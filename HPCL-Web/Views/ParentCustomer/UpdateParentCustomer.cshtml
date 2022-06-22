@@ -1,0 +1,3189 @@
+﻿@model HPCL.Common.Models.ViewModel.ParentCustomer.ManageProfileViewModel
+
+
+<div class="col-lg-12">
+    <div class="bg-white p-2 p-md-4">
+        <h5>Customer Update</h5>
+        <ul class="nav nav-tabs mt-2 form_tabs" id="formTab" role="tablist">
+            <li class="nav-item"> <a class="nav-link active" id="basicInfo-tab" data-toggle="tab" href="#basicInfo" role="tab" aria-controls="basicInfo" aria-selected="true">Basic Information</a> </li>
+            <li class="nav-item"> <a class="nav-link disable" id="address-tab" data-toggle="tab" href="#address" role="tab" aria-controls="address" aria-selected="false">Address</a> </li>
+            <li class="nav-item"> <a class="nav-link disable" id="officialDetails-tab" data-toggle="tab" href="#officialDetails" role="tab" aria-controls="officialDetails" aria-selected="false">Key Official Details</a> </li>
+        </ul>
+        <form name="applicationForm" method="post" asp-action="UpdateParentCustomer" class="w-100">
+
+            <div class="tab-content mt-3" id="myTabContent">
+                <div class="tab-pane fade show active" id="basicInfo" role="tabpanel" aria-labelledby="basicInfo-tab">
+                    <div class="w-100">
+                        <div class="col-lg-6 col-md-12 col-12 pl-0 pr-md-2 pr-0 py-2">
+                            <div class="border-1 rounded border-grey">
+                                <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Application Details</p>
+                                <div class="alert alert-danger alert-cust-success" id="dvRemarks" style="@(Model.Remarks=="" ? "display:none":"display:block")">
+                                    @Html.DisplayFor(m => m.Remarks)
+                                </div>
+                                <div class="py-4 pr-4 pl-0 px-md-4">
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-4 col-12">Form No. <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-8 col-12">
+                                            @Html.TextBoxFor(m => m.FormNumber, new { placeholder = "Form Number", @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off", @readonly = "readonly" })
+                                            <span class="error" id="formNumber_error"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-4 col-12">Customer Type <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-8 col-12">
+                                            <div class="custom_select">
+
+                                                <select name="CustomerTypeID" id="CustomerTypeID" class="form-control" disabled>
+                                                    <option value="Fleet">Fleet</option>
+                                                </select>
+                                            </div>
+                                            <span class="error" id="customerType_error"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-4 col-12">Customer Sub Type <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-8 col-12">
+                                            <div class="custom_select">
+                                                <select name="CustomerSubTypeID" id="CustomerSubTypeID" class="form-control" disabled>
+                                                    <option value="Parent">Parent</option>
+                                                </select>
+                                            </div>
+                                            <span class="error" id="customerSubType_error"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-4 col-12">Date of Application <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-8 col-12">
+                                            @Html.TextBoxFor(m => m.CustomerDateOfApplication, new { @class = "form-control fromDate",@placeholder="dd-mm-yyyy", autocomplete = "off" })
+                                            <span class="error" id="applicationDate_error"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-4 col-12">Zonal Office <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-8 col-12">
+                                            <div class="custom_select">
+                                                @Html.DropDownListFor(m => m.CustomerZonalOfficeID, new SelectList(Model.CustomerZonalOfficeMdl, "ZonalOfficeID", "ZonalOfficeName"), new { @class = "form-control" })
+                                            </div>
+                                            <span class="error" id="zonalOffice_error"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-4 col-12">Regional Office <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-8 col-12">
+                                            <div class="custom_select">
+                                                @Html.DropDownListFor(m => m.CustomerRegionID, new SelectList(Model.CustomerRegionMdl, "RegionalOfficeID", "RegionalOfficeName"), new { @class = "form-control" })
+                                            </div>
+                                            <span class="error" id="regionalOffice_error"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-4 col-12">Sales Area <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-8 col-12">
+                                            @Html.DropDownListFor(m => m.CustomerSalesAreaID, new SelectList(Model.SalesAreaMdl, "SalesAreaID", "SalesAreaName"), new { @class = "form-control" })
+                                            <span class="error" id="salesArea_error"></span>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-12 col-12 pr-0 pl-md-2 pl-0 py-2">
+                            <div class="border-1 rounded border-grey h-100">
+                                <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Personal Details</p>
+                                <div class="py-4 pr-4 pl-0 px-md-4">
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-4 col-12">Individual/Org. Name <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-8 col-12">
+                                            <div class="row">
+                                                <div class="col-4">
+                                                    <div class="custom_select">
+                                                        @Html.DropDownListFor(x => x.IndividualOrgNameTitle, new[]{
+                                                        new SelectListItem(){ Text = "Title", Value = "-1" },
+                                                        new SelectListItem(){ Text = "Mr", Value = "Mr"},
+                                                        new SelectListItem(){ Text = "Ms", Value = "Ms"},
+                                                        new SelectListItem(){ Text = "M/s", Value = "M/s"},
+                                                        }, null, new { @class = "form-control px-0" })
+                                                    </div>
+                                                    <span class="error" id="salutaion_error"></span>
+                                                </div>
+                                                <div class="col-8 pl-0">
+                                                    @Html.TextBoxFor(m => m.IndividualOrgName, new { placeholder = "Individual/Org. Name", @class = "form-control", autocomplete = "off", maxlength = "80" })
+                                                    <span class="error" id="individualName_error"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-4 col-12">Name on Card <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-8 col-12">
+                                            @Html.TextBoxFor(m => m.CustomerNameOnCard, new { placeholder = "Name on Card", @class = "form-control", autocomplete = "off", maxlength = "22" })
+                                            <span class="error" id="nameOnCard_error"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-4 col-12">Type of Business Entity <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-8 col-12">
+                                            <div class="custom_select">
+                                                @Html.DropDownListFor(m => m.CustomerTbentityID, new SelectList(Model.CustomerTbentityMdl, "TBEntityID", "TBEntityName"), new { @class = "form-control" })
+                                            </div>
+                                            <span class="error" id="typeOfbusiness_error"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-4 col-12">Residence Status<sup class="text-danger">*</sup></label>
+                                        <div class="col-md-8 col-12">
+                                            <div class="custom_select">
+                                                @Html.DropDownListFor(x => x.CustomerResidenceStatus, new[]{
+                                                new SelectListItem(){ Text = "Select Residence Status", Value = "-1"},
+                                                new SelectListItem(){ Text = "Indian", Value = "Indian"},
+                                                new SelectListItem(){ Text = "NRI", Value = "NRI"},
+                                                }, null, new { @class = "form-control" })
+                                            </div>
+                                            <span class="error" id="residenceStatus_error"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-4 col-12" id="lblPanText">Income Tax PAN<sup class="text-danger">*</sup></label>
+                                        <div class="col-md-6 col-12" id="dvPan">
+                                            @Html.TextBoxFor(m => m.CustomerIncomeTaxPan, new { @class = "form-control", @style = "text-transform:uppercase", autocomplete = "off" })
+                                            <span class="error" id="incomeTaxPan_error"></span>
+                                        </div>
+                                        <div class="col-md-2 col-12 pl-md-0">
+                                            <button class="btn btn_primary" type="button" id="btnVerify" onclick="ValidatePAN()">Verify</button>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group align-items-center flex-wrap" id="lblCustPOI">
+                                        <p class="alert alert-info" style="padding: 5px 10px;">** Please provide the document details that you are going to upload as POI.</p>
+                                    </div>
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-4 col-12" id="lblPanCardRemarks" style="display:none;">PAN Card Remarks<sup class="text-danger">*</sup></label>
+                                        <div class="col-md-8 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.PanCardRemarks, new { @class = "form-control", autocomplete = "off", maxlength = "50", @readonly = "readonly" })
+                                            </div>
+                                            <span class="error" id="PanCardRemarks_error"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="d-flex align-items-center justify-content-center mt-3">
+                            <div class="px-2">
+                                <button class="btn btn_primary" type="button" id="btnshowregAddress" onclick="return showregAddress()">Next</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="tab-pane fade" id="address" role="tabpanel" aria-labelledby="address-tab">
+                    <div class="border-1 rounded border-grey h-100">
+                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Communication Address</p>
+                        <div class="py-2 p-md-4">
+                            <div class="d-flex align-items-center justify-content-between flex-wrap row">
+                                <div class="col-md-6 col-12">
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal offset-md-1 col-md-3 col-12">Address 1<sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            @Html.TextBoxFor(m => m.CommunicationAddress1, new { @class = "form-control", autocomplete = "off", maxlength = "50" })
+                                            <span class="error" id="comm_address1_error"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-12">
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal offset-md-1 col-md-3 col-12">Address 2<sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            @Html.TextBoxFor(m => m.CommunicationAddress2, new { @class = "form-control", autocomplete = "off", maxlength = "50" })
+                                            <span class="error" id="comm_address2_error"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-12">
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal offset-md-1 col-md-3 col-12">Address 3</label>
+                                        <div class="col-md-7 col-12">
+                                            @Html.TextBoxFor(m => m.CommunicationAddress3, new { @class = "form-control", autocomplete = "off", maxlength = "50" })
+                                            <span class="error" id="comm_address3_error"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-12">
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal offset-md-1 col-md-3 col-12">Location</label>
+                                        <div class="col-md-7 col-12">
+                                            @Html.TextBoxFor(m => m.CommunicationLocation, new { @class = "form-control", autocomplete = "off", maxlength = "20" })
+                                            <span class="error" id="comm_location_error"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-12">
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal offset-md-1 col-md-3 col-12">City<sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            @Html.TextBoxFor(m => m.CommunicationCity, new { @class = "form-control", autocomplete = "off", maxlength = "20" })
+                                            <span class="error" id="comm_city_error"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-12">
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal offset-md-1 col-md-3 col-12">Pin code<sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            @Html.TextBoxFor(m => m.CommunicationPinCode, new { @class = "form-control", maxlength = "6", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                            <span class="error" id="comm_pincode_error"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-12">
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal offset-md-1 col-md-3 col-12">State<sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.DropDownListFor(m => m.CommunicationStateID, new SelectList(Model.CustomerStateMdl, "StateID", "StateName"), new { @class = "form-control" })
+                                            </div>
+                                            <span class="error" id="comm_states_error"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-12">
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal offset-md-1 col-md-3 col-12">District<sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.DropDownListFor(m => m.CommunicationDistrictId, new SelectList(Model.CommunicationDistrictMdl, "districtID", "districtName"), new { @class = "form-control" })
+                                            </div>
+                                            <span class="error" id="comm_district_error"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-12">
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal offset-md-1 col-md-3 col-12">Phone (Office) </label>@*<sup class="text-danger">*</sup>*@
+                                        <div class="col-md-7 col-12">
+                                            <div class="row">
+                                                <div class="col-4">
+                                                    @Html.TextBoxFor(m => m.CommunicationDialCode, new { @class = "form-control", maxlength = "4", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                    <span class="error" id="CommunicationDialCode_error"></span>
+                                                </div>
+                                                <div class="col-8 pl-0">
+                                                    @Html.TextBoxFor(m => m.CommunicationPhoneNo, new { @class = "form-control", maxlength = "8", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                    <span class="error" id="comm_officePhone_error"></span>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-12">
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal offset-md-1 col-md-3 col-12">Fax</label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="row">
+                                                <div class="col-4">
+                                                    @Html.TextBoxFor(m => m.CommunicationFaxCode, new { @class = "form-control", maxlength = "4", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                    <span class="error" id="CommunicationFaxCode_error"></span>
+                                                </div>
+                                                <div class="col-8 pl-0">
+                                                    @Html.TextBoxFor(m => m.CommunicationFax, new { @class = "form-control", maxlength = "8", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                    <span class="error" id="CommunicationFax_error"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-12">
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal offset-md-1 col-md-3 col-12">Mobile<sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            @Html.TextBoxFor(m => m.CommunicationMobileNumber, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                            <div class="error" id="comm_mobileNumber_error"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-12">
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal offset-md-1 col-md-3 col-12">Email<sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            @Html.TextBoxFor(m => m.CommunicationEmail, new { @class = "form-control", @style = "text-transform:lowercase", autocomplete = "off", maxlength = "50" })
+                                            <div class="error" id="comm_email_error"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="border-1 rounded border-grey h-100 mt-3">
+                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Permanent/Registered Office Address <label class="text-danger">(if different from Communication Address)</label></p>
+                        <div class="py-2 p-md-4">
+                            <span class="d-flex align-items-center justify-content-start px-3 mb-3">
+                                <input type="checkbox" name="sameAddressCheck" id="sameAddressCheck" class="mr-2" onclick="sameAddressAsCommunication()">
+                                <span class="m-0">Same as Communication Address</span>
+                            </span>
+                            <div class="row w-100" id="permanent_add">
+                                <div class="d-flex align-items-center justify-content-between flex-wrap">
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group d-flex align-items-center flex-wrap">
+                                            <label class="font-weight-normal offset-md-1 col-md-3 col-12">Address 1<sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                @Html.TextBoxFor(m => m.PerOrRegAddress1, new { @class = "form-control", autocomplete = "off", maxlength = "50" })
+                                                <div class="error" id="perma_address1_error"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group d-flex align-items-center flex-wrap">
+                                            <label class="font-weight-normal offset-md-2 col-md-3 col-12">Address 2<sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                @Html.TextBoxFor(m => m.PerOrRegAddress2, new { @class = "form-control", autocomplete = "off", maxlength = "50" })
+                                                <div class="error" id="perma_address2_error"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group d-flex align-items-center flex-wrap">
+                                            <label class="font-weight-normal offset-md-1 col-md-3 col-12">Address 3</label>
+                                            <div class="col-md-7 col-12">
+                                                @Html.TextBoxFor(m => m.PerOrRegAddress3, new { @class = "form-control", autocomplete = "off", maxlength = "50" })
+                                                <div class="error" id="perma_address3_error"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group d-flex align-items-center flex-wrap">
+                                            <label class="font-weight-normal offset-md-2 col-md-3 col-12">Location</label>
+                                            <div class="col-md-7 col-12">
+                                                @Html.TextBoxFor(m => m.PerOrRegAddressLocation, new { @class = "form-control", autocomplete = "off", maxlength = "20" })
+                                                <span class="error" id="perma_location_error"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group d-flex align-items-center flex-wrap">
+                                            <label class="font-weight-normal offset-md-1 col-md-3 col-12">City<sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                @Html.TextBoxFor(m => m.PerOrRegAddressCity, new { @class = "form-control", autocomplete = "off", maxlength = "20" })
+                                                <span class="error" id="perma_city_error"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group d-flex align-items-center flex-wrap">
+                                            <label class="font-weight-normal offset-md-2 col-md-3 col-12">Pin code<sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                @Html.TextBoxFor(m => m.PerOrRegAddressPinCode, new { @class = "form-control", maxlength = "6", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                <span class="error" id="perma_pincode_error"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group d-flex align-items-center flex-wrap">
+                                            <label class="font-weight-normal offset-md-1 col-md-3 col-12">State<sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="custom_select">
+                                                    @Html.DropDownListFor(m => m.PerOrRegAddressStateID, new SelectList(Model.CustomerStateMdl, "StateID", "StateName"), new { @class = "form-control" })
+                                                </div>
+                                                <span class="error" id="perma_state_error"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group d-flex align-items-center flex-wrap">
+                                            <label class="font-weight-normal offset-md-2 col-md-3 col-12">District<sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="custom_select">
+                                                    @Html.DropDownListFor(m => m.PermanentDistrictId, new SelectList(Model.PerOrRegAddressDistrictMdl, "districtID", "districtName"), new { @class = "form-control" })
+                                                </div>
+                                                <span class="error" id="perma_district_error"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group d-flex align-items-center flex-wrap">
+                                            <label class="font-weight-normal offset-md-1 col-md-3 col-12">Phone (Office) </label> @*<sup class="text-danger">*</sup>*@
+                                            <div class="col-md-7 col-12">
+                                                <div class="row">
+                                                    <div class="col-4">
+                                                        @Html.TextBoxFor(m => m.PerOrRegAddressDialCode, new { @class = "form-control", maxlength = "4", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                        <span class="error" id="PerOrRegAddressDialCode_error"></span>
+                                                    </div>
+                                                    <div class="col-8 pl-0">
+                                                        @Html.TextBoxFor(m => m.PerOrRegAddressPhoneNumber, new { @class = "form-control", maxlength = "8", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                        <span class="error" id="perma_officePhone_error"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group d-flex align-items-center flex-wrap">
+                                            <label class="font-weight-normal offset-md-2 col-md-3 col-12">Fax</label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="row">
+                                                    <div class="col-4">
+                                                        @Html.TextBoxFor(m => m.PermanentFaxCode, new { @class = "form-control", maxlength = "4", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                        <span class="error" id="PermanentFaxCode_error"></span>
+                                                    </div>
+                                                    <div class="col-8 pl-0">
+                                                        @Html.TextBoxFor(m => m.PermanentFax, new { @class = "form-control", maxlength = "8", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                        <span class="error" id="perma_faxNumber_error"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="d-flex align-items-center justify-content-center mt-3">
+                        <div class="px-2">
+                            <button class="btn btn_primary px-4 py-2" type="button" onclick="showBasicInfo()">Previous</button>
+                        </div>
+                        <div class="px-2">
+                            <button class="btn btn_primary px-4 py-2" type="button" onclick="return showOfficialDetails()">Next</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="officialDetails" role="tabpanel" aria-labelledby="officialDetails-tab">
+                    <div class="border-1 rounded border-grey w-100">
+                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Key Official</p>
+                        <div class="py-2 p-md-4">
+                            <div class="d-flex align-items-start justify-content-between flex-wrap row">
+                                <div class="col-lg-6 col-md-12 col-12">
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal offset-md-1 col-md-3 col-12">Individual Initials </label>
+                                        <div class="col-md-7 col-12">
+                                            @Html.TextBoxFor(m => m.KeyOffIndividualInitials, new { @class = "form-control", autocomplete = "off", maxlength = "30" })
+                                            <span class="error" id="KeyOffIndividualInitials_error"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal offset-md-1 col-md-3 col-12">Middle Name </label>
+                                        <div class="col-md-7 col-12">
+                                            @Html.TextBoxFor(m => m.KeyOffMiddleName, new { @class = "form-control", autocomplete = "off", maxlength = "30" })
+                                            <span class="error" id="KeyOffMiddleName_error"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal offset-md-1 col-md-3 col-12">Date of Birth</label>
+                                        <div class="col-md-7 col-12">
+                                            @Html.TextBoxFor(m => m.KeyOfficialDOB, new { @id = "KeyOfficialDOB", @class = "form-control nodefaultDate",@placeholder="dd-mm-yyyy", @autocomplete = "off", @onchange = "validateDate('KeyOfficialDOB','KeyOfficialDOB_error');" })
+                                            <span class="error" id="KeyOfficialDOB_error"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal offset-md-1 col-md-3 col-12">Email</label>
+                                        <div class="col-md-7 col-12">
+                                            @Html.TextBoxFor(m => m.KeyOffEmail, new { @class = "form-control", autocomplete = "off", @style = "text-transform:lowercase", maxlength = "50" })
+                                            <span class="error" id="KeyOffEmail_error"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal offset-md-1 col-md-3 col-12">Designation <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            @Html.TextBoxFor(m => m.KeyOffDesignation, new { @class = "form-control", autocomplete = "off", maxlength = "30" })
+                                            <span class="error" id="official_designation_error"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal offset-md-1 col-md-3 col-12">Fax</label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="row">
+                                                <div class="col-4">
+                                                    @Html.TextBoxFor(m => m.KeyOffFaxCode, new { @class = "form-control", maxlength = "4", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                    <span class="error" id="KeyOffFaxCode_error"></span>
+                                                </div>
+                                                <div class="col-8 pl-0">
+                                                    @Html.TextBoxFor(m => m.KeyOffFax, new { @class = "form-control", maxlength = "8", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                    <span class="error" id="KeyOffFax_error"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-md-12 col-12">
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal offset-md-1 col-md-3 col-12">First Name <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="row">
+                                                <div class="col-4">
+                                                    <div class="custom_select">
+                                                        @Html.DropDownListFor(x => x.KeyOffTitle, new[]{
+                                                        new SelectListItem(){ Text = "Title", Value = "-1"},
+                                                        new SelectListItem(){ Text = "Mr", Value = "Mr"},
+                                                        new SelectListItem(){ Text = "Ms", Value = "Ms"},
+                                                        new SelectListItem(){ Text = "M/s", Value = "M/s"},
+                                                        }, null, new { @class = "form-control px-0" })
+                                                    </div>
+                                                    <span class="error" id="officialTitle_error"></span>
+                                                </div>
+                                                <div class="col-md-8 col-12">
+                                                    @Html.TextBoxFor(m => m.KeyOffFirstName, new { @class = "form-control", autocomplete = "off", maxlength = "30" })
+                                                    <span class="error" id="official_fName_error"></span>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal offset-md-1 col-md-3 col-12">Last Name</label>
+                                        <div class="col-md-7 col-12">
+                                            @Html.TextBoxFor(m => m.KeyOffLastName, new { @class = "form-control", autocomplete = "off", maxlength = "30" })
+                                            <span class="error" id="KeyOffLastName_error"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal offset-md-1 col-md-3 col-12 px-0">Date of Anniversary</label>
+                                        <div class="col-md-7 col-12">
+                                            @Html.TextBoxFor(m => m.KeyOffDateOfAnniversary, new { @id = "KeyOffDateOfAnniversary", @class = "form-control nodefaultDate",@placeholder="dd-mm-yyyy", @autocomplete = "off" , @onchange = "validateDate('KeyOffDateOfAnniversary','KeyOffDateOfAnniversary_error');"})
+                                            <span class="error" id="KeyOffDateOfAnniversary_error"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal offset-md-1 col-md-3 col-12">Mobile <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            @Html.TextBoxFor(m => m.KeyOffMobileNumber, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                            <span class="error" id="official_mobile_error"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal offset-md-1 col-md-3 col-12">Phone (Office)</label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="row">
+                                                <div class="col-4">
+                                                    @Html.TextBoxFor(m => m.KeyOffPhoneCode, new { @class = "form-control", maxlength = "4", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                    <span class="error" id="KeyOffPhoneCode_error"></span>
+                                                </div>
+                                                <div class="col-8 pl-0">
+                                                    @Html.TextBoxFor(m => m.KeyOffPhoneNumber, new { @class = "form-control", maxlength = "8", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                    <span class="error" id="KeyOffPhoneNumber_error"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                    <div class="border-1 rounded border-grey w-100 mt-3">
+                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Other Details</p>
+                        <div class="py-2 p-md-4">
+                            <div class="d-flex align-items-center justify-content-between flex-wrap row">
+                                <div class="col-lg-6 col-md-12 col-12">
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-5 col-12">Secret Question</label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.DropDownListFor(m => m.KeyOfficialSecretQuestion, new SelectList(Model.CustomerSecretQueMdl, "SecretQuestionId", "SecretQuestionName"), new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-md-12 col-12">
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-5 col-12">Secret Answer</label>
+                                        <div class="col-md-7 col-12">
+                                            @Html.TextBoxFor(m => m.KeyOfficialSecretAnswer, new { @class = "form-control", autocomplete = "off" })
+                                            <span class="error" id="KeyOfficialSecretAnswer_error"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-md-12 col-12">
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-5 col-12">Area of Operation</label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="d-flex align-items-center justify-content-between flex-wrap">
+                                                <label class="d-flex align-items-center justify-content-between">
+                                                    @*<input type="checkbox" class="mr-2">*@
+                                                    @Html.CheckBoxFor(m => m.InterState, new { id = "hdnInterState" })
+                                                    <p class="m-0 ml-2">Inter State</p>
+                                                </label>
+                                                <label class="d-flex align-items-center justify-content-between">
+                                                    @*<input type="checkbox" class="mr-2">*@
+                                                    @Html.CheckBoxFor(m => m.InterCity, new { id = "hdnInterCity" })
+                                                    <p class="m-0 ml-2">Inter City</p>
+                                                </label>
+                                                <label class="d-flex align-items-center justify-content-between">
+                                                    @*<input type="checkbox" class="mr-2">*@
+                                                    @Html.CheckBoxFor(m => m.IntraCity, new { id = "hdnIntraCity" })
+                                                    <p class="m-0 ml-2">Intra City</p>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-md-12 col-12">
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-5 col-12">Fleet Size (No. of Vehicles Owned)</label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="d-flex align-items-center justify-content-between flex-wrap">
+                                                <div class="mb-2 mb-sm-2 px-2 col-sm-6 col-md-3">
+                                                    <span class="d-flex font-12">HCV</span>
+                                                    @Html.TextBoxFor(m => m.FleetSizeNoOfVechileOwnedHCV, new { @class = "w-100 form-control", maxlength = "3", onkeypress = "return isNumberKey(event)" })
+                                                    <span class="error" id="FleetSizeNoOfVechileOwnedHCV_error"></span>
+                                                </div>
+                                                <div class="mb-2 mb-sm-2 px-2 col-sm-6 col-md-3">
+                                                    <span class="d-flex font-12">LCV</span>
+                                                    @Html.TextBoxFor(m => m.FleetSizeNoOfVechileOwnedLCV, new { @class = "w-100 form-control", maxlength = "3", onkeypress = "return isNumberKey(event)" })
+                                                    <span class="error" id="FleetSizeNoOfVechileOwnedLCV_error"></span>
+                                                </div>
+                                                <div class="mb-2 mb-sm-2 px-2 col-sm-6 col-md-3">
+                                                    <span class="d-flex font-12">MUV/SUV</span>
+                                                    @Html.TextBoxFor(m => m.FleetSizeNoOfVechileOwnedMUVSUV, new { @class = "w-100 form-control", maxlength = "3", onkeypress = "return isNumberKey(event)" })
+                                                    <span class="error" id="FleetSizeNoOfVechileOwnedMUVSUV_error"></span>
+                                                </div>
+                                                <div class="mb-2 mb-sm-2 px-2 col-sm-6 col-md-3">
+                                                    <span class="d-flex font-12">Car/Jeep</span>
+                                                    @Html.TextBoxFor(m => m.FleetSizeNoOfVechileOwnedCarJeep, new { @class = "w-100 form-control", maxlength = "3", onkeypress = "return isNumberKey(event)" })
+                                                    <span class="error" id="FleetSizeNoOfVechileOwnedCarJeep_error"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-md-12 col-12">
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-5 col-12">Type of Fleet</label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.DropDownListFor(m => m.CustomerTypeOfFleetID, new SelectList(Model.CustomerTypeOfFleetMdl, "TypeOfFleetId", "TypeOfFleetName"), new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-md-12 col-12">
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-5 col-12">Card applied for</label>
+                                        <div class="col-md-7 col-12">
+                                            @Html.TextBoxFor(m => m.KeyOfficialCardAppliedFor, new { @class = "form-control", autocomplete = "off" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-md-12 col-12">
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-5 col-12">Approx Monthly Spends on Vehicles</label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="row">
+                                                <div class="col-12 col-sm-8">
+                                                    <div class="py-2">
+                                                        <div class=" position-relative pr-4">
+                                                            @Html.TextBoxFor(m => m.KeyOfficialApproxMonthlySpendsonVechile1, new { @class = "form-control", maxlength = "8", onkeypress = "return isNumberKey(event)" })
+                                                            <span class="error" id="KeyOfficialApproxMonthlySpendsonVechile1_error"></span>
+                                                            <a href="#" class="form_info" title="Fuel in Rs.">?</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-sm-4">
+                                                    <div class=" py-2">
+                                                        <div class=" position-relative pr-4">
+                                                            @Html.TextBoxFor(m => m.KeyOfficialApproxMonthlySpendsonVechile2, new { @class = "form-control", maxlength = "5", onkeypress = "return isNumberKey(event)" })
+                                                            <span class="error" id="KeyOfficialApproxMonthlySpendsonVechile2_error"></span>
+                                                            <a href="#" class="form_info" title="Lube in Rs.">?</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="d-flex align-items-center justify-content-center mt-3">
+                        <div class="px-2">
+                            <button class="btn btn_primary px-4 py-2" type="button" onclick="showregAddressInfo()">Previous</button>
+                        </div>
+                        <div class="px-2">
+                            <button class="btn btn_primary px-4 py-2" id="btnAdd" type="submit" onclick="return showCardDetails()">Save</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display:none;">@Html.CheckBoxFor(m => m.IsSameAsCommAddress, new { id = "hdnSameAsCommAddress" })</div>
+                <div style="display:none;">@Html.TextBoxFor(m => m.PerOrRegAddress1, new { id = "hdnPerOrRegAddress1" })</div>
+                <div style="display:none;">@Html.TextBoxFor(m => m.PerOrRegAddress2, new { id = "hdnPerOrRegAddress2" })</div>
+                <div style="display:none;">@Html.TextBoxFor(m => m.PerOrRegAddress3, new { id = "hdnPerOrRegAddress3" })</div>
+                <div style="display:none;">@Html.TextBoxFor(m => m.PerOrRegAddressLocation, new { id = "hdnPerOrRegAddressLocation" })</div>
+                <div style="display:none;">@Html.TextBoxFor(m => m.PerOrRegAddressCity, new { id = "hdnPerOrRegAddressCity" })</div>
+                <div style="display:none;">@Html.TextBoxFor(m => m.PerOrRegAddressPinCode, new { id = "hdnPerOrRegAddressPinCode" })</div>
+                <div style="display:none;">@Html.TextBoxFor(m => m.PerOrRegAddressStateID, new { id = "hdnPerOrRegAddressStateID" })</div>
+                <div style="display:none;">@Html.TextBoxFor(m => m.PerOrRegAddressDistrict, new { id = "hdnPerOrRegAddressDistrict" })</div>
+                <div style="display:none;">@Html.TextBoxFor(m => m.PerOrRegAddressDialCode, new { id = "hdnPerOrRegAddressDialCode" })</div>
+                <div style="display:none;">@Html.TextBoxFor(m => m.PerOrRegAddressPhoneNumber, new { id = "hdnPerOrRegAddressPhoneNumber" })</div>
+                <div style="display:none;">@Html.TextBoxFor(m => m.PermanentFaxCode, new { id = "hdnPermanentFaxCode" })</div>
+                <div style="display:none;">@Html.TextBoxFor(m => m.PermanentFax, new { id = "hdnPermanentFax" })</div>
+                <div style="display:none;">@Html.TextBoxFor(m => m.PerOrRegAddressDialCode, new { id = "hdnPerOrRegAddressDialCode" })</div>
+                @Html.HiddenFor(model => Model.IsDuplicatePanNo)
+                @Html.HiddenFor(model => Model.AllowPanDuplication)
+                @Html.HiddenFor(model => Model.CustomerReferenceNo)
+                @Html.HiddenFor(model => Model.ExternalPANAPIStatus)
+            </div>
+
+            <!-- Modal : Dialog -->
+            <!-- PAN Validation Modal -->
+            <div class="modal fade" id="panvalidation" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header py-2">
+                            <h5 class="modal-title" id="exampleModalLabel" style="font-size:18px;">PAN Validation</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="col-lg-12 col-12">
+                                <div class="d-flex align-items-center justify-content-center flex-wrap mb-0">
+                                    <p class="mb-0">Entered PAN is already existing in DT Plus system. Still you want to proceed?</p>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-center mt-3">
+                                <div class="px-2">
+                                    <button class="btn btn_primary" type="button" onclick="GetClientConfirmation(this)">YES</button>
+                                </div>
+                                <div class="px-2">
+                                    <button class="btn btn_primary" type="button" onclick="GetClientConfirmation(this)">NO</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Modal : Dialog -->
+            <!-- Modal : Dialog -->
+            <!-- PAN ErrorMsg Modal -->
+            <div class="modal fade" id="PANErrorMsg" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header py-2">
+                            <h5 class="modal-title" id="exampleModalLabel" style="font-size:18px;">PAN Validation</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="col-lg-12 col-12">
+                                <div class="d-flex align-items-center justify-content-center flex-wrap mb-0">
+                                    <p class="mb-0">Entered PAN No. does not match with selected Type of Business Entity</p>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-center mt-3">
+                                <div class="px-2">
+                                    <button class="btn btn_primary" type="button" onclick="HidePANErrorMsgPopup(this)">OK</button>
+                                </div>
+                                <div class="px-2">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Modal : Dialog -->
+        </form>
+
+
+    </div>
+</div>
+<script type="text/javascript">
+                var custDateOfApplication = $("#CustomerDateOfApplication").val();
+                var OfficialDOB = $("#KeyOfficialDOB").val();
+                var OffDateOfAnniversary = $("#KeyOffDateOfAnniversary").val();
+                var notFoundError = "@ViewBag.NotFoundError";
+
+                $(document).ready(function () {
+
+                    var customerTbentityID = $('#CustomerTbentityID').val();
+                    console.log(customerTbentityID);
+                    if (customerTbentityID == "10") {
+                        $('#lblCustPOI').show();
+                        document.getElementById("CustomerIncomeTaxPan").maxLength = 30;
+                    }
+                    else {
+                        $('#lblCustPOI').hide();
+                        document.getElementById("CustomerIncomeTaxPan").maxLength = 10;
+                    }
+
+                    localStorage.setItem("PANNOALREADYUSED", "1");
+                    localStorage.setItem("FORMNOALREADYUSED", "1");
+                    localStorage.setItem("MOBILENUMBERREADYUSED", "1");
+                    localStorage.setItem("EMAILIDALREADYUSED", "1");
+                    localStorage.setItem("DUPLICATEPANUSED", "1");
+                    setDOAFormat();
+
+                  
+                    $("#CustomerIncomeTaxPan").focus();
+
+                    if ($('#AllowPanDuplication').val() == "Y") {
+                        document.getElementById("lblPanCardRemarks").style.display = "block";
+                        document.getElementById("PanCardRemarks").style.display = "block";
+                        $("#PanCardRemarks").prop('readonly', false);
+                    }
+                    else {
+                        document.getElementById("lblPanCardRemarks").style.display = "none";
+                        document.getElementById("PanCardRemarks").style.display = "none";
+                        $("#PanCardRemarks").prop('readonly', true);
+                    }
+
+                });
+
+                function setDOAFormat(){
+                    $(".anniversaryDate").attr("readonly", true);
+                    $('.anniversaryDate').datepicker({
+                        dateFormat: 'dd-mm-yy',
+                        changeMonth: true,
+                        changeYear: true,
+                        maxDate: new Date(today),
+                        autoclose: "true"
+                    });
+                    if (($('.anniversaryDate').val() != undefined)  && ($('.anniversaryDate').val() != "") ){
+                        var d1 = stringToDate($('.anniversaryDate').val(),"dd-mm-yyyy");
+                        var ye1 = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(d1)
+                        var mo1 = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(d1)
+                        var da1 = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(d1)
+                        $('.anniversaryDate').val(`${da1}-${mo1}-${ye1}`);
+                    }
+                }
+
+                //function setDates() {
+                //    var d = new Date();
+
+                //    var month = d.getMonth() + 1;
+                //    var day = d.getDate();
+                //    var output = (day < 10 ? '0' : '') + day + '-' +
+                //        (month < 10 ? '0' : '') + month + '-' +
+                //        d.getFullYear();
+
+                //    $("#CustomerDateOfApplication").val(output);
+                //    //$("#KeyOfficialDOB").val(output);
+
+                //};
+
+                //function setDOB() {
+                //    var d = new Date();
+
+                //    var month = d.getMonth() + 1;
+                //    var day = d.getDate();
+                //    var output = (day < 10 ? '0' : '') + day + '-' +
+                //        (month < 10 ? '0' : '') + month + '-' +
+                //        d.getFullYear();
+
+                //    $("#KeyOfficialDOB").val(output);
+
+                //};
+
+                $('select').SumoSelect({
+                        placeholder: '--Select--',
+                        search: true,
+                        searchText: 'Enter Text here.'
+                    });
+
+                $("#btnAdd").click(function () {
+                    let flag = 'Y';
+                    debugger;
+                    if (document.getElementById("sameAddressCheck").checked == true) {
+                        //$('#hdnPermAddress1').checked = true;
+                        /*$('#hdnPermAddress1').val($('#CommunicationAddress1').val());*/
+                        $('#hdnPerOrRegAddress1').val($('#CommunicationAddress1').val());
+                        $('#PerOrRegAddress1').val($('#CommunicationAddress1').val());
+                        $('#hdnPerOrRegAddress2').val($('#CommunicationAddress2').val());
+                        $('#hdnPerOrRegAddress3').val($('#CommunicationAddress3').val());
+                        $('#hdnPerOrRegAddressLocation').val($('#CommunicationLocation').val());
+                        $('#hdnPerOrRegAddressCity').val($('#CommunicationCity').val());
+                        $('#hdnPerOrRegAddressStateID').val($('#CommunicationStateID').val());
+                        $('#hdnPerOrRegAddressPinCode').val($('#CommunicationPinCode').val());
+                        $('#hdnPerOrRegAddressDialCode').val($('#CommunicationDialCode').val());
+                        $('#hdnPerOrRegAddressPhoneNumber').val($('#CommunicationPhoneNo').val());
+                        $('#hdnPermanentFax').val($('#CommunicationFax').val());
+                        $('#hdnPerOrRegAddressDialCode').val($('#CommunicationDialCode').val());
+                        $('#hdnPermanentFaxCode').val($('#CommunicationFaxCode').val());
+
+                    }
+
+                    if (flag == 'N') {
+                        $("#applicationForm").submit(function (e) {
+                            e.preventDefault();
+                        });
+                    }
+                });
+
+                // on customer selection Change
+                $("#CustomerTypeID").change(function () {
+                    var id = 901;
+                    if (id != 0) {
+                        $("#customerType_error").html("");
+                        //$("#customerSubType_error").html("");
+                    }
+
+
+
+                    $.ajax({
+                        type: 'POST',  // http method
+                        url: '@Url.Action("GetCustomerSubType", "Customer")',
+                        data: { CustomerTypeID: id },  // data to submit
+                        dataType: "json",
+                        success: function (data, status, xhr) {
+                            var v = data;
+                            if (status == 'success') {
+                                $("#CustomerSubTypeID").html("");
+                                $.each(data, function (i, data) { // bind the dropdown list using json result
+                                    $('<option>',
+                                        {
+                                            value: data.customerSubTypeID,
+                                            text: data.customerSubTypeName
+                                        }).html(data.customerSubTypeName).appendTo("#CustomerSubTypeID");
+                                });
+                                $("#CustomerSubTypeID")[0].sumo.reload();
+
+                            }
+                            else {
+                                console.log(v);
+                            }
+                        },
+                        error: function (jqXhr, textStatus, errorMessage) {
+                            alert("Error Populating Customer Sub Type");
+                        }
+                    });
+                });
+
+                 // on Zone  selection Change
+                $("#CustomerZonalOfficeID").change(function () {
+                    var id = this.value;
+                    if (id != 0) {
+                        $("#zonalOffice_error").html("");
+                        //$("#regionalOffice_error").html("");
+                    }
+                    $.ajax({
+                        type: 'POST',  // http method
+                        url: '@Url.Action("GetRegionalDetails", "Customer")',
+                        data: { ZonalOfficeID: id },  // data to submit
+                        dataType: "json",
+                        success: function (data, status, xhr) {
+                            var v = data;
+                            if (status == 'success') {
+                                $("#CustomerRegionID").html("");
+                                $.each(data, function (i, data) { // bind the dropdown list using json result
+                                    $('<option>',
+                                        {
+                                            value: data.regionalOfficeID,
+                                            text: data.regionalOfficeName
+                                        }).html(data.regionalOfficeName).appendTo("#CustomerRegionID");
+                                });
+                                $("#CustomerRegionID")[0].sumo.reload();
+                                $('#CustomerRegionID').trigger('change');
+                            }
+                            else {
+                                console.log(v);
+                            }
+                        },
+                        error: function (jqXhr, textStatus, errorMessage) {
+                            alert("Error Populating Customer Region");
+                        }
+                    });
+                });
+
+                 // on Region selection Change
+                $("#CustomerRegionID").change(function () {
+                    var id = this.value;
+                        if (id != 0) {
+                            $("#regionalOffice_error").html("");
+                        }
+                        $.ajax({
+                            type: 'POST',  // http method
+                            url: '@Url.Action("GetsalesAreaDetails", "Customer")',
+                            data: { RegionID: id },  // data to submit
+                            dataType: "json",
+                            success: function (data, status, xhr) {
+                                var v = data;
+                                if (status == 'success') {
+                                    $("#CustomerSalesAreaID").html("");
+                                    $.each(data, function (i, data) { // bind the dropdown list using json result
+                                        $('<option>',
+                                            {
+                                                value: data.salesAreaID,
+                                                text: data.salesAreaName
+                                            }).html(data.salesAreaName).appendTo("#CustomerSalesAreaID");
+                                    });
+                                    $("#CustomerSalesAreaID")[0].sumo.reload();
+                                }
+                                else {
+                                    console.log(v);
+                                }
+                            },
+                            error: function (jqXhr, textStatus, errorMessage) {
+                                alert("Error Populating Sales Area");
+                            }
+                        });
+                });
+
+                $("#CommunicationStateID").change(function () {
+                        var id = this.value;
+
+                        if (id != 0) {
+                            $("#comm_states_error").html("");
+                        }
+
+                        $.ajax({
+                            type: 'POST',  // http method
+                            url: '@Url.Action("GetDistrictDetails", "Customer")',
+                            data: { Stateid: id },  // data to submit
+                            dataType: "json",
+                            success: function (data, status, xhr) {
+                                var v = data;
+                                if (status == 'success') {
+                                    $("#CommunicationDistrictId").html("");
+                                    $.each(data, function (i, data) { // bind the dropdown list using json result
+                                        $('<option>',
+                                            {
+                                                value: data.districtID,
+                                                text: data.districtName
+                                            }).html(data.districtName).appendTo("#CommunicationDistrictId");
+                                    });
+                                    $("#CommunicationDistrictId")[0].sumo.reload();
+                                }
+                                else {
+                                    console.log(v);
+                                }
+                            },
+                            error: function (jqXhr, textStatus, errorMessage) {
+                                alert("Error Populating District Data");
+                            }
+                        });
+                });
+                $("#PerOrRegAddressStateID").change(function () {
+                        var id = this.value;
+                     if (id != 0) {
+                         $("#perma_state_error").html("");
+                        }
+
+                        $.ajax({
+                            type: 'POST',  // http method
+                            url: '@Url.Action("GetDistrictDetails", "Customer")',
+                            data: { Stateid: id },  // data to submit
+                            dataType: "json",
+                            success: function (data, status, xhr) {
+                                var v = data;
+
+                                if (status == 'success') {
+                                    $("#PermanentDistrictId").html("");
+                                    $.each(data, function (i, data) { // bind the dropdown list using json result
+                                        $('<option>',
+                                            {
+                                                value: data.districtID,
+                                                text: data.districtName
+                                            }).html(data.districtName).appendTo("#PermanentDistrictId");
+                                    });
+                                    $("#PermanentDistrictId")[0].sumo.reload();
+                                }
+                                else {
+                                    console.log(v);
+                                }
+                            },
+                            error: function (jqXhr, textStatus, errorMessage) {
+                                alert("Error Populating District Data");
+                            }
+
+                       });
+
+                });
+
+                function sameAddressAsCommunication() {
+                    debugger;
+                    var sameAscheck = document.getElementById("sameAddressCheck");
+                    var permanent_add = document.querySelector("#permanent_add");
+                    // var sameas = false;
+
+
+                    if (document.getElementById("sameAddressCheck").checked == true) {
+
+                        if (document.applicationForm.CommunicationAddress1.value.trim() == "") {
+                            document.getElementById("comm_address1_error").innerHTML = "Address field cannot be left blank";
+                            return false;
+                        }
+                        else {
+                                if (!document.getElementById("CommunicationAddress1").value.match(atLeastOneAlphabet)) {
+                                    document.getElementById("comm_address1_error").innerHTML = "Invalid Address";
+                                    return false;
+                                }
+                            else {
+                                document.getElementById("comm_address1_error").innerHTML = "";
+                            }
+                        }
+
+                        if (document.applicationForm.CommunicationAddress2.value.trim() == "") {
+                            document.getElementById("comm_address2_error").innerHTML = "Address field cannot be left blank";
+                            return false;
+                        }
+                        else {
+                            if (!document.getElementById("CommunicationAddress2").value.match(atLeastOneAlphabet)) {
+                                    document.getElementById("comm_address2_error").innerHTML = "Invalid Address";
+                                    return false;
+                                }
+                            else {
+                                document.getElementById("comm_address2_error").innerHTML = "";
+                            }
+                        }
+
+                        if (document.applicationForm.CommunicationCity.value.trim() == "") {
+                            document.getElementById("comm_city_error").innerHTML = "City field cannot be left blank";
+                            return false;
+                        }
+                        else {
+                            if (!document.getElementById("CommunicationCity").value.match(atLeastOneAlphabet)) {
+                                document.getElementById("comm_city_error").innerHTML = "Invalid City";
+                                return false;
+                            }
+                            else {
+                                document.getElementById("comm_city_error").innerHTML = "";
+                            }
+                        }
+
+                        if (document.applicationForm.CommunicationPinCode.value.trim() == "") {
+                            document.getElementById("comm_pincode_error").innerHTML = "Pin code field cannot be left blank";
+                            return (false);
+                        }
+                        else {
+                             if (document.getElementById("CommunicationPinCode").value.substring(0, 1) == "0") {
+                                document.getElementById("comm_pincode_error").innerHTML = "Invalid Pin code. Min-Max 6 digits";
+                                return false;
+                            }
+                            else {
+                                document.getElementById("comm_pincode_error").innerHTML = "";
+                            }
+
+                            if (document.getElementById("CommunicationPinCode").value.length < 6) {
+                                document.getElementById("comm_pincode_error").innerHTML = "Invalid Pin code. Min-Max 6 digits";
+                                return false;
+                            }
+                            else {
+                                document.getElementById("comm_pincode_error").innerHTML = "";
+                            }
+                        }
+
+                        if (document.applicationForm.CommunicationStateID.value == "0" || document.applicationForm.CommunicationStateID.value == "") {
+                            document.getElementById("comm_states_error").innerHTML = "State field cannot be left blank";
+                            return false;
+                        }
+                        else {
+                            document.getElementById("comm_states_error").innerHTML = "";
+                        }
+
+                        if (document.applicationForm.CommunicationDistrictId.value == "0" || document.applicationForm.CommunicationDistrictId.value == "") {
+                            document.getElementById("comm_district_error").innerHTML = "District field cannot be left blank";
+                            return false;
+                        }
+                        else {
+                            document.getElementById("comm_district_error").innerHTML = "";
+                        }
+
+
+
+                        if (document.applicationForm.CommunicationMobileNumber.value.trim() == "") {
+                            document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile Number field cannot be left blank";
+                            return false;
+                        }
+                        else {
+
+                            if (document.getElementById("CommunicationMobileNumber").value.substring(0, 1) == "0") {
+                                document.getElementById("comm_mobileNumber_error").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
+                                return false;
+                            }
+                            else
+                            {
+                                document.getElementById("comm_mobileNumber_error").innerHTML = "";
+                            }
+
+                            if (document.getElementById("CommunicationMobileNumber").value.length < 10) {
+                                document.getElementById("comm_mobileNumber_error").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
+                                return false;
+                            }
+                            else
+                            {
+                                document.getElementById("comm_mobileNumber_error").innerHTML = "";
+                            }
+
+                            if (document.getElementById("CommunicationMobileNumber").value.match(phoneno)) {
+                                document.getElementById("comm_mobileNumber_error").innerHTML = "";
+                            }
+                            else {
+                                document.getElementById("comm_mobileNumber_error").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
+                                return false;
+                            }
+                        }
+
+                        if (document.applicationForm.CommunicationEmail.value.trim() == "") {
+                            document.getElementById("comm_email_error").innerHTML = "Email field cannot be left blank";
+                            return (false);
+                        }
+                        else {
+                            if (document.applicationForm.CommunicationEmail.value.match(email)) {
+                                document.getElementById("comm_email_error").innerHTML = "";
+                                //return true
+                            }
+                            else {
+                                document.getElementById("comm_email_error").innerHTML = "Invalid email id (e.g.: abc@gmail.com)";
+                                return (false);
+                            }
+                        }
+                        var id = $('#CommunicationStateID').val();
+                        $('#PerOrRegAddressStateID')[0].sumo.selectItem($("#CommunicationStateID").val());
+
+                        $.ajax({
+                            type: 'POST',  // http method
+                            url: "GetDistrictDetails/Customer",
+                            data: { Stateid: id },  // data to submit
+                            dataType: "json",
+                            success: function (data, status, xhr) {
+                                var v = data;
+
+                                if (status == 'success') {
+                                    $("#PermanentDistrictId").html("");
+                                    $.each(data, function (i, data) { // bind the dropdown list using json result
+                                        $('<option>',
+                                            {
+                                                value: data.districtID,
+                                                text: data.districtName
+                                            }).html(data.districtName).appendTo("#PermanentDistrictId");
+                                    });
+                                    $("#PermanentDistrictId")[0].sumo.reload();
+                                    //$('#PermanentDistrictId')[0].sumo.selectItem($("#CommunicationDistrictId").val());
+                                    //document.getElementById('PermanentDistrictId').value = document.getElementById('CommunicationDistrictId').value;
+                                    setTimeout(function(){
+                                           $('#PermanentDistrictId')[0].sumo.selectItem($("#CommunicationDistrictId").val());
+                                       },500);
+                                }
+                                else {
+                                    console.log(v);
+                                }
+                            },
+                            error: function (jqXhr, textStatus, errorMessage) {
+                                alert("Error Populating District Data");
+                            }
+                        });
+
+                        $('#PerOrRegAddress1').val($('#CommunicationAddress1').val());
+                        $('#PerOrRegAddress2').val($('#CommunicationAddress2').val());
+                        $('#PerOrRegAddress3').val($('#CommunicationAddress3').val());
+                        $('#PerOrRegAddressLocation').val($('#CommunicationLocation').val());
+                        $('#PerOrRegAddressCity').val($('#CommunicationCity').val());
+                        //$('#PerOrRegAddressStateID').val($('#CommunicationStateID').val());
+                        $('#PerOrRegAddressPinCode').val($('#CommunicationPinCode').val());
+                        $('#PerOrRegAddressDialCode').val($('#CommunicationDialCode').val());
+                        $('#PerOrRegAddressPhoneNumber').val($('#CommunicationPhoneNo').val());
+                        $('#PermanentFax').val($('#CommunicationFax').val());
+                        $('#PerOrRegAddressDialCode').val($('#CommunicationDialCode').val());
+                        $('#PermanentFaxCode').val($('#CommunicationFaxCode').val());
+                        $("#perma_address1_error").html("");
+                        $("#perma_address2_error").html("");
+                        $("#perma_address3_error").html("");
+                        $("#perma_location_error").html("");
+                        $("#perma_city_error").html("");
+                        $("#perma_pincode_error").html("");
+                        $("#perma_state_error").html("");
+                        $("#perma_district_error").html("");
+                        $("#PerOrRegAddressDialCode_error").html("");
+                        $("#perma_officePhone_error").html("");
+                        $("#PermanentFaxCode_error").html("");
+                        $("#perma_faxNumber_error").html("");
+
+                        //var Distrid = $('#CommunicationDistrictId').val();
+                        //var DistrictName = $("#CommunicationDistrictId option:selected").text();
+
+                        //$('#PermanentDistrictId').val($('#CommunicationDistrictId').val());
+                        //$("#PerOrRegAddressStateID")[0].sumo.disable();
+                        //$("#PermanentDistrictId")[0].sumo.disable();
+                        if (document.getElementById("sameAddressCheck").checked == true) {
+                            permanent_add.querySelectorAll("input, select").forEach(function (i) {
+                                i.setAttribute("disabled", true);
+                            })
+                        }
+                        // sameas = true;
+
+                        //document.getElementById('PermanentDistrictId').value = document.getElementById('CommunicationDistrictId').value;
+                    }
+                    else {
+
+                        $('#PerOrRegAddress1').val('');
+                        $('#PerOrRegAddress2').val('');
+                        $('#PerOrRegAddress3').val('');
+                        $('#PerOrRegAddressLocation').val('');
+                        $('#PerOrRegAddressCity').val('');
+                        //$('#PerOrRegAddressStateID')[0].selectedIndex = 0;
+                        $("#PerOrRegAddressStateID")[0].sumo.selectItem(0);
+                        $('#PerOrRegAddressPinCode').val('');
+                        $('#PerOrRegAddressDialCode').val('');
+                        $('#PermanentFaxCode').val('');
+                        //$('#PermanentDistrictId')[0].selectedIndex = 0;
+                         $("#PermanentDistrictId")[0].sumo.selectItem(0);
+                        $('#PerOrRegAddressPhoneNumber').val('');
+                        $('#PermanentFax').val('');
+
+                        $("#PerOrRegAddressDistrict").html("");
+                        if (document.getElementById("sameAddressCheck").checked == false) {
+                            permanent_add.querySelectorAll("input, select").forEach(function (i) {
+                                i.removeAttribute("disabled", true);
+                            })
+                        }
+
+                        // sameas = false;
+                    }
+                }
+
+                $("#CustomerTbentityID").change(function () {
+                    var id = this.value;
+                    if (id != 0) {
+                        $("#incomeTaxPan_error").html("");
+                        $("#typeOfbusiness_error").html("");
+                    }
+
+                    document.getElementById("CustomerIncomeTaxPan").value = "";
+                    document.getElementById("incomeTaxPan_error").className = "error";
+
+                    if (id == 10) {
+                        $('#lblPanText').text('');
+                        $('#lblPanText').append('Govt. Dept. Identification Details<sup class="text-danger">*</sup>');
+                        $('#btnVerify').hide();
+                        $('#lblCustPOI').show();
+                        document.getElementById('IsDuplicatePanNo').value = "1";
+                        document.getElementById("CustomerIncomeTaxPan").maxLength = 30;
+                        document.getElementById("dvPan").className = "col-md-8 col-12";
+                    }
+                    else {
+                        $('#lblPanText').text('');
+                        $('#lblPanText').append('Income Tax PAN<sup class="text-danger">*</sup>');
+                        $('#btnVerify').show();
+                        $('#lblCustPOI').hide();
+                        document.getElementById("CustomerIncomeTaxPan").maxLength = 10;
+                        document.getElementById("dvPan").className = "col-md-6 col-12";
+                    }
+
+                    var panNumber = document.getElementById("CustomerIncomeTaxPan").value.trim();
+
+                    if (id == 10)
+                    {
+                        if (panNumber == "")
+                        {
+                            document.getElementById("incomeTaxPan_error").innerHTML = "Govt. Dept. Identification Details required";
+                            document.getElementById("incomeTaxPan_error").className = "error";
+                            return (false);
+                        }
+                        else
+                        {
+                            document.getElementById("incomeTaxPan_error").innerHTML = "";
+                        }
+                    }
+                    else
+                    {
+                        if (panNumber == "")
+                        {
+                            document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN field cannot be left blank";
+                            document.getElementById("incomeTaxPan_error").className = "error";
+                            return (false);
+                        }
+                        else
+                        {
+                            document.getElementById("incomeTaxPan_error").innerHTML = "";
+                        }
+                    }
+
+                });
+
+
+                $("#CommunicationEmail").on("blur", function () {
+                    //debugger;
+                    var communicationEmail = document.getElementById("CommunicationEmail").value.trim();
+                    if (communicationEmail == "") {
+                        document.getElementById("comm_email_error").innerHTML = "Email field cannot be left blank";
+                        return (false);
+                    }
+                    else {
+                        document.getElementById("comm_email_error").innerHTML = "";
+                    }
+
+                    if (communicationEmail.match(email)) {
+                        document.getElementById("comm_email_error").innerHTML = "";
+                    }
+                    else {
+                        document.getElementById("comm_email_error").innerHTML = "Invalid email id (e.g.: abc@gmail.com)";
+                        return (false);
+                    }
+
+                    var emailUsed = false;
+                    localStorage.setItem("EMAILIDALREADYUSED", "1");
+
+    @*$.ajax({
+        type: 'POST',  // http method
+        url: '@Url.Action("CheckEmailDuplication", "Customer")',
+        data: { Emailid: communicationEmail },  // data to submit
+        dataType: "json",
+        success: function (data, status, xhr) {
+        console.log(data);
+        console.log(status);
+        var v = data;
+        if (status == 'success') {
+
+        //if (data == "Failed to load Customer Details")
+        //    document.getElementById("RBEName").value = "";
+        //console.log('Test');
+        //console.log(data.status);
+        //console.log(data.reason);
+        if (data.status == "0") {
+        emailUsed = true;
+        document.getElementById("comm_email_error").innerHTML = "Email already exists";
+        localStorage.setItem("EMAILIDALREADYUSED", "0");
+        }
+        else {
+        emailUsed = false;
+        document.getElementById("comm_email_error").innerHTML = "";
+        }
+        }
+        else {
+        //console.log(v);
+        emailUsed = true;
+        }
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+        //document.getElementById("RBEName").value = "";
+        },
+        statusCode: {
+        1024: function () {
+        //document.getElementById("RBEName").value = "";
+        }
+        }
+        });*@
+
+                });
+
+                $("#CommunicationMobileNumber").on("blur", function () {
+                    //debugger;
+                    var communicationMobile = document.getElementById("CommunicationMobileNumber").value;
+                    if (communicationMobile == "") {
+                        document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile Number field cannot be left blank";
+                        return (false);
+                    }
+                    else {
+                        document.getElementById("comm_mobileNumber_error").innerHTML = "";
+                    }
+
+                    if (document.getElementById("CommunicationMobileNumber").value.substring(0, 1) == "0") {
+                        document.getElementById("comm_mobileNumber_error").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
+                        return false;
+                    }
+                    else {
+                        document.getElementById("comm_mobileNumber_error").innerHTML = "";
+                    }
+
+                    if (document.getElementById("CommunicationMobileNumber").value.length < 10) {
+                        document.getElementById("comm_mobileNumber_error").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
+                        return false;
+                    }
+                    else {
+                        document.getElementById("comm_mobileNumber_error").innerHTML = "";
+                    }
+
+                    if (document.getElementById("CommunicationMobileNumber").value.match(phoneno)) {
+                        document.getElementById("comm_mobileNumber_error").innerHTML = "";
+                    }
+                    else {
+                        document.getElementById("comm_mobileNumber_error").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
+                        return false;
+                    }
+
+                    var mobileNoUsed = false;
+                    localStorage.setItem("MOBILENUMBERREADYUSED", "1");
+
+    @*$.ajax({
+        type: 'POST',  // http method
+        url: '@Url.Action("CheckMobilNoDuplication", "Customer")',
+        data: { MobileNo: communicationMobile },  // data to submit
+        dataType: "json",
+        success: function (data, status, xhr) {
+        console.log(data);
+        console.log(status);
+        var v = data;
+        if (status == 'success') {
+
+        //if (data == "Failed to load Customer Details")
+        //    document.getElementById("RBEName").value = "";
+        //console.log('Test');
+        //console.log(data.status);
+        //console.log(data.reason);
+        if (data.status == "0") {
+        mobileNoUsed = true;
+        document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile Number already exists";
+        localStorage.setItem("MOBILENUMBERREADYUSED", "0");
+        }
+        else {
+        mobileNoUsed = false;
+        document.getElementById("comm_mobileNumber_error").innerHTML = "";
+        }
+        }
+        else {
+        //console.log(v);
+        mobileNoUsed = true;
+        }
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+        //document.getElementById("RBEName").value = "";
+        },
+        statusCode: {
+        1024: function () {
+        //document.getElementById("RBEName").value = "";
+        }
+        }
+        });*@
+
+                });
+
+                $("#CustomerIncomeTaxPan").focus(function()
+                {
+                    $("#btnshowregAddress").attr("disabled", true);
+                });
+
+               $("#CustomerIncomeTaxPan").on("blur", function () {
+                debugger;
+                var panNumber = document.getElementById("CustomerIncomeTaxPan").value.trim();
+                $("#btnshowregAddress").attr("disabled", true);
+
+                var customerTbentityid = $("#CustomerTbentityID").val();
+                localStorage.setItem("PANNOALREADYUSED", "1");
+                localStorage.setItem("DUPLICATEPANUSED", "1");
+
+                if (customerTbentityid == 10)
+                {
+                    document.getElementById("incomeTaxPan_error").innerHTML = "";
+                    document.getElementById("IsDuplicatePanNo").value = "1";
+                    $('#AllowPanDuplication').val('N');
+                    localStorage.setItem("IsDuplicatePanNo", "1");
+                    if (panNumber == "") {
+                        document.getElementById("incomeTaxPan_error").innerHTML = "Govt. Dept. Identification Details required";
+                        document.getElementById("incomeTaxPan_error").className = "error";
+                    }
+                    else
+                    {
+                        document.getElementById("incomeTaxPan_error").innerHTML = "";
+                    }
+                    $("#btnshowregAddress").attr("disabled", false);
+                    return (false);
+                }
+
+                if (panNumber == "")
+                {
+                    document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN field cannot be left blank";
+                    document.getElementById("incomeTaxPan_error").className = "error";
+                    $("#btnshowregAddress").attr("disabled", false);
+                    return (false);
+                }
+                else
+                {
+                    document.getElementById("incomeTaxPan_error").innerHTML = "";
+                }
+
+                document.getElementById("CustomerIncomeTaxPan").value = document.getElementById("CustomerIncomeTaxPan").value.trim().toUpperCase();
+                panNumber = document.getElementById("CustomerIncomeTaxPan").value.trim();
+
+                if ($('#CustomerIncomeTaxPan').val().match(pancard))
+                {
+                    document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN Number is valid";
+                    document.getElementById("incomeTaxPan_error").className = "error text-success";
+                }
+                else
+                {
+                    document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
+                    document.getElementById("incomeTaxPan_error").className = "error";
+                    $("#btnshowregAddress").attr("disabled", false);
+                    return (false);
+                }
+
+                //solo Propritorship 4th Char Pan should be 'P'--> 2
+                //Public/Private Ltd Co 4th Char Pan should be 'C' --> 3
+                //HUF (Hindu Undivided Family) 4th Char Pan should be 'H'--> 4
+                //A stands for Association of Persons (AOP)—(Trust Foundation) 4th Char Pan should be 'A'-->8
+                if (customerTbentityid !=10)
+                {
+                    let forthdigitPan = panNumber.substr(3, 1);
+                    console.log(forthdigitPan);
+                    if (customerTbentityid == 2 && forthdigitPan != 'P')
+                    {
+                        document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
+                        document.getElementById("incomeTaxPan_error").className = "error";
+                        $("#btnshowregAddress").attr("disabled", false);
+                        $('#PANErrorMsg').modal('show');
+                        return (false);
+                    }
+                    else if (customerTbentityid == 3 && forthdigitPan != 'C')
+                    {
+                        document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
+                        document.getElementById("incomeTaxPan_error").className = "error";
+                        $("#btnshowregAddress").attr("disabled", false);
+                        $('#PANErrorMsg').modal('show');
+                        return (false);
+                    }
+                    else if (customerTbentityid == 4 && forthdigitPan != 'H')
+                    {
+                        document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
+                        document.getElementById("incomeTaxPan_error").className = "error";
+                        $("#btnshowregAddress").attr("disabled", false);
+                        $('#PANErrorMsg').modal('show');
+                        return (false);
+                    }
+                    else if (customerTbentityid == 8 && forthdigitPan != 'A')
+                    {
+                        document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
+                        document.getElementById("incomeTaxPan_error").className = "error";
+                        $("#btnshowregAddress").attr("disabled", false);
+                        $('#PANErrorMsg').modal('show');
+                        return (false);
+                    }
+                    else if ((customerTbentityid == 1 || customerTbentityid == 5 || customerTbentityid == 6 || customerTbentityid == 7 || customerTbentityid == 9) && (forthdigitPan == 'A' || forthdigitPan == 'P'|| forthdigitPan == 'C'|| forthdigitPan == 'H'))
+                        {
+                            document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
+                            document.getElementById("incomeTaxPan_error").className = "error";
+                            $("#btnshowregAddress").attr("disabled", false);
+                            $('#PANErrorMsg').modal('show');
+                            return (false);
+                        }
+                    else
+                    {
+                        document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN Number is valid";
+                        document.getElementById("incomeTaxPan_error").className = "error text-success";
+                    }
+                }
+
+                var panNumberUsed = false;
+
+
+                var districtId = $("#CommunicationDistrictId").val();
+                var customerReferenceNo = $("#CustomerReferenceNo").val();
+
+                var externalPANAPIStatus="Y";
+
+                externalPANAPIStatus = document.getElementById("ExternalPANAPIStatus").value.trim();
+
+                console.log(externalPANAPIStatus);
+                var customerReferenceNo = $("#CustomerReferenceNo").val();
+
+        if(externalPANAPIStatus=="Y")
+        {
+
+              $.ajax({
+                type: 'POST',  // http method
+                url: '@Url.Action("PANValidation", "Customer")',
+                data: { PANNumber: panNumber },  // data to submit
+                dataType: "json",
+                success: function (data, status, xhr) {
+                    //debugger;
+                    var jsonData = JSON.parse(data);
+                    console.log(jsonData);
+                    if (status == 'success' && jsonData['status-code'] == '101')
+                    {
+                        //document.applicationForm.IndividualOrgName.value = jsonData["result"]["name"];
+                        correctPANName = jsonData["result"]["name"];
+
+                        document.getElementById("incomeTaxPan_error").innerHTML = "";
+                        document.getElementById("incomeTaxPan_error").className = "error text-success";
+
+                        console.log(correctPANName);
+                        console.log(OrgName);
+                        if (correctPANName.toUpperCase() != OrgName.toUpperCase())
+                        {
+                            document.getElementById("incomeTaxPan_error").innerHTML = "Individual name not match with pan name";
+                            document.getElementById("incomeTaxPan_error").className = "error";
+                            localStorage.setItem("PANNAMEMATCHING", "0");
+                        }
+                        else
+                        {
+                            document.getElementById("incomeTaxPan_error").innerHTML = "";
+                            document.getElementById("incomeTaxPan_error").className = "error text-success";
+
+
+                            if (districtId != 0 && customerTbentityid != "10")
+                            {
+
+                                $.ajax({
+                                    type: 'POST',  // http method
+                                    url: '@Url.Action("CheckPanCardDuplicationByDistrictidForCustomerUpdate", "Customer")',
+                                    data: { DistrictId: districtId, IncomeTaxPan: panNumber, CustomerReferenceNo: customerReferenceNo},
+                                    dataType: "json",
+                                    success: function (data, status, xhr)
+                                    {
+                                        console.log(data);
+                                        console.log(status);
+                                        var v = data;
+                                        if (status == 'success') {
+
+                                            console.log('Test');
+                                            console.log(data);
+                                            console.log(data.status);
+                                            console.log(data.reason);
+                                            if (data.status == "0") {
+                                                //document.getElementById("comm_district_error").innerHTML = "Pan Number already exists";
+                                                localStorage.setItem("DUPLICATEPANUSED", "0");
+                                                document.getElementById('IsDuplicatePanNo').value = "0";
+                                                document.getElementById("lblPanCardRemarks").style.display = "block";
+                                                document.getElementById("PanCardRemarks").style.display = "block";
+                                                $("#PanCardRemarks").prop('readonly', false);
+                                            }
+                                            else {
+                                                localStorage.setItem("DUPLICATEPANUSED", "1");
+                                                document.getElementById('IsDuplicatePanNo').value = "1";
+                                                document.getElementById("comm_district_error").innerHTML = "";
+                                                document.getElementById("lblPanCardRemarks").style.display = "none";
+                                                document.getElementById("PanCardRemarks").style.display = "none";
+                                                document.getElementById("PanCardRemarks").value = "";
+                                                document.getElementById("PanCardRemarks_error").innerHTML ="";
+                                                $("#PanCardRemarks").prop('readonly', true);
+                                            }
+                                        }
+                                        else {
+                                            document.getElementById("lblPanCardRemarks").style.display = "none";
+                                            document.getElementById("PanCardRemarks").style.display = "none";
+                                            document.getElementById("PanCardRemarks").value = "";
+                                            document.getElementById("PanCardRemarks_error").innerHTML ="";
+                                            $("#PanCardRemarks").prop('readonly', true);
+                                        }
+                                    },
+                                    error: function (xhr, ajaxOptions, thrownError)
+                                    {
+                                        document.getElementById("lblPanCardRemarks").style.display = "none";
+                                        document.getElementById("PanCardRemarks").style.display = "none";
+                                        document.getElementById("PanCardRemarks").value = "";
+                                        document.getElementById("PanCardRemarks_error").innerHTML ="";
+                                        $("#PanCardRemarks").prop('readonly', true);
+                                    }
+                                });
+                            }
+                            else
+                            {
+                                document.getElementById("lblPanCardRemarks").style.display = "none";
+                                document.getElementById("PanCardRemarks").style.display = "none";
+                                document.getElementById("PanCardRemarks").value = "";
+                                document.getElementById("PanCardRemarks_error").innerHTML ="";
+                                $("#PanCardRemarks").prop('readonly', true);
+                            }
+
+
+
+                        }
+
+                    }
+                    else
+                    {
+                        document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
+                        document.getElementById("incomeTaxPan_error").className = "error";
+                        localStorage.setItem("INVALIDPAN", "0");
+                        console.log('Not Success');
+                    }
+                },
+                error: function (jqXhr, textStatus, errorMessage)
+                {
+                    document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
+                    console.log(jsonData['status-code']);
+                    document.getElementById("incomeTaxPan_error").className = "error";
+                }
+            });
+
+        }
+        else
+        {
+                localStorage.setItem("INVALIDPAN", "1");
+                localStorage.setItem("PANNAMEMATCHING", "1");
+
+                if (districtId != 0 && customerTbentityid != "10")
+                {
+
+                    $.ajax({
+                        type: 'POST',  // http method
+                        url: '@Url.Action("CheckPanCardDuplicationByDistrictidForCustomerUpdate", "Customer")',
+                        data: { DistrictId: districtId, IncomeTaxPan: panNumber, CustomerReferenceNo: customerReferenceNo },
+                        dataType: "json",
+                        success: function (data, status, xhr) {
+                            console.log(data);
+                            console.log(status);
+                            var v = data;
+                            if (status == 'success')
+                            {
+                                console.log('Test');
+                                console.log(data);
+                                console.log(data.status);
+                                console.log(data.reason);
+                                if (data.status == "0")
+                                {
+                                    //document.getElementById("comm_district_error").innerHTML = "Pan Number already exists";
+                                    localStorage.setItem("DUPLICATEPANUSED", "0");
+                                    document.getElementById('IsDuplicatePanNo').value = "0";
+                                    document.getElementById("lblPanCardRemarks").style.display = "block";
+                                    document.getElementById("PanCardRemarks").style.display = "block";
+                                    $("#PanCardRemarks").prop('readonly', false);
+                                }
+                                else
+                                {
+                                    localStorage.setItem("DUPLICATEPANUSED", "1");
+                                    document.getElementById('IsDuplicatePanNo').value = "1";
+                                    document.getElementById("comm_district_error").innerHTML = "";
+                                    document.getElementById("lblPanCardRemarks").style.display = "none";
+                                    document.getElementById("PanCardRemarks").style.display = "none";
+                                    document.getElementById("PanCardRemarks").value = "";
+                                    $("#PanCardRemarks").prop('readonly', true);
+                                    document.getElementById("PanCardRemarks_error").innerHTML ="";
+                                }
+                            }
+                            else
+                            {
+                                document.getElementById("lblPanCardRemarks").style.display = "none";
+                                document.getElementById("PanCardRemarks").style.display = "none";
+                                document.getElementById("PanCardRemarks").value = "";
+                                $("#PanCardRemarks").prop('readonly', true);
+                                document.getElementById("PanCardRemarks_error").innerHTML ="";
+                            }
+                        },
+                        error: function (xhr, ajaxOptions, thrownError)
+                        {
+                            document.getElementById("lblPanCardRemarks").style.display = "none";
+                            document.getElementById("PanCardRemarks").style.display = "none";
+                            document.getElementById("PanCardRemarks").value = "";
+                            $("#PanCardRemarks").prop('readonly', true);
+                            document.getElementById("PanCardRemarks_error").innerHTML ="";
+                        }
+                    });
+
+                }
+
+        }
+
+                $("#btnshowregAddress").attr("disabled", false);
+
+                });
+
+                $("#CustomerIncomeTaxPan").keydown(function (e) {
+                    var k = e.keyCode || e.which;
+                    var ok = k >= 65 && k <= 90 || // A-Z
+                        k >= 96 && k <= 105 || // a-z
+                        k >= 35 && k <= 40 || // arrows
+                        k == 9 || //tab
+                        k == 46 || //del
+                        k == 8 || // backspaces
+                        (!e.shiftKey && k >= 48 && k <= 57); // only 0-9 (ignore SHIFT options)
+
+                    if (!ok || (e.ctrlKey && e.altKey)) {
+                        e.preventDefault();
+                    }
+                });
+
+                $("#CommunicationPinCode").on("blur", function () {
+                    //debugger;
+                    if (document.getElementById("CommunicationPinCode").value == "") {
+                        document.getElementById("comm_pincode_error").innerHTML = "Pin code field cannot be left blank";
+                        return (false);
+                    }
+                    else {
+                        document.getElementById("comm_pincode_error").innerHTML = "";
+                    }
+
+                    if (document.getElementById("CommunicationPinCode").value.substring(0, 1) == "0") {
+                        document.getElementById("comm_pincode_error").innerHTML = "Invalid Pin code. Min-Max 6 digits";
+                        return false;
+                    }
+                    else {
+                         document.getElementById("comm_pincode_error").innerHTML = "";
+                    }
+
+                    if (document.getElementById("CommunicationPinCode").value.length < 6) {
+                        document.getElementById("comm_pincode_error").innerHTML = "Invalid Pin code. Min-Max 6 digits";
+                        return false;
+                    }
+                    else {
+                         document.getElementById("comm_pincode_error").innerHTML = "";
+                    }
+
+                    if (document.applicationForm.CommunicationPinCode.value.match(pincode)) {
+                        document.getElementById("comm_pincode_error").innerHTML = "";
+                    }
+                    else {
+                        document.getElementById("comm_pincode_error").innerHTML = "Invalid Pin Code. Min-Max 6 digits";
+                        return false;
+                    }
+                });
+
+                $("#PerOrRegAddressPinCode").on("blur", function () {
+                    //debugger;
+                    if (document.getElementById("PerOrRegAddressPinCode").value == "") {
+                        document.getElementById("perma_pincode_error").innerHTML = "Pin code field cannot be left blank";
+                        return (false);
+                    }
+                    else {
+                        document.getElementById("perma_pincode_error").innerHTML = "";
+                    }
+
+                    if (document.getElementById("PerOrRegAddressPinCode").value.substring(0, 1) == "0") {
+                        document.getElementById("perma_pincode_error").innerHTML = "Invalid Pin code. Min-Max 6 digits";
+                        return false;
+                    }
+                    else {
+                        document.getElementById("perma_pincode_error").innerHTML = "";
+                    }
+
+                    if (document.getElementById("PerOrRegAddressPinCode").value.length < 6) {
+                        document.getElementById("perma_pincode_error").innerHTML = "Pin code length must be 6 digit";
+                        return false;
+                    }
+                    else {
+                        document.getElementById("perma_pincode_error").innerHTML = "";
+                    }
+
+                    if (document.getElementById("PerOrRegAddressPinCode").value.match(pincode)) {
+                        document.getElementById("perma_pincode_error").innerHTML = "";
+                    }
+                    else {
+                        document.getElementById("perma_pincode_error").innerHTML = "Invalid Pin Code. Min-Max 6 digits";
+                        return false;
+                    }
+
+                });
+
+                $("#KeyOffMobileNumber").on("blur", function () {
+                    //debugger;
+                    var OffMobileNumber = document.getElementById("KeyOffMobileNumber").value;
+                    if (OffMobileNumber == "") {
+                        document.getElementById("official_mobile_error").innerHTML = "Mobile Number field cannot be left blank";
+                        return (false);
+                    }
+                    else {
+                        document.getElementById("official_mobile_error").innerHTML = "";
+                    }
+
+                    if (document.getElementById("KeyOffMobileNumber").value.substring(0, 1) == "0") {
+                        document.getElementById("official_mobile_error").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
+                        return false;
+                    }
+                    else {
+                        document.getElementById("official_mobile_error").innerHTML = "";
+                    }
+
+                    if (document.getElementById("KeyOffMobileNumber").value.length < 10) {
+                        document.getElementById("official_mobile_error").innerHTML = "Mobile Number length must be 10 digit";
+                        return false;
+                    }
+                    else {
+                        document.getElementById("official_mobile_error").innerHTML = "";
+                    }
+
+                    if (document.getElementById("KeyOffMobileNumber").value.match(phoneno)) {
+                        document.getElementById("official_mobile_error").innerHTML = "";
+                    }
+                    else {
+                        document.getElementById("official_mobile_error").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
+                        return false;
+                    }
+                });
+
+                $("#KeyOffEmail").on("blur", function () {
+                    //debugger;
+                    var OffEmail = document.getElementById("KeyOffEmail").value.trim();
+
+                    if (OffEmail != "") {
+
+                        if (OffEmail.match(email)) {
+                            document.getElementById("KeyOffEmail_error").innerHTML = "";
+                            //return true
+                        }
+                        else {
+                            document.getElementById("KeyOffEmail_error").innerHTML = "Invalid email id (e.g.: abc@gmail.com)";
+                            return (false);
+                        }
+                    }
+                });
+
+                $("#CustomerDateOfApplication").on("change", function () {
+
+                    var selectedDate = document.getElementById("CustomerDateOfApplication").value.trim();
+
+                    if (selectedDate == "") {
+                       document.getElementById("applicationDate_error").innerHTML = "Application date field cannot be left blank";
+                    }
+                    else {
+                        document.getElementById("applicationDate_error").innerHTML = "";
+                    }
+
+                });
+
+                $("#CommunicationDistrictId").change(function () {
+                    debugger;
+                    localStorage.setItem("DUPLICATEPANUSED", "1");
+                    var id = this.value;
+                    if (id != 0) {
+                        $("#comm_district_error").html("");
+                    }
+                    var panno = $('#CustomerIncomeTaxPan').val().trim();
+                    var customerTbentityID = $('#CustomerTbentityID').val();
+
+                    document.getElementById('IsDuplicatePanNo').value = "1";
+                    document.getElementById('AllowPanDuplication').value = "N";
+                    var customerReferenceNo = $("#CustomerReferenceNo").val();
+
+                    if (id != 0 && customerTbentityID != "10") {
+
+                        $.ajax({
+                            type: 'POST',  // http method
+                            url: '@Url.Action("CheckPanCardDuplicationByDistrictidForCustomerUpdate", "Customer")',
+                            data: { DistrictId: id, IncomeTaxPan: panno, CustomerReferenceNo: customerReferenceNo},  // data to submit
+                            dataType: "json",
+                            success: function (data, status, xhr) {
+                                console.log(data);
+                                console.log(status);
+                                var v = data;
+                                if (status == 'success') {
+
+                                    console.log('Test');
+                                    console.log(data);
+                                    console.log(data.status);
+                                    console.log(data.reason);
+                                    if (data.status == "0") {
+                                        //document.getElementById("comm_district_error").innerHTML = "Pan Number already exists";
+                                        localStorage.setItem("DUPLICATEPANUSED", "0");
+                                        document.getElementById('IsDuplicatePanNo').value = "0";
+                                    }
+                                    else {
+                                        localStorage.setItem("DUPLICATEPANUSED", "1");
+                                        document.getElementById('IsDuplicatePanNo').value = "1";
+                                        document.getElementById("comm_district_error").innerHTML = "";
+                                    }
+                                }
+                                else {
+                                    //console.log(v);
+                                }
+                            },
+                            error: function (xhr, ajaxOptions, thrownError) {
+                            },
+                            statusCode: {
+                                1024: function () {
+                                }
+                            }
+                        });
+                    }
+
+                });
+
+                $("#IndividualOrgName").on("blur", function () {
+                    //debugger;
+                    var individualOrgName = document.getElementById("IndividualOrgName").value.trim();
+                    if (individualOrgName == "") {
+                        document.getElementById("individualName_error").innerHTML = "Individual/Org. Name is required";
+                        return (false);
+                    }
+                    else {
+                        document.getElementById("individualName_error").innerHTML = "";
+                    }
+
+                    if (!isNaN(document.getElementById("IndividualOrgName").value.trim())) {
+                        document.getElementById("individualName_error").innerHTML = "Invalid Individual/Org. Name";
+                        return false;
+                    }
+                    else {
+                        document.getElementById("individualName_error").innerHTML = "";
+                    }
+
+                    if (!document.getElementById("IndividualOrgName").value.match(nameWithSpaceCheck)) {
+                        document.getElementById("individualName_error").innerHTML = "Invalid Individual/Org. Name";
+                        return false;
+                    }
+                    else {
+                        document.getElementById("individualName_error").innerHTML = "";
+                    }
+                });
+
+                $("#CustomerNameOnCard").on("blur", function () {
+                    //debugger;
+                    var customerNameOnCard = document.getElementById("CustomerNameOnCard").value.trim();
+                    if (customerNameOnCard == "") {
+                        document.getElementById("nameOnCard_error").innerHTML = "Name on Card field cannot be left blank";
+                        return (false);
+                    }
+                    else {
+                        document.getElementById("nameOnCard_error").innerHTML = "";
+                    }
+
+                    if (!isNaN(document.getElementById("CustomerNameOnCard").value.trim())) {
+                        document.getElementById("nameOnCard_error").innerHTML = "Invalid Name on Card";
+                        return false;
+                    }
+                    else {
+                        document.getElementById("nameOnCard_error").innerHTML = "";
+                    }
+
+                    if (!document.getElementById("CustomerNameOnCard").value.match(nameWithSpaceCheck)) {
+                        document.getElementById("nameOnCard_error").innerHTML = "Invalid Name on Card";
+                        return false;
+                    }
+                    else {
+                        document.getElementById("nameOnCard_error").innerHTML = "";
+                    }
+                });
+
+                $("#CustomerSubTypeID").change(function () {
+                    var id = this.value;
+
+                    if (id != 0) {
+                        $("#customerSubType_error").html("");
+                    }
+                });
+
+                $("#CustomerSubTypeID").change(function () {
+                    var id = this.value;
+
+                    if (id != 0) {
+                        $("#customerSubType_error").html("");
+                    }
+                });
+
+                $("#CustomerSalesAreaID").change(function () {
+                    var id = this.value;
+
+                    if (id != 0) {
+                        $("#salesArea_error").html("");
+                    }
+                });
+
+
+
+                $("#CustomerResidenceStatus").change(function () {
+                    var id = this.value;
+
+                    if (id != -1) {
+                        $("#residenceStatus_error").html("");
+                    }
+                });
+
+                $("#IndividualOrgNameTitle").change(function () {
+                    var id = this.value;
+
+                    if (id != -1) {
+                        $("#salutaion_error").html("");
+                    }
+                });
+
+                $("#PermanentDistrictId").change(function () {
+                    var id = this.value;
+
+                    if (id != 0) {
+                        $("#perma_district_error").html("");
+                    }
+                });
+
+                $("#KeyOffTitle").change(function () {
+                    var id = this.value;
+
+                    if (id != -1) {
+                        $("#officialTitle_error").html("");
+                    }
+                });
+
+                $("#CommunicationAddress1").on("blur", function () {
+                    //debugger;
+                    if (document.getElementById("CommunicationAddress1").value.trim() == "")
+                    {
+                        document.getElementById("comm_address1_error").innerHTML = "Address field cannot be left blank";
+                        return (false);
+                    }
+                    else
+                    {
+                        if (!isNaN(document.getElementById("CommunicationAddress1").value.trim()))
+                        {
+                            document.getElementById("comm_address1_error").innerHTML = "Invalid Address";
+                            return false;
+                        }
+                        else
+                        {
+                            document.getElementById("comm_address1_error").innerHTML = "";
+                        }
+                        if (!document.getElementById("CommunicationAddress1").value.match(atLeastOneAlphabet))
+                        {
+                            document.getElementById("comm_address1_error").innerHTML = "Invalid Address";
+                            return false;
+                        }
+                        else
+                        {
+                            document.getElementById("comm_address1_error").innerHTML = "";
+                        }
+                    }
+                });
+
+                $("#CommunicationAddress2").on("blur", function () {
+                    //debugger;
+                    if (document.getElementById("CommunicationAddress2").value.trim() == "")
+                    {
+                        document.getElementById("comm_address2_error").innerHTML = "Address field cannot be left blank";
+                        return (false);
+                    }
+                    else
+                    {
+                        if (!isNaN(document.getElementById("CommunicationAddress2").value.trim()))
+                        {
+                            document.getElementById("comm_address2_error").innerHTML = "Invalid Address";
+                            return false;
+                        }
+                        else
+                        {
+                            document.getElementById("comm_address2_error").innerHTML = "";
+                        }
+                        if (!document.getElementById("CommunicationAddress2").value.match(atLeastOneAlphabet))
+                        {
+                            document.getElementById("comm_address2_error").innerHTML = "Invalid Address";
+                            return false;
+                        }
+                        else
+                        {
+                            document.getElementById("comm_address2_error").innerHTML = "";
+                        }
+                    }
+                });
+
+                $("#CommunicationAddress3").on("blur", function () {
+                    //debugger;
+                    if (document.getElementById("CommunicationAddress3").value.trim() != "")
+                    {
+                        if (!isNaN(document.getElementById("CommunicationAddress3").value.trim())) {
+                            document.getElementById("comm_address3_error").innerHTML = "Invalid Address";
+                            return false;
+                        }
+                        else
+                        {
+                            document.getElementById("comm_address3_error").innerHTML = "";
+                        }
+                        if (!document.getElementById("CommunicationAddress3").value.match(atLeastOneAlphabet))
+                        {
+                            document.getElementById("comm_address3_error").innerHTML = "Invalid Address";
+                            return false;
+                        }
+                        else
+                        {
+                            document.getElementById("comm_address3_error").innerHTML = "";
+                        }
+                    }
+                    else
+                    {
+                        document.getElementById("comm_address3_error").innerHTML = "";
+                    }
+                });
+
+                $("#CommunicationCity").on("blur", function () {
+                    //debugger;
+                    if (document.getElementById("CommunicationCity").value.trim() == "")
+                    {
+                        document.getElementById("comm_city_error").innerHTML = "City field cannot be left blank";
+                        return (false);
+                    }
+                    else {
+                        if (!isNaN(document.getElementById("CommunicationCity").value.trim()))
+                        {
+                            document.getElementById("comm_city_error").innerHTML = "Invalid City";
+                            return false;
+                        }
+                        else
+                        {
+                            document.getElementById("comm_city_error").innerHTML = "";
+                        }
+                        if (!document.getElementById("CommunicationCity").value.match(atLeastOneAlphabet))
+                        {
+                            document.getElementById("comm_city_error").innerHTML = "Invalid City";
+                            return false;
+                        }
+                        else
+                        {
+                            document.getElementById("comm_city_error").innerHTML = "";
+                        }
+                    }
+                });
+
+                $("#PerOrRegAddress1").on("blur", function () {
+                    //debugger;
+                    if (document.getElementById("PerOrRegAddress1").value.trim() == "")
+                    {
+                        document.getElementById("perma_address1_error").innerHTML = "Address field cannot be left blank";
+                        return (false);
+                    }
+                    else
+                    {
+                        if (!isNaN(document.getElementById("PerOrRegAddress1").value.trim()))
+                        {
+                            document.getElementById("perma_address1_error").innerHTML = "Invalid Address";
+                            return false;
+                        }
+                        else
+                        {
+                            document.getElementById("perma_address1_error").innerHTML = "";
+                        }
+                        if (!document.getElementById("PerOrRegAddress1").value.match(atLeastOneAlphabet))
+                        {
+                            document.getElementById("perma_address1_error").innerHTML = "Invalid Address";
+                            return false;
+                        }
+                        else {
+                            document.getElementById("perma_address1_error").innerHTML = "";
+                        }
+                    }
+                });
+
+                $("#PerOrRegAddress2").on("blur", function () {
+                    //debugger;
+                    if (document.getElementById("PerOrRegAddress2").value.trim() == "")
+                    {
+                        document.getElementById("perma_address2_error").innerHTML = "Address field cannot be left blank";
+                        return (false);
+                    }
+                    else
+                    {
+                        if (!isNaN(document.getElementById("PerOrRegAddress2").value.trim()))
+                        {
+                            document.getElementById("perma_address2_error").innerHTML = "Invalid Address";
+                            return false;
+                        }
+                        else
+                        {
+                            document.getElementById("perma_address2_error").innerHTML = "";
+                        }
+
+                        if (!document.getElementById("PerOrRegAddress2").value.match(atLeastOneAlphabet))
+                        {
+                            document.getElementById("perma_address2_error").innerHTML = "Invalid Address";
+                            return false;
+                        }
+                        else
+                        {
+                            document.getElementById("perma_address2_error").innerHTML = "";
+                        }
+                    }
+                });
+
+                $("#PerOrRegAddress3").on("blur", function () {
+                    //debugger;
+                    if (document.getElementById("PerOrRegAddress3").value.trim() != "")
+                    {
+                        if (!isNaN(document.getElementById("PerOrRegAddress3").value.trim()))
+                        {
+                            document.getElementById("perma_address3_error").innerHTML = "Invalid Address";
+                            return false;
+                        }
+                        else
+                        {
+                            document.getElementById("perma_address3_error").innerHTML = "";
+                        }
+
+                        if (!document.getElementById("PerOrRegAddress3").value.match(atLeastOneAlphabet))
+                        {
+                            document.getElementById("perma_address3_error").innerHTML = "Invalid Address";
+                            return false;
+                        }
+                        else
+                        {
+                            document.getElementById("perma_address3_error").innerHTML = "";
+                        }
+                    }
+                    else
+                    {
+                        document.getElementById("perma_address3_error").innerHTML = "";
+                    }
+
+                });
+
+                $("#PerOrRegAddressCity").on("blur", function () {
+                    //debugger;
+                    if (document.getElementById("PerOrRegAddressCity").value.trim() == "")
+                    {
+                        document.getElementById("perma_city_error").innerHTML = "City field cannot be left blank";
+                        return (false);
+                    }
+                    else
+                    {
+                        if (!isNaN(document.getElementById("PerOrRegAddressCity").value.trim()))
+                        {
+                            document.getElementById("perma_city_error").innerHTML = "Invalid City";
+                            return false;
+                        }
+                        else
+                        {
+                            document.getElementById("perma_city_error").innerHTML = "";
+                        }
+
+                        if (!document.getElementById("PerOrRegAddressCity").value.match(atLeastOneAlphabet))
+                        {
+                            document.getElementById("perma_city_error").innerHTML = "Invalid City";
+                            return false;
+                        }
+                        else
+                        {
+                            document.getElementById("perma_city_error").innerHTML = "";
+                        }
+                    }
+                });
+
+                $("#CommunicationLocation").on("blur", function () {
+                    //debugger;
+                    if (document.getElementById("CommunicationLocation").value.trim() != "")
+                    {
+                        if (!isNaN(document.getElementById("CommunicationLocation").value.trim()))
+                        {
+                            document.getElementById("comm_location_error").innerHTML = "Invalid Location";
+                            return false;
+                        }
+                        else
+                        {
+                            document.getElementById("comm_location_error").innerHTML = "";
+                        }
+
+                        if (!document.getElementById("CommunicationLocation").value.match(atLeastOneAlphabet))
+                        {
+                            document.getElementById("comm_location_error").innerHTML = "Invalid Location";
+                            return false;
+                        }
+                        else
+                        {
+                            document.getElementById("comm_location_error").innerHTML = "";
+                        }
+                    }
+                    else
+                    {
+                        document.getElementById("comm_location_error").innerHTML = "";
+                    }
+                });
+
+                $("#PerOrRegAddressLocation").on("blur", function () {
+                    //debugger;
+                    if (document.getElementById("PerOrRegAddressLocation").value.trim() != "")
+                    {
+                        if (!isNaN(document.getElementById("PerOrRegAddressLocation").value.trim()))
+                        {
+                            document.getElementById("perma_location_error").innerHTML = "Invalid Location";
+                            return false;
+                        }
+                        else
+                        {
+                            document.getElementById("perma_location_error").innerHTML = "";
+                        }
+
+                        if (!document.getElementById("PerOrRegAddressLocation").value.match(atLeastOneAlphabet))
+                        {
+                            document.getElementById("perma_location_error").innerHTML = "Invalid Location";
+                            return false;
+                        }
+                        else
+                        {
+                            document.getElementById("perma_location_error").innerHTML = "";
+                        }
+                    }
+                    else
+                    {
+                        document.getElementById("perma_location_error").innerHTML = "";
+                    }
+                });
+
+                $("#KeyOffFirstName").on("blur", function () {
+                    //debugger;
+                    if (document.getElementById("KeyOffFirstName").value.trim() == "") {
+                        document.getElementById("official_fName_error").innerHTML = "First Name is required";
+                        return (false);
+                    }
+                    else
+                    {
+                        if (!isNaN(document.getElementById("KeyOffFirstName").value.trim()))
+                        {
+                            document.getElementById("official_fName_error").innerHTML = "Invalid First Name";
+                            return false;
+                        }
+                        else
+                        {
+                            document.getElementById("official_fName_error").innerHTML = "";
+                        }
+
+                        if (!document.getElementById("KeyOffFirstName").value.match(nameWithSpaceCheck)) {
+                            document.getElementById("official_fName_error").innerHTML = "Invalid First Name";
+                            return false;
+                        }
+                        else {
+                            document.getElementById("official_fName_error").innerHTML = "";
+                        }
+                    }
+
+                });
+
+                $("#KeyOffDesignation").on("blur", function () {
+                    //debugger;
+                    var designation = document.getElementById("KeyOffDesignation").value.trim();
+                    if (designation == "") {
+                        document.getElementById("official_designation_error").innerHTML = "Designation field cannot be left blank";
+                        return (false);
+                    }
+                    else
+                    {
+                        if (!isNaN(document.getElementById("KeyOffDesignation").value.trim()))
+                        {
+                            document.getElementById("official_designation_error").innerHTML = "Invalid Designation";
+                            return false;
+                        }
+                        else
+                        {
+                            document.getElementById("official_designation_error").innerHTML = "";
+                        }
+
+                        if (!document.getElementById("KeyOffDesignation").value.match(nameWithSpaceCheck))
+                        {
+                            document.getElementById("official_designation_error").innerHTML = "Invalid Designation";
+                            return false;
+                        }
+                        else
+                        {
+                            document.getElementById("official_designation_error").innerHTML = "";
+                        }
+                    }
+
+                });
+
+                //$("#KeyOfficialDOB").on("change", function () {
+                //    //debugger;
+                //    var selectedDate = document.getElementById("KeyOfficialDOB").value.trim();
+                //    console.log(selectedDate);
+
+                //    if (selectedDate != "") {
+                //        var today = new Date();
+                //        today.setHours(0, 0, 0, 0);
+
+                //        const myArray = document.getElementById("KeyOfficialDOB").value.split("-");
+
+                //        var varDate = new Date(myArray[2], (myArray[1] - 1), myArray[0], 0, 0, 0, 0);
+                //        console.log(today);
+                //        console.log(varDate);
+                //        if (varDate > today) {
+                //            document.getElementById("KeyOfficialDOB_error").innerHTML = "Date of Birth cannot be a future date";
+                //            setDOB();
+                //        }
+                //        else {
+                //            document.getElementById("KeyOfficialDOB_error").innerHTML = "";
+                //        }
+                //    }
+
+                //});
+
+                $("#KeyOffLastName").on("blur", function () {
+                    //debugger;
+                    if (document.getElementById("KeyOffLastName").value.trim() != "")
+                    {
+                        if (!isNaN(document.getElementById("KeyOffLastName").value.trim()))
+                        {
+                            document.getElementById("KeyOffLastName_error").innerHTML = "Invalid Last Name";
+                            return false;
+                        }
+                        else
+                        {
+                            document.getElementById("KeyOffLastName_error").innerHTML = "";
+                        }
+
+                        if (!document.getElementById("KeyOffLastName").value.match(nameWithSpaceCheck))
+                        {
+                            document.getElementById("KeyOffLastName_error").innerHTML = "Invalid Last Name";
+                            return false;
+                        }
+                        else
+                        {
+                            document.getElementById("KeyOffLastName_error").innerHTML = "";
+                        }
+                    }
+                    else
+                    {
+                        document.getElementById("KeyOffLastName_error").innerHTML = "";
+                    }
+
+                });
+
+                $("#KeyOffMiddleName").on("blur", function () {
+                    //debugger;
+                    if (document.getElementById("KeyOffMiddleName").value.trim() != "")
+                    {
+                        if (!isNaN(document.getElementById("KeyOffMiddleName").value.trim()))
+                        {
+                            document.getElementById("KeyOffMiddleName_error").innerHTML = "Invalid Middle Name";
+                            return false;
+                        }
+                        else
+                        {
+                            document.getElementById("KeyOffMiddleName_error").innerHTML = "";
+                        }
+
+                        if (!document.getElementById("KeyOffMiddleName").value.match(nameWithSpaceCheck))
+                        {
+                            document.getElementById("KeyOffMiddleName_error").innerHTML = "Invalid Middle Name";
+                            return false;
+                        }
+                        else
+                        {
+                            document.getElementById("KeyOffMiddleName_error").innerHTML = "";
+                        }
+                    }
+                    else
+                    {
+                        document.getElementById("KeyOffMiddleName_error").innerHTML = "";
+                    }
+
+                });
+
+                $("#KeyOfficialSecretAnswer").on("blur", function () {
+                    //debugger;
+                    if (document.getElementById("KeyOfficialSecretAnswer").value.trim() != "")
+                    {
+                        if (!document.getElementById("KeyOfficialSecretAnswer").value.match(secretQuestion))
+                        {
+                            document.getElementById("KeyOfficialSecretAnswer_error").innerHTML = "Invalid Secret Answer";
+                            return false;
+                        }
+                        else
+                        {
+                            document.getElementById("KeyOfficialSecretAnswer_error").innerHTML = "";
+                        }
+                    }
+                    else
+                    {
+                        document.getElementById("KeyOfficialSecretAnswer_error").innerHTML = "";
+                    }
+
+                });
+
+                 $("#PanCardRemarks").on("blur", function () {
+                    //debugger;
+                   if (document.getElementById("PanCardRemarks").value.trim() == "")
+                   {
+                        document.getElementById("PanCardRemarks_error").innerHTML = "PAN Card Remarks field cannot be left blank";
+                        return (false);
+                    }
+                    else
+                    {
+                        document.getElementById("PanCardRemarks_error").innerHTML = "";
+                    }
+
+                });
+
+                $("#CommunicationDialCode").on("blur", function ()
+                {
+                    //debugger;
+                    var stdCode = document.getElementById("CommunicationDialCode").value.trim();
+                    if (stdCode != "")
+                    {
+
+                        if (stdCode.length < 2 || stdCode.length > 4)
+                        {
+                            document.getElementById("CommunicationDialCode_error").innerHTML = "Invalid Code";
+                            return false;
+                        }
+                        else
+                        {
+                            if (!stdCode.match(number))
+                            {
+                                document.getElementById("CommunicationDialCode_error").innerHTML = "Invalid Code";
+                                return false;
+                            }
+                            else
+                            {
+                                document.getElementById("CommunicationDialCode_error").innerHTML = "";
+                            }
+                        }
+                    }
+                    else
+                    {
+                        document.getElementById("CommunicationDialCode_error").innerHTML = "";
+                    }
+
+              });
+
+              $("#CommunicationPhoneNo").on("blur", function ()
+               {
+                    //debugger;
+                    var phno = document.getElementById("CommunicationPhoneNo").value.trim();
+                    if (phno != "")
+                    {
+                        if (phno.charAt(0) == "0")
+                        {
+                            document.getElementById("comm_officePhone_error").innerHTML = "Invalid Phone Number";
+                            return false;
+                        }
+                        else if (phno.length < 6 || phno.length > 8)
+                        {
+                            document.getElementById("comm_officePhone_error").innerHTML = "Invalid Phone Number";
+                            return false;
+                        }
+                        else
+                        {
+                            if (!phno.match(number))
+                            {
+                                document.getElementById("comm_officePhone_error").innerHTML = "Invalid Phone Number";
+                                return false;
+                            }
+                            else
+                            {
+                                document.getElementById("comm_officePhone_error").innerHTML = "";
+                            }
+                        }
+
+                    }
+                    else
+                    {
+                        document.getElementById("comm_officePhone_error").innerHTML = "";
+                    }
+
+              });
+
+              $("#CommunicationFaxCode").on("blur", function ()
+               {
+                    //debugger;
+                var faxCode = document.getElementById("CommunicationFaxCode").value.trim();
+                if (faxCode != "") {
+                    if (faxCode.length < 2 || faxCode.length > 4) {
+                        document.getElementById("CommunicationFaxCode_error").innerHTML = "Invalid Code";
+                        return false;
+                    }
+                    else
+                    {
+                        if (!faxCode.match(number))
+                        {
+                            document.getElementById("CommunicationFaxCode_error").innerHTML = "Invalid Code";
+                            return false;
+                        }
+                        else {
+                            document.getElementById("CommunicationFaxCode_error").innerHTML = "";
+                        }
+                    }
+
+                }
+                else {
+                    document.getElementById("CommunicationFaxCode_error").innerHTML = "";
+                }
+
+              });
+
+              $("#CommunicationFax").on("blur", function ()
+              {
+                    //debugger;
+                var faxphno = document.getElementById("CommunicationFax").value.trim();
+                if (faxphno != "") {
+                    if (faxphno.charAt(0) == "0") {
+                        document.getElementById("CommunicationFax_error").innerHTML = "Invalid Fax Number";
+                        return false;
+                    }
+                    else if (faxphno.length < 6 || faxphno.length > 8) {
+                        document.getElementById("CommunicationFax_error").innerHTML = "Invalid Fax Number";
+                        return false;
+                    }
+                    else
+                    {
+                        if (!faxphno.match(number))
+                        {
+                            document.getElementById("CommunicationFax_error").innerHTML = "Invalid Fax Number";
+                            return false;
+                        }
+                        else
+                        {
+                            document.getElementById("CommunicationFax_error").innerHTML = "";
+                        }
+                    }
+
+                }
+                else
+                {
+                    document.getElementById("CommunicationFax_error").innerHTML = "";
+                }
+
+              });
+
+              $("#PerOrRegAddressDialCode").on("blur", function ()
+                {
+                    //debugger;
+                    var stdCode = document.getElementById("PerOrRegAddressDialCode").value.trim();
+                    if (stdCode != "")
+                    {
+
+                        if (stdCode.length < 2 || stdCode.length > 4)
+                        {
+                            document.getElementById("PerOrRegAddressDialCode_error").innerHTML = "Invalid Code";
+                            return false;
+                        }
+                        else
+                        {
+                            if (!stdCode.match(number))
+                            {
+                                document.getElementById("PerOrRegAddressDialCode_error").innerHTML = "Invalid Code";
+                                return false;
+                            }
+                            else
+                            {
+                                document.getElementById("PerOrRegAddressDialCode_error").innerHTML = "";
+                            }
+                        }
+                    }
+                    else
+                    {
+                        document.getElementById("PerOrRegAddressDialCode_error").innerHTML = "";
+                    }
+
+              });
+
+              $("#PerOrRegAddressPhoneNumber").on("blur", function ()
+               {
+                    //debugger;
+                    var phno = document.getElementById("PerOrRegAddressPhoneNumber").value.trim();
+                    if (phno != "")
+                    {
+                        if (phno.charAt(0) == "0")
+                        {
+                            document.getElementById("perma_officePhone_error").innerHTML = "Invalid Phone Number";
+                            return false;
+                        }
+                        else if (phno.length < 6 || phno.length > 8)
+                        {
+                            document.getElementById("perma_officePhone_error").innerHTML = "Invalid Phone Number";
+                            return false;
+                        }
+                        else
+                        {
+                            if (!phno.match(number))
+                            {
+                                document.getElementById("perma_officePhone_error").innerHTML = "Invalid Phone Number";
+                                return false;
+                            }
+                            else
+                            {
+                                document.getElementById("perma_officePhone_error").innerHTML = "";
+                            }
+                        }
+
+                    }
+                    else
+                    {
+                        document.getElementById("perma_officePhone_error").innerHTML = "";
+                    }
+
+              });
+
+              $("#PermanentFaxCode").on("blur", function ()
+               {
+                    //debugger;
+                var faxCode = document.getElementById("PermanentFaxCode").value.trim();
+                if (faxCode != "") {
+                    if (faxCode.length < 2 || faxCode.length > 4) {
+                        document.getElementById("PermanentFaxCode_error").innerHTML = "Invalid Code";
+                        return false;
+                    }
+                    else
+                    {
+                        if (!faxCode.match(number))
+                        {
+                            document.getElementById("PermanentFaxCode_error").innerHTML = "Invalid Code";
+                            return false;
+                        }
+                        else {
+                            document.getElementById("PermanentFaxCode_error").innerHTML = "";
+                        }
+                    }
+
+                }
+                else {
+                    document.getElementById("PermanentFaxCode_error").innerHTML = "";
+                }
+
+              });
+
+              $("#PermanentFax").on("blur", function ()
+              {
+                    //debugger;
+                var faxphno = document.getElementById("PermanentFax").value.trim();
+                if (faxphno != "") {
+                    if (faxphno.charAt(0) == "0") {
+                        document.getElementById("perma_faxNumber_error").innerHTML = "Invalid Fax Number";
+                        return false;
+                    }
+                    else if (faxphno.length < 6 || faxphno.length > 8) {
+                        document.getElementById("perma_faxNumber_error").innerHTML = "Invalid Fax Number";
+                        return false;
+                    }
+                    else
+                    {
+                        if (!faxphno.match(number))
+                        {
+                            document.getElementById("perma_faxNumber_error").innerHTML = "Invalid Fax Number";
+                            return false;
+                        }
+                        else
+                        {
+                            document.getElementById("perma_faxNumber_error").innerHTML = "";
+                        }
+                    }
+
+                }
+                else
+                {
+                    document.getElementById("perma_faxNumber_error").innerHTML = "";
+                }
+
+              });
+
+              $("#KeyOffPhoneCode").on("blur", function ()
+                {
+                    //debugger;
+                    var stdCode = document.getElementById("KeyOffPhoneCode").value.trim();
+                    if (stdCode != "")
+                    {
+
+                        if (stdCode.length < 2 || stdCode.length > 4)
+                        {
+                            document.getElementById("KeyOffPhoneCode_error").innerHTML = "Invalid Code";
+                            return false;
+                        }
+                        else
+                        {
+                            if (!stdCode.match(number))
+                            {
+                                document.getElementById("KeyOffPhoneCode_error").innerHTML = "Invalid Code";
+                                return false;
+                            }
+                            else
+                            {
+                                document.getElementById("KeyOffPhoneCode_error").innerHTML = "";
+                            }
+                        }
+                    }
+                    else
+                    {
+                        document.getElementById("KeyOffPhoneCode_error").innerHTML = "";
+                    }
+
+              });
+
+              $("#KeyOffPhoneNumber").on("blur", function ()
+               {
+                    //debugger;
+                    var phno = document.getElementById("KeyOffPhoneNumber").value.trim();
+                    if (phno != "")
+                    {
+                        if (phno.charAt(0) == "0")
+                        {
+                            document.getElementById("KeyOffPhoneNumber_error").innerHTML = "Invalid Phone Number";
+                            return false;
+                        }
+                        else if (phno.length < 6 || phno.length > 8)
+                        {
+                            document.getElementById("KeyOffPhoneNumber_error").innerHTML = "Invalid Phone Number";
+                            return false;
+                        }
+                        else
+                        {
+                            if (!phno.match(number))
+                            {
+                                document.getElementById("KeyOffPhoneNumber_error").innerHTML = "Invalid Phone Number";
+                                return false;
+                            }
+                            else
+                            {
+                                document.getElementById("KeyOffPhoneNumber_error").innerHTML = "";
+                            }
+                        }
+
+                    }
+                    else
+                    {
+                        document.getElementById("KeyOffPhoneNumber_error").innerHTML = "";
+                    }
+
+              });
+
+              $("#KeyOffFaxCode").on("blur", function ()
+               {
+                    //debugger;
+                var faxCode = document.getElementById("KeyOffFaxCode").value.trim();
+                if (faxCode != "") {
+                    if (faxCode.length < 2 || faxCode.length > 4) {
+                        document.getElementById("KeyOffFaxCode_error").innerHTML = "Invalid Code";
+                        return false;
+                    }
+                    else
+                    {
+                        if (!faxCode.match(number))
+                        {
+                            document.getElementById("KeyOffFaxCode_error").innerHTML = "Invalid Code";
+                            return false;
+                        }
+                        else {
+                            document.getElementById("KeyOffFaxCode_error").innerHTML = "";
+                        }
+                    }
+
+                }
+                else {
+                    document.getElementById("KeyOffFaxCode_error").innerHTML = "";
+                }
+
+              });
+
+              $("#KeyOffFax").on("blur", function ()
+              {
+                    //debugger;
+                var faxphno = document.getElementById("KeyOffFax").value.trim();
+                if (faxphno != "") {
+                    if (faxphno.charAt(0) == "0") {
+                        document.getElementById("KeyOffFax_error").innerHTML = "Invalid Fax Number";
+                        return false;
+                    }
+                    else if (faxphno.length < 6 || faxphno.length > 8) {
+                        document.getElementById("KeyOffFax_error").innerHTML = "Invalid Fax Number";
+                        return false;
+                    }
+                    else
+                    {
+                        if (!faxphno.match(number))
+                        {
+                            document.getElementById("KeyOffFax_error").innerHTML = "Invalid Fax Number";
+                            return false;
+                        }
+                        else
+                        {
+                            document.getElementById("KeyOffFax_error").innerHTML = "";
+                        }
+                    }
+
+                }
+                else
+                {
+                    document.getElementById("KeyOffFax_error").innerHTML = "";
+                }
+
+              });
+               $("#FleetSizeNoOfVechileOwnedHCV").on("blur", function ()
+               {
+                    //debugger;
+               if (document.applicationForm.FleetSizeNoOfVechileOwnedHCV.value.trim() != "")
+                {
+                    if (!(document.applicationForm.FleetSizeNoOfVechileOwnedHCV.value.trim().match(number)))
+                    {
+                        document.getElementById("FleetSizeNoOfVechileOwnedHCV_error").innerHTML = "Invalid No.";
+                        ret = false;
+                    }
+                    else if (Number(document.applicationForm.FleetSizeNoOfVechileOwnedHCV.value.trim())> 250)
+                    {
+                        document.getElementById("FleetSizeNoOfVechileOwnedHCV_error").innerHTML = "Invalid No.";
+                        ret = false;
+                    }
+                    else
+                    {
+                        document.getElementById("FleetSizeNoOfVechileOwnedHCV_error").innerHTML = "";
+                    }
+                }
+                else
+                {
+                    document.getElementById("FleetSizeNoOfVechileOwnedHCV_error").innerHTML = "";
+                }
+
+              });
+              $("#FleetSizeNoOfVechileOwnedLCV").on("blur", function ()
+               {
+                    //debugger;
+                if (document.applicationForm.FleetSizeNoOfVechileOwnedLCV.value.trim() != "")
+                {
+                    if (!(document.applicationForm.FleetSizeNoOfVechileOwnedLCV.value.trim().match(number)))
+                    {
+                        document.getElementById("FleetSizeNoOfVechileOwnedLCV_error").innerHTML = "Invalid No.";
+                        ret = false;
+                    }
+                    else if (Number(document.applicationForm.FleetSizeNoOfVechileOwnedLCV.value.trim()) > 250)
+                    {
+                        document.getElementById("FleetSizeNoOfVechileOwnedLCV_error").innerHTML = "Invalid No.";
+                        ret = false;
+                    }
+                    else
+                    {
+                        document.getElementById("FleetSizeNoOfVechileOwnedLCV_error").innerHTML = "";
+                    }
+                }
+                else
+                {
+                    document.getElementById("FleetSizeNoOfVechileOwnedLCV_error").innerHTML = "";
+                }
+
+              });
+            $("#FleetSizeNoOfVechileOwnedMUVSUV").on("blur", function ()
+               {
+                    //debugger;
+                if (document.applicationForm.FleetSizeNoOfVechileOwnedMUVSUV.value.trim() != "")
+                {
+                    if (!(document.applicationForm.FleetSizeNoOfVechileOwnedMUVSUV.value.trim().match(number)))
+                    {
+                        document.getElementById("FleetSizeNoOfVechileOwnedMUVSUV_error").innerHTML = "Invalid No.";
+                        ret = false;
+                    }
+                    else if (Number(document.applicationForm.FleetSizeNoOfVechileOwnedMUVSUV.value.trim()) > 250)
+                    {
+                        document.getElementById("FleetSizeNoOfVechileOwnedMUVSUV_error").innerHTML = "Invalid No.";
+                        ret = false;
+                    }
+                    else
+                    {
+                        document.getElementById("FleetSizeNoOfVechileOwnedMUVSUV_error").innerHTML = "";
+                    }
+                }
+                else
+                {
+                    document.getElementById("FleetSizeNoOfVechileOwnedMUVSUV_error").innerHTML = "";
+                }
+
+              });
+
+
+               $("#FleetSizeNoOfVechileOwnedCarJeep").on("blur", function ()
+               {
+                    //debugger;
+               if (document.applicationForm.FleetSizeNoOfVechileOwnedCarJeep.value.trim() != "")
+                {
+                    if (!(document.applicationForm.FleetSizeNoOfVechileOwnedCarJeep.value.trim().match(number)))
+                    {
+                        document.getElementById("FleetSizeNoOfVechileOwnedCarJeep_error").innerHTML = "Invalid No.";
+                        ret = false;
+                    }
+                    else if (Number(document.applicationForm.FleetSizeNoOfVechileOwnedCarJeep.value.trim()) > 250)
+                    {
+                        document.getElementById("FleetSizeNoOfVechileOwnedCarJeep_error").innerHTML = "Invalid No.";
+                        ret = false;
+                    }
+                    else
+                    {
+                        document.getElementById("FleetSizeNoOfVechileOwnedCarJeep_error").innerHTML = "";
+                    }
+                }
+                else
+                {
+                    document.getElementById("FleetSizeNoOfVechileOwnedCarJeep_error").innerHTML = "";
+                }
+
+              });
+             $("#KeyOffIndividualInitials").on("blur", function ()
+              {
+                //debugger;
+                if (document.getElementById("KeyOffIndividualInitials").value.trim() != "")
+                {
+                    if (!isNaN(document.getElementById("KeyOffIndividualInitials").value.trim())) {
+                        document.getElementById("KeyOffIndividualInitials_error").innerHTML = "Invalid Individual Initials";
+                        return false;
+                    }
+                    else if (!document.getElementById("KeyOffIndividualInitials").value.match(nameWithSpaceCheck))
+                    {
+                        document.getElementById("KeyOffIndividualInitials_error").innerHTML = "Invalid Individual Initials";
+                        return false;
+                    }
+                    else
+                    {
+                        document.getElementById("KeyOffIndividualInitials_error").innerHTML = "";
+                    }
+                }
+
+             });
+      
+</script>
