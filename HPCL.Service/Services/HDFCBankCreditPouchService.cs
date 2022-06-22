@@ -196,7 +196,7 @@ namespace HPCL.Service.Services
             return searchList;
         }
 
-        public async Task<string> GetRequestAuthorizationDetails(GetRequestAuthorizationReq entity)
+        public async Task<GetRequestAuthorizationRes> GetRequestAuthorizationDetails(GetRequestAuthorizationReq entity)
         {
             var searchBody = new GetRequestAuthorizationReq
             {
@@ -211,8 +211,28 @@ namespace HPCL.Service.Services
             StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
             var response = await _requestService.CommonRequestService(content, WebApiUrl.GetRequestAuthorizationDetailsUrl);
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
-            CcmsRechargeHdfcRes searchList = obj.ToObject<CcmsRechargeHdfcRes>();
-            return "";
+            GetRequestAuthorizationRes searchList = obj.ToObject<GetRequestAuthorizationRes>();
+            return searchList;
+        }
+
+        public async Task<List<SuccessResponse>> AuthorizationAction(string authReq)
+        {
+            ObjBankAuthEntryDetail[] arrs = JsonConvert.DeserializeObject<ObjBankAuthEntryDetail[]>(authReq);
+
+            var searchBody = new AuthorizationActionReq
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                ObjBankAuthEntryDetail = arrs
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.RequestAuthorizationActionUrl);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<SuccessResponse> reasonList = jarr.ToObject<List<SuccessResponse>>();
+            return reasonList;
         }
     }
 }

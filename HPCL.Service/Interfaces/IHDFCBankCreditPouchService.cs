@@ -16,7 +16,7 @@ namespace HPCL.Service.Interfaces
         Task<SearchEnrollStatusRes> GetEnrollStatus(SearchEnrollStatusClone entity);
         Task<GetEnrollStatusReportRes> GetEnrollStatusReport(string customerId, int requestId);
         Task<CcmsRechargeHdfcRes> CCMSRechargeHDFC(string customerId, string amount);
-        Task<string> GetRequestAuthorizationDetails(GetRequestAuthorizationReq entity);
-        //Task<string> AuthorizationAction();
+        Task<GetRequestAuthorizationRes> GetRequestAuthorizationDetails(GetRequestAuthorizationReq entity);
+        Task<List<SuccessResponse>> AuthorizationAction(string authReq);
     }
 }

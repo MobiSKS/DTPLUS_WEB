@@ -15,6 +15,8 @@
                         <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">HDFC Bank Credit Pouch Request Authorization</p>
                         <div class="col-lg-12 col-md-12 col-12 py-3">
                           
+                            <div id="successUpdate" class="mb-3 text-center alert alert-success" style="display:none;"></div>
+
                             <div class="d-flex align-items-center flex-wrap">
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
@@ -73,26 +75,38 @@
 
                         <div id="approvalRejectSection" style="display:none;">
                             <div class="table-responsive px-3">
-                                <table id="approvalHdfcList" class="datatable table table-striped d-block table-bordered table-responsive mt-3" style="width:100%;">
+                                <table id="authHdfcList" class="datatable table table-striped d-block table-bordered table-responsive mt-3" style="width:100%;">
                                     <thead>
                                         <tr>
                                             <th>S.No.</th>
+                                            <th>Select</th>
+                                            <th>Reference No.</th>
                                             <th>ZO</th>
                                             <th>RO</th>
-                                            <th>Customer ID</th>
+                                            <th>Customer Id</th>
                                             <th>Customer Name</th>
-                                            <th>Plan Name</th>
-                                            <th>Enrolled Date</th>
-                                            <th>Enrolled By</th>
-                                            <th>Approver Remark</th>
-                                            <th>Authorizer Remark</th>
+                                            <th>Address</th>
+                                            <th>Mobile No.</th>
+                                            <th>Email</th>
+                                            <th>Requested By</th>
+                                            <th>Requested On</th>
+                                            <th>Approved By</th>
+                                            <th>Approved On</th>
+                                            <th>Authorization Remarks</th>
+                                            <th>Credit Limit assigned per Month(in Rs)</th>
                                             <th>Status</th>
-                                            <th>Credit Limit assigned per Month (in Rs)</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
                                 </table>
                             </div>
+
+                            <div class="d-flex align-items-center justify-content-center mt-3">
+                                <div class="px-md-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2">
+                                    <button class="btn btn_primary" type="button" onclick="requestAuthSubmit()">Submit</button>
+                                </div>
+                            </div>
+
                         </div>
 
                     </div>
@@ -100,36 +114,6 @@
             </div>
         </form>
         <div class="clearfix"></div>
-    </div>
-</div>
-
-<div id="viewHdfcEnrollReport" class="modal fade">
-    <div class="vertical-alignment-helper">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title text_primary" id="exampleModalLabel">HDFC Payment Enrollment Details</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        &times;
-                    </button>
-                </div>
-                <div class="modal-body" id="bodyFetch">
-                    <div id="CustDetails">
-                        <table id="reportList" class="table table-striped d-md-table d-block table-bordered table-responsive mt-3" style="width:100%;">
-                            <tr>
-                                <th>S.No.</th>
-                                <th>Customer ID</th>
-                                <th>Customer Name</th>
-                                <th>Plan Name</th>
-                                <th>Modified Date</th>
-                                <th>Modified By</th>
-                                <th>Status</th>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 </div>
 
@@ -143,6 +127,19 @@
             if (event.originalEvent.clipboardData.getData('Text').match(/[^\d]/)) {
                 event.preventDefault();
             }
+        });
+
+        $("#authHdfcList").on('keydown', '.cLimit', function (event) {
+            if (event.shiftKey == true) {
+                event.preventDefault();
+            }
+            if ((event.keyCode >= 48 && event.keyCode <= 57) || (event.keyCode >= 96 && event.keyCode <= 105) || event.keyCode == 8 || event.keyCode == 9 || event.keyCode == 37 || event.keyCode == 39 || event.keyCode == 46 || event.keyCode == 190 || event.keyCode==110) {
+
+            } else {
+                event.preventDefault();
+            }
+            if($(this).val().indexOf('.') !== -1 && (event.keyCode == 190|| event.keyCode == 110))
+                event.preventDefault();
         });
 
         $(document).ready(function () {
@@ -161,65 +158,26 @@
                 search: true,
                 searchText: 'Enter Text here.'
             });
-
-            $.ajax({
-                type: 'POST',  // http method
-                url: '@Url.Action("GetzonalOfficeList", "Common")',
-                dataType: "json",
-                success: function (data, status, xhr) {
-
-                    console.log(data);
-
-                    $.each(data.zonalOfficeLst, function (i, option) {
-                        $("<option/>").val(option.zonalOfficeID).text(option.zonalOfficeName).appendTo(".zonalFetchId");
-                    });
-                    $(".zonalFetchId")[0].sumo.reload();
-                },
-                error: function (jqXhr, textStatus, errorMessage) {
-                    alert("Error Populating Zonal Office");
-                }
-            });
         });
 
-    $(".zonalFetchId").change(function () {
-        var id = this.value;
 
-         if(id == ""){
-            $(".regionalFetchId").html("");
-            $(".regionalFetchId")[0].sumo.reload();
-            return false;
-         }
+    $("#authHdfcList").on('click', '.checkRow', function (e) {
 
-        $.ajax({
-            type: 'POST',  // http method
-            url: '@Url.Action("GetRegionalOfcDetails", "Common")',
-            data: { zonalOfcId: id },  // data to submit
-            dataType: "json",
-            success: function (data, status, xhr) {
-                var v = data;
-                if (status == 'success') {
-                    $(".regionalFetchId").html("");
-                    $('<option>',{value: 0,text: "--Select Regional Office--"}).html("--Select Regional Office--").appendTo(".regionalFetchId");
-                    //$('<option>--Select Regional Office--</option>').appendTo(".regionalFetchId");
-                    $.each(data, function (i, data) { // bind the dropdown list using json result
-                        $('<option>',
-                            {
-                                value: data.regionalOfficeID,
-                                text: data.regionalOfficeName
-                            }).html(data.districtName).appendTo(".regionalFetchId");
-                    });
-                    $(".regionalFetchId")[0].sumo.reload();
-                }
-                else {
-                    console.log(v);
-                }
-            },
-            error: function (jqXhr, textStatus, errorMessage) {
-                alert("Error Populating Regional Office");
-            }
-        });
+        currentRow = $(this).closest("tr");
+
+        if ($(this).is(':checked')) {
+
+            currentRow.find('.cLimit').attr("disabled", false);
+            currentRow.find('.remarksVal').attr("disabled", false);
+            currentRow.find('.actionVal').attr("disabled", false);
+        }
+        if (!$(this).is(':checked')) {
+            currentRow.find('.cLimit').attr("disabled", true);
+            currentRow.find('.remarksVal').attr("disabled", true);
+            currentRow.find('.actionVal').attr("disabled", true);
+            currentRow.find('.errs').css("display", "none");
+        }
     });
-
 
     function searchEnroll() {
 
@@ -227,16 +185,6 @@
         var todate = $("#ToDate").val();
 
         var flag = "Y";
-        ////if (fromdate == "") {
-        ////    $("#fromDate_error").attr("style", "display:block");
-        ////    $("#fromDate_error").html("Select From Date");
-        ////    flag = "N";
-        ////}
-        ////if (todate == "") {
-        ////    $("#toDate_error").attr("style", "display:block");
-        ////    $("#toDate_error").html("Select To Date");
-        ////    flag = "N";
-        ////}
         if (fromdate != "" && todate != "") {
             flag = checkdates("fromdate_error",'31');
         }
@@ -249,7 +197,7 @@
 
                 $.ajax({
                     type: 'POST',  // http method
-                    url: '@Url.Action("EnrollmentStatus", "HDFCBankCreditPouch")',
+                    url: '@Url.Action("RequestAuthorization", "HDFCBankCreditPouch")',
                     data: $('#formValid').serialize(),  // data to submit
                     success: function (res, status, xhr) {
 
@@ -259,9 +207,9 @@
 
                             document.getElementById("noRecord").style.display = "none";
 
-                            $('#approvalHdfcList').DataTable().clear().destroy();
+                            $('#authHdfcList').DataTable().clear().destroy();
 
-                            var tbl = $('#approvalHdfcList').DataTable({
+                            var tbl = $('#authHdfcList').DataTable({
                                 paging: true,
                                 searching: false,
                                 stateSave: true,
@@ -277,33 +225,43 @@
                             for (var i = 0; i < girdList.length; i++) {
 
                                 var srNumber = (i + 1);
+                                var select = "<input type='checkbox' class='checkRow'>";
+                                var refNo = (girdList[i].referenceNo || '');
                                 var zo = (girdList[i].zo || '');
                                 var ro = (girdList[i].ro || '');
                                 var customerId = "</span class='getCustId'>"+(girdList[i].customerId || '')+"</span>";
                                 var customerName = (girdList[i].customerName || '');
-                                var planName = "";
-                                var enrolledDate = (girdList[i].enrolledDate || '');
-                                var enrolledBy = (girdList[i].enrolledBy || '');
-                                var approverRemark = (girdList[i].approverRemark || '');
-                                var authorizerRemark = (girdList[i].authorizerRemark || '');
-                                var status = (girdList[i].status || '');
-                                var creditLimitAssigned = (girdList[i].creditLimitAssigned.toFixed(2));
-                                var view = "<a href='#' class='viewListReport'>View</a><span class='getReqId' style='display:none;'>"+(girdList[i].requestNo)+"</span>";
+                                var address =  (girdList[i].address || '');
+                                var mobNo = (girdList[i].mobileNo || '');
+                                var email = (girdList[i].email || '');
+                                var reqBy = (girdList[i].requestedBy || '');
+                                var requestNo = (girdList[i].requestNo || '');
+                                var approvedBy = (girdList[i].approvedBy || '');
+                                var approveOn = (girdList[i].approvedDate || '');
+                                var remarks = "<div style='width:160px;'><textarea onblur='remarksChange(this," + (i) + ")' disabled='disabled' class='form-control remarksVal' maxlength = '250'></textarea><i style='display:none;margin-top:10px;' class='fa fa-exclamation-triangle errs' id='remarks_error_"+i+"' aria-hidden='true'></i></div>";
+                                var creditLimit = "<div style='width:160px;'><input type='text' onblur='limitOnChage(this," + (i) + ")' disabled='disabled' maxlength='10' class='form-control cLimit' maxlength = '250' /><i style='display:none;margin-top:10px;' class='fa fa-exclamation-triangle errs' id='creditlimit_error_"+i+"' aria-hidden='true'></i></div>";
+                                var status = (girdList[i].actionStatus || '');
+                                var action = "<select disabled='disabled' class='form-control actionVal'><option value='3'>Approved</option><option value='4'>Rejected</option><option value='7'>ReSubmitted</option></select><span style='display:none;' class='reqId'>"+(res.searchList.data[i].requestNo)+"</span>";
 
                                 tbl.row.add([
-                                    srNumber,
-                                    zo,
-                                    ro,
-                                    customerId,
-                                    customerName,
-                                    planName,
-                                    enrolledDate,
-                                    enrolledBy,
-                                    approverRemark,
-                                    authorizerRemark,
-                                    status,
-                                    creditLimitAssigned,
-                                    view
+                                   srNumber,
+                                   select,
+                                   refNo,
+                                   zo,
+                                   ro,
+                                   customerId,
+                                   customerName,
+                                   address,
+                                   mobNo,
+                                   email,
+                                   reqBy,
+                                   requestNo,
+                                   approvedBy,
+                                   approveOn,
+                                   remarks,
+                                   creditLimit,
+                                   status,
+                                   action
                                 ]).draw();
                             }
                             document.getElementById('approvalRejectSection').style.display = 'block';
@@ -325,50 +283,161 @@
         }
     }
 
-$("#approvalHdfcList").on('click', '.viewListReport', function (e) {
     
-      document.getElementById("noRecord").style.display = "none";
+    function requestAuthSubmit(){
 
-      var currentRow = $(this).closest("tr");
+        document.getElementById("successUpdate").style.display = "none";
+        document.getElementById("noRecord").style.display = "none";
 
-      var customerId = currentRow.find('.getCustId').text();
-      var requestId = currentRow.find('.getReqId').text();
+        var updateArray = new Array();
 
-        $.ajax({
-            type: 'POST',  // http method
-            url: '@Url.Action("GetEnrollStatusReport", "HDFCBankCreditPouch")',
-            data: {customerId: customerId, requestId: requestId },  // data to submit
-            success: function (res, status, xhr) {
-                
-                    if(res.searchList.success == true){
+        var flag = "Y";
+        var CustomerId;
 
-                        $("#reportList td").parent().remove();
+        $("#authHdfcList input[type=checkbox]:checked").each(function () {
+            
+            var selectedRow = $(this).closest("tr")[0];
+          
+            var indexS = (selectedRow.rowIndex) - 1;
 
-                        for (var i = 0; i < res.searchList.data.length; i++) {
+            console.log("indexS",indexS);
 
-                            var rows = "<tbody><tr>"
-                                + "<td>"+(i+1)+"</td>"
-                                + "<td>" + (res.searchList.data[i].customerId || '') + "</td>"
-                                + "<td>" + (res.searchList.data[i].customerName || '') + "</td>"
-                                + "<td></td>"
-                                + "<td>" + (res.searchList.data[i].modifiedBy || '') + "</td>"
-                                + "<td>" + (res.searchList.data[i].modifiedDate || '') + "</td>"
-                                + "<td>" + (res.searchList.data[i].status || '') + "</td>"
-                                + "</tr ></tbody>";
+            var row = $(this).closest("tr");
 
-                            $('#reportList').append(rows);
-                        }
-                        $("#viewHdfcEnrollReport").modal('show');
-                    }else{
-                        document.getElementById("approvalRejectSection").style.display = "none";
-                        $("#noRecord").html("");
-                        $("#noRecord").append("<span>" + res.searchList.message + "</span>");
-                        document.getElementById("noRecord").style.display = "block";
-                    }
-            },
-            error: function (jqXhr, textStatus, errorMessage) {
-                console.log("Error");
+            CustomerId = row.find('.custVal').text();
+            var RequestId = row.find('.reqId').text();
+            var AuthorizationRemark = row.find('.remarksVal').val();
+            var ActionType = row.find('.actionVal option:selected').val();
+            var CreditLimitAssigned = row.find('.cLimit').val();
+            var AuthorizBy = row.find('.custVal').text();
+            
+            updateArray.push({
+                CustomerId: CustomerId,
+                RequestId: RequestId,
+                AuthorizationRemark: AuthorizationRemark,
+                ActionType: ActionType,
+                CreditLimitAssigned: CreditLimitAssigned,
+                AuthorizBy: AuthorizBy
+            });
+
+            if(AuthorizationRemark.trim() == ''){
+                document.getElementById('remarks_error_'+indexS).title="Please enter Authorization Remarks.";
+                document.getElementById('remarks_error_'+indexS).style.display = "block";
+                flag = "N";
             }
+            else{
+             if(AuthorizationRemark.trim()!=''){
+                if (!AuthorizationRemark.match(/^[A-Za-z0-9 ]+$/)){
+                    document.getElementById('remarks_error_'+indexS).title="Special characters are not allowed";
+                    document.getElementById('remarks_error_'+indexS).style.display = "block";
+                    flag = "N";
+                }
+              }
+            }
+
+            if(CreditLimitAssigned.trim() == ''){
+                document.getElementById('creditlimit_error_'+indexS).title="Please enter Credit Limit.";
+                document.getElementById('creditlimit_error_'+indexS).style.display = "block";
+                flag = "N";
+            }
+
+
         });
-  });
+
+        if (CustomerId == undefined) {
+                alert("Please select atleast one record");
+                flag = "N";
+        }
+ 
+        if (flag == "N")
+            e.preventDefault();
+
+        if (flag == "Y") {
+         $("#authHdfcList input[type=checkbox]:checked").each(function () {
+                var selectedRow = $(this).closest("tr")[0];
+                console.log("index",selectedRow.rowIndex);
+                var indexS = (selectedRow.rowIndex) - 1;
+                document.getElementById('remarks_error_'+indexS).style.display = "none";
+                $(this).closest("tr").find(".checkRow").prop('checked',false);
+                $(this).closest("tr").find('.remarksVal').val('');
+                $(this).closest("tr").find('.cLimit').val('');
+                $(this).closest("tr").find('.cLimit').attr("disabled", true);
+                $(this).closest("tr").find('.remarksVal').attr("disabled", true);
+                $(this).closest("tr").find('.actionVal').attr("disabled", true);
+            });
+
+            if (confirm('Are you sure! You want to process the selected record(s)?')) {
+                console.log('ok');
+
+                $.ajax({
+                    url: "@Url.Action("AuthorizationAction", "HDFCBankCreditPouch")",
+                    type: "POST",
+                    traditional: true,
+                    data: { authReq: JSON.stringify(updateArray) },
+                    success: function (res) {
+
+                        if(res.reasonList[0].status == 1){
+                            $("#successUpdate").html('');
+                            $("#successUpdate").append("<span>"+(res.reasonList[0].reason)+"</span>");
+                            document.getElementById("successUpdate").style.display = "block";
+                        }else{
+                            $("#noRecord").html('');
+                            $("#noRecord").append("<span>"+(res.reasonList[0].reason)+"</span>");
+                            document.getElementById("noRecord").style.display = "block";
+                        }
+                    },
+                    error: function (ex) {
+                        alert('Failed' + ex);
+                    }
+                });
+
+            } else {
+                console.log('cancel')
+            }
+        }
+    }
+
+    function remarksChange(o, rowSelected){
+
+       var AuthorizationRemark = o.value;
+       
+       if(AuthorizationRemark.trim() == ''){
+                document.getElementById('remarks_error_'+rowSelected).title="Please enter Apporval Remarks.";
+                document.getElementById('remarks_error_'+rowSelected).style.display = "block";
+                return false;
+            }else{
+            if(AuthorizationRemark.trim()!=''){
+                if (!AuthorizationRemark.match(/^[A-Za-z0-9 ]+$/)){
+                    document.getElementById('remarks_error_'+rowSelected).title="Special characters are not allowed";
+                    document.getElementById('remarks_error_'+rowSelected).style.display = "block";
+                    return false;
+                }else{
+                    document.getElementById('remarks_error_'+rowSelected).title="";
+                    document.getElementById('remarks_error_'+rowSelected).style.display = "none";
+                }
+            }
+        }
+    }
+
+     function limitOnChage(o, rowSelected){
+
+       var creditLimit = o.value;
+       
+       if(creditLimit.trim() == ''){
+            document.getElementById('creditlimit_error_'+rowSelected).title="Please enter Credit Limit.";
+            document.getElementById('creditlimit_error_'+rowSelected).style.display = "block";
+            return false;
+       }else{   
+           document.getElementById('creditlimit_error_'+rowSelected).title="";
+           document.getElementById('creditlimit_error_'+rowSelected).style.display = "none";
+       }
+       
+    }
+
 </script>
+
+<style>
+textarea {
+   resize: none;
+}
+</style>
