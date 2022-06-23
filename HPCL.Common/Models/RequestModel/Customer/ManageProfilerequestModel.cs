@@ -11,5 +11,6 @@ namespace HPCL.Common.Models.RequestModel.Customer
     {
         public string CustomerId { get; set; }
         public string NameOnCard { get; set; }
+        public string RequestId { get; set; }
     }
 }

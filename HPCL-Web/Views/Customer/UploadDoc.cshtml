@@ -74,7 +74,7 @@
                 <div class="clearfix"></div>
 
 
-                <div id="uploadSection" style="display:none;">
+                <div id="uploadSection">
 
                     <div class="form-group d-flex align-items-center flex-wrap">
                     </div>
@@ -130,6 +130,11 @@
                                         <div class="col-md-5 col-6"></div>
                                         <div class="col-md-7 col-12">
                                             <div id="idPfrontImg"></div>
+                                             <div class="d-flex align-items-center justify-content-center mt-3">
+                                                <div class="px-2">
+                                                    <button class="btn btn_primary" type="button" id="download-btn">download image</button>
+                                                </div>
+                                             </div>
                                         </div>
                                     </div>
                                 </div>
@@ -222,17 +227,7 @@
     </div>
 </div>
 
-
-<!-- The Modal -->
-<div id="myModal" class="modal">
-  <span class="close">&times;</span>
-  <img class="modal-content" id="img01">
-  <div id="caption"></div>
-</div>
-
 <script>
-
-   
 
      function resetClick() {
          document.getElementById('CustomerReferenceNoId').value = '';
@@ -251,7 +246,18 @@
      var addFront;
      var addBack;
 
+
      $(document).ready(function () {
+
+          $('#download-btn').click(function(){
+                var link = document.createElement('a');
+                link.href = $('.downloadable img').attr('src');  // use realtive url 
+                link.download = "aaa.jpg";
+                document.body.appendChild(link);
+                link.click();     
+                document.body.removeChild(link);
+           });
+
 
          $('.proofType').SumoSelect({
             placeholder: '-Select-',
@@ -324,9 +330,10 @@
                          var regexImage = /(.*?)\.(png|jpeg|JPEG|jpg|gif)$/;
                          if (regexImage.test($(this).val())) {
                              $("#idPfrontImg").show();
-                             $("#idPfrontImg").append("<img id='myImg'/>");
+                             $("#idPfrontImg").append("<a class='without-caption image-link'></a><img />");
                              var reader = new FileReader();
                              reader.onload = function (e) {
+                                 $("#idPfrontImg a").attr("href", e.target.result);
                                  $("#idPfrontImg img").attr("src", e.target.result);
                                  $("#idPfrontImg img").attr("style", "width: 200px");
                                  $("#idPfrontImg img").attr("style", "height: 100px");
@@ -545,28 +552,7 @@
 
 
 
-        // Get the modal
-        var modal = document.getElementById('myModal');
-
-        // Get the image and insert it inside the modal - use its "alt" text as a caption
-        var img = document.getElementById('myImg');
-        var modalImg = document.getElementById("img01");
-        var captionText = document.getElementById("caption");
-        img.onclick = function(){
-            modal.style.display = "block";
-            modalImg.src = this.src;
-            captionText.innerHTML = this.alt;
-        }
-
-        // Get the <span> element that closes the modal
-        var span = document.getElementsByClassName("close")[0];
-
-        // When the user clicks on <span> (x), close the modal
-        span.onclick = function() { 
-            modal.style.display = "none";
-        }
-
-
+         
 
 
      });
@@ -635,3 +621,109 @@
     }
     
 </script>
+
+
+<script>
+
+$('.without-caption').magnificPopup({
+		type: 'image',
+		closeOnContentClick: true,
+		closeBtnInside: false,
+		mainClass: 'mfp-no-margins mfp-with-zoom', // class to remove default margin from left and right side
+		image: {
+			verticalFit: true
+		},
+		zoom: {
+			enabled: true,
+			duration: 300 // don't foget to change the duration also in CSS
+		}
+	});
+
+$('.with-caption').magnificPopup({
+		type: 'image',
+		closeOnContentClick: true,
+		closeBtnInside: false,
+		mainClass: 'mfp-with-zoom mfp-img-mobile',
+		image: {
+			verticalFit: true,
+			titleSrc: function(item) {
+				return item.el.attr('title') + ' &middot; <a class="image-source-link" href="'+item.el.attr('data-source')+'" target="_blank">image source</a>';
+			}
+		},
+		zoom: {
+			enabled: true
+		}
+	});
+
+
+
+
+</script>
+
+
+<style>
+
+.image-link {
+  cursor: -webkit-zoom-in;
+  cursor: -moz-zoom-in;
+  cursor: zoom-in;
+}
+
+
+/* This block of CSS adds opacity transition to background */
+.mfp-with-zoom .mfp-container,
+.mfp-with-zoom.mfp-bg {
+	opacity: 0;
+	-webkit-backface-visibility: hidden;
+	-webkit-transition: all 0.3s ease-out; 
+	-moz-transition: all 0.3s ease-out; 
+	-o-transition: all 0.3s ease-out; 
+	transition: all 0.3s ease-out;
+}
+
+.mfp-with-zoom.mfp-ready .mfp-container {
+		opacity: 1;
+}
+.mfp-with-zoom.mfp-ready.mfp-bg {
+		opacity: 0.8;
+}
+
+.mfp-with-zoom.mfp-removing .mfp-container, 
+.mfp-with-zoom.mfp-removing.mfp-bg {
+	opacity: 0;
+}
+
+
+
+/* padding-bottom and top for image */
+.mfp-no-margins img.mfp-img {
+	padding: 0;
+}
+/* position of shadow behind the image */
+.mfp-no-margins .mfp-figure:after {
+	top: 0;
+	bottom: 0;
+}
+/* padding for main container */
+.mfp-no-margins .mfp-container {
+	padding: 0;
+}
+
+
+
+/* aligns caption to center */
+.mfp-title {
+  text-align: center;
+  padding: 6px 0;
+}
+.image-source-link {
+  color: #DDD;
+}
+
+
+body { -webkit-backface-visibility: hidden; padding: 10px 30px; 
+  font-family: "Calibri", "Trebuchet MS", "Helvetica", sans-serif;
+}
+
+
+</style>
