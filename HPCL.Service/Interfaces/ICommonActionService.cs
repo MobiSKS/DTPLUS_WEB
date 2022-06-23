@@ -79,5 +79,6 @@ namespace HPCL.Service.Interfaces
         Task<List<StatusResponseModal>> GetCreditPouchStatus();
         Task<List<StatusModal>> GetComcoLimitSetModeList();
         Task<List<StatusModal>> GetComcoLimitInvoiceIntervalList();
+        Task<List<CustomerZonalOfficeModel>> GetZonalOfficebySBUType(string SBUTypeId);
     }
 }

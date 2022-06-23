@@ -23,6 +23,14 @@ namespace HPCL_Web.Controllers
         {
             return View();
         }
+        public IActionResult Profile()
+        {
+            return View();
+        }
+        public IActionResult Approval()
+        {
+            return View();
+        }
         public async Task<IActionResult> ManageProfile(string CustomerId,string NameOnCard)
         {
             var modals = await _customerService.ManageProfile(CustomerId, NameOnCard);
@@ -102,6 +110,6 @@ namespace HPCL_Web.Controllers
             }
             return View(modals);
         }
-
+       
     }
 }

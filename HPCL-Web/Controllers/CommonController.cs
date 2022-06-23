@@ -256,5 +256,13 @@ namespace HPCL_Web.Controllers
             var getStatus = await _commonActionService.GetCreditPouchStatus();
             return Json(new { getStatus = getStatus });
         }
+        [HttpPost]
+        public async Task<JsonResult> GetZonalOfficebySBUType(string SBUTypeId)
+        {
+            var sortedtList = await _commonActionService.GetZonalOfficebySBUType(SBUTypeId);
+
+            ModelState.Clear();
+            return Json(sortedtList);
+        }
     }
 }

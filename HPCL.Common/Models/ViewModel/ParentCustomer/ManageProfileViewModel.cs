@@ -104,6 +104,7 @@ namespace HPCL.Common.Models.ViewModel.ParentCustomer
             FromDate = DateTime.Now.AddMonths(-1).ToString("dd-MM-yyyy");
             ToDate = DateTime.Now.ToString("dd-MM-yyyy");
             Data = new List<SearchCustomerData>();
+            SBUTypes = new List<SbuTypeResponseModal>();
         }
 
         public virtual List<OTCCardDetails> CardDetailsMdl { get; set; }
@@ -320,6 +321,9 @@ namespace HPCL.Common.Models.ViewModel.ParentCustomer
         public string CustomerId { get; set; }
         public string NameOnCard { get; set; }
         public string RequestId { get; set; }
+        public string SBUTypeId { get; set; }
+        
+             public virtual List<SbuTypeResponseModal> SBUTypes { get; set; }
     }
     public class SearchCustomerData
     {

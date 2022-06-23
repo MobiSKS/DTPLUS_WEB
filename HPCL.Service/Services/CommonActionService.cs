@@ -1638,5 +1638,52 @@ namespace HPCL.Service.Services
             return sortedtList;
         }
 
+        public async Task<List<CustomerZonalOfficeModel>> GetZonalOfficebySBUType(string SBUTypeId)
+        {
+            var requestData = new BaseEntity()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                SBUTypeId= SBUTypeId
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(requestData), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getZonalOffice);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<CustomerZonalOfficeModel> SortedtList = jarr.ToObject<List<CustomerZonalOfficeModel>>();
+
+            if (_httpContextAccessor.HttpContext.Session.GetString("ZonalId") != "0")
+            {
+                List<CustomerZonalOfficeModel> zonalOfficeLstCopy = SortedtList.ToList();
+
+                string[] AssignedZones = _httpContextAccessor.HttpContext.Session.GetString("ZonalId").Split(',');
+
+                char flag = 'N';
+
+                foreach (var item in zonalOfficeLstCopy)
+                {
+                    flag = 'N';
+
+                    for (int i = 0; i < AssignedZones.Length; i++)
+                    {
+                        if (item.ZonalOfficeID.ToString() == AssignedZones[i])
+                        {
+                            flag = 'Y';
+                            break;
+                        }
+                    }
+                    if (flag == 'N')
+                    {
+                        SortedtList.Remove(item);
+                    }
+                }
+            }
+
+            return SortedtList;
+        }
     }
 }

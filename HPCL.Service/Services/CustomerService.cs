@@ -1403,7 +1403,8 @@ namespace HPCL.Service.Services
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
-                CustomerReferenceNo = customerReferenceNo,
+                //CustomerReferenceNo = customerReferenceNo,
+                FormNumber = customerReferenceNo,
                 Type = "0"
             };
 

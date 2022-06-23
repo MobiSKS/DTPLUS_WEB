@@ -118,5 +118,6 @@ namespace HPCL.Common.Models.ResponseModel.Customer
         public string KeyOffDialCode { get; set; }
         public string KeyOffPh { get; set; }
         public string PanCardRemarks { get; set; }
+        public string SBUTypeId { get; set; }
     }
 }
