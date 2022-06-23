@@ -12,6 +12,9 @@
                 <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
                     <div class="border-1 rounded border-grey pb-3">
                         <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Limit Set Request</p>
+                        <div class="alert alert-danger mt-3 text-center" id="dvRemarks" style="@(Model.Message=="" ? "display:none":"display:block")">
+                            @Html.DisplayFor(m => m.Message)
+                        </div>
                         <div class="col-lg-12 col-md-12 col-12 pt-3">
                             <div class="d-flex align-items-center flex-wrap">
                                 <div class="col-lg-12 col-12">
@@ -127,7 +130,7 @@
                                     <div class="d-flex align-items-center flex-wrap mb-3">
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                <button class="btn btn_primary" type="button" id="btnCard1" style="height:30px;" data-toggle="modal" data-target="#myModalCard1" onclick="LoadCard1Deatils()">ADD</button>
+                                                <button class="btn btn_primary" type="button" id="btnAdd" onclick="AddCardTbl()">ADD</button>
                                             </div>
                                         </div>
                                     </div>
@@ -215,9 +218,10 @@
 
                         </div>
                         <div class="clearfix"></div>
+                        <div id="ViewNoOfCardsTbl" style="display:none;"></div>
                         <div class="d-flex align-items-center justify-content-center flex-wrap mb-3">
                             <div class="px-2">
-                                <button class="btn btn_primary" type="submit" onclick="return ValidateMandatoryFields()">@Label.Submit</button>
+                                <button class="btn btn_primary" type="submit" id="btnSubmit" onclick="return ValidateMandatoryFields()">@Label.Submit</button>
                             </div>
                             <div class="px-2">
                                 <button class="btn btn_primary regrate_btn" type="button" id="btnReset">@Label.Reset</button>
@@ -227,6 +231,27 @@
                     </div>
                 </div>
             </div>
+
+             <div style="display:none">
+        <table id="OldVehicleDetails">
+            <thead>
+                <tr>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.lstChequeDetails)
+                {
+                    <tr>
+                        <td>@item.ChequeBDSCRNumber</td>
+                        <td>@item.ChequeBDSCRDate</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+      </div>
+      
         </form>
         <div class="clearfix"></div>
     </div>
@@ -248,6 +273,7 @@ $("#LimitSetMode").change(function () {
 
             $("#ScannedReferenceDocumentWSD_error").html("");
             $("#ScannedReferenceDocumentWOSD_error").html("");
+            document.getElementById("btnSubmit").style.display="block";
         }
         else
         {
@@ -260,6 +286,7 @@ $("#LimitSetMode").change(function () {
 
             $("#ScannedReferenceDocumentWSD_error").html("");
             $("#ScannedReferenceDocumentWOSD_error").html("");
+            document.getElementById("btnSubmit").style.display="none";
         }
     }
     else
@@ -676,9 +703,160 @@ function ValidateMandatoryFields()
             document.getElementById("ServicesCharges_error").innerHTML = "";
         }
 
+            var cnt=0;
+            $("#NoOfCardsTbl tbody tr").each(function ()
+            {
+                var row = $(this);
+
+                var chequeBDSCRNumber = row.find("td:eq(1) input[type='text']").val();
+                var chequeDate = row.find("td:eq(2) input[type='text']").val();
+
+                if(chequeBDSCRNumber.trim()=='')
+                {
+                    document.getElementById('ChequeBDSCRNumber_error_'+cnt).innerHTML="This field cannot be left blank";
+                    ret=false;
+                }
+                else
+                {
+                    if(!(chequeBDSCRNumber.match(forVehicleNo)))
+                    {
+                        document.getElementById('ChequeBDSCRNumber_error_'+cnt).innerHTML ="Invalid format for Cheque/ BDS/CR No.";
+                        ret=false;
+                    }
+                    else
+                    {
+                        document.getElementById('ChequeBDSCRNumber_error_'+cnt).innerHTML="";
+                    }
+                }
+
+                if(chequeDate.trim()=='')
+                {
+                    document.getElementById('ChequeBDSCRDate_error_'+cnt).innerHTML="This field cannot be left blank";
+                    ret=false;
+                }
+                else
+                {
+                    document.getElementById('ChequeBDSCRDate_error_'+cnt).innerHTML="";
+                }
+                                      
+                cnt=cnt+1;
+
+            });
+
     }
 
 
     return ret;
 }
+
+function AddCardTbl()
+{
+          var ret=true;
+          console.log('Inside AddCardTbl()');
+           var cardsCount = $("#NoOfCheques").val();
+
+            if ($("#NoOfCheques").val().trim() == "") 
+            {
+                document.getElementById("NoOfCheques_error").innerHTML = "Please enter No. of cheque/ BDS /CR required";
+                ret=false;
+            }
+            else if (!($("#NoOfCheques").val().match(number)))
+            {
+                document.getElementById("NoOfCheques_error").innerHTML = "Number should be between 1 and 100";
+                ret=false;
+            }
+            else if (Number($("#NoOfCheques").val())<1 || Number($("#NoOfCheques").val())>100)
+            {
+                document.getElementById("NoOfCheques_error").innerHTML = "Number should be between 1 and 100";
+                ret=false;
+            }
+            else
+            {
+                document.getElementById("NoOfCheques_error").innerHTML = "";
+            }
+
+
+            if ($("#CustomerID").val().trim() == "")
+            {
+                $("#CustomerIdValErrMsg").attr("style", "display:block");
+                $('#CustomerIdValErrMsg').html("Please enter Customer ID");
+                ret=false;
+            }
+            else if (!$("#CustomerID").val().match(mappedCustomerId))
+            {
+                $("#CustomerIdValErrMsg").attr("style", "display:block");
+                $("#CustomerIdValErrMsg").html("Invalid Customer ID");
+                ret=false;
+            }
+            else
+            {
+                $('#CustomerIdValErrMsg').html("");
+            }
+
+
+           if(ret==false)
+           {
+              return ret;
+           }
+
+           var vehicles = [];
+
+           if($("#dvRemarks").html().trim()!="")
+           {
+                   $("#OldVehicleDetails TBODY TR").each(function () {
+                       var row = $(this);
+                       vehicles.push({
+                           CustomerID: document.getElementById("CustomerID").value.trim(),
+                           Message: $("#Message").val(),
+                           ChequeBDSCRNumber: row.find("TD").eq(0).html(),
+                           ChequeBDSCRDate: row.find("TD").eq(1).html(),
+                           NoOfCheques: cardsCount
+                       })
+                   });
+              }
+              else
+              {
+                   vehicles.push({
+                               CustomerID: document.getElementById("CustomerID").value.trim(),
+                               Message: $("#Message").val(),
+                               ChequeBDSCRNumber: "",
+                               ChequeBDSCRDate: "",
+                               NoOfCheques: cardsCount
+                           });
+              }
+
+               console.log(vehicles);
+
+
+            $.ajax({
+               type: 'POST',
+               url: '@Url.Action("GetSetCreditLimitChequeDetailsPartialView", "COMCOManager")',
+               contentType: "application/json; charset=utf-8",
+               data: JSON.stringify(vehicles),
+               dataType: "html",
+               success: function (data, status, xhr) 
+               {
+                       var v = data;
+                       if (status == 'success') 
+                       {
+                           document.getElementById("ViewNoOfCardsTbl").style.display = "block";
+                           $("#ViewNoOfCardsTbl").html(data);
+                           $('html, body').animate({
+                               scrollTop: $("#ViewNoOfCardsTbl").offset().top
+                           }, 2000);
+
+                           $('#NoOfCheques').attr("readonly", true);
+                           $("#btnAdd").attr("disabled", true);
+                           document.getElementById("NoOfCardsTbl").className="datatable table table-striped table-bordered w-50 d-md-table b-block text-nowrap display table-responsive";
+                           document.getElementById("btnSubmit").style.display="block";
+                       }
+                   },
+               error: function (jqXhr, textStatus, errorMessage) 
+               {
+                   $("#ViewNoOfCardsTbl").html("");
+                   $("#btnAdd").attr("disabled", false);
+               }
+           });
+}
+
 </script>

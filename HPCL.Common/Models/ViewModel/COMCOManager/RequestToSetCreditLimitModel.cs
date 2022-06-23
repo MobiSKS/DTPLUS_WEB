@@ -51,6 +51,7 @@ namespace HPCL.Common.Models.ViewModel.COMCOManager
         //[Required(ErrorMessage = "Finance Charges is required")]
         public string FinanceCharges { get; set; }
         public string Remarks { get; set; }
+        public string Message { get; set; }
         public string NoOfCheques { get; set; }
         public IFormFile ScannedReferenceDocumentWOSD { get; set; }
         public IFormFile ScannedReferenceDocumentWSD { get; set; }
@@ -62,5 +63,8 @@ namespace HPCL.Common.Models.ViewModel.COMCOManager
     {
         public string ChequeBDSCRNumber { get; set; }
         public string ChequeBDSCRDate { get; set; }
+        public string NoOfCheques { get; set; }
+        public string Message { get; set; }
+        public string CustomerID { get; set; }
     }
 }

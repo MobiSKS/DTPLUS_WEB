@@ -4,6 +4,7 @@ using HPCL.Common.Models.ViewModel.COMCOManager;
 using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace HPCL_Web.Controllers
@@ -78,6 +79,11 @@ namespace HPCL_Web.Controllers
         {
             ViewBag.Message = Message;
             return View();
+        }
+        public async Task<IActionResult> GetSetCreditLimitChequeDetailsPartialView([FromBody] List<ChequeDetails> objCardDetails)
+        {
+            var modals = await _comCOManagerService.GetSetCreditLimitChequeDetailsPartialView(objCardDetails);
+            return PartialView("~/Views/COMCOManager/_SetCreditLimitChequeDetails.cshtml", modals);
         }
 
     }

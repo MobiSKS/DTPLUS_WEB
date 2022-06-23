@@ -1,0 +1,135 @@
+﻿@model HPCL.Common.Models.ViewModel.COMCOManager.RequestToSetCreditLimitModel
+@using HPCL.Common.Resources
+
+<div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3">
+        <div class="d-flex align-items-center flex-wrap mb-3">
+            <div class="table-responsive">
+					<table class="datatable table table-striped table-bordered d-md-table d-block text-nowrap display table-responsive" style="width:100%;" id="NoOfCardsTbl">
+						<thead>
+							<tr>
+								<th>S.No.</th>
+								<th>Cheque/ BDS/CR No.</th>
+                                <th>Cheque/ BDS/CR Date</th>
+							</tr>
+						</thead>
+						<tbody>
+							@{ int Slno = 1;}
+							@for(int i = 0; i < Convert.ToInt32(Model.NoOfCheques); i++)
+							{
+                                if (@Model.lstChequeDetails.Count > 0)
+                                {
+                                     <tr>
+                                        <td>@Slno</td>
+                                        <td>
+                                            <input type="text" maxlength="24" class="form-control" onkeydown="return IsAlphaNumeric(event.keyCode)" name="lstChequeDetails[@i].ChequeBDSCRNumber" value="@Model.lstChequeDetails[i].ChequeBDSCRNumber" onchange='CardNumberChange(this,@i)' id='ChequeBDSCRNumber_@i'>
+                                            <span class='field-validation-error text-danger' id='ChequeBDSCRNumber_error_@i'>
+                                                @*@Model.ObjCardDetail[i].CardNoMsg*@
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control fromDate" name="lstChequeDetails[@i].ChequeBDSCRDate" value="@Model.lstChequeDetails[i].ChequeBDSCRDate" id='ChequeBDSCRDate_@i' onchange='DateChange(this,@i)'>
+                                            <span class='field-validation-error text-danger' id='ChequeBDSCRDate_error_@i'></span>
+                                        </td>                                   
+                                    </tr>
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td>@Slno</td>
+                                       
+                                            <td>
+                                                <input type="text" maxlength="24" class="form-control" onkeydown="return IsAlphaNumeric(event.keyCode)" name="lstChequeDetails[@i].ChequeBDSCRNumber" onchange='CardNumberChange(this,@i)' id='ChequeBDSCRNumber_@i'>
+                                                <span class='field-validation-error text-danger' id='ChequeBDSCRNumber_error_@i'></span>
+                                            </td>
+                                        
+                                            <td>
+                                                <input type="text" class="form-control fromDate" name="lstChequeDetails[@i].ChequeBDSCRDate" id='ChequeBDSCRDate_@i' onchange='DateChange(this,@i)'>
+                                                <span class='field-validation-error text-danger' id='ChequeBDSCRDate_error_@i'></span>
+                                            </td>
+                                            
+                                    </tr>
+                                }
+                                Slno++;
+							}
+						</tbody>
+					</table>
+            </div>
+        </div>
+    
+</div>
+
+@Html.HiddenFor(model => Model.NoOfCheques)
+
+<div class="clearfix"></div>
+<script>
+ $(document).ready(function () 
+ {
+     setFromDateFormat();
+ });
+
+     function setFromDateFormat(){
+           $(".fromDate").attr("readonly", true);
+           $('.fromDate').datepicker({
+               dateFormat: 'dd-mm-yy',
+               changeMonth: true,
+               changeYear: true,
+               maxDate: new Date(today),
+               autoclose: "true",
+               yearRange: "-100:+0"
+           });
+
+            if (($('.fromDate').val() != undefined)  && ($('.fromDate').val() != "") ){
+               var d = stringToDate($('.fromDate').val(),"dd-mm-yyyy");
+               var ye = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(d)
+               var mo = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(d)
+               var da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(d)
+               $('.fromDate').val(`${da}-${mo}-${ye}`);
+            }
+       }
+             
+     function CardNumberChange(o, rowSelected) 
+     {
+         var chequeBDSCRNumber = o.value;
+         console.log(chequeBDSCRNumber);
+         var isValid=true;
+
+        if(chequeBDSCRNumber.trim()=='')
+        {
+            document.getElementById('ChequeBDSCRNumber_error_'+rowSelected).innerHTML="This field cannot be left blank";
+            isValid=false;
+        }
+        else
+        {
+            if(!(chequeBDSCRNumber.match(forVehicleNo)))
+            {
+                document.getElementById('ChequeBDSCRNumber_error_'+cnt).innerHTML ="Invalid format for Cheque/ BDS/CR No.";
+                ret=false;
+            }
+            else
+            {
+                document.getElementById('ChequeBDSCRNumber_error_'+rowSelected).innerHTML="";
+            }
+
+        }
+       
+     }
+
+     function DateChange(o, rowSelected) 
+     {
+         var identifier = o.value;
+         console.log(identifier);
+         var isValid=true;
+
+        if(identifier.trim()=='')
+        {
+            document.getElementById('ChequeBDSCRDate_error_'+rowSelected).innerHTML="This field cannot be left blank";
+            isValid=false;
+        }
+        else
+        {
+           document.getElementById('ChequeBDSCRDate_error_'+rowSelected).innerHTML="";
+        }
+       
+     }
+
+</script>

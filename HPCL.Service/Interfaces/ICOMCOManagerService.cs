@@ -17,5 +17,6 @@ namespace HPCL.Service.Interfaces
         Task<ViewMappedCreditCustomersModel> ViewMappedCreditCustomers(ViewMappedCreditCustomersModel model);
         Task<RequestToSetCreditLimitModel> RequestToSetCreditLimit();
         Task<RequestToSetCreditLimitModel> RequestToSetCreditLimit(RequestToSetCreditLimitModel model);
+        Task<RequestToSetCreditLimitModel> GetSetCreditLimitChequeDetailsPartialView([FromBody] List<ChequeDetails> arrs);
     }
 }
