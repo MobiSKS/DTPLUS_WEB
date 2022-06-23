@@ -1,6 +1,7 @@
 ﻿using HPCL.Common.Helper;
 using HPCL.Common.Models;
 using HPCL.Common.Models.RequestModel.COMCOManager;
+using HPCL.Common.Models.ResponseModel.MyHpOTCCardCustomer;
 using HPCL.Common.Models.ViewModel.COMCOManager;
 using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Http;
@@ -191,6 +192,101 @@ namespace HPCL.Service.Services
             {
                 model.MerchantID = "";
                 model.CustomerID = "";
+            }
+
+            return model;
+        }
+
+        public async Task<RequestToSetCreditLimitModel> RequestToSetCreditLimit()
+        {
+            RequestToSetCreditLimitModel model = new RequestToSetCreditLimitModel();
+            model.Remarks = "";
+            model.COMCOLimitModeMdl.AddRange(await _commonActionService.GetComcoLimitSetModeList());
+            model.COMCOLimitIntervalMdl.AddRange(await _commonActionService.GetComcoLimitInvoiceIntervalList());
+
+            return model;
+        }
+        public async Task<RequestToSetCreditLimitModel> RequestToSetCreditLimit(RequestToSetCreditLimitModel model)
+        {
+            model.UserAgent = CommonBase.useragent;
+            model.UserIp = CommonBase.userip;
+            model.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
+            model.CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId");
+
+            MultipartFormDataContent form = new MultipartFormDataContent();
+
+            form.Add(new StringContent(model.CustomerID), "CustomerID");
+            form.Add(new StringContent(model.LimitSetMode.ToString()), "LimitSetMode");
+            form.Add(new StringContent(model.Amount.ToString()), "Amount");
+            form.Add(new StringContent(model.InvoiceIntervalId.ToString()), "InvoiceIntervalId");
+            form.Add(new StringContent(model.COMOCOPackageID), "COMOCOPackageID");
+            List<string> chequeBDSCRNumber = new List<string>();
+            List<string> chequeBDSCRDate = new List<string>();
+
+            if (model.LimitSetMode == 1)
+            {
+                form.Add(new StringContent(model.CautionAmountWOSD.ToString()), "CautionAmount");
+                form.Add(new StreamContent(model.ScannedReferenceDocumentWOSD.OpenReadStream()), "ScannedReferenceDocument", model.ScannedReferenceDocumentWOSD.FileName);
+                form.Add(new StringContent(model.FinanceCharges), "FinanceCharges");
+                form.Add(new StringContent(chequeBDSCRNumber.ToString()), "ChequeBDSCRNumber");
+                form.Add(new StringContent(chequeBDSCRDate.ToString()), "ChequeBDSCRDate");
+            }
+            else
+            {
+                foreach (ChequeDetails item in model.lstChequeDetails)
+                {
+                    chequeBDSCRNumber.Add(item.ChequeBDSCRNumber);
+                    string bDSCRDate = await _commonActionService.changeDateFormat(item.ChequeBDSCRDate);
+                    chequeBDSCRDate.Add(bDSCRDate);
+                }
+
+                form.Add(new StringContent(model.CautionAmountWSD.ToString()), "CautionAmount");
+                form.Add(new StreamContent(model.ScannedReferenceDocumentWSD.OpenReadStream()), "ScannedReferenceDocument", model.ScannedReferenceDocumentWSD.FileName);
+                form.Add(new StringContent(model.ServicesCharges), "ServicesCharges");
+                form.Add(new StringContent(chequeBDSCRNumber.ToString()), "ChequeBDSCRNumber");
+                form.Add(new StringContent(chequeBDSCRDate.ToString()), "ChequeBDSCRDate");
+            }
+
+            form.Add(new StringContent(_httpContextAccessor.HttpContext.Session.GetString("UserId")), "CreatedBy");
+            form.Add(new StringContent(model.UserId), "Userid");
+            form.Add(new StringContent(model.UserAgent), "Useragent");
+            form.Add(new StringContent(model.UserIp), "Userip");
+
+            var response = await _requestService.FormDataRequestService(form, WebApiUrl.comcoLimitSetRequest);
+
+            var settings = new JsonSerializerSettings
+            {
+                NullValueHandling = NullValueHandling.Ignore,
+                MissingMemberHandling = MissingMemberHandling.Ignore
+            };
+
+            OTCCustomerCardResponse customerResponse = JsonConvert.DeserializeObject<OTCCustomerCardResponse>(response, settings);
+
+            model.Internel_Status_Code = customerResponse.Internel_Status_Code;
+            model.Remarks = customerResponse.Message;
+
+            if (customerResponse.Internel_Status_Code != 1000)
+            {
+                if (customerResponse != null && customerResponse.Data != null && customerResponse.Data.Count > 0)
+                    model.Remarks = customerResponse.Data[0].Reason;
+                else
+                    model.Remarks = customerResponse.Message;
+
+                model.COMCOLimitModeMdl.AddRange(await _commonActionService.GetComcoLimitSetModeList());
+                model.COMCOLimitIntervalMdl.AddRange(await _commonActionService.GetComcoLimitInvoiceIntervalList());
+            }
+            else
+            {
+                if (customerResponse != null && customerResponse.Data != null && customerResponse.Data.Count > 0)
+                {
+                    model.Remarks = customerResponse.Data[0].Reason;
+                    if (customerResponse.Data[0].Status != 1)
+                    {
+                        model.Internel_Status_Code = customerResponse.Internel_Status_Code + 1;
+                        model.COMCOLimitModeMdl.AddRange(await _commonActionService.GetComcoLimitSetModeList());
+                        model.COMCOLimitIntervalMdl.AddRange(await _commonActionService.GetComcoLimitInvoiceIntervalList());
+                    }
+                }
             }
 
             return model;

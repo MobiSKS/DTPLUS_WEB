@@ -15,5 +15,7 @@ namespace HPCL.Service.Interfaces
         Task<COMCOCustomerMappingViewModel> COMCOCustomerMapping(COMCOCustomerMappingViewModel Model);
         Task<CommonResponseData> UpdateCOMCOMapCustomer([FromBody] UpdateCOMCOMapCustomerRequest model);
         Task<ViewMappedCreditCustomersModel> ViewMappedCreditCustomers(ViewMappedCreditCustomersModel model);
+        Task<RequestToSetCreditLimitModel> RequestToSetCreditLimit();
+        Task<RequestToSetCreditLimitModel> RequestToSetCreditLimit(RequestToSetCreditLimitModel model);
     }
 }

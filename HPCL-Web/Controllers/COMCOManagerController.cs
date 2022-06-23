@@ -56,6 +56,29 @@ namespace HPCL_Web.Controllers
             }
             return View(searchResult);
         }
+        public async Task<IActionResult> RequestToSetCreditLimit()
+        {
+            var modals = await _comCOManagerService.RequestToSetCreditLimit();
+            return View(modals);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RequestToSetCreditLimit(RequestToSetCreditLimitModel model)
+        {
+            model = await _comCOManagerService.RequestToSetCreditLimit(model);
+
+            if (model.Internel_Status_Code == 1000)
+            {
+                return RedirectToAction("SuccessRedirectSetCreditLimit", new { Message = model.Remarks });
+            }
+
+            return View(model);
+        }
+        public async Task<IActionResult> SuccessRedirectSetCreditLimit(string Message)
+        {
+            ViewBag.Message = Message;
+            return View();
+        }
 
     }
 }

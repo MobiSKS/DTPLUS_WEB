@@ -1599,5 +1599,44 @@ namespace HPCL.Service.Services
             List<StatusResponseModal> lst = jarr.ToObject<List<StatusResponseModal>>();
             return lst;
         }
+
+        public async Task<List<StatusModal>> GetComcoLimitSetModeList()
+        {
+            var forms = new Dictionary<string, string>
+            {
+                {"useragent", CommonBase.useragent},
+                {"userip", CommonBase.userip},
+                {"userid", _httpContextAccessor.HttpContext.Session.GetString("UserId")},
+            };
+
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getComcoLimitSetMode);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<StatusModal> sortedtList = jarr.ToObject<List<StatusModal>>();
+            return sortedtList;
+        }
+
+        public async Task<List<StatusModal>> GetComcoLimitInvoiceIntervalList()
+        {
+            var forms = new Dictionary<string, string>
+            {
+                {"useragent", CommonBase.useragent},
+                {"userip", CommonBase.userip},
+                {"userid", _httpContextAccessor.HttpContext.Session.GetString("UserId")},
+            };
+
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getComcoLimitInvoiceInterval);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<StatusModal> sortedtList = jarr.ToObject<List<StatusModal>>();
+            return sortedtList;
+        }
+
     }
 }

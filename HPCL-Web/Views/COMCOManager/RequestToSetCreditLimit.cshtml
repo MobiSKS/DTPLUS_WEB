@@ -1,0 +1,534 @@
+﻿@model HPCL.Common.Models.ViewModel.COMCOManager.RequestToSetCreditLimitModel
+@using HPCL.Common.Resources
+
+<div class="col-lg-12 p-4 p-md-4">
+    <div class="bg-white p-2 p-md-4">
+        <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
+            <li class="breadcrumb-item"><a href="#" class="text_primary">Credit Limit</a> </li>
+            <li class="breadcrumb-item font-weight-light">Limit Set Request</li>
+        </ul>
+        <form name="Form1" id="Form1" method="post" asp-action="RequestToSetCreditLimit" class="w-100" autocomplete="off" enctype="multipart/form-data">
+            <div class="w-100">
+                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
+                    <div class="border-1 rounded border-grey pb-3">
+                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Limit Set Request</p>
+                        <div class="col-lg-12 col-md-12 col-12 pt-3">
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-12 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-0">
+                                        <label class="font-weight-normal col-md-2 col-12">Select Mode <sup class="text-danger">*</sup></label>
+                                        <div class="col-sm-3 col-md-3 col-12">
+                                            <div class="custom_select">
+                                                @Html.DropDownListFor(m => m.LimitSetMode, new SelectList(Model.COMCOLimitModeMdl, "StatusId", "StatusName"), new { @class = "form-control" })
+                                            </div>
+                                            <span class="error" id="LimitSetMode_error"></span>
+                                        </div>
+                                        <div class="col-md-7 col-12">
+                                            <div class="d-flex align-items-center flex-wrap">
+                                                <div class="px-0">
+                                                    <button class="btn btn_primary regrate_btn" type="button">View Mapped Customers</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+
+                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3" id="dvDetails" style="display:none">
+                    <div class="border-1 rounded border-grey pb-0">
+                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold" id="headerText">Without Security Deposit</p>
+                        <div class="col-lg-12 col-md-12 col-12 pt-3">
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">Customer ID <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.CustomerID, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)" })
+                                                @Html.ValidationMessageFor(m => m.CustomerID, "", new { @class = "text-danger", @id = "CustomerIdValErrMsg" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-5 col-12">Amount <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.Amount, new { @class = "form-control", maxlength="10", onkeypress = "return isNumberKey(event)" })
+                                                <span class="error" id="Amount_error"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="dvCautionAmountWOSD" style="display:none;">
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">Caution Amount <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.CautionAmountWOSD, new { @class = "form-control", maxlength="10", onkeypress = "return isNumberKey(event)" })
+                                                <span class="error" id="CautionAmountWOSD_error"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-5 col-12">Scanned Reference Document <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.ScannedReferenceDocumentWOSD, new { @id = "ScannedReferenceDocumentWOSD", @class = "form-control-file", Type = "file" })
+                                                <span class="error" id="ScannedReferenceDocumentWOSD_error"></span>
+                                            </div>
+                                            <p class="mb-0">(In pdf/jpg/doc/docx format)</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            </div>
+
+                            <div id="dvCautionAmountWSD" style="display:none;">
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">Caution Amount <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.CautionAmountWSD, new { @class = "form-control", maxlength="10", onkeypress = "return isNumberKey(event)" })
+                                                <span class="error" id="CautionAmountWSD_error"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-5 col-12">No. of cheque/ BDS /CR required <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.NoOfCheques, new { @class = "form-control", maxlength="3", onkeypress = "return isNumberKey(event)" })
+                                                <span class="error" id="NoOfCheques_error"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                <button class="btn btn_primary" type="button" id="btnCard1" style="height:30px;" data-toggle="modal" data-target="#myModalCard1" onclick="LoadCard1Deatils()">ADD</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            </div>
+
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">Invoice Interval </label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.DropDownListFor(m => m.InvoiceIntervalId, new SelectList(Model.COMCOLimitIntervalMdl, "StatusId", "StatusName"), new { @class = "form-control" })
+                                                <span class="error" id="InvoiceIntervalId_error"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-5 col-12">COMCO Package ID <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.COMOCOPackageID, new { @class = "form-control", maxlength="10", onkeydown="return IsAlphaNumeric(event.keyCode)" })
+                                                <span class="error" id="COMCOPackageID_error"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="dvFinanceCharges" style="display:none">
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">Finance Charges (%) <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.FinanceCharges, new { @class = "form-control", maxlength="10", onkeypress = "return isNumberKey(event)" })
+                                                <span class="error" id="FinanceCharges_error"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            </div>
+
+                            <div id="dvServicesCharges" style="display:none;">
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">Service Charges (%) <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.ServicesCharges, new { @class = "form-control", maxlength="10", onkeypress = "return isNumberKey(event)" })
+                                                <span class="error" id="ServicesCharges_error"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-5 col-12">Scanned Reference Document <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.ScannedReferenceDocumentWSD, new { @id = "ScannedReferenceDocumentWSD", @class = "form-control-file", Type = "file" })
+                                                <span class="error" id="ScannedReferenceDocumentWSD_error"></span>
+                                            </div>
+                                            <p class="mb-0">(In pdf/jpg/doc/docx format)</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            </div>
+
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="d-flex align-items-center justify-content-center flex-wrap mb-3">
+                            <div class="px-2">
+                                <button class="btn btn_primary" type="submit" onclick="return ValidateMandatoryFields()">@Label.Submit</button>
+                            </div>
+                            <div class="px-2">
+                                <button class="btn btn_primary regrate_btn" type="button" id="btnReset">@Label.Reset</button>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="clearfix"></div>
+    </div>
+</div>
+<div class="clearfix"></div>
+<script>
+$("#LimitSetMode").change(function () {
+    var id = this.value;
+    if (id != 0) 
+    {
+        if(id==1)
+        {
+            $("#headerText").html("Without Security Deposit");
+            document.getElementById("dvCautionAmountWSD").style.display="none";
+            document.getElementById("dvCautionAmountWOSD").style.display="block";
+            document.getElementById("dvDetails").style.display="block";
+            document.getElementById("dvFinanceCharges").style.display="block";
+            document.getElementById("dvServicesCharges").style.display="none";
+
+            $("#ScannedReferenceDocumentWSD_error").html("");
+            $("#ScannedReferenceDocumentWOSD_error").html("");
+        }
+        else
+        {
+            $("#headerText").html("Security Deposit");
+            document.getElementById("dvCautionAmountWSD").style.display="block";
+            document.getElementById("dvCautionAmountWOSD").style.display="none";
+            document.getElementById("dvDetails").style.display="block";
+            document.getElementById("dvFinanceCharges").style.display="none";
+            document.getElementById("dvServicesCharges").style.display="block";
+
+            $("#ScannedReferenceDocumentWSD_error").html("");
+            $("#ScannedReferenceDocumentWOSD_error").html("");
+        }
+    }
+    else
+    {
+        $("#headerText").html("Without Security Deposit");
+        document.getElementById("dvDetails").style.display="none";
+    }
+    
+});
+
+$("#btnReset").click(function () {
+        window.location.href = '@Url.Action("RequestToSetCreditLimit", "COMCOManager")';
+    });
+
+$("#ScannedReferenceDocumentWSD").on("blur", function () {
+    //debugger;
+    var addressProof = document.getElementById("ScannedReferenceDocumentWSD").value.trim();
+    if (addressProof == "") {
+        document.getElementById("ScannedReferenceDocumentWSD_error").innerHTML = "Please select valid file";
+        return (false);
+    }
+    else {
+        document.getElementById("ScannedReferenceDocumentWSD_error").innerHTML = "";
+    }
+
+});
+
+$("#ScannedReferenceDocumentWOSD").on("blur", function () {
+    //debugger;
+    var addressProof = document.getElementById("ScannedReferenceDocumentWOSD").value.trim();
+    if (addressProof == "") {
+        document.getElementById("ScannedReferenceDocumentWOSD_error").innerHTML = "Please select valid file";
+        return (false);
+    }
+    else {
+        document.getElementById("ScannedReferenceDocumentWOSD_error").innerHTML = "";
+    }
+
+});
+
+$("#ScannedReferenceDocumentWSD").change(function () 
+{
+    $("#ScannedReferenceDocumentWSD_error").html("");
+
+    idFront = $(this).val().replace(/C:\\Fakepath\\/i, '');
+
+    var regex = /(.*?)\.(pdf|jpeg|jpg|JPEG|doc|docx)$/;
+    if (regex.test($(this).val()))
+    {
+        if (typeof (FileReader) != "undefined") 
+        {
+            if(this.files[0].size < 10485760)
+            {
+                var valueSize = (this.files[0].size) / 1024;
+            }
+            else
+            {
+                $("#ScannedReferenceDocumentWSD_error").text("");
+                $('#ScannedReferenceDocumentWSD').val('');
+                $("#ScannedReferenceDocumentWSD_error").text("File size should not exceeded from 10MB");
+            } 
+
+        } 
+        else 
+        {
+            $('#ScannedReferenceDocumentWSD').val('');
+        }
+    }
+    else 
+    {
+        $("#ScannedReferenceDocumentWSD_error").text("");
+        $('#ScannedReferenceDocumentWSD').val('');
+        $("#ScannedReferenceDocumentWSD_error").text("Invalid File Type");
+    }
+});
+
+$("#ScannedReferenceDocumentWOSD").change(function () 
+{
+    $("#ScannedReferenceDocumentWOSD_error").html("");
+
+    idFront = $(this).val().replace(/C:\\Fakepath\\/i, '');
+
+    var regex = /(.*?)\.(pdf|jpeg|jpg|JPEG|doc|docx)$/;
+    if (regex.test($(this).val()))
+    {
+        if (typeof (FileReader) != "undefined") 
+        {
+            if(this.files[0].size < 10485760)
+            {
+                var valueSize = (this.files[0].size) / 1024;
+            }
+            else
+            {
+                $("#ScannedReferenceDocumentWOSD_error").text("");
+                $('#ScannedReferenceDocumentWOSD').val('');
+                $("#ScannedReferenceDocumentWOSD_error").text("File size should not exceeded from 10MB");
+            } 
+
+        } 
+        else 
+        {
+            $('#ScannedReferenceDocumentWOSD').val('');
+        }
+    }
+    else 
+    {
+        $("#ScannedReferenceDocumentWOSD_error").text("");
+        $('#ScannedReferenceDocumentWOSD').val('');
+        $("#ScannedReferenceDocumentWOSD_error").text("Invalid File Type");
+    }
+});
+
+$("#CustomerID").on("blur", function ()
+{
+    if ($("#CustomerID").val().trim() == "")
+    {
+        $("#CustomerIdValErrMsg").attr("style", "display:block");
+        $('#CustomerIdValErrMsg').html("Please enter Customer ID");
+        return false;
+    }
+    else if (!$("#CustomerID").val().match(mappedCustomerId))
+    {
+        $("#CustomerIdValErrMsg").attr("style", "display:block");
+        $("#CustomerIdValErrMsg").html("Invalid Customer ID");
+        return false;
+    }
+    else
+    {
+        $('#CustomerIdValErrMsg').html("");
+    }
+
+})
+
+function ValidateMandatoryFields() 
+{
+    debugger;
+
+    var ret = true;
+
+    if ($("#CustomerID").val().trim() == "")
+    {
+        $("#CustomerIdValErrMsg").attr("style", "display:block");
+        $('#CustomerIdValErrMsg').html("Please enter Customer ID");
+        ret = false;
+    }
+    else if (!$("#CustomerID").val().match(mappedCustomerId))
+    {
+        $("#CustomerIdValErrMsg").attr("style", "display:block");
+        $("#CustomerIdValErrMsg").html("Invalid Customer ID");
+        ret = false;
+    }
+    else
+    {
+        $('#CustomerIdValErrMsg').html("");
+    }
+
+    if (document.getElementById("Amount").value.trim() == "") 
+    {
+        document.getElementById("Amount_error").innerHTML = "Please enter Amount";
+        ret = false;
+    }
+    else
+    {
+        document.getElementById("Amount_error").innerHTML = "";
+    }
+
+    if (document.getElementById("COMOCOPackageID").value.trim() == "") 
+    {
+        document.getElementById("COMCOPackageID_error").innerHTML = "Please enter COMOCO Package ID";
+        ret = false;
+    }
+    else if (!(document.getElementById("COMOCOPackageID").value.match(forVehicleNo)))
+    {
+        document.getElementById("COMCOPackageID_error").innerHTML = "COMOCO Package ID should be alphanumeric";
+        ret = false;
+    }
+    else
+    {
+        document.getElementById("COMCOPackageID_error").innerHTML = "";
+    }
+
+    if ($("#LimitSetMode").val() == "1")//WithOutSecurityDeposit
+    {
+        if (document.getElementById("CautionAmountWOSD").value.trim() == "") 
+        {
+            document.getElementById("CautionAmountWOSD_error").innerHTML = "Please enter Caution Amount";
+            ret = false;
+        }
+        else
+        {
+            document.getElementById("CautionAmountWOSD_error").innerHTML = "";
+        }
+
+        if (document.getElementById("ScannedReferenceDocumentWOSD").value.trim() == "") 
+        {
+            document.getElementById("ScannedReferenceDocumentWOSD_error").innerHTML = "Please select a valid file";
+            ret = false;
+        }
+        else 
+        {
+            document.getElementById("ScannedReferenceDocumentWOSD_error").innerHTML = "";
+        }
+
+        if (document.getElementById("FinanceCharges").value.trim() == "") 
+        {
+            document.getElementById("FinanceCharges_error").innerHTML = "Please enter Finance Charge";
+            ret = false;
+        }
+        else
+        {
+            document.getElementById("FinanceCharges_error").innerHTML = "";
+        }
+
+    }
+    else if ($("#LimitSetMode").val() == "2")//SecurityDeposit
+    {
+        if (document.getElementById("CautionAmountWSD").value.trim() == "") 
+        {
+            document.getElementById("CautionAmountWSD_error").innerHTML = "Please enter Caution Amount";
+            ret = false;
+        }
+        else
+        {
+            document.getElementById("CautionAmountWSD_error").innerHTML = "";
+        }
+
+        if (document.getElementById("ScannedReferenceDocumentWSD").value.trim() == "") 
+        {
+            document.getElementById("ScannedReferenceDocumentWSD_error").innerHTML = "Please select a valid file";
+            ret = false;
+        }
+        else 
+        {
+            document.getElementById("ScannedReferenceDocumentWSD_error").innerHTML = "";
+        }
+
+        if ($("#NoOfCheques").val().trim() == "") 
+        {
+            document.getElementById("NoOfCheques_error").innerHTML = "Please enter No. of cheque/BDS/CR required";
+            ret = false;
+        }
+        else if (!($("#NoOfCheques").val().match(number)))
+        {
+            document.getElementById("NoOfCheques_error").innerHTML = "invalid Number. Number should be between 1 and 100";
+            ret = false;
+        }
+        else if (Number($("#NoOfCheques").val())<1 || Number($("#NoOfCheques").val())>100)
+        {
+            document.getElementById("NoOfCheques_error").innerHTML = "invalid Number. Number should be between 1 and 100";
+            ret = false;
+        }
+        else
+        {
+            document.getElementById("NoOfCheques_error").innerHTML = "";
+        }
+
+        if (document.getElementById("ServicesCharges").value.trim() == "") 
+        {
+            document.getElementById("ServicesCharges_error").innerHTML = "Please enter Service Charge";
+            ret = false;
+        }
+        else
+        {
+            document.getElementById("ServicesCharges_error").innerHTML = "";
+        }
+
+    }
+
+
+    return ret;
+}
+</script>
