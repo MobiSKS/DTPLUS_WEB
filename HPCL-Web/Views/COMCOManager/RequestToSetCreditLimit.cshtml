@@ -50,7 +50,7 @@
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
                                                 @Html.TextBoxFor(m => m.CustomerID, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)" })
-                                                @Html.ValidationMessageFor(m => m.CustomerID, "", new { @class = "text-danger", @id = "CustomerIdValErrMsg" })
+                                                @Html.ValidationMessageFor(m => m.CustomerID, "", new { @class = "error", @id = "CustomerIdValErrMsg" })
                                             </div>
                                         </div>
                                     </div>
@@ -393,6 +393,136 @@ $("#CustomerID").on("blur", function ()
 
 })
 
+$("#Amount").on("blur", function ()
+{
+    if ($("#Amount").val().trim() == "")
+    {
+        $("#Amount_error").attr("style", "display:block");
+        $('#Amount_error').html("Please enter Amount");
+        return false;
+    }
+    else
+    {
+        $('#Amount_error').html("");
+    }
+
+})
+
+$("#COMOCOPackageID").on("blur", function ()
+{
+    if (document.getElementById("COMOCOPackageID").value.trim() == "") 
+    {
+        document.getElementById("COMCOPackageID_error").innerHTML = "Please enter COMOCO Package ID";
+    }
+    else if (!(document.getElementById("COMOCOPackageID").value.match(forVehicleNo)))
+    {
+        document.getElementById("COMCOPackageID_error").innerHTML = "COMOCO Package ID should be alphanumeric";
+    }
+    else
+    {
+        document.getElementById("COMCOPackageID_error").innerHTML = "";
+    }
+
+})
+
+$("#CautionAmountWOSD").on("blur", function ()
+{
+    if (document.getElementById("CautionAmountWOSD").value.trim() == "") 
+    {
+        document.getElementById("CautionAmountWOSD_error").innerHTML = "Please enter Caution Amount";
+    }
+    else
+    {
+        document.getElementById("CautionAmountWOSD_error").innerHTML = "";
+    }
+
+})
+
+$("#CautionAmountWSD").on("blur", function ()
+{
+    if (document.getElementById("CautionAmountWSD").value.trim() == "") 
+    {
+        document.getElementById("CautionAmountWSD_error").innerHTML = "Please enter Caution Amount";
+    }
+    else
+    {
+        document.getElementById("CautionAmountWSD_error").innerHTML = "";
+    }
+
+})
+
+$("#FinanceCharges").on("blur", function ()
+{
+    if ($("#FinanceCharges").val().trim() == "") 
+    {
+        document.getElementById("FinanceCharges_error").innerHTML = "Please enter Finance Charge";
+        return false;
+    }
+    else if (!($("#FinanceCharges").val().match(number)))
+    {
+        document.getElementById("FinanceCharges_error").innerHTML = "Amount should be between 0 and 100";
+        return false;
+    }
+    else if (Number($("#FinanceCharges").val())<0 || Number($("#FinanceCharges").val())>100)
+    {
+        document.getElementById("FinanceCharges_error").innerHTML = "Amount should be between 0 and 100";
+        return false;
+    }
+    else
+    {
+        document.getElementById("FinanceCharges_error").innerHTML = "";
+    }
+
+})
+
+$("#ServicesCharges").on("blur", function ()
+{
+    if ($("#ServicesCharges").val().trim() == "") 
+    {
+        document.getElementById("ServicesCharges_error").innerHTML = "Please enter Service Charge";
+        return false;
+    }
+    else if (!($("#ServicesCharges").val().match(number)))
+    {
+        document.getElementById("ServicesCharges_error").innerHTML = "Amount should be between 0 and 100";
+        return false;
+    }
+    else if (Number($("#ServicesCharges").val())<0 || Number($("#ServicesCharges").val())>100)
+    {
+        document.getElementById("ServicesCharges_error").innerHTML = "Amount should be between 0 and 100";
+        return false;
+    }
+    else
+    {
+        document.getElementById("ServicesCharges_error").innerHTML = "";
+    }
+
+})
+
+$("#NoOfCheques").on("blur", function ()
+{
+    if ($("#NoOfCheques").val().trim() == "") 
+    {
+        document.getElementById("NoOfCheques_error").innerHTML = "Please enter No. of cheque/ BDS /CR required";
+        return false;
+    }
+    else if (!($("#NoOfCheques").val().match(number)))
+    {
+        document.getElementById("NoOfCheques_error").innerHTML = "Number should be between 1 and 100";
+        return false;
+    }
+    else if (Number($("#NoOfCheques").val())<1 || Number($("#NoOfCheques").val())>100)
+    {
+        document.getElementById("NoOfCheques_error").innerHTML = "Number should be between 1 and 100";
+        return false;
+    }
+    else
+    {
+        document.getElementById("NoOfCheques_error").innerHTML = "";
+    }
+
+})
+
 function ValidateMandatoryFields() 
 {
     debugger;
@@ -455,7 +585,7 @@ function ValidateMandatoryFields()
 
         if (document.getElementById("ScannedReferenceDocumentWOSD").value.trim() == "") 
         {
-            document.getElementById("ScannedReferenceDocumentWOSD_error").innerHTML = "Please select a valid file";
+            document.getElementById("ScannedReferenceDocumentWOSD_error").innerHTML = "Please select valid file";
             ret = false;
         }
         else 
@@ -466,6 +596,16 @@ function ValidateMandatoryFields()
         if (document.getElementById("FinanceCharges").value.trim() == "") 
         {
             document.getElementById("FinanceCharges_error").innerHTML = "Please enter Finance Charge";
+            ret = false;
+        }
+        else if (!($("#FinanceCharges").val().match(number)))
+        {
+            document.getElementById("FinanceCharges_error").innerHTML = "Amount should be between 0 and 100";
+            ret = false;
+        }
+        else if (Number($("#FinanceCharges").val())<0 || Number($("#FinanceCharges").val())>100)
+        {
+            document.getElementById("FinanceCharges_error").innerHTML = "Amount should be between 0 and 100";
             ret = false;
         }
         else
@@ -488,7 +628,7 @@ function ValidateMandatoryFields()
 
         if (document.getElementById("ScannedReferenceDocumentWSD").value.trim() == "") 
         {
-            document.getElementById("ScannedReferenceDocumentWSD_error").innerHTML = "Please select a valid file";
+            document.getElementById("ScannedReferenceDocumentWSD_error").innerHTML = "Please select valid file";
             ret = false;
         }
         else 
@@ -498,17 +638,17 @@ function ValidateMandatoryFields()
 
         if ($("#NoOfCheques").val().trim() == "") 
         {
-            document.getElementById("NoOfCheques_error").innerHTML = "Please enter No. of cheque/BDS/CR required";
+            document.getElementById("NoOfCheques_error").innerHTML = "Please enter No. of cheque/ BDS /CR required";
             ret = false;
         }
         else if (!($("#NoOfCheques").val().match(number)))
         {
-            document.getElementById("NoOfCheques_error").innerHTML = "invalid Number. Number should be between 1 and 100";
+            document.getElementById("NoOfCheques_error").innerHTML = "Number should be between 1 and 100";
             ret = false;
         }
         else if (Number($("#NoOfCheques").val())<1 || Number($("#NoOfCheques").val())>100)
         {
-            document.getElementById("NoOfCheques_error").innerHTML = "invalid Number. Number should be between 1 and 100";
+            document.getElementById("NoOfCheques_error").innerHTML = "Number should be between 1 and 100";
             ret = false;
         }
         else
@@ -519,6 +659,16 @@ function ValidateMandatoryFields()
         if (document.getElementById("ServicesCharges").value.trim() == "") 
         {
             document.getElementById("ServicesCharges_error").innerHTML = "Please enter Service Charge";
+            ret = false;
+        }
+        else if (!($("#ServicesCharges").val().match(number)))
+        {
+            document.getElementById("ServicesCharges_error").innerHTML = "Amount should be between 0 and 100";
+            ret = false;
+        }
+        else if (Number($("#ServicesCharges").val())<0 || Number($("#ServicesCharges").val())>100)
+        {
+            document.getElementById("ServicesCharges_error").innerHTML = "Amount should be between 0 and 100";
             ret = false;
         }
         else
