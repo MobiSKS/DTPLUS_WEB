@@ -77,5 +77,6 @@ namespace HPCL.Service.Interfaces
         Task<List<StatusResponseModal>> GetNormalFleetCustomerStatus();
         Task<List<StatusResponseModal>> GetNormalFleetCustomerStatusForApprove();
         Task<List<StatusResponseModal>> GetCreditPouchStatus();
+        Task<List<CustomerZonalOfficeModel>> GetZonalOfficebySBUType(string SBUTypeId);
     }
 }

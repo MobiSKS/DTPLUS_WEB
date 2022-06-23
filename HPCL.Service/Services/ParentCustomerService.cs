@@ -55,8 +55,9 @@ namespace HPCL.Service.Services
                 custMdl = obj.ToObject<ManageProfileViewModel>();
             }
             custMdl.Remarks = "";
+            custMdl.SBUTypes.AddRange(await _commonActionService.GetSbuTypeList());
             custMdl.CustomerTypeMdl.AddRange(await _commonActionService.GetCustomerTypeListDropdown());
-            custMdl.CustomerZonalOfficeMdl.AddRange(await _commonActionService.GetZonalOfficeListForDropdown());
+            custMdl.CustomerZonalOfficeMdl.AddRange(await _commonActionService.GetZonalOfficebySBUType("1"));
 
             custMdl.CustomerTbentityMdl.AddRange(await _commonActionService.GetCustomerTbentityListDropdown());
 
@@ -212,8 +213,9 @@ namespace HPCL.Service.Services
                 //cust.CustomerTypeMdl.AddRange(await _commonActionService.GetCustomerTypeListDropdown());
 
                 //cust.CustomerSubTypeMdl.AddRange(await _commonActionService.GetCustomerSubTypeDropdown(cust.CustomerTypeID));
+                cust.SBUTypes.AddRange(await _commonActionService.GetSbuTypeList());
 
-                cust.CustomerZonalOfficeMdl.AddRange(await _commonActionService.GetZonalOfficeListForDropdown());
+                cust.CustomerZonalOfficeMdl.AddRange(await _commonActionService.GetZonalOfficebySBUType("1"));
 
                 cust.CustomerRegionMdl.AddRange(await _commonActionService.GetRegionalDetailsDropdown(cust.CustomerZonalOfficeID));
 
@@ -423,8 +425,8 @@ namespace HPCL.Service.Services
 
             int CustomerTypeID = 901, CustomerSubTypeID = 913;
             custMdl.CustomerSubTypeMdl.AddRange(await _commonActionService.GetCustomerSubTypeDropdown(CustomerTypeID));
-
-            custMdl.CustomerZonalOfficeMdl.AddRange(await _commonActionService.GetZonalOfficeListForDropdown());
+            custMdl.SBUTypes.AddRange(await _commonActionService.GetSbuTypeList());
+            //custMdl.CustomerZonalOfficeMdl.AddRange(await _commonActionService.GetZonalOfficeListForDropdown());
 
             custMdl.CustomerTbentityMdl.AddRange(await _commonActionService.GetCustomerTbentityListDropdown());
 
@@ -474,9 +476,20 @@ namespace HPCL.Service.Services
                     custMdl.CustomerId = customerId;
                     custMdl.RequestId = RequestId;
                     custMdl.CustomerTypeID = Convert.ToInt32(string.IsNullOrEmpty(Customer.CustomerTypeId) ? "0" : Customer.CustomerTypeId);
-
+                    custMdl.SBUTypeId = string.IsNullOrEmpty(Customer.SBUTypeId) ? "1" : Customer.SBUTypeId;
 
                     custMdl.CustomerSubTypeID = Convert.ToInt32(string.IsNullOrEmpty(Customer.CustomerSubtypeId) ? "0" : Customer.CustomerSubtypeId);
+                    List<CustomerZonalOfficeModel> lstZonalList = new List<CustomerZonalOfficeModel>();
+                    lstZonalList = await _commonActionService.GetZonalOfficebySBUType(custMdl.SBUTypeId);
+                    if (lstZonalList.Count > 0)
+                    {
+                        if (lstZonalList[0].ZonalOfficeName == "--Select--")
+                            lstZonalList[0].ZonalOfficeName = "Select Zonal Office";
+                    }
+
+                    custMdl.CustomerZonalOfficeMdl.Clear();
+                    custMdl.CustomerZonalOfficeMdl.AddRange(lstZonalList);
+
                     custMdl.CustomerZonalOfficeID = Convert.ToInt32(string.IsNullOrEmpty(Customer.ZonalOfficeID) ? "0" : Customer.ZonalOfficeID);
 
                     List<CustomerRegionModel> lstCustomerRegion = new List<CustomerRegionModel>();
@@ -852,8 +865,8 @@ namespace HPCL.Service.Services
                 //cust.CustomerTypeMdl.AddRange(await _commonActionService.GetCustomerTypeListDropdown());
 
                 // cust.CustomerSubTypeMdl.AddRange(await _commonActionService.GetCustomerSubTypeDropdown(901));
-
-                cust.CustomerZonalOfficeMdl.AddRange(await _commonActionService.GetZonalOfficeListForDropdown());
+                cust.SBUTypes.AddRange(await _commonActionService.GetSbuTypeList());
+                cust.CustomerZonalOfficeMdl.AddRange(await _commonActionService.GetZonalOfficebySBUType("1"));
 
                 cust.CustomerRegionMdl.AddRange(await _commonActionService.GetRegionalDetailsDropdown(cust.CustomerZonalOfficeID));
 
