@@ -331,7 +331,7 @@ namespace HPCL.Service.Services
                     UserAgent = CommonBase.useragent,
                     UserIp = CommonBase.userip,
                     CustomerId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
-                    StatusFlag = -1
+                    StatusFlag = entity.StatusFlag
                 };
             }
 

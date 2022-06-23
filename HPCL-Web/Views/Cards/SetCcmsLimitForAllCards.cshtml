@@ -72,7 +72,7 @@
                                                 <div class="form-group d-flex align-items-center flex-wrap">
                                                     <label class="font-weight-normal col-md-5 col-12 mb-0">Type Of Limit<sup class="text-danger">*</sup></label>
                                                     <div class="col-md-7 col-12">
-                                                        @Html.DropDownListFor(m => m.TypeOfLimit, Enumerable.Empty<SelectListItem>(), "--Select Limit--", new { @class = "form-control limitVal" })
+                                                        @Html.DropDownListFor(m => m.TypeOfLimit, Enumerable.Empty<SelectListItem>(),  new { @class = "form-control limitVal" })
                                                         @Html.ValidationMessageFor(m => m.TypeOfLimit, "", new {@id="TypeOfLimitErr", @class = "text-danger" })
                                                     </div>
                                                 </div>
@@ -81,7 +81,7 @@
                                                 <div class="form-group d-flex align-items-center flex-wrap">
                                                     <label class="font-weight-normal col-md-5 col-12 mb-0">CCMS Limit (Rs)</label>
                                                     <div class="col-md-7 col-12">
-                                                        @Html.TextBoxFor(m => m.CcmsLimitRs, new {@id="CcmsLimitRs", @class = "form-control restrictPaste", @onblur = "ccmsLimitValidate(this)" })
+                                                        @Html.TextBoxFor(m => m.CcmsLimitRs, new {@id="CcmsLimitRs", @class = "form-control restrictPaste", @onblur = "ccmsLimitValidate(this)", @maxlength="10" })
                                                         @Html.ValidationMessageFor(m => m.CcmsLimitRs, "", new {@id="CcmsLimitRsErr", @class = "text-danger" })
                                                     </div>
                                                 </div>
@@ -194,13 +194,15 @@
             }
         });
 
-         $.ajax({
+        $.ajax({
             type: 'POST',  // http method
             url: '@Url.Action("GetLimitType", "Common")',
             dataType: "json",
             success: function (data, status, xhr) {
 
                 console.log(data);
+
+                $("<option/>").val("0").text("--Select Limit--").appendTo(".limitVal");
 
                 $.each(data.sortedtList, function (i, option) {
                     $("<option/>").val(option.limitId).text(option.description).appendTo(".limitVal");
@@ -264,6 +266,16 @@
 
         if (res.searchCcmsCard.success == true) {
 
+            $("#CcmsLimitRsErr").text('');
+
+            $("#CcmsLimitRs").val('');
+
+            $("#CcmsLimitRs").attr("readonly", true);
+
+            $(".limitVal").val("0");
+
+            $(".limitVal")[0].sumo.reload();
+
             document.getElementById("noRecord").style.display = "none";
 
             $(".actual").html('');
@@ -287,6 +299,17 @@
 
         } else {
             document.getElementById("setAllLimit").style.display = "none";
+
+            $("#CcmsLimitRsErr").text('');
+
+            $("#CcmsLimitRs").val('');
+
+            $("#CcmsLimitRs").attr("readonly", true);
+
+            $(".limitVal").val("0");
+
+            $(".limitVal")[0].sumo.reload();
+
             $("#noRecord").html("");
             $("#noRecord").append("<span>" + res.searchCcmsCard.message + "</span>");
             document.getElementById("noRecord").style.display = "block";
@@ -353,10 +376,10 @@
         if(amountVal == ""){
             amountVal = 0;
         }else{
-            if(!amountVal.match("^[0-9]{1,10}$")){
+            if(!amountVal.match(/^[0-9.]+$/)){
                 $("#CcmsLimitRsErr").text("Please Enter numeric value");
                 return false;
-            }else if((amountVal == 0) || !(amountVal < 5000001)){
+            }else if((amountVal == 0) || !(parseFloat(amountVal) <= 5000000)){
                 $("#CcmsLimitRsErr").text("Invalid CCMS Limit");
                 return false;
             }else{

@@ -4,7 +4,7 @@ namespace HPCL.Common.Models.ViewModel.HDFCBankCreditPouch
 {
     public class AuthorizationActionReq : BaseEntity
     {
-        public ObjBankAuthEntryDetail[] objBankAuthEntryDetail { get; set; }
+        public ObjBankAuthEntryDetail[] ObjBankAuthEntryDetail { get; set; }
     }
 
     public class ObjBankAuthEntryDetail
