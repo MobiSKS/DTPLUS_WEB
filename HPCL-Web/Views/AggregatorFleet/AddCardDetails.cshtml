@@ -26,12 +26,22 @@
                             <div class="py-3 px-0 px-md-2">
 
                                 <div class="d-flex align-items-center flex-wrap">
-                                    <div class="col-lg-6 col-12">
+@*                                    <div class="col-lg-6 col-12">
                                         <div class="d-flex align-items-center flex-wrap mb-3">
                                             <label class="font-weight-normal col-md-5 col-12">Customer Ref No. <sup class="text-danger">*</sup></label>
                                             <div class="col-md-7 col-12">
                                                 @Html.TextBoxFor(m => m.CustomerReferenceNo, new { @id = "CustomerReferenceNo", @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)" })
                                                 <span class="error" id="CustomerReferenceNo_error"></span>
+                                            </div>
+                                        </div>
+                                    </div>*@
+
+                                    <div class="col-lg-6 col-12">
+                                        <div class="form-group d-flex align-items-center flex-wrap">
+                                            <label class="font-weight-normal col-md-5 col-12">Form Number <sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                @Html.TextBoxFor(m => m.FormNumber, new { @id = "FormNumber", @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)" })
+                                                <span class="error" id="FormNumber_error"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -269,7 +279,8 @@
 
 
 
-            $("#CustomerReferenceNo").prop('readonly', true);
+            //$("#CustomerReferenceNo").prop('readonly', true);
+            $("#FormNumber").prop('readonly', true);
 
             if (customerTypeId == "905" || customerTypeId == "909")
             {
@@ -281,8 +292,9 @@
             }
 
         }
-
-        if($("#dvRemarks").html().trim()=="" && document.getElementById("CustomerReferenceNo").value.trim()!="")
+        
+        //if($("#dvRemarks").html().trim()=="" && document.getElementById("CustomerReferenceNo").value.trim()!="")
+        if($("#dvRemarks").html().trim()=="" && document.getElementById("FormNumber").value.trim()!="")
         {
             $("#btnSearch").click();
         }
@@ -303,36 +315,71 @@
 
     $("#btnSearch").click(function () {
 
-        var custRefNo = document.getElementById("CustomerReferenceNo").value.trim();
+        //var custRefNo = document.getElementById("CustomerReferenceNo").value.trim();
+        //if (custRefNo == "")
+        //{
+        //    document.getElementById("CustomerReferenceNo_error").innerHTML = "Please enter 10 digits Customer Reference No.";
+        //    return (false);
+        //}
+        //else
+        //{
+        //    if (document.getElementById("CustomerReferenceNo").value.substring(0, 1) == "0")
+        //    {
+        //      document.getElementById("CustomerReferenceNo_error").innerHTML = "Please enter 10 digits Customer Reference No.";
+        //      return false;
+        //    }
+        //    else
+        //    {
+        //        if (document.getElementById("CustomerReferenceNo").value.length < 10)
+        //        {
+        //            document.getElementById("CustomerReferenceNo_error").innerHTML = "Please enter 10 digits Customer Reference No.";
+        //            return false;
+        //        }
+        //        else
+        //        {
+        //            if (!(document.getElementById("CustomerReferenceNo").value.match(number)))
+        //            {
+        //                document.getElementById("CustomerReferenceNo_error").innerHTML = "Please enter 10 digits Customer Reference No.";
+        //                return false;
+        //            }
+        //            else
+        //            {
+        //                document.getElementById("CustomerReferenceNo_error").innerHTML = "";
+        //            }
+        //        }
+        //    }
+        //}
+
+        var custFormNo = document.getElementById("FormNumber").value.trim();
         if (custRefNo == "")
         {
-            document.getElementById("CustomerReferenceNo_error").innerHTML = "Please enter 10 digits Customer Reference No.";
+            document.getElementById("FormNumber_error").innerHTML = "Please enter 10 digits Form No.";
             return (false);
         }
         else
         {
-            if (document.getElementById("CustomerReferenceNo").value.substring(0, 1) == "0")
+            if (document.getElementById("FormNumber").value.substring(0, 1) == "0")
             {
-              document.getElementById("CustomerReferenceNo_error").innerHTML = "Please enter 10 digits Customer Reference No.";
+              document.getElementById("FormNumber_error").innerHTML = "Please enter 10 digits Form No.";
               return false;
             }
             else
             {
-                if (document.getElementById("CustomerReferenceNo").value.length < 10)
+                if (document.getElementById("FormNumber").value.length < 10)
                 {
-                    document.getElementById("CustomerReferenceNo_error").innerHTML = "Please enter 10 digits Customer Reference No.";
+                    document.getElementById("FormNumber_error").innerHTML = "Please enter 10 digits Form No.";
                     return false;
                 }
                 else
                 {
-                    if (!(document.getElementById("CustomerReferenceNo").value.match(number)))
+                    if (!(document.getElementById("FormNumber").value.match(number)))
                     {
-                        document.getElementById("CustomerReferenceNo_error").innerHTML = "Please enter 10 digits Customer Reference No.";
+                        document.getElementById("FormNumber_error").innerHTML = "Please enter 10 digits Form No.";
                         return false;
                     }
                     else
                     {
-                        document.getElementById("CustomerReferenceNo_error").innerHTML = "";
+                        document.getElementById("FormNumber_error").innerHTML = "";
                     }
                 }
             }
@@ -341,7 +388,7 @@
             $.ajax({
                 type: 'POST',  // http method
                 url: '@Url.Action("GetCustomerDetailsForAddCard", "AggregatorFleet")',
-                data: { customerReferenceNo: custRefNo },  // data to submit
+                data: { customerReferenceNo: custFormNo },  // data to submit
                 dataType: "json",
                 success: function (data, status, xhr) {
 
@@ -426,13 +473,16 @@
                        }
                     }
                     else {
-                        $("#CustomerReferenceNo_error").html("");
+                        //$("#CustomerReferenceNo_error").html("");
+                        $("#FormNumber_error").html("");
+
                         console.log(v);
                         document.getElementById("CustomerName").value = "";
                         document.getElementById("FormNumber").value = "";
                         document.getElementById("CustomerTypeId").value = "";
                         var customerTypeId = "901";
-                        $("#CustomerReferenceNo").prop('readonly', false);
+                        //$("#CustomerReferenceNo").prop('readonly', false);
+                        $("#FormNumber").prop('readonly', false);
                         console.log(customerTypeId);
 
                     }
@@ -957,7 +1007,52 @@
      });
 
 
-     $('#CustomerReferenceNo').keypress(function (e)
+     //$('#CustomerReferenceNo').keypress(function (e)
+     //{
+     //    if (e.keyCode == 13) {  // detect the enter key
+     //        e.preventDefault();
+     //        $('#btnSearch').click();
+     //    }
+     //});
+
+     //$("#CustomerReferenceNo").on("blur", function ()
+     //{
+     //    var custRefNo = document.getElementById("CustomerReferenceNo").value;
+     //    if (custRefNo == "")
+     //    {
+     //        document.getElementById("CustomerReferenceNo_error").innerHTML = "Please enter 10 digits Customer Reference No.";
+     //        return (false);
+     //    }
+     //    else
+     //    {
+     //        if (document.getElementById("CustomerReferenceNo").value.substring(0, 1) == "0")
+     //        {
+     //          document.getElementById("CustomerReferenceNo_error").innerHTML = "Please enter 10 digits Customer Reference No.";
+     //          return false;
+     //        }
+     //        else
+     //        {
+     //            if (document.getElementById("CustomerReferenceNo").value.length < 10)
+     //            {
+     //                document.getElementById("CustomerReferenceNo_error").innerHTML = "Please enter 10 digits Customer Reference No.";
+     //                return false;
+     //            }
+     //            else
+     //            {
+     //                if (!(document.getElementById("CustomerReferenceNo").value.match(number)))
+     //                {
+     //                    document.getElementById("CustomerReferenceNo_error").innerHTML = "Please enter 10 digits Customer Reference No.";
+     //                    return false;
+     //                }
+     //                else
+     //                {
+     //                    document.getElementById("CustomerReferenceNo_error").innerHTML = "";
+     //                }
+     //            }
+     //       }
+     //   }
+
+     $('#FormNumber').keypress(function (e)
      {
          if (e.keyCode == 13) {  // detect the enter key
              e.preventDefault();
@@ -965,38 +1060,38 @@
          }
      });
 
-     $("#CustomerReferenceNo").on("blur", function ()
+     $("#FormNumber").on("blur", function ()
      {
-         var custRefNo = document.getElementById("CustomerReferenceNo").value;
+         var custRefNo = document.getElementById("FormNumber").value;
          if (custRefNo == "")
          {
-             document.getElementById("CustomerReferenceNo_error").innerHTML = "Please enter 10 digits Customer Reference No.";
+             document.getElementById("FormNumber_error").innerHTML = "Please enter 10 digits Form No.";
              return (false);
          }
          else
          {
-             if (document.getElementById("CustomerReferenceNo").value.substring(0, 1) == "0")
+             if (document.getElementById("FormNumber").value.substring(0, 1) == "0")
              {
-               document.getElementById("CustomerReferenceNo_error").innerHTML = "Please enter 10 digits Customer Reference No.";
+               document.getElementById("FormNumber_error").innerHTML = "Please enter 10 digits Form No.";
                return false;
              }
              else
              {
-                 if (document.getElementById("CustomerReferenceNo").value.length < 10)
+                 if (document.getElementById("FormNumber").value.length < 10)
                  {
-                     document.getElementById("CustomerReferenceNo_error").innerHTML = "Please enter 10 digits Customer Reference No.";
+                     document.getElementById("FormNumber_error").innerHTML = "Please enter 10 digits Form No.";
                      return false;
                  }
                  else
                  {
-                     if (!(document.getElementById("CustomerReferenceNo").value.match(number)))
+                     if (!(document.getElementById("FormNumber").value.match(number)))
                      {
-                         document.getElementById("CustomerReferenceNo_error").innerHTML = "Please enter 10 digits Customer Reference No.";
+                         document.getElementById("FormNumber_error").innerHTML = "Please enter 10 digits Form No.";
                          return false;
                      }
                      else
                      {
-                         document.getElementById("CustomerReferenceNo_error").innerHTML = "";
+                         document.getElementById("FormNumber_error").innerHTML = "";
                      }
                  }
             }
