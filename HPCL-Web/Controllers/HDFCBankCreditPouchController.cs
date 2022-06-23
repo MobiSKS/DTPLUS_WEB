@@ -105,11 +105,6 @@ namespace HPCL_Web.Controllers
             return Json(new { searchList = searchList });
         }
 
-        public IActionResult RequestAuthorization()
-        {
-            return View();
-        }
-
         public IActionResult CCMSRechargeThroughCreditPouch()
         {
             return View();
@@ -132,6 +127,27 @@ namespace HPCL_Web.Controllers
             HttpContext.Session.SetString("hdfcaccesscode", arrs.response.accessCode);
 
             return View();
+        }
+
+        public IActionResult RequestAuthorization()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> RequestAuthorization(GetRequestAuthorizationReq entity)
+        {
+            var searchList = await _hDFCBankCreditPouchService.GetRequestAuthorizationDetails(entity);
+            ModelState.Clear();
+            return Json(new { searchList = searchList });
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> AuthorizationAction(string authReq)
+        {
+            var reasonList = await _hDFCBankCreditPouchService.AuthorizationAction(authReq);
+            ModelState.Clear();
+            return Json(new { reasonList = reasonList });
         }
     }
 }

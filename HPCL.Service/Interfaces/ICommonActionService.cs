@@ -77,5 +77,7 @@ namespace HPCL.Service.Interfaces
         Task<List<StatusResponseModal>> GetNormalFleetCustomerStatus();
         Task<List<StatusResponseModal>> GetNormalFleetCustomerStatusForApprove();
         Task<List<StatusResponseModal>> GetCreditPouchStatus();
+        Task<List<StatusModal>> GetComcoLimitSetModeList();
+        Task<List<StatusModal>> GetComcoLimitInvoiceIntervalList();
     }
 }

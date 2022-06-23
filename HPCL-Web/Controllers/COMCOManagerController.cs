@@ -43,6 +43,42 @@ namespace HPCL_Web.Controllers
 
             return Json(new { customer = updateKycResponse });
         }
+        public async Task<IActionResult> ViewMappedCreditCustomers(ViewMappedCreditCustomersModel model, string reset, string success, string error, string UserName, string Status, string FromDate, string ToDate)
+        {
+            var searchResult = await _comCOManagerService.ViewMappedCreditCustomers(model);
+            ViewBag.Reset = String.IsNullOrEmpty(reset) ? "" : reset;
+            ViewBag.SuccessMessage = success;
+            ViewBag.ErrorMessage = error;
+            if (!String.IsNullOrEmpty(reset))
+            {
+                model.FromDate = DateTime.Now.AddMonths(-1).ToString("dd-MM-yyyy");
+                model.ToDate = DateTime.Now.ToString("dd-MM-yyyy");
+            }
+            return View(searchResult);
+        }
+        public async Task<IActionResult> RequestToSetCreditLimit()
+        {
+            var modals = await _comCOManagerService.RequestToSetCreditLimit();
+            return View(modals);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RequestToSetCreditLimit(RequestToSetCreditLimitModel model)
+        {
+            model = await _comCOManagerService.RequestToSetCreditLimit(model);
+
+            if (model.Internel_Status_Code == 1000)
+            {
+                return RedirectToAction("SuccessRedirectSetCreditLimit", new { Message = model.Remarks });
+            }
+
+            return View(model);
+        }
+        public async Task<IActionResult> SuccessRedirectSetCreditLimit(string Message)
+        {
+            ViewBag.Message = Message;
+            return View();
+        }
 
     }
 }

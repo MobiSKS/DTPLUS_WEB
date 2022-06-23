@@ -11,11 +11,15 @@ namespace HPCL.Service.Interfaces
 {
     public interface IParentCustomerService
     {
-        Task<ManageProfileViewModel> ManageProfile();
+        Task<ManageProfileViewModel> ManageProfile(string CustomerId, string NameOnCard);
         Task<ManageProfileViewModel> ManageProfile(ManageProfileViewModel cust);
         Task<ParentCustomerApprovalModel> ApproveParentCustomer(ParentCustomerApprovalModel ApprovalMdl);
         Task<List<string>> ActionParentCustomerApproval([FromBody] ApproveParentCustomer approveParentCustomer);
         Task<ParentCustomerApprovalModel> AuthorizeParentCustomer(ParentCustomerApprovalModel ApprovalMdl);
         Task<List<string>> ActionParentCustomerAuthorize([FromBody] ApproveParentCustomer approveParentCustomer);
+        Task<ViewCustomerCardorDispatchDetails> GetCardDetails(string CustomerId, string RequestId);
+        Task<ViewCustomerCardorDispatchDetails> GetDispatchDetails(string CustomerId, string RequestId);
+        Task<ManageProfileViewModel> UpdateParentCustomer(string CustomerId, string RequestId);
+        Task<ManageProfileViewModel> UpdateParentCustomer(ManageProfileViewModel cust);
     }
 }
