@@ -17,9 +17,9 @@ namespace HPCL.Service.Interfaces
         Task<List<string>> ActionParentCustomerApproval([FromBody] ApproveParentCustomer approveParentCustomer);
         Task<ParentCustomerApprovalModel> AuthorizeParentCustomer(ParentCustomerApprovalModel ApprovalMdl);
         Task<List<string>> ActionParentCustomerAuthorize([FromBody] ApproveParentCustomer approveParentCustomer);
-        Task<ViewCustomerCardorDispatchDetails> GetCardDetails(string CustomerId);
-        Task<ViewCustomerCardorDispatchDetails> GetDispatchDetails(string CustomerId);
-        Task<ManageProfileViewModel> UpdateParentCustomer(string CustomerId);
+        Task<ViewCustomerCardorDispatchDetails> GetCardDetails(string CustomerId, string RequestId);
+        Task<ViewCustomerCardorDispatchDetails> GetDispatchDetails(string CustomerId, string RequestId);
+        Task<ManageProfileViewModel> UpdateParentCustomer(string CustomerId, string RequestId);
         Task<ManageProfileViewModel> UpdateParentCustomer(ManageProfileViewModel cust);
     }
 }

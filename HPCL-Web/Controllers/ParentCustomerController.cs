@@ -69,20 +69,20 @@ namespace HPCL_Web.Controllers
             var reason = await _customerService.ActionParentCustomerAuthorize(approveParentCustomer);
             return Json(reason);
         }
-        public async Task<IActionResult> GetCardDetails(string CustomerId)
+        public async Task<IActionResult> GetCardDetails(string CustomerId,string RequestId)
         {
-            var modals = await _customerService.GetCardDetails(CustomerId);
+            var modals = await _customerService.GetCardDetails(CustomerId, RequestId);
             return PartialView("~/Views/ParentCustomer/_GetCardandDispatchDetailsTbl.cshtml", modals);
         }
-        public async Task<IActionResult> GetDispatchDetails(string CustomerId)
+        public async Task<IActionResult> GetDispatchDetails(string CustomerId, string RequestId)
         {
-            var modals = await _customerService.GetDispatchDetails(CustomerId);
+            var modals = await _customerService.GetDispatchDetails(CustomerId, RequestId);
             return PartialView("~/Views/ParentCustomer/_GetCardandDispatchDetailsTbl.cshtml", modals);
         }
 
-        public async Task<IActionResult> UpdateParentCustomer(string CustomerId)
+        public async Task<IActionResult> UpdateParentCustomer(string CustomerId,string RequestId)
         {
-            var modals = await _customerService.UpdateParentCustomer(CustomerId);
+            var modals = await _customerService.UpdateParentCustomer(CustomerId,RequestId);
             return View(modals);
         }
 
@@ -94,10 +94,12 @@ namespace HPCL_Web.Controllers
 
             if (cust.Internel_Status_Code == 1000)
             {
-                return RedirectToAction("ManageProfile");
-                //return RedirectToAction("SuccessRedirect", new { customerReferenceNo = modals.CustomerReferenceNo, Message = cust.Remarks, Status = "Update" });
+                ViewBag.Success = cust.Remarks;
             }
-
+            else
+            {
+                ViewBag.Success = "false";
+            }
             return View(modals);
         }
 

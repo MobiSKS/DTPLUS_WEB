@@ -9,6 +9,8 @@ namespace HPCL.Common.Models.RequestModel.Customer
 {
     public class CustomerCreationRequestModel : BaseEntity
     {
+        public string RequestId { get; set; }
+        public string CustomerId { get; set; }
         public string CustomerType { get; set; }
         public string CustomerSubtype { get; set; }
         public string ZonalOffice { get; set; }

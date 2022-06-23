@@ -291,7 +291,7 @@ namespace HPCL.Common.Models.ViewModel.ParentCustomer
         public int CustomerSalesAreaID { get; set; }
 
         public string FormNumber { get; set; }
-
+      
         public int OfficerTypeID { get; set; }
         public virtual List<OfficerTypeModel> OfficerTypeMdl { get; set; }
 
@@ -319,6 +319,7 @@ namespace HPCL.Common.Models.ViewModel.ParentCustomer
         public string Message { get; set; }
         public string CustomerId { get; set; }
         public string NameOnCard { get; set; }
+        public string RequestId { get; set; }
     }
     public class SearchCustomerData
     {
@@ -328,5 +329,6 @@ namespace HPCL.Common.Models.ViewModel.ParentCustomer
         public string FormNumber { get; set; }
         public string FormReceiptDate { get; set; }
         public string StatusName { get; set; }
+        public string Id { get; set; }
     }
 }
