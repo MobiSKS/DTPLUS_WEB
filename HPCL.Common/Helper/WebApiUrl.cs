@@ -486,6 +486,9 @@
         public static string getComcoMapCustomerDetails = "api/dtplus/COMCO/get_comco_map_customer_details";
         public static string updateComcoMapCustomer = "api/dtplus/COMCO/update_comco_map_customer";
         public static string getComcoViewMappedCustomer = "api/dtplus/COMCO/get_comco_view_mapped_customer";
+        public static string getComcoLimitSetMode = "api/dtplus/COMCO/get_comco_limit_set_mode";
+        public static string getComcoLimitInvoiceInterval = "api/dtplus/COMCO/get_comco_limit_invoice_interval";
+        public static string comcoLimitSetRequest = "api/dtplus/COMCO/comco_limit_set_request";
         #endregion
     }
 }
