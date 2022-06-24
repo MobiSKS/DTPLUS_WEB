@@ -86,7 +86,7 @@
                                     <th>Vehicle No</th>
                                     <th>Mobile No</th>
                                     <th>Issue Date</th>
-                                    <th>Expiry Date</th>
+                                   @* <th>Expiry Date</th>*@
                                     <th>Status</th>
                                     <th>Balance</th>
                                     <th>Amount To Transfer</th>
@@ -125,12 +125,12 @@
         if (event.shiftKey == true) {
             event.preventDefault();
         }
-        if ((event.keyCode >= 48 && event.keyCode <= 57) || (event.keyCode >= 96 && event.keyCode <= 105) || event.keyCode == 8 || event.keyCode == 9 || event.keyCode == 37 || event.keyCode == 39 || event.keyCode == 46 || event.keyCode == 190) {
+        if ((event.keyCode >= 48 && event.keyCode <= 57) || (event.keyCode >= 96 && event.keyCode <= 105) || event.keyCode == 8 || event.keyCode == 9 || event.keyCode == 37 || event.keyCode == 39 || event.keyCode == 46 || event.keyCode == 190|| event.keyCode==110) {
 
         } else {
             event.preventDefault();
         }
-        if($(this).val().indexOf('.') !== -1 && event.keyCode == 190)
+        if($(this).val().indexOf('.') !== -1 && (event.keyCode == 190|| event.keyCode == 110))
             event.preventDefault();
     });
 
@@ -192,11 +192,11 @@
                     "info": "Showing _START_ to _END_ of _TOTAL_ Records",
                 }
             });
-
+             var m = 0;
              for (var i = 0; i < girdList.length; i++) {
-
+                 m++;
                     if(girdList[i].status == "Active"){
-                        var m = 0;
+                       
                         var isDts;
                         var expDts;
 
@@ -206,11 +206,11 @@
                             isDts = moment(girdList[i].issueDate, 'DD-MM-YYYY').format('DD-MM-YYYY');
                         }
 
-                        if(((girdList[i].expiryDate) == "01-01-0001 00:00:00") || ((girdList[i].expiryDate) == "01-01-1900 00:00:00") || ((girdList[i].expiryDate) == null)){
-                            expDts = "";
-                        }else{
-                            expDts = moment(girdList[i].expiryDate, 'DD-MM-YYYY').format('DD-MM-YYYY');
-                        }
+                        //if(((girdList[i].expiryDate) == "01-01-0001 00:00:00") || ((girdList[i].expiryDate) == "01-01-1900 00:00:00") || ((girdList[i].expiryDate) == null)){
+                        //    expDts = "";
+                        //}else{
+                        //    expDts = moment(girdList[i].expiryDate, 'DD-MM-YYYY').format('DD-MM-YYYY');
+                        //}
 
                         var checkBoxValid;
 
@@ -220,13 +220,13 @@
                             checkBoxValid = "<input type='checkbox' class='checkEnable' name='enableRow'>";
                         }
 
-                        var srNumber = (m + 1);
+                        var srNumber = m;
                         var pressCheck = checkBoxValid;
                         var cardNumber = "<span class='cdn'>" + (girdList[i].cardNumber || '') + "</span>";
                         var vechileNo = (girdList[i].vechileNo || '');
                         var mobileno = "<span class='mobN'>" + (girdList[i].mobileno || '') + "</span>";
                         var issueDate = isDts;
-                        var expiryDate = expDts;
+                        //var expiryDate = expDts;
                         var status = (girdList[i].status || '');
                         var cardBalance = "<span class='balanceAmt' id='balanceId_"+i+"'>"+(girdList[i].cardBalance)+"</span>";
                         var transAmt = "<div style='width:160px;display:flex;'><input maxlength='10' onblur='amtToTransChange(this," + (i) + ")' class='form-control txnAmt cgl' id='amtTotransId_"+i+"' name='AmountToTransfer' type='text' readonly='readonly'><i style='display:none;margin-top:10px;' class='fa fa-exclamation-triangle errss' id='amtToTrans_error_"+i+"' aria-hidden='true'></i></div>";
@@ -238,7 +238,6 @@
                             vechileNo,
                             mobileno,
                             issueDate,
-                            expiryDate,
                             status,
                             cardBalance,
                             transAmt
@@ -375,27 +374,31 @@
 
     function amtToTransChange(o, rowSelected){
         var amountVal = o.value;
-        var balance = $('#balanceId_'+rowSelected).text();
+        var chkEnable=o.closest('td').closest('tr').cells[1].firstChild;
+        
+        if (chkEnable.checked) {
+            var balance = $('#balanceId_'+rowSelected).text();
 
-        if(amountVal.trim() == ''){
-            document.getElementById('amtToTrans_error_'+rowSelected).title="Please Enter Amount";
-            document.getElementById('amtToTrans_error_'+rowSelected).style.display = "block";
-            return false;
-        }
+            if(amountVal.trim() == ''){
+                document.getElementById('amtToTrans_error_'+rowSelected).title="Please Enter Amount";
+                document.getElementById('amtToTrans_error_'+rowSelected).style.display = "block";
+                return false;
+            }
 
-         if(amountVal.trim() !=''){
-             if(!(parseFloat(amountVal) <= parseFloat(balance))){
-                    document.getElementById('amtToTrans_error_'+rowSelected).title="Amount should be less than or equal to Card Balance";
-                    document.getElementById('amtToTrans_error_'+rowSelected).style.display = "block";
-                    return false;
-             }else if(amountVal.trim() == 0){
-                    document.getElementById('amtToTrans_error_'+rowSelected).title="Please Enter  Value greater than 0";
-                    document.getElementById('amtToTrans_error_'+rowSelected).style.display = "block";
-                    return false;
-             }
-             else{
-                    document.getElementById('amtToTrans_error_'+rowSelected).title="";
-                    document.getElementById('amtToTrans_error_'+rowSelected).style.display = "none";
+             if(amountVal.trim() !=''){
+                 if(!(parseFloat(amountVal) <= parseFloat(balance))){
+                        document.getElementById('amtToTrans_error_'+rowSelected).title="Amount should be less than or equal to Card Balance";
+                        document.getElementById('amtToTrans_error_'+rowSelected).style.display = "block";
+                        return false;
+                 }else if(amountVal.trim() == 0){
+                        document.getElementById('amtToTrans_error_'+rowSelected).title="Please Enter  Value greater than 0";
+                        document.getElementById('amtToTrans_error_'+rowSelected).style.display = "block";
+                        return false;
+                 }
+                 else{
+                        document.getElementById('amtToTrans_error_'+rowSelected).title="";
+                        document.getElementById('amtToTrans_error_'+rowSelected).style.display = "none";
+                 }
              }
          }
      }
