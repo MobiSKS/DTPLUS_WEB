@@ -317,7 +317,8 @@ namespace HPCL.Service.Services
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
                 ZonalId = CommonBase.zonalid,
-                RegionalId = CommonBase.regionalid
+                RegionalId = CommonBase.regionalid,
+                SBUTypeId="0"
             };
 
             StringContent zonalOfficeContent = new StringContent(JsonConvert.SerializeObject(zonalOfficeForms), Encoding.UTF8, "application/json");
@@ -751,7 +752,8 @@ namespace HPCL.Service.Services
             {
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
-                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId")
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                SBUTypeId = "0"
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(requestData), Encoding.UTF8, "application/json");
