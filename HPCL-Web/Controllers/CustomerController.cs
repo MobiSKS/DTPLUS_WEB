@@ -13,6 +13,9 @@ using HPCL.Common.Models.CommonEntity;
 using HPCL.Common.Models.ResponseModel.Customer;
 using System;
 using HPCL.Common.Models.RequestModel.Customer;
+using System.IO;
+using System.Net.Http;
+using System.Net.Mime;
 
 namespace HPCL_Web.Controllers
 {
@@ -816,5 +819,27 @@ namespace HPCL_Web.Controllers
             var modals = await _customerService.UpdateEmailResetPassword(reqModel);
             return Json(modals);
         }
+        public async Task<IActionResult> CreateFileResult(string Filepath)
+        {
+            var cd = new ContentDisposition
+            {
+                FileName = Filepath,
+                Inline = false
+            };
+
+            var fileName = Path.GetFileName(Filepath);
+
+            using (var client = new HttpClient())
+            {
+                using (var result = await client.GetAsync(Filepath))
+                {
+                    byte[] bytes = await result.Content.ReadAsByteArrayAsync();
+                    this.HttpContext.Response.Headers.Add("Content-Disposition", cd.ToString());
+                    return this.File(bytes, MediaTypeNames.Application.Octet, fileName);
+                }
+            }
+
+        }
+
     }
 }
