@@ -27,7 +27,7 @@ namespace HPCL.Service.Interfaces
         Task<CustomerValidate> ValidateNewCustomer(CustomerValidate entity);
         Task<List<SearchCustomerResponseGrid>> ReloadUpdatedGrid();
         Task<JObject> ViewCustomerDetails(string FormNumber);
-        Task<UpdateKycResponse> AproveCustomer(string CustomerReferenceNo, string Comments, string Approvalstatus);
+        Task<CommonResponseData> AproveCustomer(string FormNumber, string Comments, string Approvalstatus);
         Task<List<SalesAreaModel>> GetsalesAreaDetails(int RegionID);
         Task<CustomerBalanceInfoModel> BalanceInfo();
         Task<GetCustomerBalanceResponse> GetCustomerBalanceInfo(string CustomerID);

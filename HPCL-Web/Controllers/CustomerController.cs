@@ -45,7 +45,7 @@ namespace HPCL_Web.Controllers
 
             if (cust.Internel_Status_Code == 1000)
             {
-                return RedirectToAction("SuccessRedirect", new { customerReferenceNo = modals.CustomerReferenceNo, Message = cust.Remarks });
+                return RedirectToAction("SuccessRedirect", new { FormNumber = modals.FormNumber, Message = cust.Remarks });
             }
 
             return View(modals);
@@ -128,17 +128,17 @@ namespace HPCL_Web.Controllers
             return new JsonResult(data);
         }
 
-        public async Task<IActionResult> SuccessRedirect(string customerReferenceNo, string Message)
+        public async Task<IActionResult> SuccessRedirect(string FormNumber, string Message)
         {
-            ViewBag.CustomerReferenceNo = customerReferenceNo;
+            ViewBag.FormNumber = FormNumber;
             ViewBag.Message = Message;
             return View();
         }
 
-        public async Task<IActionResult> AddCardDetails(string customerReferenceNo)
+        public async Task<IActionResult> AddCardDetails(string FormNumber)
         {
             CustomerCardInfo customerCardInfo = new CustomerCardInfo();
-            customerCardInfo = await _customerService.AddCardDetails(customerReferenceNo);
+            customerCardInfo = await _customerService.AddCardDetails(FormNumber);
             customerCardInfo.Message = "";
 
             return View(customerCardInfo);
@@ -199,9 +199,9 @@ namespace HPCL_Web.Controllers
             uploadDoc.IdProofDocumentNo = "";
             uploadDoc.AddressProofDocumentNo = "";
 
-            if (!string.IsNullOrEmpty(customerReferenceNo))
+            if (!string.IsNullOrEmpty(FormNumber))
             {
-                uploadDoc.CustomerReferenceNo = customerReferenceNo;
+                uploadDoc.FormNumber = FormNumber;
                 uploadDoc.Type = "1";
                 if (!string.IsNullOrEmpty(FormNumber))
                 {
@@ -457,10 +457,10 @@ namespace HPCL_Web.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> AproveCustomer(string CustomerReferenceNo, string Comments, string Approvalstatus)
+        public async Task<IActionResult> AproveCustomer(string FormNumber, string Comments, string Approvalstatus)
         {
-            UpdateKycResponse updateKycResponse = await _customerService.AproveCustomer(CustomerReferenceNo, Comments, Approvalstatus);
-            return Json(updateKycResponse.Reason);
+            var updateKycResponse = await _customerService.AproveCustomer(FormNumber, Comments, Approvalstatus);
+            return Json(new { commonResponseData = updateKycResponse });
         }
 
         [HttpPost]
@@ -482,9 +482,9 @@ namespace HPCL_Web.Controllers
             return Json(lst);
         }
 
-        public async Task<IActionResult> SuccessUploadRedirect(string customerReferenceNo)
+        public async Task<IActionResult> SuccessUploadRedirect(string FormNumber)
         {
-            ViewBag.CustomerReferenceNo = customerReferenceNo;
+            ViewBag.FormNumber = FormNumber;
             return View();
         }
 
@@ -794,9 +794,9 @@ namespace HPCL_Web.Controllers
             ViewBag.Message = Message;
             return View();
         }
-        public async Task<IActionResult> SuccessUploadDocumentRedirect(string customerReferenceNo)
+        public async Task<IActionResult> SuccessUploadDocumentRedirect(string FormNumber)
         {
-            ViewBag.CustomerReferenceNo = customerReferenceNo;
+            ViewBag.FormNumber = FormNumber;
             return View();
         }
         public async Task<IActionResult> CustomerResetPassword()
