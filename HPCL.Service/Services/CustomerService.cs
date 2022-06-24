@@ -44,11 +44,11 @@ namespace HPCL.Service.Services
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
-                CustomerReferenceNo = entity.CustomerReferenceNo,
+                FormNumber = entity.FormNumber,
                 Type = String.IsNullOrEmpty(entity.Type)?"0":"1",
             };
 
-            _httpContextAccessor.HttpContext.Session.SetString("CustomerReferenceNoVal", entity.CustomerReferenceNo);
+            _httpContextAccessor.HttpContext.Session.SetString("FormNoVal", entity.FormNumber);
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
 
@@ -63,7 +63,7 @@ namespace HPCL.Service.Services
         {
             MultipartFormDataContent form = new MultipartFormDataContent();
 
-            form.Add(new StringContent(_httpContextAccessor.HttpContext.Session.GetString("CustomerReferenceNoVal")), "CustomerReferenceNo");
+            form.Add(new StringContent(_httpContextAccessor.HttpContext.Session.GetString("FormNoVal")), "FormNumber");
             form.Add(new StringContent(entity.IdProofType.ToString()), "IdProofType");
             form.Add(new StringContent(entity.IdProofDocumentNo), "IdProofDocumentNo");
             form.Add(new StreamContent(entity.IdProofFront.OpenReadStream()), "IdProofFront", entity.IdProofFront.FileName);
@@ -83,7 +83,7 @@ namespace HPCL.Service.Services
             var jarr = obj["Data"].Value<JArray>();
             List<UpdateKycResponse> insertKyc = jarr.ToObject<List<UpdateKycResponse>>();
 
-            return (insertKyc[0].Reason + "," + _httpContextAccessor.HttpContext.Session.GetString("CustomerReferenceNoVal"));
+            return (insertKyc[0].Reason + "," + _httpContextAccessor.HttpContext.Session.GetString("FormNoVal"));
         }
 
         public async Task<CustomerModel> OnlineForm()
@@ -91,7 +91,9 @@ namespace HPCL.Service.Services
             CustomerModel custMdl = new CustomerModel();
             custMdl.Remarks = "";
             custMdl.CustomerTypeMdl.AddRange(await _commonActionService.GetCustomerTypeListDropdown());
-            custMdl.CustomerZonalOfficeMdl.AddRange(await _commonActionService.GetZonalOfficeListForDropdown());
+            custMdl.SBUTypes.AddRange(await _commonActionService.GetSbuTypeList());
+            custMdl.SBUTypeID = 1;
+            custMdl.CustomerZonalOfficeMdl.AddRange(await _commonActionService.GetZonalOfficebySBUType(custMdl.SBUTypeID.ToString()));
 
             custMdl.CustomerTbentityMdl.AddRange(await _commonActionService.GetCustomerTbentityListDropdown());
 
@@ -147,7 +149,7 @@ namespace HPCL.Service.Services
             string KeyOfficialDOB = "";
 
             //string[] custDateOfApplication = cust.CustomerDateOfApplication.Split("-");
-            
+
             //customerDateOfApplication = custDateOfApplication[2] + "-" + custDateOfApplication[1] + "-" + custDateOfApplication[0];
             customerDateOfApplication = await _commonActionService.changeDateFormat(cust.CustomerDateOfApplication);
 
@@ -217,7 +219,7 @@ namespace HPCL.Service.Services
                     {"KeyOfficialDOA", (string.IsNullOrEmpty(KeyOffDateOfAnniversary)?"1900-01-01":KeyOffDateOfAnniversary)},
                     {"KeyOfficialMobile", cust.KeyOffMobileNumber},
                     {"KeyOfficialDOB", (string.IsNullOrEmpty(KeyOfficialDOB)?"1900-01-01":KeyOfficialDOB)},
-                    {"KeyOfficialSecretQuestion", cust.KeyOfficialSecretQuestion},
+                    {"KeyOfficialSecretQuestion", "0"},
                     {"KeyOfficialSecretAnswer", (String.IsNullOrEmpty(cust.KeyOfficialSecretAnswer)?"":cust.KeyOfficialSecretAnswer)},
                     {"KeyOfficialTypeOfFleet", cust.CustomerTypeOfFleetID},
                     {"KeyOfficialCardAppliedFor", (String.IsNullOrEmpty(cust.KeyOfficialCardAppliedFor)?"":cust.KeyOfficialCardAppliedFor)},
@@ -258,8 +260,9 @@ namespace HPCL.Service.Services
                 cust.CustomerTypeMdl.AddRange(await _commonActionService.GetCustomerTypeListDropdown());
 
                 cust.CustomerSubTypeMdl.AddRange(await _commonActionService.GetCustomerSubTypeDropdown(cust.CustomerTypeID));
+                cust.SBUTypes.AddRange(await _commonActionService.GetSbuTypeList());
 
-                cust.CustomerZonalOfficeMdl.AddRange(await _commonActionService.GetZonalOfficeListForDropdown());
+                cust.CustomerZonalOfficeMdl.AddRange(await _commonActionService.GetZonalOfficebySBUType(cust.SBUTypeID.ToString()));
 
                 cust.CustomerRegionMdl.AddRange(await _commonActionService.GetRegionalDetailsDropdown(cust.CustomerZonalOfficeID));
 
@@ -316,7 +319,7 @@ namespace HPCL.Service.Services
             return SortedtList;
         }
 
-        public async Task<CustomerCardInfo> AddCardDetails(string customerReferenceNo)
+        public async Task<CustomerCardInfo> AddCardDetails(string FormNumber)
         {
             CustomerCardInfo customerCardInfo = new CustomerCardInfo();
             customerCardInfo.Remarks = "";
@@ -327,14 +330,14 @@ namespace HPCL.Service.Services
                 customerCardInfo.ExternalVehicleAPIStatus = "Y";
             }
 
-            if (!string.IsNullOrEmpty(customerReferenceNo))
+            if (!string.IsNullOrEmpty(FormNumber))
             {
                 var requestData = new CheckPancardbyDistrictIdRequestModel()
                 {
                     UserAgent = CommonBase.useragent,
                     UserIp = CommonBase.userip,
                     UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
-                    CustomerReferenceNo = customerReferenceNo,
+                    FormNumber = FormNumber,
                     Type = "0"
                 };
 
@@ -346,7 +349,7 @@ namespace HPCL.Service.Services
                 customerResponseByReferenceNo = JsonConvert.DeserializeObject<CustomerResponseByReferenceNo>(responseCustomer);
                 if (customerResponseByReferenceNo.Internel_Status_Code == 1000)
                 {
-                    customerCardInfo.CustomerReferenceNo = customerReferenceNo;
+                    customerCardInfo.FormNumber = FormNumber;
 
                     if (customerResponseByReferenceNo.Data != null)
                     {
@@ -746,14 +749,14 @@ namespace HPCL.Service.Services
 
             return obj;
         }
-        public async Task<UpdateKycResponse> AproveCustomer(string CustomerReferenceNo, string Comments, string Approvalstatus)
+        public async Task<CommonResponseData> AproveCustomer(string FormNumber, string Comments, string Approvalstatus)
         {
             var approvalBody = new AproveCustomerRequest()
             {
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
-                CustomerReferenceNo = CustomerReferenceNo,
+                FormNumber = FormNumber,
                 Comments = Comments,
                 Approvalstatus = Approvalstatus,
                 ApprovedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
@@ -765,7 +768,12 @@ namespace HPCL.Service.Services
 
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
             var jarr = obj["Data"].Value<JArray>();
-            List<UpdateKycResponse> insertKyc = jarr.ToObject<List<UpdateKycResponse>>();
+            List<CommonResponseData> insertKyc = jarr.ToObject<List<CommonResponseData>>();
+
+            foreach (CommonResponseData item in insertKyc)
+            {
+                item.Internel_Status_Code = Convert.ToInt32(obj["Internel_Status_Code"].ToString());
+            }
 
             return insertKyc[0];
         }
@@ -902,7 +910,7 @@ namespace HPCL.Service.Services
 
             custMdl.CustomerTypeMdl.AddRange(await _commonActionService.GetCustomerTypeListDropdown());
 
-            custMdl.CustomerZonalOfficeMdl.AddRange(await _commonActionService.GetZonalOfficeListForDropdown());
+            custMdl.CustomerZonalOfficeMdl.AddRange(await _commonActionService.GetZonalOfficebySBUType("1"));
 
             custMdl.CustomerTbentityMdl.AddRange(await _commonActionService.GetCustomerTbentityListDropdown());
 
@@ -1347,7 +1355,7 @@ namespace HPCL.Service.Services
 
                 cust.CustomerSubTypeMdl.AddRange(await _commonActionService.GetCustomerSubTypeDropdown(cust.CustomerTypeID));
 
-                cust.CustomerZonalOfficeMdl.AddRange(await _commonActionService.GetZonalOfficeListForDropdown());
+                cust.CustomerZonalOfficeMdl.AddRange(await _commonActionService.GetZonalOfficebySBUType("1"));
 
                 cust.CustomerRegionMdl.AddRange(await _commonActionService.GetRegionalDetailsDropdown(cust.CustomerZonalOfficeID));
 

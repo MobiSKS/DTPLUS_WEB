@@ -12,13 +12,10 @@
             <li class="nav-item"> <a class="nav-link active" id="basicInfo-tab" data-toggle="tab" href="#basicInfo" role="tab" aria-controls="basicInfo" aria-selected="true">Basic Information</a> </li>
             <li class="nav-item"> <a class="nav-link disable" id="address-tab" data-toggle="tab" href="#address" role="tab" aria-controls="address" aria-selected="false">Address</a> </li>
             <li class="nav-item"> <a class="nav-link disable" id="officialDetails-tab" data-toggle="tab" href="#officialDetails" role="tab" aria-controls="officialDetails" aria-selected="false">Key Official Details</a> </li>
-            @*<li class="nav-item"> <a class="nav-link disable" id="cardDetails-tab" data-toggle="tab" href="#cardDetails" role="tab" aria-controls="cardDetails" aria-selected="false">Card Details</a> </li>*@
-            @*<li class="nav-item"> <a class="nav-link disable" id="uploadDocuments-tab" data-toggle="tab" href="#uploadDocuments" role="tab" aria-controls="uploadDocuments" aria-selected="false">Upload Documents</a> </li>*@
         </ul>
-        @*<form name="applicationForm" onsubmit="return submitForm()" class="w-100">*@
+
         <form name="applicationForm" method="post" asp-action="OnlineForm" class="w-100">
-            @*@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "form1" }))
-                {*@
+
             <div class="tab-content mt-3" id="myTabContent">
                 <div class="tab-pane fade show active" id="basicInfo" role="tabpanel" aria-labelledby="basicInfo-tab">
                     <div class="w-100">
@@ -76,6 +73,17 @@
                                     <div class="d-flex align-items-center flex-wrap">
                                         <div class="col-lg-6 col-12">
                                             <div class="form-group d-flex align-items-center flex-wrap">
+                                                <label class="font-weight-normal col-md-4 col-12">SBU Type <sup class="text-danger">*</sup></label>
+                                                <div class="col-md-8 col-12">
+                                                    <div class="custom_select">
+                                                        @Html.DropDownListFor(m => m.SBUTypeID, new SelectList(Model.SBUTypes, "SBUId", "SBUName"), new { @class = "form-control" })
+                                                    </div>
+                                                    <span class="error" id="SBUType_error"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 col-12">
+                                            <div class="form-group d-flex align-items-center flex-wrap">
                                                 <label class="font-weight-normal col-md-4 col-12">Zonal Office <sup class="text-danger">*</sup></label>
                                                 <div class="col-md-8 col-12">
                                                     <div class="custom_select">
@@ -85,52 +93,51 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-lg-6 col-12">
-                                            <div class="form-group d-flex align-items-center flex-wrap">
-                                                <label class="font-weight-normal col-md-4 col-12">Regional Office <sup class="text-danger">*</sup></label>
-                                                <div class="col-md-8 col-12">
-                                                    <div class="custom_select">
-                                                        @Html.DropDownListFor(m => m.CustomerRegionID, new SelectList(Model.CustomerRegionMdl, "RegionalOfficeID", "RegionalOfficeName"), new { @class = "form-control" })
-                                                    </div>
-                                                    <span class="error" id="regionalOffice_error"></span>
-                                                </div>
-                                            </div>
-                                        </div>
                                     </div>
                                     <div class="d-flex align-items-center flex-wrap">
                                         <div class="col-lg-6 col-12">
                                             <div class="form-group d-flex align-items-center flex-wrap">
-                                                <label class="font-weight-normal col-md-4 col-12">Sales Area <sup class="text-danger">*</sup></label>
+                                                <label class="font-weight-normal col-md-4 col-12">Regional Office <sup class="text-danger">*</sup></label>
                                                 <div class="col-md-8 col-12">
-                                                    @Html.DropDownListFor(m => m.CustomerSalesAreaID, new SelectList(Model.SalesAreaMdl, "SalesAreaID", "SalesAreaName"), new { @class = "form-control" })
-                                                    <span class="error" id="salesArea_error"></span>
+                                                    @Html.DropDownListFor(m => m.CustomerRegionID, new SelectList(Model.CustomerRegionMdl, "RegionalOfficeID", "RegionalOfficeName"), new { @class = "form-control" })
+                                                    <span class="error" id="regionalOffice_error"></span>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-lg-6 col-12">
                                             <div class="form-group d-flex align-items-center flex-wrap">
-                                                <label class="font-weight-normal col-md-4 col-12">Type Of Customer <sup class="text-danger">*</sup></label>
+                                                <label class="font-weight-normal col-md-4 col-12">Sales Area <sup class="text-danger">*</sup></label>
                                                 <div class="col-md-8 col-12">
                                                     <div class="custom_select">
-                                                        @Html.DropDownListFor(x => x.TypeOfCustomerID, new[]{
+                                                       @Html.DropDownListFor(m => m.CustomerSalesAreaID, new SelectList(Model.SalesAreaMdl, "SalesAreaID", "SalesAreaName"), new { @class = "form-control" })
+                                                    </div>
+                                                    <span class="error" id="salesArea_error"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="d-flex align-items-center flex-wrap">
+                                        <div class="col-lg-6 col-12">
+                                            <div class="form-group d-flex align-items-center flex-wrap">
+                                                <label class="font-weight-normal col-md-4 col-12">Type Of Customer <sup class="text-danger">*</sup></label>
+                                                <div class="col-md-8 col-12">
+                                                    @Html.DropDownListFor(x => x.TypeOfCustomerID, new[]{
                                                         new SelectListItem(){ Text = "Select Customer Type", Value = "0"},
                                                         new SelectListItem(){ Text = "Competitor Customer", Value = "1"},
                                                         new SelectListItem(){ Text = "Existing HPCL Customer", Value = "2"},
                                                         new SelectListItem(){ Text = "New Customer", Value = "3"},
                                                         }, null, new { @class = "form-control" })
-                                                    </div>
                                                     <span class="error" id="typeOfCustomer_error"></span>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="d-flex align-items-center flex-wrap">
                                         <div class="col-lg-6 col-12">
                                             <div class="form-group d-flex align-items-center flex-wrap">
                                                 <label class="font-weight-normal col-md-4 col-12">Tier Of Customer <sup class="text-danger">*</sup></label>
                                                 <div class="col-md-8 col-12">
                                                     <div class="custom_select">
-                                                        @Html.DropDownListFor(x => x.TierOfCustomerID, new[]{
+                                                       @Html.DropDownListFor(x => x.TierOfCustomerID, new[]{
                                                         new SelectListItem(){ Text = "Select Tier Of Customer", Value = "0"},
                                                         new SelectListItem(){ Text = "1", Value = "1"},
                                                         new SelectListItem(){ Text = "2", Value = "2"},
@@ -142,6 +149,7 @@
                                             </div>
                                         </div>
                                     </div>
+
                                 </div>
                                 <div class="clearfix"></div>
                             </div>
@@ -336,9 +344,9 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6 col-12">
+                                @*<div class="col-md-6 col-12">
                                     <div class="form-group d-flex align-items-center flex-wrap">
-                                        <label class="font-weight-normal offset-md-1 col-md-3 col-12">Phone (Office) </label>@*<sup class="text-danger">*</sup>*@
+                                        <label class="font-weight-normal offset-md-1 col-md-3 col-12">Phone (Office) </label>
                                         <div class="col-md-7 col-12">
                                             <div class="row">
                                                 <div class="col-4">
@@ -370,7 +378,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div>*@
                                 <div class="col-md-6 col-12">
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                         <label class="font-weight-normal offset-md-1 col-md-3 col-12">Mobile<sup class="text-danger">*</sup></label>
@@ -477,9 +485,9 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 col-12">
+                                    @*<div class="col-md-6 col-12">
                                         <div class="form-group d-flex align-items-center flex-wrap">
-                                            <label class="font-weight-normal offset-md-1 col-md-3 col-12">Phone (Office) </label> @*<sup class="text-danger">*</sup>*@
+                                            <label class="font-weight-normal offset-md-1 col-md-3 col-12">Phone (Office) </label>
                                             <div class="col-md-7 col-12">
                                                 <div class="row">
                                                     <div class="col-4">
@@ -510,7 +518,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div>*@
                                 </div>
                             </div>
                         </div>
@@ -639,7 +647,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-lg-6 col-12">
+                                @*<div class="col-lg-6 col-12">
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                         <label class="font-weight-normal offset-md-1 col-md-4 col-12">Phone (Office)</label>
                                         <div class="col-md-7 col-12">
@@ -655,9 +663,9 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div>*@
                             </div>
-                            <div class="d-flex align-items-center flex-wrap">
+@*                            <div class="d-flex align-items-center flex-wrap">
                                 <div class="col-lg-6 col-12">
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                         <label class="font-weight-normal col-md-4 col-12">Fax</label>
@@ -675,7 +683,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div>*@
                         </div>
                         <div class="clearfix"></div>
 
@@ -684,7 +692,7 @@
                         <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Other Details</p>
                         <div class="py-2 p-md-4">
                             <div class="d-flex align-items-center justify-content-between flex-wrap row">
-                                <div class="col-lg-6 col-md-12 col-12">
+                                @*<div class="col-lg-6 col-md-12 col-12">
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                         <label class="font-weight-normal col-md-5 col-12">Secret Question</label>
                                         <div class="col-md-7 col-12">
@@ -702,7 +710,7 @@
                                             <span class="error" id="KeyOfficialSecretAnswer_error"></span>
                                         </div>
                                     </div>
-                                </div>
+                                </div>*@
                                 <div class="col-lg-6 col-md-12 col-12">
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                         <label class="font-weight-normal col-md-5 col-12">Area of Operation</label>
@@ -825,11 +833,11 @@
                 <div style="display:none;">@Html.TextBoxFor(m => m.PerOrRegAddressPinCode, new { id = "hdnPerOrRegAddressPinCode" })</div>
                 <div style="display:none;">@Html.TextBoxFor(m => m.PerOrRegAddressStateID, new { id = "hdnPerOrRegAddressStateID" })</div>
                 <div style="display:none;">@Html.TextBoxFor(m => m.PerOrRegAddressDistrict, new { id = "hdnPerOrRegAddressDistrict" })</div>
-                <div style="display:none;">@Html.TextBoxFor(m => m.PerOrRegAddressDialCode, new { id = "hdnPerOrRegAddressDialCode" })</div>
-                <div style="display:none;">@Html.TextBoxFor(m => m.PerOrRegAddressPhoneNumber, new { id = "hdnPerOrRegAddressPhoneNumber" })</div>
+                @*<div style="display:none;">@Html.TextBoxFor(m => m.PerOrRegAddressDialCode, new { id = "hdnPerOrRegAddressDialCode" })</div>*@
+                @*<div style="display:none;">@Html.TextBoxFor(m => m.PerOrRegAddressPhoneNumber, new { id = "hdnPerOrRegAddressPhoneNumber" })</div>
                 <div style="display:none;">@Html.TextBoxFor(m => m.PermanentFaxCode, new { id = "hdnPermanentFaxCode" })</div>
-                <div style="display:none;">@Html.TextBoxFor(m => m.PermanentFax, new { id = "hdnPermanentFax" })</div>
-                <div style="display:none;">@Html.TextBoxFor(m => m.PerOrRegAddressDialCode, new { id = "hdnPerOrRegAddressDialCode" })</div>
+                <div style="display:none;">@Html.TextBoxFor(m => m.PermanentFax, new { id = "hdnPermanentFax" })</div>*@
+                @*<div style="display:none;">@Html.TextBoxFor(m => m.PerOrRegAddressDialCode, new { id = "hdnPerOrRegAddressDialCode" })</div>*@
                 @Html.HiddenFor(model => Model.IsDuplicatePanNo)
                 @Html.HiddenFor(model => Model.AllowPanDuplication)
                 @Html.HiddenFor(model => Model.CustomerReferenceNo)
@@ -1045,11 +1053,11 @@
                 $('#hdnPerOrRegAddressCity').val($('#CommunicationCity').val());
                 $('#hdnPerOrRegAddressStateID').val($('#CommunicationStateID').val());
                 $('#hdnPerOrRegAddressPinCode').val($('#CommunicationPinCode').val());
-                $('#hdnPerOrRegAddressDialCode').val($('#CommunicationDialCode').val());
-                $('#hdnPerOrRegAddressPhoneNumber').val($('#CommunicationPhoneNo').val());
-                $('#hdnPermanentFax').val($('#CommunicationFax').val());
-                $('#hdnPerOrRegAddressDialCode').val($('#CommunicationDialCode').val());
-                $('#hdnPermanentFaxCode').val($('#CommunicationFaxCode').val());
+                //$('#hdnPerOrRegAddressDialCode').val($('#CommunicationDialCode').val());
+                //$('#hdnPerOrRegAddressPhoneNumber').val($('#CommunicationPhoneNo').val());
+                //$('#hdnPermanentFax').val($('#CommunicationFax').val());
+                //$('#hdnPerOrRegAddressDialCode').val($('#CommunicationDialCode').val());
+                //$('#hdnPermanentFaxCode').val($('#CommunicationFaxCode').val());
 
             }
 
@@ -1336,110 +1344,112 @@
                     document.getElementById("comm_district_error").innerHTML = "";
                 }
 
-                 var stdCode = document.applicationForm.CommunicationDialCode.value.trim();
-                if (stdCode != "") {
+            //     var stdCode = document.applicationForm.CommunicationDialCode.value.trim();
+            //    if (stdCode != "") 
+            //    {
 
-                if (stdCode.length < 2 || stdCode.length > 4) {
-                    document.getElementById("CommunicationDialCode_error").innerHTML = "Invalid Code";
-                    return false;
-                }
-                else
-                {
-                    if (!stdCode.match(number))
-                    {
-                        document.getElementById("CommunicationDialCode_error").innerHTML = "Invalid Code";
-                        return false;
-                    }
-                    else
-                    {
-                        document.getElementById("CommunicationDialCode_error").innerHTML = "";
-                    }
-                }
+            //    if (stdCode.length < 2 || stdCode.length > 4) 
+            //    {
+            //        document.getElementById("CommunicationDialCode_error").innerHTML = "Invalid Code";
+            //        return false;
+            //    }
+            //    else
+            //    {
+            //        if (!stdCode.match(number))
+            //        {
+            //            document.getElementById("CommunicationDialCode_error").innerHTML = "Invalid Code";
+            //            return false;
+            //        }
+            //        else
+            //        {
+            //            document.getElementById("CommunicationDialCode_error").innerHTML = "";
+            //        }
+            //    }
 
-            }
-            else {
-                document.getElementById("CommunicationDialCode_error").innerHTML = "";
-            }
+            //}
+            //else {
+            //    document.getElementById("CommunicationDialCode_error").innerHTML = "";
+            //}
 
-            var phno = document.applicationForm.CommunicationPhoneNo.value.trim();
-            if (phno != "") {
-                if (phno.charAt(0) == "0") {
-                    document.getElementById("comm_officePhone_error").innerHTML = "Invalid Phone Number";
-                    return false;
-                }
-                else if (phno.length < 6 || phno.length > 8) {
-                    document.getElementById("comm_officePhone_error").innerHTML = "Invalid Phone Number";
-                    return false;
-                }
-                else
-                {
-                    if (!phno.match(number))
-                    {
-                        document.getElementById("comm_officePhone_error").innerHTML = "Invalid Phone Number";
-                        return false;
-                    }
-                    else {
-                        document.getElementById("comm_officePhone_error").innerHTML = "";
-                    }
-                }
+            //var phno = document.applicationForm.CommunicationPhoneNo.value.trim();
+            //if (phno != "") {
+            //    if (phno.charAt(0) == "0") {
+            //        document.getElementById("comm_officePhone_error").innerHTML = "Invalid Phone Number";
+            //        return false;
+            //    }
+            //    else if (phno.length < 6 || phno.length > 8) {
+            //        document.getElementById("comm_officePhone_error").innerHTML = "Invalid Phone Number";
+            //        return false;
+            //    }
+            //    else
+            //    {
+            //        if (!phno.match(number))
+            //        {
+            //            document.getElementById("comm_officePhone_error").innerHTML = "Invalid Phone Number";
+            //            return false;
+            //        }
+            //        else {
+            //            document.getElementById("comm_officePhone_error").innerHTML = "";
+            //        }
+            //    }
 
-            }
-            else {
-                document.getElementById("comm_officePhone_error").innerHTML = "";
-            }
+            //}
+            //else {
+            //    document.getElementById("comm_officePhone_error").innerHTML = "";
+            //}
 
 
-            var faxCode = document.applicationForm.CommunicationFaxCode.value.trim();
-            if (faxCode != "") {
-                if (faxCode.length < 2 || faxCode.length > 4) {
-                    document.getElementById("CommunicationFaxCode_error").innerHTML = "Invalid Code";
-                    return false;
-                }
-                else
-                {
-                    if (!faxCode.match(number))
-                    {
-                        document.getElementById("CommunicationFaxCode_error").innerHTML = "Invalid Code";
-                        return false;
-                    }
-                    else {
-                        document.getElementById("CommunicationFaxCode_error").innerHTML = "";
-                    }
-                }
+            //var faxCode = document.applicationForm.CommunicationFaxCode.value.trim();
+            //if (faxCode != "") {
+            //    if (faxCode.length < 2 || faxCode.length > 4) {
+            //        document.getElementById("CommunicationFaxCode_error").innerHTML = "Invalid Code";
+            //        return false;
+            //    }
+            //    else
+            //    {
+            //        if (!faxCode.match(number))
+            //        {
+            //            document.getElementById("CommunicationFaxCode_error").innerHTML = "Invalid Code";
+            //            return false;
+            //        }
+            //        else {
+            //            document.getElementById("CommunicationFaxCode_error").innerHTML = "";
+            //        }
+            //    }
 
-            }
-            else {
-                document.getElementById("CommunicationFaxCode_error").innerHTML = "";
-            }
+            //}
+            //else {
+            //    document.getElementById("CommunicationFaxCode_error").innerHTML = "";
+            //}
 
-            var faxphno = document.applicationForm.CommunicationFax.value.trim();
-            if (faxphno != "") {
-                if (faxphno.charAt(0) == "0") {
-                    document.getElementById("CommunicationFax_error").innerHTML = "Invalid Fax Number";
-                    return false;
-                }
-                else if (faxphno.length < 6 || faxphno.length > 8) {
-                    document.getElementById("CommunicationFax_error").innerHTML = "Invalid Fax Number";
-                    return false;
-                }
-                else
-                {
-                    if (!faxphno.match(number))
-                    {
-                        document.getElementById("CommunicationFax_error").innerHTML = "Invalid Fax Number";
-                        return false;
-                    }
-                    else
-                    {
-                        document.getElementById("CommunicationFax_error").innerHTML = "";
-                    }
-                }
+            //var faxphno = document.applicationForm.CommunicationFax.value.trim();
+            //if (faxphno != "") {
+            //    if (faxphno.charAt(0) == "0") {
+            //        document.getElementById("CommunicationFax_error").innerHTML = "Invalid Fax Number";
+            //        return false;
+            //    }
+            //    else if (faxphno.length < 6 || faxphno.length > 8) {
+            //        document.getElementById("CommunicationFax_error").innerHTML = "Invalid Fax Number";
+            //        return false;
+            //    }
+            //    else
+            //    {
+            //        if (!faxphno.match(number))
+            //        {
+            //            document.getElementById("CommunicationFax_error").innerHTML = "Invalid Fax Number";
+            //            return false;
+            //        }
+            //        else
+            //        {
+            //            document.getElementById("CommunicationFax_error").innerHTML = "";
+            //        }
+            //    }
 
-            }
-            else
-            {
-                document.getElementById("CommunicationFax_error").innerHTML = "";
-            }
+            //}
+            //else
+            //{
+            //    document.getElementById("CommunicationFax_error").innerHTML = "";
+            //}
 
 
                 if (document.applicationForm.CommunicationMobileNumber.value.trim() == "") {
@@ -1532,11 +1542,11 @@
                 $('#PerOrRegAddressCity').val($('#CommunicationCity').val());
                 //$('#PerOrRegAddressStateID').val($('#CommunicationStateID').val());
                 $('#PerOrRegAddressPinCode').val($('#CommunicationPinCode').val());
-                $('#PerOrRegAddressDialCode').val($('#CommunicationDialCode').val());
-                $('#PerOrRegAddressPhoneNumber').val($('#CommunicationPhoneNo').val());
-                $('#PermanentFax').val($('#CommunicationFax').val());
-                $('#PerOrRegAddressDialCode').val($('#CommunicationDialCode').val());
-                $('#PermanentFaxCode').val($('#CommunicationFaxCode').val());
+                //$('#PerOrRegAddressDialCode').val($('#CommunicationDialCode').val());
+                //$('#PerOrRegAddressPhoneNumber').val($('#CommunicationPhoneNo').val());
+                //$('#PermanentFax').val($('#CommunicationFax').val());
+                //$('#PerOrRegAddressDialCode').val($('#CommunicationDialCode').val());
+                //$('#PermanentFaxCode').val($('#CommunicationFaxCode').val());
                 $("#perma_address1_error").html("");
                 $("#perma_address2_error").html("");
                 $("#perma_address3_error").html("");
@@ -1545,10 +1555,10 @@
                 $("#perma_pincode_error").html("");
                 $("#perma_state_error").html("");
                 $("#perma_district_error").html("");
-                $("#PerOrRegAddressDialCode_error").html("");
-                $("#perma_officePhone_error").html("");
-                $("#PermanentFaxCode_error").html("");
-                $("#perma_faxNumber_error").html("");
+                //$("#PerOrRegAddressDialCode_error").html("");
+                //$("#perma_officePhone_error").html("");
+                //$("#PermanentFaxCode_error").html("");
+                //$("#perma_faxNumber_error").html("");
 
                 //var Distrid = $('#CommunicationDistrictId').val();
                 //var DistrictName = $("#CommunicationDistrictId option:selected").text();
@@ -1575,12 +1585,12 @@
                 //$('#PerOrRegAddressStateID')[0].selectedIndex = 0;
                 $("#PerOrRegAddressStateID")[0].sumo.selectItem(0);
                 $('#PerOrRegAddressPinCode').val('');
-                $('#PerOrRegAddressDialCode').val('');
-                $('#PermanentFaxCode').val('');
+                //$('#PerOrRegAddressDialCode').val('');
+                //$('#PermanentFaxCode').val('');
                 //$('#PermanentDistrictId')[0].selectedIndex = 0;
                 $("#PermanentDistrictId")[0].sumo.selectItem(0);
-                $('#PerOrRegAddressPhoneNumber').val('');
-                $('#PermanentFax').val('');
+                //$('#PerOrRegAddressPhoneNumber').val('');
+                //$('#PermanentFax').val('');
 
                 $("#PerOrRegAddressDistrict").html("");
                 if (document.getElementById("sameAddressCheck").checked == false) {
@@ -3055,26 +3065,26 @@
 
         });
 
-        $("#KeyOfficialSecretAnswer").on("blur", function () {
-            //debugger;
-            if (document.getElementById("KeyOfficialSecretAnswer").value.trim() != "")
-            {
-                if (!document.getElementById("KeyOfficialSecretAnswer").value.match(secretQuestion))
-                {
-                    document.getElementById("KeyOfficialSecretAnswer_error").innerHTML = "Invalid Secret Answer";
-                    return false;
-                }
-                else
-                {
-                    document.getElementById("KeyOfficialSecretAnswer_error").innerHTML = "";
-                }
-            }
-            else
-            {
-                document.getElementById("KeyOfficialSecretAnswer_error").innerHTML = "";
-            }
+        //$("#KeyOfficialSecretAnswer").on("blur", function () {
+        //    //debugger;
+        //    if (document.getElementById("KeyOfficialSecretAnswer").value.trim() != "")
+        //    {
+        //        if (!document.getElementById("KeyOfficialSecretAnswer").value.match(secretQuestion))
+        //        {
+        //            document.getElementById("KeyOfficialSecretAnswer_error").innerHTML = "Invalid Secret Answer";
+        //            return false;
+        //        }
+        //        else
+        //        {
+        //            document.getElementById("KeyOfficialSecretAnswer_error").innerHTML = "";
+        //        }
+        //    }
+        //    else
+        //    {
+        //        document.getElementById("KeyOfficialSecretAnswer_error").innerHTML = "";
+        //    }
 
-        });
+        //});
 
         $("#PanCardRemarks").on("blur", function () {
             //debugger;
@@ -3090,398 +3100,399 @@
 
         });
 
-        $("#CommunicationDialCode").on("blur", function ()
-        {
-            //debugger;
-            var stdCode = document.getElementById("CommunicationDialCode").value.trim();
-            if (stdCode != "")
-            {
+      //  $("#CommunicationDialCode").on("blur", function ()
+      //  {
+      //      //debugger;
+      //      var stdCode = document.getElementById("CommunicationDialCode").value.trim();
+      //      if (stdCode != "")
+      //      {
 
-                if (stdCode.length < 2 || stdCode.length > 4)
-                {
-                    document.getElementById("CommunicationDialCode_error").innerHTML = "Invalid Code";
-                    return false;
-                }
-                else
-                {
-                    if (!stdCode.match(number))
-                    {
-                        document.getElementById("CommunicationDialCode_error").innerHTML = "Invalid Code";
-                        return false;
-                    }
-                    else
-                    {
-                        document.getElementById("CommunicationDialCode_error").innerHTML = "";
-                    }
-                }
-            }
-            else
-            {
-                document.getElementById("CommunicationDialCode_error").innerHTML = "";
-            }
+      //          if (stdCode.length < 2 || stdCode.length > 4)
+      //          {
+      //              document.getElementById("CommunicationDialCode_error").innerHTML = "Invalid Code";
+      //              return false;
+      //          }
+      //          else
+      //          {
+      //              if (!stdCode.match(number))
+      //              {
+      //                  document.getElementById("CommunicationDialCode_error").innerHTML = "Invalid Code";
+      //                  return false;
+      //              }
+      //              else
+      //              {
+      //                  document.getElementById("CommunicationDialCode_error").innerHTML = "";
+      //              }
+      //          }
+      //      }
+      //      else
+      //      {
+      //          document.getElementById("CommunicationDialCode_error").innerHTML = "";
+      //      }
 
-      });
+      //});
 
-      $("#CommunicationPhoneNo").on("blur", function ()
-       {
-            //debugger;
-            var phno = document.getElementById("CommunicationPhoneNo").value.trim();
-            if (phno != "")
-            {
-                if (phno.charAt(0) == "0")
-                {
-                    document.getElementById("comm_officePhone_error").innerHTML = "Invalid Phone Number";
-                    return false;
-                }
-                else if (phno.length < 6 || phno.length > 8)
-                {
-                    document.getElementById("comm_officePhone_error").innerHTML = "Invalid Phone Number";
-                    return false;
-                }
-                else
-                {
-                    if (!phno.match(number))
-                    {
-                        document.getElementById("comm_officePhone_error").innerHTML = "Invalid Phone Number";
-                        return false;
-                    }
-                    else
-                    {
-                        document.getElementById("comm_officePhone_error").innerHTML = "";
-                    }
-                }
+      //$("#CommunicationPhoneNo").on("blur", function ()
+      // {
+      //      //debugger;
+      //      var phno = document.getElementById("CommunicationPhoneNo").value.trim();
+      //      if (phno != "")
+      //      {
+      //          if (phno.charAt(0) == "0")
+      //          {
+      //              document.getElementById("comm_officePhone_error").innerHTML = "Invalid Phone Number";
+      //              return false;
+      //          }
+      //          else if (phno.length < 6 || phno.length > 8)
+      //          {
+      //              document.getElementById("comm_officePhone_error").innerHTML = "Invalid Phone Number";
+      //              return false;
+      //          }
+      //          else
+      //          {
+      //              if (!phno.match(number))
+      //              {
+      //                  document.getElementById("comm_officePhone_error").innerHTML = "Invalid Phone Number";
+      //                  return false;
+      //              }
+      //              else
+      //              {
+      //                  document.getElementById("comm_officePhone_error").innerHTML = "";
+      //              }
+      //          }
 
-            }
-            else
-            {
-                document.getElementById("comm_officePhone_error").innerHTML = "";
-            }
+      //      }
+      //      else
+      //      {
+      //          document.getElementById("comm_officePhone_error").innerHTML = "";
+      //      }
 
-      });
+      //});
 
-      $("#CommunicationFaxCode").on("blur", function ()
-       {
-            //debugger;
-        var faxCode = document.getElementById("CommunicationFaxCode").value.trim();
-        if (faxCode != "") {
-            if (faxCode.length < 2 || faxCode.length > 4) {
-                document.getElementById("CommunicationFaxCode_error").innerHTML = "Invalid Code";
-                return false;
-            }
-            else
-            {
-                if (!faxCode.match(number))
-                {
-                    document.getElementById("CommunicationFaxCode_error").innerHTML = "Invalid Code";
-                    return false;
-                }
-                else {
-                    document.getElementById("CommunicationFaxCode_error").innerHTML = "";
-                }
-            }
+      //$("#CommunicationFaxCode").on("blur", function ()
+      // {
+      //      //debugger;
+      //  var faxCode = document.getElementById("CommunicationFaxCode").value.trim();
+      //  if (faxCode != "") {
+      //      if (faxCode.length < 2 || faxCode.length > 4) {
+      //          document.getElementById("CommunicationFaxCode_error").innerHTML = "Invalid Code";
+      //          return false;
+      //      }
+      //      else
+      //      {
+      //          if (!faxCode.match(number))
+      //          {
+      //              document.getElementById("CommunicationFaxCode_error").innerHTML = "Invalid Code";
+      //              return false;
+      //          }
+      //          else {
+      //              document.getElementById("CommunicationFaxCode_error").innerHTML = "";
+      //          }
+      //      }
 
-        }
-        else {
-            document.getElementById("CommunicationFaxCode_error").innerHTML = "";
-        }
+      //  }
+      //  else {
+      //      document.getElementById("CommunicationFaxCode_error").innerHTML = "";
+      //  }
 
-      });
+      //});
 
-      $("#CommunicationFax").on("blur", function ()
-      {
-            //debugger;
-        var faxphno = document.getElementById("CommunicationFax").value.trim();
-        if (faxphno != "") {
-            if (faxphno.charAt(0) == "0") {
-                document.getElementById("CommunicationFax_error").innerHTML = "Invalid Fax Number";
-                return false;
-            }
-            else if (faxphno.length < 6 || faxphno.length > 8) {
-                document.getElementById("CommunicationFax_error").innerHTML = "Invalid Fax Number";
-                return false;
-            }
-            else
-            {
-                if (!faxphno.match(number))
-                {
-                    document.getElementById("CommunicationFax_error").innerHTML = "Invalid Fax Number";
-                    return false;
-                }
-                else
-                {
-                    document.getElementById("CommunicationFax_error").innerHTML = "";
-                }
-            }
+      //$("#CommunicationFax").on("blur", function ()
+      //{
+      //      //debugger;
+      //  var faxphno = document.getElementById("CommunicationFax").value.trim();
+      //  if (faxphno != "") {
+      //      if (faxphno.charAt(0) == "0") {
+      //          document.getElementById("CommunicationFax_error").innerHTML = "Invalid Fax Number";
+      //          return false;
+      //      }
+      //      else if (faxphno.length < 6 || faxphno.length > 8) {
+      //          document.getElementById("CommunicationFax_error").innerHTML = "Invalid Fax Number";
+      //          return false;
+      //      }
+      //      else
+      //      {
+      //          if (!faxphno.match(number))
+      //          {
+      //              document.getElementById("CommunicationFax_error").innerHTML = "Invalid Fax Number";
+      //              return false;
+      //          }
+      //          else
+      //          {
+      //              document.getElementById("CommunicationFax_error").innerHTML = "";
+      //          }
+      //      }
 
-        }
-        else
-        {
-            document.getElementById("CommunicationFax_error").innerHTML = "";
-        }
+      //  }
+      //  else
+      //  {
+      //      document.getElementById("CommunicationFax_error").innerHTML = "";
+      //  }
 
-      });
+      //});
 
-      $("#PerOrRegAddressDialCode").on("blur", function ()
-        {
-            //debugger;
-            var stdCode = document.getElementById("PerOrRegAddressDialCode").value.trim();
-            if (stdCode != "")
-            {
+      //$("#PerOrRegAddressDialCode").on("blur", function ()
+      //  {
+      //      //debugger;
+      //      var stdCode = document.getElementById("PerOrRegAddressDialCode").value.trim();
+      //      if (stdCode != "")
+      //      {
 
-                if (stdCode.length < 2 || stdCode.length > 4)
-                {
-                    document.getElementById("PerOrRegAddressDialCode_error").innerHTML = "Invalid Code";
-                    return false;
-                }
-                else
-                {
-                    if (!stdCode.match(number))
-                    {
-                        document.getElementById("PerOrRegAddressDialCode_error").innerHTML = "Invalid Code";
-                        return false;
-                    }
-                    else
-                    {
-                        document.getElementById("PerOrRegAddressDialCode_error").innerHTML = "";
-                    }
-                }
-            }
-            else
-            {
-                document.getElementById("PerOrRegAddressDialCode_error").innerHTML = "";
-            }
+      //          if (stdCode.length < 2 || stdCode.length > 4)
+      //          {
+      //              document.getElementById("PerOrRegAddressDialCode_error").innerHTML = "Invalid Code";
+      //              return false;
+      //          }
+      //          else
+      //          {
+      //              if (!stdCode.match(number))
+      //              {
+      //                  document.getElementById("PerOrRegAddressDialCode_error").innerHTML = "Invalid Code";
+      //                  return false;
+      //              }
+      //              else
+      //              {
+      //                  document.getElementById("PerOrRegAddressDialCode_error").innerHTML = "";
+      //              }
+      //          }
+      //      }
+      //      else
+      //      {
+      //          document.getElementById("PerOrRegAddressDialCode_error").innerHTML = "";
+      //      }
 
-      });
+      //});
 
-      $("#PerOrRegAddressPhoneNumber").on("blur", function ()
-       {
-            //debugger;
-            var phno = document.getElementById("PerOrRegAddressPhoneNumber").value.trim();
-            if (phno != "")
-            {
-                if (phno.charAt(0) == "0")
-                {
-                    document.getElementById("perma_officePhone_error").innerHTML = "Invalid Phone Number";
-                    return false;
-                }
-                else if (phno.length < 6 || phno.length > 8)
-                {
-                    document.getElementById("perma_officePhone_error").innerHTML = "Invalid Phone Number";
-                    return false;
-                }
-                else
-                {
-                    if (!phno.match(number))
-                    {
-                        document.getElementById("perma_officePhone_error").innerHTML = "Invalid Phone Number";
-                        return false;
-                    }
-                    else
-                    {
-                        document.getElementById("perma_officePhone_error").innerHTML = "";
-                    }
-                }
+      //$("#PerOrRegAddressPhoneNumber").on("blur", function ()
+      // {
+      //      //debugger;
+      //      var phno = document.getElementById("PerOrRegAddressPhoneNumber").value.trim();
+      //      if (phno != "")
+      //      {
+      //          if (phno.charAt(0) == "0")
+      //          {
+      //              document.getElementById("perma_officePhone_error").innerHTML = "Invalid Phone Number";
+      //              return false;
+      //          }
+      //          else if (phno.length < 6 || phno.length > 8)
+      //          {
+      //              document.getElementById("perma_officePhone_error").innerHTML = "Invalid Phone Number";
+      //              return false;
+      //          }
+      //          else
+      //          {
+      //              if (!phno.match(number))
+      //              {
+      //                  document.getElementById("perma_officePhone_error").innerHTML = "Invalid Phone Number";
+      //                  return false;
+      //              }
+      //              else
+      //              {
+      //                  document.getElementById("perma_officePhone_error").innerHTML = "";
+      //              }
+      //          }
 
-            }
-            else
-            {
-                document.getElementById("perma_officePhone_error").innerHTML = "";
-            }
+      //      }
+      //      else
+      //      {
+      //          document.getElementById("perma_officePhone_error").innerHTML = "";
+      //      }
 
-      });
+      //});
 
-      $("#PermanentFaxCode").on("blur", function ()
-       {
-            //debugger;
-        var faxCode = document.getElementById("PermanentFaxCode").value.trim();
-        if (faxCode != "") {
-            if (faxCode.length < 2 || faxCode.length > 4) {
-                document.getElementById("PermanentFaxCode_error").innerHTML = "Invalid Code";
-                return false;
-            }
-            else
-            {
-                if (!faxCode.match(number))
-                {
-                    document.getElementById("PermanentFaxCode_error").innerHTML = "Invalid Code";
-                    return false;
-                }
-                else {
-                    document.getElementById("PermanentFaxCode_error").innerHTML = "";
-                }
-            }
+      //$("#PermanentFaxCode").on("blur", function ()
+      // {
+      //      //debugger;
+      //  var faxCode = document.getElementById("PermanentFaxCode").value.trim();
+      //  if (faxCode != "") {
+      //      if (faxCode.length < 2 || faxCode.length > 4) {
+      //          document.getElementById("PermanentFaxCode_error").innerHTML = "Invalid Code";
+      //          return false;
+      //      }
+      //      else
+      //      {
+      //          if (!faxCode.match(number))
+      //          {
+      //              document.getElementById("PermanentFaxCode_error").innerHTML = "Invalid Code";
+      //              return false;
+      //          }
+      //          else {
+      //              document.getElementById("PermanentFaxCode_error").innerHTML = "";
+      //          }
+      //      }
 
-        }
-        else {
-            document.getElementById("PermanentFaxCode_error").innerHTML = "";
-        }
+      //  }
+      //  else {
+      //      document.getElementById("PermanentFaxCode_error").innerHTML = "";
+      //  }
 
-      });
+      //});
 
-      $("#PermanentFax").on("blur", function ()
-      {
-            //debugger;
-        var faxphno = document.getElementById("PermanentFax").value.trim();
-        if (faxphno != "") {
-            if (faxphno.charAt(0) == "0") {
-                document.getElementById("perma_faxNumber_error").innerHTML = "Invalid Fax Number";
-                return false;
-            }
-            else if (faxphno.length < 6 || faxphno.length > 8) {
-                document.getElementById("perma_faxNumber_error").innerHTML = "Invalid Fax Number";
-                return false;
-            }
-            else
-            {
-                if (!faxphno.match(number))
-                {
-                    document.getElementById("perma_faxNumber_error").innerHTML = "Invalid Fax Number";
-                    return false;
-                }
-                else
-                {
-                    document.getElementById("perma_faxNumber_error").innerHTML = "";
-                }
-            }
+      //$("#PermanentFax").on("blur", function ()
+      //{
+      //      //debugger;
+      //  var faxphno = document.getElementById("PermanentFax").value.trim();
+      //  if (faxphno != "") {
+      //      if (faxphno.charAt(0) == "0") {
+      //          document.getElementById("perma_faxNumber_error").innerHTML = "Invalid Fax Number";
+      //          return false;
+      //      }
+      //      else if (faxphno.length < 6 || faxphno.length > 8) {
+      //          document.getElementById("perma_faxNumber_error").innerHTML = "Invalid Fax Number";
+      //          return false;
+      //      }
+      //      else
+      //      {
+      //          if (!faxphno.match(number))
+      //          {
+      //              document.getElementById("perma_faxNumber_error").innerHTML = "Invalid Fax Number";
+      //              return false;
+      //          }
+      //          else
+      //          {
+      //              document.getElementById("perma_faxNumber_error").innerHTML = "";
+      //          }
+      //      }
 
-        }
-        else
-        {
-            document.getElementById("perma_faxNumber_error").innerHTML = "";
-        }
+      //  }
+      //  else
+      //  {
+      //      document.getElementById("perma_faxNumber_error").innerHTML = "";
+      //  }
 
-      });
+      //});
 
-      $("#KeyOffPhoneCode").on("blur", function ()
-        {
-            //debugger;
-            var stdCode = document.getElementById("KeyOffPhoneCode").value.trim();
-            if (stdCode != "")
-            {
+      //$("#KeyOffPhoneCode").on("blur", function ()
+      //  {
+      //      //debugger;
+      //      var stdCode = document.getElementById("KeyOffPhoneCode").value.trim();
+      //      if (stdCode != "")
+      //      {
 
-                if (stdCode.length < 2 || stdCode.length > 4)
-                {
-                    document.getElementById("KeyOffPhoneCode_error").innerHTML = "Invalid Code";
-                    return false;
-                }
-                else
-                {
-                    if (!stdCode.match(number))
-                    {
-                        document.getElementById("KeyOffPhoneCode_error").innerHTML = "Invalid Code";
-                        return false;
-                    }
-                    else
-                    {
-                        document.getElementById("KeyOffPhoneCode_error").innerHTML = "";
-                    }
-                }
-            }
-            else
-            {
-                document.getElementById("KeyOffPhoneCode_error").innerHTML = "";
-            }
+      //          if (stdCode.length < 2 || stdCode.length > 4)
+      //          {
+      //              document.getElementById("KeyOffPhoneCode_error").innerHTML = "Invalid Code";
+      //              return false;
+      //          }
+      //          else
+      //          {
+      //              if (!stdCode.match(number))
+      //              {
+      //                  document.getElementById("KeyOffPhoneCode_error").innerHTML = "Invalid Code";
+      //                  return false;
+      //              }
+      //              else
+      //              {
+      //                  document.getElementById("KeyOffPhoneCode_error").innerHTML = "";
+      //              }
+      //          }
+      //      }
+      //      else
+      //      {
+      //          document.getElementById("KeyOffPhoneCode_error").innerHTML = "";
+      //      }
 
-      });
+      //});
 
-      $("#KeyOffPhoneNumber").on("blur", function ()
-       {
-            //debugger;
-            var phno = document.getElementById("KeyOffPhoneNumber").value.trim();
-            if (phno != "")
-            {
-                if (phno.charAt(0) == "0")
-                {
-                    document.getElementById("KeyOffPhoneNumber_error").innerHTML = "Invalid Phone Number";
-                    return false;
-                }
-                else if (phno.length < 6 || phno.length > 8)
-                {
-                    document.getElementById("KeyOffPhoneNumber_error").innerHTML = "Invalid Phone Number";
-                    return false;
-                }
-                else
-                {
-                    if (!phno.match(number))
-                    {
-                        document.getElementById("KeyOffPhoneNumber_error").innerHTML = "Invalid Phone Number";
-                        return false;
-                    }
-                    else
-                    {
-                        document.getElementById("KeyOffPhoneNumber_error").innerHTML = "";
-                    }
-                }
+      //$("#KeyOffPhoneNumber").on("blur", function ()
+      // {
+      //      //debugger;
+      //      var phno = document.getElementById("KeyOffPhoneNumber").value.trim();
+      //      if (phno != "")
+      //      {
+      //          if (phno.charAt(0) == "0")
+      //          {
+      //              document.getElementById("KeyOffPhoneNumber_error").innerHTML = "Invalid Phone Number";
+      //              return false;
+      //          }
+      //          else if (phno.length < 6 || phno.length > 8)
+      //          {
+      //              document.getElementById("KeyOffPhoneNumber_error").innerHTML = "Invalid Phone Number";
+      //              return false;
+      //          }
+      //          else
+      //          {
+      //              if (!phno.match(number))
+      //              {
+      //                  document.getElementById("KeyOffPhoneNumber_error").innerHTML = "Invalid Phone Number";
+      //                  return false;
+      //              }
+      //              else
+      //              {
+      //                  document.getElementById("KeyOffPhoneNumber_error").innerHTML = "";
+      //              }
+      //          }
 
-            }
-            else
-            {
-                document.getElementById("KeyOffPhoneNumber_error").innerHTML = "";
-            }
+      //      }
+      //      else
+      //      {
+      //          document.getElementById("KeyOffPhoneNumber_error").innerHTML = "";
+      //      }
 
-      });
+      //});
 
-      $("#KeyOffFaxCode").on("blur", function ()
-       {
-            //debugger;
-        var faxCode = document.getElementById("KeyOffFaxCode").value.trim();
-        if (faxCode != "") {
-            if (faxCode.length < 2 || faxCode.length > 4) {
-                document.getElementById("KeyOffFaxCode_error").innerHTML = "Invalid Code";
-                return false;
-            }
-            else
-            {
-                if (!faxCode.match(number))
-                {
-                    document.getElementById("KeyOffFaxCode_error").innerHTML = "Invalid Code";
-                    return false;
-                }
-                else {
-                    document.getElementById("KeyOffFaxCode_error").innerHTML = "";
-                }
-            }
+      //$("#KeyOffFaxCode").on("blur", function ()
+      // {
+      //      //debugger;
+      //  var faxCode = document.getElementById("KeyOffFaxCode").value.trim();
+      //  if (faxCode != "") {
+      //      if (faxCode.length < 2 || faxCode.length > 4) {
+      //          document.getElementById("KeyOffFaxCode_error").innerHTML = "Invalid Code";
+      //          return false;
+      //      }
+      //      else
+      //      {
+      //          if (!faxCode.match(number))
+      //          {
+      //              document.getElementById("KeyOffFaxCode_error").innerHTML = "Invalid Code";
+      //              return false;
+      //          }
+      //          else {
+      //              document.getElementById("KeyOffFaxCode_error").innerHTML = "";
+      //          }
+      //      }
 
-        }
-        else {
-            document.getElementById("KeyOffFaxCode_error").innerHTML = "";
-        }
+      //  }
+      //  else {
+      //      document.getElementById("KeyOffFaxCode_error").innerHTML = "";
+      //  }
 
-      });
+      //});
 
-      $("#KeyOffFax").on("blur", function ()
-      {
-            //debugger;
-        var faxphno = document.getElementById("KeyOffFax").value.trim();
-        if (faxphno != "") {
-            if (faxphno.charAt(0) == "0") {
-                document.getElementById("KeyOffFax_error").innerHTML = "Invalid Fax Number";
-                return false;
-            }
-            else if (faxphno.length < 6 || faxphno.length > 8) {
-                document.getElementById("KeyOffFax_error").innerHTML = "Invalid Fax Number";
-                return false;
-            }
-            else
-            {
-                if (!faxphno.match(number))
-                {
-                    document.getElementById("KeyOffFax_error").innerHTML = "Invalid Fax Number";
-                    return false;
-                }
-                else
-                {
-                    document.getElementById("KeyOffFax_error").innerHTML = "";
-                }
-            }
+      //$("#KeyOffFax").on("blur", function ()
+      //{
+      //      //debugger;
+      //  var faxphno = document.getElementById("KeyOffFax").value.trim();
+      //  if (faxphno != "") {
+      //      if (faxphno.charAt(0) == "0") {
+      //          document.getElementById("KeyOffFax_error").innerHTML = "Invalid Fax Number";
+      //          return false;
+      //      }
+      //      else if (faxphno.length < 6 || faxphno.length > 8) {
+      //          document.getElementById("KeyOffFax_error").innerHTML = "Invalid Fax Number";
+      //          return false;
+      //      }
+      //      else
+      //      {
+      //          if (!faxphno.match(number))
+      //          {
+      //              document.getElementById("KeyOffFax_error").innerHTML = "Invalid Fax Number";
+      //              return false;
+      //          }
+      //          else
+      //          {
+      //              document.getElementById("KeyOffFax_error").innerHTML = "";
+      //          }
+      //      }
 
-        }
-        else
-        {
-            document.getElementById("KeyOffFax_error").innerHTML = "";
-        }
+      //  }
+      //  else
+      //  {
+      //      document.getElementById("KeyOffFax_error").innerHTML = "";
+      //  }
 
-      });
+      //});
+
       $("#FleetSizeNoOfVechileOwnedHCV").on("blur", function ()
        {
             //debugger;
@@ -3610,4 +3621,45 @@
         }
 
      });
+     $("#SBUTypeID").change(function () {
+        var id = this.value;
+
+        $.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("GetZonalOfficebySBUType", "Common")',
+            data: { SBUTypeId: id },  // data to submit
+            dataType: "json",
+            success: function (data, status, xhr) {
+                var v = data;
+                if (status == 'success') {
+
+                    $("#CustomerZonalOfficeID").html("");
+                    $.each(data, function (i, data) { // bind the dropdown list using json result
+                            if (i == 0) {
+                            $('<option>',
+                                {
+                                    value: 0,
+                                    text: "Select Zonal Office"
+                                }).html("Select Zonal Office").appendTo("#CustomerZonalOfficeID");
+                            }
+                            else{
+                            $('<option>',
+                                {
+                                    value: data.zonalOfficeID,
+                                    text: data.zonalOfficeName
+                                }).html(data.zonalOfficeName).appendTo("#CustomerZonalOfficeID");
+                            }
+                    });
+                    $("#CustomerZonalOfficeID")[0].sumo.reload();
+                    $("#CustomerZonalOfficeID").trigger("change");
+                }
+                else {
+                    console.log(v);
+                }
+            },
+            error: function (jqXhr, textStatus, errorMessage) {
+                alert("Error Populating Customer Zone");
+            }
+        });
+    });
 </script>

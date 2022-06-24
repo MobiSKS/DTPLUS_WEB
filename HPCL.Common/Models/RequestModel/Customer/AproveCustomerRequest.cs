@@ -11,5 +11,6 @@ namespace HPCL.Common.Models.RequestModel.Customer
         public String Comments { get; set; }
         public String Approvalstatus { get; set; }
         public String ApprovedBy { get; set; }
+        public String FormNumber { get; set; }
     }
 }

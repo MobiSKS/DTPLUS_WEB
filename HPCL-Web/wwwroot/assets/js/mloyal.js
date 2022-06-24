@@ -615,110 +615,110 @@ function showOfficialDetails() {
     //    return false;
     //}
 
-    var stdCode = document.applicationForm.CommunicationDialCode.value.trim();
-    if (stdCode != "") {
+    //var stdCode = document.applicationForm.CommunicationDialCode.value.trim();
+    //if (stdCode != "") {
 
-        if (stdCode.length < 2 || stdCode.length > 4) {
-            document.getElementById("CommunicationDialCode_error").innerHTML = "Invalid Code";
-            ret = false;
-        }
-        else
-        {
-            if (!stdCode.match(number))
-            {
-                document.getElementById("CommunicationDialCode_error").innerHTML = "Invalid Code";
-                ret = false;
-            }
-            else
-            {
-                document.getElementById("CommunicationDialCode_error").innerHTML = "";
-            }
-        }
+    //    if (stdCode.length < 2 || stdCode.length > 4) {
+    //        document.getElementById("CommunicationDialCode_error").innerHTML = "Invalid Code";
+    //        ret = false;
+    //    }
+    //    else
+    //    {
+    //        if (!stdCode.match(number))
+    //        {
+    //            document.getElementById("CommunicationDialCode_error").innerHTML = "Invalid Code";
+    //            ret = false;
+    //        }
+    //        else
+    //        {
+    //            document.getElementById("CommunicationDialCode_error").innerHTML = "";
+    //        }
+    //    }
 
-    }
-    else {
-        document.getElementById("CommunicationDialCode_error").innerHTML = "";
-    }
+    //}
+    //else {
+    //    document.getElementById("CommunicationDialCode_error").innerHTML = "";
+    //}
 
-    var phno = document.applicationForm.CommunicationPhoneNo.value.trim();
-    if (phno != "") {
-        if (phno.charAt(0) == "0") {
-            document.getElementById("comm_officePhone_error").innerHTML = "Invalid Phone Number";
-            ret = false;
-        }
-        else if (phno.length < 6 || phno.length > 8) {
-            document.getElementById("comm_officePhone_error").innerHTML = "Invalid Phone Number";
-            ret = false;
-        }
-        else
-        {
-            if (!phno.match(number))
-            {
-                document.getElementById("comm_officePhone_error").innerHTML = "Invalid Phone Number";
-                ret = false;
-            }
-            else {
-                document.getElementById("comm_officePhone_error").innerHTML = "";
-            }
-        }
+    //var phno = document.applicationForm.CommunicationPhoneNo.value.trim();
+    //if (phno != "") {
+    //    if (phno.charAt(0) == "0") {
+    //        document.getElementById("comm_officePhone_error").innerHTML = "Invalid Phone Number";
+    //        ret = false;
+    //    }
+    //    else if (phno.length < 6 || phno.length > 8) {
+    //        document.getElementById("comm_officePhone_error").innerHTML = "Invalid Phone Number";
+    //        ret = false;
+    //    }
+    //    else
+    //    {
+    //        if (!phno.match(number))
+    //        {
+    //            document.getElementById("comm_officePhone_error").innerHTML = "Invalid Phone Number";
+    //            ret = false;
+    //        }
+    //        else {
+    //            document.getElementById("comm_officePhone_error").innerHTML = "";
+    //        }
+    //    }
 
-    }
-    else {
-        document.getElementById("comm_officePhone_error").innerHTML = "";
-    }
+    //}
+    //else {
+    //    document.getElementById("comm_officePhone_error").innerHTML = "";
+    //}
 
 
-    var faxCode = document.applicationForm.CommunicationFaxCode.value.trim();
-    if (faxCode != "") {
-        if (faxCode.length < 2 || faxCode.length > 4) {
-            document.getElementById("CommunicationFaxCode_error").innerHTML = "Invalid Code";
-            ret = false;
-        }
-        else
-        {
-            if (!faxCode.match(number))
-            {
-                document.getElementById("CommunicationFaxCode_error").innerHTML = "Invalid Code";
-                ret = false;
-            }
-            else {
-                document.getElementById("CommunicationFaxCode_error").innerHTML = "";
-            }
-        }
+    //var faxCode = document.applicationForm.CommunicationFaxCode.value.trim();
+    //if (faxCode != "") {
+    //    if (faxCode.length < 2 || faxCode.length > 4) {
+    //        document.getElementById("CommunicationFaxCode_error").innerHTML = "Invalid Code";
+    //        ret = false;
+    //    }
+    //    else
+    //    {
+    //        if (!faxCode.match(number))
+    //        {
+    //            document.getElementById("CommunicationFaxCode_error").innerHTML = "Invalid Code";
+    //            ret = false;
+    //        }
+    //        else {
+    //            document.getElementById("CommunicationFaxCode_error").innerHTML = "";
+    //        }
+    //    }
 
-    }
-    else {
-        document.getElementById("CommunicationFaxCode_error").innerHTML = "";
-    }
+    //}
+    //else {
+    //    document.getElementById("CommunicationFaxCode_error").innerHTML = "";
+    //}
 
-    var faxphno = document.applicationForm.CommunicationFax.value.trim();
-    if (faxphno != "") {
-        if (faxphno.charAt(0) == "0") {
-            document.getElementById("CommunicationFax_error").innerHTML = "Invalid Fax Number";
-            ret = false;
-        }
-        else if (faxphno.length < 6 || faxphno.length > 8) {
-            document.getElementById("CommunicationFax_error").innerHTML = "Invalid Fax Number";
-            ret = false;
-        }
-        else
-        {
-            if (!faxphno.match(number))
-            {
-                document.getElementById("CommunicationFax_error").innerHTML = "Invalid Fax Number";
-                ret = false;
-            }
-            else
-            {
-                document.getElementById("CommunicationFax_error").innerHTML = "";
-            }
-        }
+    //var faxphno = document.applicationForm.CommunicationFax.value.trim();
+    //if (faxphno != "") {
+    //    if (faxphno.charAt(0) == "0") {
+    //        document.getElementById("CommunicationFax_error").innerHTML = "Invalid Fax Number";
+    //        ret = false;
+    //    }
+    //    else if (faxphno.length < 6 || faxphno.length > 8) {
+    //        document.getElementById("CommunicationFax_error").innerHTML = "Invalid Fax Number";
+    //        ret = false;
+    //    }
+    //    else
+    //    {
+    //        if (!faxphno.match(number))
+    //        {
+    //            document.getElementById("CommunicationFax_error").innerHTML = "Invalid Fax Number";
+    //            ret = false;
+    //        }
+    //        else
+    //        {
+    //            document.getElementById("CommunicationFax_error").innerHTML = "";
+    //        }
+    //    }
 
-    }
-    else
-    {
-        document.getElementById("CommunicationFax_error").innerHTML = "";
-    }
+    //}
+    //else
+    //{
+    //    document.getElementById("CommunicationFax_error").innerHTML = "";
+    //}
 
     console.log('Before CommunicationMobileNumber check');
     if (document.applicationForm.CommunicationMobileNumber.value.trim() == "") {
@@ -903,97 +903,97 @@ function showOfficialDetails() {
     }
 
 
-    var stdCode = document.getElementById("PerOrRegAddressDialCode").value.trim();
-    if (stdCode != "") {
+    //var stdCode = document.getElementById("PerOrRegAddressDialCode").value.trim();
+    //if (stdCode != "") {
 
-        if (stdCode.length < 2 || stdCode.length > 4) {
-            document.getElementById("PerOrRegAddressDialCode_error").innerHTML = "Invalid Code";
-            ret = false;
-        }
-        else {
-            if (!stdCode.match(number)) {
-                document.getElementById("PerOrRegAddressDialCode_error").innerHTML = "Invalid Code";
-                ret = false;
-            }
-            else {
-                document.getElementById("PerOrRegAddressDialCode_error").innerHTML = "";
-            }
-        }
-    }
-    else {
-        document.getElementById("PerOrRegAddressDialCode_error").innerHTML = "";
-    }
+    //    if (stdCode.length < 2 || stdCode.length > 4) {
+    //        document.getElementById("PerOrRegAddressDialCode_error").innerHTML = "Invalid Code";
+    //        ret = false;
+    //    }
+    //    else {
+    //        if (!stdCode.match(number)) {
+    //            document.getElementById("PerOrRegAddressDialCode_error").innerHTML = "Invalid Code";
+    //            ret = false;
+    //        }
+    //        else {
+    //            document.getElementById("PerOrRegAddressDialCode_error").innerHTML = "";
+    //        }
+    //    }
+    //}
+    //else {
+    //    document.getElementById("PerOrRegAddressDialCode_error").innerHTML = "";
+    //}
 
-    var phno = document.getElementById("PerOrRegAddressPhoneNumber").value.trim();
-    if (phno != "") {
-        if (phno.charAt(0) == "0") {
-            document.getElementById("perma_officePhone_error").innerHTML = "Invalid Phone Number";
-            ret = false;
-        }
-        else if (phno.length < 6 || phno.length > 8) {
-            document.getElementById("perma_officePhone_error").innerHTML = "Invalid Phone Number";
-            ret = false;
-        }
-        else {
-            if (!phno.match(number)) {
-                document.getElementById("perma_officePhone_error").innerHTML = "Invalid Phone Number";
-                ret = false;
-            }
-            else {
-                document.getElementById("perma_officePhone_error").innerHTML = "";
-            }
-        }
+    //var phno = document.getElementById("PerOrRegAddressPhoneNumber").value.trim();
+    //if (phno != "") {
+    //    if (phno.charAt(0) == "0") {
+    //        document.getElementById("perma_officePhone_error").innerHTML = "Invalid Phone Number";
+    //        ret = false;
+    //    }
+    //    else if (phno.length < 6 || phno.length > 8) {
+    //        document.getElementById("perma_officePhone_error").innerHTML = "Invalid Phone Number";
+    //        ret = false;
+    //    }
+    //    else {
+    //        if (!phno.match(number)) {
+    //            document.getElementById("perma_officePhone_error").innerHTML = "Invalid Phone Number";
+    //            ret = false;
+    //        }
+    //        else {
+    //            document.getElementById("perma_officePhone_error").innerHTML = "";
+    //        }
+    //    }
 
-    }
-    else {
-        document.getElementById("perma_officePhone_error").innerHTML = "";
-    }
+    //}
+    //else {
+    //    document.getElementById("perma_officePhone_error").innerHTML = "";
+    //}
 
-    var faxCode = document.getElementById("PermanentFaxCode").value.trim();
-    if (faxCode != "") {
-        if (faxCode.length < 2 || faxCode.length > 4) {
-            document.getElementById("PermanentFaxCode_error").innerHTML = "Invalid Code";
-            ret = false;
-        }
-        else {
-            if (!faxCode.match(number)) {
-                document.getElementById("PermanentFaxCode_error").innerHTML = "Invalid Code";
-                ret = false;
-            }
-            else {
-                document.getElementById("PermanentFaxCode_error").innerHTML = "";
-            }
-        }
+    //var faxCode = document.getElementById("PermanentFaxCode").value.trim();
+    //if (faxCode != "") {
+    //    if (faxCode.length < 2 || faxCode.length > 4) {
+    //        document.getElementById("PermanentFaxCode_error").innerHTML = "Invalid Code";
+    //        ret = false;
+    //    }
+    //    else {
+    //        if (!faxCode.match(number)) {
+    //            document.getElementById("PermanentFaxCode_error").innerHTML = "Invalid Code";
+    //            ret = false;
+    //        }
+    //        else {
+    //            document.getElementById("PermanentFaxCode_error").innerHTML = "";
+    //        }
+    //    }
 
-    }
-    else {
-        document.getElementById("PermanentFaxCode_error").innerHTML = "";
-    }
+    //}
+    //else {
+    //    document.getElementById("PermanentFaxCode_error").innerHTML = "";
+    //}
 
-    var faxphno = document.getElementById("PermanentFax").value.trim();
-    if (faxphno != "") {
-        if (faxphno.charAt(0) == "0") {
-            document.getElementById("perma_faxNumber_error").innerHTML = "Invalid Fax Number";
-            ret = false;
-        }
-        else if (faxphno.length < 6 || faxphno.length > 8) {
-            document.getElementById("perma_faxNumber_error").innerHTML = "Invalid Fax Number";
-            ret = false;
-        }
-        else {
-            if (!faxphno.match(number)) {
-                document.getElementById("perma_faxNumber_error").innerHTML = "Invalid Fax Number";
-                ret = false;
-            }
-            else {
-                document.getElementById("perma_faxNumber_error").innerHTML = "";
-            }
-        }
+    //var faxphno = document.getElementById("PermanentFax").value.trim();
+    //if (faxphno != "") {
+    //    if (faxphno.charAt(0) == "0") {
+    //        document.getElementById("perma_faxNumber_error").innerHTML = "Invalid Fax Number";
+    //        ret = false;
+    //    }
+    //    else if (faxphno.length < 6 || faxphno.length > 8) {
+    //        document.getElementById("perma_faxNumber_error").innerHTML = "Invalid Fax Number";
+    //        ret = false;
+    //    }
+    //    else {
+    //        if (!faxphno.match(number)) {
+    //            document.getElementById("perma_faxNumber_error").innerHTML = "Invalid Fax Number";
+    //            ret = false;
+    //        }
+    //        else {
+    //            document.getElementById("perma_faxNumber_error").innerHTML = "";
+    //        }
+    //    }
 
-    }
-    else {
-        document.getElementById("perma_faxNumber_error").innerHTML = "";
-    }
+    //}
+    //else {
+    //    document.getElementById("perma_faxNumber_error").innerHTML = "";
+    //}
 
 
     if (ret == false)
@@ -1228,128 +1228,128 @@ function showCardDetails() {
         document.getElementById("KeyOffLastName_error").innerHTML = "";
     }
 
-    var faxCode = document.applicationForm.KeyOffFaxCode.value.trim();
-    if (faxCode != "")
-    {
-        if (faxCode.length < 2 || faxCode.length > 4) {
-            document.getElementById("KeyOffFaxCode_error").innerHTML = "Invalid Code";
-            ret = false;
-        }
-        else
-        {
-            if (!faxCode.match(number))
-            {
-                document.getElementById("KeyOffFaxCode_error").innerHTML = "Invalid Code";
-                ret = false;
-            }
-            else
-            {
-                document.getElementById("KeyOffFaxCode_error").innerHTML = "";
-            }
-        }
+    //var faxCode = document.applicationForm.KeyOffFaxCode.value.trim();
+    //if (faxCode != "")
+    //{
+    //    if (faxCode.length < 2 || faxCode.length > 4) {
+    //        document.getElementById("KeyOffFaxCode_error").innerHTML = "Invalid Code";
+    //        ret = false;
+    //    }
+    //    else
+    //    {
+    //        if (!faxCode.match(number))
+    //        {
+    //            document.getElementById("KeyOffFaxCode_error").innerHTML = "Invalid Code";
+    //            ret = false;
+    //        }
+    //        else
+    //        {
+    //            document.getElementById("KeyOffFaxCode_error").innerHTML = "";
+    //        }
+    //    }
 
-    }
-    else
-    {
-        document.getElementById("KeyOffFaxCode_error").innerHTML = "";
-    }
+    //}
+    //else
+    //{
+    //    document.getElementById("KeyOffFaxCode_error").innerHTML = "";
+    //}
 
-    var faxno = document.applicationForm.KeyOffFax.value.trim();
-    if (faxno != "")
-    {
-        if (faxno.charAt(0) == "0")
-        {
-            document.getElementById("KeyOffFax_error").innerHTML = "Invalid Fax Number";
-            ret = false;
-        }
-        else
-        {
-            if (faxno.length < 6 || faxno.length > 8)
-            {
-                document.getElementById("KeyOffFax_error").innerHTML = "Invalid Fax Number";
-                ret = false;
-            }
-            else
-            {
-                if (!faxno.match(number))
-                {
-                    document.getElementById("KeyOffFax_error").innerHTML = "Invalid Fax Number";
-                    ret = false;
-                }
-                else
-                {
-                    document.getElementById("KeyOffFaxCode_error").innerHTML = "";
-                }
-            }
-        }
-    }
-    else
-    {
-        document.getElementById("KeyOffFax_error").innerHTML = "";
-    }
+    //var faxno = document.applicationForm.KeyOffFax.value.trim();
+    //if (faxno != "")
+    //{
+    //    if (faxno.charAt(0) == "0")
+    //    {
+    //        document.getElementById("KeyOffFax_error").innerHTML = "Invalid Fax Number";
+    //        ret = false;
+    //    }
+    //    else
+    //    {
+    //        if (faxno.length < 6 || faxno.length > 8)
+    //        {
+    //            document.getElementById("KeyOffFax_error").innerHTML = "Invalid Fax Number";
+    //            ret = false;
+    //        }
+    //        else
+    //        {
+    //            if (!faxno.match(number))
+    //            {
+    //                document.getElementById("KeyOffFax_error").innerHTML = "Invalid Fax Number";
+    //                ret = false;
+    //            }
+    //            else
+    //            {
+    //                document.getElementById("KeyOffFaxCode_error").innerHTML = "";
+    //            }
+    //        }
+    //    }
+    //}
+    //else
+    //{
+    //    document.getElementById("KeyOffFax_error").innerHTML = "";
+    //}
 
 
-    var stdCode = document.applicationForm.KeyOffPhoneCode.value.trim();
-    if (stdCode != "")
-    {
+    //var stdCode = document.applicationForm.KeyOffPhoneCode.value.trim();
+    //if (stdCode != "")
+    //{
 
-        if (stdCode.length < 2 || stdCode.length > 4)
-        {
-            document.getElementById("KeyOffPhoneCode_error").innerHTML = "Invalid Code";
-            ret = false;
-        }
-        else
-        {
-            if (!stdCode.match(number))
-            {
-                document.getElementById("KeyOffPhoneCode_error").innerHTML = "Invalid Code";
-                ret = false;
-            }
-            else
-            {
-                document.getElementById("KeyOffPhoneCode_error").innerHTML = "";
-            }
-        }
+    //    if (stdCode.length < 2 || stdCode.length > 4)
+    //    {
+    //        document.getElementById("KeyOffPhoneCode_error").innerHTML = "Invalid Code";
+    //        ret = false;
+    //    }
+    //    else
+    //    {
+    //        if (!stdCode.match(number))
+    //        {
+    //            document.getElementById("KeyOffPhoneCode_error").innerHTML = "Invalid Code";
+    //            ret = false;
+    //        }
+    //        else
+    //        {
+    //            document.getElementById("KeyOffPhoneCode_error").innerHTML = "";
+    //        }
+    //    }
 
-    }
-    else
-    {
-        document.getElementById("KeyOffPhoneCode_error").innerHTML = "";
-    }
+    //}
+    //else
+    //{
+    //    document.getElementById("KeyOffPhoneCode_error").innerHTML = "";
+    //}
 
-    var phno = document.applicationForm.KeyOffPhoneNumber.value.trim();
-    if (phno != "")
-    {
-        if (phno.charAt(0) == "0")
-        {
-            document.getElementById("KeyOffPhoneNumber_error").innerHTML = "Invalid Phone Number";
-            ret = false;
-        }
-        else
-        {
-            if (phno.length < 6 || phno.length > 8)
-            {
-                document.getElementById("KeyOffPhoneNumber_error").innerHTML = "Invalid Phone Number";
-                ret = false;
-            }
-            else
-            {
-                if (!phno.match(number))
-                {
-                    document.getElementById("KeyOffPhoneNumber_error").innerHTML = "Invalid Phone Number";
-                    ret = false;
-                }
-                else
-                {
-                    document.getElementById("KeyOffPhoneNumber_error").innerHTML = "";
-                }
-            }
-        }
-    }
-    else
-    {
-        document.getElementById("KeyOffPhoneNumber_error").innerHTML = "";
-    }
+    //var phno = document.applicationForm.KeyOffPhoneNumber.value.trim();
+    //if (phno != "")
+    //{
+    //    if (phno.charAt(0) == "0")
+    //    {
+    //        document.getElementById("KeyOffPhoneNumber_error").innerHTML = "Invalid Phone Number";
+    //        ret = false;
+    //    }
+    //    else
+    //    {
+    //        if (phno.length < 6 || phno.length > 8)
+    //        {
+    //            document.getElementById("KeyOffPhoneNumber_error").innerHTML = "Invalid Phone Number";
+    //            ret = false;
+    //        }
+    //        else
+    //        {
+    //            if (!phno.match(number))
+    //            {
+    //                document.getElementById("KeyOffPhoneNumber_error").innerHTML = "Invalid Phone Number";
+    //                ret = false;
+    //            }
+    //            else
+    //            {
+    //                document.getElementById("KeyOffPhoneNumber_error").innerHTML = "";
+    //            }
+    //        }
+    //    }
+    //}
+    //else
+    //{
+    //    document.getElementById("KeyOffPhoneNumber_error").innerHTML = "";
+    //}
 
     if (document.applicationForm.KeyOffEmail.value.trim() != "") {
 
@@ -1424,21 +1424,21 @@ function showCardDetails() {
         
     }
 
-    if (document.getElementById("KeyOfficialSecretAnswer").value.trim() != "")
-    {
-        if (!document.getElementById("KeyOfficialSecretAnswer").value.match(secretQuestion)) {
-            document.getElementById("KeyOfficialSecretAnswer_error").innerHTML = "Invalid Secret Answer";
-            ret = false;
-        }
-        else
-        {
-            document.getElementById("KeyOfficialSecretAnswer_error").innerHTML = "";
-        }
-    }
-    else
-    {
-        document.getElementById("KeyOfficialSecretAnswer_error").innerHTML = "";
-    }
+    //if (document.getElementById("KeyOfficialSecretAnswer").value.trim() != "")
+    //{
+    //    if (!document.getElementById("KeyOfficialSecretAnswer").value.match(secretQuestion)) {
+    //        document.getElementById("KeyOfficialSecretAnswer_error").innerHTML = "Invalid Secret Answer";
+    //        ret = false;
+    //    }
+    //    else
+    //    {
+    //        document.getElementById("KeyOfficialSecretAnswer_error").innerHTML = "";
+    //    }
+    //}
+    //else
+    //{
+    //    document.getElementById("KeyOfficialSecretAnswer_error").innerHTML = "";
+    //}
     if (document.getElementById("KeyOfficialDOB").value.trim() != "") {
         var flag = validateDate("KeyOfficialDOB", "KeyOfficialDOB_error");
         if (flag == "N")

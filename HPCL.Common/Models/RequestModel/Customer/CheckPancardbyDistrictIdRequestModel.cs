@@ -11,5 +11,6 @@ namespace HPCL.Common.Models.RequestModel.Customer
         public string DistrictId { get; set; }
         public string CustomerReferenceNo { get; set; }
         public string Type { get; set; }
+        public string FormNumber { get; set; }
     }
 }
