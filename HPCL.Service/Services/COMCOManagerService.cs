@@ -201,6 +201,7 @@ namespace HPCL.Service.Services
         {
             RequestToSetCreditLimitModel model = new RequestToSetCreditLimitModel();
             model.Remarks = "";
+            model.Message = "";
             model.COMCOLimitModeMdl.AddRange(await _commonActionService.GetComcoLimitSetModeList());
             model.COMCOLimitIntervalMdl.AddRange(await _commonActionService.GetComcoLimitInvoiceIntervalList());
 
@@ -290,6 +291,20 @@ namespace HPCL.Service.Services
             }
 
             return model;
+        }
+
+        public async Task<RequestToSetCreditLimitModel> GetSetCreditLimitChequeDetailsPartialView([FromBody] List<ChequeDetails> arrs)
+        {
+            RequestToSetCreditLimitModel addAddOnCard = new RequestToSetCreditLimitModel();
+
+            if (!string.IsNullOrEmpty(arrs[0].Message))
+                addAddOnCard.Message = arrs[0].Message;
+            addAddOnCard.CustomerID = arrs[0].CustomerID;
+            addAddOnCard.NoOfCheques = arrs[0].NoOfCheques;
+            if (arrs != null && arrs.Count > 0 && ((!string.IsNullOrEmpty(arrs[0].ChequeBDSCRNumber))))
+                addAddOnCard.lstChequeDetails = arrs;
+
+            return addAddOnCard;
         }
 
     }

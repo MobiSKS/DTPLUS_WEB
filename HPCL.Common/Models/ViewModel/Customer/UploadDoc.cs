@@ -9,9 +9,9 @@ namespace HPCL.Common.Models.ViewModel.Customer
 {
     public class UploadDoc : BaseEntity
     {
-        [Required(ErrorMessage = "Please enter 10 digits Customer Reference No.")]
-        [StringLength(10)]
-        [RegularExpression(FieldValidation.ValidCustomerReferenceNo, ErrorMessage = FieldValidation.ValidCustomerReferenceNoErrMsg)]
+        //[Required(ErrorMessage = "Please enter 10 digits Customer Reference No.")]
+        //[StringLength(10)]
+        //[RegularExpression(FieldValidation.ValidCustomerReferenceNo, ErrorMessage = FieldValidation.ValidCustomerReferenceNoErrMsg)]
         public string CustomerReferenceNo { get; set; }
 
         [Display(Name = "IdProofType")]
@@ -45,6 +45,9 @@ namespace HPCL.Common.Models.ViewModel.Customer
         [Required(ErrorMessage = "Address Proof Back Photo is required")]
         public IFormFile AddressProofBack { get; set; }
 
+        [Required(ErrorMessage = "Please enter 10 digits Form Number")]
+        [StringLength(10)]
+        [RegularExpression(FieldValidation.ValidFormNo, ErrorMessage = FieldValidation.ValidFormNoErrMsg)]
         public string FormNumber { get; set; }
         public string CustomerName { get; set; }
         public string IdProofFrontSRC { get; set; }

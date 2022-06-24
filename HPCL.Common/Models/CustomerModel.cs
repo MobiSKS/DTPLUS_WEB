@@ -98,6 +98,7 @@ namespace HPCL.Common.Models
                 districtName = "Select District"
             });
             CustomerDateOfApplication= DateTime.Now.ToString("dd-MM-yyyy");
+            SBUTypes = new List<SbuTypeResponseModal>();
         }
 
         public virtual List<CardDetails> CardDetailsMdl { get; set; }
@@ -310,6 +311,8 @@ namespace HPCL.Common.Models
         public string ExternalPANAPIStatus { get; set; }
         public string SignedOn { get; set; }    
         public string Type { get; set; }
+        public virtual List<SbuTypeResponseModal> SBUTypes { get; set; }
+        public int SBUTypeID { get; set; }
 
     }
 
