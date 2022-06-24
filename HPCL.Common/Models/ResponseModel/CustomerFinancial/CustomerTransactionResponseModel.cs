@@ -44,6 +44,7 @@ namespace HPCL.Common.Models.ResponseModel.CustomerFinancial
         public string Discount { get; set; }
         public string OdometerReading { get; set; }
         public string Status { get; set; }
+        public string RetailOutletName { get; set; }
 
     }
 }

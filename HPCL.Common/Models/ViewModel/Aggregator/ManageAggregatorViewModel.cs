@@ -103,8 +103,10 @@ namespace HPCL.Common.Models.ViewModel.Aggregator
             CustomerDateOfApplication = DateTime.Now.ToString("dd-MM-yyyy");
             FromDate= DateTime.Now.AddMonths(-1).ToString("dd-MM-yyyy");
             ToDate = DateTime.Now.ToString("dd-MM-yyyy");
+            SBUTypes = new List<SbuTypeResponseModal>();
         }
-
+        public string SBUTypeId { get; set; }
+        public virtual List<SbuTypeResponseModal> SBUTypes { get; set; }
         public virtual List<OTCCardDetails> CardDetailsMdl { get; set; }
         public virtual List<CustomerTypeModel> CustomerTypeMdl { get; set; }
         public virtual List<CustomerSubTypeModel> CustomerSubTypeMdl { get; set; }
