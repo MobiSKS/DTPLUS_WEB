@@ -40,8 +40,9 @@ namespace HPCL.Common.Models.ViewModel.MyHpOTCCardCustomer
                 SecretQuestionId = 0,
                 SecretQuestionName = "--Select--"
             });
-            DateOfApplication= DateTime.Now.ToString("dd-MM-yyyy");
+            DateOfApplication = DateTime.Now.ToString("dd-MM-yyyy");
             SignedOn = DateTime.Now.ToString("dd-MM-yyyy");
+            SBUTypes = new List<SbuTypeResponseModal>();
         }
 
         [Required(ErrorMessage = "Driver Title is Required")]
@@ -92,6 +93,8 @@ namespace HPCL.Common.Models.ViewModel.MyHpOTCCardCustomer
         public string SignedOn { get; set; }
         public string NameOnCard { get; set; }
         public string ExternalPANAPIStatus { get; set; }
+        public virtual List<SbuTypeResponseModal> SBUTypes { get; set; }
+        public int SBUTypeID { get; set; }
 
     }
 
