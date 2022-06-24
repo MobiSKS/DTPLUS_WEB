@@ -1,5 +1,7 @@
 ﻿@model HPCL.Common.Models.ResponseModel.CustomerFinancial.CustomerTransactionResponseModel
 @using HPCL.Common.Resources
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.6/jspdf.plugin.autotable.min.js"></script>
 @if (Model != null && Model.GetTransactionsDetailSummary.Count() > 0)
 {
     <p class="font-12 font-weight-bold d-inline-block w-auto ml-3 mb-0 px-2">Summary of Transactions</p>
@@ -35,6 +37,7 @@
 
 @if (Model != null && Model.GetTransactionsDetailSummary.Count() > 0)
 {
+     <p class="font-12 font-weight-bold d-inline-block w-auto ml-3 mb-0 px-2">** Service tax included in service charge.</p>
     <div>
         <table id="CustTransactionDetails" class="datatable table table-striped table-bordered table-responsive" style="width:100%;">
             <thead>
@@ -42,14 +45,14 @@
                     <th>S.No.</th>
                     <th>Terminal ID</th>
                     <th>Merchant ID</th>
+                    <th>Retail Outlet Name</th>
                     <th>Account Number</th>
-                    <th>Vehicle No./User Name</th>
+                    <th>Vehicle No./Card Identifier</th>
                     <th>Txn Date</th>
                     <th>Txn Type</th>
                     <th>Product</th>
                     <th>Price</th>
                     <th>Volume(Ltr.)</th>
-                    <th>Currency</th>
                     <th>Service Charge</th>
                     <th>Amount</th>
                     <th>Discount</th>
@@ -68,6 +71,7 @@
                         <td>@Sno</td>
                         <td>@item.TerminalId</td>
                         <td>@item.MerchantId</td>
+                        <td>@item.RetailOutletName</td>
                         <td>@item.AccountNumber</td>
                         <td>@item.VechileNo</td>
                         <td>@item.TxnDate</td>
@@ -75,7 +79,6 @@
                         <td>@item.ProductName</td>
                         <td>@item.Price</td>
                         <td>@item.Volume</td>
-                        <td>@item.Currency</td>
                         <td>@item.ServiceCharge</td>
                         <td>@item.Amount</td>
                         <td>@item.Discount</td>
@@ -104,5 +107,212 @@
             }
         });
     });
+    function tableToCSV() {
 
+        // Variable to store the final csv data
+        var csv_data = [];
+
+        // Get each row data
+        //var rows = document.getElementsByTagName('tr');
+        $("#CustTransactionSummary tr").each(function () {
+            var row = $(this);
+            //debugger;
+            //for (var i = 0; i < rows.length; i++) {
+
+                // Get each column data
+                var cols = row[0].querySelectorAll('td,th');
+
+                // Stores each csv row data
+                var csvrow = [];
+                for (var j = 0; j < cols.length; j++) {
+
+                    // Get the text data of each cell
+                    // of a row and push it to csvrow
+                    
+                        if(j==0)
+                            csvrow.push("'"+cols[j].innerHTML.toString());
+                        else
+                            csvrow.push(cols[j].innerHTML.toString());
+                    
+                }
+
+                // Combine each column value with comma
+                csv_data.push(csvrow.join(","));
+            //}
+        });
+          $("#CustTransactionDetails tr").each(function () {
+            var row = $(this);
+            //debugger;
+            //for (var i = 0; i < rows.length; i++) {
+
+                // Get each column data
+                var cols = row[0].querySelectorAll('td,th');
+
+                // Stores each csv row data
+                var csvrow = [];
+                for (var j = 0; j < cols.length; j++) {
+
+                    // Get the text data of each cell
+                    // of a row and push it to csvrow
+                    
+                        if(j==1 ||j==2 ||j==4 ||j==6)
+                            csvrow.push("'"+cols[j].innerHTML.toString());
+                        else
+                            csvrow.push(cols[j].innerHTML.toString());
+                    
+                }
+
+                // Combine each column value with comma
+                csv_data.push(csvrow.join(","));
+            //}
+        });
+        // Combine each row data with new line character
+        csv_data = csv_data.join('\n');
+
+        // Call this function to download csv file
+        downloadCSVFile(csv_data);
+
+    }
+
+    function downloadCSVFile(csv_data) {
+
+        // Create CSV file object and feed
+        // our csv_data into it
+        CSVFile = new Blob([csv_data], {
+            type: "text/csv"
+        });
+
+        // Create to temporary link to initiate
+        // download process
+        var temp_link = document.createElement('a');
+
+        // Download csv file
+        temp_link.download = "CustomerTransactionDetails.csv";
+        var url = window.URL.createObjectURL(CSVFile);
+        temp_link.href = url;
+
+        // This link should not be displayed
+        temp_link.style.display = "none";
+        document.body.appendChild(temp_link);
+
+        // Automatically click the link to
+        // trigger download
+        temp_link.click();
+        document.body.removeChild(temp_link);
+    }
+   function generatePDF() {
+     var doc = new jsPDF({
+        orientation: 'l', // landscape
+        unit: 'pt', // points, pixels won't work properly
+        format: [612, 792] // set needed dimensions for any element
+    })
+  //create jsPDF object
+     var htmlstring = '';  
+     var tempVarToCheckPageHeight = 0;  
+     var pageHeight = 0;  
+     pageHeight = doc.internal.pageSize.height;  
+     margins = {  
+        top: 50,  
+        bottom: 60,  
+        left: 10,  
+        right: 10,  
+        width: 10  
+     };  
+     var y = 20;  
+     doc.setLineWidth(2);  
+     
+     doc.text(40, y = y + 20, "Customer Transaction Details");  
+
+     doc.autoTable({  
+        html: '#CustTransactionSummary',  
+        startY: 50,  
+       tableWidth: 'auto',
+        margin: {right:0,left:0},
+        theme: 'striped',
+        columnStyles: {  
+            0: {  
+                columnWidth: 'auto' 
+            },  
+            1: {  
+               columnWidth: 'auto'
+            },  
+            2: {  
+                columnWidth: 'auto'  
+            },
+            3: {  
+                columnWidth: 'auto' 
+            },
+            4: {  
+                columnWidth: 'auto'
+            }
+        },  
+        styles: {  
+            minCellHeight: 10  
+        }  
+     })  
+     doc.autoTable({  
+        html: '#CustTransactionDetails',  
+        startY: 100, 
+        tableWidth: 'auto',
+        margin: {right:0,left:0},
+        theme: 'striped',
+        columnStyles: {  
+            0: {  
+                columnWidth: 'auto'
+            },  
+            1: {  
+                columnWidth: 'auto'
+            },  
+            2: {  
+                columnWidth: 'auto'
+            },
+            3: {  
+                columnWidth: 'auto' 
+            },
+            4: {  
+                columnWidth: 'auto' 
+            },
+            5: {  
+               columnWidth: 'auto'
+            },  
+            6: {  
+                columnWidth: 'auto' 
+            },
+            7: {  
+               columnWidth: 'auto'
+            },
+            8: {  
+                columnWidth: 'auto' 
+            },
+              
+            9: {  
+               columnWidth: 'auto'
+            },
+            10: {  
+               columnWidth: 'auto'
+            },
+            11: {  
+                columnWidth: 'auto'  
+            },  
+            12: {  
+                columnWidth: 'auto'
+            },
+            13: {  
+                columnWidth: 'auto' 
+            },
+            14: {  
+                columnWidth: 'auto'
+            },
+            15: {  
+                columnWidth: 'auto'  
+            }
+
+        },  
+        styles: {  
+            minCellHeight: 10  
+        }  
+     })  
+     doc.save('CustomerTransactionDetails.pdf');  
+     
+}
 </script>
