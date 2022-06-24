@@ -31,7 +31,12 @@
                                             <div class="form-group d-flex align-items-center flex-wrap">
                                                 <label class="font-weight-normal col-md-4 col-12">Form No. <sup class="text-danger">*</sup></label>
                                                 <div class="col-md-8 col-12">
-                                                    @Html.TextBoxFor(m => m.FormNumber, new { placeholder = "Form Number", @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                        <div class="col-md-5 px-1 col-12">
+                                                            @Html.TextBoxFor(m => m.FormNumber, new { placeholder = "Form Number", @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off",@readonly="readonly" })
+                                                        </div>
+                                                        <div class="col-md-7 px-0 col-12">
+                                                            <button class="btn btn_primary regrate_btn" type="button" id="btnFormNumber" name="btnFormNumber">Generate Form Number</button>
+                                                        </div>
                                                     <span class="error" id="formNumber_error"></span>
                                                 </div>
                                             </div>
@@ -3662,4 +3667,27 @@
             }
         });
     });
+
+$("#btnFormNumber").on('click', function (e) 
+{
+
+        $.ajax({
+            url: "@Url.Action("GenerateFormNumber", "Customer")",
+            type: "POST",
+            dataType: "JSON",
+            data: {},
+            success: function (res) {
+                console.log(res, "res");
+                $('#FormNumber').val(res);
+                $("#btnFormNumber").attr("disabled",true);
+                $('#formNumber_error').html("");
+
+            },
+            error: function (ex) {
+                alert('Failed' + ex);
+            }
+
+        });
+
+});
 </script>
