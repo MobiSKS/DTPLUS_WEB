@@ -67,7 +67,8 @@ namespace HPCL.Service.Services
             custMdl.Remarks = "";
             int CustomerTypeID = 901;
             custMdl.CustomerSubTypeMdl.AddRange(await _commonActionService.GetCustomerSubTypeDropdown(CustomerTypeID));
-            custMdl.CustomerZonalOfficeMdl.AddRange(await _commonActionService.GetZonalOfficeListForDropdown());
+            custMdl.SBUTypes.AddRange(await _commonActionService.GetSbuTypeList());
+            custMdl.CustomerZonalOfficeMdl.AddRange(await _commonActionService.GetZonalOfficebySBUType("1"));
 
             custMdl.CustomerTbentityMdl.AddRange(await _commonActionService.GetCustomerTbentityListDropdown());
 
@@ -185,8 +186,8 @@ namespace HPCL.Service.Services
                     {"KeyOfficialDOA", (string.IsNullOrEmpty(KeyOffDateOfAnniversary)?"1900-01-01":KeyOffDateOfAnniversary)},
                     {"KeyOfficialMobile", cust.KeyOffMobileNumber},
                     {"KeyOfficialDOB", (string.IsNullOrEmpty(KeyOfficialDOB)?"1900-01-01":KeyOfficialDOB)},
-                    {"KeyOfficialSecretQuestion", cust.KeyOfficialSecretQuestion},
-                    {"KeyOfficialSecretAnswer", (String.IsNullOrEmpty(cust.KeyOfficialSecretAnswer)?"":cust.KeyOfficialSecretAnswer)},
+                    {"KeyOfficialSecretQuestion", "0"},
+                    {"KeyOfficialSecretAnswer",""},
                     {"KeyOfficialTypeOfFleet", cust.CustomerTypeOfFleetID},
                     {"KeyOfficialCardAppliedFor", (String.IsNullOrEmpty(cust.KeyOfficialCardAppliedFor)?"":cust.KeyOfficialCardAppliedFor)},
                     {"KeyOfficialApproxMonthlySpendsonVechile1", (String.IsNullOrEmpty(cust.KeyOfficialApproxMonthlySpendsonVechile1)?"0":cust.KeyOfficialApproxMonthlySpendsonVechile1)},
@@ -226,7 +227,9 @@ namespace HPCL.Service.Services
                 //cust.CustomerTypeMdl.AddRange(await _commonActionService.GetCustomerTypeListDropdown());
                 cust.CustomerSubTypeMdl.AddRange(await _commonActionService.GetCustomerSubTypeDropdown(901));
 
-                cust.CustomerZonalOfficeMdl.AddRange(await _commonActionService.GetZonalOfficeListForDropdown());
+                cust.SBUTypes.AddRange(await _commonActionService.GetSbuTypeList());
+
+                cust.CustomerZonalOfficeMdl.AddRange(await _commonActionService.GetZonalOfficebySBUType("1"));
 
                 cust.CustomerRegionMdl.AddRange(await _commonActionService.GetRegionalDetailsDropdown(cust.CustomerZonalOfficeID));
 
@@ -653,9 +656,9 @@ namespace HPCL.Service.Services
 
             int CustomerTypeID = 901;
             custMdl.CustomerSubTypeMdl.AddRange(await _commonActionService.GetCustomerSubTypeDropdown(CustomerTypeID));
+            custMdl.SBUTypes.AddRange(await _commonActionService.GetSbuTypeList());
 
-            custMdl.CustomerZonalOfficeMdl.AddRange(await _commonActionService.GetZonalOfficeListForDropdown());
-
+            custMdl.CustomerZonalOfficeMdl.AddRange(await _commonActionService.GetZonalOfficebySBUType("1"));
             custMdl.CustomerTbentityMdl.AddRange(await _commonActionService.GetCustomerTbentityListDropdown());
 
             custMdl.CustomerStateMdl.AddRange(await _commonActionService.GetStateList());
@@ -694,6 +697,17 @@ namespace HPCL.Service.Services
                     custMdl.CustomerSubTypeMdl.AddRange(await _commonActionService.GetCustomerSubTypeDropdown(custMdl.CustomerTypeID));
 
                     custMdl.CustomerSubTypeID = Convert.ToInt32(string.IsNullOrEmpty(Customer.CustomerSubtypeId) ? "0" : Customer.CustomerSubtypeId);
+                    custMdl.SBUTypeId = string.IsNullOrEmpty(Customer.SBUTypeId) ? "0" : Customer.SBUTypeId;
+                    List<CustomerZonalOfficeModel> lstZonalList = new List<CustomerZonalOfficeModel>();
+                    lstZonalList = await _commonActionService.GetZonalOfficebySBUType(custMdl.SBUTypeId);
+                    if (lstZonalList.Count > 0)
+                    {
+                        if (lstZonalList[0].ZonalOfficeName == "--Select--")
+                            lstZonalList[0].ZonalOfficeName = "Select Zonal Office";
+                    }
+
+                    custMdl.CustomerZonalOfficeMdl.Clear();
+                    custMdl.CustomerZonalOfficeMdl.AddRange(lstZonalList);
                     custMdl.CustomerZonalOfficeID = Convert.ToInt32(string.IsNullOrEmpty(Customer.ZonalOfficeID) ? "0" : Customer.ZonalOfficeID);
 
                     List<CustomerRegionModel> lstCustomerRegion = new List<CustomerRegionModel>();
@@ -856,10 +870,16 @@ namespace HPCL.Service.Services
                     {
                         if (!Customer.KeyOfficialDOA.Contains("1900"))
                         {
-
-                            string[] subs = Customer.KeyOfficialDOA.Split(' ');
-                            string[] date = subs[0].Split('/');
-                            custMdl.KeyOffDateOfAnniversary = date[1] + "-" + date[0] + "-" + date[2];
+                            if (!Customer.KeyOfficialDOA.Contains('-'))
+                            {
+                                string[] subs = Customer.KeyOfficialDOA.Split(' ');
+                                string[] date = subs[0].Split('/');
+                                custMdl.KeyOffDateOfAnniversary = date[1] + "-" + date[0] + "-" + date[2];
+                            }
+                            else
+                            {
+                                custMdl.KeyOffDateOfAnniversary = Customer.KeyOfficialDOA;
+                            }
                         }
                     }
 
@@ -867,9 +887,16 @@ namespace HPCL.Service.Services
                     {
                         if (!Customer.KeyOfficialDOB.Contains("1900"))
                         {
-                            string[] subs = Customer.KeyOfficialDOB.Split(' ');
-                            string[] date = subs[0].Split('/');
-                            custMdl.KeyOfficialDOB = date[1] + "-" + date[0] + "-" + date[2];
+                            if (!Customer.KeyOfficialDOB.Contains('-'))
+                            {
+                                string[] subs = Customer.KeyOfficialDOB.Split(' ');
+                                string[] date = subs[0].Split('/');
+                                custMdl.KeyOfficialDOB = date[1] + "-" + date[0] + "-" + date[2];
+                            }
+                            else
+                            {
+                                custMdl.KeyOfficialDOB = Customer.KeyOfficialDOB;
+                            }
                         }
                     }
 
@@ -1030,8 +1057,8 @@ namespace HPCL.Service.Services
                     {"KeyOfficialDOA", (string.IsNullOrEmpty(KeyOffDateOfAnniversary)?"1900-01-01":KeyOffDateOfAnniversary)},
                     {"KeyOfficialMobile", cust.KeyOffMobileNumber},
                     {"KeyOfficialDOB", (string.IsNullOrEmpty(KeyOfficialDOB)?"1900-01-01":KeyOfficialDOB)},
-                    {"KeyOfficialSecretQuestion", cust.KeyOfficialSecretQuestion},
-                    {"KeyOfficialSecretAnswer", (String.IsNullOrEmpty(cust.KeyOfficialSecretAnswer)?"":cust.KeyOfficialSecretAnswer)},
+                    {"KeyOfficialSecretQuestion", "0"},
+                    {"KeyOfficialSecretAnswer", ""},
                     {"KeyOfficialTypeOfFleet", cust.CustomerTypeOfFleetID},
                     {"KeyOfficialCardAppliedFor", (String.IsNullOrEmpty(cust.KeyOfficialCardAppliedFor)?"":cust.KeyOfficialCardAppliedFor)},
                     {"KeyOfficialApproxMonthlySpendsonVechile1", (String.IsNullOrEmpty(cust.KeyOfficialApproxMonthlySpendsonVechile1)?"0":cust.KeyOfficialApproxMonthlySpendsonVechile1)},
@@ -1069,7 +1096,8 @@ namespace HPCL.Service.Services
 
                 cust.CustomerSubTypeMdl.AddRange(await _commonActionService.GetCustomerSubTypeDropdown(901));
 
-                cust.CustomerZonalOfficeMdl.AddRange(await _commonActionService.GetZonalOfficeListForDropdown());
+                cust.SBUTypes.AddRange(await _commonActionService.GetSbuTypeList());
+                cust.CustomerZonalOfficeMdl.AddRange(await _commonActionService.GetZonalOfficebySBUType("1"));
 
                 cust.CustomerRegionMdl.AddRange(await _commonActionService.GetRegionalDetailsDropdown(cust.CustomerZonalOfficeID));
 

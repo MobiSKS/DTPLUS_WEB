@@ -476,7 +476,7 @@ namespace HPCL.Service.Services
                     custMdl.CustomerId = customerId;
                     custMdl.RequestId = RequestId;
                     custMdl.CustomerTypeID = Convert.ToInt32(string.IsNullOrEmpty(Customer.CustomerTypeId) ? "0" : Customer.CustomerTypeId);
-                    custMdl.SBUTypeId = string.IsNullOrEmpty(Customer.SBUTypeId) ? "1" : Customer.SBUTypeId;
+                    custMdl.SBUTypeId = string.IsNullOrEmpty(Customer.SBUTypeId) ? "0" : Customer.SBUTypeId;
 
                     custMdl.CustomerSubTypeID = Convert.ToInt32(string.IsNullOrEmpty(Customer.CustomerSubtypeId) ? "0" : Customer.CustomerSubtypeId);
                     List<CustomerZonalOfficeModel> lstZonalList = new List<CustomerZonalOfficeModel>();
@@ -652,10 +652,16 @@ namespace HPCL.Service.Services
                     {
                         if (!Customer.KeyOfficialDOA.Contains("1900"))
                         {
-
-                            string[] subs = Customer.KeyOfficialDOA.Split(' ');
-                            string[] date = subs[0].Split('/');
-                            custMdl.KeyOffDateOfAnniversary = date[1] + "-" + date[0] + "-" + date[2];
+                            if (!Customer.KeyOfficialDOA.Contains('-'))
+                            {
+                                string[] subs = Customer.KeyOfficialDOA.Split(' ');
+                                string[] date = subs[0].Split('/');
+                                custMdl.KeyOffDateOfAnniversary = date[1] + "-" + date[0] + "-" + date[2];
+                            }
+                            else
+                            {
+                                custMdl.KeyOffDateOfAnniversary = Customer.KeyOfficialDOA;
+                            }
                         }
                     }
 
@@ -663,9 +669,16 @@ namespace HPCL.Service.Services
                     {
                         if (!Customer.KeyOfficialDOB.Contains("1900"))
                         {
-                            string[] subs = Customer.KeyOfficialDOB.Split(' ');
-                            string[] date = subs[0].Split('/');
-                            custMdl.KeyOfficialDOB = date[1] + "-" + date[0] + "-" + date[2];
+                            if (!Customer.KeyOfficialDOB.Contains('-'))
+                            {
+                                string[] subs = Customer.KeyOfficialDOB.Split(' ');
+                                string[] date = subs[0].Split('/');
+                                custMdl.KeyOfficialDOB = date[1] + "-" + date[0] + "-" + date[2];
+                            }
+                            else
+                            {
+                                custMdl.KeyOfficialDOB = Customer.KeyOfficialDOB;
+                            }
                         }
                     }
 
@@ -781,6 +794,7 @@ namespace HPCL.Service.Services
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
+                CustomerReferenceNo=cust.CustomerReferenceNo,
                 CustomerId = cust.CustomerId,
                 ZonalOffice = cust.CustomerZonalOfficeID.ToString(),
                 RegionalOffice = cust.CustomerRegionID.ToString(),
