@@ -553,8 +553,7 @@ namespace HPCL_Web.Controllers
             return PartialView("~/Views/Customer/_CustomerCardWiseBalancesTbl.cshtml", modals);
         }
 
-        [HttpPost]
-        public async Task<JsonResult> GetCustomerDetailsByCustomerID(string CustomerID)
+        public async Task<IActionResult> GetCustomerDetailsByCustomerID(string CustomerID)
         {
             JObject obj = await _customerService.GetCustomerDetailsByCustomerID(CustomerID);
 
@@ -564,10 +563,10 @@ namespace HPCL_Web.Controllers
             List<GetCustomerDetailsResponse> customerList = custResult.ToObject<List<GetCustomerDetailsResponse>>();
 
             GetCustomerDetailsResponse Customer = customerList.Where(t => t.CustomerID == CustomerID).FirstOrDefault();
+            return PartialView("~/Views/Customer/_CustomerSummaryView.cshtml", Customer);
+            //ModelState.Clear();
 
-            ModelState.Clear();
-
-            return Json(new { customer = Customer });
+            //return Json(new { customer = Customer });
         }
 
         public async Task<IActionResult> SuccessAddCardRedirect(string customerReferenceNo, string Message)
