@@ -949,6 +949,7 @@ namespace HPCL.Service.Services
                     custMdl.CustomerReferenceNo = Customer.CustomerReferenceNo;
                     custMdl.CustomerTypeID = Convert.ToInt32(string.IsNullOrEmpty(Customer.CustomerTypeId) ? "0" : Customer.CustomerTypeId);
 
+                    custMdl.CustomerSubTypeMdl.Clear();
                     custMdl.CustomerSubTypeMdl.AddRange(await _commonActionService.GetCustomerSubTypeDropdown(custMdl.CustomerTypeID));
 
                     custMdl.CustomerSubTypeID = Convert.ToInt32(string.IsNullOrEmpty(Customer.CustomerSubtypeId) ? "0" : Customer.CustomerSubtypeId);
@@ -1264,7 +1265,8 @@ namespace HPCL.Service.Services
                 KeyOfficialDOB = await _commonActionService.changeDateFormat(cust.KeyOfficialDOB);
             }
 
-
+            cust.KeyOfficialSecretQuestion = "0";
+            cust.KeyOfficialSecretAnswer = "";
             var CustomerTypeForms = new Dictionary<string, string>
                 {
                     {"UserId", _httpContextAccessor.HttpContext.Session.GetString("UserId")},
@@ -1411,7 +1413,6 @@ namespace HPCL.Service.Services
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
-                //CustomerReferenceNo = customerReferenceNo,
                 FormNumber = customerReferenceNo,
                 Type = "0"
             };
@@ -1425,15 +1426,13 @@ namespace HPCL.Service.Services
 
             customerResponseByReferenceNo = JsonConvert.DeserializeObject<CustomerResponseByReferenceNo>(responseCustomer);
 
-            if (string.IsNullOrEmpty(customerCardInfo.FormNumber))
-            {
-                customerCardInfo.FormNumber = "";
-            }
+            customerCardInfo.FormNumber = customerReferenceNo;
+
 
             if (customerResponseByReferenceNo.Internel_Status_Code == 1000)
             {
                 customerCardInfo.CustomerReferenceNo = customerReferenceNo;
-                customerCardInfo.FormNumber = customerResponseByReferenceNo.Data[0].FormNumber;
+                customerCardInfo.FormNumber = customerReferenceNo;
 
                 customerCardInfo.CustomerName = customerResponseByReferenceNo.Data[0].CustomerName;
 
