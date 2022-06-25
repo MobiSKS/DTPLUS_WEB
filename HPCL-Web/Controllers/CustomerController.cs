@@ -545,7 +545,7 @@ namespace HPCL_Web.Controllers
             GetCustomerBalanceResponse customerBalanceResponse = new GetCustomerBalanceResponse();
             customerBalanceResponse = await _customerService.GetCustomerBalanceInfo(CustomerID);
 
-            return Json(new { customerBalanceResponse = customerBalanceResponse.Data });
+            return Json(customerBalanceResponse);
         }
         public async Task<IActionResult> GetCustomerCardWiseBalance(string CustomerID)
         {
