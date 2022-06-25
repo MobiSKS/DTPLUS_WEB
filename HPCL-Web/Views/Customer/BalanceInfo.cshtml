@@ -85,7 +85,11 @@
 
                         </table>
                     </div>
+                    
                 </div>
+                   <div class="clearfix"></div>
+                <div class="mb-3 text-center alert alert-danger" style="display:none" id="divMsg">
+                    </div>
             </div>
         </form>
         <!-- Modal : Card1 -->
@@ -103,7 +107,7 @@
                     <div class="modal-body" style="overflow:scroll;height:500px;">
                         <div class="col-lg-12 col-md-12 col-12 toBeHiddenOnSuccess" id="CustomerSummaryData">
                         </div>
-               
+
                     </div>
                 </div>
                 @*<div class="modal-footer">
@@ -170,38 +174,44 @@
                 url: '@Url.Action("GetCustomerBalanceInfo", "Customer")',
                 data: { CustomerID: customerId },  // data to submit
                 dataType: "json",
-                success: function (data, status, xhr) {
-                    console.log(data);
-                    console.log(data.customerBalanceResponse);
-                    console.log(status);
+                success: function (res, status, xhr) {
+                
 
                     if (status == 'success') {
+                        debugger;
                         $("#CustomerBalanceTbl td").parent().remove();
-
-                        for (var i = 0; i < data.customerBalanceResponse.length; i++) {
-                            var customerID = data.customerBalanceResponse[i].customerID;
-                            var rows = "<tbody><tr>"
-                                //+ "<td class='nav-item'><a class='CardNumber' data-toggle='tab' href='#BasicInformation' onclick='ViewCardDetails(this)' role='tab'><span class='rowCardNo'>" + (data.customerBalanceResponse[i].customerID || '') + "</span></a></td>"
-                                //+ "<td class='nav-item'><a class='CardNumber' onclick='ViewBasicInfo(this)' role='tab'><span class='rowCardNo'>" + (data.customerBalanceResponse[i].customerID || '') + "</span></a></td>"
-                                + "<td class='nav-item'><a class='CustNo' data-toggle='modal' href='#myModalCard1' onclick='ViewBasicInfo(this)' role='tab'><span class='rowCardNo'>" + (data.customerBalanceResponse[i].customerID || '') + "</span></a></td>"
-                                + "<td><span class='rowData CustReferenceNo'>" + (data.customerBalanceResponse[i].cardBalance || '') + "</span></td>"
-                                + "<td class='nav-item'><a class='CCMSBalance' href='#' onclick='ViewCCMSBalanceDetails(this)' role='tab'><span class='rowCCMSBalance'>" + (data.customerBalanceResponse[i].ccmsLimitValue || '') + "</span></a></td>"
-                                + "<td><span class='rowData'>" + (data.customerBalanceResponse[i].drivestars || '') + "</span></td>"
-                                + "<td><span class='rowData'>" + (data.customerBalanceResponse[i].expiredDrivestars || '') + "</span></td>"
-                                + "<td><span class='rowData'>" + (data.customerBalanceResponse[i].expiringDrivestars || '') + "</span></td>"
-                                + "<td><span class='rowData'>" + (data.customerBalanceResponse[i].cashPurseLimit || '') + "</span></td>"
-                                + "<td><span class='rowData'>" + (data.customerBalanceResponse[i].dailyCashLimitBalance || '') + "</span></td>"
-                                //+ "<td><div class='d-flex align-items-center justify-content-left' style='min-height: 100%'><div class='px-2'><a href='#' class='d-block action_btn'><img src='assets/images/search_icon2.png' alt='View' class='img-fluid'></a></div></div></td></tr></tbody>"
-                                + "<td class='nav-item'><a class='CardNumber' data-toggle='tab' onclick='ViewCardDetails(" + customerID + ")' role='tab'><img src='/assets/images/search_icon2.png' alt='View' class='action_btn img-fluid'></a></td></tr></tbody>"
-
-
-                            $('#CustomerBalanceTbl').append(rows);
+                        var data=res.data;
+                        if(data.length>0){
+                            for (var i = 0; i < data.length; i++) {
+                                var customerID = data[i].customerID;
+                                var rows = "<tbody><tr>"
+                                    //+ "<td class='nav-item'><a class='CardNumber' data-toggle='tab' href='#BasicInformation' onclick='ViewCardDetails(this)' role='tab'><span class='rowCardNo'>" + (data.customerBalanceResponse[i].customerID || '') + "</span></a></td>"
+                                    //+ "<td class='nav-item'><a class='CardNumber' onclick='ViewBasicInfo(this)' role='tab'><span class='rowCardNo'>" + (data.customerBalanceResponse[i].customerID || '') + "</span></a></td>"
+                                    + "<td class='nav-item'><a class='CustNo' data-toggle='modal' href='#myModalCard1' onclick='ViewBasicInfo(this)' role='tab'><span class='rowCardNo'>" + (data[i].customerID || '') + "</span></a></td>"
+                                    + "<td><span class='rowData CustReferenceNo'>" + (data[i].cardBalance || '') + "</span></td>"
+                                    + "<td class='nav-item'><a class='CCMSBalance' href='#' onclick='ViewCCMSBalanceDetails(this)' role='tab'><span class='rowCCMSBalance'>" + (data[i].ccmsLimitValue || '') + "</span></a></td>"
+                                    + "<td><span class='rowData'>" + (data[i].drivestars || '') + "</span></td>"
+                                    + "<td><span class='rowData'>" + (data[i].expiredDrivestars || '') + "</span></td>"
+                                    + "<td><span class='rowData'>" + (data[i].expiringDrivestars || '') + "</span></td>"
+                                    + "<td><span class='rowData'>" + (data[i].cashPurseLimit || '') + "</span></td>"
+                                    + "<td><span class='rowData'>" + (data[i].dailyCashLimitBalance || '') + "</span></td>"
+                                    //+ "<td><div class='d-flex align-items-center justify-content-left' style='min-height: 100%'><div class='px-2'><a href='#' class='d-block action_btn'><img src='assets/images/search_icon2.png' alt='View' class='img-fluid'></a></div></div></td></tr></tbody>"
+                                    + "<td class='nav-item'><a class='CardNumber' data-toggle='tab' onclick='ViewCardDetails(" + customerID + ")' role='tab'><img src='/assets/images/search_icon2.png' alt='View' class='action_btn img-fluid'></a></td></tr></tbody>"
 
 
+                                $('#CustomerBalanceTbl').append(rows);
+
+
+                            }
+
+                            document.getElementById('dvCustomerBalance').style.display = 'block';
+                            document.getElementById('divMsg').style.display = 'none';
                         }
-
-                        document.getElementById('dvCustomerBalance').style.display = 'block';
-
+                        else{
+                            document.getElementById('dvCustomerBalance').style.display = 'none';
+                            document.getElementById('divMsg').style.display = 'block';
+                            $("#divMsg").html(res.message);
+                        }
 
                         //if (data == "Failed to load Customer Details")
                         //document.getElementById("RBEName").value = "";
