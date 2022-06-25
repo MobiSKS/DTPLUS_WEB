@@ -11,7 +11,7 @@ namespace HPCL.Service.Interfaces
     public interface IValidateNewCardsService
     {
         Task<ValidateNewCardsModel> Details(ValidateNewCardsModel validateNewCardsMdl);
-        Task<List<VehicleDetailsModel>> GetCardDetailsForApproval(string CustomerRefNo);
+        Task<List<VehicleDetailsModel>> GetCardDetailsForApproval(string CustomerRefNo, string FormNumber);
         Task<CommonResponseData> ActionOnCards([FromBody] ApproveCardDetailsModel approveRejectModel);
     }
 }

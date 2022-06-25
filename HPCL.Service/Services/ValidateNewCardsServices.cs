@@ -41,7 +41,8 @@ namespace HPCL.Service.Services
                 CustomerReferenceNo = approveRejectModel.CustomerReferenceNo,
                 Comments = approveRejectModel.Comments,
                 Approvalstatus = approveRejectModel.Approvalstatus,
-                ApprovedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
+                ApprovedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                FormNumber= approveRejectModel.FormNumber
             };
 
             StringContent actionOnCardsContent = new StringContent(JsonConvert.SerializeObject(actionOnCardsForms), Encoding.UTF8, "application/json");
@@ -108,7 +109,7 @@ namespace HPCL.Service.Services
             return validateNewCardsModel;
         }
 
-        public async Task<List<VehicleDetailsModel>> GetCardDetailsForApproval(string CustomerRefNo)
+        public async Task<List<VehicleDetailsModel>> GetCardDetailsForApproval(string CustomerRefNo,string FormNumber)
         {
             var getDetailsForApprovalForms = new ValidateNewCardWithReferenceNumberModel
             {
@@ -125,7 +126,10 @@ namespace HPCL.Service.Services
             JObject getDetailsForApprovalObj = JObject.Parse(JsonConvert.DeserializeObject(getDetailsForApprovalResponse).ToString());
             var getDetailsForApprovalJarr = getDetailsForApprovalObj["Data"].Value<JArray>();
             List<VehicleDetailsModel> getDetailsForApprovallst = getDetailsForApprovalJarr.ToObject<List<VehicleDetailsModel>>();
-            
+            foreach (VehicleDetailsModel item in getDetailsForApprovallst)
+            {
+                item.FormNumber = FormNumber;
+            }
             return getDetailsForApprovallst;
         }
     }
