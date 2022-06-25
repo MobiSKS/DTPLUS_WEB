@@ -137,19 +137,23 @@ function showregAddress() {
         }
     }
 
-    if (document.applicationForm.CustomerTypeID.value == "0") {
+    if (document.getElementById("CustomerTypeID").value == "0")
+    {
         document.getElementById("customerType_error").innerHTML = "Customer Type field cannot be left blank";
         ret = false;
     }
-    else {
+    else
+    {
         document.getElementById("customerType_error").innerHTML = "";
     }
 
-    if (document.applicationForm.CustomerSubTypeID.value == "0" || document.applicationForm.CustomerSubTypeID.value == "") {
+    if (document.getElementById("CustomerSubTypeID").value == "0" || document.getElementById("CustomerSubTypeID").value == "")
+    {
         document.getElementById("customerSubType_error").innerHTML = "Customer Sub Type field cannot be left blank";
         ret = false;
     }
-    else {
+    else
+    {
         document.getElementById("customerSubType_error").innerHTML = "";
     }
 
