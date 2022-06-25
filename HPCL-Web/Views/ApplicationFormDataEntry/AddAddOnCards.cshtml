@@ -66,7 +66,12 @@
                                         <label class="font-weight-normal col-md-5 col-12"> Form Number <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.FormNumber, new { @class = "form-control", @id = "FormNumber", maxlength = "10", onkeypress = "return isNumberKey(event)" })
+                                                <div class="col-md-5 px-1 col-12">
+                                                    @Html.TextBoxFor(m => m.FormNumber, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off",@readonly="readonly" })
+                                                </div>
+                                                <div class="col-md-7 px-0 col-12">
+                                                    <button class="btn btn_primary regrate_btn" type="button" id="btnFormNumber" name="btnFormNumber">Generate</button>
+                                                </div>
                                             </div>
                                             @Html.ValidationMessageFor(m => m.FormNumber, "", new { @class = "error", @id = "formNameValErrMsg" })
                                         </div>
@@ -192,6 +197,7 @@
          if($("#dvRemarks").html().trim()!="")
          {
              debugger;
+             $("#btnFormNumber").attr("disabled",true);
              ViewCardDetailsTbl.style.display = "block";
              var customerTypeId = document.getElementById("CustomerTypeId").value;
 
@@ -651,5 +657,28 @@
        }
         
     });
+
+$("#btnFormNumber").on('click', function (e) 
+{
+
+        $.ajax({
+            url: "@Url.Action("GenerateFormNumber", "Customer")",
+            type: "POST",
+            dataType: "JSON",
+            data: {},
+            success: function (res) {
+                console.log(res, "res");
+                $('#FormNumber').val(res);
+                $("#btnFormNumber").attr("disabled",true);
+                $('#formNameValErrMsg').html("");
+
+            },
+            error: function (ex) {
+                alert('Failed' + ex);
+            }
+
+        });
+
+});
 
 </script>
