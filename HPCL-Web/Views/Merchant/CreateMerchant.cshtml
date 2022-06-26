@@ -647,7 +647,12 @@
                                         <label class="font-weight-normal col-md-5 col-12">@Label.NoOfLiveTerminals<sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.NoofLiveTerminals, new { @class = "form-control" })
+                                                @*@Html.TextBoxFor(m => m.NoofLiveTerminals, new { @class = "form-control" })*@
+                                                @Html.DropDownListFor(x => x.NoofLiveTerminals, new[]{
+                                                    new SelectListItem(){ Text = "Select", Value = "0" },
+                                                    new SelectListItem(){ Text = "1", Value = "1"},
+                                                    new SelectListItem(){ Text = "2", Value = "2"},
+                                                    }, null, new { @class = "form-control px-0" })
                                             </div>
                                         </div>
                                         <span class="error" id="numOfLiveTerminal_error" style="margin-left: 42%"></span>
@@ -2211,7 +2216,7 @@
         var ret = "Y";
 
         if (document.applicationForm.NoofLiveTerminals.value.trim() == "0" || document.applicationForm.NoofLiveTerminals.value == "") {
-            document.getElementById("numOfLiveTerminal_error").innerHTML = "No. of Live Terminals should be either 1 or 2";
+            document.getElementById("numOfLiveTerminal_error").innerHTML = "Select No. of Live Terminals";
             if (ret != "N") {
                 document.applicationForm.NoofLiveTerminals.focus();
             }
@@ -2220,26 +2225,26 @@
             });
             ret = "N";
         }
-        else if (!document.applicationForm.NoofLiveTerminals.value.match(number)) {
-            document.getElementById("numOfLiveTerminal_error").innerHTML = "No. of Live Terminals should be either 1 or 2";
-            if (ret != "N") {
-                document.applicationForm.NoofLiveTerminals.focus();
-            }
-            $("#applicationForm").submit(function (e) {
-                e.preventDefault();
-            });
-            ret = "N";
-        }
-        else if (!document.applicationForm.NoofLiveTerminals.value.match(noOfTerminalsCheck)) {
-            document.getElementById("numOfLiveTerminal_error").innerHTML = "No. of Live Terminals should be either 1 or 2";
-            if (ret != "N") {
-                document.applicationForm.NoofLiveTerminals.focus();
-            }
-            $("#applicationForm").submit(function (e) {
-                e.preventDefault();
-            });
-            ret = "N";
-        }
+        //else if (!document.applicationForm.NoofLiveTerminals.value.match(number)) {
+        //    document.getElementById("numOfLiveTerminal_error").innerHTML = "No. of Live Terminals should be either 1 or 2";
+        //    if (ret != "N") {
+        //        document.applicationForm.NoofLiveTerminals.focus();
+        //    }
+        //    $("#applicationForm").submit(function (e) {
+        //        e.preventDefault();
+        //    });
+        //    ret = "N";
+        //}
+        //else if (!document.applicationForm.NoofLiveTerminals.value.match(noOfTerminalsCheck)) {
+        //    document.getElementById("numOfLiveTerminal_error").innerHTML = "No. of Live Terminals should be either 1 or 2";
+        //    if (ret != "N") {
+        //        document.applicationForm.NoofLiveTerminals.focus();
+        //    }
+        //    $("#applicationForm").submit(function (e) {
+        //        e.preventDefault();
+        //    });
+        //    ret = "N";
+        //}
         else {
             document.getElementById("numOfLiveTerminal_error").innerHTML = "";
         }
@@ -3356,41 +3361,48 @@
             document.getElementById("email_error").innerHTML = "";
         }
     });
-    $("#NoofLiveTerminals").on("blur", function () {
-        if (document.applicationForm.NoofLiveTerminals.value.trim() == "0" || document.applicationForm.NoofLiveTerminals.value == "") {
-            document.getElementById("numOfLiveTerminal_error").innerHTML = "No. of Live Terminals should be either 1 or 2";
-            if (ret != "N") {
-                document.applicationForm.NoofLiveTerminals.focus();
+    $("#NoofLiveTerminals").change(function () {
+            var id = this.value;
+
+            if (id != 0) {
+                $("#numOfLiveTerminal_error").html("");
             }
-            $("#applicationForm").submit(function (e) {
-                e.preventDefault();
-            });
-            ret = "N";
-        }
-        else if (!document.applicationForm.NoofLiveTerminals.value.match(number)) {
-            document.getElementById("numOfLiveTerminal_error").innerHTML = "No. of Live Terminals should be either 1 or 2";
-            if (ret != "N") {
-                document.applicationForm.NoofLiveTerminals.focus();
-            }
-            $("#applicationForm").submit(function (e) {
-                e.preventDefault();
-            });
-            ret = "N";
-        }
-        else if (!document.applicationForm.NoofLiveTerminals.value.match(noOfTerminalsCheck)) {
-            document.getElementById("numOfLiveTerminal_error").innerHTML = "No. of Live Terminals should be either 1 or 2";
-            if (ret != "N") {
-                document.applicationForm.NoofLiveTerminals.focus();
-            }
-            $("#applicationForm").submit(function (e) {
-                e.preventDefault();
-            });
-            ret = "N";
-        }
-        else {
-            document.getElementById("numOfLiveTerminal_error").innerHTML = "";
-        }
-    });
+     });
+    //$("#NoofLiveTerminals").on("blur", function () {
+    //    if (document.applicationForm.NoofLiveTerminals.value.trim() == "0" || document.applicationForm.NoofLiveTerminals.value == "") {
+    //        document.getElementById("numOfLiveTerminal_error").innerHTML = "No. of Live Terminals should be either 1 or 2";
+    //        if (ret != "N") {
+    //            document.applicationForm.NoofLiveTerminals.focus();
+    //        }
+    //        $("#applicationForm").submit(function (e) {
+    //            e.preventDefault();
+    //        });
+    //        ret = "N";
+    //    }
+    //    else if (!document.applicationForm.NoofLiveTerminals.value.match(number)) {
+    //        document.getElementById("numOfLiveTerminal_error").innerHTML = "No. of Live Terminals should be either 1 or 2";
+    //        if (ret != "N") {
+    //            document.applicationForm.NoofLiveTerminals.focus();
+    //        }
+    //        $("#applicationForm").submit(function (e) {
+    //            e.preventDefault();
+    //        });
+    //        ret = "N";
+    //    }
+    //    else if (!document.applicationForm.NoofLiveTerminals.value.match(noOfTerminalsCheck)) {
+    //        document.getElementById("numOfLiveTerminal_error").innerHTML = "No. of Live Terminals should be either 1 or 2";
+    //        if (ret != "N") {
+    //            document.applicationForm.NoofLiveTerminals.focus();
+    //        }
+    //        $("#applicationForm").submit(function (e) {
+    //            e.preventDefault();
+    //        });
+    //        ret = "N";
+    //    }
+    //    else {
+    //        document.getElementById("numOfLiveTerminal_error").innerHTML = "";
+    //    }
+    //});
     $("#HighwayName").on("blur", function () {
         if (document.applicationForm.HighwayName.value.trim() != "") {
             if (!document.applicationForm.HighwayName.value.match(highwayName)) {

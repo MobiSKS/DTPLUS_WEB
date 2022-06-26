@@ -44,10 +44,10 @@
         public const string ErpCode = "ERP Code";
         public const string Misc = "Misc";
         public const string NoOfLiveTerminals = "No. of Live Terminal(s)";
-        public const string TerminalTypeRequested = "Terminal type requested";
-        public const string GPRSInstallation = "Terminal type requested";
-        public const string DesktopInstallation = "Terminal type requested";
-        public const string WifiInstallation = "Terminal type requested";
+        public const string TerminalTypeRequested = "Terminal type Requested";
+        public const string GPRSInstallation = "Terminal type Requested";
+        public const string DesktopInstallation = "Terminal type Requested";
+        public const string WifiInstallation = "Terminal type Requested";
 
         #endregion
 
