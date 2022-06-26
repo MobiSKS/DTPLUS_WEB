@@ -181,8 +181,8 @@ namespace HPCL.Common.Models.ResponseModel.CustomerManage
         public string FleetSizeNoOfVechileOwnedCarJeep { get; set; }
         public string KeyOfficialCardAppliedFor { get; set; }
 
-        public decimal KeyOfficialApproxMonthlySpendsonVechile1 { get; set; }
-        public decimal KeyOfficialApproxMonthlySpendsonVechile2 { get; set; }
+        public string KeyOfficialApproxMonthlySpendsonVechile1 { get; set; }
+        public string KeyOfficialApproxMonthlySpendsonVechile2 { get; set; }
         public string NoOfCards { get; set; }
 
 
@@ -305,8 +305,8 @@ namespace HPCL.Common.Models.ResponseModel.CustomerManage
         public string FleetSizeNoOfVechileOwnedMUVSUV { get; set; }
         public string FleetSizeNoOfVechileOwnedCarJeep { get; set; }
         public string KeyOfficialCardAppliedFor { get; set; }
-        public decimal KeyOfficialApproxMonthlySpendsonVechile1 { get; set; }
-        public decimal KeyOfficialApproxMonthlySpendsonVechile2 { get; set; }
+        public string KeyOfficialApproxMonthlySpendsonVechile1 { get; set; }
+        public string KeyOfficialApproxMonthlySpendsonVechile2 { get; set; }
         public string NoOfCards { get; set; }
         public string FeePaymentsCollectFeeWaiver { get; set; }
         public string FeePaymentsChequeNo { get; set; }

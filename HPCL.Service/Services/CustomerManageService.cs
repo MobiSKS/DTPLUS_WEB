@@ -326,6 +326,10 @@ namespace HPCL.Service.Services
                         response.FleetSizeNoOfVechileOwnedCarJeep = (string.IsNullOrEmpty(response.FleetSizeNoOfVechileOwnedCarJeep) ? "" : response.FleetSizeNoOfVechileOwnedCarJeep);
                         if (response.FleetSizeNoOfVechileOwnedCarJeep == "0")
                             response.FleetSizeNoOfVechileOwnedCarJeep = "";
+                        if (response.KeyOfficialApproxMonthlySpendsonVechile1 == "0")
+                            response.KeyOfficialApproxMonthlySpendsonVechile1 = "";
+                        if (response.KeyOfficialApproxMonthlySpendsonVechile2 == "0")
+                            response.KeyOfficialApproxMonthlySpendsonVechile2 = "";
 
                         if (!string.IsNullOrEmpty(response.KeyOfficialDOA))
                         {
