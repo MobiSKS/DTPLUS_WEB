@@ -72,14 +72,16 @@
                             <thead>
                                 <tr>
                                     <th>Customer ID</th>
+                                    <th>Customer Name</th>
+                                    <th>Regional Office</th>
                                     <th>Card Balance</th>
                                     <th>CCMS Balance</th>
                                     <th>Drivestars</th>
                                     <th>Expired Drivestars</th>
                                     <th>Expiring Drivestars</th>
-                                    <th>Daily Cash Limit</th>
+                                    @*<th>Daily Cash Limit</th>
                                     <th>Daily Cash Limit Balance</th>
-                                    <th>Card-wise Balances</th>
+                                    <th>Card-wise Balances</th>*@
                                 </tr>
                             </thead>
 
@@ -88,7 +90,7 @@
                     
                 </div>
                    <div class="clearfix"></div>
-                <div class="mb-3 text-center alert alert-danger" style="display:none" id="divMsg">
+                <div class="alert alert-danger mt-3 text-center ml-3 mr-3" style="display:none" id="divMsg">
                     </div>
             </div>
         </form>
@@ -139,12 +141,12 @@
 
         $("#btnReset").click(function () {
 
-            $("#CustomerId").val("");
-            document.getElementById("CustomerId_error").innerHTML = "";
-            document.getElementById('dvCustomerBalance').style.display = 'none';
-            document.getElementById('customerCardWiseBalancesTbl').style.display = 'none';
-            document.getElementById('customerCCMSBalanceTbl').style.display = 'none';
-
+            //$("#CustomerId").val("");
+            //document.getElementById("CustomerId_error").innerHTML = "";
+            //document.getElementById('dvCustomerBalance').style.display = 'none';
+            //document.getElementById('customerCardWiseBalancesTbl').style.display = 'none';
+            //document.getElementById('customerCCMSBalanceTbl').style.display = 'none';
+            window.location.href = '@Url.Action("BalanceInfo", "Customer")';
         });
 
         $("#btnSearch").click(function () {
@@ -188,15 +190,18 @@
                                     //+ "<td class='nav-item'><a class='CardNumber' data-toggle='tab' href='#BasicInformation' onclick='ViewCardDetails(this)' role='tab'><span class='rowCardNo'>" + (data.customerBalanceResponse[i].customerID || '') + "</span></a></td>"
                                     //+ "<td class='nav-item'><a class='CardNumber' onclick='ViewBasicInfo(this)' role='tab'><span class='rowCardNo'>" + (data.customerBalanceResponse[i].customerID || '') + "</span></a></td>"
                                     + "<td class='nav-item'><a class='CustNo' data-toggle='modal' href='#myModalCard1' onclick='ViewBasicInfo(this)' role='tab'><span class='rowCardNo'>" + (data[i].customerID || '') + "</span></a></td>"
-                                    + "<td><span class='rowData CustReferenceNo'>" + (data[i].cardBalance || '') + "</span></td>"
+                                    //+ "<td><span class='rowData CustReferenceNo'>" + (data[i].cardBalance || '') + "</span></td>"
+                                    + "<td><span class='rowData'>" + (data[i].individualOrgName || '') + "</span></td>"
+                                    + "<td><span class='rowData'>" + (data[i].regionalOfficeName || '') + "</span></td>"
+                                    + "<td class='nav-item'><a class='CardNumber' href='#' onclick='ViewCardDetails(" + customerID + ")' role='tab'>" + (data[i].cardBalance || '')  +"</a></td>"
                                     + "<td class='nav-item'><a class='CCMSBalance' href='#' onclick='ViewCCMSBalanceDetails(this)' role='tab'><span class='rowCCMSBalance'>" + (data[i].ccmsLimitValue || '') + "</span></a></td>"
                                     + "<td><span class='rowData'>" + (data[i].drivestars || '') + "</span></td>"
                                     + "<td><span class='rowData'>" + (data[i].expiredDrivestars || '') + "</span></td>"
-                                    + "<td><span class='rowData'>" + (data[i].expiringDrivestars || '') + "</span></td>"
-                                    + "<td><span class='rowData'>" + (data[i].cashPurseLimit || '') + "</span></td>"
-                                    + "<td><span class='rowData'>" + (data[i].dailyCashLimitBalance || '') + "</span></td>"
+                                    + "<td><span class='rowData'>" + (data[i].expiringDrivestars || '') + "</span></td></tr></tbody>"
+                                    //+ "<td><span class='rowData'>" + (data[i].cashPurseLimit || '') + "</span></td>"
+                                    //+ "<td><span class='rowData'>" + (data[i].dailyCashLimitBalance || '') + "</span></td>"
                                     //+ "<td><div class='d-flex align-items-center justify-content-left' style='min-height: 100%'><div class='px-2'><a href='#' class='d-block action_btn'><img src='assets/images/search_icon2.png' alt='View' class='img-fluid'></a></div></div></td></tr></tbody>"
-                                    + "<td class='nav-item'><a class='CardNumber' data-toggle='tab' onclick='ViewCardDetails(" + customerID + ")' role='tab'><img src='/assets/images/search_icon2.png' alt='View' class='action_btn img-fluid'></a></td></tr></tbody>"
+                                    //+ "<td class='nav-item'><a class='CardNumber' data-toggle='tab' onclick='ViewCardDetails(" + customerID + ")' role='tab'><img src='/assets/images/search_icon2.png' alt='View' class='action_btn img-fluid'></a></td></tr></tbody>"
 
 
                                 $('#CustomerBalanceTbl').append(rows);
