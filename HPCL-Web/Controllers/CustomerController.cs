@@ -613,7 +613,7 @@ namespace HPCL_Web.Controllers
 
             if (cust.Internel_Status_Code == 1000)
             {
-                return RedirectToAction("SuccessRedirectUpdateCustomer", new { customerReferenceNo = modals.CustomerReferenceNo, Message = cust.Remarks });
+                return RedirectToAction("SuccessRedirectUpdateCustomer", new { FormNumber = modals.FormNumber, Message = cust.Remarks });
             }
 
             return View(modals);
@@ -790,9 +790,9 @@ namespace HPCL_Web.Controllers
 
             return PartialView("~/Views/Customer/_ViewCustomerOldNewContactPersonDetailsTbl.cshtml", model);
         }
-        public async Task<IActionResult> SuccessRedirectUpdateCustomer(string customerReferenceNo, string Message)
+        public async Task<IActionResult> SuccessRedirectUpdateCustomer(string FormNumber, string Message)
         {
-            ViewBag.CustomerReferenceNo = customerReferenceNo;
+            ViewBag.FormNumber = FormNumber;
             ViewBag.Message = Message;
             return View();
         }
