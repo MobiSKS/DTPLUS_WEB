@@ -224,7 +224,7 @@
                                 </div>*@
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal col-md-4 col-12">Email </label>
+                                        <label class="font-weight-normal col-md-4 col-12">Email <sup class="text-danger">*</sup></label>
                                         <div class="col-md-8 col-12">
                                            <div class="custom_select">
                                                 @Html.TextBoxFor(m => m.CommunicationEmailid, new { @class = "form-control", autocomplete = "off", maxlength = "50" })
@@ -341,7 +341,16 @@
 
         if($("#dvRemarks").html().trim()!="")
         {
-            $("#btnFormNumber").attr("disabled",true);
+            var str = $("#dvRemarks").html().trim();
+            var substr = "Form Number already exists";
+            if(str.indexOf(substr) !== -1)
+            {
+              $("#btnFormNumber").attr("disabled",false);
+            }
+            else
+            {
+                $("#btnFormNumber").attr("disabled",true);
+            }
         }
 
     });
@@ -501,7 +510,7 @@
 
         if(!document.getElementById("CommunicationMobileNo").value.match(phoneno)) {
             document.getElementById("comm_mobileNumber_error").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
-            ret = false;
+            return false;
         }
         else {
             document.getElementById("comm_mobileNumber_error").innerHTML = "";
