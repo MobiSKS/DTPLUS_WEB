@@ -32,7 +32,7 @@
                                         <label class="font-weight-normal offset-md-1 col-md-4 col-12">Amount <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.Amount, new {@id="amountVal", @class = "form-control restrictPaste", onkeypress = "return isNumberKey(event)" })
+                                                @Html.TextBoxFor(m => m.Amount, new {@id="amountVal", @class = "form-control restrictPaste" })
                                                 @Html.ValidationMessageFor(m => m.Amount, "", new {@id="amountValErr", @class = "text-danger" })
                                             </div>
                                         </div>
@@ -85,6 +85,21 @@
             return true;
         }
     });
+
+
+    $("#amountVal").on('keydown', function (event) {
+        if (event.shiftKey == true) {
+            event.preventDefault();
+        }
+        debugger;
+        if ((event.keyCode >= 48 && event.keyCode <= 57) || (event.keyCode >= 96 && event.keyCode <= 105) || event.keyCode == 8 || event.keyCode == 9 || event.keyCode == 37 || event.keyCode == 39 || event.keyCode == 46 || event.keyCode == 190 || event.keyCode==110) {
+
+        } else {
+            event.preventDefault();
+        }
+        if($(this).val().indexOf('.') !== -1 && (event.keyCode == 190|| event.keyCode == 110))
+            event.preventDefault();
+     });
 
     function resetClick(){
         location.reload();

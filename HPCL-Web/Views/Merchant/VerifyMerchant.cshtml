@@ -109,7 +109,8 @@
                                     string MerchantIDVal = "30" + @item.ErpCode;
                                     <tr>
                                         <td><input type="checkbox" class="checkEnable" id="check_@i" /></td>
-                                        <td><a class="erp_code text_primary" asp-action="CreateMerchant" asp-route-MerchantIDValue="" asp-route-fromDate="@Model.FromDate" asp-route-toDate="@Model.ToDate" asp-route-category="@Model.CategoryID" asp-route-actionFlow="Edit" asp-route-ERPCode="@item.ErpCode">@item.ErpCode</a></td>
+                                        @*<td><a class="erp_code text_primary" asp-action="CreateMerchant" asp-route-MerchantIDValue="" asp-route-fromDate="@Model.FromDate" asp-route-toDate="@Model.ToDate" asp-route-category="@Model.CategoryID" asp-route-actionFlow="Edit" asp-route-ERPCode="@item.ErpCode">@item.ErpCode</a></td>*@
+                                        <td><a data-toggle='modal' href='#MerchantSummaryView' onclick='ViewMerchantSummary(this)' role='tab'><span>@item.ErpCode</span></a></td>
                                         <td>@item.RegionalOfficeName</td>
                                         <td>@item.RetailOutletName</td>
                                         <td>@item.City</td>
@@ -159,6 +160,22 @@
                 }
             </div>
         }
+    </div>
+</div>
+<div class="modal fade" id="MerchantSummaryView" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="max-width:960px; margin:20px auto;">
+        <div class="modal-content">
+            <div class="modal-header py-2">
+                <h5 class="modal-title" id="exampleModalLabel" style="font-size:18px;">Merchant Summary</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" >
+                 <div class="col-lg-12 col-md-12 col-12 toBeHiddenOnSuccess" id="MerchantSummaryData">
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 <script type="text/javascript">
@@ -302,4 +319,31 @@
                 }
            }
       });
+      function ViewMerchantSummary(o)
+      {
+        var erpCode=o.innerText;
+         $.ajax({
+            type: 'GET',  // http method
+            url: '@Url.Action("GetMerchantSummaryData", "TerminalManagement")',
+            contentType: "application/json; charset=utf-8",
+            data: { ERPCode: erpCode },
+            dataType: "text",
+            success: function (data, status, xhr) {
+                var v = data;
+                if (status == 'success') 
+                {
+                    $("#MerchantSummaryData").html("");
+                    $("#MerchantSummaryData").html(data);
+                   $('#MerchantSummaryView').modal('show');
+                }
+                else {
+                    console.log(v);
+                }
+            },
+            error: function (jqXhr, textStatus, errorMessage) {
+                alert("Error");
+            }
+        });
+       
+    }
 </script>

@@ -20,12 +20,12 @@ namespace HPCL.Common.Models.ResponseModel.MerchantFinancial
         public string TransactionDate { get; set; }
         public string TransactionType { get; set; }
         public string Product { get; set; }
-        public decimal Price { get; set; }
-        public decimal Volume { get; set; }
+        public string Price { get; set; }
+        public string Volume { get; set; }
         public string Currency { get; set; }
         public decimal Amount { get; set; }
-        public decimal ServiceCharge { get; set; }
-        public decimal DriveStars { get; set; }
+        public string ServiceCharge { get; set; }
+        public string DriveStars { get; set; }
         public string VoidedByRoc { get; set; }
         public string VoidedRoc { get; set; }
         public string FSMName { get; set; }

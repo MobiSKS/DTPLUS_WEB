@@ -70,7 +70,7 @@ namespace HPCL.Service.Services
                 UserAgent = CommonBase.useragent,
                 UserIp= CommonBase.userip,
                 UserId= _httpContextAccessor.HttpContext.Session.GetString("UserId"),
-                CustomerReferenceNo = CustomerReferenceNo,
+                FormNumber = CustomerReferenceNo,
                 Approvalstatus = 4,
                 Comments = comments,
                 ApprovedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
@@ -93,7 +93,7 @@ namespace HPCL.Service.Services
                 UserAgent = CommonBase.useragent,
                 UserIp= CommonBase.userip,
                 UserId= _httpContextAccessor.HttpContext.Session.GetString("UserId"),
-                CustomerReferenceNo = CustomerReferenceNo,
+                FormNumber = CustomerReferenceNo,
                 Approvalstatus = 13,
                 Comments = comments,
                 ApprovedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")

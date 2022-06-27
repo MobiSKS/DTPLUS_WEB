@@ -40,7 +40,7 @@ namespace HPCL.Common.Models.ResponseModel.CustomerFinancial
         public string Volume { get; set; }
         public string Currency { get; set; }
         public string ServiceCharge { get; set; }
-        public string Amount { get; set; }
+        public Decimal Amount { get; set; }
         public string Discount { get; set; }
         public string OdometerReading { get; set; }
         public string Status { get; set; }
