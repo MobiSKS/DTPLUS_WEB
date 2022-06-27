@@ -56,9 +56,6 @@
                                                     <th>
                                                         Form Number
                                                     </th>
-                                                    <th>
-                                                        Customer Reference No.
-                                                    </th>
                                                     <th style="width:1%">
                                                         Zonal
                                                     </th>
@@ -367,11 +364,9 @@
             for (var i = 0; i < girdList.length; i++) {
 
                 var srNumber = (i + 1);
-                //var customerReferenceNo = "<a href='#aaa' class='cust'>" + (girdList[i].customerReferenceNo || '') + "</a>";
-                var customerReferenceNo = "<span class='cust'>" + (girdList[i].customerReferenceNo || '') + "</span>";
+                var formNumber = "<span class='formNumberValCr'>" + (girdList[i].formNumber || '') + "</span>";
                 var zonalOfficeName = (girdList[i].zonalOfficeName || '');
                 var regionalOfficeName = (girdList[i].regionalOfficeName || '');
-                var formNumber = "<a href='#aaa' class='frmNo'>" + (girdList[i].formNumber || '') + "</a>";
                 var customerName = (girdList[i].customerName || '');
                 var createdRoleName = (girdList[i].createdRoleName || '');
                 var mobileNo = (girdList[i].mobileNo || '');
@@ -380,7 +375,6 @@
                 tbl.row.add([
                     srNumber,
                     formNumber,
-                    customerReferenceNo,
                     zonalOfficeName,
                     regionalOfficeName,
                     customerName,
@@ -748,17 +742,17 @@
         alert(data);
     }
 
-    var customerReferenceNo;
+    //var customerReferenceNo;
     var formNumber;
 
     $("#customerSearchTblBind").on('click', '.approveDtls', function (e) {
 
         var currentRow = $(this).closest("tr");
 
-        customerReferenceNo = currentRow.find(".cust").text();
-        formNumber = currentRow.find(".frmNo").text();
+        //customerReferenceNo = currentRow.find(".cust").text();
+        formNumber = currentRow.find(".formNumberValCr").text();
 
-        console.log(customerReferenceNo, "cust");
+        //console.log(customerReferenceNo, "cust");
 
          $.ajax({
             url: "@Url.Action("BindPendingCustomer", "CustomerFeeWaiver")",
@@ -1013,7 +1007,7 @@
                 url: "@Url.Action("ApproveCustomer", "CustomerFeeWaiver")",
                 type: "POST",
                 dataType: "JSON",
-                data: { customerReferenceNo: customerReferenceNo, comments: comments },
+                data: { formNumber: formNumber, comments: comments },
                 success: function (res) {
 
                     if(res.responseMsg[0].status == 1)
@@ -1072,7 +1066,7 @@
                     url: "@Url.Action("RejectCustomer", "CustomerFeeWaiver")",
                     type: "POST",
                     dataType: "JSON",
-                    data: { customerReferenceNo: customerReferenceNo, comments: comments },
+                    data: { formNumber: formNumber, comments: comments },
                     success: function (res) {
 
                         if(res.responseMsg[0].status == 1)
