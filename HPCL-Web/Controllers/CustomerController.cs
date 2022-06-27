@@ -216,13 +216,13 @@ namespace HPCL_Web.Controllers
                         uploadDoc.IdProofType = Convert.ToInt32(response.IdProofTypeId);
                         uploadDoc.IdProofDocumentNo = response.IdProofDocumentNo;
                         uploadDoc.IdProofFrontSRC = response.IdProofFront;
-                        //uploadDoc.IdProofFront = response.IdProofFront;
-                        //uploadDoc.IdProofBack = response.IdProofBack;
+                        uploadDoc.IdProofFrontimg = response.IdProofFront;
+                        uploadDoc.IdProofBackimg = response.IdProofBack;
                         uploadDoc.AddressProofType = Convert.ToInt32(response.AddressProofTypeId);
                         uploadDoc.AddressProofDocumentNo = response.AddressProofDocumentNo;
-                        //uploadDoc.AddressProofFront = response.AddressProofFront;
-                        //uploadDoc.AddressProofBack = response.AddressProofBack;
-                        
+                        uploadDoc.AddProofFrontimg = response.AddressProofFront;
+                        uploadDoc.AddProofBackimg = response.AddressProofBack;
+
                     }
                 }
             }
