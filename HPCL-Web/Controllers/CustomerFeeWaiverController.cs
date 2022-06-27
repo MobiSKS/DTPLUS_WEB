@@ -42,17 +42,17 @@ namespace HPCL_Web.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> ApproveCustomer(string CustomerReferenceNo, string comments)
+        public async Task<JsonResult> ApproveCustomer(string formNumber, string comments)
         {
-            var responseMsg = await _customerFeeWaiverServices.ApproveCustomer(CustomerReferenceNo, comments);
+            var responseMsg = await _customerFeeWaiverServices.ApproveCustomer(formNumber, comments);
             ModelState.Clear();
             return Json(new { responseMsg = responseMsg });
         }
 
         [HttpPost]
-        public async Task<JsonResult> RejectCustomer(string CustomerReferenceNo, string comments)
+        public async Task<JsonResult> RejectCustomer(string formNumber, string comments)
         {
-            var responseMsg = await _customerFeeWaiverServices.RejectCustomer(CustomerReferenceNo, comments);
+            var responseMsg = await _customerFeeWaiverServices.RejectCustomer(formNumber, comments);
             ModelState.Clear();
             return Json(new { responseMsg = responseMsg });
         }

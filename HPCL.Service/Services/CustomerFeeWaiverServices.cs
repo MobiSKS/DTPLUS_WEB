@@ -63,14 +63,14 @@ namespace HPCL.Service.Services
             return searchList;
         }
 
-        public async Task<List<SuccessResponse>> ApproveCustomer(string CustomerReferenceNo, string comments)
+        public async Task<List<SuccessResponse>> ApproveCustomer(string formNumber, string comments)
         {
             var forms = new ApproveRejectWaiver
             {
                 UserAgent = CommonBase.useragent,
                 UserIp= CommonBase.userip,
                 UserId= _httpContextAccessor.HttpContext.Session.GetString("UserId"),
-                FormNumber = CustomerReferenceNo,
+                FormNumber = formNumber,
                 Approvalstatus = 4,
                 Comments = comments,
                 ApprovedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
@@ -86,14 +86,14 @@ namespace HPCL.Service.Services
             return responseMsg;
         }
 
-        public async Task<List<SuccessResponse>> RejectCustomer(string CustomerReferenceNo, string comments)
+        public async Task<List<SuccessResponse>> RejectCustomer(string formNumber, string comments)
         {
             var forms = new ApproveRejectWaiver
             {
                 UserAgent = CommonBase.useragent,
                 UserIp= CommonBase.userip,
                 UserId= _httpContextAccessor.HttpContext.Session.GetString("UserId"),
-                FormNumber = CustomerReferenceNo,
+                FormNumber = formNumber,
                 Approvalstatus = 13,
                 Comments = comments,
                 ApprovedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
