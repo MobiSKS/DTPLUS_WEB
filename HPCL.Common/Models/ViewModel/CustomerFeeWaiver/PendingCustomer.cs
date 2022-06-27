@@ -31,7 +31,7 @@ namespace HPCL.Common.Models.ViewModel.CustomerFeeWaiver
 
     public class ApproveRejectWaiver : BaseEntity
     {
-        public string CustomerReferenceNo { get; set; }
+        public string FormNumber { get; set; }
         public string Comments { get; set; }
         public int Approvalstatus { get; set; }
         public string ApprovedBy { get; set; }
