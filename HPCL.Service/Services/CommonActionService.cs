@@ -1149,7 +1149,7 @@ namespace HPCL.Service.Services
             List<TransactionTypeResponse> SortedtList = jarr.ToObject<List<TransactionTypeResponse>>();
             return SortedtList;
         }
-        public async Task<CommonResponseData> CheckPanCardDuplicationByDistrictidForCustomerUpdate(string DistrictId, string IncomeTaxPan, string CustomerReferenceNo)
+        public async Task<CommonResponseData> CheckPanCardDuplicationByDistrictidForCustomerUpdate(string DistrictId, string IncomeTaxPan, string FormNumber)
         {
             CommonResponseData responseData = new CommonResponseData();
 
@@ -1160,7 +1160,7 @@ namespace HPCL.Service.Services
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 DistrictId = DistrictId,
                 IncomeTaxPan = IncomeTaxPan,
-                CustomerReferenceNo = CustomerReferenceNo
+                FormNumber = FormNumber
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(requestinfo), Encoding.UTF8, "application/json");

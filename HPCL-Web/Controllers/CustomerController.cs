@@ -620,9 +620,9 @@ namespace HPCL_Web.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> CheckPanCardDuplicationByDistrictidForCustomerUpdate(string DistrictId, string IncomeTaxPan, string CustomerReferenceNo)
+        public async Task<JsonResult> CheckPanCardDuplicationByDistrictidForCustomerUpdate(string DistrictId, string IncomeTaxPan, string FormNumber)
         {
-            var result = await _commonActionService.CheckPanCardDuplicationByDistrictidForCustomerUpdate(DistrictId, IncomeTaxPan, CustomerReferenceNo);
+            var result = await _commonActionService.CheckPanCardDuplicationByDistrictidForCustomerUpdate(DistrictId, IncomeTaxPan, FormNumber);
 
             return Json(result);
         }
