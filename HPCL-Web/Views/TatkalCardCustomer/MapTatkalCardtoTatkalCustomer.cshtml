@@ -10,11 +10,11 @@
 
         <div id="reason" class="mb-3 text-center alert alert-success" style="display:none;"></div>
         <form class="toBeHiddenOnSuccess">
-            <div class="w-100"> 
+            <div class="w-100">
                 <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
                     <div class="border-1 rounded border-grey pb-3">
                         <p class="text_primary px-3 py-3 bg-grey m-0 font-weight-bold">Map Tatkal Cards To Tatkal Customer</p>
-                        <button class="btn btn_primary add_update_btn" type="button">DOWNLOAD UNALLOCATED CARDS</button>
+                        <button class="btn btn_primary add_update_btn" type="button" onclick="tableToCSV()">DOWNLOAD UNALLOCATED CARDS</button>
                         <div class="col-lg-12 col-md-12 col-12 py-3">
                             <div class="d-flex align-items-center flex-wrap">
                                 <div class="col-lg-6 col-12">
@@ -51,19 +51,54 @@
         <div id="message" tabindex="0" class="mb-3 text-center" style="display:none">
         </div>
         <div class="clearfix"></div>
-        <div id="divtable" class="toBeHiddenOnSuccess" style="display:none">
+        @*<div id="divtable" class="toBeHiddenOnSuccess" style="display:none">
             <table id="CardDetailsTbl" class="table" style="width:100%;">
-                <thead>
-                    <tr>
-                        <th colspan="6">Select Un-Allocated Card(s) <input type="checkbox" id="checkAll" name="checkAll" value="checkAll"> Select All</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
+            <thead>
+            <tr>
+            <th colspan="6">Select Un-Allocated Card(s) <input type="checkbox" id="checkAll" name="checkAll" value="checkAll"> Select All</th>
+            </tr>
+            </thead>
+            <tbody>
+            </tbody>
             </table>
 
             <div class="clearfix"></div>
 
+            <div class="d-flex align-items-center justify-content-center mt-0">
+            <div class="px-2">
+            <button class="btn btn_primary" type="button" id="btnMap">MAP</button>
+            </div>
+
+            <div class="px-2">
+            <button class="btn btn_primary" type="button" id="btnReset">RESET</button>
+            </div>
+
+            </div>
+            </div>*@
+        <div id="divtable" class="toBeHiddenOnSuccess" style="display:none">
+            <div class="d-flex align-items-center flex-wrap">
+                <div class="col-lg-6 col-12">
+                    <div class="d-flex align-items-start flex-wrap mb-3">
+                        <label class="font-weight-normal col-md-4 col-12">Card Number(s)<sup class="text-danger">*</sup></label>
+                        <div class="col-md-7 col-12">
+                            <div class="custom_select">
+                                <div class="col-md-12 col-12">
+                                    <label class="font-weight-normal">Select Un-Allocated Card(s)</label>
+                                    <label class="d-flex align-items-center mt-2">
+                                        <input type="checkbox" id="checkAll" name="checkAll" value="checkAll">
+                                        <span class="ml-1">Select All</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="col-lg-12 col-12">
+                                <div id="dvCards" style='overflow-x: hidden; overflow-y: scroll; width: 250px; height: 250px'></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
             <div class="d-flex align-items-center justify-content-center mt-0">
                 <div class="px-2">
                     <button class="btn btn_primary" type="button" id="btnMap">MAP</button>
@@ -90,7 +125,7 @@
                         <div class="clearfix"></div>
                         <div class="col-md-3 col-12">
                             <div class="px-2">
-                                <button  class="btn btn_primary" type="button" id="btnUpload">Upload</button>
+                                <button class="btn btn_primary" type="button" id="btnUpload">Upload</button>
                             </div>
                         </div>
                     </div>
@@ -132,6 +167,7 @@
                 }
            }
            if(flag=="Y"){
+                document.getElementById("dvCards").innerHTML = "";
                 $.ajax({
                     type: 'POST',
                     url: '@Url.Action("GetMapTatkalCardtoCustomer", "TatkalCardCustomer")',
@@ -149,36 +185,47 @@
                                 }
                                 else
                                 {
-                             
-                                 $("#message").attr("style", "display:none");
-                                 $("#CardDetailsTbl td").parent().remove();
-                                 if (data.objGetCardDetailsTatkalCardsToTatkalCustomer.length > 0) {
-                                       var count = data.objGetCardDetailsTatkalCardsToTatkalCustomer.length;
-                                        var rowcount = Math.ceil((count) / 6);
-                                          var cnt = 0;
-                                       var rows = "<tbody>";
-                                       for (var i = 0; i <= rowcount; i++){
-                                       rows += "<tr>";
-                                           for (var j = 0; j < 6; j++){
-                                               if (cnt < data.objGetCardDetailsTatkalCardsToTatkalCustomer.length){
-                                                   rows += "<td><label><input type='checkbox' name='' value='" + data.objGetCardDetailsTatkalCardsToTatkalCustomer[cnt].cardNo + "'/>"+ data.objGetCardDetailsTatkalCardsToTatkalCustomer[cnt].cardNo +"</label></td>";
-                                                   cnt = cnt + 1;
-                                               }
-                                           }
-                                           rows += "</tr>";
-                                           }
-                                           rows += "</tbody>";
-                                           $('#CardDetailsTbl').append(rows);
-                                           $("#message").attr("style", "display:none");
-                                           $("#divtable").attr("style", "display:block");
 
+                                 $("#message").attr("style", "display:none");
+                                 var table = $("<table></table>");
+                                 if (data.objGetCardDetailsTatkalCardsToTatkalCustomer.length > 0) {
+                                       //var count = data.objGetCardDetailsTatkalCardsToTatkalCustomer.length;
+                                       // var rowcount = Math.ceil((count) / 6);
+                                       //   var cnt = 0;
+                                       //var rows = "<tbody>";
+                                       //for (var i = 0; i <= rowcount; i++){
+                                       //rows += "<tr>";
+                                       //    for (var j = 0; j < 6; j++){
+                                       //        if (cnt < data.objGetCardDetailsTatkalCardsToTatkalCustomer.length){
+                                       //            rows += "<td><label><input type='checkbox' name='' value='" + data.objGetCardDetailsTatkalCardsToTatkalCustomer[cnt].cardNo + "'/>"+ data.objGetCardDetailsTatkalCardsToTatkalCustomer[cnt].cardNo +"</label></td>";
+                                       //            cnt = cnt + 1;
+                                       //        }
+                                       //    }
+                                       //    rows += "</tr>";
+                                       //    }
+                                       //    rows += "</tbody>";
+                                       //    $('#CardDetailsTbl').append(rows);
+                                       //    $("#message").attr("style", "display:none");
+                                        var rows = "<tbody>";
+                                        $(data.objGetCardDetailsTatkalCardsToTatkalCustomer).each(function (index, item) {
+                                            var i = parseInt(index) + 1;
+                                            rows += "<tr>";
+                                            rows += '<td class="py-1 d-flex align-items-center"><label><input type="checkbox"  name="card" value="' + item.cardNo + '"/>'+ item.cardNo +'</label></td>';
+                                            rows += "</tr>";
+                                        });
+                                        rows += "</tbody>";
+                                        table.append(rows);
+                                        $('#dvCards').append(table);
+                                        setTimeout(function(){
+                                            $("#divtable").attr("style", "display:block");
+                                        },500);
                                  }
-                                 
                                   else {
                                      $("#message").html("");
                                      $("#message").append(data.message);
 
                                      $("#message").attr("style", "display:block;background-color:#f9c9c9; color:#8d0d0d; border-color: #f3abab;");
+                                     $("#dvCards").attr("style", "display:none");
                                      $("#divtable").attr("style", "display:none");
 
                                  }
@@ -202,20 +249,25 @@
 
     });
       $("#btnMap").click(function () {
-
+          debugger;
         CardDetails = [];
-         $("#CardDetailsTbl tbody tr").each(function () {
+         //$("#CardDetailsTbl tbody tr").each(function () {
+         //    debugger;
+         //    var row = $(this);
+         //    $(this).find('td').each(function(){
+         //    if ($(this).find('input[type="checkbox"]').is(":checked")) {
+         //        debugger;
+         //        var cardNo = $(this).find(':checkbox:checked').val();
+         //        CardDetails.push({ CardNo: cardNo });
 
-             var row = $(this);
-             $(this).find('td').each(function(){
-             if ($(this).find('input[type="checkbox"]').is(":checked")) {
-
-                 var cardNo = $(this).find(':checkbox:checked').val();
-                 CardDetails.push({ CardNo: cardNo });
-
-            }
-            });
-         });
+         //   }
+         //   });
+         //});
+            $("input:checkbox[name=card]:checked").each(function () {
+            //alert("Id: " + $(this).attr("id") + " Value: " + $(this).val());
+            //selectedCards = selectedCards + 1;
+            CardDetails.push({ CardNo: $(this).val() });
+        });
          var customerId = $("#CustomerId").val();
            if(CardDetails.length<2 ||CardDetails.length>100){
                 $("#message").html("");
@@ -300,11 +352,11 @@
         $("#CustomerId").on("blur", function () {
             var customerId = $("#CustomerId").val();
             if (customerId != "") {
-               
+
                 if(searchCustomerId!=""){
                     if(searchCustomerId!=customerId){
                         $("#CardDetailsTbl td").parent().remove();
-                        $("#divtable").attr("style", "display:none");
+                        $("#dvCards").attr("style", "display:none");
                          $("#customerId_error").attr("style", "display:none");
                         $("#customerId_error").html("");
                     }
@@ -323,13 +375,80 @@
                 $("#customerId_error").attr("style", "display:block");
                 $("#customerId_error").html("Enter Customer ID");
                 $("#CardDetailsTbl td").parent().remove();
-                $("#divtable").attr("style", "display:none");
+                $("#dvCards").attr("style", "display:none");
             }
             searchCustomerId=customerId;
-            
-             
-        
-             
-         
+
+
+
+
+
      });
+      function tableToCSV() {
+
+        // Variable to store the final csv data
+        var csv_data = [];
+
+        // Get each row data
+        var rows = document.getElementsByTagName('tr');
+
+        if (rows.length > 0) {
+
+            for (var i = 0; i < rows.length; i++) {
+
+                // Get each column data
+                var cols = rows[i].querySelectorAll('td,th');
+
+                // Stores each csv row data
+                var csvrow = [];
+                for (var j = 0; j < cols.length; j++) {
+
+                    // Get the text data of each cell
+                    // of a row and push it to csvrow
+                    //csvrow.push(cols[j].innerHTML);
+                    //console.log(cols.length);
+                    //console.log(cols[j].firstChild.value);
+                    csvrow.push("'" + cols[j].firstChild.textContent);
+                }
+                //console.log(i, csvrow);
+                //console.log(csvrow);
+                // Combine each column value with comma
+                csv_data.push(csvrow.join(","));
+            }
+
+            // Combine each row data with new line character
+            csv_data = csv_data.join('\n');
+
+            // Call this function to download csv file
+            downloadCSVFile(csv_data);
+        }
+    }
+
+    function downloadCSVFile(csv_data) {
+
+        // Create CSV file object and feed
+        // our csv_data into it
+        CSVFile = new Blob([csv_data], {
+            type: "text/csv"
+        });
+
+        // Create to temporary link to initiate
+        // download process
+        var temp_link = document.createElement('a');
+
+        // Download csv file
+        temp_link.download = "UnallocatedTatkalCards.csv";
+        var url = window.URL.createObjectURL(CSVFile);
+        temp_link.href = url;
+
+        // This link should not be displayed
+        temp_link.style.display = "none";
+        document.body.appendChild(temp_link);
+
+        // Automatically click the link to
+        // trigger download
+        temp_link.click();
+        document.body.removeChild(temp_link);
+    }
+
 </script>
