@@ -461,6 +461,8 @@
         #region "CCMS Recharge"
         public static string GetDetailsByMobNoUrl = "api/dtplus/RechargeCCMS/get_details";
         public static string RedirectToPGUrl = "api/dtplus/RechargeCCMS/init_ccms_recharge";
+        public static string CcmsRecGenerateOtp = "api/dtplus/RechargeCCMS/generate_ccms_otp";
+        public static string CcmsRecVerifyOtp = "api/dtplus/RechargeCCMS/ccms_confirm_otp";
         #endregion
 
         #region Parent Customer

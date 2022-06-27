@@ -159,13 +159,17 @@
 
             <div id="otpSection" style="display:none;">
                 <div class="py-4 pr-4 pl-0 pr-md-4">
-                    <p style="color:green;">OTP has been sent to customer registered Mobile No.</p>
+                    <p style="color:green;" id="otpMsg"></p>
                     <div class="form-group d-flex align-items-center flex-wrap">
+
                         <label class="font-weight-normal col-md-4 col-12">Enter OTP </label>
                         <div class="col-md-8 col-12">
                             <div class="custom_select">
-                                <input type="text" maxlength="4" id="otpVal" class="form-control">
-                                <span><a style="color:#0012ff;outline:none;">Resend OTP</a> Maximum three attempt</span>
+
+                               @* <input type="hidden" id="storeOtp">
+*@
+                                <input type="text" maxlength="6" id="otpVal" class="form-control" onblur="otpValidate(this)" onkeypress = "return isNumberKey(event)">
+                                <span><a style="color:#0012ff;outline:none;" onclick="resendOtp()">Resend OTP</a> Maximum three attempt</span>
                                 @Html.ValidationMessage("otpVal", "", new { @id = "otpValErr", @class = "text-danger" })
                             </div>
                         </div>
@@ -457,8 +461,37 @@
     }
 
     function redirectToOTP(){
-        document.getElementById("customerDetailsSection").style.display = "none";
-        document.getElementById("otpSection").style.display = "block";
+
+          var mobNo = $("#mobNoVal").val();
+
+          $.ajax({
+                url: "@Url.Action("CCCMSRecGenerateOtp","CCMSRecharge")",
+                type: "POST",
+                dataType: "JSON",
+                data: { mobNo: mobNo },
+                success: function (res) {
+
+                    console.log(res,"res");
+
+                    if(res.getOtp.success == true){
+
+                        //$("#storeOtp").val('');
+
+                        //$("#storeOtp").val(res.getOtp.data[0].otp);
+
+                        $("#otpMsg").html('');
+                        $("#otpMsg").append("<span>OTP has been sent to customer registered Mobile No.</span>");
+                        document.getElementById("customerDetailsSection").style.display = "none";
+                        document.getElementById("otpSection").style.display = "block";
+
+                    }else{
+                        alert(res.getOtp.message);
+                    }
+                },
+                error: function (ex) {
+                    alert('Failed' + ex);
+                }
+            });
     }
 
     function confirmOTP(){
@@ -477,43 +510,102 @@
 
 
         if(flag == "Y"){
-            if (confirm('Are you sure you want to initiate For CCMS Recharge by Payment Gateway?')) {
-                console.log('ok');
 
-                var customerId = $("#customerIdVal").val();
-                var mobNo = $("#mobNoVal").val();
-                var controlCardNo = $("#controlCardNoVal").val();
-                var amount = $("#amountVal").val();
+          var mobNo = $("#mobNoVal").val();
+          //var otp = $("#storeOtp").val();
 
-                $.ajax({
-                    url: "@Url.Action("RedirectToPG","CCMSRecharge")",
-                    type: "POST",
-                    dataType: "JSON",
-                    data: { customerId: customerId, mobNo: mobNo, controlCardNo: controlCardNo, amount: amount },
-                    success: function (res) {
+           $.ajax({
+                url: "@Url.Action("CCCMSRecVerifyOtp","CCMSRecharge")",
+                type: "POST",
+                dataType: "JSON",
+                data: { mobNo: mobNo, otp: otpVal },
+                success: function (res) {
 
-                        console.log(res,"res");
+                    console.log(res,"res");
 
-                        var ress = JSON.stringify(res.redirectDetails.data);
+                    
+                    if(res.verifyOtp[0].status == 1){
 
-                        if(res.redirectDetails.success == true){
+                        if (confirm('Are you sure you want to initiate For CCMS Recharge by Payment Gateway?')) {
+                            console.log('ok');
+
+                            var customerId = $("#customerIdVal").val();
+                            var mobNo = $("#mobNoVal").val();
+                            var controlCardNo = $("#controlCardNoVal").val();
+                            var amount = $("#amountVal").val();
+
+                            $.ajax({
+                                url: "@Url.Action("RedirectToPG","CCMSRecharge")",
+                                type: "POST",
+                                dataType: "JSON",
+                                data: { customerId: customerId, mobNo: mobNo, controlCardNo: controlCardNo, amount: amount },
+                                success: function (res) {
+
+                                    console.log(res,"res");
+
+                                    var ress = JSON.stringify(res.redirectDetails.data);
+
+                                    if(res.redirectDetails.success == true){
                           
-                            var url = '@Html.Raw(@Url.Action("RedirectToPaymentGateway", new { inputTxtValues = "dd" }))';
+                                        var url = '@Html.Raw(@Url.Action("RedirectToPaymentGateway", new { inputTxtValues = "dd" }))';
 
-                            url = url.replace("dd", encodeURIComponent(ress));
+                                        url = url.replace("dd", encodeURIComponent(ress));
 
-                            window.location.href = url;
-                        }
+                                        window.location.href = url;
+                                    }
                         
-                    },
-                    error: function (ex) {
-                        alert('Failed' + ex);
-                    }
-                });
+                                },
+                                error: function (ex) {
+                                    alert('Failed' + ex);
+                                }
+                            });
 
-            } else {
-                console.log('cancel')
-            }
+                        } else {
+                            console.log('cancel')
+                        }
+
+                    }else{
+                        alert(res.verifyOtp[0].reason);
+                    }
+
+
+                },
+                error: function (ex) {
+                    alert('Failed' + ex);
+                }
+            });
         }
     }
+
+    function otpValidate(o){
+        var otp = o.value;
+        if(otpVal == ""){
+            $("#otpValErr").text("Please enter Valid OTP");
+            return false;
+        }else{
+             $("#otpValErr").text('');
+        }
+     }
+
+
+     function resendOtp(){
+         $.ajax({
+                url: "@Url.Action("CCCMSRecGenerateOtp","CCMSRecharge")",
+                type: "POST",
+                dataType: "JSON",
+                data: { mobNo: mobNo },
+                success: function (res) {
+
+                    console.log(res,"res");
+
+                    if(res.getOtp.success == true){
+                        $("#otpMsg").html('');
+                        $("#otpMsg").append("<span>OTP has been resent to customer registered Mobile No.</span>");
+                    }
+                },
+                error: function (ex) {
+                    alert('Failed' + ex);
+                }
+        });
+     }
 </script>
