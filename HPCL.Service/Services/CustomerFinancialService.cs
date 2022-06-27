@@ -133,6 +133,7 @@ namespace HPCL.Service.Services
             CardToCardBalanceTransferSearchResponse searchList = obj.ToObject<CardToCardBalanceTransferSearchResponse>();
             return searchList;
         }
+
         public async Task<CustomerTransactionResponseModel> GetCustomerTransactionDetails(string CustomerID,string CardNo,string MobileNo,string FromDate,string ToDate)
         {
             CustomerTransactionResponseModel transactionResponse = new CustomerTransactionResponseModel();
