@@ -139,6 +139,9 @@
 
         });
 
+        var cardclick = "N";
+        var ccmsclcik = "N";
+
         $("#btnReset").click(function () {
 
             //$("#CustomerId").val("");
@@ -150,6 +153,13 @@
         });
 
         $("#btnSearch").click(function () {
+
+
+            console.log(cardclick+"             "+ccmsclcik);
+
+            $("#customerCCMSBalanceTbl").hide();
+            $("#customerCardWiseBalancesTbl").hide();
+
             //debugger;
             var customerId = document.getElementById("CustomerId").value;
             if (customerId == "") {
@@ -193,8 +203,8 @@
                                     //+ "<td><span class='rowData CustReferenceNo'>" + (data[i].cardBalance || '') + "</span></td>"
                                     + "<td><span class='rowData'>" + (data[i].individualOrgName || '') + "</span></td>"
                                     + "<td><span class='rowData'>" + (data[i].regionalOfficeName || '') + "</span></td>"
-                                    + "<td class='nav-item'><a class='CardNumber' href='#' onclick='ViewCardDetails(" + customerID + ")' role='tab'>" + (data[i].cardBalance || '')  +"</a></td>"
-                                    + "<td class='nav-item'><a class='CCMSBalance' href='#' onclick='ViewCCMSBalanceDetails(this)' role='tab'><span class='rowCCMSBalance'>" + (data[i].ccmsLimitValue || '') + "</span></a></td>"
+                                    + "<td class='nav-item'><a class='CardNumber' href='#' onclick='viewCardDetailsGrid()' role='tab'>" + (data[i].cardBalance || '')  +"</a></td>"
+                                    + "<td class='nav-item'><a class='CCMSBalance' href='#' onclick='ViewCCMSInfo()' role='tab'><span class='rowCCMSBalance'>" + (data[i].ccmsLimitValue || '') + "</span></a></td>"
                                     //+ "<td><span class='rowData'>" + (data[i].drivestars || '') + "</span></td>"
                                     + "<td class='nav-item'><a class='Drivestars' href='#' onclick='ViewDrivestars(" + customerID + ")' role='tab'>" + (data[i].drivestars || '')  +"</a></td>"
                                     + "<td><span class='rowData'>" + (data[i].expiredDrivestars || '') + "</span></td>"
@@ -208,6 +218,26 @@
                                 $('#CustomerBalanceTbl').append(rows);
 
 
+                            }
+
+
+                            ViewCardDetails(customerId);
+                            ViewCCMSBalanceDetails(customerId);
+
+                            console.log(cardclick+"             "+ccmsclcik);
+
+                            if((cardclick == "N") && (ccmsclcik == "N")){
+                                $("#customerCCMSBalanceTbl").hide();
+                                $("#customerCardWiseBalancesTbl").hide();
+                            }
+
+                            if((cardclick == "Y") && (ccmsclcik == "N")){
+                                $("#customerCCMSBalanceTbl").hide();
+                                $("#customerCardWiseBalancesTbl").show();
+                            }
+                            if((ccmsclcik == "Y") && (cardclick == "N")){
+                                $("#customerCardWiseBalancesTbl").hide();
+                                $("#customerCCMSBalanceTbl").show();
                             }
 
                             document.getElementById('dvCustomerBalance').style.display = 'block';
@@ -242,16 +272,24 @@
 
         });
 
+
+
+        function viewCardDetailsGrid(){
+            cardclick = "Y";
+            ccmsclcik = "N";
+            $("#customerCCMSBalanceTbl").hide();
+            $("#customerCardWiseBalancesTbl").show();
+        }
+
+        function ViewCCMSInfo(){
+            cardclick = "N";
+            ccmsclcik = "Y";
+            $("#customerCardWiseBalancesTbl").hide();
+            $("#customerCCMSBalanceTbl").show();
+        }
+
+
         function ViewCardDetails(customerId) {
-            //var customerId = document.getElementById("CustomerId").value;
-            //if (customerId == "") {
-            //    document.getElementById("CustomerId_error").innerHTML = "Customer ID is required";
-            //    $("#CustomerId").focus;
-            //    return (false);
-            //}
-            //else {
-            //    document.getElementById("CustomerId_error").innerHTML = "";
-            //}
 
             if (customerId == "") {
                 return (false);
@@ -273,7 +311,6 @@
                 success: function (data, status, xhr) {
                     var v = data;
                     if (status == 'success') {
-                        $("#customerCCMSBalanceTbl").html("");
                         $("#customerCardWiseBalancesTbl").html(data);
                         $('html, body').animate({
                             scrollTop: $("#customerCardWiseBalancesTbl").offset().top
@@ -332,7 +369,6 @@
                 success: function (data,status,xhr) {
                     var v = data;
                     if (status == 'success') {
-                        $("#customerCardWiseBalancesTbl").html("");
                         $("#customerCCMSBalanceTbl").html(data);
                         $('html, body').animate({
                             scrollTop: $("#customerCCMSBalanceTbl").offset().top
