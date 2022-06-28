@@ -19,39 +19,42 @@
                                 <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Parent Customer Approval</p>
                                 <div class="col-lg-12 col-md-12 col-12 pl-0 pr-md-2 pr-0 py-3">
                                     <div class="d-flex align-items-center justify-content-start flex-wrap">
-                                   
-                                        <div class="col-lg-6 col-12 mb-2 d-flex align-items-center justify-content-start flex-wrap">
-                                            <label class="font-weight-normal col-md-4 col-12">From Date</label>
-                                            <div class="col-md-7 col-12">
-                                                <div class="custom_select">
-                                                    @Html.TextBoxFor(m => m.FromDate, new { @class = "form-control fromDate", @onchange = "checkDates('fromDate_error');", @placeholder="dd/mm/yyyy" })
+
+                                        <div class="col-lg-6 col-12 ">
+                                            <div class="d-flex align-items-center flex-wrap mb-3">
+                                                <label class="font-weight-normal col-md-4 col-12">From Date</label>
+                                                <div class="col-md-7 col-12">
+                                                    <div class="custom_select">
+                                                        @Html.TextBoxFor(m => m.FromDate, new { @class = "form-control fromDate", @onchange = "checkDates('fromDate_error');", @placeholder="dd/mm/yyyy" })
+                                                    </div>
+                                                    <span class="error" id="fromDate_error"></span>
                                                 </div>
-                                                <span class="error" id="fromDate_error"></span>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-6 col-12">
+                                            <div class="d-flex align-items-center flex-wrap mb-3">
+                                                <label class="font-weight-normal col-md-4 col-12">To Date</label>
+                                                <div class="col-md-7 col-12">
+                                                    <div class="custom_select">
+                                                        @Html.TextBoxFor(m => m.ToDate, new { @class = "form-control toDate", @onchange = "checkDates('fromDate_error');", @placeholder="dd/mm/yyyy" })
+                                                    </div>
+                                                    <span class="error" id="toDate"></span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="d-flex align-items-center justify-content-start flex-wrap">
-                                        <div class="col-lg-6 col-12 mb-2 d-flex align-items-center justify-content-start flex-wrap">
-                                            <label class="font-weight-normal col-md-4 col-12">To Date</label>
-                                            <div class="col-md-7 col-12">
-                                                <div class="custom_select">
-                                                    @Html.TextBoxFor(m => m.ToDate, new { @class = "form-control toDate", @onchange = "checkDates('fromDate_error');", @placeholder="dd/mm/yyyy" })
-                                                </div>
-                                                <span class="error" id="toDate"></span>
-                                            </div>
+
+                                    <div class="col-12 d-flex align-items-center justify-content-center">
+                                        <div class="px-2">
+                                            <button class="btn btn_primary" type="submit" id="searchBtn">Search</button>
+                                        </div>
+                                        <div class="px-2">
+                                            <button class="btn btn_primary" type="button" onclick="location.href='@Url.Action("ApproveParentCustomer", "ParentCustomer", new { reset="Y" })'">Reset</button>
                                         </div>
                                     </div>
-                                  
-                                        <div class="col-12 d-flex align-items-center justify-content-center">
-                                            <div class="px-2">
-                                                <button class="btn btn_primary" type="submit" id="searchBtn">Search</button>
-                                            </div>
-                                            <div class="px-2">
-                                                <button class="btn btn_primary" type="button" onclick="location.href='@Url.Action("ApproveParentCustomer", "ParentCustomer", new { reset="Y" })'">Reset</button>
-                                            </div>
-                                        </div>
-                                   
-                                   
+
+
                                 </div>
                                 <div class="clearfix"></div>
                             </div>
@@ -89,6 +92,15 @@
                                 @foreach (var item in Model.Data)
                                 {
                                     i = i + 1;
+                                    if (item.CreatedDate != null)
+                                    {
+                                        if (item.CreatedDate.IndexOf('/') != -1)
+                                        {
+                                            string[] subs = item.CreatedDate.Split(' ');
+                                            string[] date = subs[0].Split('/');
+                                            item.CreatedDate = date[1] + "-" + date[0] + "-" + date[2];
+                                        }
+                                    }
                                     <tr>
                                         <td><input type="checkbox" class="checkEnable" id="check_@i" /></td>
                                         <td>@item.CustomerName</td>
@@ -105,7 +117,7 @@
                             </tbody>
                         </table>
                     </div>
-         
+
                     <div class="col-12 d-flex align-items-center justify-content-center mt-3 px-0">
                         <div class="col-md-3 col-12 d-flex align-items-center justify-content-center">
                             <div class="pr-2">
@@ -171,7 +183,7 @@
                 if (comment != undefined)
                 {
                     if (comment.trim() == "") {
-                        $(this).find(".comment_error").html("Please enter comment.");
+                        $(this).find(".comment_error").html("Please enter comment");
                         flag = "N";
                     }
                     else{
@@ -183,21 +195,21 @@
                     var customerId = $(this)[0].cells[8].textContent;
                     var formNumber = $(this)[0].cells[9].textContent;
                     objParentCustomerDtl.push({ Id:customerId,FormNumber:formNumber, Comment: comment });
-                    
+
                 }
-              
+
             }
 
         });
         if (objParentCustomerDtl.length == 0){
-         
+
             if(action=="Approve")
                 alert("Please select atleast one customer to approve.");
             if(action=="Reject")
                 alert("Please select atleast one customer to reject.");
-                
+
         }
-     
+
 
         if (objParentCustomerDtl.length > 0 && flag == "Y") {
             var reqModel = {  ObjParentCustomerDtl: objParentCustomerDtl, Action: action};
@@ -252,7 +264,7 @@
 
                 }
                 else{
-                    row.find(".comment_error").html("Please enter comment.");
+                    row.find(".comment_error").html("Please enter comment");
 
                 }
            }

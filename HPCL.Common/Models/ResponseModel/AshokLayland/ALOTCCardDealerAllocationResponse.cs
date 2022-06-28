@@ -14,11 +14,11 @@ namespace HPCL.Common.Models.ResponseModel.AshokLayland
     {
         public OTCCardResponseData()
         {
-            ObjMerchantTotalCardDetail = new List<ALOTCCardDealerTotalCardDetail>();
-            ObjMerchantViewCardDetail = new List<ALOTCCardDealerViewCardDetail>();
+            ObjALTotalCardDetail = new List<ALOTCCardDealerTotalCardDetail>();
+            ObjALViewCardDetail = new List<ALOTCCardDealerViewCardDetail>();
         }
-        public List<ALOTCCardDealerTotalCardDetail> ObjMerchantTotalCardDetail { get; set; }
-        public List<ALOTCCardDealerViewCardDetail> ObjMerchantViewCardDetail { get; set; }
+        public List<ALOTCCardDealerTotalCardDetail> ObjALTotalCardDetail { get; set; }
+        public List<ALOTCCardDealerViewCardDetail> ObjALViewCardDetail { get; set; }
     }
 
     public class ALOTCCardDealerViewCardDetail

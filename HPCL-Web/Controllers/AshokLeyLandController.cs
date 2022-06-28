@@ -240,5 +240,12 @@ namespace HPCL_Web.Controllers
             var updateKycResponse = await _ashokLeyLandService.AproveRejectCustomer(CustomerID, Comments, Approvalstatus);
             return Json(new { customer = updateKycResponse });
         }
+        public async Task<IActionResult> ManageProfile()
+        {
+            var custMdl = await _ashokLeyLandService.ManageProfile();
+
+            return View(custMdl);
+        }
+
     }
 }
