@@ -304,6 +304,7 @@
                         $("#controlCardNoVal").attr("readonly", true);
 
                     }else{
+                        document.getElementById("mobNoSearchRes").style.display = "none";
                         $("#cutomerName").removeClass("d-flex");
                         document.getElementById("cutomerName").style.display = "none";
                         alert(res.searchList.message);
@@ -463,12 +464,13 @@
     function redirectToOTP(){
 
           var mobNo = $("#mobNoVal").val();
+          var customerId = $("#customerIdVal").val();
 
           $.ajax({
                 url: "@Url.Action("CCCMSRecGenerateOtp","CCMSRecharge")",
                 type: "POST",
                 dataType: "JSON",
-                data: { mobNo: mobNo },
+                data: { mobNo: mobNo, customerId: customerId },
                 success: function (res) {
 
                     console.log(res,"res");
@@ -511,14 +513,15 @@
 
         if(flag == "Y"){
 
-          var mobNo = $("#mobNoVal").val();
-          //var otp = $("#storeOtp").val();
+           var mobNo = $("#mobNoVal").val();
+           var customerId = $("#customerIdVal").val();
+
 
            $.ajax({
                 url: "@Url.Action("CCCMSRecVerifyOtp","CCMSRecharge")",
                 type: "POST",
                 dataType: "JSON",
-                data: { mobNo: mobNo, otp: otpVal },
+                data: { mobNo: mobNo, otp: otpVal, customerId:customerId },
                 success: function (res) {
 
                     console.log(res,"res");
@@ -573,7 +576,7 @@
                 error: function (ex) {
                     alert('Failed' + ex);
                 }
-            });
+           });
         }
     }
 
@@ -585,15 +588,19 @@
         }else{
              $("#otpValErr").text('');
         }
-     }
+    }
 
 
      function resendOtp(){
+
+         var mobNo = $("#mobNoVal").val();
+         var customerId = $("#customerIdVal").val();
+
          $.ajax({
                 url: "@Url.Action("CCCMSRecGenerateOtp","CCMSRecharge")",
                 type: "POST",
                 dataType: "JSON",
-                data: { mobNo: mobNo },
+                data: { mobNo: mobNo, customerId: customerId },
                 success: function (res) {
 
                     console.log(res,"res");
