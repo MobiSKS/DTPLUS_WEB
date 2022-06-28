@@ -10,13 +10,13 @@
     <div class="bg-white p-2 p-md-4">
         <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
             <li class="breadcrumb-item"><a href="@Url.Action("Index", "AshokLeyLand")" class="text_primary">Ashok Leyland</a> </li>
-            <li class="breadcrumb-item font-weight-light">AL OTC Card Request</li>
+            <li class="breadcrumb-item font-weight-light">AL Dealer OTC Card Request</li>
         </ul>
         <form name="ALOTCCardRequestForm" method="post" asp-action="DealerOTCCardRequest" class="w-100">
             <div class="w-100">
                 <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
                     <div class="border-1 rounded border-grey pb-0">
-                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">AL OTC Card Request</p>
+                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">AL Dealer OTC Card Request</p>
                         <div class="alert alert-danger mt-3 text-center" id="dvRemarks" style="@(Model.Remarks=="" ? "display:none":"display:block")">
                             @Html.DisplayFor(m => m.Remarks)
                         </div>
@@ -27,7 +27,7 @@
                                         <label class="font-weight-normal col-md-4 col-12">Dealer Code <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.DealerCode, new { @class = "form-control", maxlength = "25", autocomplete = "off" })
+                                                @Html.TextBoxFor(m => m.DealerCode, new { @class = "form-control", maxlength = "25", autocomplete = "off", onkeypress = "return AllowAlphaNumeric(event)" })
                                                 <span class="error" id="DealerCode_error"></span>
                                             </div>
                                         </div>
@@ -35,10 +35,10 @@
                                 </div>
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal offset-md-1 col-md-4 col-12">No. of Cards <sup class="text-danger">*</sup></label>
+                                        <label class="font-weight-normal offset-md-1 col-md-4 col-12">No. Of Cards <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.NoofCards, new { @class = "form-control", maxlength = "3", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                @Html.TextBoxFor(m => m.NoofCards, new { @class = "form-control", maxlength = "4", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
                                                 <span class="error" id="NoofCards_error"></span>
                                             </div>
                                         </div>
@@ -75,14 +75,16 @@
     $("#DealerCode").on("blur", function () {
         debugger;
         localStorage.setItem("DEALERFOUND", "0");
+        localStorage.setItem("DEALERMSG", "");
 
-        var dealerCode = document.getElementById("DealerCode").value;
-        if (dealerCode == "") {
-            document.getElementById("DealerCode_error").innerHTML = "Dealer Code is required";
-            $("#DealerCode").focus;
+        var dealerCode = document.getElementById("DealerCode").value.trim();
+        if (dealerCode == "") 
+        {
+            document.getElementById("DealerCode_error").innerHTML = "Please enter Dealer Code";
             return (false);
         }
-        else {
+        else 
+        {
             document.getElementById("DealerCode_error").innerHTML = "";
         }
 
@@ -97,35 +99,38 @@
                 console.log(status);
                 console.log(data.status);
 
-                if (status == 'success') {
-                    if (data.status == 1) {
+                if (status == 'success') 
+                {
+                    if (data.status == 1) 
+                    {
                         document.getElementById("DealerCode_error").innerHTML = "";
                         localStorage.setItem("DEALERFOUND", "1");
                     }
-                    else {
-                        document.getElementById("DealerCode_error").innerHTML = "Invalid Dealer Code";
+                    else 
+                    {
+                        document.getElementById("DealerCode_error").innerHTML = data.reason;
                         localStorage.setItem("DEALERFOUND", "0");
+                        localStorage.setItem("DEALERMSG", data.reason);
                     }
 
-                    if (data == "Failed to load Dealer Details") {
+                    if (data == "Failed to load Dealer Details") 
+                    {
                         document.getElementById("DealerCode_error").innerHTML = "Invalid Dealer Code";
                         localStorage.setItem("DEALERFOUND", "0");
+                        localStorage.setItem("DEALERMSG", "Invalid Dealer Code");
                     }
                 }
-                else {
+                else 
+                {
                     document.getElementById("DealerCode_error").innerHTML = "Invalid Dealer Code";
                     localStorage.setItem("DEALERFOUND", "0");
+                    localStorage.setItem("DEALERMSG", "Invalid Dealer Code");
                 }
             },
             error: function (xhr, ajaxOptions, thrownError) {
                 document.getElementById("DealerCode_error").innerHTML = "Invalid Dealer Code";
                 localStorage.setItem("DEALERFOUND", "0");
-            },
-            statusCode: {
-                1024: function () {
-                    document.getElementById("DealerCode_error").innerHTML = "Invalid Dealer Code";
-                    localStorage.setItem("DEALERFOUND", "0");
-                }
+                localStorage.setItem("DEALERMSG", "Invalid Dealer Code");
             }
         });
 
@@ -140,15 +145,23 @@
 
         if (document.getElementById('DealerCode').value.trim() == "") 
         {
-            document.getElementById("DealerCode_error").innerHTML = "Dealer Code is required";
+            document.getElementById("DealerCode_error").innerHTML = "Please enter Dealer Code";
             ret = false;
         }
         else 
         {
             if (localStorage.getItem("DEALERFOUND") == 0) 
             {
-                document.getElementById("DealerCode_error").innerHTML = "Invalid Dealer Code";
-                ret = false;
+                if(localStorage.getItem("DEALERMSG")=="")
+                {
+                    document.getElementById("DealerCode_error").innerHTML = "Invalid Dealer Code";
+                    ret = false;
+                }
+                else
+                {
+                    document.getElementById("DealerCode_error").innerHTML = localStorage.getItem("DEALERMSG");
+                    ret = false;
+                }
             }
             else 
             {
@@ -158,14 +171,14 @@
 
         if (document.getElementById('NoofCards').value.trim() == "") 
         {
-            document.getElementById("NoofCards_error").innerHTML = "No. of Cards is required";
+            document.getElementById("NoofCards_error").innerHTML = "Please enter Number of Cards";
             ret = false;
         }
         else 
         {
-            if (Number(document.getElementById('NoofCards').value.trim()) < 1 || Number(document.getElementById('NoofCards').value.trim()) > 125) 
+            if (Number(document.getElementById('NoofCards').value.trim()) < 1 || Number(document.getElementById('NoofCards').value.trim()) > 3000) 
             {
-                document.getElementById("NoofCards_error").innerHTML = "No. Of AL OTC Cards should be 1 to 125";
+                document.getElementById("NoofCards_error").innerHTML = "No. Of OTC Cards should be 1 to 3000";
                 ret = false;
             }
             else 
@@ -187,19 +200,19 @@
     //debugger;
        if (document.getElementById('NoofCards').value.trim() == "") 
        {
-            document.getElementById("NoofCards_error").innerHTML = "No. of Cards is required";
+            document.getElementById("NoofCards_error").innerHTML = "Please enter Number of Cards";
             return false;
        }
        else 
        {
-            if (Number(document.getElementById('NoofCards').value) < 1 || Number(document.getElementById('NoofCards').value) > 125) 
+            if (Number(document.getElementById('NoofCards').value) < 1 || Number(document.getElementById('NoofCards').value) > 3000) 
             {
-                document.getElementById("NoofCards_error").innerHTML = "No. Of AL OTC Cards should be 1 to 125";
+                document.getElementById("NoofCards_error").innerHTML = "No. Of OTC Cards should be 1 to 3000";
                 return false;
             }
             else if(!(document.getElementById('NoofCards').value).match(number))
             {
-                document.getElementById("NoofCards_error").innerHTML = "No. Of AL OTC Cards should be 1 to 125";
+                document.getElementById("NoofCards_error").innerHTML = "No. Of OTC Cards should be 1 to 3000";
                 ret = false;
             }
             else 

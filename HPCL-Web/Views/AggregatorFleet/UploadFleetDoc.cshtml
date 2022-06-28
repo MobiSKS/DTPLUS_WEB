@@ -20,13 +20,23 @@
                             @*<p class="text-dark pb-2 mb-0 font-weight-bold ml-4 mr-4" style="border-bottom: 1px solid #ccc;">
                                 Search
                                 </p>*@
-                            <div class="d-flex align-items-center justify-content-between flex-wrap pt-0">
+                           <div class="d-flex align-items-center justify-content-between flex-wrap pt-0">
                                 <div class="col-md-6 col-12 px-2">
                                     <div class="form-group d-flex align-items-center flex-wrap">
-                                        <label class="font-weight-normal col-md-5 col-12 mb-0">Customer Reference Number<sup class="text-danger">*</sup></label>
+                                        <label class="font-weight-normal col-md-5 col-12 mb-0">Form Number<sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
-                                            @Html.TextBoxFor(m => m.CustomerReferenceNo, new { @id = "CustomerReferenceNoId", @class = "form-control restrictPaste", maxlength = "10", onkeypress = "return isNumberKey(event)" })
-                                            @Html.ValidationMessageFor(m => m.CustomerReferenceNo, "", new { @class = "text-danger" })
+                                            @Html.TextBoxFor(m => m.FormNumber, new { @id = "CustomerReferenceNoId", @class = "form-control restrictPaste", maxlength = "10", onkeypress = "return isNumberKey(event)" })
+                                            @Html.ValidationMessageFor(m => m.FormNumber, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-12">
+                                    <div class="d-flex align-items-center justify-content-start mb-3">
+                                        <div class="px-2">
+                                            <button class="btn btn_primary" type="submit" id="btnSave" name="submit" onclick="openSearchGrid()">SEARCH</button>
+                                        </div>
+                                        <div class="px-2">
+                                            <a class="btn btn_primary" href="#" id="btnCancel" name="cancel" onclick="resetClick()">RESET</a>
                                         </div>
                                     </div>
                                 </div>
@@ -43,25 +53,18 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-6 col-12 px-2">
+                                        @*       <div class="col-md-6 col-12 px-2">
                                             <div class="d-flex align-items-center flex-wrap">
-                                                <label class="font-weight-normal col-md-5 col-12 mb-0">Form Number</label>
-                                                <div class="col-md-7 col-12">
-                                                    @Html.TextBoxFor(m => m.FormNumber, new { @id = "FormNumber", @class = "form-control", @readonly = "readonly" })
-                                                </div>
+                                            <label class="font-weight-normal col-md-5 col-12 mb-0">Form Number</label>
+                                            <div class="col-md-7 col-12">
+                                            @Html.TextBoxFor(m => m.FormNumber, new { @id = "FormNumber", @class = "form-control", @readonly = "readonly" })
                                             </div>
-                                        </div>
+                                            </div>
+                                            </div>*@
                                     </div>
                                 </div>
                             </div>
-                            <div class="d-flex align-items-center justify-content-center mb-3">
-                                <div class="px-2">
-                                    <button class="btn btn_primary" type="submit" id="btnSave" name="submit" onclick="openSearchGrid()">SEARCH</button>
-                                </div>
-                                <div class="px-2">
-                                    <a class="btn btn_primary" href="#" id="btnCancel" name="cancel" onclick="resetClick()">RESET</a>
-                                </div>
-                            </div>
+
                             @Html.HiddenFor(model => Model.IdProofFrontSRC)
                             @Html.HiddenFor(model => Model.Type)
                         </form>
@@ -245,7 +248,50 @@
             event.preventDefault();
         }
     });
+    function adfimgClick() 
+    {
+        var upath = $('#idAfrontImg img')[0].src;
+        var url = '@Html.Raw(@Url.Action("CreateFileResult","Customer", new { Filepath="zzzzxx"  }))';
+        //url = url.replace("zzzzxx", encodeURIComponent(upath));
+        url = url.replace("zzzzxx", upath);
+        window.location.href = url;
+    }
 
+    function panfrontimgClick() 
+    {
+        var upath = $('#panCardImg img')[0].src;
+        var url = '@Html.Raw(@Url.Action("CreateFileResult","Customer", new { Filepath="zzzzxx"  }))';
+        //url = url.replace("zzzzxx", encodeURIComponent(upath));
+        url = url.replace("zzzzxx", upath);
+        window.location.href = url;
+    }
+
+    function idfimgClick () 
+    {
+        var upath = $('#idPfrontImg img')[0].src;
+        var url = '@Html.Raw(@Url.Action("CreateFileResult","Customer", new { Filepath="zzzzxx"  }))';
+        //url = url.replace("zzzzxx", encodeURIComponent(upath));
+        url = url.replace("zzzzxx", upath);
+        window.location.href = url;
+    }
+
+    function vehImgClick () 
+    {
+        var upath = $('#vehicleDetailsImg img')[0].src;
+        var url = '@Html.Raw(@Url.Action("CreateFileResult","Customer", new { Filepath="zzzzxx"  }))';
+        //url = url.replace("zzzzxx", encodeURIComponent(upath));
+        url = url.replace("zzzzxx", upath);
+        window.location.href = url;
+    }
+    
+    function CustImgClick () 
+    {
+        var upath = $('#customerFormImg img')[0].src;
+        var url = '@Html.Raw(@Url.Action("CreateFileResult","Customer", new { Filepath="zzzzxx"  }))';
+        //url = url.replace("zzzzxx", encodeURIComponent(upath));
+        url = url.replace("zzzzxx", upath);
+        window.location.href = url;
+    }
      var idFront;
      var addFront;
      var panImg;
@@ -258,6 +304,47 @@
              openSearchGrid();
              $("#btnSave").click();
          }
+            var ifimg="@Model.IdProofFrontimg";
+            var panimg="@Model.PanFrontimg";
+            var afimg="@Model.AddProofFrontimg";
+            var vehimg="@Model.VehFrontimg";
+            var custimg="@Model.CustFrontimg";
+            if(ifimg!=""){
+                        
+                $("#idPfrontImg").append("<img /><button class='btn btn_primary' style='margin-top:2%' type='button' onclick='idfimgClick()'>Download Image</button>");
+                $('#idPfrontImg img').attr('src',  ifimg);
+                $("#idPfrontImg img").attr("style", "width: 200px");
+                $("#idPfrontImg img").attr("style", "height: 100px");
+                $("#idPfrontImg img").show();
+            }
+            if(panimg!=""){
+                $("#panCardImg").append("<img /><button class='btn btn_primary' style='margin-top:2%' type='button' onclick='panfrontimgClick()'>Download Image</button>");
+                $('#panCardImg img').attr('src',  panimg);
+                $("#panCardImg img").attr("style", "width: 200px");
+                $("#panCardImg img").attr("style", "height: 100px");
+                $("#panCardImg img").show();
+            }
+            if(afimg!=""){
+                $("#idAfrontImg").append("<img /><button class='btn btn_primary' style='margin-top:2%' type='button' onclick='adfimgClick()'>Download Image</button>");
+                $('#idAfrontImg img').attr('src',  afimg);
+                $("#idAfrontImg img").attr("style", "width: 200px");
+                $("#idAfrontImg img").attr("style", "height: 100px");
+                $("#idAfrontImg img").show();
+            }
+            if(vehimg!=""){
+                $("#vehicleDetailsImg").append("<img /><button class='btn btn_primary' style='margin-top:2%' type='button'  onclick='vehImgClick()'>Download Image</button>");
+                $('#vehicleDetailsImg img').attr('src',  vehimg);
+                $("#vehicleDetailsImg img").attr("style", "width: 200px");
+                $("#vehicleDetailsImg img").attr("style", "height: 100px");
+                $("#vehicleDetailsImg img").show();
+            }
+            if(custimg!=""){
+                $("#customerFormImg").append("<img /><button class='btn btn_primary' style='margin-top:2%' type='button'  onclick='CustImgClick()'>Download Image</button>");
+                $('#customerFormImg img').attr('src',  custimg);
+                $("#customerFormImg img").attr("style", "width: 200px");
+                $("#customerFormImg img").attr("style", "height: 100px");
+                $("#customerFormImg img").show();
+            }
          $("#IdProofFront").change(function () {
              $("#idFrontErr").text("");
              $("#idPfrontImg").html("");
@@ -299,7 +386,7 @@
                          var regexImage = /(.*?)\.(png|jpeg|JPEG|jpg|gif)$/;
                          if (regexImage.test($(this).val())) {
                              $("#idPfrontImg").show();
-                             $("#idPfrontImg").append("<img />");
+                             $("#idPfrontImg").append("<img /><button class='btn btn_primary' style='margin-top:2%' type='button' onclick='idFrontClick()' id='idFrontBtn'>Download Image</button>");
                              var reader = new FileReader();
                              reader.onload = function (e) {
                                  $("#idPfrontImg img").attr("src", e.target.result);
@@ -370,7 +457,7 @@
                          var regexImage = /(.*?)\.(png|jpeg|JPEG|jpg|gif)$/;
                          if(regexImage.test($(this).val())) {
                              $("#idAfrontImg").show();
-                             $("#idAfrontImg").append("<img />");
+                             $("#idAfrontImg").append("<img /><button class='btn btn_primary' style='margin-top:2%' type='button' onclick='addfrotClick()' id='addFront_btn'>Download Image</button>");
                              var reader = new FileReader();
                              reader.onload = function (e) {
                                  $("#idAfrontImg img").attr("src", e.target.result);
@@ -441,7 +528,7 @@
                          var regexImage = /(.*?)\.(png|jpeg|JPEG|jpg|gif)$/;
                          if (regexImage.test($(this).val())) {
                              $("#panCardImg").show();
-                             $("#panCardImg").append("<img />");
+                             $("#panCardImg").append("<img /><button class='btn btn_primary' style='margin-top:2%' type='button' onclick='panimgClick()' id='pan_btn'>Download Image</button>");
                              var reader = new FileReader();
                              reader.onload = function (e) {
                                  $("#panCardImg img").attr("src", e.target.result);
@@ -512,7 +599,7 @@
                          var regexImage = /(.*?)\.(png|jpeg|JPEG|jpg|gif)$/;
                          if(regexImage.test($(this).val())) {
                              $("#vehicleDetailsImg").show();
-                             $("#vehicleDetailsImg").append("<img />");
+                             $("#vehicleDetailsImg").append("<img /><button class='btn btn_primary' style='margin-top:2%' type='button' onclick='vehicleimgClick()' id='vehicle_btn'>Download Image</button>");
                              var reader = new FileReader();
                              reader.onload = function (e) {
                                  $("#vehicleDetailsImg img").attr("src", e.target.result);
@@ -582,7 +669,7 @@
                          var regexImage = /(.*?)\.(png|jpeg|JPEG|jpg|gif)$/;
                          if(regexImage.test($(this).val())) {
                              $("#customerFormImg").show();
-                             $("#customerFormImg").append("<img />");
+                             $("#customerFormImg").append("<img /><button class='btn btn_primary' style='margin-top:2%' type='button' onclick='custimgClick()' id='cust_btn'>Download Image</button>");
                              var reader = new FileReader();
                              reader.onload = function (e) {
                                  $("#customerFormImg img").attr("src", e.target.result);
@@ -634,7 +721,7 @@
             //$("#resSearch div").parent().remove();
 
             document.getElementById("CustomerName").value = res.searchCustomer.result.data[0].customerName;
-            document.getElementById("FormNumber").value = res.searchCustomer.result.data[0].formNumber;
+            //document.getElementById("FormNumber").value = res.searchCustomer.result.data[0].formNumber;
             if(res.searchCustomer.result.data[0].status != 0){
                 document.getElementById('uploadSection').style.display = 'block';
                 document.getElementById('resSearch').style.display = 'block';
@@ -669,12 +756,56 @@
         //if (imagePath != "")
         //    window.location.href = '@Url.Action("ValidateFleetCustomer", "AggregatorFleet")';
         //else
-            window.location.href = '@Url.Action("SuccessUploadRedirect", "AggregatorFleet")?customerReferenceNo='+myArray[1];
+            window.location.href = '@Url.Action("SuccessUploadRedirect", "AggregatorFleet")?FormNumber='+myArray[1];
 
     };
 
      function OnFailure(data) {
          alert('HTTP Status Code: ' + data + '  Error Message: ' + data);
     }
+    function idFrontClick(){
+        var link = document.createElement('a');
+        link.href = $('#idPfrontImg img')[0].src;
+        link.download = $('#idPfrontImg img').attr('src');
+        document.body.appendChild(link);
+        link.click();     
+        document.body.removeChild(link);
+    }
 
+          
+    function panimgClick(){
+        var link = document.createElement('a');
+        link.href = $('#panCardImg img')[0].src;
+        link.download = $('#panCardImg img').attr('src');
+        document.body.appendChild(link);
+        link.click();     
+        document.body.removeChild(link);
+    }
+
+    function addfrotClick(){
+        var link = document.createElement('a');
+        link.href = $('#idAfrontImg img')[0].src;
+        link.download = $('#idAfrontImg img').attr('src');
+        document.body.appendChild(link);
+        link.click();     
+        document.body.removeChild(link);
+    }
+
+    function vehicleimgClick(){
+        var link = document.createElement('a');
+        link.href = $('#vehicleDetailsImg img')[0].src;
+        link.download = $('#vehicleDetailsImg img').attr('src');
+        document.body.appendChild(link);
+        link.click();     
+        document.body.removeChild(link);
+    }
+    function custimgClick(){
+        var link = document.createElement('a');
+        link.href = $('#customerFormImg img')[0].src;
+        link.download = $('#customerFormImg img').attr('src');
+        document.body.appendChild(link);
+        link.click();     
+        document.body.removeChild(link);
+    }
+    
 </script>

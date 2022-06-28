@@ -62,18 +62,15 @@ namespace HPCL.Service.Services
             return redirectDetails;
         }
 
-        public async Task<CCCMSRecGenerateOtpRes> CCCMSRecGenerateOtp(string mobNo)
+        public async Task<CCCMSRecGenerateOtpRes> CCCMSRecGenerateOtp(string mobNo, string customerId)
         {
             var reqBody = new CCCMSRecGenerateOtpReq
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
-                Terminalid = null,
-                Merchantid = null,
                 Mobileno = mobNo,
-                OTPtype = 3,
-                CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
+                CustomerId = customerId
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
@@ -83,7 +80,7 @@ namespace HPCL.Service.Services
             return getOtp;
         }
 
-        public async Task<List<CCCMSRecVerifyOtpRes>> CCCMSRecVerifyOtp(string mobNo, string otp)
+        public async Task<List<CCCMSRecVerifyOtpRes>> CCCMSRecVerifyOtp(string mobNo, string otp, string customerId)
         {
             var reqBody = new CCCMSRecVerifyOtpReq
             {
@@ -92,7 +89,7 @@ namespace HPCL.Service.Services
                 UserIp = CommonBase.userip,
                 MobileNo = mobNo,
                 otp = otp,
-                CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
+                customerId = _httpContextAccessor.HttpContext.Session.GetString("UserId")
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");

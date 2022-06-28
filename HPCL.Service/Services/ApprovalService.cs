@@ -96,7 +96,10 @@ namespace HPCL.Service.Services
             List<SuccessResponse> approvalRejectionTerminalReqLst = approvalRejectionTerminalReqJarr.ToObject<List<SuccessResponse>>();
             List<string> MessageList = new List<string>();
             MessageList.Add(Convert.ToString(approvalRejectionTerminalReqLst[0].Status));
-            MessageList.Add(approvalRejectionTerminalReqLst[0].Reason);
+            foreach (var approvalRejectionTerminalReq in approvalRejectionTerminalReqLst)
+            {
+                MessageList.Add(approvalRejectionTerminalReq.Reason);
+            }
             return MessageList;
 
         }
@@ -166,7 +169,11 @@ namespace HPCL.Service.Services
             List<SuccessResponse> approvalRejectionTerminalReqLst = approvalRejectionTerminalReqJarr.ToObject<List<SuccessResponse>>();
             List<string> MessageList = new List<string>();
             MessageList.Add(Convert.ToString(approvalRejectionTerminalReqLst[0].Status));
-            MessageList.Add(approvalRejectionTerminalReqLst[0].Reason);
+
+            foreach (var approvalRejectionTerminalReq in approvalRejectionTerminalReqLst)
+            {
+                MessageList.Add(approvalRejectionTerminalReq.Reason);
+            }
             return MessageList;
         }
     }
