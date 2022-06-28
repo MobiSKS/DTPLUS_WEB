@@ -78,8 +78,10 @@
                                     <th style="width:10%;">ZO</th>
                                     <th style="width:10%;">RO</th>
                                     <th style="width:10%;">City</th>
-                                    <th style="width:10%;">Created Date</th>
                                     <th style="width:10%;">Created By</th>
+                                    <th style="width:10%;">Created Date</th>
+                                    <th style="width:10%;">Approved By</th>
+                                    <th style="width:10%;">Approved Date</th>
                                     <th style="width:19%;">Comments</th>
                                     <th style="display:none">CustomerId</th>
                                     <th style="display:none">FormNumber</th>
@@ -93,14 +95,34 @@
                                 @foreach (var item in Model.Data)
                                 {
                                     i = i + 1;
+                                    if (item.CreatedDate != null)
+                                    {
+                                        if (item.CreatedDate.IndexOf('/') != -1)
+                                        {
+                                            string[] subs = item.CreatedDate.Split(' ');
+                                            string[] date = subs[0].Split('/');
+                                            item.CreatedDate = date[1] + "-" + date[0] + "-" + date[2];
+                                        }
+                                    }
+                                    if (item.ApprovedDate != null)
+                                    {
+                                        if (item.ApprovedDate.IndexOf('/') != -1)
+                                        {
+                                            string[] subs = item.ApprovedDate.Split(' ');
+                                            string[] date = subs[0].Split('/');
+                                            item.ApprovedDate = date[1] + "-" + date[0] + "-" + date[2];
+                                        }
+                                    }
                                     <tr>
                                         <td><input type="checkbox" class="checkEnable" id="check_@i" /></td>
                                         <td>@item.CustomerName</td>
                                         <td>@item.ZO</td>
                                         <td>@item.RO</td>
                                         <td>@item.CityName</td>
-                                        <td>@item.CreatedDate</td>
                                         <td>@item.CreatedBy</td>
+                                        <td>@item.CreatedDate</td>
+                                        <td>@item.ApprovedBy</td>
+                                        <td>@item.ApprovedDate</td>
                                         <td><input type="text" id="comments_@i" class="form-control comments" maxlength="50" disabled /><span class="comment_error"></span></td>
                                         <td style="display:none">@item.Id</td>
                                         <td style="display:none">@item.FormNumber</td>
@@ -176,7 +198,7 @@
                 if (comment != undefined)
                 {
                     if (comment.trim() == "") {
-                        $(this).find(".comment_error").html("Please enter comment.");
+                        $(this).find(".comment_error").html("Please enter comment");
                         flag = "N";
                     }
                     else{
@@ -260,7 +282,7 @@
 
                 }
                 else{
-                    row.find(".comment_error").html("Please enter comment.");
+                    row.find(".comment_error").html("Please enter comment");
 
                 }
            }
