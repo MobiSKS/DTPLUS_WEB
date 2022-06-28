@@ -21,7 +21,7 @@ namespace HPCL.Common.Models.ViewModel.HDFCBankCreditPouch
             FromDate = DateTime.Now.AddMonths(-1).ToString("dd-MM-yyyy");
             ToDate = DateTime.Now.ToString("dd-MM-yyyy");
         }
-        [Required(ErrorMessage = FieldValidation.CustomerNotEmpty)]
+        //[Required(ErrorMessage = FieldValidation.CustomerNotEmpty)]
         [StringLength(10)]
         [RegularExpression(FieldValidation.ValidCustomerId, ErrorMessage = FieldValidation.ValidCustomerIdErrMsg)]
         public string CustomerId { get; set; }

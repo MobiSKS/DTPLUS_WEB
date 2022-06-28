@@ -45,7 +45,7 @@
                               <div class="d-flex align-items-center flex-wrap">
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal col-md-4 col-12">Customer ID<sup class="text-danger">*</sup></label>
+                                        <label class="font-weight-normal col-md-4 col-12">Customer ID</label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
                                                 @Html.TextBoxFor(m => m.CustomerId, new { @id = "CustomerDefaultVal", @class = "form-control restrictPaste", onkeypress = "return isNumberKey(event)" })
@@ -116,6 +116,11 @@
         <div class="clearfix"></div>
     </div>
 </div>
+
+
+@using Microsoft.AspNetCore.Http;
+<script src="https://rawgit.com/moment/moment/2.2.1/min/moment.min.js"></script>
+
 
 <script type="text/javascript">
 
@@ -201,6 +206,8 @@
                     data: $('#formValid').serialize(),  // data to submit
                     success: function (res, status, xhr) {
 
+                        console.log("res",res);
+
                         if (res.searchList.success == true) {
 
                             var girdList = res.searchList.data;
@@ -224,6 +231,21 @@
 
                             for (var i = 0; i < girdList.length; i++) {
 
+                                var reqOn;
+                                var appOn;
+
+                                if(((girdList[i].requestNo) == "01/1/0001 00:00:00") || ((girdList[i].requestNo) == "01/01/1900 00:00:00") || ((girdList[i].requestNo) == null)){
+                                    reqOn = "";
+                                }else{
+                                    reqOn = moment(girdList[i].requestNo, 'DD-MM-YYYY').format('DD-MM-YYYY');
+                                }
+
+                                if(((girdList[i].approvedDate) == "01/1/0001 00:00:00") || ((girdList[i].approvedDate) == "01/01/1900 00:00:00") || ((girdList[i].approvedDate) == null)){
+                                    appOn = "";
+                                }else{
+                                    appOn = moment(girdList[i].approvedDate, 'DD-MM-YYYY').format('DD-MM-YYYY');
+                                }
+
                                 var srNumber = (i + 1);
                                 var select = "<input type='checkbox' class='checkRow'>";
                                 var refNo = (girdList[i].referenceNo || '');
@@ -235,9 +257,9 @@
                                 var mobNo = (girdList[i].mobileNo || '');
                                 var email = (girdList[i].email || '');
                                 var reqBy = (girdList[i].requestedBy || '');
-                                var requestNo = (girdList[i].requestNo || '');
+                                var requestNo = reqOn;
                                 var approvedBy = (girdList[i].approvedBy || '');
-                                var approveOn = (girdList[i].approvedDate || '');
+                                var approveOn = appOn;
                                 var remarks = "<div style='width:160px;'><textarea onblur='remarksChange(this," + (i) + ")' disabled='disabled' class='form-control remarksVal' maxlength = '250'></textarea><i style='display:none;margin-top:10px;' class='fa fa-exclamation-triangle errs' id='remarks_error_"+i+"' aria-hidden='true'></i></div>";
                                 var creditLimit = "<div style='width:160px;'><input type='text' onblur='limitOnChage(this," + (i) + ")' disabled='disabled' maxlength='10' class='form-control cLimit' maxlength = '250' /><i style='display:none;margin-top:10px;' class='fa fa-exclamation-triangle errs' id='creditlimit_error_"+i+"' aria-hidden='true'></i></div>";
                                 var status = (girdList[i].actionStatus || '');
@@ -353,21 +375,22 @@
             e.preventDefault();
 
         if (flag == "Y") {
-         $("#authHdfcList input[type=checkbox]:checked").each(function () {
-                var selectedRow = $(this).closest("tr")[0];
-                console.log("index",selectedRow.rowIndex);
-                var indexS = (selectedRow.rowIndex) - 1;
-                document.getElementById('remarks_error_'+indexS).style.display = "none";
-                $(this).closest("tr").find(".checkRow").prop('checked',false);
-                $(this).closest("tr").find('.remarksVal').val('');
-                $(this).closest("tr").find('.cLimit').val('');
-                $(this).closest("tr").find('.cLimit').attr("disabled", true);
-                $(this).closest("tr").find('.remarksVal').attr("disabled", true);
-                $(this).closest("tr").find('.actionVal').attr("disabled", true);
-            });
 
             if (confirm('Are you sure! You want to process the selected record(s)?')) {
                 console.log('ok');
+
+                $("#authHdfcList input[type=checkbox]:checked").each(function () {
+                    var selectedRow = $(this).closest("tr")[0];
+                    console.log("index",selectedRow.rowIndex);
+                    var indexS = (selectedRow.rowIndex) - 1;
+                    document.getElementById('remarks_error_'+indexS).style.display = "none";
+                    $(this).closest("tr").find(".checkRow").prop('checked',false);
+                    $(this).closest("tr").find('.remarksVal').val('');
+                    $(this).closest("tr").find('.cLimit').val('');
+                    $(this).closest("tr").find('.cLimit').attr("disabled", true);
+                    $(this).closest("tr").find('.remarksVal').attr("disabled", true);
+                    $(this).closest("tr").find('.actionVal').attr("disabled", true);
+                });
 
                 $.ajax({
                     url: "@Url.Action("AuthorizationAction", "HDFCBankCreditPouch")",
