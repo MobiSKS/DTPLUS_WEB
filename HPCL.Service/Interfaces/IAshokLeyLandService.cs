@@ -33,5 +33,6 @@ namespace HPCL.Service.Interfaces
         Task<GetAlCustomerDetailForVerificationModel> VerifyCustomerDocuments(GetAlCustomerDetailForVerificationModel model);
         Task<HPCL.Common.Models.ViewModel.Customer.UpdateKycResponse> AproveRejectCustomer(string CustomerID, string Comments, string Approvalstatus);
         Task<List<StatusResponseModal>> GetAlStatusType();
+        Task<ALCustomerProfileModel> ManageProfile();
     }
 }

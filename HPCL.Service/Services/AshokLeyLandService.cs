@@ -108,7 +108,7 @@ namespace HPCL.Service.Services
         public async Task<InsertResponse> AlEnrollUpdate(string getAllData)
         {
 
-            JArray objs= JArray.Parse(JsonConvert.DeserializeObject(getAllData).ToString());
+            JArray objs = JArray.Parse(JsonConvert.DeserializeObject(getAllData).ToString());
             List<AlEnrollment> arrs = objs.ToObject<List<AlEnrollment>>();
 
             var insertServiceBody = new AlEnrollment
@@ -119,15 +119,15 @@ namespace HPCL.Service.Services
                 DealerCode = arrs[0].DealerCode,
                 ZonalOfficeId = arrs[0].ZonalOfficeId,
                 RegionalOfficeId = arrs[0].RegionalOfficeId,
-                Address1 =  arrs[0].Address1,
-                Address2 =  arrs[0].Address2,
-                Address3 =  arrs[0].Address3,
-                StateId =  arrs[0].StateId,
-                CityName =  arrs[0].CityName,
-                DistrictId =  arrs[0].DistrictId,
-                Pin =  arrs[0].Pin,
-                MobileNo =  arrs[0].MobileNo,
-                EmailId =  arrs[0].EmailId,
+                Address1 = arrs[0].Address1,
+                Address2 = arrs[0].Address2,
+                Address3 = arrs[0].Address3,
+                StateId = arrs[0].StateId,
+                CityName = arrs[0].CityName,
+                DistrictId = arrs[0].DistrictId,
+                Pin = arrs[0].Pin,
+                MobileNo = arrs[0].MobileNo,
+                EmailId = arrs[0].EmailId,
                 ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
             };
 
@@ -559,7 +559,7 @@ namespace HPCL.Service.Services
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 DealerCode = dealerCode
             };
-            
+
             StringContent custRefcontent = new StringContent(JsonConvert.SerializeObject(requestInfo), Encoding.UTF8, "application/json");
 
             var response = await _requestService.CommonRequestService(custRefcontent, WebApiUrl.getAlSalesExeEmpidAddonOtcCardMapping);
@@ -663,7 +663,7 @@ namespace HPCL.Service.Services
             model.ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId");
             model.CommunicationPhoneNo = (string.IsNullOrEmpty(model.CommunicationDialCode) ? "" : model.CommunicationDialCode) + "-" + (string.IsNullOrEmpty(model.CommunicationPhonePart2) ? "" : model.CommunicationPhonePart2);
             model.CommunicationFax = (string.IsNullOrEmpty(model.CommunicationFaxCode) ? "" : model.CommunicationFaxCode) + "-" + (string.IsNullOrEmpty(model.CommunicationFaxPart2) ? "" : model.CommunicationFaxPart2);
-       
+
             if (!string.IsNullOrEmpty(model.CommunicationEmailid))
             {
                 model.CommunicationEmailid = model.CommunicationEmailid.ToLower();
@@ -802,6 +802,20 @@ namespace HPCL.Service.Services
             List<StatusResponseModal> lst = jarr.ToObject<List<StatusResponseModal>>();
 
             return lst;
+        }
+
+        public async Task<ALCustomerProfileModel> ManageProfile()
+        {
+            ALCustomerProfileModel custMdl = new ALCustomerProfileModel();
+
+            custMdl.SBUTypes.AddRange(await _commonActionService.GetSbuTypeList());
+            custMdl.SBUTypeID = 1;
+
+            custMdl.CustomerZonalOfficeMdl.AddRange(await _commonActionService.GetZonalOfficebySBUType(custMdl.SBUTypeID.ToString()));
+            custMdl.CustomerTbentityMdl.AddRange(await _commonActionService.GetCustomerTbentityListDropdown());
+            custMdl.CustomerStateMdl.AddRange(await _commonActionService.GetStateList());
+
+            return custMdl;
         }
 
     }

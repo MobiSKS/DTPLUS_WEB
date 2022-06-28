@@ -6,5 +6,6 @@ namespace HPCL.Common.Models.ViewModel.CCMSRecharge
     {
         public string MobileNo { get;set; }
         public string otp { get;set; }
+        public string customerId { get; set; }
     }
 }
