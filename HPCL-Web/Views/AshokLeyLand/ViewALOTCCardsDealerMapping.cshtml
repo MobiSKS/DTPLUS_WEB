@@ -18,7 +18,7 @@
                                         <label class="font-weight-normal col-md-4 col-12">Dealer Code <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.DealerCode, new { @class = "form-control", maxlength = "25", autocomplete = "off" })
+                                                @Html.TextBoxFor(m => m.DealerCode, new { @class = "form-control", maxlength = "25", autocomplete = "off", onkeypress = "return AllowAlphaNumeric(event)" })
                                                 <span class="error" id="DealerCode_error"></span>
                                             </div>
                                         </div>
@@ -62,22 +62,38 @@
     <script type="text/javascript">
 
         
-        $("#btnReset").click(function () {
-            document.getElementById("DealerCode").value = "";
-            document.getElementById("CardNumber").value = "";
-            viewALOTCCardDealerAllocationTbl.style.display = "none";
+        $("#btnReset").click(function () 
+        {
+             window.location.href = '@Url.Action("ViewALOTCCardsDealerMapping", "AshokLeyLand")';
         });
 
         $("#btnSearch").click(function () {
             //debugger;
             var dealerCode = document.getElementById("DealerCode").value.trim();
-            if (document.getElementById("DealerCode").value.trim() == "") {
-                document.getElementById("DealerCode_error").innerHTML = "Dealer Code cannot be left blank";
-                //$("#DealerCode").focus;
+            if (document.getElementById("DealerCode").value.trim() == "") 
+            {
+                document.getElementById("DealerCode_error").innerHTML = "Please enter Dealer Code";
                 return (false);
             }
-            else {
-                document.getElementById("DealerCode_error").innerHTML = "";
+            else 
+            {
+                if (localStorage.getItem("DEALERFOUND") == 0) 
+                {
+                    if(localStorage.getItem("DEALERMSG")=="")
+                    {
+                        document.getElementById("DealerCode_error").innerHTML = "Invalid Dealer Code";
+                        return (false);
+                    }
+                    else
+                    {
+                        document.getElementById("DealerCode_error").innerHTML = localStorage.getItem("DEALERMSG");
+                        return (false);
+                    }
+                }
+                else 
+                {
+                    document.getElementById("DealerCode_error").innerHTML = "";
+                }
             }
                         
             var cardNumber = document.getElementById("CardNumber").value;
@@ -110,5 +126,78 @@
 
 
         });
+
+    $("#DealerCode").focus(function()
+    {
+       $("#btnSearch").attr("disabled", true);
+    });
+
+   $("#DealerCode").on("blur", function () 
+   {
+        debugger;
+        $("#btnSearch").attr("disabled", true);
+        localStorage.setItem("DEALERFOUND", "0");
+        localStorage.setItem("DEALERMSG", "");
+
+        var dealerCode = document.getElementById("DealerCode").value.trim();
+        if (dealerCode == "") 
+        {
+            document.getElementById("DealerCode_error").innerHTML = "Please enter Dealer Code";
+            return (false);
+        }
+        else 
+        {
+            document.getElementById("DealerCode_error").innerHTML = "";
+        }
+
+
+        $.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("CheckDealerCodeIsValid", "Common")',
+            data: { DealerCode: dealerCode },  // data to submit
+            dataType: "json",
+            success: function (data, status, xhr) {
+                console.log(data);
+                console.log(status);
+                console.log(data.status);
+
+                if (status == 'success') 
+                {
+                    if (data.status == 1) 
+                    {
+                        document.getElementById("DealerCode_error").innerHTML = "";
+                        localStorage.setItem("DEALERFOUND", "1");
+                        $("#btnSearch").removeAttr("disabled");
+                    }
+                    else 
+                    {
+                        document.getElementById("DealerCode_error").innerHTML = data.reason;
+                        localStorage.setItem("DEALERFOUND", "0");
+                        localStorage.setItem("DEALERMSG", data.reason);
+                    }
+
+                    if (data == "Failed to load Dealer Details") 
+                    {
+                        document.getElementById("DealerCode_error").innerHTML = "Invalid Dealer Code";
+                        localStorage.setItem("DEALERFOUND", "0");
+                        localStorage.setItem("DEALERMSG", "Invalid Dealer Code");
+                    }
+                }
+                else 
+                {
+                    document.getElementById("DealerCode_error").innerHTML = "Invalid Dealer Code";
+                    localStorage.setItem("DEALERFOUND", "0");
+                    localStorage.setItem("DEALERMSG", "Invalid Dealer Code");
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                document.getElementById("DealerCode_error").innerHTML = "Invalid Dealer Code";
+                localStorage.setItem("DEALERFOUND", "0");
+                localStorage.setItem("DEALERMSG", "Invalid Dealer Code");
+            }
+        });
+
+
+    });
 
     </script>
