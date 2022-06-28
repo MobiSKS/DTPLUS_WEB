@@ -81,6 +81,9 @@ namespace HPCL.Common.Models.ViewModel.Customer
         public string IdProofBackimg { get; set; }
         public string AddProofFrontimg { get; set; }
         public string AddProofBackimg { get; set; }
+        public string PanFrontimg { get; set; }
+        public string VehFrontimg { get; set; }
+        public string CustFrontimg { get; set; }
     }
 
     public class UploadDocResponse: ResponseMsg

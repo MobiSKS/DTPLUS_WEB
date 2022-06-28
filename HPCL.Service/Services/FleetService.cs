@@ -259,11 +259,11 @@ namespace HPCL.Service.Services
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
-                CustomerReferenceNo = entity.CustomerReferenceNo,
+                FormNumber = entity.FormNumber,
                 Type = String.IsNullOrEmpty(entity.Type) ? "0" : "1",
             };
 
-            _httpContextAccessor.HttpContext.Session.SetString("CustomerReferenceNoVal", entity.CustomerReferenceNo);
+            _httpContextAccessor.HttpContext.Session.SetString("FormNoVal", entity.FormNumber);
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
 
@@ -278,7 +278,7 @@ namespace HPCL.Service.Services
         {
             MultipartFormDataContent form = new MultipartFormDataContent();
 
-            form.Add(new StringContent(_httpContextAccessor.HttpContext.Session.GetString("CustomerReferenceNoVal")), "CustomerReferenceNo");
+            form.Add(new StringContent(_httpContextAccessor.HttpContext.Session.GetString("FormNoVal")), "FormNumber");
 
             form.Add(new StringContent("4"), "IdProofType");
             form.Add(new StreamContent(entity.IdProofFront.OpenReadStream()), "IdProofFront", entity.IdProofFront.FileName);
@@ -306,7 +306,7 @@ namespace HPCL.Service.Services
             var jarr = obj["Data"].Value<JArray>();
             List<UpdateKycResponse> insertKyc = jarr.ToObject<List<UpdateKycResponse>>();
 
-            return (insertKyc[0].Reason + "," + _httpContextAccessor.HttpContext.Session.GetString("CustomerReferenceNoVal"));
+            return (insertKyc[0].Reason + "," + _httpContextAccessor.HttpContext.Session.GetString("FormNoVal"));
         }
         public async Task<UploadDocResponseBody> UploadDoc(string FormNumber)
         {
@@ -355,7 +355,7 @@ namespace HPCL.Service.Services
 
             MultipartFormDataContent form = new MultipartFormDataContent();
 
-            form.Add(new StringContent(customerCardInfo.CustomerReferenceNo.ToString()), "CustomerReferenceNo");
+            form.Add(new StringContent(customerCardInfo.FormNumber.ToString()), "FormNumber");
             form.Add(new StringContent(customerCardInfo.NoOfCards.ToString()), "NoOfCards");
             form.Add(new StringContent(customerCardInfo.CardPreference.ToString()), "CardPreference");
             foreach (CardDetails item in customerCardInfo.ObjCardDetail)
@@ -462,7 +462,7 @@ namespace HPCL.Service.Services
 
             return customerCardInfo;
         }
-        public async Task<CustomerCardInfo> AddCardDetails(string customerReferenceNo)
+        public async Task<CustomerCardInfo> AddCardDetails(string formNumber)
         {
             CustomerCardInfo customerCardInfo = new CustomerCardInfo();
             customerCardInfo.Remarks = "";
@@ -473,14 +473,15 @@ namespace HPCL.Service.Services
                 customerCardInfo.ExternalVehicleAPIStatus = "Y";
             }
 
-            if (!string.IsNullOrEmpty(customerReferenceNo))
+            if (!string.IsNullOrEmpty(formNumber))
             {
                 var requestData = new CheckPancardbyDistrictIdRequestModel()
                 {
                     UserAgent = CommonBase.useragent,
                     UserIp = CommonBase.userip,
                     UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
-                    CustomerReferenceNo = customerReferenceNo
+                    FormNumber = formNumber,
+                    Type="0"
                 };
 
                 CustomerResponseByReferenceNo customerResponseByReferenceNo;
@@ -491,8 +492,8 @@ namespace HPCL.Service.Services
                 customerResponseByReferenceNo = JsonConvert.DeserializeObject<CustomerResponseByReferenceNo>(responseCustomer);
                 if (customerResponseByReferenceNo.Internel_Status_Code == 1000)
                 {
-                    customerCardInfo.CustomerReferenceNo = customerReferenceNo;
-
+                    //customerCardInfo.CustomerReferenceNo = customerReferenceNo;
+                    customerCardInfo.FormNumber = formNumber;
                     if (customerResponseByReferenceNo.Data != null)
                     {
                         customerCardInfo.FormNumber = customerResponseByReferenceNo.Data[0].FormNumber;
