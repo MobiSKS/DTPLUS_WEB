@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -59,6 +60,47 @@ namespace HPCL.Service.Services
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
             RedirectToPGResponse redirectDetails = obj.ToObject<RedirectToPGResponse>();
             return redirectDetails;
+        }
+
+        public async Task<CCCMSRecGenerateOtpRes> CCCMSRecGenerateOtp(string mobNo)
+        {
+            var reqBody = new CCCMSRecGenerateOtpReq
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                Terminalid = null,
+                Merchantid = null,
+                Mobileno = mobNo,
+                OTPtype = 3,
+                CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.CcmsRecGenerateOtp);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            CCCMSRecGenerateOtpRes getOtp = obj.ToObject<CCCMSRecGenerateOtpRes>();
+            return getOtp;
+        }
+
+        public async Task<List<CCCMSRecVerifyOtpRes>> CCCMSRecVerifyOtp(string mobNo, string otp)
+        {
+            var reqBody = new CCCMSRecVerifyOtpReq
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                MobileNo = mobNo,
+                otp = otp,
+                CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.CcmsRecVerifyOtp);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<CCCMSRecVerifyOtpRes> verifyOtp = jarr.ToObject<List<CCCMSRecVerifyOtpRes>>();
+            return verifyOtp;
         }
     }
 }

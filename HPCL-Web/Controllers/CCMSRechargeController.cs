@@ -53,5 +53,21 @@ namespace HPCL_Web.Controllers
 
             return View(arrs);
         }
+
+        [HttpPost]
+        public async Task<JsonResult> CCCMSRecGenerateOtp(string mobNo)
+        {
+            var getOtp = await _cCMSRechargeService.CCCMSRecGenerateOtp(mobNo);
+
+            return Json(new { getOtp = getOtp });
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> CCCMSRecVerifyOtp(string mobNo, string otp)
+        {
+            var verifyOtp = await _cCMSRechargeService.CCCMSRecVerifyOtp(mobNo, otp);
+
+            return Json(new { verifyOtp = verifyOtp });
+        }
     }
 }

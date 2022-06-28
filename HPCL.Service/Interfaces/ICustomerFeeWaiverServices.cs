@@ -12,8 +12,8 @@ namespace HPCL.Service.Interfaces
     {
         Task<PendingCustResponse> FeeWaiver(PendingCustomer entity);
         Task<BindPendingCustomerRes> BindPendingCustomer(string formNumber);
-        Task<List<SuccessResponse>> ApproveCustomer(string CustomerReferenceNo, string comments);
-        Task<List<SuccessResponse>> RejectCustomer(string CustomerReferenceNo, string comments);
+        Task<List<SuccessResponse>> ApproveCustomer(string formNumber, string comments);
+        Task<List<SuccessResponse>> RejectCustomer(string formNumber, string comments);
         void ViewCustomer(string formNumber);
         Task<ViewCustomerDetailsResponse> ViewCustomerDetails(string formNumber);
     }

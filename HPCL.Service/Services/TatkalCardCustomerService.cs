@@ -89,7 +89,7 @@ namespace HPCL.Service.Services
             custModel.SBUTypeID = 1;
             custModel.CustomerZonalOfficeMdl.AddRange(await _commonActionService.GetZonalOfficebySBUType(custModel.SBUTypeID.ToString()));
             custModel.CustomerStateMdl.AddRange(await _commonActionService.GetStateList());
-            custModel.CustomerSecretQueMdl.AddRange(await _commonActionService.GetCustomerSecretQuestionListForDropdown());
+            //custModel.CustomerSecretQueMdl.AddRange(await _commonActionService.GetCustomerSecretQuestionListForDropdown());
             custModel.ExternalPANAPIStatus = _configuration.GetSection("ExternalAPI:PANAPI").Value.ToString();
             if (string.IsNullOrEmpty(custModel.ExternalPANAPIStatus))
             {
@@ -200,7 +200,7 @@ namespace HPCL.Service.Services
                     customerModel.Remarks = customerResponse.Message;
 
                 customerModel.CustomerStateMdl.AddRange(await _commonActionService.GetStateList());
-                customerModel.CustomerSecretQueMdl.AddRange(await _commonActionService.GetCustomerSecretQuestionListForDropdown());
+                //customerModel.CustomerSecretQueMdl.AddRange(await _commonActionService.GetCustomerSecretQuestionListForDropdown());
                 customerModel.SBUTypes.AddRange(await _commonActionService.GetSbuTypeList());
                 customerModel.CustomerZonalOfficeMdl.AddRange(await _commonActionService.GetZonalOfficebySBUType(customerModel.SBUTypeID.ToString()));
                 customerModel.CustomerRegionMdl.AddRange(await _commonActionService.GetRegionalDetailsDropdown(customerModel.ZonalOffice));
@@ -214,7 +214,7 @@ namespace HPCL.Service.Services
                     {
                         customerModel.Internel_Status_Code = customerResponse.Internel_Status_Code + 1;
                         customerModel.CustomerStateMdl.AddRange(await _commonActionService.GetStateList());
-                        customerModel.CustomerSecretQueMdl.AddRange(await _commonActionService.GetCustomerSecretQuestionListForDropdown());
+                        //customerModel.CustomerSecretQueMdl.AddRange(await _commonActionService.GetCustomerSecretQuestionListForDropdown());
                         customerModel.SBUTypes.AddRange(await _commonActionService.GetSbuTypeList());
                         customerModel.CustomerZonalOfficeMdl.AddRange(await _commonActionService.GetZonalOfficebySBUType(customerModel.SBUTypeID.ToString()));
                         customerModel.CustomerRegionMdl.AddRange(await _commonActionService.GetRegionalDetailsDropdown(customerModel.ZonalOffice));

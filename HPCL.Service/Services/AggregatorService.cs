@@ -814,11 +814,11 @@ namespace HPCL.Service.Services
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
-                CustomerReferenceNo = entity.CustomerReferenceNo,
+                FormNumber = entity.FormNumber,
                 Type = String.IsNullOrEmpty(entity.Type) ? "0" : "1",
             };
 
-            _httpContextAccessor.HttpContext.Session.SetString("CustomerReferenceNoVal", entity.CustomerReferenceNo);
+            _httpContextAccessor.HttpContext.Session.SetString("FormNoVal", entity.FormNumber);
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
 
@@ -833,7 +833,7 @@ namespace HPCL.Service.Services
         {
             MultipartFormDataContent form = new MultipartFormDataContent();
 
-            form.Add(new StringContent(_httpContextAccessor.HttpContext.Session.GetString("CustomerReferenceNoVal")), "CustomerReferenceNo");
+            form.Add(new StringContent(_httpContextAccessor.HttpContext.Session.GetString("FormNoVal")), "FormNumber");
             form.Add(new StringContent(entity.IdProofType.ToString()), "IdProofType");
             form.Add(new StringContent(entity.IdProofDocumentNo), "IdProofDocumentNo");
             form.Add(new StreamContent(entity.IdProofFront.OpenReadStream()), "IdProofFront", entity.IdProofFront.FileName);
@@ -853,7 +853,7 @@ namespace HPCL.Service.Services
             var jarr = obj["Data"].Value<JArray>();
             List<UpdateKycResponse> insertKyc = jarr.ToObject<List<UpdateKycResponse>>();
 
-            return (insertKyc[0].Reason + "," + _httpContextAccessor.HttpContext.Session.GetString("CustomerReferenceNoVal"));
+            return (insertKyc[0].Reason + "," + _httpContextAccessor.HttpContext.Session.GetString("FormNoVal"));
         }
         public async Task<UploadDocResponseBody> UploadDoc(string FormNumber)
         {

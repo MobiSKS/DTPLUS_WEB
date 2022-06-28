@@ -65,7 +65,7 @@
                               <div class="d-flex align-items-center flex-wrap">
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal col-md-4 col-12">Customer ID<sup class="text-danger">*</sup></label>
+                                        <label class="font-weight-normal col-md-4 col-12">Customer ID</label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
                                                 @Html.TextBoxFor(m => m.CustomerId, new { @id = "CustomerDefaultVal", @class = "form-control restrictPaste", onkeypress = "return isNumberKey(event)" })
@@ -154,6 +154,10 @@
         </div>
     </div>
 </div>
+
+
+@using Microsoft.AspNetCore.Http;
+<script src="https://rawgit.com/moment/moment/2.2.1/min/moment.min.js"></script>
 
 <script type="text/javascript">
 
@@ -275,6 +279,8 @@
                     data: $('#formValid').serialize(),  // data to submit
                     success: function (res, status, xhr) {
 
+                        console.log("res",res);
+
                         if (res.searchList.success == true) {
 
                             var girdList = res.searchList.data;
@@ -298,13 +304,21 @@
 
                             for (var i = 0; i < girdList.length; i++) {
 
+                                var enDate;
+
+                                if(((girdList[i].enrolledDate) == "01/1/0001 00:00:00") || ((girdList[i].enrolledDate) == "01/01/1900 00:00:00") || ((girdList[i].enrolledDate) == null)){
+                                    enDate = "";
+                                }else{
+                                    enDate = moment(girdList[i].enrolledDate, 'DD-MM-YYYY').format('DD-MM-YYYY');
+                                }
+
                                 var srNumber = (i + 1);
                                 var zo = (girdList[i].zo || '');
                                 var ro = (girdList[i].ro || '');
-                                var customerId = "</span class='getCustId'>"+(girdList[i].customerId || '')+"</span>";
+                                var customerId = "<span class='getCustId'>"+(girdList[i].customerId || '')+"</span>";
                                 var customerName = (girdList[i].customerName || '');
                                 var planName = "";
-                                var enrolledDate = (girdList[i].enrolledDate || '');
+                                var enrolledDate = enDate;
                                 var enrolledBy = (girdList[i].enrolledBy || '');
                                 var approverRemark = (girdList[i].approverRemark || '');
                                 var authorizerRemark = (girdList[i].authorizerRemark || '');
@@ -382,7 +396,7 @@ $("#approvalHdfcList").on('click', '.viewListReport', function (e) {
                         }
                         $("#viewHdfcEnrollReport").modal('show');
                     }else{
-                        document.getElementById("approvalRejectSection").style.display = "none";
+                        //document.getElementById("approvalRejectSection").style.display = "none";
                         $("#noRecord").html("");
                         $("#noRecord").append("<span>" + res.searchList.message + "</span>");
                         document.getElementById("noRecord").style.display = "block";
