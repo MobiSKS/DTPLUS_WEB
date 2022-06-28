@@ -33,7 +33,8 @@ namespace HPCL.Common.Models.ViewModel.ParentCustomer
         public string Id { get; set; }
         public string ReferenceId { get; set; }
         
-
+        public string ApprovedDate { get; set; }
+        public string ApprovedBy { get; set; }
 
     }
 }
