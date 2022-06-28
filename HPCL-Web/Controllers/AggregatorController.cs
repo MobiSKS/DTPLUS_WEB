@@ -48,7 +48,7 @@ namespace HPCL_Web.Controllers
 
             if (cust.Internel_Status_Code == 1000)
             {
-                return RedirectToAction("SuccessRedirect", new { customerReferenceNo = modals.CustomerReferenceNo, Message = cust.Remarks });
+                return RedirectToAction("SuccessRedirect", new { FormNumber = modals.FormNumber, Message = cust.Remarks });
             }
             else
             {
@@ -56,13 +56,13 @@ namespace HPCL_Web.Controllers
             }
             return View(modals);
         }
-        public async Task<IActionResult> SuccessRedirect(string customerReferenceNo, string Message)
+        public async Task<IActionResult> SuccessRedirect(string FormNumber, string Message)
         {
-            ViewBag.CustomerReferenceNo = customerReferenceNo;
+            ViewBag.FormNumber = FormNumber;
             ViewBag.Message = Message;
             return View();
         }
-      
+
         public async Task<IActionResult> ValidateAggregatorCustomer(ValidateAggregatorCustomerModel entity,string reset)
         {
             var modals = await _aggregatorService.ValidateAggregatorCustomer(entity);
@@ -308,7 +308,7 @@ namespace HPCL_Web.Controllers
 
             if (cust.Internel_Status_Code == 1000)
             {
-                return RedirectToAction("ValidateAggregatorCustomer");
+                return RedirectToAction("SuccessRedirectUpdateCustomer", new { FormNumber = modals.FormNumber, Message = cust.Remarks });
             }
 
             return View(modals);
@@ -323,7 +323,7 @@ namespace HPCL_Web.Controllers
             uploadDoc.IdProofDocumentNo = "";
             uploadDoc.AddressProofDocumentNo = "";
 
-            if (!string.IsNullOrEmpty(customerReferenceNo))
+            if (!string.IsNullOrEmpty(FormNumber))
             {
                 uploadDoc.CustomerReferenceNo = customerReferenceNo;
                 uploadDoc.Type = "1";
@@ -337,12 +337,12 @@ namespace HPCL_Web.Controllers
                         uploadDoc.IdProofType = Convert.ToInt32(response.IdProofTypeId);
                         uploadDoc.IdProofDocumentNo = response.IdProofDocumentNo;
                         uploadDoc.IdProofFrontSRC = response.IdProofFront;
-                        //uploadDoc.IdProofFront = response.IdProofFront;
-                        //uploadDoc.IdProofBack = response.IdProofBack;
+                        uploadDoc.IdProofFrontimg = response.IdProofFront;
+                        uploadDoc.IdProofBackimg = response.IdProofBack;
                         uploadDoc.AddressProofType = Convert.ToInt32(response.AddressProofTypeId);
                         uploadDoc.AddressProofDocumentNo = response.AddressProofDocumentNo;
-                        //uploadDoc.AddressProofFront = response.AddressProofFront;
-                        //uploadDoc.AddressProofBack = response.AddressProofBack;
+                        uploadDoc.AddProofFrontimg = response.AddressProofFront;
+                        uploadDoc.AddProofBackimg = response.AddressProofBack;
                     }
                 }
             }
@@ -366,9 +366,20 @@ namespace HPCL_Web.Controllers
             ModelState.Clear();
             return Json(reason);
         }
-        public async Task<IActionResult> SuccessUploadRedirect(string customerReferenceNo)
+        public async Task<IActionResult> SuccessUploadRedirect(string FormNumber)
         {
-            ViewBag.CustomerReferenceNo = customerReferenceNo;
+            ViewBag.FormNumber = FormNumber;
+            return View();
+        }
+        public async Task<IActionResult> SuccessRedirectUpdateCustomer(string FormNumber, string Message)
+        {
+            ViewBag.FormNumber = FormNumber;
+            ViewBag.Message = Message;
+            return View();
+        }
+        public async Task<IActionResult> SuccessUploadDocumentRedirect(string FormNumber)
+        {
+            ViewBag.FormNumber = FormNumber;
             return View();
         }
     }

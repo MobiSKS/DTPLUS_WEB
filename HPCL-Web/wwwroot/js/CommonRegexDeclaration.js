@@ -33,5 +33,5 @@ var userNameCheck = /^(?![@_.])(?!.*[@_.]{2})[a-zA-Z0-9@_.]{6,30}$/;
 var tatkalCustomerCheck = /^(?=([24]3))[0-9]{10}$/;
 var dealerNameCheck = /^[A-Za-z ]{2,50}$/;
 var cardNoCheck = /^(?!(0))[0-9]{16}$/;
-var corporateCustomerCheck = /^(?=([24]s8))[0-9]{10}$/;
+var corporateCustomerCheck = /^(?=([24]8))[0-9]{10}$/;
 var empIDCheck = /^[A-Za-z0-9]{6,30}$/;

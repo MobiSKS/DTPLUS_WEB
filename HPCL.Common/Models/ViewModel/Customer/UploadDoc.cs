@@ -77,7 +77,10 @@ namespace HPCL.Common.Models.ViewModel.Customer
 
         [Required(ErrorMessage = "Customer Form is required")]
         public IFormFile CustomerForm{ get; set; }
-
+        public string IdProofFrontimg { get; set; }
+        public string IdProofBackimg { get; set; }
+        public string AddProofFrontimg { get; set; }
+        public string AddProofBackimg { get; set; }
     }
 
     public class UploadDocResponse: ResponseMsg

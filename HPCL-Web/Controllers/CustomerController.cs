@@ -216,13 +216,13 @@ namespace HPCL_Web.Controllers
                         uploadDoc.IdProofType = Convert.ToInt32(response.IdProofTypeId);
                         uploadDoc.IdProofDocumentNo = response.IdProofDocumentNo;
                         uploadDoc.IdProofFrontSRC = response.IdProofFront;
-                        //uploadDoc.IdProofFront = response.IdProofFront;
-                        //uploadDoc.IdProofBack = response.IdProofBack;
+                        uploadDoc.IdProofFrontimg = response.IdProofFront;
+                        uploadDoc.IdProofBackimg = response.IdProofBack;
                         uploadDoc.AddressProofType = Convert.ToInt32(response.AddressProofTypeId);
                         uploadDoc.AddressProofDocumentNo = response.AddressProofDocumentNo;
-                        //uploadDoc.AddressProofFront = response.AddressProofFront;
-                        //uploadDoc.AddressProofBack = response.AddressProofBack;
-                        
+                        uploadDoc.AddProofFrontimg = response.AddressProofFront;
+                        uploadDoc.AddProofBackimg = response.AddressProofBack;
+
                     }
                 }
             }
@@ -620,9 +620,9 @@ namespace HPCL_Web.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> CheckPanCardDuplicationByDistrictidForCustomerUpdate(string DistrictId, string IncomeTaxPan, string CustomerReferenceNo)
+        public async Task<JsonResult> CheckPanCardDuplicationByDistrictidForCustomerUpdate(string DistrictId, string IncomeTaxPan, string FormNumber)
         {
-            var result = await _commonActionService.CheckPanCardDuplicationByDistrictidForCustomerUpdate(DistrictId, IncomeTaxPan, CustomerReferenceNo);
+            var result = await _commonActionService.CheckPanCardDuplicationByDistrictidForCustomerUpdate(DistrictId, IncomeTaxPan, FormNumber);
 
             return Json(result);
         }

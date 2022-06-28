@@ -129,7 +129,7 @@
                                     <div class="form-group align-items-center flex-wrap">
                                         <div class="col-md-5 col-6"></div>
                                         <div class="col-md-7 col-12">
-                                            <div id="idPfrontImg" class="popup"></div>
+                                            <div id="idPfrontImg" ></div>
                                         </div>
                                     </div>
                                 </div>
@@ -277,7 +277,41 @@
                 link.click();     
                 document.body.removeChild(link);
           }
+ function adfimgClick() 
+    {
+        var upath = $('#idAfrontImg img')[0].src;
+        var url = '@Html.Raw(@Url.Action("CreateFileResult","Customer", new { Filepath="zzzzxx"  }))';
+        //url = url.replace("zzzzxx", encodeURIComponent(upath));
+        url = url.replace("zzzzxx", upath);
+        window.location.href = url;
+    }
 
+    function adbimgClick() 
+    {
+        var upath = $('#idAbackImg img')[0].src;
+        var url = '@Html.Raw(@Url.Action("CreateFileResult","Customer", new { Filepath="zzzzxx"  }))';
+        //url = url.replace("zzzzxx", encodeURIComponent(upath));
+        url = url.replace("zzzzxx", upath);
+        window.location.href = url;
+    }
+
+    function idfimgClick () 
+    {
+        var upath = $('#idPfrontImg img')[0].src;
+        var url = '@Html.Raw(@Url.Action("CreateFileResult","Customer", new { Filepath="zzzzxx"  }))';
+        //url = url.replace("zzzzxx", encodeURIComponent(upath));
+        url = url.replace("zzzzxx", upath);
+        window.location.href = url;
+    }
+
+    function idbimgClick () 
+    {
+        var upath = $('#idPbackImg img')[0].src;
+        var url = '@Html.Raw(@Url.Action("CreateFileResult","Customer", new { Filepath="zzzzxx"  }))';
+        //url = url.replace("zzzzxx", encodeURIComponent(upath));
+        url = url.replace("zzzzxx", upath);
+        window.location.href = url;
+    }
      $(document).ready(function () {
 
 
@@ -311,12 +345,49 @@
 
                  $("#IdProofType")[0].sumo.reload();
                  $("#AddressProofType")[0].sumo.reload();
+                 
+                    // $("#idPfrontImg img").attr("src", @Model.IdProofFrontimg);
+                    var ifimg="@Model.IdProofFrontimg";
+                    var ibimg="@Model.IdProofBackimg";
+                    var afimg="@Model.AddProofFrontimg";
+                    var abimg="@Model.AddProofBackimg";
+                    if(ifimg!=""){
+                        
+                        $("#idPfrontImg").append("<img class='imgZoom'/><button class='btn btn_primary' style='margin-top:2%' type='button' onclick='idfimgClick()'>Download Image</button>");
+                        $('#idPfrontImg img').attr('src',  ifimg);
+                        $("#idPfrontImg img").attr("style", "width: 200px");
+                        $("#idPfrontImg img").attr("style", "height: 100px");
+                        $("#idPfrontImg img").show();
+                    }
+                     if(ibimg!=""){
+                        $("#idPbackImg").append("<img class='imgZoom'/><button class='btn btn_primary' style='margin-top:2%' type='button' onclick='idbimgClick()'>Download Image</button>");
+                        $('#idPbackImg img').attr('src',  ibimg);
+                        $("#idPbackImg img").attr("style", "width: 200px");
+                        $("#idPbackImg img").attr("style", "height: 100px");
+                        $("#idPbackImg img").show();
+                    }
+                     if(afimg!=""){
+                        $("#idAfrontImg").append("<img class='imgZoom'/><button class='btn btn_primary' style='margin-top:2%' type='button' onclick='adfimgClick()'>Download Image</button>");
+                        $('#idAfrontImg img').attr('src',  afimg);
+                        $("#idAfrontImg img").attr("style", "width: 200px");
+                        $("#idAfrontImg img").attr("style", "height: 100px");
+                        $("#idAfrontImg img").show();
+                    }
+                     if(abimg!=""){
+                        $("#idAbackImg").append("<img class='imgZoom'/><button class='btn btn_primary' style='margin-top:2%' type='button'  onclick='adbimgClick()'>Download Image</button>");
+                        $('#idAbackImg img').attr('src',  abimg);
+                        $("#idAbackImg img").attr("style", "width: 200px");
+                        $("#idAbackImg img").attr("style", "height: 100px");
+                        $("#idAbackImg img").show();
+                    }
+                        
+                 
              },
              error: function (jqXhr, textStatus, errorMessage) {
                  alert("Error Populating Proof Type");
              }
          });
-
+    
          $("#IdProofFront").change(function () {
              $("#idFrontErr").text("");
              $("#idPfrontImg").html("");
@@ -483,7 +554,7 @@
                              reader.onload = function (e) {
                                  $("#idAfrontImg img").attr("src", e.target.result);
                                  $("#idAfrontImg img").attr("style", "width: 200px");
-                                 $("#idPfrontImg img").attr("style", "height: 100px");
+                                 $("#idAfrontImg img").attr("style", "height: 100px");
                              }
                              reader.readAsDataURL($(this)[0].files[0]);
                          }else{
@@ -583,7 +654,7 @@
      };
  
     function OnSuccessUploadDoc(res) {
-
+        debugger;
         console.log(res);
 
         if (res.searchCustomer.result.success == true) {
