@@ -14,7 +14,7 @@ namespace HPCL.Common.Models.ViewModel.HDFCBankCreditPouch
 
     public class SearchRequestApprovalClone
     {
-        [Required(ErrorMessage = FieldValidation.CustomerNotEmpty)]
+        //[Required(ErrorMessage = FieldValidation.CustomerNotEmpty)]
         [StringLength(10)]
         [RegularExpression(FieldValidation.ValidCustomerId, ErrorMessage = FieldValidation.ValidCustomerIdErrMsg)]
         public string CustomerId { get; set; }

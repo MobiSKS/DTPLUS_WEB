@@ -1,4 +1,5 @@
 ﻿using HPCL.Common.Models.CommonEntity;
+using System;
 
 namespace HPCL.Common.Models.ViewModel.HDFCBankCreditPouch
 {
@@ -13,7 +14,7 @@ namespace HPCL.Common.Models.ViewModel.HDFCBankCreditPouch
         public int RequestId { get; set; }
         public string AuthorizationRemark { get; set; }
         public int ActionType { get; set; }
-        public int CreditLimitAssigned { get; set; }
+        public Decimal CreditLimitAssigned { get; set; }
         public string AuthorizBy { get; set; }
     }
 }
