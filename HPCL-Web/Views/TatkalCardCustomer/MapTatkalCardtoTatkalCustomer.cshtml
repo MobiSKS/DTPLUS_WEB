@@ -48,7 +48,7 @@
             </div>
         </form>
         <div class="clearfix"></div>
-        <div id="message" tabindex="0" class="mb-3 text-center" style="display:none">
+        <div id="message" tabindex="0" class="mb-3 text-center alert alert-danger" style="display:none">
         </div>
         <div class="clearfix"></div>
         @*<div id="divtable" class="toBeHiddenOnSuccess" style="display:none">
@@ -191,7 +191,7 @@
                                  if (data.objGetCardDetailsTatkalCardsToTatkalCustomer.length > 0) {
                                        //var count = data.objGetCardDetailsTatkalCardsToTatkalCustomer.length;
                                        // var rowcount = Math.ceil((count) / 6);
-                                       //   var cnt = 0;
+                                         var cnt = 0;
                                        //var rows = "<tbody>";
                                        //for (var i = 0; i <= rowcount; i++){
                                        //rows += "<tr>";
@@ -208,23 +208,34 @@
                                        //    $("#message").attr("style", "display:none");
                                         var rows = "<tbody>";
                                         $(data.objGetCardDetailsTatkalCardsToTatkalCustomer).each(function (index, item) {
-                                            var i = parseInt(index) + 1;
-                                            rows += "<tr>";
-                                            rows += '<td class="py-1 d-flex align-items-center"><label><input type="checkbox"  name="card" value="' + item.cardNo + '"/>'+ item.cardNo +'</label></td>';
-                                            rows += "</tr>";
+                                            if( item.cardNo!=null){
+                                                var i = parseInt(index) + 1;
+                                                rows += "<tr>";
+                                                rows += '<td class="py-1 d-flex align-items-center"><label><input type="checkbox"  name="card" value="' + item.cardNo + '"/>'+ item.cardNo +'</label></td>';
+                                                rows += "</tr>";
+                                                cnt++;
+                                            }
                                         });
                                         rows += "</tbody>";
                                         table.append(rows);
-                                        $('#dvCards').append(table);
-                                        setTimeout(function(){
-                                            $("#divtable").attr("style", "display:block");
-                                        },500);
+                                        if(cnt>0){
+                                            document.getElementById("dvCards").innerHTML = "";
+                                            $('#dvCards').append(table);
+                                            setTimeout(function(){
+                                                $("#divtable").attr("style", "display:block");
+                                            },500);
+                                        }
+                                        else{
+                                             $("#message").html("");
+                                             $("#message").append("No Record Found");
+                                             $("#message").attr("style", "display:block;");
+                                        }
                                  }
                                   else {
                                      $("#message").html("");
                                      $("#message").append(data.message);
-
-                                     $("#message").attr("style", "display:block;background-color:#f9c9c9; color:#8d0d0d; border-color: #f3abab;");
+                                     $("#message").attr("style", "display:block;");
+                                     //$("#message").attr("style", "display:block;background-color:#f9c9c9; color:#8d0d0d; border-color: #f3abab;");
                                      $("#dvCards").attr("style", "display:none");
                                      $("#divtable").attr("style", "display:none");
 
@@ -357,6 +368,7 @@
                     if(searchCustomerId!=customerId){
                         $("#CardDetailsTbl td").parent().remove();
                         $("#dvCards").attr("style", "display:none");
+                         $("#divtable").attr("style", "display:none");
                          $("#customerId_error").attr("style", "display:none");
                         $("#customerId_error").html("");
                     }
@@ -376,6 +388,7 @@
                 $("#customerId_error").html("Enter Customer ID");
                 $("#CardDetailsTbl td").parent().remove();
                 $("#dvCards").attr("style", "display:none");
+                $("#divtable").attr("style", "display:none");
             }
             searchCustomerId=customerId;
 
