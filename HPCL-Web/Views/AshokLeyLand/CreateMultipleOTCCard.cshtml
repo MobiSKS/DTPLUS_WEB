@@ -489,14 +489,12 @@
             $('#NoOfCards_error').text("No. of Cards cannot be left blank");
             $("#NoOfCards_error").attr("style", "display:block");
             ret=false;
-            return (false);
         }
         else if (Number(noOfCards) <=0 || Number(noOfCards) >10)
         {
             $('#NoOfCards_error').text("No. of Cards may be 1 to 10");
             $("#NoOfCards_error").attr("style", "display:block");
             ret=false;
-            return (false);
         }
         else
         {
@@ -507,7 +505,19 @@
         {
             document.getElementById("DealerCode_error").innerHTML = "Dealer Code is required";
             ret=false;
-            return (false);
+        }
+        else if (localStorage.getItem("DEALERFOUND") == 0) 
+        {
+            if(localStorage.getItem("DEALERMSG")!="")
+            {
+                document.getElementById("DealerCode_error").innerHTML = localStorage.getItem("DEALERMSG");
+                ret = false;
+            }
+            else
+            {
+                document.getElementById("DealerCode_error").innerHTML = "Invalid Dealer Code";
+                ret = false;
+            }
         }
         else 
         {
@@ -971,8 +981,16 @@
         {
             if (localStorage.getItem("DEALERFOUND") == 0) 
             {
-             document.getElementById("DealerCode_error").innerHTML = "Invalid Dealer Code";
-             ret = false;
+               if(localStorage.getItem("DEALERMSG")!="")
+               {
+                   document.getElementById("DealerCode_error").innerHTML = localStorage.getItem("DEALERMSG");
+                   ret = false;
+               }
+               else
+               {
+                   document.getElementById("DealerCode_error").innerHTML = "Invalid Dealer Code";
+                   ret = false;
+               }
             }
             else 
             {
@@ -1598,6 +1616,7 @@
     {
         debugger;
         localStorage.setItem("DEALERFOUND", "0");
+        localStorage.setItem("DEALERMSG", "");
 
         var dealerCode = document.getElementById("DealerCode").value;
         if (dealerCode == "") 
@@ -1672,16 +1691,17 @@ debugger;
                     }
                     else 
                     {
-                        document.getElementById("DealerCode_error").innerHTML = "Invalid Dealer Code";
+                        document.getElementById("DealerCode_error").innerHTML = data.reason;
                         localStorage.setItem("DEALERFOUND", "0");
                         document.getElementById("SalesExecutiveEmployeeID").value = "";
+                        localStorage.setItem("DEALERMSG", data.reason);
                     }
 
                     if (data == "Failed to load Dealer Details") 
                     {
                         document.getElementById("DealerCode_error").innerHTML = "Invalid Dealer Code";
                         localStorage.setItem("DEALERFOUND", "0");
-                         document.getElementById("SalesExecutiveEmployeeID").value = "";
+                        document.getElementById("SalesExecutiveEmployeeID").value = "";
                     }
                 }
                 else 
