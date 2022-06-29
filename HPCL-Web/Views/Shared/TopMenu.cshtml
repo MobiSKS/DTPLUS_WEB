@@ -3,7 +3,7 @@
 
 @foreach (var item in Model.Where(x => x.MenuId == x.ParentMenuId && x.UserID == Context.Session.GetString("UserId")).OrderBy(x => x.MenuOrder))
 {
-	if (item.Action == "Index" || item.Action == "Profile")
+	if (item.IsFinalPage == 0)
 @*	if (item.Controller == null || item.Controller == "")
 *@	{
 		<li>
@@ -12,7 +12,7 @@
 				<ul class="subMenu">
 			@foreach (var item1 in Model.Where(x => x.ParentMenuId == item.MenuId && x.MenuId != item.MenuId).OrderBy(x => x.MenuOrder))
 			{
-				if (item1.Action == "Index" || item1.Action == "Profile")
+				if (item1.IsFinalPage == 0)
 				@*if (item1.Controller == null || item1.Controller == "")*@
 				{
 					<li class="hasSub">
@@ -21,7 +21,7 @@
 						<ul class="level2Menu">
 						@foreach (var item2 in Model.Where(x => x.ParentMenuId == item1.MenuId && x.MenuId != item1.MenuId).OrderBy(x => x.MenuOrder))
 						{
-							if (item2.Action == "Index" || item2.Action == "Profile")
+							if (item2.IsFinalPage == 0)
 @*							if (item2.Controller == null || item2.Controller == "")
 *@							{
 								<li class="hasSub">
@@ -30,7 +30,7 @@
 									<ul class="level2Menu">
 									@foreach (var item3 in Model.Where(x => x.ParentMenuId == item2.MenuId && x.MenuId != item2.MenuId).OrderBy(x => x.MenuOrder))
 									{
-										if (item3.Action == "Index" || item3.Action == "Profile")
+										if (item3.IsFinalPage == 0)
 @*										if (item3.Controller == null || item3.Controller == "")
 *@										{
 											<li><a href="@Url.Action(item.Action, item3.Controller)" class="anchor">@item3.MenuName</a></li>
