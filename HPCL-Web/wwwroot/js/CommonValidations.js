@@ -34,3 +34,16 @@ function AllowAlphaNumeric(evt)
         return false;
     }
 }
+
+function AllowAlphaNumericWithSpace(evt)
+{
+    var charCode = (evt.which) ? evt.which : event.keyCode;
+    if ((charCode >= 48 && charCode <= 57) || (charCode >= 65 && charCode <= 90) || (charCode >= 97 && charCode <= 122) || (charCode == 8) || (charCode == 127) || (charCode == 32))
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
