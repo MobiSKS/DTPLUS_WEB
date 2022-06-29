@@ -82,6 +82,7 @@
         public static string approveRejectAddOnCard = "api/dtplus/card/approve_reject_add_on_card";
         public static string getdetailforcorpmultirechargelimitconfig = "api/dtplus/card/get_detail_for_corp_multi_recharge_limit_config";
         public static string corpmultirechargelimitconfig = "api/dtplus/card/corp_multi_recharge_limit_config";
+        public static string GetGenericAttachedVehicleUrl = "api/dtplus/card/Get_Generic_Attached_Vehicle";
         #endregion
 
         #region Merchant

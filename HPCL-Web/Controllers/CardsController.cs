@@ -334,5 +334,12 @@ namespace HPCL_Web.Controllers
             var  modals = await _cardService.ConfigureLimits(reqModel);
             return Json(modals);
         }
+
+        [HttpPost]
+        public async Task<JsonResult> GetGenericAttachedVehicle(GetGenericAttachedVehicleReq entity)
+        {
+            var searchList = await _cardService.GetGenericAttachedVehicle(entity);
+            return Json(new { searchList = searchList });
+        }
     }
 }

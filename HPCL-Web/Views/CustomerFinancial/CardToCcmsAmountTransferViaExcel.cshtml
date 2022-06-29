@@ -152,6 +152,7 @@
                         $("#uploadSection").show();
                     }else{
                         $("#CustomerDefaultVal").attr("readonly",true);
+                        $("#uploadSection").hide();
                         $("#noRecord").html("");
                         $("#noRecord").append("<span>" + res.searchList.message + "</span>");
                         document.getElementById("noRecord").style.display = "block";
@@ -172,6 +173,7 @@
             $("#CustomerDefaultVal").attr("readonly",false);
             $("#CustomerDefaultVal").val('');
             document.getElementById("ExcelDataError").style.display = "none";
+            document.getElementById("noRecord").style.display = "none";
             document.getElementById("reponseErr").style.display = "none";
             document.getElementById("successUpdate").style.display = "none";
         }
@@ -353,7 +355,7 @@
                 }
             } else {
                 $("#excel_file_error").attr("style", "display:block");
-                $("#excel_file_error").html("Please upload a valid CSV file.");
+                $("#excel_file_error").html("Only .csv file is allowed");
                 $("#excel_file").val('');
             }
     });
@@ -369,7 +371,7 @@
 
         if($("#excel_file").val() == ''){
              $("#excel_file_error").attr("style", "display:block");
-             $("#excel_file_error").html("Please add a CSV file.");
+             $("#excel_file_error").html("Please Select File");
              flag = "N";
         }
 
@@ -416,35 +418,41 @@
                             document.getElementById("uploadBox").style.display = "none";
                             document.getElementById("successUpdate").style.display = "block";
                         }else{
+                            if(res.reasonList.data != null){
 
-                            $("#checkRecord").html('');
-                            $("#checkRecord").append("<span>"+res.reasonList.message+"</span>")
-                            $('#ExcelTable tr:gt(0)').each(function(index, tr) {
+                                $("#checkRecord").html('');
+                                $("#checkRecord").append("<span>"+res.reasonList.message+"</span>");
 
-                                var currentIndex = index + 1;
+                                $('#ExcelTable tr:gt(0)').each(function(index, tr) {
 
-                                var Cardno = $(tr).find(':nth-child(1)').text();
-                                for(var i =0;i<res.reasonList.data.length;i++){
-                                    if(res.reasonList.data[i].status == 0){
-                                        if(Cardno == res.reasonList.data[i].cardNo){
-                                            var bindRes = "<span>Record No "+currentIndex+":- "+(res.reasonList.data[i].reason)+"</span><br>";
+                                    var currentIndex = index + 1;
 
-                                            $(tr).find(':nth-child(4)').append(bindRes);
+                                    var Cardno = $(tr).find(':nth-child(1)').text();
+                                    for(var i =0;i<res.reasonList.data.length;i++){
+                                        if(res.reasonList.data[i].status == 0){
+                                            if(Cardno == res.reasonList.data[i].cardNo){
+                                                var bindRes = "<span>Record No "+currentIndex+":- "+(res.reasonList.data[i].reason)+"</span><br>";
+
+                                                $(tr).find(':nth-child(4)').append(bindRes);
+                                            }
                                         }
                                     }
-                                }
-                            });
+                                });
 
-                            $('#ExcelTable tr:gt(0)').each(function(index, tr){
-                                var err = $(tr).find(':nth-child(4)').text();
-                                if(err == ''){
-                                    $(this).hide();
-                                }
-                            });
+                                $('#ExcelTable tr:gt(0)').each(function(index, tr){
+                                    var err = $(tr).find(':nth-child(4)').text();
+                                    if(err == ''){
+                                        $(this).hide();
+                                    }
+                                });
 
-                            $("#excel_file").val('');
-                            document.getElementById("reponseErr").style.display = "grid";
-
+                                $("#excel_file").val('');
+                                document.getElementById("reponseErr").style.display = "grid";
+                            }else{
+                                $("#ExcelDataError").html('');
+                                $("#ExcelDataError").append("<span>"+res.reasonList.message+"</span>");
+                                document.getElementById("ExcelDataError").style.display = "block";
+                            }
                         }
 
                     },
