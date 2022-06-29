@@ -166,7 +166,7 @@
                                          <button class="btn btn_primary" type="button" id="btnExpExcel"  onclick="tableToCSV()">EXPORT TO EXCEL</button>
                                     </div>
                                     <div class="px-2">
-                                         <button class="btn btn_primary" type="button" id="btnExpPDF">EXPORT TO PDF</button>
+                                         <button class="btn btn_primary" type="button" onclick="generatePDF()" id="btnExpPDF">EXPORT TO PDF</button>
                                     </div>
                                 </div>
 
@@ -395,7 +395,7 @@
 
             currentRow.find('td.editCell').each(function(){
                 if(pCreditCloseLimitType!="Unlimited")
-                          $(this)[0].innerHTML=('<input type="text" , autocomplete = "off" onkeypress = "return isDecimal(event,this)"  class="form-control " value="'+ $(this)[0].textContent + '" id="'+$(this)[0].id+'_'+i+'"><span class="field-validation-error text-danger" id="'+$(this)[0].id+'_error'+i+'"></span>');
+                          $(this)[0].innerHTML=('<input type="text" , autocomplete = "off"   class="form-control lAmt" value="'+ $(this)[0].textContent + '" id="'+$(this)[0].id+'_'+i+'"><span class="field-validation-error text-danger" id="'+$(this)[0].id+'_error'+i+'"></span>');
                       });
           var LimitTypeId=currentRow.find('td.editCelldropdown')[0].id;
           currentRow.find('td.editCelldropdown')[0].innerHTML=('<select name="CreditCloseLimitType" id="tdLimitType_'+i+'" onchange="enableLimitAmt(this);" class="form-control"></select>');
@@ -450,7 +450,7 @@
          var i = currentRow.cells[0].textContent;
          var limitAmtCell=currentRow.cells[5];
         if(selectedVal=="1"){
-             currentRow.cells.tdLimitAmount.innerHTML=('<input type="text" , autocomplete = "off" onkeypress = "return isDecimal(event,this)"  class="form-control " value="'+ limitAmtCell.textContent + '" id="'+limitAmtCell.id+'_'+i+'"><span class="field-validation-error text-danger" id="'+limitAmtCell.id+'_error'+i+'"></span>');
+             currentRow.cells.tdLimitAmount.innerHTML=('<input type="text" , autocomplete = "off"  class="form-control lAmt " value="'+ limitAmtCell.textContent + '" id="'+limitAmtCell.id+'_'+i+'"><span class="field-validation-error text-danger" id="'+limitAmtCell.id+'_error'+i+'"></span>');
 
         }
         else{
@@ -553,21 +553,34 @@
         }
      }));
 
-    function isDecimal(event,o){
-        var txboxVal=o.value;
-        console.log(txboxVal);
-        if ((event.which != 46 || txboxVal.indexOf('.') != -1)&&(event.which < 48 || event.which > 57)) {
-            if((event.which != 46 || txboxVal.indexOf('.') != -1)){
-             return false;
-          }
-          event.preventDefault();
-       }
-       if(txboxVal.indexOf(".")>-1 && (txboxVal.split('.')[1].length > 1))		{
-            return false;
+    //function isDecimal(event,o){
+    //    var txboxVal=o.value;
+    //    console.log(txboxVal);
+    //    if ((event.which != 46 || txboxVal.indexOf('.') != -1)&&(event.which < 48 || event.which > 57)) {
+    //        if((event.which != 46 || txboxVal.indexOf('.') != -1)){
+    //         return false;
+    //      }
+    //      event.preventDefault();
+    //   }
+    //   if(txboxVal.indexOf(".")>-1 && (txboxVal.split('.')[1].length > 1))		{
+    //        return false;
+    //        event.preventDefault();
+    //   }
+    //   return true;
+    //}
+    $("#CustomerMerchantMappedDetails").on('keydown', '.lAmt', function (event) {
+    
+        if (event.shiftKey == true) {
             event.preventDefault();
-       }
-       return true;
-    }
+        }
+        if ((event.keyCode >= 48 && event.keyCode <= 57) || (event.keyCode >= 96 && event.keyCode <= 105) || event.keyCode == 8 || event.keyCode == 9 || event.keyCode == 37 || event.keyCode == 39 || event.keyCode == 46 || event.keyCode == 190|| event.keyCode==110) {
+
+        } else {
+            event.preventDefault();
+        }
+        if($(this).val().indexOf('.') !== -1 && (event.keyCode == 190|| event.keyCode == 110))
+            event.preventDefault();
+    });
     $("#btnPayment").on("click",(function(e){
             var customerId=$("#CustomerID").val();
          var flag="Y";

@@ -187,7 +187,85 @@ namespace HPCL.Service.Services
             DealerCreditSaleStatement searchList = JsonConvert.DeserializeObject<DealerCreditSaleStatement>(response);
             return searchList;
         }
+        public async Task<List<UpdateMerchantSuccessResponse>> UpdateDealerCreditPaymentBulk([FromBody] DealerRequestModel DealerRequestModel)
+        {
 
+            var RequestForm = new DealerRequestModel
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                CustomerID = DealerRequestModel.CustomerID,
+                ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                TypeUpdateDealerCreditPaymentInBulk = DealerRequestModel.TypeUpdateDealerCreditPaymentInBulk
+            };
+
+            StringContent requestContent = new StringContent(JsonConvert.SerializeObject(RequestForm), Encoding.UTF8, "application/json");
+            var RequestResponse = await _requestService.CommonRequestService(requestContent, WebApiUrl.updatedealercreditpaymentinbulk);
+            JObject RequestResponseObj = JObject.Parse(JsonConvert.DeserializeObject(RequestResponse).ToString());
+
+            List<UpdateMerchantSuccessResponse> RequestResponseList = new List<UpdateMerchantSuccessResponse>();
+            if (RequestResponseObj["Status_Code"].ToString() == "200")
+            {
+                var RequestResponseJarr = RequestResponseObj["Data"].Value<JArray>();
+                RequestResponseList = RequestResponseJarr.ToObject<List<UpdateMerchantSuccessResponse>>();
+
+            }
+            else
+            {
+                UpdateMerchantSuccessResponse successResponse = new UpdateMerchantSuccessResponse();
+                successResponse.Status = 0;
+                successResponse.Reason = RequestResponseObj["Message"].ToString();
+                RequestResponseList.Add(successResponse);
+            }
+            return RequestResponseList;
+        }
+        public async Task<DealerCreditPaymentinBulk> GetDealerCreditPaymentBulk()
+        {
+            DealerCreditPaymentinBulk dealerCreditPaymentinBulk = new DealerCreditPaymentinBulk();
+            var searchBody = new DealerRequestModel
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getdealercreditpaymentinbulk);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            dealerCreditPaymentinBulk = obj.ToObject<DealerCreditPaymentinBulk>();
+            return dealerCreditPaymentinBulk;
+        }
+        public async Task<DealerCreditSaleViewModel> GetDealerCreditSaleView(string CustomerID,string MerchantID,string FromDate,string ToDate)
+        {
+            DealerCreditSaleViewModel dealerCreditSaleViewModel = new DealerCreditSaleViewModel();
+            if (!string.IsNullOrEmpty(FromDate) && !string.IsNullOrEmpty(FromDate))
+            {
+                FromDate = await _commonActionService.changeDateFormat(FromDate);
+                ToDate = await _commonActionService.changeDateFormat(ToDate);
+            }
+            else
+            {
+                FromDate = DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd");
+                ToDate = DateTime.Now.ToString("yyyy-MM-dd");
+            }
+            var searchBody = new DealerRequestModel
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                CustomerID= CustomerID,
+                MerchantID = MerchantID==null?"":MerchantID,
+                FromDate = FromDate,
+                ToDate = ToDate,
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getdealercreditsaleview);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            dealerCreditSaleViewModel = obj.ToObject<DealerCreditSaleViewModel>();
+            return dealerCreditSaleViewModel;
+        }
     }
 
 }
