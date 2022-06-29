@@ -12,6 +12,7 @@ namespace HPCL.Common.Models.RequestModel.Dealer
         public DealerRequestModel()
         {
             TypeUpdateDealerCreditMapping = new List<DealerRequestDetails>();
+            TypeUpdateDealerCreditPaymentInBulk = new List<DealerCreditPaymentDetails>();
         }
         public string CustomerID { get; set; }
         public string MerchantID{ get; set; }
@@ -23,11 +24,21 @@ namespace HPCL.Common.Models.RequestModel.Dealer
         public string FromDate { get; set; }
         public string ToDate { get; set; }
         public List<DealerRequestDetails> TypeUpdateDealerCreditMapping { get; set; }
+        public List<DealerCreditPaymentDetails> TypeUpdateDealerCreditPaymentInBulk { get; set; }
+        
     }
     public class DealerRequestDetails
     {
         public string MerchantID { get; set; }
         public string LimitAmount { get; set; }
         public string CreditCloseLimitType { get; set; }
+    }
+    public class DealerCreditPaymentDetails
+    {
+        public string MerchantID { get; set; }
+        public string CustomerID { get; set; }
+        public string RetailOutletName { get; set; }
+        public string Outstanding { get; set; }
+        public string Amount { get; set; }
     }
 }

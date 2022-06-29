@@ -107,12 +107,39 @@
     });
 
        function exportReportToExcel() {
-           var csv_data = [];
-           var csvrow = [];
-           csvrow.push("CustomerID", "MerchantID", "RetailOutletName", "Outstanding","Amount");
-           csv_data.push(csvrow.join(","));
-           csv_data = csv_data.join('\n');
-           downloadCSVFile(csv_data);
+            $.ajax({
+                    url: "@Url.Action("GetDealerCreditPaymentBulk", "Dealer")",
+                    contentType: "application/json; charset=utf-8",
+                    type: "POST",
+                    dataType: "JSON",
+                    success: function (res) {
+
+                       var csv_data = [];
+                       var csvrow = [];
+                       csvrow.push("CustomerID", "MerchantID", "RetailOutletName", "Outstanding","Amount");
+                       csv_data.push(csvrow.join(","));
+                      
+                       debugger;
+                        var data=res.data;
+                        if(data.length>0)
+                        {
+                            for (var i = 0; i < data.length; i++) 
+                            {
+                                var csvrowNew=[];
+                                csvrowNew.push("'"+data[i].customerID.toString(),"'"+data[i].merchantID.toString(),data[i].outletNameAndLocation,data[i].outstanding,data[i].amount);
+                                       
+                                csv_data.push(csvrowNew.join(","));
+                            }
+                            csv_data = csv_data.join('\n');
+                             downloadCSVFile(csv_data);
+                        }
+                    },
+                    error: function (ex) {
+                        console.log('Failed' + ex);
+                    }
+                });
+           
+          
        }
         function downloadCSVFile(csv_data) {
 
@@ -304,16 +331,16 @@
     function uploadBulkLimitRow(){
 
         document.getElementById("reponseErr").style.display = "none";
-
+        var customerId=$("#CustomerID").val();
         if($("#excel_file").val() != ''){
 
             var updateArray = [];
             $('#ExcelTable tr:gt(0)').each(function(index, tr) {
-                var customerID = $(tr).find(':nth-child(1)').text();
-                var merchantID = $(tr).find(':nth-child(2)').text();
-                var retailOutletName = $(tr).find(':nth-child(3)').text();
-                var outstanding = $(tr).find(':nth-child(4)').text();
-                var amount = $(tr).find(':nth-child(5)').text();
+                var customerID = $(tr).find(':nth-child(1)').text().trim();
+                var merchantID = $(tr).find(':nth-child(2)').text().trim();
+                var retailOutletName = $(tr).find(':nth-child(3)').text().trim();
+                var outstanding = $(tr).find(':nth-child(4)').text().trim();
+                var amount = $(tr).find(':nth-child(5)').text().trim();
 
                 updateArray.push({
                     CustomerID:customerID,
@@ -324,11 +351,13 @@
                 });
             })
             if(updateArray.length>0){
+                  var reqmodel={ CustomerID: customerId, TypeUpdateDealerCreditPaymentInBulk:updateArray};
                 $.ajax({
                     url: "@Url.Action("UpdateDealerCreditPaymentBulk", "Dealer")",
+                    contentType: "application/json; charset=utf-8",
                     type: "POST",
                     dataType: "JSON",
-                    data: { limitArray: updateArray},
+                    data: JSON.stringify(reqmodel),
                     success: function (res) {
 
                         console.log("res",res);

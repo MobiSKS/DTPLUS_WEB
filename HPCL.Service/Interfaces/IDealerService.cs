@@ -18,5 +18,8 @@ namespace HPCL.Service.Interfaces
         Task<List<SuccessResponse>> MerchantMapEnableorDisable(string customerID, string merchantID, string action);
         Task<List<UpdateMerchantSuccessResponse>> UpdateDealerCreditmapping([FromBody] DealerRequestModel DealerRequestModel);
         Task<DealerCreditSaleStatement> GetCreditSaleStatement(string CustomerID, string MerchantID, string FromDate, string ToDate);
+        Task<List<UpdateMerchantSuccessResponse>> UpdateDealerCreditPaymentBulk([FromBody] DealerRequestModel DealerRequestModel);
+        Task<DealerCreditPaymentinBulk> GetDealerCreditPaymentBulk();
+        Task<DealerCreditSaleViewModel> GetDealerCreditSaleView(string CustomerID, string MerchantID, string FromDate, string ToDate);
     }
 }
