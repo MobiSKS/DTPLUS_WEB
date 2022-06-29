@@ -39,5 +39,6 @@ namespace HPCL.Service.Interfaces
         Task<CommonResponseData> EnableDisableProductsAndTransaction(string ObjProductsInput, string ObjTransactionsInput, string CustomerId, string CardNo, string MobileNo);
         Task<CorporateMultiRechargeLimitModel> GetCustomerRechargeLimitConfig(string CustomerId);
         Task<List<SuccessResponse>> ConfigureLimits([FromBody] CorporateMultiRechargeLimitRequest reqModel);
+        Task<GetGenericAttachedVehicleRes> GetGenericAttachedVehicle(GetGenericAttachedVehicleReq entity);
     }
 }

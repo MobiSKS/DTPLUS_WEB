@@ -757,5 +757,28 @@ namespace HPCL.Service.Services
             List<SuccessResponse> res = jarr.ToObject<List<SuccessResponse>>();
             return res;
         }
+
+        public async Task<GetGenericAttachedVehicleRes> GetGenericAttachedVehicle(GetGenericAttachedVehicleReq entity)
+        {
+
+            var searchBody = new GetGenericAttachedVehicleReq
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                Customerid = entity.Customerid,
+                Cardno = entity.Cardno,
+                Mobileno=entity.Mobileno,
+                Vehiclenumber=entity.Vehiclenumber,
+                Statusflag = entity.Statusflag
+            };
+
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.GetGenericAttachedVehicleUrl);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            GetGenericAttachedVehicleRes searchList = obj.ToObject<GetGenericAttachedVehicleRes>();
+            return searchList;
+        }
     }
 }
