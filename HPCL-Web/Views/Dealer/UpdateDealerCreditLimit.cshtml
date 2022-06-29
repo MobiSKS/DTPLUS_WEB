@@ -33,7 +33,7 @@
                                         <div class="col-md-6 col-12">
                                             <div class="custom_select">
                                                 <div class="px-2">
-                                                    <button class="btn btn_primary" type="button" onclick="exportReportToExcel()" id="btnDownload">DOWNLOAD</button>
+                                                    <button class="btn btn_primary" type="button" id="btnDownload">DOWNLOAD</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -46,7 +46,11 @@
                                                 <input type="file" class="form-control-file" id="excel_file">
                                             </div>
                                         </div>
-
+                                        <div class="col-lg-4 col-12">
+                                            <div class="d-flex align-items-start justify-content-start mb-0">
+                                                <p class="mb-0"> Only .xlsx file is allowed!</p>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -99,6 +103,9 @@
         <div class="clearfix"></div>
     </div>
 </div>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.13.5/xlsx.full.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.13.5/jszip.js"></script>
 <script type="text/javascript">
     $(document).ready(function () {
         $("#CustomerID").attr("disabled",true);
@@ -147,7 +154,7 @@
         document.getElementById("ExcelDataError").style.display = "none";
 
         var fileUpload = document.getElementById("excel_file");
-            var regex = /(.*?)\.(csv)$/;
+            var regex =  /(.*?)\.(xlsx)$/;
             if (regex.test(fileUpload.value)) {
                 if (typeof (FileReader) != "undefined") {
                     var reader = new FileReader();
@@ -156,24 +163,66 @@
                         table.setAttribute("id", "ExcelTable");
 
                         table.classList.add("table");
-                        table.classList.add("table-striped");
-                        table.classList.add("d-block");
-                        table.classList.add("table-bordered");
-                        table.classList.add("table-responsive");
-                        table.classList.add("nowrap");
-                        table.classList.add("mt-3");
 
-                        var rows = e.target.result.split("\n");
-                        for (var i = 0; i < rows.length; i++) {
-                            var cells = rows[i].split(",");
-                            if (cells.length > 1) {
-                                var row = table.insertRow(-1);
-                                for (var j = 0; j < cells.length; j++) {
+                        //Read the Excel File data.
+                        var workbook = XLSX.read(e.target.result, {
+                            type: 'binary'
+                        });
+
+                        //Fetch the name of First Sheet.
+                        var firstSheet = workbook.SheetNames[0];
+
+                        //Read all rows from First Sheet into an JSON array.
+                        var rows = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[firstSheet]);
+                        debugger;
+                        var row = table.insertRow(-1);
+
+                        //Add the header cells.
+                        headerCell = document.createElement("TH");
+                        headerCell.innerHTML = "Merchant ID";
+                        row.appendChild(headerCell);
+
+                        headerCell = document.createElement("TH");
+                        headerCell.innerHTML = "Limit Type";
+                        row.appendChild(headerCell);
+
+                        headerCell = document.createElement("TH");
+                        headerCell.innerHTML = "Limit Amount";
+                        row.appendChild(headerCell);
+
+                         if(rows.length>0)
+                         {
+                            if(rows[0]["Merchant ID"]=="undefined" || rows[0]["Merchant ID"]==undefined ||
+                                rows[0]["Limit Type"]=="undefined" || rows[0]["Limit Type"]==undefined ||
+                                rows[0]["Limit Amount"]=="undefined" || rows[0]["Limit Amount"]==undefined)
+                                {
+                                    $("#ExcelDataError").html('');
+                                    $("#ExcelDataError").append("<span>Excel Columns mismatch</span>");
+                                    $("#excel_file").val('');
+                                    document.getElementById("ExcelDataError").style.display = "block";
+                                    return false;
+                                }
+                         }
+                        for (var i = 0; i < rows.length; i++)
+                        {
+                            if(i<500)
+                            {
+                                if(rows[i]["Merchant ID"]!="undefined" && rows[i]["Merchant ID"]!=undefined)
+                                {
+                                    var row = table.insertRow(-1);
+
                                     var cell = row.insertCell(-1);
-                                    cell.innerHTML = cells[j];
+                                    cell.innerHTML = rows[i]["Merchant ID"].replace(/`/g, '');
+
+                                    var cell = row.insertCell(-1);
+                                    cell.innerHTML = rows[i]["Limit Type"];
+
+                                    var cell = row.insertCell(-1);
+                                    cell.innerHTML = rows[i]["Limit Amount"];
                                 }
                             }
                         }
+
                         var dvCSV = document.getElementById("excel_data");
                         dvCSV.innerHTML = "";
                         dvCSV.appendChild(table);
@@ -186,16 +235,16 @@
                         $("tr:not(:first)").append("<td class ='errMsg'></td>");
 
 
-                        if(rows.length >1){
+                        if(rows.length !=0){
                             $('#ExcelTable tr:gt(0)').each(function(index, tr) {
                                 var merchantID = $(tr).find(':nth-child(1)').text();
                                 var limitType = $(tr).find(':nth-child(2)').text();
                                 var limitAmount = $(tr).find(':nth-child(3)').text();
-                              
+
 
                                 var currentIndex = index + 1;
 
-                             
+
                                 if(merchantID.trim() == ''){
                                     $("#ExcelDataError").html('');
                                     $("#ExcelDataError").append("<span>Record No "+currentIndex+":- Enter Merchant ID</span>");
@@ -205,7 +254,7 @@
                                 }
 
                                 else{
-                                    if(!merchantID.match(mappedMerchantID)){
+                                    if(!merchantID.trim().match(mappedMerchantID)){
                                         $("#ExcelDataError").html('');
                                         $("#ExcelDataError").append("<span>Record No "+currentIndex+":- Invalid Merchant ID</span>");
                                         $("#excel_file").val('');
@@ -221,9 +270,9 @@
                                     return false;
                                 }
                                 else{
-                                    if(limitType!="Unlimited" && limitType !="OneTime"){
+                                    if(limitType!="Unlimited" && limitType !="One Time Limit"){
                                         $("#ExcelDataError").html('');
-                                        $("#ExcelDataError").append("<span>Record No "+currentIndex+":- Limit Type can be Unlimited/OneTime</span>");
+                                        $("#ExcelDataError").append("<span>Record No "+currentIndex+":- Limit Type can be Unlimited/One Time Limit</span>");
                                         $("#excel_file").val('');
                                         document.getElementById("ExcelDataError").style.display = "block";
                                         return false;
@@ -261,17 +310,22 @@
                             alert("Please enter details in excel to upload");
                         }
                     }
-                    reader.readAsText(fileUpload.files[0]);
+                    reader.readAsBinaryString(fileUpload.files[0]);
                 }
                 else {
                     alert("This browser does not support HTML5.");
                 }
             }
             else {
-                alert("Please upload a valid CSV file.");
+                alert("Please upload a valid xlsx file.");
             }
     });
+     $("#btnDownload").click(function ()
+    {
 
+        var url = '@Html.Raw(@Url.Action("Download","Dealer"))';
+        window.location.href = url;
+    });
     function uploadBulkLimitRow(){
 
         document.getElementById("reponseErr").style.display = "none";
@@ -281,12 +335,12 @@
 
             var merchantDetail = [];
             $('#ExcelTable tr:gt(0)').each(function(index, tr) {
-                var merchantID = $(tr).find(':nth-child(1)').text();
+                var merchantID = $(tr).find(':nth-child(1)').text().trim();
                 var CreditCloseLimitType = $(tr).find(':nth-child(2)').text().trim();
                 var CreditCloseLimitAmount ="0";
                 if(CreditCloseLimitType!="Unlimited")
                     CreditCloseLimitAmount=$(tr).find(':nth-child(3)').text().trim();
-              
+
 
                 merchantDetail.push({ MerchantID: merchantID, CreditCloseLimitType: CreditCloseLimitType,LimitAmount:CreditCloseLimitAmount });
             })

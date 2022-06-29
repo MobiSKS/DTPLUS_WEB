@@ -444,6 +444,10 @@
         public static string customermerchantmappingenabledisable = "api/dtplus/dealercredit/customer_merchant_mapping_enable_disable";
         public static string updatedealercreditmapping = "api/dtplus/dealercredit/update_dealer_credit_mapping";
         public static string getdealercreditsalestatement = "api/dtplus/dealercredit/get_dealer_credit_sale_statement";
+        public static string updatedealercreditpaymentinbulk = "api/dtplus/dealercredit/update_dealer_credit_payment_in_bulk";
+        public static string getdealercreditpaymentinbulk = "api/dtplus/dealercredit/get_dealer_credit_payment_in_bulk";
+        public static string getdealercreditsaleview = "api/dtplus/dealercredit/get_dealer_credit_sale_view";
+
         #endregion
 
         #region "HDFC Bank Credit Pouch"
@@ -492,6 +496,19 @@
         public static string getComcoLimitSetMode = "api/dtplus/COMCO/get_comco_limit_set_mode";
         public static string getComcoLimitInvoiceInterval = "api/dtplus/COMCO/get_comco_limit_invoice_interval";
         public static string comcoLimitSetRequest = "api/dtplus/COMCO/comco_limit_set_request";
+        #endregion
+
+        #region "AMEX Bank Credit Pouch"
+        public static string AMEXGetCustomerDetailsUrl = "api/dtplus/AMEXCreditPouch/get_dtail_mo";
+        public static string AMEXEnrollExceptionReqUrl = " api/dtplus/AMEXcreditPouch/insrt_cp_rqst";
+        public static string AMEXGetExApprovalUrl = "api/dtplus/AMEXcreditPouch/Get_cp_by_bank";
+        public static string AMEXSubmitExApprovalUrl = "api/dtplus/AMEXcreditPouch/action_cp";
+
+        public static string AMEXGetEnrollStatusUrl = "api/dtplus/AMEXCreditPouch/get_cp_status";
+        public static string AMEXGetEnrollStatusReportUrl = "api/dtplus/AMEXCreditPouch/get_cp_status_Report";
+        public static string AMEXHdfcCcmsRechargeUrl = "api/dtplus/HDFCCreditPouch/insert_cp_pg_log";
+        public static string AMEXGetRequestAuthorizationDetailsUrl = "api/dtplus/AMEXcreditPouch/get_cp_by_bank_auth";
+        public static string AMEXRequestAuthorizationActionUrl = "api/dtplus/AMEXcreditPouch/auth_action_cp";
         #endregion
     }
 }
