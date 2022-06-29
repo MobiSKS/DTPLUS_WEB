@@ -8,5 +8,6 @@ namespace HPCL.Common.Models.RequestModel.ValidateNewCard
     public class ValidateNewCardWithReferenceNumberModel : BaseEntity
     {
         public string CustomerReferenceNo { get; set; }
+        public string FormNumber { get; set; }
     }
 }
