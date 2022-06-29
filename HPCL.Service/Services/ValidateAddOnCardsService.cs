@@ -114,7 +114,7 @@ namespace HPCL.Service.Services
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
-                CustomerReferenceNo = CustomerRefNo
+                FormNumber = FormNumber
             };
 
             StringContent getDetailsForApprovalContent = new StringContent(JsonConvert.SerializeObject(getDetailsForApprovalForms), Encoding.UTF8, "application/json");
