@@ -1,0 +1,473 @@
+﻿@model HPCL.Common.Models.ViewModel.HDFCBankCreditPouch.CustomerDetailsReq
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ajax-unobtrusive/3.2.6/jquery.unobtrusive-ajax.js"></script>
+
+<div class="col-lg-12 px-0">
+    <div class="bg-white p-2 p-md-4">
+        <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
+            <li class="breadcrumb-item"><a href="@Url.Action("Index")" class="text_primary">AMEX Bank Credit Pouch</a> </li>
+            <li class="breadcrumb-item font-weight-light">Exception Request to Add Customer for AMEX Bank Credit Pouch</li>
+        </ul>
+
+        <div class="w-100">
+            <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
+                <div class="border-1 rounded border-grey">
+                    <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Exception Request to Add Customer for AMEX Bank Credit Pouch</p>
+
+                    <form id="formVal" method="post" data-ajax="true" asp-controller="AMEXBankCreditPouch" asp-action="ExceptionRequestToAddCustomer" data-ajax-method="POST" data-ajax-success="OnSuccess" data-ajax-failure="OnFailure">
+                        <div class="col-lg-12 col-md-12 col-12 py-3">
+
+                            <div id="EnrollSuccess" class="mb-3 text-center alert alert-success" style="display:none;"></div>
+
+                            <fieldset class="border-1 rounded border-grey pb-3">
+                                <legend class="font-12 font-weight-bold d-inline-block w-auto ml-3 mb-0 px-2">Customer Enrollment</legend>
+                                <div class="d-flex align-items-center flex-wrap">
+                                    <div class="col-lg-12 col-12">
+                                        <div class="d-flex align-items-center flex-wrap mb-3">
+                                            <label class="font-weight-normal col-md-2 col-12">Customer ID <sup class="text-danger">*</sup></label>
+                                            <div class="col-md-3 col-12">
+                                                <div class="custom_select">
+                                                    @Html.TextBoxFor(m => m.CustomerId, new { @id = "CustomerDefaultVal", @class = "form-control" })
+                                                    @Html.ValidationMessageFor(m => m.CustomerId, "", new {@id="CustomerIdErr", @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                            <div class="col-md-7 col-12">
+                                                <div class="d-flex align-items-center justify-content-start mt-0">
+                                                    <div class="px-2">
+                                                        <button class="btn btn_primary" type="submit">Submit</button>
+                                                    </div>
+                                                    <div class="px-2">
+                                                        <button class="btn btn_primary" type="button" onclick="resetClick()">Reset</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </form>
+                    <div class="clearfix"></div>
+                    <div id="noRecord" class="mb-3 text-center alert alert-danger ml-3 mr-3" style="display:none;"></div>
+                </div>
+            </div>
+
+            <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3" id="customerDetailsSection" style="display:none;">
+                <div class="border-1 rounded border-grey">
+                    <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Customer Detail</p>
+                    <div class="col-lg-12 col-md-12 col-12 py-3">
+                        <div class="d-flex align-items-center flex-wrap">
+                            <div class="col-lg-4 col-12">
+                                <div class="d-flex align-items-center flex-wrap mb-2">
+                                    <label class="font-weight-normal col-md-5 col-12 mb-0">Customer ZO </label>
+                                    <div class="col-md-7 col-12">
+                                        <div class="custom_select" id="custZonal">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-12">
+                                <div class="d-flex align-items-center flex-wrap mb-2">
+                                    <label class="font-weight-normal col-md-6 col-12 mb-0">Customer RO </label>
+                                    <div class="col-md-6 col-12">
+                                        <div class="custom_select" id="custRegional">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-12">
+                                <div class="d-flex align-items-center flex-wrap mb-2">
+                                    <label class="font-weight-normal col-md-5 col-12 mb-0">Customer Name </label>
+                                    <div class="col-md-7 col-12">
+                                        <div class="custom_select" id="custName">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-12">
+                                <div class="d-flex align-items-center flex-wrap mb-2">
+                                    <label class="font-weight-normal col-md-5 col-12 mb-0">Name On Card</label>
+                                    <div class="col-md-7 col-12">
+                                        <div class="custom_select" id="nameOnCard">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-12">
+                                <div class="d-flex align-items-center flex-wrap mb-2">
+                                    <label class="font-weight-normal col-md-6 col-12 mb-0">Last Transaction Date</label>
+                                    <div class="col-md-6 col-12">
+                                        <div class="custom_select" id="transDate">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-12">
+                                <div class="d-flex align-items-center flex-wrap mb-2">
+                                    <label class="font-weight-normal col-md-5 col-12 mb-0">Last Quarter Spends</label>
+                                    <div class="col-md-7 col-12">
+                                        <div class="custom_select" id="lastQuaterSpend">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-12">
+                                <div class="d-flex align-items-center flex-wrap mb-2">
+                                    <label class="font-weight-normal col-md-5 col-12 mb-0">Customer Type</label>
+                                    <div class="col-md-7 col-12">
+                                        <div class="custom_select" id="custType">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div id="AlreadyEnroll" class="mb-3 text-center alert alert-danger" style="display:none;"></div>
+                </div>
+            </div>
+
+            <div id="custEnrollUpdateSection" style="display:none">
+                <form>
+                    <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3">
+                        <div class="border-1 rounded border-grey">
+                            <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Enroll/Update</p>
+                            <div class="col-lg-12 col-md-12 col-12 py-3">
+                                <div class="d-flex align-items-center flex-wrap">
+                                    <div class="col-lg-6 col-12">
+                                        <div class="d-flex align-items-center flex-wrap mb-3">
+                                            <label class="font-weight-normal col-md-4 col-12">Quarterly Fuel Consumption in (RS)<sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="custom_select">
+                                                    <input class="form-control restrictPaste" id="fuelAmt" maxlength="10" onkeypress="return isNumberKey(event)" name="fromdate" type="text" value="" onchange="checkPlan(this)">
+                                                    <span style="display:none" class="error" id="fuelAmt_error"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-12">
+                                        <div class="d-flex align-items-center flex-wrap mb-3">
+                                            <label class="font-weight-normal offset-md-1 col-md-4 col-12">Plan<sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="custom_select">
+                                                    @Html.DropDownList("PlanType", Enumerable.Empty<SelectListItem>(),"select", new { @class = "form-control disableSumo typePlan", @readonly = "readonly", disabled = "disabled" })
+                                                    <span style="display:none" class="error" id="planType_error"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center flex-wrap">
+                                    <div class="col-lg-6 col-12">
+                                        <div class="d-flex align-items-center flex-wrap mb-3">
+                                            <label class="font-weight-normal col-md-4 col-12">Bank Name</label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="custom_select">
+                                                    <select class="form-control disableSumo" disabled="disabled" readonly="readonly">
+                                                        <option>HDFC Bank</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-12">
+                                        <div class="d-flex align-items-center flex-wrap mb-3">
+                                            <label class="font-weight-normal offset-md-1 col-md-4 col-12">Reference No</label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="custom_select">
+                                                    <input class="form-control restrictPaste" maxlength="15" id="refNo" name="" type="text" value="" readonly="readonly" onkeypress="return isNumberKey(event)">
+                                                    <span style="display:none" class="error" id="refNo_error"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center flex-wrap">
+                                    <div class="col-lg-6 col-12">
+                                        <div class="d-flex align-items-center flex-wrap mb-3">
+                                            <label class="font-weight-normal col-md-4 col-12">Comment<sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="custom_select">
+                                                    <textarea id="cmnts" maxlength="100" class="form-control" rows="2"></textarea>
+                                                    <span style="display:none" class="error" id="comments_error"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center justify-content-center mt-0">
+                                    <div class="px-2">
+                                        <button class="btn btn_primary" type="button" onclick="enrollExceptionReq()">Enroll</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="clearfix"></div>
+            <div id="failedEnroll" class="mb-3 text-center alert alert-danger" style="display:none;"></div>
+        </div>
+
+        <div class="clearfix"></div>
+    </div>
+</div>
+<div class="clearfix"></div>
+
+<script src="https://rawgit.com/moment/moment/2.2.1/min/moment.min.js"></script>
+
+<script>
+
+    $('.restrictPaste').on('paste', function (event) {
+        if (event.originalEvent.clipboardData.getData('Text').match(/[^\d]/)) {
+            event.preventDefault();
+        }
+    });
+
+    function resetClick() {
+        window.location.reload(true);
+    }
+
+    $('input').on('paste', function (event) {
+        if (event.originalEvent.clipboardData.getData('Text').match(/[^\d]/)) {
+            event.preventDefault();
+        }
+    });
+
+    $(document).ready(function () {
+
+        //$('select.disableSumo')[0].sumo.unload();
+
+        function isNumberKey(evt) {
+            var charCode = (evt.which) ? evt.which : event.keyCode;
+            if (charCode != 46 && charCode > 31
+                && (charCode < 48 || charCode > 57))
+                return false;
+
+            return true;
+        }
+    });
+
+    function OnSuccess(res) {
+
+        document.getElementById("noRecord").style.display = "none";
+        document.getElementById("AlreadyEnroll").style.display = "none";
+
+        console.log(res);
+
+        if (res.searchList.success == true) {
+
+            if(res.searchList.data[0].status == 1){
+                $("#custZonal").html('');
+                $("#custRegional").html('');
+                $("#custName").html('');
+                $("#nameOnCard").html('');
+                $("#transDate").html('');
+                $("#lastQuaterSpend").html('');
+                $("#custType").html('');
+                $("#custZonal").append("<span>"+(res.searchList.data[0].zo || '')+"</span>");
+                $("#custRegional").append("<span>"+(res.searchList.data[0].ro || '')+"</span>");
+                $("#custName").append("<span>"+(res.searchList.data[0].customerName || '')+"</span>");
+                $("#nameOnCard").append("<span>"+(res.searchList.data[0].nameOnCard || '')+"</span>");
+
+                var transDate;
+
+                if(((res.searchList.data[0].lastTransactionDate) == "01/01/0001 00:00:00") || ((res.searchList.data[0].lastTransactionDate) == "01/01/1900 00:00:00") || ((res.searchList.data[0].lastTransactionDate) == null)){
+                    transDate = "";
+                }else{
+                    transDate = moment(res.searchList.data[0].lastTransactionDate, 'DD-MM-YYYY').format('DD-MM-YYYY');
+                }
+
+                 $("#transDate").append("<span>"+(transDate)+"</span>");
+
+                 var lstSpend = (res.searchList.data[0].totalSpend == 0) ? lstSpend = "" : lstSpend = (res.searchList.data[0].totalSpend);
+
+                $("#lastQuaterSpend").append("<span>"+(lstSpend)+"</span>");
+                $("#custType").append("<span>"+(res.searchList.data[0].customerType || '')+"</span>")
+
+                document.getElementById("customerDetailsSection").style.display = "block";
+                document.getElementById("custEnrollUpdateSection").style.display = "block";
+            }else{
+                document.getElementById("customerDetailsSection").style.display = "block";
+                document.getElementById("custEnrollUpdateSection").style.display = "none";
+                $("#AlreadyEnroll").html("");
+                $("#AlreadyEnroll").append("<span>" + res.searchList.data[0].reason + "</span>");
+                document.getElementById("AlreadyEnroll").style.display = "block";
+            }
+        }else{
+            document.getElementById("customerDetailsSection").style.display = "none";
+            document.getElementById("custEnrollUpdateSection").style.display = "none";
+            $("#noRecord").html("");
+            $("#noRecord").append("<span>" + res.searchList.message + "</span>");
+            document.getElementById("noRecord").style.display = "block";
+        }
+
+    }
+
+    function checkPlan(res){
+        var amountVal = res.value;
+
+        $("#planType_error").attr("style", "display:none");
+
+        if(amountVal == ''){
+            $("#fuelAmt_error").html("Please enter Upliftment");
+            $("#fuelAmt_error").attr("style", "display:block");
+            return false;
+        }else{
+            $("#fuelAmt_error").html("");
+            $("#fuelAmt_error").attr("style", "display:none");
+        }
+
+        //$('select.disableSumo')[0].sumo.unload();
+        //$('select.disableSumo')[1].sumo.unload();
+
+        $.ajax({
+            url: "@Url.Action("CheckPlan", "AMEXBankCreditPouch")",
+            data: { amount: amountVal},
+            type: "POST",
+            dataType: "JSON",
+            success: function (res) {
+
+                console.log("res",res);
+
+                if(res.searchList.success == true){
+                    $(".typePlan").html("");
+                    var plans = $('<option value="' + res.searchList.data[0].planId + '">' + (res.searchList.data[0].planName || '') + '</option>');
+                    $('#PlanType').append(plans);
+                    $('#PlanType').attr("disabled", true);
+                    $("#refNo").attr("readonly", false);
+                    $('select.disableSumo')[0].sumo.reload();
+                }else{
+                    $(".typePlan").html("");
+                    var plans = $('<option value="-1">No Plan</option>');
+                    $('#PlanType').append(plans);
+                    $('#PlanType').attr("disabled", true);
+                    $("#refNo").attr("readonly", false);
+                    $('select.disableSumo')[0].sumo.reload();
+                }
+
+            },
+            error: function (ex) {
+                alert('Failed' + ex);
+            }
+        });
+    }
+
+    $("#cmnts").on("blur", function (){
+
+        var comments = $("#cmnts").val();
+
+        if (comments.trim() == '') {
+            $("#comments_error").html("Please enter comment");
+            $("#comments_error").attr("style", "display:block");
+            return false;
+        }
+        if(comments.trim() != ''){
+             if(!comments.trim().match(atLeastOneAlphabet)){
+                $("#comments_error").html("Invalid Comment");
+                $("#comments_error").attr("style", "display:block");
+                return false;
+            }else{
+                $("#comments_error").attr("style", "display:none");
+            }
+        }
+
+    });
+
+    function enrollExceptionReq(){
+
+        document.getElementById("EnrollSuccess").style.display = "none";
+        document.getElementById("failedEnroll").style.display = "none";
+
+        var enrollArray = [];
+
+        var flag = "Y";
+        var FuleConsumptionCapacity = $("#fuelAmt").val();
+        var PlanTypeId = $(".typePlan option:selected").val();
+        var ReferenceNo = $("#refNo").val();
+        var MoComment = $("#cmnts").val();
+        var CustomerId = $("#CustomerDefaultVal").val();
+
+        if(FuleConsumptionCapacity == ''){
+            $("#fuelAmt_error").html("Please enter Upliftment");
+            $("#fuelAmt_error").attr("style", "display:block");
+            flag = "N";
+        }
+        if(PlanTypeId == ''){
+            $("#planType_error").html("Please select  Plan");
+            $("#planType_error").attr("style", "display:block");
+            flag = "N";
+        }
+        if(PlanTypeId != ''){
+            if(PlanTypeId == "-1"){
+                $("#planType_error").html("Customer cannot be enrolled with No Plan");
+                $("#planType_error").attr("style", "display:block");
+                flag = "N";
+            }
+        }
+        if(MoComment == ''){
+            $("#comments_error").html("Please enter comment");
+            $("#comments_error").attr("style", "display:block");
+            flag = "N";
+        }
+        if(MoComment.trim() != ''){
+            if(!MoComment.trim().match(atLeastOneAlphabet)){
+                $("#comments_error").html("Invalid Comment");
+                $("#comments_error").attr("style", "display:block");
+                flag = "N";
+            }
+        }
+
+        enrollArray.push({
+            CustomerId:CustomerId,
+            FuleConsumptionCapacity:FuleConsumptionCapacity,
+            PlanTypeId:PlanTypeId,
+            ReferenceNo:ReferenceNo,
+            MoComment:MoComment,
+            RequestedBy:CustomerId
+        });
+
+        if (flag == "N")
+            e.preventDefault();
+        else {
+
+             if (confirm('Are you sure you want to provide option to the customer for CCMS Recharge through Credit ?')) {
+                console.log('ok');
+
+                  $.ajax({
+                    url: "@Url.Action("EnrollExceptionRequest", "AMEXBankCreditPouch")",
+                    data: { enrollList: JSON.stringify(enrollArray)},
+                    type: "POST",
+                    dataType: "JSON",
+                    success: function (res) {
+
+                        if(res.reasonList[0].status == 1){
+                            document.getElementById("custEnrollUpdateSection").style.display = "none";
+                            document.getElementById("customerDetailsSection").style.display = "none";
+                            $("#EnrollSuccess").html('');
+                            $("#EnrollSuccess").append("<span>"+(res.reasonList[0].reason)+"</span>");
+                            document.getElementById("EnrollSuccess").style.display = "block";
+                        }else{
+                            $("#failedEnroll").html('');
+                            $("#failedEnroll").append("<span>"+(res.reasonList[0].reason)+"</span>");
+                            document.getElementById("failedEnroll").style.display = "block";
+                        }
+                    },
+                    error: function (ex) {
+                        alert('Failed' + ex);
+                    }
+                });
+
+            } else {
+                console.log('cancel')
+            }
+        }
+    }
+</script>
+
+<style>
+    textarea {
+        resize: none;
+    }
+</style>
