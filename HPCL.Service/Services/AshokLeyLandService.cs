@@ -181,6 +181,11 @@ namespace HPCL.Service.Services
         {
             AshokLeylandCardCreationModel ashokLeylandCardCreationModel = new AshokLeylandCardCreationModel();
             ashokLeylandCardCreationModel.Remarks = "";
+            ashokLeylandCardCreationModel.ExternalPANAPIStatus = _configuration.GetSection("ExternalAPI:PANAPI").Value.ToString();
+            if (string.IsNullOrEmpty(ashokLeylandCardCreationModel.ExternalPANAPIStatus))
+            {
+                ashokLeylandCardCreationModel.ExternalPANAPIStatus = "Y";
+            }
             ashokLeylandCardCreationModel.CustomerStateMdl.AddRange(await _commonActionService.GetStateList());
             ashokLeylandCardCreationModel.VehicleTypeMdl.AddRange(await _commonActionService.GetVehicleTypeDropdown());
             return ashokLeylandCardCreationModel;

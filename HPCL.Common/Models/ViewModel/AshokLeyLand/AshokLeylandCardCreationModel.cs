@@ -86,6 +86,9 @@ namespace HPCL.Common.Models.ViewModel.AshokLeyLand
         public int Internel_Status_Code { get; set; }
         public string Message { get; set; }
         public string ExternalVehicleAPIStatus { get; set; }
+        //[Required(ErrorMessage = "Income Tax Pan is Required")]
+        public string IncomeTaxPan { get; set; }
+        public string ExternalPANAPIStatus { get; set; }
     }
     public class ALCardEntryDetails
     {
