@@ -14,10 +14,14 @@ namespace HPCL_Web.Controllers
     public class SecurityController : Controller
     {
         private readonly ISecurityService _securityService;
-        public SecurityController(ISecurityService securityService)
+        private readonly ICommonActionService _commonActionService;
+        public SecurityController(ISecurityService securityService, ICommonActionService commonActionService)
         {
             _securityService = securityService;
+            _commonActionService = commonActionService;
         }
+        
+        
         public async Task<IActionResult> Index()
         {
             return View();
@@ -127,10 +131,7 @@ namespace HPCL_Web.Controllers
             return PartialView("~/Views/Security/_ViewUserRoleLocationTbl.cshtml", model);
         }
 
-        public IActionResult AddNewUser()
-        {
-            return View();
-        }
+       
         public async Task<IActionResult> UserCreationApprovalNonRBE(UserCreationApprovalNonRBEModel model, string reset, string success, string error, string FirstName, string UserName)
         {
             var searchResult = await _securityService.UserCreationApprovalNonRBE(model);
@@ -212,6 +213,13 @@ namespace HPCL_Web.Controllers
         {
             var result = await _securityService.UpdateManageRole(manageRolesRequestModel);
             return Json(result);
+        }
+        public async Task<IActionResult> AddNewUser()
+        {
+            var modals = new ManageNewUserViewModel();
+            modals.CustomerSecretQueMdl.AddRange(await _commonActionService.GetCustomerSecretQuestionListForDropdown());
+            modals.getUserRolesandregions.Add(await _securityService.GetUserRolesAndRegions());
+            return View(modals);
         }
     }
 }
