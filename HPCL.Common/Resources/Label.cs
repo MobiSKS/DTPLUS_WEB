@@ -63,7 +63,7 @@
         public const string Save = "SAVE";
         public const string AddOfficer = "ADD OFFICER";
         public const string AddLocation = "ADD LOCATION";
-        public const string ExportToExcel = "Export To Excel";
+        public const string ExportToExcel = "EXPORT TO EXCEL";
         public const string ProcessRequest = "PROCESS REQUEST";
         public const string Submit = "SUBMIT";
         public const string GetUnallocatedCards = "GET UNALLOCATED CARDS";
