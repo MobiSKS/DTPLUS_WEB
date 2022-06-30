@@ -264,5 +264,11 @@ namespace HPCL_Web.Controllers
             ModelState.Clear();
             return Json(sortedtList);
         }
+        public async Task<JsonResult> GetSbuTypeList()
+        {
+            var sbuTypeResponseLst = await _commonActionService.GetSbuTypeList();
+
+            return Json(new { sbuTypeResponseList = sbuTypeResponseLst });
+        }
     }
 }
