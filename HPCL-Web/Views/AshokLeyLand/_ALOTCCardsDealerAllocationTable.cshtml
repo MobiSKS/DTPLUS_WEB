@@ -96,14 +96,14 @@ else
 
         // Variable to store the final csv data
         var csv_data = [];
+        var rowsExists=false;
 
         // Get each row data
         //var rows = document.getElementsByTagName('tr');
         $("#tblStatusWiseDetails tr").each(function () {
             var row = $(this);
             //debugger;
-            //for (var i = 0; i < rows.length; i++) {
-
+                rowsExists=true;
                 // Get each column data
                 var cols = row[0].querySelectorAll('td,th');
 
@@ -120,12 +120,13 @@ else
 
                 // Combine each column value with comma
                 csv_data.push(csvrow.join(","));
-            //}
+
         });
 
         var i=0;
         $("#tblMerchantViewCardDetail tr").each(function () {
             var row = $(this);
+            rowsExists=true;
             //debugger;
             if(i<2)
             {
@@ -168,29 +169,35 @@ else
         //  //}
         //});
 
-        var tableName = $('#tblMerchantViewCardDetail').DataTable();
-        tableName.rows().every(function(){
-            //console.log(this.data()[0]);
-            var csvrow = [];
+        if(rowsExists)
+        {
+            var tableName = $('#tblMerchantViewCardDetail').DataTable();
+            tableName.rows().every(function(){
+                //console.log(this.data()[0]);
+                var csvrow = [];
 
-            csvrow.push(this.data()[0]);
-            csvrow.push(this.data()[1]);
-            csvrow.push(this.data()[2]);
-            csvrow.push(this.data()[3]);
-            csvrow.push("'"+this.data()[4]);
-            csvrow.push(this.data()[5]);
-            csvrow.push(this.data()[6]);
-            csvrow.push(this.data()[7]);
-            csvrow.push(this.data()[8]);
-            csvrow.push(this.data()[9]);
+                csvrow.push(this.data()[0]);
+                csvrow.push(this.data()[1]);
+                csvrow.push(this.data()[2]);
+                csvrow.push(this.data()[3]);
+                csvrow.push("'"+this.data()[4]);
+                csvrow.push(this.data()[5]);
+                csvrow.push(this.data()[6]);
+                csvrow.push(this.data()[7]);
+                csvrow.push(this.data()[8]);
+                csvrow.push(this.data()[9]);
 
-            csv_data.push(csvrow.join(","));
-        });
+                csv_data.push(csvrow.join(","));
+            });
 
-        csv_data = csv_data.join('\n');
+            csv_data = csv_data.join('\n');
+        }
 
         // Call this function to download csv file
-        downloadCSVFile(csv_data);
+        if(rowsExists)
+        {
+           downloadCSVFile(csv_data);
+        }
     }
 
     function downloadCSVFile(csv_data) {
