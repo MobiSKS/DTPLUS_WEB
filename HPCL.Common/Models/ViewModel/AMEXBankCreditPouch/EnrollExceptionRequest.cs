@@ -11,5 +11,6 @@ namespace HPCL.Common.Models.ViewModel.AMEXBankCreditPouch
         public string ReferenceNo { get; set; }
         public string MoComment { get; set; }
         public string RequestedBy { get; set; }
+        public string CreatedBy { get; set; }
     }
 }

@@ -626,7 +626,7 @@
                  data: { editFlag: editOk},
                  success: function (data) {
 
-                     OnSuccess(data);
+                     searchResponse(data);
 
                      document.getElementById('CardSearch').style.display = 'block'
 
@@ -653,7 +653,7 @@
                 dataType: "JSON",
                 success: function (data) {
 
-                    OnSuccess(data);
+                    searchResponse(data);
 
                     $("#GetCustomerIdValue").html('');
                     $("#GetCustomerIdValue").val('@Context.Session.GetString("UserId")');
@@ -669,17 +669,9 @@
         }
     });
 
-    function searchCards() {
 
-         if ($("#formVal").valid()) {
-
-            $.ajax({
-                type: 'POST',  // http method
-                url: '@Url.Action("ManageCards", "Cards")',
-                data: $('#formVal').serialize(),  // data to submit
-                success: function (res, status, xhr) {
-
-                    console.log("search result",res);
+    function searchResponse(res){
+         console.log("search result",res);
 
                     if (res.searchList.success == true) {
 
@@ -792,6 +784,19 @@
                     let custmId = $('.cusId').html();
                     sessionStorage.setItem("cusmId", custmId);
                     console.log(custmId,"cust");
+    }
+
+    function searchCards() {
+
+         if ($("#formVal").valid()) {
+
+            $.ajax({
+                type: 'POST',  // http method
+                url: '@Url.Action("ManageCards", "Cards")',
+                data: $('#formVal').serialize(),  // data to submit
+                success: function (res, status, xhr) {
+
+                   searchResponse(res);
 
                 },
                 error: function (jqXhr, textStatus, errorMessage) {

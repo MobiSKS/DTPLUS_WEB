@@ -502,7 +502,7 @@
 
         #region "AMEX Bank Credit Pouch"
         public static string AMEXGetCustomerDetailsUrl = "api/dtplus/AMEXCreditPouch/get_dtail_mo";
-        public static string AMEXEnrollExceptionReqUrl = " api/dtplus/AMEXcreditPouch/insrt_cp_rqst";
+        public static string AMEXEnrollExceptionReqUrl = "api/dtplus/AMEXcreditPouch/insrt_cp_rqst";
         public static string AMEXGetExApprovalUrl = "api/dtplus/AMEXcreditPouch/Get_cp_by_bank";
         public static string AMEXSubmitExApprovalUrl = "api/dtplus/AMEXcreditPouch/action_cp";
 
