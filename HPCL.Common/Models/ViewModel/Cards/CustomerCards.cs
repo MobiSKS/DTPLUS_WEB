@@ -1,7 +1,6 @@
 ﻿using HPCL.Common.Models.CommonEntity;
 using HPCL.Common.Resources;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace HPCL.Common.Models.ViewModel.Cards
