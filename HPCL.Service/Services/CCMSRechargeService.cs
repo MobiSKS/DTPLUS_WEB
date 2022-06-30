@@ -28,7 +28,7 @@ namespace HPCL.Service.Services
         {
             var searchBody = new GetDetailsByMob
             {
-                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserId = "demo",
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
                 MobileNo = mobNo,
@@ -46,7 +46,7 @@ namespace HPCL.Service.Services
         {
             var searchBody = new RedirectToPGRequest
             {
-                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserId = "demo",
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
                 MobileNo = mobNo,
@@ -66,7 +66,7 @@ namespace HPCL.Service.Services
         {
             var reqBody = new CCCMSRecGenerateOtpReq
             {
-                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserId = "demo",
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
                 Mobileno = mobNo,
@@ -84,7 +84,7 @@ namespace HPCL.Service.Services
         {
             var reqBody = new CCCMSRecVerifyOtpReq
             {
-                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserId = "demo",
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
                 MobileNo = mobNo,

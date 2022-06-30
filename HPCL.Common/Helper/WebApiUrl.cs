@@ -482,6 +482,7 @@
         public static string getparentcustomerdispatchdetails = "api/dtplus/ParentCustomer/get_parent_customer_dispatch_details";
         public static string updateparentcustomer = "api/dtplus/ParentCustomer/update_parent_customer";
         public static string getparentcustomertoupdate = "api/dtplus/ParentCustomer/get_parent_customer_to_update";
+        public static string getparentcustomerstatus = "api/dtplus/ParentCustomer/get_parent_customer_status";
 
         #endregion
         #region Volvo Eicher
@@ -501,7 +502,7 @@
 
         #region "AMEX Bank Credit Pouch"
         public static string AMEXGetCustomerDetailsUrl = "api/dtplus/AMEXCreditPouch/get_dtail_mo";
-        public static string AMEXEnrollExceptionReqUrl = " api/dtplus/AMEXcreditPouch/insrt_cp_rqst";
+        public static string AMEXEnrollExceptionReqUrl = "api/dtplus/AMEXcreditPouch/insrt_cp_rqst";
         public static string AMEXGetExApprovalUrl = "api/dtplus/AMEXcreditPouch/Get_cp_by_bank";
         public static string AMEXSubmitExApprovalUrl = "api/dtplus/AMEXcreditPouch/action_cp";
 

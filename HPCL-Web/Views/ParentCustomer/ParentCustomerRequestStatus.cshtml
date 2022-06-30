@@ -1,0 +1,290 @@
+﻿@model HPCL.Common.Models.ViewModel.ParentCustomer.ParentCustomerStatusReport
+@using Microsoft.AspNetCore.Http;
+<div class="col-lg-12">
+    <div class="bg-white p-2 p-md-4">
+        <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
+            <li class="breadcrumb-item"><a href="@Url.Action("Profile", "ParentCustomer")" class="text_primary">Profile</a> </li>
+            <li class="breadcrumb-item font-weight-light">Parent Customer Request Status</li>
+        </ul>
+        @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "form1" }))
+        {
+            <div class="w-100">
+                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mb-3">
+                    <div class="border-1 rounded border-grey">
+                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Parent Customer Request Status</p>
+                        <div class="col-lg-12 col-md-12 col-12 py-3">
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">Zonal Office <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+
+                                                @Html.DropDownListFor(m => m.ZonalOfficeId, new SelectList(Model.ZonalOffices, "ZonalOfficeID", "ZonalOfficeName"), new { @class = "form-control", onchange = "getMerchantRegionalOfc()" })
+                                                <span class="error" id="zonal_office_error"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">Regional Office <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                <select name="RegionalOfficeId" id="RegionalOfficeId" class="form-control"></select>
+                                                <span class="error" id="regionalOfc_error"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">From Date <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.FromDate, new { @class = "form-control fromDate",@placeholder="dd-mm-yyyy", @autocomplete = "off", @onchange = "checkDates('fromDate_error');" })
+                                            </div>
+                                            <span class="error" id="fromDate_error"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">To Date <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.ToDate, new { @class = "form-control toDate",@placeholder="dd-mm-yyyy", @autocomplete = "off", @onchange = "checkDates('fromDate_error');" })
+                                            </div>
+                                            <span class="error" id="toDate_error"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">Form Number</label>
+                                        <div class="col-md-7 col-12">
+                                            @Html.TextBoxFor(m => m.FormNumber, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                            <span style="display:none" class="error" id="formNumber_error"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                               
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="d-flex align-items-center justify-content-center mt-0">
+                                <div class="px-2">
+                                    <button class="btn btn_primary" id="btnSearch" type="button">SEARCH</button>
+                                </div>
+                                <div class="px-2">
+                                    <button class="btn btn_primary" id="btnReset" type="button">RESET</button>
+                                </div>
+                            </div>
+                            <div style="display:none;">@Html.TextBoxFor(m => m.RegionalOfcIdVal)</div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+        }
+        <div id="show_Table" class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3" >
+        </div>
+       <div class="clearfix"></div>
+
+    </div>
+</div>
+
+<script type="text/javascript">
+    //debugger;
+
+    var zonalID = $("#ZonalOfficeId").val();
+    var regionalID = $("#RegionalOfcIdVal").val();
+
+    var fromdate = $("#FromDate").val();
+    var todate = $("#ToDate").val();
+
+
+    $("#btnReset").click(function () {
+
+       window.location.reload(true);
+    });
+ 
+    $("#btnSearch").on("click", (function (e) {
+        var fromdate = $("#FromDate").val();
+        var todate = $("#ToDate").val();
+        var formNumber = $("#FormNumber").val();
+        
+        var flag = "Y";
+        if (fromdate == "") {
+            $("#fromDate_error").attr("style", "display:block");
+            $("#fromDate_error").html("Select From Date");
+            flag = "N";
+        }
+
+        if (todate == "") {
+            $("#toDate_error").attr("style", "display:block");
+            $("#toDate_error").html("Select To Date");
+            flag = "N";
+        }
+        if (fromdate != "" && todate != "") {
+            flag = checkDates("fromDate_error");
+        }
+        if (formNumber != "") {
+          
+                if (formNumber.substring(0, 1) == "0") {
+                    $("#formNumber_error").html("Invalid Form Number. Min-Max 10 digits");
+                     flag = "N";
+                }
+
+                else if (formNumber.length < 10) {
+                     $("#formNumber_error").html("Invalid Form Number. Min-Max 10 digits");
+                      flag = "N";
+                }
+                else if (!(formNumber.match(number))) {
+                     $("#formNumber_error").html("Invalid Form Number. Min-Max 10 digits");
+                      flag = "N";
+                }
+                else
+                   $("#formNumber_error").html("");
+            
+        }
+       
+        if (flag == "Y") {
+            $("#toDate_error").attr("style", "display:none");
+            $("#toDate_error").html("");
+            $("#fromDate_error").attr("style", "display:none");
+            $("#fromDate_error").html("");
+            $("#formNumber_error").attr("style", "display:none");
+            $("#formNumber_error").html("");
+        }
+        if (flag == "N")
+            e.preventDefault();
+           else{
+                 var zoID = $("#ZonalOfficeId").val();
+                 var roID = $("#RegionalOfficeId").val();
+            
+                 $.ajax({
+                 type: 'GET',  // http method
+                 url: '@Url.Action("SearchParentCustomerRequestStatus", "ParentCustomer")',
+                 contentType: "application/json; charset=utf-8",
+                 dataType: 'text',
+                 data: { ZonalOfficeId: zoID, RegionalOfficeId: roID, FromDate: fromdate, ToDate: todate, FormNumber: formNumber},
+                 success: function (data, status, xhr) {
+                     var v = data;
+                     if (status == 'success') {
+                         $("#show_Table").html(data);
+                         $('html, body').animate({
+                             scrollTop: $("#show_Table").offset().top
+                         }, 2000);
+                         $("#FromDate").attr("disabled",true);
+                         $("#ToDate").attr("disabled",true);
+                         $("#FormNumber").attr("disabled",true);
+                         $("#ZonalOfficeId").attr("disabled",true);
+                         $("#RegionalOfficeId").attr("disabled",true);
+                     }
+                     else {
+                         console.log(v);
+                     }
+                 },
+                 error: function (jqXhr, textStatus, errorMessage) {
+                     alert("Error"+ errorMessage);
+                 }
+                });
+             }
+    }));
+    $("#RegionalOfficeId").change(function () {
+        var id = this.value;
+        $("#RegionalOfcIdVal").val(id);
+    });
+    function getMerchantRegionalOfc() {
+        var id = $('#ZonalOfficeId :selected').val();
+        var regionalID = $("#RegionalOfcIdVal").val();
+        if(id>0){
+             $.ajax({
+                 type: 'POST',  // http method
+                 url: '@Url.Action("GetRegionalOfcDetails", "Common")',
+                 data: { ZonalOfcID: id },  // data to submit
+                 dataType: "json",
+                 success: function (data, status, xhr) {
+                     var v = data;
+                     if (status == 'success') {
+                         $("#RegionalOfficeId").html("");
+                         $.each(data, function (i, data) { // bind the dropdown list using json result
+                             if (i == 0) {
+                                 $('<option>',
+                                     {
+                                         value: 0,
+                                         text: "--All--"
+                                     }).html("--All--").appendTo("#RegionalOfficeId");
+                                 if (data.regionalOfficeID == regionalID) {
+                                     $('<option selected = "selected">',
+                                         {
+                                             value: data.regionalOfficeID,
+                                             text: data.regionalOfficeName
+                                         }).html(data.regionalOfficeName).appendTo("#RegionalOfficeId");
+                                 }
+                                 else {
+                                     $('<option>',
+                                         {
+                                             value: data.regionalOfficeID,
+                                             text: data.regionalOfficeName
+                                         }).html(data.regionalOfficeName).appendTo("#RegionalOfficeId");
+                                 }
+                             }
+                             else if (data.regionalOfficeID == regionalID) {
+                                 $('<option selected = "selected">',
+                                     {
+                                         value: data.regionalOfficeID,
+                                         text: data.regionalOfficeName
+                                     }).html(data.regionalOfficeName).appendTo("#RegionalOfficeId");
+                             }
+                             else {
+                                 $('<option>',
+                                     {
+                                         value: data.regionalOfficeID,
+                                         text: data.regionalOfficeName
+                                     }).html(data.regionalOfficeName).appendTo("#RegionalOfficeId");
+                             }
+                         });
+                         $("#RegionalOfficeId")[0].sumo.reload();
+                     }
+                     else {
+                         console.log(v);
+                     }
+                 },
+                 error: function (jqXhr, textStatus, errorMessage) {
+                     alert("Error Populating Regional Office Data");
+                 }
+             });
+         }
+         else{
+            $("#RegionalOfficeId").html('');
+            $("#RegionalOfficeId")[0].sumo.reload();
+         }
+     };
+
+    $("#FormNumber").on("blur", function () {
+            var formNumber =  $("#FormNumber").val();
+            if (formNumber == "") {
+                $("#formNumber_error").html("Form Number field cannot be left blank");
+            }
+            else {
+                if (formNumber.substring(0, 1) == "0") {
+                    $("#formNumber_error").html("Invalid Form Number. Min-Max 10 digits");
+                }
+
+                else if (formNumber.length < 10) {
+                     $("#formNumber_error").html("Invalid Form Number. Min-Max 10 digits");
+                }
+                else if (!(formNumber.match(number))) {
+                     $("#formNumber_error").html("Invalid Form Number. Min-Max 10 digits");
+                }
+                else
+                   $("#formNumber_error").html("");
+            }
+    });
+</script>
