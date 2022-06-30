@@ -36,9 +36,10 @@
     <table id="tblMerchantViewCardDetail" class="table d-md-table table-bordered table-responsive mt-3" style="width:100%;">
         <thead>
             <tr>
-                <th colspan="9">Card wise details</th>
+                <th colspan="10">Card wise details</th>
             </tr>
             <tr>
+                <th>S.No.</th>
                 <th>ZO</th>
                 <th>RO</th>
                 <th>Dealer Code</th>
@@ -51,11 +52,16 @@
             </tr>
         </thead>
         <tbody>
+            @{
+                int Sno = 0;
+            }
             @foreach (var item in Model.Data.ObjALViewCardDetail)
             {
+                Sno++;
             <tr>
-                <td class="merchantId">@item.ZonalOfficeName</td>
-                <td class="terminalId">@item.RegionalOfficeName</td>
+                <td>@Sno</td>
+                <td>@item.ZonalOfficeName</td>
+                <td>@item.RegionalOfficeName</td>
                 <td>@item.MerchantId</td>
                 <td>@item.CardNo</td>
                 <td>@item.Status</td>
@@ -85,5 +91,140 @@ else
             }
         });
     });
+
+        function tableToCSV() {
+
+        // Variable to store the final csv data
+        var csv_data = [];
+        var rowsExists=false;
+
+        // Get each row data
+        //var rows = document.getElementsByTagName('tr');
+        $("#tblStatusWiseDetails tr").each(function () {
+            var row = $(this);
+            //debugger;
+                rowsExists=true;
+                // Get each column data
+                var cols = row[0].querySelectorAll('td,th');
+
+                // Stores each csv row data
+                var csvrow = [];
+                for (var j = 0; j < cols.length; j++) {
+
+                    // Get the text data of each cell
+                    // of a row and push it to csvrow
+
+                   csvrow.push(cols[j].innerHTML.toString());
+                    
+                }
+
+                // Combine each column value with comma
+                csv_data.push(csvrow.join(","));
+
+        });
+
+        var i=0;
+        $("#tblMerchantViewCardDetail tr").each(function () {
+            var row = $(this);
+            rowsExists=true;
+            //debugger;
+            if(i<2)
+            {
+                // Get each column data
+                var cols = row[0].querySelectorAll('td,th');
+
+                // Stores each csv row data
+                var csvrow = [];
+                for (var j = 0; j < cols.length; j++) 
+                {
+
+                    // Get the text data of each cell
+                    // of a row and push it to csvrow
+                    
+                        if(j==4)
+                            csvrow.push("'"+cols[j].innerHTML.toString());
+                        else
+                            csvrow.push(cols[j].innerHTML.toString());
+                    
+                }
+
+                // Combine each column value with comma
+                csv_data.push(csvrow.join(","));
+            }
+            i=i+1
+        });
+        // Combine each row data with new line character
+        //csv_data = csv_data.join('\n');
+
+        //// Call this function to download csv file
+        //downloadCSVFile(csv_data);
+
+        //var data = $('#tblMerchantViewCardDetail').DataTable().rows.data();
+        //data.each(function (value, index) {
+        //    console.log(value);
+        //  //if (value.isActive)
+        //  //{
+        //  //   console.log(value.UserID);
+        //  //   console.log(value.UserName);
+        //  //}
+        //});
+
+        if(rowsExists)
+        {
+            var tableName = $('#tblMerchantViewCardDetail').DataTable();
+            tableName.rows().every(function(){
+                //console.log(this.data()[0]);
+                var csvrow = [];
+
+                csvrow.push(this.data()[0]);
+                csvrow.push(this.data()[1]);
+                csvrow.push(this.data()[2]);
+                csvrow.push(this.data()[3]);
+                csvrow.push("'"+this.data()[4]);
+                csvrow.push(this.data()[5]);
+                csvrow.push(this.data()[6]);
+                csvrow.push(this.data()[7]);
+                csvrow.push(this.data()[8]);
+                csvrow.push(this.data()[9]);
+
+                csv_data.push(csvrow.join(","));
+            });
+
+            csv_data = csv_data.join('\n');
+        }
+
+        // Call this function to download csv file
+        if(rowsExists)
+        {
+           downloadCSVFile(csv_data);
+        }
+    }
+
+    function downloadCSVFile(csv_data) {
+
+        // Create CSV file object and feed
+        // our csv_data into it
+        CSVFile = new Blob([csv_data], {
+            type: "text/csv"
+        });
+
+        // Create to temporary link to initiate
+        // download process
+        var temp_link = document.createElement('a');
+
+        // Download csv file
+        temp_link.download = "ViewALDealerOTCCardsDetail.csv";
+        var url = window.URL.createObjectURL(CSVFile);
+        temp_link.href = url;
+
+        // This link should not be displayed
+        temp_link.style.display = "none";
+        document.body.appendChild(temp_link);
+
+        // Automatically click the link to
+        // trigger download
+        temp_link.click();
+        document.body.removeChild(temp_link);
+    }
 
 </script>

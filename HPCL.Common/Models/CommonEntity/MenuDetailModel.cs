@@ -25,5 +25,6 @@ namespace HPCL.Common.Models.CommonEntity
         public int CalledMenuId { get; set; }
         public int CalledMenuAllowedAction { get; set; }
         public int AllowedAction { get; set; }
+        public int IsFinalPage { get; set; }
     }
 }

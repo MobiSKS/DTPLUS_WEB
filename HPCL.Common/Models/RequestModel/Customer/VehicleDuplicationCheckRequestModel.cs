@@ -8,5 +8,6 @@ namespace HPCL.Common.Models.RequestModel.Customer
     public class VehicleDuplicationCheckRequestModel: BaseEntity
     {
         public string VechileNo { get; set; }
+        public string VinNumber { get; set; }
     }
 }

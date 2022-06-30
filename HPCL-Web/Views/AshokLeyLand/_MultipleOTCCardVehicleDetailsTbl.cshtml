@@ -19,6 +19,7 @@
 								<td style="display:none;"></td>
 								<td style="display:none;"></td>
                                 <td style="display:none;"></td>
+                                <td style="display:none;"></td>
 							</tr>
 						</thead>
 						<tbody>
@@ -30,7 +31,7 @@
                                      <tr>
                                         <td>@Slno</td>
                                         <td>
-                                            <input type="text" maxlength="16" style="text-transform:uppercase" class="form-control" onkeypress="return isNumberKey(event)" name="ObjALCardEntryDetail[@i].CardNo" value="@Model.ObjALCardEntryDetail[i].CardNo" id="ObjALCardEntryDetail_@i" readonly size="30">
+                                            <input type="text" maxlength="16" style="text-transform:uppercase" class="form-control" onkeypress="return isNumberKey(event)" name="ObjALCardEntryDetail[@i].CardNo" value="@Model.ObjALCardEntryDetail[i].CardNo" id="ObjALCardEntryDetail_@i" readonly size="26">
                                             <span class='field-validation-error text-danger' id='CardNo_error_@i'>
                                                 @Model.ObjALCardEntryDetail[i].CardNoMsg
                                             </span>
@@ -49,12 +50,12 @@
                                             <span class='field-validation-error text-danger' id='ddlVehicleType_error_@i'></span>
                                         </td>
                                         <td>
-                                            <input type="text" maxlength="17" class="form-control" name="ObjALCardEntryDetail[@i].VINNumber" value="@Model.ObjALCardEntryDetail[i].VINNumber" onchange='VINNumberChange(this,@i)' onkeydown='javascript: IsAlphaNumeric(this)'>
+                                            <input type="text" maxlength="17" class="form-control" name="ObjALCardEntryDetail[@i].VINNumber" value="@Model.ObjALCardEntryDetail[i].VINNumber" onchange='VINNumberChange(this,@i)' onkeydown='javascript: IsAlphaNumeric(this)' size="25">
                                             <span class='field-validation-error text-danger' id='VINNumber_error_@i'>
                                                 @Model.ObjALCardEntryDetail[i].VINNoMsg
                                             </span>
                                         </td>
-                                            <td>
+                                        <td>
                                             <input type="text" class="form-control" maxlength="10" onkeypress="return isNumberKey(event)" name="ObjALCardEntryDetail[@i].MobileNo" value="@Model.ObjALCardEntryDetail[i].MobileNo" onchange='MobileNoChange(this,@i)'>
                                             <span class='field-validation-error text-danger' id='MobileNo_error_@i'>
                                                 @Model.ObjALCardEntryDetail[i].MobileNoMsg
@@ -66,15 +67,16 @@
                                             @Model.ObjALCardEntryDetail[i].Verified                                       
                                          </td>
                                          <td style="display:none;">0</td>
+                                         <td style="display:none;">0</td>
                                     </tr>
                                 }
                                 else
                                 {
                                     <tr>
-                                        <td>@Slno</td>
+                                            <td>@Slno</td>
                                        
                                             <td>
-                                                <input type="text" maxlength="16" style="text-transform:uppercase" class="form-control" onkeypress="return isNumberKey(event)" name="ObjALCardEntryDetail[@i].CardNo" id="ObjALCardEntryDetail_@i" readonly size="30">
+                                                <input type="text" maxlength="16" style="text-transform:uppercase" class="form-control" onkeypress="return isNumberKey(event)" name="ObjALCardEntryDetail[@i].CardNo" id="ObjALCardEntryDetail_@i" readonly size="26">
                                                 <span class='field-validation-error text-danger' id='CardNo_error_@i'></span>
                                             </td>
                                             <td style="vertical-align: unset;"><button class="btn btn_primary px-4 py - 2" onclick="LoadAvailityALOTCCard(this,@i)" type="button" data-toggle="modal" data-target="#myModalCard" name="btnAddCard[@i].CardNo">Add</button></td>
@@ -89,7 +91,7 @@
                                                 <span class='field-validation-error text-danger' id='ddlVehicleType_error_@i'></span>
                                             </td>
                                             <td>
-                                                <input type="text" maxlength="17" class="form-control" name="ObjALCardEntryDetail[@i].VINNumber" onchange='VINNumberChange(this,@i)' onkeydown='javascript: IsAlphaNumeric(this)'>
+                                                <input type="text" maxlength="17" class="form-control" name="ObjALCardEntryDetail[@i].VINNumber" onchange='VINNumberChange(this,@i)' onkeydown='javascript: IsAlphaNumeric(this)' size="25">
                                                 <span class='field-validation-error text-danger' id='VINNumber_error_@i'></span>
                                             </td>
                                             <td>
@@ -97,6 +99,7 @@
                                                 <span class='field-validation-error text-danger' id='MobileNo_error_@i'></span>
                                             </td>
                                             <td></td>
+                                            <td style="display:none;">0</td>
                                             <td style="display:none;">0</td>
                                             <td style="display:none;">0</td>
                                             <td style="display:none;">0</td>
@@ -203,7 +206,7 @@
   function CheckVechileNoUsed(o, rowSelected) 
   {
           debugger;
-          $("#VechileNo_Vefirybtn_" + rowSelected).prop("disabled", false);
+          $("#VechileNo_Vefirybtn_" + rowSelected).prop("disabled", true);
           var vehicleNo = o.value;
           var isValid=true;
           console.log(vehicleNo);
@@ -212,7 +215,7 @@
         if(vehicleNo.trim()=='')
         {
             document.getElementById('VechileNo_error_'+rowSelected).innerHTML="Enter Vehicle No.";
-            return false;
+            isValid=false;
         }
         else
         {
@@ -222,13 +225,11 @@
                 {
                     document.getElementById('VechileNo_error_'+rowSelected).innerHTML ="Invalid Vehicle No.";
                     isValid=false;
-                    return false;
                 }
                 else if(vehicleNo.length<6 || vehicleNo.length>10)
                 {
                     document.getElementById('VechileNo_error_'+rowSelected).innerHTML ="Invalid Vehicle No.";
                     isValid=false;
-                    return false;
                 }
                 else
                 {
@@ -267,6 +268,16 @@
               mycelStatus.innerHTML = "0";
           }
 
+          if(isValid)
+          {
+              //if($(VehicleVerifiedManually).prop("checked"))
+              //{
+                  $("#VechileNo_Vefirybtn_" + rowSelected).prop("disabled", false);
+              //}
+              //else
+              //{
+              //   $("#VechileNo_Vefirybtn_" + rowSelected).prop("disabled", false);
+              //}
 
           $.ajax({
               type: 'POST',  // http method
@@ -295,6 +306,8 @@
                   isValid=false;
               }
           });
+
+        }
 
         setTimeout(function()
         {
@@ -327,10 +340,6 @@
                                     if(CurIdent.trim()!="")
                                     {
                                         if (!(CurIdent.match(forVehicleNo))) 
-                                        {
-                                            document.getElementById('VechileNo_error_'+cnt).innerHTML ="Invalid Vehicle No.";
-                                        }
-                                        else if (!CurIdent.match(atLeastOneAlphabet)) 
                                         {
                                             document.getElementById('VechileNo_error_'+cnt).innerHTML ="Invalid Vehicle No.";
                                         }
@@ -480,95 +489,6 @@
 
      }
 
-     //function CardNumberChange(o, rowSelected) 
-     //{
-     //    var identifier = o.value;
-     //    console.log(identifier);
-     //    var isValid=true;
-
-     //   if(identifier.trim()=='')
-     //   {
-     //       document.getElementById('CardNo_error_'+rowSelected).innerHTML="Enter Card Number";
-     //       isValid=false;
-     //   }
-     //   else
-     //   {
-     //       if (identifier.charAt(0) == "0") 
-     //       {
-     //           document.getElementById('CardNo_error_'+rowSelected).innerHTML="Invalid Card Number";
-     //           isValid=false;
-     //       }
-     //       else if (identifier.length < 16 || identifier.length > 16) 
-     //       {
-     //           document.getElementById('CardNo_error_'+rowSelected).innerHTML="Invalid Card Number";
-     //           isValid=false;
-     //       }
-     //       else if(!identifier.match(number)) 
-     //       {
-     //           document.getElementById('CardNo_error_'+rowSelected).innerHTML="Invalid Card Number";
-     //           isValid = false;
-     //       }
-     //       else
-     //       {
-     //           document.getElementById('CardNo_error_'+rowSelected).innerHTML="";
-     //       }
-     //   } 
-
-     //   if(isValid)
-     //   {
-     //       var j=0;i=0;
-     //       var cnt=0;
-     //       console.log('Before Checking For Duplicate Card Number');
-     //       $("#NoOfCardsTbl tbody tr").each(function () 
-     //       {
-     //           var row = $(this);
-     //           j=0;
-     //           i=i+1;
-     //           cnt = 0;
-     //           $("#NoOfCardsTbl tbody tr").each(function () 
-     //           {
-     //               var row1 = $(this);
-
-     //               j=j+1;
-     //               if(i>0 && j>1 && j>i)
-     //               {
-     //                   var PrevIdent = row.find("td:eq(1) input[type='text']").val();
-     //                   var CurIdent =  row1.find("td:eq(1) input[type='text']").val();
-
-     //                   if(PrevIdent!="" && CurIdent!="")
-     //                   {
-     //                       if(PrevIdent.trim().toUpperCase()==CurIdent.trim().toUpperCase())
-     //                       {
-
-     //                           if(CurIdent.trim()!="")
-     //                           {
-     //                               if(CurIdent.length<16 || CurIdent.length>16)
-     //                               {
-     //                                 document.getElementById('CardNo_error_'+cnt).innerHTML ="Invalid Card Number";
-     //                               }
-     //                               else if(!CurIdent.match(number))
-     //                               {
-     //                                 document.getElementById('CardNo_error_'+cnt).innerHTML ="Invalid Card Number";
-     //                               }
-     //                               else
-     //                               {
-     //                                   document.getElementById('CardNo_error_'+cnt).innerHTML="Duplicate Card Number";
-     //                               }
-     //                           }
-
-     //                       }
-     //                   }
-     //               }
-
-     //               cnt=cnt+1;
-     //           });
-
-     //       });
-
-     //   }
-
-     //}
-
      function VINNumberChange(o, rowSelected) 
      {
           var vinNumber = o.value;
@@ -600,61 +520,118 @@
             document.getElementById('VINNumber_error_'+rowSelected).innerHTML="";
         } 
 
+          var tbl = document.getElementById('NoOfCardsTbl');
+          mytablebody = tbl.getElementsByTagName("tbody")[0];
+          myrow = mytablebody.getElementsByTagName("tr")[rowSelected];
+
+          var mycelStatus;
+          
+          mycelStatus=myrow.getElementsByTagName("td")[12];
+         
+
         if(isValid)
         {
-            var j=0;i=0;
-            var cnt=0;
-            console.log('Before Checking For Duplicate VIN Number');
-            $("#NoOfCardsTbl tbody tr").each(function () 
-            {
-                var row = $(this);
-                j=0;
-                i=i+1;
-                cnt = 0;
-                $("#NoOfCardsTbl tbody tr").each(function () 
-                {
-                    var row1 = $(this);
+            $.ajax({
+                type: 'POST',   
+                url: '@Url.Action("CheckVINNoUsed", "AshokLeyLand")',
+                data: { VinNo: vinNumber }, 
+                dataType: "json",
+                success: function (data, status, xhr) {
+                    console.log(data);
+                    console.log(status);
 
-                    j=j+1;
-                    if(i>0 && j>1 && j>i)
+                    if (status == 'success') 
                     {
-                        var PrevIdent = row.find("td:eq(6) input[type='text']").val();
-                        var CurIdent =  row1.find("td:eq(6) input[type='text']").val();
-
-                        if(PrevIdent!="" && CurIdent!="")
+                        console.log(data.status);
+                        console.log(data.reason);
+                        if (data.status == "0") 
                         {
-                            if(PrevIdent.trim().toUpperCase()==CurIdent.trim().toUpperCase())
-                            {
-                                if(CurIdent.trim()!="")
-                                {
-                                    if(CurIdent.length<17 || CurIdent.length>17)
-                                    {
-                                      document.getElementById('VINNumber_error_'+cnt).innerHTML ="Invalid VIN Number";
-                                    }
-                                    else if (!(CurIdent.match(forVehicleNo))) 
-                                    {
-                                        document.getElementById('VINNumber_error_'+rowSelected).innerHTML ="Invalid VIN Number";
-                                    }
-                                    else if (!CurIdent.match(atLeastOneAlphabet)) 
-                                    {
-                                        document.getElementById('VINNumber_error_'+rowSelected).innerHTML="Invalid VIN Number";
-                                    }
-                                    else
-                                    {
-                                        document.getElementById('VINNumber_error_'+cnt).innerHTML="Duplicate VIN Number";
-                                    }
-                                }
-
-                            }
+                            document.getElementById('VINNumber_error_'+rowSelected).innerHTML = "VIN Number already exists";
+                            mycelStatus.innerHTML = "1";
+                        }
+                        else 
+                        {
+                            document.getElementById('VINNumber_error_'+rowSelected).innerHTML = "";
+                            mycelStatus.innerHTML = "0";
                         }
                     }
+                    else 
+                    {
+                        document.getElementById('VINNumber_error_'+rowSelected).innerHTML = "VIN Number already exists";
+                        mycelStatus.innerHTML = "1";
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) 
+                {
+                    document.getElementById('VINNumber_error_'+rowSelected).innerHTML = "VIN Number already exists";
+                    mycelStatus.innerHTML = "1";
+                }
+            });
+        }
+        else
+        {
+           mycelStatus.innerHTML = "0";
+        }
 
-                    cnt=cnt+1;
+        setTimeout(function()
+        {
+            if(isValid)
+            {
+                var j=0;i=0;
+                var cnt=0;
+                console.log('Before Checking For Duplicate VIN Number');
+                $("#NoOfCardsTbl tbody tr").each(function () 
+                {
+                    var row = $(this);
+                    j=0;
+                    i=i+1;
+                    cnt = 0;
+                    $("#NoOfCardsTbl tbody tr").each(function () 
+                    {
+                        var row1 = $(this);
+
+                        j=j+1;
+                        if(i>0 && j>1 && j>i)
+                        {
+                            var PrevIdent = row.find("td:eq(6) input[type='text']").val();
+                            var CurIdent =  row1.find("td:eq(6) input[type='text']").val();
+
+                            if(PrevIdent!="" && CurIdent!="")
+                            {
+                                if(PrevIdent.trim().toUpperCase()==CurIdent.trim().toUpperCase())
+                                {
+                                    if(CurIdent.trim()!="")
+                                    {
+                                        if(CurIdent.length<17 || CurIdent.length>17)
+                                        {
+                                          document.getElementById('VINNumber_error_'+cnt).innerHTML ="Invalid VIN Number";
+                                        }
+                                        else if (!(CurIdent.match(forVehicleNo))) 
+                                        {
+                                            document.getElementById('VINNumber_error_'+rowSelected).innerHTML ="Invalid VIN Number";
+                                        }
+                                        else if (!CurIdent.match(atLeastOneAlphabet)) 
+                                        {
+                                            document.getElementById('VINNumber_error_'+rowSelected).innerHTML="Invalid VIN Number";
+                                        }
+                                        else
+                                        {
+                                            document.getElementById('VINNumber_error_'+cnt).innerHTML="Duplicate VIN Number";
+                                        }
+                                    }
+
+                                }
+                            }
+                        }
+
+                        cnt=cnt+1;
+                    });
+
                 });
 
-            });
+            }
 
-        }
+         },500);
 
      }
 

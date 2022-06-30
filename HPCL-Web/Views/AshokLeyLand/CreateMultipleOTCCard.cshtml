@@ -45,11 +45,41 @@
                                 </div>
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal offset-md-1 col-md-4 col-12">Name On Card <sup class="text-danger">*</sup></label>
+                                        <label class="font-weight-normal offset-md-1 col-md-4 col-12">Name on Card <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
                                                 @Html.TextBoxFor(m => m.NameOnCard, new { @class = "form-control", autocomplete = "off", maxlength = "22" })
                                                 <span class="error" id="nameOnCard_error"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                             <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">Income Tax PAN <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-5 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.IncomeTaxPan, new { @class = "form-control", @style = "text-transform:uppercase", autocomplete = "off", maxlength = "10" })
+                                                <span class="error" id="incomeTaxPan_error"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2 col-12 pl-0">
+                                            <div class="custom_select">
+                                               <button class="btn btn_primary" type="button" id="btnVerify" onclick="ValidatePAN()">Verify</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        @*<label class="font-weight-normal offset-md-1 col-md-4 col-12">Name on Card <sup class="text-danger">*</sup></label>*@
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                               @* @Html.TextBoxFor(m => m.NameOnCard, new { @class = "form-control", autocomplete = "off", maxlength = "22" })
+                                                <span class="error" id="nameOnCard_error"></span>*@
                                             </div>
                                         </div>
                                     </div>
@@ -79,7 +109,7 @@
                                 </div>
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal offset-md-1 col-md-4 col-12">Pin Code <sup class="text-danger">*</sup></label>
+                                        <label class="font-weight-normal offset-md-1 col-md-4 col-12">PIN Code <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
                                                 @Html.TextBoxFor(m => m.CommunicationPincode, new { @class = "form-control", maxlength = "6", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
@@ -221,7 +251,7 @@
                                 </div>
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal col-md-5 col-12">Sales Executive Employee ID <sup class="text-danger">*</sup></label>
+                                        <label class="font-weight-normal col-md-5 col-12">Sales Executive Employee ID </label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
                                                 @Html.TextBoxFor(m => m.SalesExecutiveEmployeeID, new { @class = "form-control", maxlength = "25", autocomplete = "off", @readonly = "readonly" })
@@ -276,39 +306,8 @@
 
                 <div class="clearfix"></div>
                 <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3">
-                    <div class="border-1 rounded border-grey pb-0 pt-1">
+                    <div class="border-1 rounded border-grey pb-0 pt-1" id="dvViewNoOfCardsTbl" style="display:none;">
                         <div class="col-lg-12 col-md-12 col-12 pt-2 pb-0">
-
-                            @*<table class="table table-bordered text-nowrap" id="NoOfCardsTbl" style="display: none">
-                                <tbody id="cardDetails">
-
-                                    @for (int i = 0; i < Model.ObjALCardEntryDetail.Count; i++)
-                                    {
-                                        var j = i + 1;
-                                    <tr>
-                                        <td>
-                                            @Html.TextBoxFor(m => m.ObjALCardEntryDetail[i].CardNo)
-                                        </td>
-                                        <td></td>
-                                        <td>
-                                            @Html.TextBoxFor(m => m.ObjALCardEntryDetail[i].VechileNo)
-                                        </td>
-                                        <td></td>
-                                        <td>
-                                            @Html.DropDownListFor(m => m.ObjALCardEntryDetail[i].VehicleType, new SelectList(Model.VehicleTypeMdl, "VehicleTypeName", "VehicleTypeName"), new { @class = "form-control" })
-                                        </td>
-                                        <td>
-                                            @Html.TextBoxFor(m => m.ObjALCardEntryDetail[i].VINNumber)
-                                        </td>
-                                        <td>
-                                            @Html.TextBoxFor(m => m.ObjALCardEntryDetail[i].MobileNo)
-                                        </td>
-                                        <td></td>
-                                    </tr>
-                                    }
-
-                                </tbody>
-                            </table>*@
 
                             <div id="ViewNoOfCardsTbl" style="display:none;"></div>
 
@@ -407,6 +406,7 @@
       </div>
         </form>
         <div class="clearfix"></div>
+        @Html.HiddenFor(model => Model.ExternalPANAPIStatus)
     </div>
 </div>
 
@@ -489,14 +489,12 @@
             $('#NoOfCards_error').text("No. of Cards cannot be left blank");
             $("#NoOfCards_error").attr("style", "display:block");
             ret=false;
-            return (false);
         }
         else if (Number(noOfCards) <=0 || Number(noOfCards) >10)
         {
             $('#NoOfCards_error').text("No. of Cards may be 1 to 10");
             $("#NoOfCards_error").attr("style", "display:block");
             ret=false;
-            return (false);
         }
         else
         {
@@ -507,7 +505,19 @@
         {
             document.getElementById("DealerCode_error").innerHTML = "Dealer Code is required";
             ret=false;
-            return (false);
+        }
+        else if (localStorage.getItem("DEALERFOUND") == 0) 
+        {
+            if(localStorage.getItem("DEALERMSG")!="")
+            {
+                document.getElementById("DealerCode_error").innerHTML = localStorage.getItem("DEALERMSG");
+                ret = false;
+            }
+            else
+            {
+                document.getElementById("DealerCode_error").innerHTML = "Invalid Dealer Code";
+                ret = false;
+            }
         }
         else 
         {
@@ -578,6 +588,7 @@
                        if (status == 'success') 
                        {
                            document.getElementById("ViewNoOfCardsTbl").style.display = "block";
+                           document.getElementById("dvViewNoOfCardsTbl").style.display = "block";
                            $("#ViewNoOfCardsTbl").html(data);
                            $('html, body').animate({
                                scrollTop: $("#ViewNoOfCardsTbl").offset().top
@@ -592,90 +603,13 @@
                error: function (jqXhr, textStatus, errorMessage) 
                {
                    $("#ViewNoOfCardsTbl").html("");
+                   document.getElementById("dvViewNoOfCardsTbl").style.display = "none";
                    $("#btnAdd").attr("disabled", false);
                    $('#DealerCode').attr("readonly", false);
                }
            });
-
-
-        //$.ajax({
-        //    type: 'POST',  // http method
-        //    url: '@Url.Action("GetVehicleTypeDetails", "Common")',
-        //    data: {},
-        //    dataType: "json",
-        //    success: function (data, status, xhr) {
-        //        //debugger;
-
-        //        var NoOfcards = $('#NoOfCards').val();
-        //        $("#NoOfCardsTbl td").parent().remove();
-
-
-        //        document.getElementById("NoOfCardsTbl").deleteTHead();
-
-        //        $('#NoOfCardsTbl').append('<thead><tr><th>Card No.</th><th>Add Card</th><th>Vehicle No.</th><th></th><th>Vehicle Type</th><th>VIN No.</th><th>Mobile No.</th><th></th></tr></thead>');
-
-
-
-        //        for (var i = 0; i < parseInt(NoOfcards); i++) {
-        //            //var id = 'ddlVehicleType' + i;
-        //            var j = (i + 1);
-        //            var name = 'ObjALCardEntryDetail[' + (i) + '].VehicleType';
-        //            var id = 'ddlVehicleType' + i;
-        //            //var cardObj = 'ObjALCardEntryDetail[' + (i) + '].CardNo';
-        //            var cardObj = 'CardNo' + i;
-        //            //console.log(cardObj);
-        //            var rows = "<tr>"
-        //                + "<td><span class='rowData'><input type='text' class='form - control' class='cardIdentifierInput' readonly name='ObjALCardEntryDetail[" + (i) + "].CardNo'> </span></td>"
-        //                + "<td><button class='btn btn_primary px-4 py - 2' onclick='LoadAvailityALOTCCard(this," + (i) + ")' type='button' data-toggle='modal' data-target='#myModalCard' name='btnAddCard" + (i) + "'>Add</button></td>"
-        //                + "<td><span class='rowData'><input type='text' maxlength='10' onkeydown='javascript: IsAlphaNumeric(this)' class='form - control' style='text-transform:uppercase' name='ObjALCardEntryDetail[" + (i) + "].VechileNo'></span></td>"
-        //                + "<td><button class='btn btn_primary px-4 py - 2' onclick='ValidateVehicleNo(this," + (i) + ")' type='button' name='btnValidate" + (i) + "'>Validate</button></td>"
-        //                + "<td><select id='" + id + "'class='vls' name='" + name + "'></select></td>"
-        //                + "<td><span class='rowData'><input type='text' maxlength='17' class='form - control' name='ObjALCardEntryDetail[" + (i) + "].VINNumber'> </span></td>"
-        //                + "<td><span class='rowData'><input type='text' class='form - control' maxlength='10' name='ObjALCardEntryDetail[" + (i) + "].MobileNo'></span></td>"
-        //                + "<td class='error'><span class='error'></span></td></tr>";
-
-
-        //            $('#NoOfCardsTbl').append(rows);
-        //            //console.log(document.getElementById(id));
-
-        //            $("#" + id).html("");
-        //            $.each(data.sortedtList, function (i, data) { // bind the dropdown list using json result
-        //                $('<option>',
-        //                    {
-        //                        value: data.vehicleTypeName,
-        //                        text: data.vehicleTypeName
-        //                    }).html(data.vehicleTypeName).appendTo("#" + id);
-        //            });
-        //        }
-
-
-        //    },
-        //    error: function (jqXhr, textStatus, errorMessage) {
-        //        alert("Error Populating VehicleTpeData Data");
-        //    }
-
-
-        //});
-
-        //document.getElementById('NoOfCardsTbl').style.display = 'block';
+        
     }
-
-
-    //function GetCardDetails(o, rowSelected) {
-    //    debugger;
-    //    var cardNo = o.innerText;
-
-    //    console.log(cardNo);
-    //    console.log(rowSelected);
-    //    var tbl = document.getElementById('NoOfCardsTbl');
-    //    mytablebody = tbl.getElementsByTagName("tbody")[0];
-    //    myrow = mytablebody.getElementsByTagName("tr")[rowSelected];
-    //    mycel = myrow.getElementsByTagName("td")[0];
-    //    console.log(mycel);
-    //    mycel.getElementsByTagName("input")[0].value = cardNo;
-
-    //    $('#myModalCard').modal('hide');
-    //}
 
     function ValidateMandatoryFields() 
     {
@@ -721,22 +655,80 @@
 
         if (document.getElementById("NameOnCard").value.trim() == "") 
         {
-            document.getElementById("nameOnCard_error").innerHTML = "Name On Card field cannot be left blank";
+            document.getElementById("nameOnCard_error").innerHTML = "Name on Card field cannot be left blank";
             ret = false;
         }
         else if (!isNaN(document.getElementById("NameOnCard").value.trim())) 
         {
-            document.getElementById("nameOnCard_error").innerHTML = "Invalid Name On Card";
+            document.getElementById("nameOnCard_error").innerHTML = "Invalid Name on Card";
             ret = false;
         }
         else if (!document.getElementById("NameOnCard").value.match(nameWithSpaceCheck)) 
         {
-            document.getElementById("nameOnCard_error").innerHTML = "Invalid Name On Card";
+            document.getElementById("nameOnCard_error").innerHTML = "Invalid Name on Card";
             ret = false;
         }
         else 
         {
             document.getElementById("nameOnCard_error").innerHTML = "";
+        }
+
+        if (document.getElementById("IncomeTaxPan").value.trim() == "") 
+        {
+            document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN field is required";
+            document.getElementById("incomeTaxPan_error").className = "error";
+            ret = false;
+        }
+        else 
+        {
+            
+            document.getElementById("IncomeTaxPan").value = document.getElementById("IncomeTaxPan").value.trim().toUpperCase();
+
+            var panNumber = document.getElementById("IncomeTaxPan").value.trim();
+            let forthdigitPan = panNumber.substr(3, 1);
+            console.log(forthdigitPan);
+            if (forthdigitPan != 'P') 
+            {
+                document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
+                document.getElementById("incomeTaxPan_error").className = "error";
+                ret = false;
+            }
+            else
+            {
+                if (!$('#IncomeTaxPan').val().match(pancard)) 
+                {
+                    document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
+                    document.getElementById("incomeTaxPan_error").className = "error";
+                    ret = false;
+                }
+                else
+                {
+                    if (localStorage.getItem("PANNOALREADYUSED") == 0) 
+                    {
+                        document.getElementById("incomeTaxPan_error").innerHTML = "PAN Number already exists";
+                        document.getElementById("incomeTaxPan_error").className = "error";
+                        ret = false;
+                    }
+                    else if (localStorage.getItem("INVALIDPAN") == 0) 
+                    {
+                        document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
+                        document.getElementById("incomeTaxPan_error").className = "error";
+                        ret = false;
+                    }
+                    else if (localStorage.getItem("PANNOANDNAMEMATCHING") == 0) 
+                    {
+                        document.getElementById("incomeTaxPan_error").innerHTML = "Customer Name not match with pan name";
+                        document.getElementById("incomeTaxPan_error").className = "error";
+                        ret = false;
+                    }
+                    else 
+                    {
+                        document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN Number is valid";
+                        document.getElementById("incomeTaxPan_error").className = "error text-success";
+                    }
+                }
+            }
+            
         }
 
         if (document.getElementById("CommunicationCityName").value.trim() == "") 
@@ -756,7 +748,7 @@
 
         if (document.getElementById("CommunicationPincode").value.trim() == "") 
         {
-            document.getElementById("communicationPincode_error").innerHTML = "Pin Code is required";
+            document.getElementById("communicationPincode_error").innerHTML = "PIN Code is required";
             ret = false;
         }
         else
@@ -764,17 +756,17 @@
             var pin = document.getElementById("CommunicationPincode").value.trim();
             if (pin.substring(0, 1) == "0") 
             {
-                document.getElementById("communicationPincode_error").innerHTML = "Invalid Pin Code. Min-Max 6 digits";
+                document.getElementById("communicationPincode_error").innerHTML = "Invalid PIN Code. Min-Max 6 digits";
                 ret = false;
             }
             else if (pin.length < 6) 
             {
-                document.getElementById("communicationPincode_error").innerHTML = "Invalid Pin Code. Min-Max 6 digits";
+                document.getElementById("communicationPincode_error").innerHTML = "Invalid PIN Code. Min-Max 6 digits";
                 ret = false;
             }
             else if (!pin.match(pincode)) 
             {
-                document.getElementById("communicationPincode_error").innerHTML = "Invalid Pin Code. Min-Max 6 digits";
+                document.getElementById("communicationPincode_error").innerHTML = "Invalid PIN Code. Min-Max 6 digits";
                 ret = false;
             }
             else 
@@ -989,8 +981,16 @@
         {
             if (localStorage.getItem("DEALERFOUND") == 0) 
             {
-             document.getElementById("DealerCode_error").innerHTML = "Invalid Dealer Code";
-             ret = false;
+               if(localStorage.getItem("DEALERMSG")!="")
+               {
+                   document.getElementById("DealerCode_error").innerHTML = localStorage.getItem("DEALERMSG");
+                   ret = false;
+               }
+               else
+               {
+                   document.getElementById("DealerCode_error").innerHTML = "Invalid Dealer Code";
+                   ret = false;
+               }
             }
             else 
             {
@@ -998,15 +998,15 @@
             }
         }
         
-        if (document.getElementById('SalesExecutiveEmployeeID').value.trim() == "") 
-        {
-            document.getElementById("SalesExecutiveEmployeeID_error").innerHTML = "Sales Executive Employee ID is required";
-            ret = false;
-        }
-        else 
-        {
-            document.getElementById("SalesExecutiveEmployeeID_error").innerHTML = "";
-        }
+        //if (document.getElementById('SalesExecutiveEmployeeID').value.trim() == "") 
+        //{
+        //    document.getElementById("SalesExecutiveEmployeeID_error").innerHTML = "Sales Executive Employee ID is required";
+        //    ret = false;
+        //}
+        //else 
+        //{
+        //    document.getElementById("SalesExecutiveEmployeeID_error").innerHTML = "";
+        //}
 
         var noOfCards = document.getElementById("NoOfCards").value.trim();
         if (noOfCards == "")
@@ -1418,6 +1418,20 @@
                     cnt=cnt+1;
                 }
 
+                console.log('Before Checking Existing VIN No.');
+                var table = document.getElementById("NoOfCardsTbl");
+                cnt=-1;
+                for (let row of table.rows)
+                {
+                    if(row.cells[12].innerHTML.trim()=="1")
+                    {
+                        document.getElementById('VINNumber_error_'+cnt).innerHTML="VIN Number already exists";
+                        ret=false;
+                    }
+   
+                    cnt=cnt+1;
+                }
+
         if (!(document.querySelector('input[name="CopyofDriverLicense"]:checked'))) {
             document.getElementById("CopyofDriverLicense_error").innerHTML = "Select Copy of Driver License Yes/No";
             ret = false;
@@ -1602,6 +1616,7 @@
     {
         debugger;
         localStorage.setItem("DEALERFOUND", "0");
+        localStorage.setItem("DEALERMSG", "");
 
         var dealerCode = document.getElementById("DealerCode").value;
         if (dealerCode == "") 
@@ -1627,7 +1642,7 @@
                 console.log(data);
                 console.log(status);
                 console.log(data.status);
-
+debugger;
                 if (status == 'success') 
                 {
                     if (data.status == 1) 
@@ -1670,42 +1685,35 @@
                             error: function (xhr, ajaxOptions, thrownError) 
                             {
                                 document.getElementById("SalesExecutiveEmployeeID").value = "";
-                            },
-                            statusCode: 
-                            {
-                                1024: function () 
-                                {
-                                    document.getElementById("SalesExecutiveEmployeeID").value = "";
-                                }
                             }
                         });
 
                     }
                     else 
                     {
-                        document.getElementById("DealerCode_error").innerHTML = "Invalid Dealer Code";
+                        document.getElementById("DealerCode_error").innerHTML = data.reason;
                         localStorage.setItem("DEALERFOUND", "0");
+                        document.getElementById("SalesExecutiveEmployeeID").value = "";
+                        localStorage.setItem("DEALERMSG", data.reason);
                     }
 
-                    if (data == "Failed to load Dealer Details") {
+                    if (data == "Failed to load Dealer Details") 
+                    {
                         document.getElementById("DealerCode_error").innerHTML = "Invalid Dealer Code";
                         localStorage.setItem("DEALERFOUND", "0");
+                        document.getElementById("SalesExecutiveEmployeeID").value = "";
                     }
                 }
-                else {
+                else 
+                {
                     document.getElementById("DealerCode_error").innerHTML = "Invalid Dealer Code";
                     localStorage.setItem("DEALERFOUND", "0");
+                     document.getElementById("SalesExecutiveEmployeeID").value = "";
                 }
             },
             error: function (xhr, ajaxOptions, thrownError) {
                 document.getElementById("DealerCode_error").innerHTML = "Invalid Dealer Code";
                 localStorage.setItem("DEALERFOUND", "0");
-            },
-            statusCode: {
-                1024: function () {
-                    document.getElementById("DealerCode_error").innerHTML = "Invalid Dealer Code";
-                    localStorage.setItem("DEALERFOUND", "0");
-                }
             }
         });
 
@@ -1717,17 +1725,17 @@
         debugger;
         var pinCode = document.getElementById("CommunicationPincode").value.trim();
         if (pinCode == "") {
-            document.getElementById("communicationPincode_error").innerHTML = "Pin Code is required";
+            document.getElementById("communicationPincode_error").innerHTML = "PIN Code is required";
             return (false);
         }
         else if (document.getElementById("CommunicationPincode").value.substring(0, 1) == "0") 
         {
-            document.getElementById("communicationPincode_error").innerHTML = "Invalid Pin Code. Min-Max 6 digits";
+            document.getElementById("communicationPincode_error").innerHTML = "Invalid PIN Code. Min-Max 6 digits";
             return false;
         }
         else if (document.getElementById("CommunicationPincode").value.length < 6) 
         {
-            document.getElementById("communicationPincode_error").innerHTML = "Invalid Pin Code. Min-Max 6 digits";
+            document.getElementById("communicationPincode_error").innerHTML = "Invalid PIN Code. Min-Max 6 digits";
             return false;
         }
         else if (!document.getElementById("CommunicationPincode").value.match(pincode)) 
@@ -1844,18 +1852,18 @@
 
     }
 
-    function IsAlphaNumeric(e) {
-        var k = e.which;
-        var ok = k >= 65 && k <= 90 || // A-Z
-            k >= 96 && k <= 105 || // a-z
-            k >= 35 && k <= 40 || // arrows
-            k == 8 || // Backspaces
-            (!e.shiftKey && k >= 48 && k <= 57); // 0-9
+    //function IsAlphaNumeric(e) {
+    //    var k = e.which;
+    //    var ok = k >= 65 && k <= 90 || // A-Z
+    //        k >= 96 && k <= 105 || // a-z
+    //        k >= 35 && k <= 40 || // arrows
+    //        k == 8 || // Backspaces
+    //        (!e.shiftKey && k >= 48 && k <= 57); // 0-9
 
-        if (!ok) {
-            e.preventDefault();
-        }
-    }
+    //    if (!ok) {
+    //        e.preventDefault();
+    //    }
+    //}
     $("#IndividualOrgName").on("blur", function () {
         //debugger;
         var individualOrgName = document.getElementById("IndividualOrgName").value.trim();
@@ -1888,7 +1896,7 @@
         //debugger;
         var nameOnCard = document.getElementById("NameOnCard").value.trim();
         if (nameOnCard == "") {
-            document.getElementById("nameOnCard_error").innerHTML = "Name On Card field cannot be left blank";
+            document.getElementById("nameOnCard_error").innerHTML = "Name on Card field cannot be left blank";
             return (false);
         }
         else {
@@ -1896,7 +1904,7 @@
         }
 
         if (!isNaN(document.getElementById("NameOnCard").value.trim())) {
-            document.getElementById("nameOnCard_error").innerHTML = "Invalid Name On Card";
+            document.getElementById("nameOnCard_error").innerHTML = "Invalid Name on Card";
             return false;
         }
         else {
@@ -1904,7 +1912,7 @@
         }
 
         if (!document.getElementById("NameOnCard").value.match(nameWithSpaceCheck)) {
-            document.getElementById("nameOnCard_error").innerHTML = "Invalid Name On Card";
+            document.getElementById("nameOnCard_error").innerHTML = "Invalid Name on Card";
             return false;
         }
         else {
@@ -2182,5 +2190,220 @@
         }
 
      });
+
+    $("#IncomeTaxPan").on("blur", function () 
+    {
+        //debugger;
+        var panNumber = document.getElementById("IncomeTaxPan").value.trim();
+        localStorage.setItem("PANNOALREADYUSED", "1");
+        localStorage.setItem("PANNOANDNAMEMATCHING", "1");
+        localStorage.setItem("INVALIDPAN", "1");
+
+        if (panNumber == "") 
+        {
+            document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN field is required";
+            document.getElementById("incomeTaxPan_error").className = "error";
+            return (false);
+        }
+        else 
+        {
+            document.getElementById("incomeTaxPan_error").innerHTML = "";
+        }
+
+        var panNumberUsed = false;
+
+        document.getElementById("IncomeTaxPan").value = document.getElementById("IncomeTaxPan").value.trim().toUpperCase();
+        panNumber = document.getElementById("IncomeTaxPan").value.trim();
+
+        let forthdigitPan = panNumber.substr(3, 1);
+        console.log(forthdigitPan);
+        if (forthdigitPan != 'P') 
+        {
+            document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
+            document.getElementById("incomeTaxPan_error").className = "error";
+            return (false);
+        }
+        else 
+        {
+            if ($('#IncomeTaxPan').val().match(pancard)) 
+            {
+                document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN Number is valid";
+                document.getElementById("incomeTaxPan_error").className = "error text-success";
+            }
+            else 
+            {
+                document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
+                document.getElementById("incomeTaxPan_error").className = "error";
+                return (false);
+            }
+        }
+
+        var panno = $('#IncomeTaxPan').val();
+        var OrgName = $('#IndividualOrgName').val();
+        var correctPANName = '';
+
+        var externalPANAPIStatus="Y";
+
+        externalPANAPIStatus = document.getElementById("ExternalPANAPIStatus").value.trim();
+
+        console.log(externalPANAPIStatus);
+
+        if(externalPANAPIStatus=="Y")
+        {
+
+            $.ajax({
+                type: 'POST',
+                url: "PANValidation/MyHpOTCCardCustomer",
+                data: { PANNumber: document.getElementById("IncomeTaxPan").value },
+                dataType: "json",
+                success: function (data, status, xhr) 
+                {
+                    //debugger;
+                    var jsonData = JSON.parse(data);
+                     console.log(jsonData);
+                    if (status == 'success' && jsonData['status-code'] == '101') 
+                    {
+                        //document.applicationForm.IndividualOrgName.value = jsonData["result"]["name"];
+                        correctPANName = jsonData["result"]["name"];
+                        if (OrgName.toUpperCase() == correctPANName.toUpperCase()) 
+                        {
+                            localStorage.setItem("PANNOANDNAMEMATCHING", "1");
+                        }
+                        else 
+                        {
+                            document.getElementById("incomeTaxPan_error").innerHTML = "Customer Name not match with pan name";
+                            document.getElementById("incomeTaxPan_error").className = "error";
+                            localStorage.setItem("PANNOANDNAMEMATCHING", "0");
+                        }
+                        console.log(OrgName);
+                        console.log(correctPANName);
+                        console.log(localStorage.getItem("PANNOANDNAMEMATCHING"));
+                    }
+                    else 
+                    {
+                        document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
+                        document.getElementById("incomeTaxPan_error").className = "error";
+                        localStorage.setItem("INVALIDPAN", "0");
+                    }
+                },
+                error: function (jqXhr, textStatus, errorMessage) 
+                {
+                    document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
+                    document.getElementById("incomeTaxPan_error").className = "error";
+                    localStorage.setItem("INVALIDPAN", "0");
+                }
+            });
+
+        }
+        else
+        {
+            localStorage.setItem("INVALIDPAN", "1");
+            localStorage.setItem("PANNOANDNAMEMATCHING", "1");
+        }
+
+    });
+
+function ValidatePAN()
+{
+    debugger;
+    var panno = $('#IncomeTaxPan').val().trim();
+    var OrgName = $('#IndividualOrgName').val().trim();
+    var correctPANName = '';
+
+    if (panno == '')
+    {
+        document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN field is required";
+        document.getElementById("incomeTaxPan_error").className = "error";
+        return (false);
+    }
+
+    if (OrgName == '')
+    {
+        document.getElementById("IndividualOrgName_error").innerHTML = "Customer/Org.Name is required";
+        return (false);
+    }
+
+    if ($('#IncomeTaxPan').val().match(pancard))
+    {
+        document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN Number is valid";
+        document.getElementById("incomeTaxPan_error").className = "error text-success";
+    }
+    else
+    {
+        document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
+        document.getElementById("incomeTaxPan_error").className = "error";
+        return (false);
+    }
+
+    //solo Propritorship 4th Char Pan should be 'P'
+    let forthdigitPan = panno.substr(3, 1);
+    console.log(forthdigitPan);
+    if (forthdigitPan != 'P')
+    {
+        document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
+        document.getElementById("incomeTaxPan_error").className = "error";
+        //alert('Please Enter Valid Income Tax PAN');
+        return (false);
+    }
+    else
+    {
+        document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN Number is valid";
+        document.getElementById("incomeTaxPan_error").className = "error text-success";
+    }
+
+
+    var externalPANAPIStatus = "Y";
+
+    externalPANAPIStatus = document.getElementById("ExternalPANAPIStatus").value.trim();
+
+    console.log(externalPANAPIStatus);
+
+    if (externalPANAPIStatus == "Y")
+    {
+
+        $.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("PANValidation", "Customer")',
+            data: { PANNumber: panno },  // data to submit
+            dataType: "json",
+            success: function (data, status, xhr) {
+                //debugger;
+                var jsonData = JSON.parse(data);
+                if (status == 'success' && jsonData['status-code'] == '101') {
+
+                    console.log(jsonData);
+                    //document.applicationForm.IndividualOrgName.value = jsonData["result"]["name"];
+                    correctPANName = jsonData["result"]["name"];
+
+                    document.getElementById("incomeTaxPan_error").innerHTML = "";
+                    document.getElementById("incomeTaxPan_error").className = "error text-success";
+
+                    console.log(correctPANName);
+                    console.log(OrgName);
+                    if (correctPANName.toUpperCase() != OrgName.toUpperCase()) {
+                        document.getElementById("incomeTaxPan_error").innerHTML = "Customer Name not match with pan name";
+                        document.getElementById("incomeTaxPan_error").className = "error";
+                    }
+                    else {
+                        document.getElementById("incomeTaxPan_error").innerHTML = "";
+                        document.getElementById("incomeTaxPan_error").className = "error text-success";
+                    }
+
+                }
+                else {
+                    document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
+                    document.getElementById("incomeTaxPan_error").className = "error";
+                    console.log(jsonData['status-code']);
+                }
+            },
+            error: function (jqXhr, textStatus, errorMessage) {
+                document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
+                console.log(jsonData['status-code']);
+                document.getElementById("incomeTaxPan_error").className = "error";
+            }
+        });
+    }
+    
+}
 
 </script>
