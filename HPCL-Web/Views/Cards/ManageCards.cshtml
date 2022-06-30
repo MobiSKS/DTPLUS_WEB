@@ -59,7 +59,7 @@
                                                 <div class="form-group d-flex align-items-center flex-wrap">
                                                     <label class="font-weight-normal col-md-4 col-12  mb-0">Mobile Number</label>
                                                     <div class="col-md-7 col-12">
-                                                        @Html.TextBoxFor(m => m.MobileNo, new { @class = "form-control restrictPaste", onkeypress = "return isNumberKey(event)" })
+                                                        @Html.TextBoxFor(m => m.MobileNo, new {@id="cardNoVal", @class = "form-control restrictPaste", onkeypress = "return isNumberKey(event)" })
                                                         @Html.ValidationMessageFor(m => m.MobileNo, "", new { @class = "text-danger" })
                                                     </div>
                                                 </div>
@@ -114,14 +114,14 @@
                                                 <th>
                                                     Customer ID
                                                 </th>
-                                                <th>
+                                            @*    <th>
                                                     User ID
-                                                </th>
+                                                </th>*@
                                                 <th>
                                                     Card Type
                                                 </th>
                                                 <th>
-                                                    Vehicle No./Card Identifier
+                                                    VehicleNo/CardIdentifier
                                                 </th>
                                                 <th>
                                                     Vehicle Type
@@ -129,9 +129,9 @@
                                                 <th>
                                                     Issue Date
                                                 </th>
-                                                <th>
+                                              @*  <th>
                                                     Expiry Date
-                                                </th>
+                                                </th>*@
                                                 <th>
                                                     Status
                                                 </th>
@@ -698,7 +698,7 @@
                         for (var i = 0; i < searchGrid.length; i++) {
 
                             var isDts;
-                            var expDts;
+                            //var expDts;
                             var yrOfReg;
 
                             if(((searchGrid[i].issueDate) == "01-01-0001") || ((searchGrid[i].issueDate) == "01-01-1900") || ((searchGrid[i].issueDate) == null)){
@@ -707,11 +707,11 @@
                                 isDts = moment(searchGrid[i].issueDate, 'DD-MM-YYYY').format('DD-MM-YYYY');
                             }
 
-                            if(((searchGrid[i].expiryDate) == "01-01-0001") || ((searchGrid[i].expiryDate) == "01-01-1900") || ((searchGrid[i].expiryDate) == null)){
-                                expDts = "";
-                            }else{
-                                expDts = moment(searchGrid[i].expiryDate, 'DD-MM-YYYY').format('DD-MM-YYYY');
-                            }
+                            //if(((searchGrid[i].expiryDate) == "01-01-0001") || ((searchGrid[i].expiryDate) == "01-01-1900") || ((searchGrid[i].expiryDate) == null)){
+                            //    expDts = "";
+                            //}else{
+                            //    expDts = moment(searchGrid[i].expiryDate, 'DD-MM-YYYY').format('DD-MM-YYYY');
+                            //}
 
                             if((searchGrid[i].yearOfRegistration) == '0'){
                                 yrOfReg = '';
@@ -730,12 +730,12 @@
                             var srNumber = "<span class='rowData'>" + (searchGrid[i].srNumber || '') + "</span>";
                             var cardNumber = "<a class='CardNumber' data-toggle='tab' href='#CardDetailsSection' onclick='ViewCardDetails(this)' role='tab'><span class='rowCardNo'>" + (searchGrid[i].cardNumber || '') + "</span></a>";
                             var customerID = "<span class='rowData cusId'>" + (searchGrid[i].customerID || '') + "</span>";
-                            var userID = (searchGrid[i].userID || '');
+                            //var userID = (searchGrid[i].userID || '');
                             var cardIssueType = (searchGrid[i].cardIssueType || '');
                             var vechileNo = (searchGrid[i].vechileNo || '');
                             var vehicleType = (searchGrid[i].vehicleType || '');
                             var issueDate = isDts;
-                            var expiryDate = expDts;
+                            //var expiryDate = expDts;
                             var status = (searchGrid[i].status || '');
                             var yearOfRegistration = yrOfReg;
                             var manufacturer = (searchGrid[i].vehicleMake || '');
@@ -750,12 +750,12 @@
                                 srNumber,
                                 cardNumber,
                                 customerID,
-                                userID,
+                                //userID,
                                 cardIssueType,
                                 vechileNo,
                                 vehicleType,
                                 issueDate,
-                                expiryDate,
+                                //expiryDate,
                                 status,
                                 yearOfRegistration,
                                 manufacturer,
@@ -787,6 +787,10 @@
     }
 
     function searchCards() {
+
+         if($("#cardNoVal").val() != ''){
+            $("#GetCustomerIdValue").removeAttr('data-val-required');
+         }
 
          if ($("#formVal").valid()) {
 
