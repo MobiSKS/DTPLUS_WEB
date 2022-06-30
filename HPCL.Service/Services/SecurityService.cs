@@ -493,5 +493,23 @@ namespace HPCL.Service.Services
             List<SuccessResponse> responseMsg = jarr.ToObject<List<SuccessResponse>>();
             return responseMsg;
         }
+        public async Task<GetUserRolesAndRegions> GetUserRolesAndRegions()
+        {
+            var forms = new ManageRolesRequestModel
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getuserrolesandregions);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            GetUserRolesAndRegions searchList = obj.ToObject<GetUserRolesAndRegions>();
+            return searchList;
+        }
+        
     }
 }

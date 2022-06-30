@@ -910,7 +910,9 @@ namespace HPCL.Service.Services
 
             custMdl.CustomerTypeMdl.AddRange(await _commonActionService.GetCustomerTypeListDropdown());
 
-            custMdl.CustomerZonalOfficeMdl.AddRange(await _commonActionService.GetZonalOfficebySBUType("1"));
+            custMdl.SBUTypes.AddRange(await _commonActionService.GetSbuTypeList());
+
+            //custMdl.CustomerZonalOfficeMdl.AddRange(await _commonActionService.GetZonalOfficebySBUType("1"));
 
             custMdl.CustomerTbentityMdl.AddRange(await _commonActionService.GetCustomerTbentityListDropdown());
 
@@ -945,6 +947,8 @@ namespace HPCL.Service.Services
 
                 if (Customer != null)
                 {
+                    custMdl.SBUTypeID = Convert.ToInt32(String.IsNullOrEmpty(Customer.SBUTypeId) ? "0" : Customer.SBUTypeId);
+                    custMdl.CustomerZonalOfficeMdl.AddRange(await _commonActionService.GetZonalOfficebySBUType(custMdl.SBUTypeID.ToString()));
                     custMdl.FormNumber = Customer.FormNumber;
                     custMdl.CustomerReferenceNo = Customer.CustomerReferenceNo;
                     custMdl.CustomerTypeID = Convert.ToInt32(string.IsNullOrEmpty(Customer.CustomerTypeId) ? "0" : Customer.CustomerTypeId);
