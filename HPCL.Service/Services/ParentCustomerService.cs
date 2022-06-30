@@ -1,7 +1,9 @@
 ﻿using HPCL.Common.Helper;
 using HPCL.Common.Models.CommonEntity;
 using HPCL.Common.Models.RequestModel.Customer;
+using HPCL.Common.Models.RequestModel.ParentCustomer;
 using HPCL.Common.Models.ResponseModel.Customer;
+using HPCL.Common.Models.ResponseModel.ParentCustomer;
 using HPCL.Common.Models.ViewModel.ParentCustomer;
 using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Http;
@@ -792,7 +794,7 @@ namespace HPCL.Service.Services
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
-                CustomerReferenceNo=cust.CustomerReferenceNo,
+                CustomerReferenceNo = cust.CustomerReferenceNo,
                 CustomerId = cust.CustomerId,
                 ZonalOffice = cust.CustomerZonalOfficeID.ToString(),
                 RegionalOffice = cust.CustomerRegionID.ToString(),
@@ -900,6 +902,37 @@ namespace HPCL.Service.Services
             }
 
             return cust;
+        }
+        public async Task<ParentCustomerReportModel> SearchParentCustomerRequestStatus(string ZonalOfficeId, string RegionalOfficeId, string FromDate, string ToDate, string FormNumber)
+        {
+            ParentCustomerReportModel parentCustomerReportModel = new ParentCustomerReportModel();
+            if (!string.IsNullOrEmpty(FromDate) && !string.IsNullOrEmpty(FromDate))
+            {
+                FromDate = await _commonActionService.changeDateFormat(FromDate);
+                ToDate = await _commonActionService.changeDateFormat(ToDate);
+            }
+            else
+            {
+                FromDate = DateTime.Now.AddMonths(-1).ToString("yyyy-MM-dd");
+                ToDate = DateTime.Now.ToString("yyyy-MM-dd");
+            }
+            var searchBody = new ParentCustomerRequestModel
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                FormId = FormNumber==null?"0":FormNumber,
+                ZO = ZonalOfficeId==null?"0":ZonalOfficeId,
+                RO = RegionalOfficeId == null ? "0" : RegionalOfficeId,
+                FromDate = FromDate,
+                ToDate = ToDate
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getparentcustomerstatus);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            parentCustomerReportModel = obj.ToObject<ParentCustomerReportModel>();
+            return parentCustomerReportModel;
         }
     }
 }
