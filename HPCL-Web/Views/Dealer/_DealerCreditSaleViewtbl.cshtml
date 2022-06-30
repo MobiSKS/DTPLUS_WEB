@@ -57,9 +57,8 @@ else
         @Model.Message
     </div>
 }
-<div class="modal fade" id="MerchantSummaryView" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 
-    <script type="text/javascript">
+<script type="text/javascript">
         $(document).ready(function () {
             $('.table').DataTable({
                 "lengthMenu": [5, 10, 20, 50, 100, 200, 500],
@@ -69,7 +68,75 @@ else
                 }
             });
         });
-        
-   
-    </script>
+
+      function tableToCSV() {
+
+        // Variable to store the final csv data
+            var csv_data = [];
+            var csvrow = [];
+            csvrow.push("S.No.","Merchant ID","OutletNameAndLocation", "Customer ID", "Customer Name","Transaction Type","Account Number","Transaction Amount","TransactionDate","Balance","RSP","Token Number");
+            csv_data.push(csvrow.join(","));
+        // Get each row data
+        //var rows = document.getElementsByTagName('tr');
+
+            var tableName = $('#dealerCreditSaletbl').DataTable();
+            tableName.rows().every(function(){
+                        var csvrow = [];
+                        debugger;
+                        var outlet="";  
+                          if(this.data()[2]!=""){
+                                    if(this.data()[2].indexOf(',') !=-1){
+                                        outlet=this.data()[2].replace(/,/g, ' ');
+                                    }
+                        
+                                }
+                        csvrow.push(this.data()[0]);
+                        csvrow.push("'"+this.data()[1]);
+                        csvrow.push(outlet);
+                        csvrow.push("'"+this.data()[3]);
+                        csvrow.push(this.data()[4]);
+                        csvrow.push(this.data()[5]);
+                        csvrow.push("'"+this.data()[6]);
+                        csvrow.push(this.data()[7]);
+                        csvrow.push(this.data()[8]);
+                        csvrow.push(this.data()[9]);
+                        csvrow.push(this.data()[10]);
+                        csvrow.push("'"+this.data()[11]);
+                        csv_data.push(csvrow.join(","));
+                    });
+                    // Combine each row data with new line character
+                    csv_data = csv_data.join('\n');
+
+        // Call this function to download csv file
+        downloadCSVFile(csv_data);
+
+    }
+
+    function downloadCSVFile(csv_data) {
+
+        // Create CSV file object and feed
+        // our csv_data into it
+        CSVFile = new Blob([csv_data], {
+            type: "text/csv"
+        });
+
+        // Create to temporary link to initiate
+        // download process
+        var temp_link = document.createElement('a');
+
+        // Download csv file
+        temp_link.download = "DealerCreditSaleView.csv";
+        var url = window.URL.createObjectURL(CSVFile);
+        temp_link.href = url;
+
+        // This link should not be displayed
+        temp_link.style.display = "none";
+        document.body.appendChild(temp_link);
+
+        // Automatically click the link to
+        // trigger download
+        temp_link.click();
+        document.body.removeChild(temp_link);
+    }
+</script>
 
