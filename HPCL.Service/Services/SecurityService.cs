@@ -1,5 +1,6 @@
 ﻿using HPCL.Common.Helper;
 using HPCL.Common.Models.CommonEntity;
+using HPCL.Common.Models.CommonEntity.RequestEnities;
 using HPCL.Common.Models.RequestModel.Security;
 using HPCL.Common.Models.ResponseModel.Security;
 using HPCL.Common.Models.ViewModel.Security;
@@ -510,6 +511,26 @@ namespace HPCL.Service.Services
             GetUserRolesAndRegions searchList = obj.ToObject<GetUserRolesAndRegions>();
             return searchList;
         }
-        
+        public async Task<string> ValidateManageUserName(string UserName)
+        {
+            var validateUserNameForms = new ValidateUserNameRequestModal
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserName = UserName,
+            };
+
+            StringContent validateUserNameContent = new StringContent(JsonConvert.SerializeObject(validateUserNameForms), Encoding.UTF8, "application/json");
+
+            var validateUserNameResponse = await _requestService.CommonRequestService(validateUserNameContent, WebApiUrl.validateUserName);
+
+            JObject validateUserNameObj = JObject.Parse(JsonConvert.DeserializeObject(validateUserNameResponse).ToString());
+            var validateUserNameJarr = validateUserNameObj["Data"].Value<JArray>();
+            List<SuccessResponse> validateUserNameLst = validateUserNameJarr.ToObject<List<SuccessResponse>>();
+
+            return validateUserNameLst[0].Status.ToString();
+        }
+
     }
 }

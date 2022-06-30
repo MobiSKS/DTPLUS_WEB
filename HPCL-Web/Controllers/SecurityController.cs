@@ -221,5 +221,13 @@ namespace HPCL_Web.Controllers
             modals.getUserRolesandregions.Add(await _securityService.GetUserRolesAndRegions());
             return View(modals);
         }
+        [HttpPost]
+        public async Task<JsonResult> ValidateUserName(string UserName)
+        {
+            var check = await _securityService.ValidateManageUserName(UserName);
+
+            ModelState.Clear();
+            return Json(check);
+        }
     }
 }

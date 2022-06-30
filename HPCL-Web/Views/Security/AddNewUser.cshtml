@@ -271,6 +271,25 @@
                      $("#userName_error").attr("style","display:block");
                       flag="N";
                 }
+                else{
+                    $.ajax({
+                        type: 'POST',  // http method
+                        url: '@Url.Action("ValidateUserName", "Security")',
+                        data: { UserName: userName.trim() },  // data to submit
+                        dataType: "json",
+                        success: function (data, status, xhr) {
+                            var v = data;
+                            if (status == 'success' && v == '0') {
+                                $("#userName_error").html("User Name already Exists");
+                                $("#userName_error").attr("style","display:block");
+                            }
+                            else {
+                                $("#userName_error").html("");
+                                $("#userName_error").attr("style","display:none");
+                            }
+                        }
+                    });
+                }
 
             }
             if(newEmail.trim()==""){
@@ -333,7 +352,7 @@
                url: '@Url.Action("InsertNewUser", "Security")',
                contentType: "application/json; charset=utf-8",
                dataType: 'JSON',
-               data: JSON.stringify(ReqModel);
+               data: JSON.stringify(ReqModel),
                success: function (data, status, xhr) {
                    var v = data;
                    if (status == 'success') {
@@ -363,11 +382,24 @@
                  $("#userName_error").attr("style","display:block");
             }
             else{
-                 $("#userName_error").html("");
-                 $("#userName_error").attr("style","display:none");
-            }
-
-
+                    $.ajax({
+                        type: 'POST',  // http method
+                        url: '@Url.Action("ValidateUserName", "Security")',
+                        data: { UserName: userName.trim() },  // data to submit
+                        dataType: "json",
+                        success: function (data, status, xhr) {
+                            var v = data;
+                            if (status == 'success' && v == '0') {
+                                $("#userName_error").html("User Name already Exists");
+                                $("#userName_error").attr("style","display:block");
+                            }
+                            else {
+                                $("#userName_error").html("");
+                                $("#userName_error").attr("style","display:none");
+                            }
+                        }
+                    });
+                }
         }
     });
      $("#NewEmail").on("blur", function() {

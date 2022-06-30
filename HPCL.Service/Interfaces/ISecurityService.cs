@@ -30,5 +30,6 @@ namespace HPCL.Service.Interfaces
         Task<List<SuccessResponse>> UpdateManageRole(ManageRolesRequestModel manageRolesRequestModel);
         Task<List<SuccessResponse>> InsertManageRole([FromBody] ManageRolesRequestModel manageRolesRequestModel);
         Task<GetUserRolesAndRegions> GetUserRolesAndRegions();
+        Task<string> ValidateManageUserName(string UserName);
     }
 }
