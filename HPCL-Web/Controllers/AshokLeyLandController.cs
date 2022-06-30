@@ -246,6 +246,13 @@ namespace HPCL_Web.Controllers
 
             return View(custMdl);
         }
+        [HttpPost]
+        public async Task<JsonResult> CheckVINNoUsed(string VinNo)
+        {
+            var Model = await _commonActionService.CheckVINNoUsed(VinNo);
+
+            return Json(Model);
+        }
 
     }
 }

@@ -45,6 +45,7 @@ namespace HPCL.Service
             services.AddTransient<IParentCustomerService, ParentCustomerService>();
             services.AddTransient<ICOMCOManagerService, COMCOManagerService>();
             services.AddTransient<IVolvoEicherService, VolvoEicherService>();
+            services.AddTransient<IAMEXBankCreditPouchService, AMEXBankCreditPouchService>();
             return services;
         }
     }
