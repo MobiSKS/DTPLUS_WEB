@@ -110,6 +110,17 @@ namespace HPCL_Web.Controllers
             }
             return View(modals);
         }
-       
+        public async Task<IActionResult> ParentCustomerRequestStatus()
+        {
+            var modals = new ParentCustomerStatusReport();
+            return View(modals);
+        }
+        
+        public async Task<IActionResult> SearchParentCustomerRequestStatus(string ZonalOfficeId, string RegionalOfficeId,string FromDate, string ToDate, string FormNumber)
+        {
+            var modals = await _customerService.SearchParentCustomerRequestStatus(ZonalOfficeId, RegionalOfficeId, FromDate, ToDate, FormNumber);
+            return PartialView("~/Views/ParentCustomer/_ParentCustomerRequestStatusTbl.cshtml", modals);
+        }
+        
     }
 }
