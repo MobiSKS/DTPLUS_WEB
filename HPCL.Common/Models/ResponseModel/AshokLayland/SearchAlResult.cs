@@ -31,5 +31,6 @@ namespace HPCL.Common.Models.ResponseModel.AshokLayland
         public string ROfficeID { get; set; }
         public string SId { get; set; }
         public string DId { get; set; }
+        public string SBUId { get; set; }
     }
 }
