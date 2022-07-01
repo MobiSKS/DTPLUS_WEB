@@ -42,7 +42,7 @@
                                                     <label class="font-weight-normal col-md-4 col-12 mb-0">Customer ID<sup class="text-danger">*</sup></label>
                                                     <div class="col-md-7 col-12">
                                                         @Html.TextBoxFor(m => m.CustomerId, new { @class = "form-control restrictPaste", @id = "GetCustomerIdValue", onkeypress = "return isNumberKey(event)" })
-                                                        @Html.ValidationMessageFor(m => m.CustomerId, "", new { @class = "text-danger" })
+                                                        @Html.ValidationMessageFor(m => m.CustomerId, "", new {@id="GetCustomerIdValueErr", @class = "text-danger" })
                                                     </div>
                                                 </div>
                                             </div>
@@ -50,7 +50,7 @@
                                                 <div class="form-group d-flex align-items-center flex-wrap">
                                                     <label class="font-weight-normal col-md-4 col-12  mb-0 offset-md-1">Card Number</label>
                                                     <div class="col-md-7 col-12">
-                                                        @Html.TextBoxFor(m => m.CardNo, new { @class = "form-control restrictPaste", onkeypress = "return isNumberKey(event)" })
+                                                        @Html.TextBoxFor(m => m.CardNo, new {@id="cardNoVal", @class = "form-control restrictPaste", onkeypress = "return isNumberKey(event)" })
                                                         @Html.ValidationMessageFor(m => m.CardNo, "", new { @class = "text-danger" })
                                                     </div>
                                                 </div>
@@ -59,7 +59,7 @@
                                                 <div class="form-group d-flex align-items-center flex-wrap">
                                                     <label class="font-weight-normal col-md-4 col-12  mb-0">Mobile Number</label>
                                                     <div class="col-md-7 col-12">
-                                                        @Html.TextBoxFor(m => m.MobileNo, new {@id="cardNoVal", @class = "form-control restrictPaste", onkeypress = "return isNumberKey(event)" })
+                                                        @Html.TextBoxFor(m => m.MobileNo, new {@id="mobNoVal", @class = "form-control restrictPaste", onkeypress = "return isNumberKey(event)" })
                                                         @Html.ValidationMessageFor(m => m.MobileNo, "", new { @class = "text-danger" })
                                                     </div>
                                                 </div>
@@ -68,7 +68,7 @@
                                                 <div class="form-group d-flex align-items-center flex-wrap">
                                                     <label class="font-weight-normal col-md-4 col-12  mb-0  offset-md-1">Vehicle No.</label>
                                                     <div class="col-md-7 col-12">
-                                                        @Html.TextBoxFor(m => m.VehicleNumber, new { @class = "form-control", maxlength="16" })
+                                                        @Html.TextBoxFor(m => m.VehicleNumber, new {@id="vehicleNoVal", @class = "form-control", maxlength="16" })
                                                         @Html.ValidationMessageFor(m => m.VehicleNumber, "", new { @class = "text-danger" })
                                                     </div>
                                                 </div>
@@ -788,105 +788,162 @@
 
     function searchCards() {
 
-         if ($("#formVal").valid()) {
+        var flag = "Y";
 
-            $.ajax({
-                type: 'POST',  // http method
-                url: '@Url.Action("ManageCards", "Cards")',
-                data: $('#formVal').serialize(),  // data to submit
-                success: function (res, status, xhr) {
+        var customerId = $("#GetCustomerIdValue").val();
+        var cardNo = $("#cardNoVal").val();
+        var mobNo = $("#mobNoVal").val();
+        var vehicleNo = $("#vehicleNoVal").val();
 
-                   searchResponse(res);
-
-                },
-                error: function (jqXhr, textStatus, errorMessage) {
-                    console.log("Error");
+        if(mobNo != '' || vehicleNo != ''){
+            if(cardNo == ''){
+                if(customerId == ''){
+                    $("#GetCustomerIdValueErr").text("Customer ID should not be left empty");
+                    flag = "N";
                 }
-            });
-        } else {
-            return false;
+            }
+        }
+
+        if(mobNo == '' && vehicleNo == '' && cardNo == ''){
+            if(customerId == ''){
+                $("#GetCustomerIdValueErr").text("Customer ID should not be left empty");
+                flag = "N";
+            }
+        }
+
+        if (flag == "N")
+            e.preventDefault();
+
+        if (flag == "Y") {
+            if ($("#formVal").valid()) {
+
+                $.ajax({
+                    type: 'POST',  // http method
+                    url: '@Url.Action("ManageCards", "Cards")',
+                    data: $('#formVal').serialize(),  // data to submit
+                    success: function (res, status, xhr) {
+
+                       searchResponse(res);
+
+                    },
+                    error: function (jqXhr, textStatus, errorMessage) {
+                        console.log("Error");
+                    }
+                });
+            } else {
+                return false;
+            }
         }
     }
 
 
     function viewGenericVehicleList() {
 
-         if ($("#formVal").valid()) {
+        var flag = "Y";
 
-            $.ajax({
-                type: 'POST',  // http method
-                url: '@Url.Action("GetGenericAttachedVehicle", "Cards")',
-                data: $('#formVal').serialize(),  // data to submit
-                success: function (res, status, xhr) {
+        var customerId = $("#GetCustomerIdValue").val();
+        var cardNo = $("#cardNoVal").val();
+        var mobNo = $("#mobNoVal").val();
+        var vehicleNo = $("#vehicleNoVal").val();
 
-                    console.log("search result",res);
+        if(mobNo != '' || vehicleNo != ''){
+            if(cardNo == ''){
+                if(customerId == ''){
+                    $("#GetCustomerIdValueErr").text("Customer ID should not be left empty");
+                    flag = "N";
+                }
+            }
+        }
 
-                    if (res.searchList.success == true) {
+        if(mobNo == '' && vehicleNo == '' && cardNo == ''){
+            if(customerId == ''){
+                $("#GetCustomerIdValueErr").text("Customer ID should not be left empty");
+                flag = "N";
+            }
+        }
 
-                        var searchGrid = res.searchList.data;
+        if (flag == "N")
+            e.preventDefault();
 
-                        document.getElementById("noRecord").style.display = "none";
+        if (flag == "Y") {
 
-                        $('#SearchGenericVehicleTbl').DataTable().clear().destroy();
+            if ($("#formVal").valid()) {
 
-                        var tbl = $('#SearchGenericVehicleTbl').DataTable({
-                            paging: true,
-                            searching: true,
-                            stateSave: true,
-                            "bDestroy": true,
-                            bVisible: false,
-                            "lengthMenu": [5, 10, 20, 50, 100, 200, 500, 1000, 2000],
-                            "autoWidth": false,
-                            "oLanguage": {
-                                "sLengthMenu": "Display _MENU_ Records",
-                                "info": "Showing _START_ to _END_ of _TOTAL_ Records",
-                            }
-                        });
+                $.ajax({
+                    type: 'POST',  // http method
+                    url: '@Url.Action("GetGenericAttachedVehicle", "Cards")',
+                    data: $('#formVal').serialize(),  // data to submit
+                    success: function (res, status, xhr) {
 
-                        for (var i = 0; i < searchGrid.length; i++) {
+                        console.log("search result",res);
 
-                            var yrOfReg;
+                        if (res.searchList.success == true) {
 
-                            if((searchGrid[i].yearOfRegistration) == 0){
-                                yrOfReg = '';
-                            }else{
-                                yrOfReg = searchGrid[i].yearOfRegistration;
-                            }
+                            var searchGrid = res.searchList.data;
 
-                            var srNumber = (i+1);
-                            var cardNumber = (searchGrid[i].cardNumber || '');
-                            var vechileNo = (searchGrid[i].vechileNo || '');
-                            var vehicleMake = (searchGrid[i].vehicleMake || '');
-                            var vehicleType = (searchGrid[i].vehicleType || '');
-                            var yrOfReg = yrOfReg;
+                            document.getElementById("noRecord").style.display = "none";
+
+                            $('#SearchGenericVehicleTbl').DataTable().clear().destroy();
+
+                            var tbl = $('#SearchGenericVehicleTbl').DataTable({
+                                paging: true,
+                                searching: true,
+                                stateSave: true,
+                                "bDestroy": true,
+                                bVisible: false,
+                                "lengthMenu": [5, 10, 20, 50, 100, 200, 500, 1000, 2000],
+                                "autoWidth": false,
+                                "oLanguage": {
+                                    "sLengthMenu": "Display _MENU_ Records",
+                                    "info": "Showing _START_ to _END_ of _TOTAL_ Records",
+                                }
+                            });
+
+                            for (var i = 0; i < searchGrid.length; i++) {
+
+                                var yrOfReg;
+
+                                if((searchGrid[i].yearOfRegistration) == 0){
+                                    yrOfReg = '';
+                                }else{
+                                    yrOfReg = searchGrid[i].yearOfRegistration;
+                                }
+
+                                var srNumber = (i+1);
+                                var cardNumber = (searchGrid[i].cardNumber || '');
+                                var vechileNo = (searchGrid[i].vechileNo || '');
+                                var vehicleMake = (searchGrid[i].vehicleMake || '');
+                                var vehicleType = (searchGrid[i].vehicleType || '');
+                                var yrOfReg = yrOfReg;
                            
 
-                            tbl.row.add([
-                                srNumber,
-                                cardNumber,
-                                vechileNo,
-                                vehicleMake,
-                                vehicleType,
-                                yrOfReg
-                            ]).draw();
+                                tbl.row.add([
+                                    srNumber,
+                                    cardNumber,
+                                    vechileNo,
+                                    vehicleMake,
+                                    vehicleType,
+                                    yrOfReg
+                                ]).draw();
+                            }
+
+                            document.getElementById('SearchGenericVehicle').style.display = 'block';
+
+                        } else {
+                            document.getElementById("SearchGenericVehicle").style.display = "none";
+                            $("#noRecord").html("");
+                            $("#noRecord").append("<span>" + res.searchList.message + "</span>");
+                            document.getElementById("noRecord").style.display = "block";
                         }
 
-                        document.getElementById('SearchGenericVehicle').style.display = 'block';
-
-                    } else {
-                        document.getElementById("SearchGenericVehicle").style.display = "none";
-                        $("#noRecord").html("");
-                        $("#noRecord").append("<span>" + res.searchList.message + "</span>");
-                        document.getElementById("noRecord").style.display = "block";
+                    },
+                    error: function (jqXhr, textStatus, errorMessage) {
+                        console.log("Error");
                     }
-
-                },
-                error: function (jqXhr, textStatus, errorMessage) {
-                    console.log("Error");
-                }
-            });
-        } else {
-            return false;
+                });
+            } else {
+                return false;
+            }
         }
     }
 
@@ -1197,79 +1254,109 @@
 
     function tableToCSV() {
 
-        if ($("#formVal").valid()) {
+        var flag = "Y";
 
-            $.ajax({
-                type: 'POST',  // http method
-                url: '@Url.Action("GetGenericAttachedVehicle", "Cards")',
-                data: $('#formVal').serialize(),  // data to submit
-                success: function (res, status, xhr) {
+        var customerId = $("#GetCustomerIdValue").val();
+        var cardNo = $("#cardNoVal").val();
+        var mobNo = $("#mobNoVal").val();
+        var vehicleNo = $("#vehicleNoVal").val();
 
-                    console.log("search result",res);
+        if(mobNo != '' || vehicleNo != ''){
+            if(cardNo == ''){
+                if(customerId == ''){
+                    $("#GetCustomerIdValueErr").text("Customer ID should not be left empty");
+                    flag = "N";
+                }
+            }
+        }
 
-                    var searchGrid = res.searchList.data;
+        if(mobNo == '' && vehicleNo == '' && cardNo == ''){
+            if(customerId == ''){
+                $("#GetCustomerIdValueErr").text("Customer ID should not be left empty");
+                flag = "N";
+            }
+        }
 
-                    if (res.searchList.success == true) {
+        if (flag == "N")
+            e.preventDefault();
+
+        if (flag == "Y") {
 
 
-                        $("#SearchGenericVehicleTblHidden td").parent().remove();
+            if ($("#formVal").valid()) {
 
-                        for (var i = 0; i < searchGrid.length; i++) {
+                $.ajax({
+                    type: 'POST',  // http method
+                    url: '@Url.Action("GetGenericAttachedVehicle", "Cards")',
+                    data: $('#formVal').serialize(),  // data to submit
+                    success: function (res, status, xhr) {
 
-                            var yrOfReg;
+                        console.log("search result",res);
 
-                            if((searchGrid[i].yearOfRegistration) == 0){
-                                yrOfReg = '';
-                            }else{
-                                yrOfReg = searchGrid[i].yearOfRegistration;
-                            }
+                        var searchGrid = res.searchList.data;
 
-                            var rows = "<tbody><trclass='gen'>"
-                                + "<td>"+(i+1)+"</td>"
-                                + "<td>" + (searchGrid[i].cardNumber || '') + "</td>"
-                                + "<td>" + (searchGrid[i].vechileNo || '')+ "</td>"
-                                + "<td>" + (searchGrid[i].vehicleMake || '') + "</td>"
-                                + "<td>" + (searchGrid[i].vehicleType || '') + "</td>"
-                                + "<td>" + (yrOfReg) + "</td>"
-                                + "</tr ></tbody>";
+                        if (res.searchList.success == true) {
 
-                            $('#SearchGenericVehicleTblHidden').append(rows);
-                         }
 
-                        var csv_data = [];
+                            $("#SearchGenericVehicleTblHidden td").parent().remove();
+
+                            for (var i = 0; i < searchGrid.length; i++) {
+
+                                var yrOfReg;
+
+                                if((searchGrid[i].yearOfRegistration) == 0){
+                                    yrOfReg = '';
+                                }else{
+                                    yrOfReg = searchGrid[i].yearOfRegistration;
+                                }
+
+                                var rows = "<tbody><trclass='gen'>"
+                                    + "<td>"+(i+1)+"</td>"
+                                    + "<td>" + (searchGrid[i].cardNumber || '') + "</td>"
+                                    + "<td>" + (searchGrid[i].vechileNo || '')+ "</td>"
+                                    + "<td>" + (searchGrid[i].vehicleMake || '') + "</td>"
+                                    + "<td>" + (searchGrid[i].vehicleType || '') + "</td>"
+                                    + "<td>" + (yrOfReg) + "</td>"
+                                    + "</tr ></tbody>";
+
+                                $('#SearchGenericVehicleTblHidden').append(rows);
+                             }
+
+                            var csv_data = [];
                                 
-                        var rows = document.getElementById("SearchGenericVehicleTblHidden").getElementsByTagName('tr');
+                            var rows = document.getElementById("SearchGenericVehicleTblHidden").getElementsByTagName('tr');
 
-                        console.log("rows",rows);
+                            console.log("rows",rows);
 
-                        if (rows.length > 0) {
+                            if (rows.length > 0) {
 
-                            for (var i = 0; i < rows.length; i++) {
+                                for (var i = 0; i < rows.length; i++) {
 
-                                var cols = rows[i].querySelectorAll('td,th');
+                                    var cols = rows[i].querySelectorAll('td,th');
 
-                                var csvrow = [];
-                                for (var j = 0; j < cols.length; j++) {
-                                    csvrow.push("" + cols[j].innerText);
+                                    var csvrow = [];
+                                    for (var j = 0; j < cols.length; j++) {
+                                        csvrow.push("" + cols[j].innerText);
+                                    }
+                                    csv_data.push(csvrow.join(","));
+                                    }
+
+                                    csv_data = csv_data.join('\n');
+
+                                    downloadCSVFile(csv_data);
                                 }
-                                csv_data.push(csvrow.join(","));
-                                }
-
-                                csv_data = csv_data.join('\n');
-
-                                downloadCSVFile(csv_data);
+                            } else {
+                                alert(res.searchList.message);
                             }
-                        } else {
-                            alert(res.searchList.message);
-                        }
 
-                    },
-                    error: function (jqXhr, textStatus, errorMessage) {
-                        console.log("Error");
-                    }
-            });
-        } else {
-            return false;
+                        },
+                        error: function (jqXhr, textStatus, errorMessage) {
+                            console.log("Error");
+                        }
+                });
+            } else {
+                return false;
+            }
         }
     }
 
