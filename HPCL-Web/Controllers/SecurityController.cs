@@ -238,9 +238,12 @@ namespace HPCL_Web.Controllers
             return Json(result);
         }
         
-        public async Task<IActionResult> UpdateUserandLocations(string UserName)
+        public async Task<IActionResult> UpdateUserandLocations(string UserName,string Email)
         {
-            var modals = new ManageNewUserViewModel();
+
+            var modals = await _securityService.GetManageUserForEdit(UserName);
+            modals.UserName = UserName;
+            modals.Email = Email;
             modals.getUserRolesandregions.Add(await _securityService.GetUserRolesAndRegions());
             return View(modals);
         }

@@ -32,5 +32,6 @@ namespace HPCL.Service.Interfaces
         Task<GetUserRolesAndRegions> GetUserRolesAndRegions();
         Task<string> ValidateManageUserName(string UserName);
         Task<List<SuccessResponse>> UpdateUser([FromBody] AddNewUserReq entity);
+        Task<ManageNewUserViewModel> GetManageUserForEdit(string UserName);
     }
 }
