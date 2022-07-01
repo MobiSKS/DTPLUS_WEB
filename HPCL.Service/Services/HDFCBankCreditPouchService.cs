@@ -223,9 +223,10 @@ namespace HPCL.Service.Services
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
-                CustomerId = entity.CustomerId,
-                FromDate = entity.FromDate,
-                ToDate = entity.ToDate
+                CustomerId = entity.CustomerId ?? "",
+                FromDate = entity.FromDate ?? "",
+                ToDate = entity.ToDate ?? ""
+                //BankNameId = 1
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");

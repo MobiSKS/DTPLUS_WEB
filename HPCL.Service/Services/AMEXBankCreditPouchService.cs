@@ -57,7 +57,7 @@ namespace HPCL.Service.Services
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
-            var response = await _requestService.CommonRequestService(content, WebApiUrl.GetPlanUrl);
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.GetAmexPlanUrl);
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
             GetPlanRes searchList = obj.ToObject<GetPlanRes>();
             return searchList;
