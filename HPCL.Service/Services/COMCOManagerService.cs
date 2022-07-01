@@ -232,6 +232,7 @@ namespace HPCL.Service.Services
                 form.Add(new StringContent(chequeBDSCRNumber.ToString()), "ChequeBDSCRNumber");
                 form.Add(new StringContent(chequeBDSCRDate.ToString()), "ChequeBDSCRDate");
                 form.Add(new StringContent("0"), "NoofCheques");
+                form.Add(new StringContent("0"), "ServicesCharges");
             }
             else
             {
@@ -248,6 +249,7 @@ namespace HPCL.Service.Services
                 form.Add(new StringContent(chequeBDSCRNumber.ToString()), "ChequeBDSCRNumber");
                 form.Add(new StringContent(chequeBDSCRDate.ToString()), "ChequeBDSCRDate");
                 form.Add(new StringContent(model.NoOfCheques), "NoofCheques");
+                form.Add(new StringContent("0"), "FinanceCharges");
             }
 
             form.Add(new StringContent(_httpContextAccessor.HttpContext.Session.GetString("UserId")), "CreatedBy");
