@@ -130,5 +130,44 @@ namespace HPCL.Service
                 }
             }
         }
+
+
+        public async Task<string> RechargeRequestService(StringContent content, string requestUrl)
+        {
+            var access_token = _api.GetToken();
+        Start:
+            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
+            {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", access_token.Result);
+
+                using (var Response = await client.PostAsync(requestUrl, content))
+                {
+                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        var ResponseContent = await Response.Content.ReadAsStringAsync();
+                        JObject respObj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        string respMessage = respObj["Message"].ToString();
+
+                        if (respMessage != "Success")
+                        {
+                            var access_tokenNew = _api.GetToken();
+                            if (access_tokenNew.Result != null)
+                            {
+                                HttpContextAccessor.HttpContext.Session.SetString("Token", access_tokenNew.Result);
+                            }
+                            else
+                            {
+                                goto Start;
+                            }
+                        }
+                        return ResponseContent;
+                    }
+                    else
+                    {
+                        throw new ArgumentException("Status Code: " + Response.StatusCode.ToString() + " Error Message: " + Response.RequestMessage.ToString());
+                    }
+                }
+            }
+        }
     }
 }

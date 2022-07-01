@@ -36,7 +36,7 @@ namespace HPCL.Service.Services
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
-            var response = await _requestService.CommonRequestService(content, WebApiUrl.GetDetailsByMobNoUrl);
+            var response = await _requestService.RechargeRequestService(content, WebApiUrl.GetDetailsByMobNoUrl);
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
             GetDetailsByMobRes searchList = obj.ToObject<GetDetailsByMobRes>();
             return searchList;
@@ -56,7 +56,7 @@ namespace HPCL.Service.Services
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
-            var response = await _requestService.CommonRequestService(content, WebApiUrl.RedirectToPGUrl);
+            var response = await _requestService.RechargeRequestService(content, WebApiUrl.RedirectToPGUrl);
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
             RedirectToPGResponse redirectDetails = obj.ToObject<RedirectToPGResponse>();
             return redirectDetails;
@@ -74,7 +74,7 @@ namespace HPCL.Service.Services
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
-            var response = await _requestService.CommonRequestService(content, WebApiUrl.CcmsRecGenerateOtp);
+            var response = await _requestService.RechargeRequestService(content, WebApiUrl.CcmsRecGenerateOtp);
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
             CCCMSRecGenerateOtpRes getOtp = obj.ToObject<CCCMSRecGenerateOtpRes>();
             return getOtp;
@@ -93,7 +93,7 @@ namespace HPCL.Service.Services
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
-            var response = await _requestService.CommonRequestService(content, WebApiUrl.CcmsRecVerifyOtp);
+            var response = await _requestService.RechargeRequestService(content, WebApiUrl.CcmsRecVerifyOtp);
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
             var jarr = obj["Data"].Value<JArray>();
             List<CCCMSRecVerifyOtpRes> verifyOtp = jarr.ToObject<List<CCCMSRecVerifyOtpRes>>();
