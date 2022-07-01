@@ -108,9 +108,9 @@ namespace HPCL_Web.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> UserResetPassword(string userName)
+        public async Task<JsonResult> UserResetPassword(string userName, string EmailId)
         {
-            var reasonList = await _securityService.UserResetPassword(userName);
+            var reasonList = await _securityService.UserResetPassword(userName,EmailId);
 
             ModelState.Clear();
             return Json(new { reasonList = reasonList });

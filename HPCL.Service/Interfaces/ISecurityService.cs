@@ -16,7 +16,7 @@ namespace HPCL.Service.Interfaces
         Task<string> RejectRbeUser(string userName, string comments);
         Task<UserCreationRequestViewModel> UserCreationRequestView(UserCreationRequestViewModel model);
         Task<GetManageUserResponse> GetManageUsers(GetManageUser entity);
-        Task<List<SuccessResponse>> UserResetPassword(string userName);
+        Task<List<SuccessResponse>> UserResetPassword(string userName, string EmailId);
         Task<List<SuccessResponse>> DisableUpdateManageUser(string userName, string action);
         Task<List<SuccessResponse>> DeleteManageUser(string userList);
         Task<List<SuccessResponse>> AddUser([FromBody] AddNewUserReq entity);
