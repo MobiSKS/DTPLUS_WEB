@@ -19,7 +19,7 @@ namespace HPCL.Service.Interfaces
         Task<List<SuccessResponse>> UserResetPassword(string userName);
         Task<List<SuccessResponse>> DisableUpdateManageUser(string userName, string action);
         Task<List<SuccessResponse>> DeleteManageUser(string userList);
-        Task<List<SuccessResponse>> AddUser(AddNewUserReq entity);
+        Task<List<SuccessResponse>> AddUser([FromBody] AddNewUserReq entity);
         Task<GetUserRoleLocationResponse> GetUserRoleLocation(string UserName);
         Task<UserCreationApprovalNonRBEModel> UserCreationApprovalNonRBE(UserCreationApprovalNonRBEModel model);
         Task<HPCL.Common.Models.ViewModel.Customer.UpdateKycResponse> UserApprovalRejectionNonRBE([FromBody] UserApprovalRejectionRequest model);
@@ -30,5 +30,7 @@ namespace HPCL.Service.Interfaces
         Task<List<SuccessResponse>> UpdateManageRole(ManageRolesRequestModel manageRolesRequestModel);
         Task<List<SuccessResponse>> InsertManageRole([FromBody] ManageRolesRequestModel manageRolesRequestModel);
         Task<GetUserRolesAndRegions> GetUserRolesAndRegions();
+        Task<string> ValidateManageUserName(string UserName);
+        Task<List<SuccessResponse>> UpdateUser([FromBody] AddNewUserReq entity);
     }
 }

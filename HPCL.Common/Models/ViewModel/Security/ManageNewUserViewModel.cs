@@ -28,5 +28,8 @@ namespace HPCL.Common.Models.ViewModel.Security
         public virtual List<CustomerSecretQueModel> CustomerSecretQueMdl { get; set; }
         public virtual List<GetUserRolesAndRegions> getUserRolesandregions { get; set; }
         
+        public string CreatedDate { get; set; }
+        public string LastLoginDate { get; set; }
     }
+    
 }

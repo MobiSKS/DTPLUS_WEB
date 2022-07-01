@@ -47,7 +47,7 @@
                                     </div>
                                     <div class="col-md-6 col-12">
                                         <div class="form-group d-flex align-items-center flex-wrap">
-                                            <label class="font-weight-normal col-md-5 col-12 mb-0">Vechile Number</label>
+                                            <label class="font-weight-normal col-md-5 col-12 mb-0">Vehicle Number</label>
                                             <div class="col-md-7 col-12">
                                                 @Html.TextBoxFor(m => m.VechileNo, new { @class = "form-control" })
                                                 @Html.ValidationMessageFor(m => m.VechileNo, "", new { @class = "text-danger" })
@@ -106,9 +106,9 @@
                                             <th>
                                                 @Html.DisplayName("Issue Date")
                                             </th>
-                                            <th>
+                                           @* <th>
                                                 @Html.DisplayName("Expiry Date")
-                                            </th>
+                                            </th>*@
                                             <th>
                                                 @Html.DisplayName("Status")
                                             </th>
@@ -153,16 +153,17 @@
      });
 
      $("#CardSearch").on('keydown', '.amt', function (event) {
-            if (event.shiftKey == true) {
-                event.preventDefault();
-            }
-            if ((event.keyCode >= 48 && event.keyCode <= 57) || (event.keyCode >= 96 && event.keyCode <= 105) || event.keyCode == 8 || event.keyCode == 9 || event.keyCode == 37 || event.keyCode == 39 || event.keyCode == 46 || event.keyCode == 190) {
+        if (event.shiftKey == true) {
+            event.preventDefault();
+        }
+        debugger;
+        if ((event.keyCode >= 48 && event.keyCode <= 57) || (event.keyCode >= 96 && event.keyCode <= 105) || event.keyCode == 8 || event.keyCode == 9 || event.keyCode == 37 || event.keyCode == 39 || event.keyCode == 46 || event.keyCode == 190 || event.keyCode==110) {
 
-            } else {
-                event.preventDefault();
-            }
-            if($(this).val().indexOf('.') !== -1 && event.keyCode == 190)
-                event.preventDefault();
+        } else {
+            event.preventDefault();
+        }
+        if($(this).val().indexOf('.') !== -1 && (event.keyCode == 190|| event.keyCode == 110))
+            event.preventDefault();
      });
 
      $(document).ready(function () {
@@ -289,7 +290,7 @@
                     for (var i = 0; i < ccmsDetails.length; i++) {
 
                         var isDts;
-                        var expDts;
+                        //var expDts;
 
                         if(((ccmsDetails[i].issueDate) == "01/01/0001 00:00:00") || ((ccmsDetails[i].issueDate) == "01/01/1900 00:00:00") || ((ccmsDetails[i].issueDate) == null)){
                             isDts = "";
@@ -297,11 +298,11 @@
                             isDts = moment(ccmsDetails[i].issueDate, 'DD-MM-YYYY').format('DD-MM-YYYY');
                         }
 
-                        if(((ccmsDetails[i].expiryDate) == "01/01/0001 00:00:00") || ((ccmsDetails[i].expiryDate) == "01/01/1900 00:00:00") || ((ccmsDetails[i].expiryDate) == null)){
-                            expDts = "";
-                        }else{
-                            expDts = moment(ccmsDetails[i].expiryDate, 'DD-MM-YYYY').format('DD-MM-YYYY');
-                        }
+                        //if(((ccmsDetails[i].expiryDate) == "01/01/0001 00:00:00") || ((ccmsDetails[i].expiryDate) == "01/01/1900 00:00:00") || ((ccmsDetails[i].expiryDate) == null)){
+                        //    expDts = "";
+                        //}else{
+                        //    expDts = moment(ccmsDetails[i].expiryDate, 'DD-MM-YYYY').format('DD-MM-YYYY');
+                        //}
 
                         var ccmsReloadSaleLimit = (ccmsDetails[i].ccmsReloadSaleLimitValue).toFixed(1);
 
@@ -310,7 +311,7 @@
                         var cardNumber = "<span class='cdn'>"+(ccmsDetails[i].cardNumber || '')+"</span>";
                         var vechileNo = "<span class='vn'>" + (ccmsDetails[i].vechileNo || '')+"</span>";
                         var issueDate = "<span class='isd'>" + isDts+"</span>";
-                        var expiryDate = "<span class='expd'>" + expDts+"</span>";
+                        //var expiryDate = "<span class='expd'>" + expDts+"</span>";
                         var status = "<span class='sts'>" + (ccmsDetails[i].status || '')+"</span>";
                         var mobileNumber = "<div style='width:160px;display:flex;'><input maxlength='10' onkeypress='return isNumberKey(event)' onchange='mobilenoChange(this," + (i) + ")' class='form-control mobn cgl' maxlength='10' pattern='^(?!(0))[0-9]{10}$' name='" + (ccmsDetails[i].mobileNumber || '') + "' type='text' value='" + (ccmsDetails[i].mobileNumber || '') + "' readonly='readonly'><i style='display:none;margin-top:10px;' class='fa fa-exclamation-triangle errs' id='mobileno_error_"+i+"' aria-hidden='true'></i></div>";
                         var ccmsLimitOption = "<div style='width:160px;display:flex;'><select onchange='selectCcmsLimitChange(this," + (i) + ")' readonly='readonly' disabled='disabled' class='form-control vls cgl'><option value='" + (ccmsDetails[i].ccmsLimitOption || '') + "'>" + (ccmsDetails[i].description || '') + "</option></select><i style='display:none;margin-top:10px;' class='fa fa-exclamation-triangle' id='selectCcmsLimit_error_"+i+"' aria-hidden='true'></i></div>";
@@ -322,7 +323,7 @@
                             cardNumber,
                             vechileNo,
                             issueDate,
-                            expiryDate,
+                            //expiryDate,
                             status,
                             mobileNumber,
                             ccmsLimitOption,

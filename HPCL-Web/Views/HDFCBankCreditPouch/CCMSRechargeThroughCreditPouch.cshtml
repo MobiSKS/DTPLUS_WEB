@@ -42,7 +42,7 @@
 
                             <div class="d-flex align-items-center justify-content-center">
                                 <div class="px-md-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2">
-                                    <button class="btn btn_primary" type="button" id="btnSave" name="submit" onclick="makeRecharge()">Submit</button>
+                                    <button class="btn btn_primary" type="button" onclick="makeRecharge()">Submit</button>
                                 </div>
                                 <div class="px-md-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2">
                                     <a class="btn btn_primary" href="#" id="btnCancel" name="cancel" onclick="resetClick()">Reset</a>
@@ -91,7 +91,6 @@
         if (event.shiftKey == true) {
             event.preventDefault();
         }
-        debugger;
         if ((event.keyCode >= 48 && event.keyCode <= 57) || (event.keyCode >= 96 && event.keyCode <= 105) || event.keyCode == 8 || event.keyCode == 9 || event.keyCode == 37 || event.keyCode == 39 || event.keyCode == 46 || event.keyCode == 190 || event.keyCode==110) {
 
         } else {
@@ -123,14 +122,14 @@
             }
         }
 
-        if(amount == ""){
+        if(amount.trim() == ""){
             $('#amountValErr').text("Please enter Amount");
             flag = "N";
         }
 
 
-        if(customerId != "" && amount != ""){
-            if($("#inlineCheckboxTC").prop('checked') == false){
+        if(customerId.trim() != "" || amount.trim() != ""){
+            if($("#gridCheck").prop('checked') == false){
                 alert("Please accept the terms and conditions.");
                 flag = "N";
             }
@@ -144,18 +143,32 @@
 
                 $.ajax({
                     type: 'POST',  // http method
-                    url: '@Url.Action("CCMSRechargeThroughCreditPouch", "HDFCBankCreditPouch")',
+                    url: '@Url.Action("CCMSInitiateRechargeHDFC", "HDFCBankCreditPouch")',
                     data: { customerId: customerId, amount: amount },  // data to submit
                     success: function (res) {
 
-                        if(res.searchList.success == true){
-                            var ress = JSON.stringify(res.searchList.data);
-                            var url = '@Html.Raw(@Url.Action("HdfcRedirectToPaymentGateway", new { inputTxtValues = "dd" }))';
-                            url = url.replace("dd", encodeURIComponent(ress));
-                            window.location.href = url;
+                        if(res.checkList.success == true){
+
+                            $.ajax({
+                                type: 'POST',  // http method
+                                url: '@Url.Action("CCMSRechargeThroughCreditPouch", "HDFCBankCreditPouch")',
+                                data: { customerId: customerId, amount: amount },  // data to submit
+                                success: function (res) {
+
+                                    var ress = JSON.stringify(res.searchList.data);
+                                    var url = '@Html.Raw(@Url.Action("HdfcRedirectToPaymentGateway", new { inputTxtValues = "dd" }))';
+                                    url = url.replace("dd", encodeURIComponent(ress));
+                                    window.location.href = url;
+
+                                },
+                                error: function (jqXhr, textStatus, errorMessage) {
+                                    console.log("Error");
+                                }
+                            });
+
                         }else{
                             $("#noRecord").html("");
-                            $("#noRecord").append("<span>" + res.searchList.message + "</span>");
+                            $("#noRecord").append("<span>" + res.checkList.data[0].reason + "</span>");
                             document.getElementById("noRecord").style.display = "block";
                         }
 
