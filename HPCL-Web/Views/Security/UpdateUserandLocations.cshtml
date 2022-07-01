@@ -1,0 +1,483 @@
+﻿@model HPCL.Common.Models.ViewModel.Security.ManageNewUserViewModel
+@using Microsoft.AspNetCore.Http;
+<div class="col-lg-12 p-4 p-md-4">
+    <div class="bg-white p-2 p-md-4">
+        <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
+            <li class="breadcrumb-item"><a href="@Url.Action("ManageUser","Security")" class="text_primary">Manage Users</a> </li>
+            <li class="breadcrumb-item font-weight-light">Add User</li>
+        </ul>
+        <ul class="nav nav-tabs mt-2 form_tabs justify-content-end" id="formTab" role="tablist">
+            <li class="nav-item"> <a class="nav-link active" id="userinfo-tab" data-toggle="tab" href="#userinfo" role="tab" aria-controls="userinfo" aria-selected="true">User Info</a> </li>
+            <li class="nav-item"> <a class="nav-link" id="userrole-tab" data-toggle="tab" href="#userrole" role="tab" aria-controls="userrole" aria-selected="false">User Role</a> </li>
+
+        </ul>
+        <div class="tab-content mt-3" id="myTabContent">
+            <div class="tab-pane fade show active" id="userinfo" role="tabpanel" aria-labelledby="userinfo-tab">
+                <div class="border-1 rounded border-grey w-100 mt-3">
+                    <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">User Information</p>
+                    <div class="py-2 p-md-4">
+                        <div class="d-flex align-items-center justify-content-between flex-wrap row">
+                            <div class="col-lg-6 col-md-12 col-12">
+                                <div class="form-group d-flex align-items-center flex-wrap">
+                                    <label class="font-weight-normal col-md-5 col-12">User Name <sup class="text-danger">*</sup></label>
+                                    <div class="col-md-7 col-12">
+                                        <div class="custom_select">
+                                            @Html.TextBoxFor(m => m.NewUserName, new { @class = "form-control", maxlength = "50", @readonly = "readonly" })
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-12 col-12">
+                                <div class="form-group d-flex align-items-center flex-wrap">
+                                    <label class="font-weight-normal offset-md-1 col-md-4 col-12">Email <sup class="text-danger">*</sup></label>
+                                    <div class="col-md-7 col-12">
+                                        <div class="custom_select">
+                                            @Html.TextBoxFor(m => m.NewEmail, new { @class = "form-control", maxlength = "50"})
+                                            <span class="error" style="display:none" id="email_error"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-between flex-wrap row">
+                            <div class="col-lg-6 col-md-12 col-12">
+                                <div class="form-group d-flex align-items-center flex-wrap">
+                                    <label class="font-weight-normal col-md-5 col-12">Created Date </label>
+                                    <div class="col-md-7 col-12">
+                                        <div class="custom_select">
+
+                                            @Html.LabelFor(m => m.CreatedDate, new { @class = "form-control"})
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-12 col-12">
+                                <div class="form-group d-flex align-items-center flex-wrap">
+                                    <label class="font-weight-normal offset-md-1 col-md-4 col-12">Last Login Date</label>
+                                    <div class="col-md-7 col-12">
+                                        <div class="custom_select">
+                                            @Html.LabelFor(m => m.LastLoginDate, new { @class = "form-control"})
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="clearfix"></div>
+                        <div class="d-flex align-items-center justify-content-center mt-0">
+                            <div class="px-0">
+                                <button class="btn btn_primary" id="btnNext" type="button">Next</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+
+            <div class="tab-pane fade show" id="userrole" role="tabpanel" aria-labelledby="userrole-tab">
+                <div class="border-1 rounded border-grey w-100 mt-3">
+                    <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">User Roles</p>
+                    <div class="d-flex align-items-start flex-wrap mt-3">
+                        <div class="col-12 col-lg-12">
+
+                            <table id="ViewRedemptionTable" class="table table-striped d-block d-md-table table-bordered table-responsive mt-3" style="width:100%;">
+                                <thead>
+                                    <tr>
+                                        <th>Role</th>
+                                        <th>Location</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>@*<a href="#">View Data Bank</a>*@
+                                            </td>
+                                        <td>@*NORTH ZONE,NORTH CENTRAL ZONE,WEST ZONE,NORTH WEST ZONE,EAST ZONE,SOUTH Z...*@
+
+                                        </td>
+                                        <td>@*<a href="#"><i class="fa fa-trash"></i></a>*@
+                                            </td>
+                                    </tr>
+
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                     <div class="clearfix"></div>
+                        <div id="message" tabindex="0" class="mb-3 text-center alert alert-danger" style="display:none"></div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="border-1 rounded border-grey w-100 mt-3">
+                    <div class="d-flex align-items-start flex-wrap">
+                        <div class="col-12 col-sm-3 px-0">
+                            <div class="UserRoleArea">
+                                <h2>User Role</h2>
+                                @if (Model.getUserRolesandregions.Count() > 0)
+                                {
+                                    if (Model.getUserRolesandregions.First().Data.UserRoles.Count() > 0)
+                                    {
+                                        <ul id="UserRoleList" style="max-height:400px; overflow-y:scroll;">
+                                            @foreach (var item in Model.getUserRolesandregions.First().Data.UserRoles)
+                                            {
+                                                <li id="@item.ID">@item.UserRole</li>
+                                                
+                                            }
+
+                                        </ul>
+                                    }
+                                }
+
+                            </div>
+                        </div>
+                 
+                        <div class="col-12 col-sm-9 px-0">
+                            <div class="LocationsArea">
+                                <h2>Locations Area</h2>
+                                <div class="panel-group" id="accordion">
+                                    <!-- /.panel -->
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h4 class="panel-title"></h4>
+                                            <input class="form-check-input check_box_pos_sty" type="checkbox" id="checkAll" value="option1">
+                                            <a class="" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" contenteditable="false">
+                                                <div class="form-check form-check-inline">
+                                                    <label class="form-check-label" for="inlineCheckbox1">All</label>
+                                                </div>
+                                            </a>
+                                        </div>
+                                        <!--/.panel-heading -->
+                                        <div id="collapseTwo" class="panel-collapse collapse show">
+                                            <div class="panel-body">
+                                                <!-- nested -->
+                                                <div class="panel-group" id="nested">
+                                                    @{
+                                                        int i = 0, j = 0;
+                                                        string ZoneId = "0";
+                                                    }
+                                                    @foreach (var item in Model.getUserRolesandregions.First().Data.Locations.OrderBy(x => x.ZonalOfficeID))
+                                                    {
+                                                        i++;
+                                                        @if (ZoneId != item.ZonalOfficeID)
+                                                        {
+                                                            ZoneId = item.ZonalOfficeID;
+                                                            <div class="panel panel-default">
+                                                                <div class="panel-heading">
+                                                                    <h4 class="panel-title"></h4>
+                                                                     <input class="form-check-input check_box_pos_sty" type="checkbox" name="zoneChk" onclick="chkAllRegion(this,@i)" id="check_@i" value="@item.ZonalOfficeID">
+                                                                    <a class="collapsed" data-toggle="collapse" data-parent="#nested" href="#nested_@i">
+                                                                        <div class="form-check form-check-inline">
+                                                                            <label class="form-check-label" for="check_@i">@item.ZonalOfficeName</label>
+                                                                        </div>
+                                                                    </a>
+
+                                                                </div>
+                                                                <!--/.panel-heading -->
+                                                        <div id="nested_@i" class="panel-collapse collapse in">
+                                                                    <div class="panel-body">
+                                                                        <ul style="padding-left: 25px;">
+                                                                            @foreach (var item1 in Model.getUserRolesandregions.First().Data.Locations.Where(x => x.ZonalOfficeID == item.ZonalOfficeID).OrderBy(x => x.ZonalOfficeID))
+                                                                            {
+                                                                                j++;
+                                                                                <li>
+                                                                                    <div class="form-check form-check-inline">
+                                                                                        <input class="form-check-input chk_@i" type="checkbox" name="regionChk" id="check_@i@j-@item.ZonalOfficeID" value="@item1.RegionalOfficeID">
+                                                                                        <label class="form-check-label" for="check_@i@j">@item1.RegionalOfficeName</label>
+                                                                                    </div>
+                                                                                </li>
+                                                                            }
+
+
+                                                                        </ul>
+                                                                    </div>
+                                                                    <!--/.panel-body -->
+                                                        </div>
+
+                                                                <!--/.panel-collapse -->
+                                                    </div>
+                                                        }
+                                                    }
+                                                    <!-- /.panel -->
+
+                                                </div>
+                                                <!-- /.panel-group -->
+                                                <!-- nested -->
+                                            </div>
+                                            <!--/.panel-body -->
+                                            
+                                        </div>
+                                        <!--/.panel-collapse -->
+                                    </div>
+                                    <!-- /.panel -->
+                                </div>
+                                <!-- /.panel-group -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="d-flex align-items-center justify-content-center mt-3">
+                    <div class="px-2">
+                        <button class="btn btn_primary" id="btnPrevious" type="button">Previous</button>
+                    </div>
+                    <div class="px-2">
+                        <button class="btn btn_primary" id="btnCreate" type="button">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</div>
+<div class="clearfix"></div>
+
+<script type="text/javascript">
+    var selectedRole="";
+    function chkAllRegion(o,cnt){
+        $('input:checkbox.chk_'+cnt).not(this).prop('checked', o.checked);
+        $("#message").html("");
+        $("#message").attr("style","display:none");
+    }
+    $("#checkAll").click(function () {
+        $('input:checkbox').not(this).prop('checked', this.checked);
+        $("#message").html("");
+        $("#message").attr("style","display:none");
+    });
+    var li =document.getElementById("UserRoleList").getElementsByTagName('li');
+
+    for(var i = 0;i<li.length;i++){
+        li[i].addEventListener("click", selectItem);
+    }
+
+    function selectItem(e){
+        //alert(e.target.innerText);   
+        //alert(e.target.attributes.id.value);  
+        selectedRole=e.target.attributes.id.value;
+        $("#message").html("Please select location for this Role");
+        $("#message").attr("style","display:block");
+
+        
+    }
+      $("#btnNext").on("click", (function (e) {
+         var userName=$("#NewUserName").val();
+         var newEmail=$("#NewEmail").val();
+        
+          var flag = "Y";
+
+            if(userName.trim()==""){
+                $("#userName_error").html("Please enter User Name");
+                $("#userName_error").attr("style","display:block");
+                flag="N";
+            }
+            else{
+                if(!(userName.match(userNameCheck))){
+                     $("#userName_error").html("Please enter valid User Name");
+                     $("#userName_error").attr("style","display:block");
+                      flag="N";
+                }
+                else{
+                    $.ajax({
+                        type: 'POST',  // http method
+                        url: '@Url.Action("ValidateUserName", "Security")',
+                        data: { UserName: userName.trim() },  // data to submit
+                        dataType: "json",
+                        success: function (data, status, xhr) {
+                            var v = data;
+                            if (status == 'success' && v == '0') {
+                                $("#userName_error").html("User Name already Exists");
+                                $("#userName_error").attr("style","display:block");
+                            }
+                            else {
+                                $("#userName_error").html("");
+                                $("#userName_error").attr("style","display:none");
+                            }
+                        }
+                    });
+                }
+
+            }
+            if(newEmail.trim()==""){
+                $("#email_error").html("Please enter Email");
+                $("#email_error").attr("style","display:block");
+                flag="N";
+            }
+            else{
+                if(!(newEmail.match(email))){
+                     $("#email_error").html("Please enter valid Email");
+                     $("#email_error").attr("style","display:block");
+                     flag="N";
+
+                }
+            }
+           
+          if (flag == "N")
+              e.preventDefault();
+           else{
+             
+                ShowUserRolesData();
+               }
+      })
+      );
+      $("#btnPrevious").on("click", (function (e) {
+            ShowUserInfoData();
+      })
+      );
+       $("#btnCreate").on("click", (function (e) {
+         var userName=$("#NewUserName").val();
+         var newEmail=$("#NewEmail").val();
+         var password=$("#NewPassword").val();
+         var confirm=$("#NewConfirmPassword").val();
+         var secretAns=$("#NewSecretAnswer").val();
+          var secretQstn =$("#NewSecretQuestion").val();
+          var flag = "Y";
+
+            if(userName.trim()==""){
+                $("#userName_error").html("Please enter User Name");
+                $("#userName_error").attr("style","display:block");
+                flag="N";
+            }
+            else{
+                if(!(userName.match(userNameCheck))){
+                     $("#userName_error").html("Please enter valid User Name");
+                     $("#userName_error").attr("style","display:block");
+                      flag="N";
+                }
+                else{
+                    $.ajax({
+                        type: 'POST',  // http method
+                        url: '@Url.Action("ValidateUserName", "Security")',
+                        data: { UserName: userName.trim() },  // data to submit
+                        dataType: "json",
+                        success: function (data, status, xhr) {
+                            var v = data;
+                            if (status == 'success' && v == '0') {
+                                $("#userName_error").html("User Name already Exists");
+                                $("#userName_error").attr("style","display:block");
+                            }
+                            else {
+                                $("#userName_error").html("");
+                                $("#userName_error").attr("style","display:none");
+                            }
+                        }
+                    });
+                }
+
+            }
+            if(newEmail.trim()==""){
+                $("#email_error").html("Please enter Email");
+                $("#email_error").attr("style","display:block");
+                flag="N";
+            }
+            else{
+                if(!(newEmail.match(email))){
+                     $("#email_error").html("Please enter valid Email");
+                     $("#email_error").attr("style","display:block");
+                     flag="N";
+
+                }
+            }
+         
+          if (flag == "N")
+              e.preventDefault();
+           else{
+               var userRoleSelected=selectedRole;
+               objUserRole=[];
+               $("input:checkbox[name=regionChk]:checked").each(function () {
+                   var chkROId=$(this).attr("id");
+                    var zoId=chkROId.substring(chkROId.indexOf('-') + 1);
+                    objUserRole.push({ RO: $(this).val(),ZO:zoId });
+               });
+               var ReqModel={UserName:userName,Email:newEmail,UserRole:userRoleSelected,FirstName:"",LastName:"",StateId:"0",ActionType:"",TypeManageUsersAddUserRole:objUserRole};
+               $.ajax({
+                   type: 'POST',  // http method
+                   url: '@Url.Action("UpdateUser", "Security")',
+                   contentType: "application/json; charset=utf-8",
+                   dataType: 'JSON',
+                   data: JSON.stringify(ReqModel),
+                   success: function (data, status, xhr) {
+                       var v = data;
+                       if (status == 'success') {
+
+                       }
+                       else {
+                           console.log(v);
+                       }
+                   },
+                   error: function (jqXhr, textStatus, errorMessage) {
+                       alert("Error"+ errorMessage);
+                   }
+               });
+            }
+      })
+      );
+       function ShowUserRolesData()
+        {
+            document.getElementById("userrole-tab").classList.remove("disable");
+            document.getElementById("userrole-tab").click();
+            document.getElementById("userinfo-tab").classList.add("disable");
+            
+
+        }
+        function ShowUserInfoData()
+        {
+            document.getElementById("userinfo-tab").classList.remove("disable");
+            document.getElementById("userinfo-tab").click();
+            document.getElementById("userrole-tab").classList.add("disable");
+            
+
+        }
+     $("#NewUserName").on("blur", function() {
+         var userName=$("#NewUserName").val();
+         if(userName.trim()==""){
+            $("#userName_error").html("Please enter User Name");
+            $("#userName_error").attr("style","display:block");
+
+        }
+        else{
+            if(!(userName.match(userNameCheck))){
+                 $("#userName_error").html("Please enter valid User Name");
+                 $("#userName_error").attr("style","display:block");
+            }
+            else{
+                    $.ajax({
+                        type: 'POST',  // http method
+                        url: '@Url.Action("ValidateUserName", "Security")',
+                        data: { UserName: userName.trim() },  // data to submit
+                        dataType: "json",
+                        success: function (data, status, xhr) {
+                            var v = data;
+                            if (status == 'success' && v == '0') {
+                                $("#userName_error").html("User Name already Exists");
+                                $("#userName_error").attr("style","display:block");
+                            }
+                            else {
+                                $("#userName_error").html("");
+                                $("#userName_error").attr("style","display:none");
+                            }
+                        }
+                    });
+                }
+        }
+    });
+     $("#NewEmail").on("blur", function() {
+         var newEmail=$("#NewEmail").val();
+         if(newEmail.trim()==""){
+            $("#email_error").html("Please enter Email");
+            $("#email_error").attr("style","display:block");
+
+        }
+        else{
+            if(!(newEmail.match(email))){
+                 $("#email_error").html("Please enter valid Email");
+                 $("#email_error").attr("style","display:block");
+            }
+            else{
+                 $("#email_error").html("");
+                 $("#email_error").attr("style","display:none");
+            }
+
+        }
+    });
+     
+</script>
