@@ -22,7 +22,7 @@
                                     <label class="font-weight-normal col-md-5 col-12">User Name <sup class="text-danger">*</sup></label>
                                     <div class="col-md-7 col-12">
                                         <div class="custom_select">
-                                            @Html.TextBoxFor(m => m.NewUserName, new { @class = "form-control", maxlength = "50", @readonly = "readonly" })
+                                            @Html.TextBoxFor(m => m.UserName, new { @class = "form-control", maxlength = "50", @readonly = "readonly" })
 
                                         </div>
                                     </div>
@@ -33,7 +33,7 @@
                                     <label class="font-weight-normal offset-md-1 col-md-4 col-12">Email <sup class="text-danger">*</sup></label>
                                     <div class="col-md-7 col-12">
                                         <div class="custom_select">
-                                            @Html.TextBoxFor(m => m.NewEmail, new { @class = "form-control", maxlength = "50"})
+                                            @Html.TextBoxFor(m => m.Email, new { @class = "form-control", maxlength = "50"})
                                             <span class="error" style="display:none" id="email_error"></span>
                                         </div>
                                     </div>
@@ -57,7 +57,7 @@
                                     <label class="font-weight-normal offset-md-1 col-md-4 col-12">Last Login Date</label>
                                     <div class="col-md-7 col-12">
                                         <div class="custom_select">
-                                            @Html.LabelFor(m => m.LastLoginDate, new { @class = "form-control"})
+                                            @Html.LabelFor(m => m.LastLogin, new { @class = "form-control"})
                                         </div>
                                     </div>
                                 </div>
@@ -78,8 +78,8 @@
             <div class="tab-pane fade show" id="userrole" role="tabpanel" aria-labelledby="userrole-tab">
                 <div class="border-1 rounded border-grey w-100 mt-3">
                     <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">User Roles</p>
-                   @* @if (Model.RolesAssignedList.Count() > 0)
-                    {*@
+                    @if (Model.Data.Count() > 0)
+                    {
                         <div class="d-flex align-items-start flex-wrap mt-3">
                             <div class="col-12 col-lg-12">
 
@@ -89,20 +89,20 @@
                                             <th>Role</th>
                                             <th>Location</th>
                                             <th>Action</th>
-                                            <th>Id</th>
-                                            <th>ZonalID</th>
-                                            <th>RegionalId</th>
+                                            <th style="display:none">Id</th>
+                                            <th style="display:none">ZonalID</th>
+                                            <th style="display:none">RegionalId</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @*@foreach (var item in Model.RolesAssignedList)
+                                        @foreach (var item in Model.Data)
                                         {
                                             <tr>
                                                 <td>
-                                                    <a href="#" class="roleSelect">@item.RoleName</a>
+                                                    <a href="#" class="roleSelect">@item.UserRole</a>
                                                 </td>
                                                 <td>
-                                                    @item.Locations
+                                                    @item.Location
                                                 </td>
                                                 <td>
                                                     <a href="#"><i class="fa fa-trash"></i></a>
@@ -111,44 +111,17 @@
                                                 <td class="zoneId" style="display:none">@item.ZonalOfficeId</td>
                                                 <td class="regionId" style="display:none">@item.RegionalOfficeId</td>
                                             </tr>
-                                        }*@
-                                        @* <tr>
-                                                <td>
-                                                    <a href="#" class="roleSelect">HO User for View</a>
-                                                </td>
-                                                <td>
-                                                    LPG
-                                                </td>
-                                                <td>
-                                                    <a href="#"><i class="fa fa-trash"></i></a>
-                                                </td>
-                                                <td class="roleId" style="display:none">4</td>
-                                                <td class="zoneId" style="display:none">1</td>
-                                                <td class="regionId" style="display:none">2</td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <a href="#" class="roleSelect">HO User for All</a>
-                                                </td>
-                                                <td>
-                                                    LPG
-                                                </td>
-                                                <td>
-                                                    <a href="#"><i class="fa fa-trash"></i></a>
-                                                </td>
-                                                <td class="roleId" style="display:none">26</td>
-                                                <td class="zoneId" style="display:none">1</td>
-                                                <td class="regionId" style="display:none">11</td>
-                                            </tr>*@
+                                        }
+                                         
                                     </tbody>
                                 </table>
                             </div>
                         </div>
-                    @*}
+                    }
                     else
                     {
                         <div id="message" tabindex="0" class="mb-3 text-center alert alert-danger">No Roles Assigned to This User</div>
-                    }*@
+                    }
                     <div class="clearfix"></div>
                     <div id="message" tabindex="0" class="mb-3 text-center alert alert-danger" style="display:none"></div>
                 </div>
@@ -315,15 +288,15 @@
         
          $('li').removeClass("usr_active");
      
-        $('#roleId').addClass("usr_active");
+        $('li#'+roleId).addClass("usr_active");
         $('input[type=checkbox][name=regionChk]').prop("checked",false);
         $('input[type=checkbox][name=regionChk][value='+regionId+']').prop("checked",true); 
      
     });
 
       $("#btnNext").on("click", (function (e) {
-         var userName=$("#NewUserName").val();
-         var newEmail=$("#NewEmail").val();
+         var userName=$("#UserName").val();
+         var newEmail=$("#Email").val();
 
           var flag = "Y";
 
@@ -386,12 +359,9 @@
       })
       );
        $("#btnCreate").on("click", (function (e) {
-         var userName=$("#NewUserName").val();
-         var newEmail=$("#NewEmail").val();
-         var password=$("#NewPassword").val();
-         var confirm=$("#NewConfirmPassword").val();
-         var secretAns=$("#NewSecretAnswer").val();
-          var secretQstn =$("#NewSecretQuestion").val();
+         var userName=$("#UserName").val();
+         var newEmail=$("#Email").val();
+        
           var flag = "Y";
 
             if(userName.trim()==""){
@@ -489,8 +459,8 @@
 
 
         }
-     $("#NewUserName").on("blur", function() {
-         var userName=$("#NewUserName").val();
+     $("#UserName").on("blur", function() {
+         var userName=$("#UserName").val();
          if(userName.trim()==""){
             $("#userName_error").html("Please enter User Name");
             $("#userName_error").attr("style","display:block");
@@ -522,8 +492,8 @@
                 }
         }
     });
-     $("#NewEmail").on("blur", function() {
-         var newEmail=$("#NewEmail").val();
+     $("#Email").on("blur", function() {
+         var newEmail=$("#Email").val();
          if(newEmail.trim()==""){
             $("#email_error").html("Please enter Email");
             $("#email_error").attr("style","display:block");

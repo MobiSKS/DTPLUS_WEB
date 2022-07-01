@@ -566,5 +566,23 @@ namespace HPCL.Service.Services
             List<SuccessResponse> responseMsg = jarr.ToObject<List<SuccessResponse>>();
             return responseMsg;
         }
+        public async Task<ManageNewUserViewModel> GetManageUserForEdit(string UserName)
+        {
+            var forms = new AddNewUserReq
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserName = UserName
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.manageeditusers);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            ManageNewUserViewModel searchList = obj.ToObject<ManageNewUserViewModel>();
+            return searchList;
+        }
     }
 }
