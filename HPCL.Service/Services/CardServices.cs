@@ -34,7 +34,7 @@ namespace HPCL.Service.Services
             var searchBody = new CustomerCards();
 
             var UserName = _httpContextAccessor.HttpContext.Session.GetString("UserId");
-            if (entity.CustomerId != null)
+            if (entity.CustomerId != null || entity.CardNo != null)
             {
                 searchBody = new CustomerCards
                 {

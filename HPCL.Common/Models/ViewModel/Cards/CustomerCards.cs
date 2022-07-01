@@ -9,7 +9,7 @@ namespace HPCL.Common.Models.ViewModel.Cards
     {
         [StringLength(10)]
         [RegularExpression(FieldValidation.ValidCustomerId, ErrorMessage = FieldValidation.ValidCustomerIdErrMsg)]
-        [Required(ErrorMessage = FieldValidation.CustomerNotEmpty)]
+        //[Required(ErrorMessage = FieldValidation.CustomerNotEmpty)]
         public string CustomerId { get; set; }
         [StringLength(16)]
         [RegularExpression(FieldValidation.ValidCardNo, ErrorMessage = FieldValidation.ValidCardNoErrMsg)]
