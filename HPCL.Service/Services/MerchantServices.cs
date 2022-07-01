@@ -73,7 +73,7 @@ namespace HPCL.Service.Services
             }
         }
 
-        public async Task<MerchantGetDetailsModel> CreateMerchant(string merchantIdValue, string fromDate, string toDate, string category,string ERPCode, string actionFlow)
+        public async Task<MerchantGetDetailsModel> CreateMerchant(string merchantIdValue, string fromDate, string toDate, string category, string ERPCode, string actionFlow)
         {
             MerchantGetDetailsModel merchantMdl = new MerchantGetDetailsModel();
             if (!string.IsNullOrEmpty(merchantIdValue))
@@ -131,9 +131,11 @@ namespace HPCL.Service.Services
             merchantMdl.MerchantTypes.AddRange(await _commonActionService.GetMerchantTypeList());
             merchantMdl.OutletCategories.AddRange(await _commonActionService.GetOutletCategoryList());
             merchantMdl.SBUTypes.AddRange(await _commonActionService.GetSbuTypeList());
+            if (string.IsNullOrEmpty(merchantMdl.SBUTypeId))
+                merchantMdl.SBUTypeId = "1";
             merchantMdl.RetailOutletStates.AddRange(await _commonActionService.GetStateList());
             merchantMdl.CommStates.AddRange(await _commonActionService.GetStateList());
-            merchantMdl.ZonalOffices.AddRange(await _commonActionService.GetZonalOfficeList());
+            merchantMdl.ZonalOffices.AddRange(await _commonActionService.GetZonalOfficebySBUType(merchantMdl.SBUTypeId));
 
             merchantMdl.RegionalOfcIdVal = merchantMdl.RegionalOfficeId;
             merchantMdl.RetailDistrictIdVal = merchantMdl.RetailOutletDistrictId;
