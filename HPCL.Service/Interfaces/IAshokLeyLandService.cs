@@ -1,5 +1,6 @@
 ﻿using HPCL.Common.Models.CommonEntity.ResponseEnities;
 using HPCL.Common.Models.ResponseModel.AshokLayland;
+using HPCL.Common.Models.ResponseModel.CustomerManage;
 using HPCL.Common.Models.ResponseModel.MyHpOTCCardCustomer;
 using HPCL.Common.Models.ViewModel.AshokLeyLand;
 using Microsoft.AspNetCore.Mvc;
@@ -34,5 +35,7 @@ namespace HPCL.Service.Interfaces
         Task<HPCL.Common.Models.ViewModel.Customer.UpdateKycResponse> AproveRejectCustomer(string CustomerID, string Comments, string Approvalstatus);
         Task<List<StatusResponseModal>> GetAlStatusType();
         Task<ALCustomerProfileModel> ManageProfile();
+        Task<List<CustomerProfileResponse>> BindCustomerDetailsForSearch(string CustomerId, string NameOnCard);
+        Task<List<SearchGridResponse>> CardDetailsForSearch(string CustomerId, string CustomerTypeId);
     }
 }
