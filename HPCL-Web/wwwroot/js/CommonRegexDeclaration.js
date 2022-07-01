@@ -35,4 +35,4 @@ var dealerNameCheck = /^[A-Za-z ]{2,50}$/;
 var cardNoCheck = /^(?!(0))[0-9]{16}$/;
 var corporateCustomerCheck = /^(?=([24]8))[0-9]{10}$/;
 var empIDCheck = /^[A-Za-z0-9]{6,30}$/;
-var passwordCheck = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*?[#?!@$%^&*-_.])[A-Za-z\d#?!@$%^&*-_.]{8,}$/
+var passwordCheck = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*?[!@~#%^&(*)])[A-Za-z\d!@~#%^&(*)]{8,}$/
