@@ -508,7 +508,7 @@
         public static string AMEXEnrollExceptionReqUrl = "api/dtplus/AMEXcreditPouch/insrt_cp_rqst";
         public static string AMEXGetExApprovalUrl = "api/dtplus/AMEXcreditPouch/Get_cp_by_bank";
         public static string AMEXSubmitExApprovalUrl = "api/dtplus/AMEXcreditPouch/action_cp";
-
+        public static string GetAmexPlanUrl = "api/dtplus/AMEXCreditPouch/get_plan";
         public static string AMEXGetEnrollStatusUrl = "api/dtplus/AMEXCreditPouch/get_cp_status";
         public static string AMEXGetEnrollStatusReportUrl = "api/dtplus/AMEXCreditPouch/get_cp_status_Report";
         public static string AMEXHdfcCcmsRechargeUrl = "api/dtplus/HDFCCreditPouch/insert_cp_pg_log";
