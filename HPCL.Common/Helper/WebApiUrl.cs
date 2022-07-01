@@ -233,6 +233,7 @@
         public static string userCreationApproval = "api/dtplus/UserManage/user_creation_approval";
         public static string userApprovalRejection = "api/dtplus/UserManage/user_approval_rejection";
         public static string getuserrolesandregions = "api/dtplus/UserManage/get_user_roles_and_regions";
+        public static string manageeditusers = "api/dtplus/UserManage/manage_edit_users";
         #endregion
 
         #region DriverCard

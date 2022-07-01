@@ -22,8 +22,8 @@
                                     <label class="font-weight-normal col-md-5 col-12">User Name <sup class="text-danger">*</sup></label>
                                     <div class="col-md-7 col-12">
                                         <div class="custom_select">
-                                            @Html.TextBoxFor(m => m.NewUserName, new { @class = "form-control", maxlength = "50", @readonly = "readonly" })
-                                            
+                                            @Html.TextBoxFor(m => m.UserName, new { @class = "form-control", maxlength = "50", @readonly = "readonly" })
+
                                         </div>
                                     </div>
                                 </div>
@@ -33,7 +33,7 @@
                                     <label class="font-weight-normal offset-md-1 col-md-4 col-12">Email <sup class="text-danger">*</sup></label>
                                     <div class="col-md-7 col-12">
                                         <div class="custom_select">
-                                            @Html.TextBoxFor(m => m.NewEmail, new { @class = "form-control", maxlength = "50"})
+                                            @Html.TextBoxFor(m => m.Email, new { @class = "form-control", maxlength = "50"})
                                             <span class="error" style="display:none" id="email_error"></span>
                                         </div>
                                     </div>
@@ -57,13 +57,13 @@
                                     <label class="font-weight-normal offset-md-1 col-md-4 col-12">Last Login Date</label>
                                     <div class="col-md-7 col-12">
                                         <div class="custom_select">
-                                            @Html.LabelFor(m => m.LastLoginDate, new { @class = "form-control"})
+                                            @Html.LabelFor(m => m.LastLogin, new { @class = "form-control"})
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="clearfix"></div>
                         <div class="d-flex align-items-center justify-content-center mt-0">
                             <div class="px-0">
@@ -78,35 +78,52 @@
             <div class="tab-pane fade show" id="userrole" role="tabpanel" aria-labelledby="userrole-tab">
                 <div class="border-1 rounded border-grey w-100 mt-3">
                     <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">User Roles</p>
-                    <div class="d-flex align-items-start flex-wrap mt-3">
-                        <div class="col-12 col-lg-12">
+                    @if (Model.Data.Count() > 0)
+                    {
+                        <div class="d-flex align-items-start flex-wrap mt-3">
+                            <div class="col-12 col-lg-12">
 
-                            <table id="ViewRedemptionTable" class="table table-striped d-block d-md-table table-bordered table-responsive mt-3" style="width:100%;">
-                                <thead>
-                                    <tr>
-                                        <th>Role</th>
-                                        <th>Location</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>@*<a href="#">View Data Bank</a>*@
-                                            </td>
-                                        <td>@*NORTH ZONE,NORTH CENTRAL ZONE,WEST ZONE,NORTH WEST ZONE,EAST ZONE,SOUTH Z...*@
-
-                                        </td>
-                                        <td>@*<a href="#"><i class="fa fa-trash"></i></a>*@
-                                            </td>
-                                    </tr>
-
-
-                                </tbody>
-                            </table>
+                                <table id="LocRoleMappingTbl" class="table table-striped d-block d-md-table table-bordered table-responsive mt-3" style="width:100%;">
+                                    <thead>
+                                        <tr>
+                                            <th>Role</th>
+                                            <th>Location</th>
+                                            <th>Action</th>
+                                            <th style="display:none">Id</th>
+                                            <th style="display:none">ZonalID</th>
+                                            <th style="display:none">RegionalId</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in Model.Data)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <a href="#" class="roleSelect">@item.UserRole</a>
+                                                </td>
+                                                <td>
+                                                    @item.Location
+                                                </td>
+                                                <td>
+                                                    <a href="#"><i class="fa fa-trash"></i></a>
+                                                </td>
+                                                <td class="roleId" style="display:none">@item.RoleId</td>
+                                                <td class="zoneId" style="display:none">@item.ZonalOfficeId</td>
+                                                <td class="regionId" style="display:none">@item.RegionalOfficeId</td>
+                                            </tr>
+                                        }
+                                         
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
-                    </div>
-                     <div class="clearfix"></div>
-                        <div id="message" tabindex="0" class="mb-3 text-center alert alert-danger" style="display:none"></div>
+                    }
+                    else
+                    {
+                        <div id="message" tabindex="0" class="mb-3 text-center alert alert-danger">No Roles Assigned to This User</div>
+                    }
+                    <div class="clearfix"></div>
+                    <div id="message" tabindex="0" class="mb-3 text-center alert alert-danger" style="display:none"></div>
                 </div>
                 <div class="clearfix"></div>
                 <div class="border-1 rounded border-grey w-100 mt-3">
@@ -122,7 +139,7 @@
                                             @foreach (var item in Model.getUserRolesandregions.First().Data.UserRoles)
                                             {
                                                 <li id="@item.ID">@item.UserRole</li>
-                                                
+
                                             }
 
                                         </ul>
@@ -131,7 +148,7 @@
 
                             </div>
                         </div>
-                 
+
                         <div class="col-12 col-sm-9 px-0">
                             <div class="LocationsArea">
                                 <h2>Locations Area</h2>
@@ -165,7 +182,7 @@
                                                             <div class="panel panel-default">
                                                                 <div class="panel-heading">
                                                                     <h4 class="panel-title"></h4>
-                                                                     <input class="form-check-input check_box_pos_sty" type="checkbox" name="zoneChk" onclick="chkAllRegion(this,@i)" id="check_@i" value="@item.ZonalOfficeID">
+                                                                    <input class="form-check-input check_box_pos_sty" type="checkbox" name="zoneChk" onclick="chkAllRegion(this,@i)" id="check_@i" value="@item.ZonalOfficeID">
                                                                     <a class="collapsed" data-toggle="collapse" data-parent="#nested" href="#nested_@i">
                                                                         <div class="form-check form-check-inline">
                                                                             <label class="form-check-label" for="check_@i">@item.ZonalOfficeName</label>
@@ -205,7 +222,7 @@
                                                 <!-- nested -->
                                             </div>
                                             <!--/.panel-body -->
-                                            
+
                                         </div>
                                         <!--/.panel-collapse -->
                                     </div>
@@ -251,18 +268,36 @@
     }
 
     function selectItem(e){
-        //alert(e.target.innerText);   
-        //alert(e.target.attributes.id.value);  
+        //alert(e.target.innerText);
+        //alert(e.target.attributes.id.value);
         selectedRole=e.target.attributes.id.value;
         $("#message").html("Please select location for this Role");
         $("#message").attr("style","display:block");
+         $('li').removeClass("usr_active");
+        $(e.target).addClass("usr_active");
 
-        
     }
-      $("#btnNext").on("click", (function (e) {
-         var userName=$("#NewUserName").val();
-         var newEmail=$("#NewEmail").val();
+
+   $("#LocRoleMappingTbl").on('click', '.roleSelect', function (e) {
+
+
+       debugger;
+        var currentRow = $(this).closest("tr");
+        var roleId = currentRow.find('.roleId').text();
+        var regionId = currentRow.find('.regionId').text();
         
+         $('li').removeClass("usr_active");
+     
+        $('li#'+roleId).addClass("usr_active");
+        $('input[type=checkbox][name=regionChk]').prop("checked",false);
+        $('input[type=checkbox][name=regionChk][value='+regionId+']').prop("checked",true); 
+     
+    });
+
+      $("#btnNext").on("click", (function (e) {
+         var userName=$("#UserName").val();
+         var newEmail=$("#Email").val();
+
           var flag = "Y";
 
             if(userName.trim()==""){
@@ -310,11 +345,11 @@
 
                 }
             }
-           
+
           if (flag == "N")
               e.preventDefault();
            else{
-             
+
                 ShowUserRolesData();
                }
       })
@@ -324,12 +359,9 @@
       })
       );
        $("#btnCreate").on("click", (function (e) {
-         var userName=$("#NewUserName").val();
-         var newEmail=$("#NewEmail").val();
-         var password=$("#NewPassword").val();
-         var confirm=$("#NewConfirmPassword").val();
-         var secretAns=$("#NewSecretAnswer").val();
-          var secretQstn =$("#NewSecretQuestion").val();
+         var userName=$("#UserName").val();
+         var newEmail=$("#Email").val();
+        
           var flag = "Y";
 
             if(userName.trim()==""){
@@ -377,7 +409,7 @@
 
                 }
             }
-         
+
           if (flag == "N")
               e.preventDefault();
            else{
@@ -416,7 +448,7 @@
             document.getElementById("userrole-tab").classList.remove("disable");
             document.getElementById("userrole-tab").click();
             document.getElementById("userinfo-tab").classList.add("disable");
-            
+
 
         }
         function ShowUserInfoData()
@@ -424,11 +456,11 @@
             document.getElementById("userinfo-tab").classList.remove("disable");
             document.getElementById("userinfo-tab").click();
             document.getElementById("userrole-tab").classList.add("disable");
-            
+
 
         }
-     $("#NewUserName").on("blur", function() {
-         var userName=$("#NewUserName").val();
+     $("#UserName").on("blur", function() {
+         var userName=$("#UserName").val();
          if(userName.trim()==""){
             $("#userName_error").html("Please enter User Name");
             $("#userName_error").attr("style","display:block");
@@ -460,8 +492,8 @@
                 }
         }
     });
-     $("#NewEmail").on("blur", function() {
-         var newEmail=$("#NewEmail").val();
+     $("#Email").on("blur", function() {
+         var newEmail=$("#Email").val();
          if(newEmail.trim()==""){
             $("#email_error").html("Please enter Email");
             $("#email_error").attr("style","display:block");
@@ -479,5 +511,5 @@
 
         }
     });
-     
+
 </script>

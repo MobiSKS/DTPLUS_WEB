@@ -8,7 +8,7 @@
         </ul>
         <ul class="nav nav-tabs mt-2 form_tabs justify-content-end" id="formTab" role="tablist">
             <li class="nav-item"> <a class="nav-link active" id="userinfo-tab" data-toggle="tab" href="#userinfo" role="tab" aria-controls="userinfo" aria-selected="true">User Info</a> </li>
-            <li class="nav-item"> <a class="nav-link" id="userrole-tab" data-toggle="tab" href="#userrole" role="tab" aria-controls="userrole" aria-selected="false">User Role</a> </li>
+            <li class="nav-item"> <a class="nav-link disable" id="userrole-tab" data-toggle="tab" href="#userrole" role="tab" aria-controls="userrole" aria-selected="false">User Role</a> </li>
 
         </ul>
         <div class="tab-content mt-3" id="myTabContent">
@@ -22,7 +22,7 @@
                                     <label class="font-weight-normal col-md-5 col-12">User Name <sup class="text-danger">*</sup></label>
                                     <div class="col-md-7 col-12">
                                         <div class="custom_select">
-                                            @Html.TextBoxFor(m => m.NewUserName, new { @class = "form-control", maxlength = "50"})
+                                            @Html.TextBoxFor(m => m.UserName, new { @class = "form-control", maxlength = "50"})
                                             <span class="error" style="display:none" id="userName_error"></span>
                                         </div>
                                     </div>
@@ -33,7 +33,7 @@
                                     <label class="font-weight-normal offset-md-1 col-md-4 col-12">Email <sup class="text-danger">*</sup></label>
                                     <div class="col-md-7 col-12">
                                         <div class="custom_select">
-                                            @Html.TextBoxFor(m => m.NewEmail, new { @class = "form-control", maxlength = "50"})
+                                            @Html.TextBoxFor(m => m.Email, new { @class = "form-control", maxlength = "50"})
                                             <span class="error" style="display:none" id="email_error"></span>
                                         </div>
                                     </div>
@@ -47,7 +47,7 @@
                                     <div class="col-md-7 col-12">
                                         <div class="custom_select">
 
-                                            @Html.PasswordFor(m => m.NewPassword, new { @class = "form-control", maxlength = "50"})
+                                            @Html.PasswordFor(m => m.Password, new { @class = "form-control", maxlength = "50",autocomplete = "new-password"})
                                             <span class="error" style="display:none" id="password_error"></span>
                                         </div>
                                     </div>
@@ -58,7 +58,7 @@
                                     <label class="font-weight-normal offset-md-1 col-md-4 col-12">Confirm Password <sup class="text-danger">*</sup></label>
                                     <div class="col-md-7 col-12">
                                         <div class="custom_select">
-                                            @Html.PasswordFor(m => m.NewConfirmPassword, new { @class = "form-control", maxlength = "50"})
+                                            @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control", maxlength = "50"})
                                             <span class="error" style="display:none" id="confirmPassword_error"></span>
                                         </div>
                                     </div>
@@ -71,7 +71,7 @@
                                     <label class="font-weight-normal col-md-5 col-12">Secret Question <sup class="text-danger">*</sup></label>
                                     <div class="col-md-7 col-12">
                                         <div class="custom_select">
-                                            @Html.DropDownListFor(m => m.NewSecretQuestion, new SelectList(Model.CustomerSecretQueMdl, "SecretQuestionId", "SecretQuestionName"), new { @class = "form-control" })
+                                            @Html.DropDownListFor(m => m.SecretQuestion, new SelectList(Model.CustomerSecretQueMdl, "SecretQuestionId", "SecretQuestionName"), new { @class = "form-control" })
                                             <span class="error" style="display:none" id="secretQuestion_error"></span>
                                         </div>
                                     </div>
@@ -82,7 +82,7 @@
                                     <label class="font-weight-normal offset-md-1 col-md-4 col-12">Secret Question Answer <sup class="text-danger">*</sup></label>
                                     <div class="col-md-7 col-12">
                                         <div class="custom_select">
-                                            @Html.TextBoxFor(m => m.NewSecretAnswer, new { @class = "form-control", maxlength = "50"})
+                                            @Html.TextBoxFor(m => m.SecretAnswer, new { @class = "form-control", maxlength = "50"})
                                             <span class="error" style="display:none" id="secretAns_error"></span>
                                         </div>
                                     </div>
@@ -96,6 +96,8 @@
                             </div>
                         </div>
                     </div>
+                    <p class="userNote px-3 py-2  m-0" style="display:none">Note:-Minimum length of Username should be 6 and special characters(Except .,_,@@)are not allowed.Username should not start with special character and 2 consecutive special characters are not allowed.</p>
+                    <p class="passNote px-3 py-2  m-0" style="display:none">Note:-Password must contain minimum 8 characters, and atleast one upper case letter, one lower case letter, one numeric digit and one special character !@@~#%^&(*)</p>
                 </div>
                 <div class="clearfix"></div>
             </div>
@@ -103,35 +105,65 @@
             <div class="tab-pane fade show" id="userrole" role="tabpanel" aria-labelledby="userrole-tab">
                 <div class="border-1 rounded border-grey w-100 mt-3">
                     <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">User Roles</p>
-                    <div class="d-flex align-items-start flex-wrap mt-3">
-                        <div class="col-12 col-lg-12">
+                    @if (Model.Data.Count() > 0)
+                    {
+                        <div class="d-flex align-items-start flex-wrap mt-3">
+                            <div class="col-12 col-lg-12">
 
-                            <table id="ViewRedemptionTable" class="table table-striped d-block d-md-table table-bordered table-responsive mt-3" style="width:100%;">
-                                <thead>
-                                    <tr>
-                                        <th>Role</th>
-                                        <th>Location</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>@*<a href="#">View Data Bank</a>*@
-                                            </td>
-                                        <td>@*NORTH ZONE,NORTH CENTRAL ZONE,WEST ZONE,NORTH WEST ZONE,EAST ZONE,SOUTH Z...*@
-
-                                        </td>
-                                        <td>@*<a href="#"><i class="fa fa-trash"></i></a>*@
-                                            </td>
-                                    </tr>
-
-
-                                </tbody>
-                            </table>
+                                <table id="LocRoleMappingTbl" class="table table-striped d-block d-md-table table-bordered table-responsive mt-3" style="width:100%;">
+                                    <thead>
+                                        <tr>
+                                            <th>Role</th>
+                                            <th>Location</th>
+                                            <th>Action</th>
+                                            <th>Id</th>
+                                            <th>ZonalID</th>
+                                            <th>RegionalId</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in Model.Data)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <a href="#" class="roleSelect">@item.UserRole</a>
+                                                </td>
+                                                <td>
+                                                    @item.Location
+                                                </td>
+                                                <td>
+                                                    <a href="#"><i class="fa fa-trash"></i></a>
+                                                </td>
+                                                <td class="roleId" style="display:none">@item.RoleId</td>
+                                                <td class="zoneId" style="display:none">@item.ZonalOfficeId</td>
+                                                <td class="regionId" style="display:none">@item.RegionalOfficeId</td>
+                                            </tr>
+                                        }
+                                        @* <tr>
+                                                <td>
+                                                    <a href="#" class="roleSelect">RoleName</a>
+                                                </td>
+                                                <td>
+                                                    LPG
+                                                </td>
+                                                <td>
+                                                    <a href="#"><i class="fa fa-trash"></i></a>
+                                                </td>
+                                                <td class="roleId" style="display:none">25</td>
+                                                <td class="zoneId" style="display:none">1</td>
+                                                <td class="regionId" style="display:none">10</td>
+                                            </tr>*@
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
-                    </div>
-                     <div class="clearfix"></div>
-                        <div id="message" tabindex="0" class="mb-3 text-center alert alert-danger" style="display:none"></div>
+                    }
+                    else
+                    {
+                        <div id="message" tabindex="0" class="mb-3 text-center alert alert-danger">No Roles Assigned to This User</div>
+                    }
+                    <div class="clearfix"></div>
+                    <div id="message" tabindex="0" class="mb-3 text-center alert alert-danger" style="display:none"></div>
                 </div>
                 <div class="clearfix"></div>
                 <div class="border-1 rounded border-grey w-100 mt-3">
@@ -147,7 +179,7 @@
                                             @foreach (var item in Model.getUserRolesandregions.First().Data.UserRoles)
                                             {
                                                 <li id="@item.ID">@item.UserRole</li>
-                                                
+
                                             }
 
                                         </ul>
@@ -156,7 +188,7 @@
 
                             </div>
                         </div>
-                 
+
                         <div class="col-12 col-sm-9 px-0">
                             <div class="LocationsArea">
                                 <h2>Locations Area</h2>
@@ -190,7 +222,7 @@
                                                             <div class="panel panel-default">
                                                                 <div class="panel-heading">
                                                                     <h4 class="panel-title"></h4>
-                                                                     <input class="form-check-input check_box_pos_sty" type="checkbox" name="zoneChk" onclick="chkAllRegion(this,@i)" id="check_@i" value="@item.ZonalOfficeID">
+                                                                    <input class="form-check-input check_box_pos_sty" type="checkbox" name="zoneChk" onclick="chkAllRegion(this,@i)" id="check_@i" value="@item.ZonalOfficeID">
                                                                     <a class="collapsed" data-toggle="collapse" data-parent="#nested" href="#nested_@i">
                                                                         <div class="form-check form-check-inline">
                                                                             <label class="form-check-label" for="check_@i">@item.ZonalOfficeName</label>
@@ -230,7 +262,7 @@
                                                 <!-- nested -->
                                             </div>
                                             <!--/.panel-body -->
-                                            
+
                                         </div>
                                         <!--/.panel-collapse -->
                                     </div>
@@ -276,24 +308,39 @@
     }
 
     function selectItem(e){
-        //alert(e.target.innerText);   
-        //alert(e.target.attributes.id.value);  
+        //alert(e.target.innerText);
+        //alert(e.target.attributes.id.value);
         selectedRole=e.target.attributes.id.value;
         $("#message").html("Please select location for this Role");
         $("#message").attr("style","display:block");
         debugger;
-        $('li').removeClass("active"); 
-        $(e.target).addClass("active"); 
+        $('li').removeClass("usr_active");
+        $(e.target).addClass("usr_active");
 
-        
+
     }
+    
+   $("#LocRoleMappingTbl").on('click', '.roleSelect', function (e) {
+
+
+       debugger;
+        var currentRow = $(this).closest("tr");
+        var roleId = currentRow.find('.roleId').text();
+        var regionId = currentRow.find('.regionId').text();
+        
+         $('li').removeClass("usr_active");
+     
+        $('#roleId').addClass("usr_active");
+        $('input[type=checkbox][name=regionChk][value='+regionId+']').prop("checked",true); 
+     
+    });
       $("#btnNext").on("click", (function (e) {
-         var userName=$("#NewUserName").val();
-         var newEmail=$("#NewEmail").val();
-         var password=$("#NewPassword").val();
-         var confirm=$("#NewConfirmPassword").val();
-         var secretAns=$("#NewSecretAnswer").val();
-          var secretQstn =$("#NewSecretQuestion").val();
+         var userName=$("#UserName").val();
+         var newEmail=$("#Email").val();
+         var password=$("#Password").val();
+         var confirm=$("#ConfirmPassword").val();
+         var secretAns=$("#SecretAnswer").val();
+          var secretQstn =$("#SecretQuestion").val();
           var flag = "Y";
 
             if(userName.trim()==""){
@@ -305,6 +352,7 @@
                 if(!(userName.match(userNameCheck))){
                      $("#userName_error").html("Please enter valid User Name");
                      $("#userName_error").attr("style","display:block");
+                     $("p.userNote").attr("style","display:block");
                       flag="N";
                 }
                 else{
@@ -350,6 +398,7 @@
                if(!(password.match(passwordCheck))){
                      $("#password_error").html("Please enter valid Password");
                      $("#password_error").attr("style","display:block");
+                     $("p.passNote").attr("style","display:block");
                      flag="N";
                 }
             }
@@ -382,7 +431,7 @@
           if (flag == "N")
               e.preventDefault();
            else{
-             
+
                 ShowUserRolesData();
                }
       })
@@ -392,12 +441,12 @@
       })
       );
        $("#btnCreate").on("click", (function (e) {
-         var userName=$("#NewUserName").val();
-         var newEmail=$("#NewEmail").val();
-         var password=$("#NewPassword").val();
-         var confirm=$("#NewConfirmPassword").val();
-         var secretAns=$("#NewSecretAnswer").val();
-          var secretQstn =$("#NewSecretQuestion").val();
+         var userName=$("#UserName").val();
+         var newEmail=$("#Email").val();
+         var password=$("#Password").val();
+         var confirm=$("#ConfirmPassword").val();
+         var secretAns=$("#SecretAnswer").val();
+          var secretQstn =$("#SecretQuestion").val();
           var flag = "Y";
 
             if(userName.trim()==""){
@@ -409,6 +458,7 @@
                 if(!(userName.match(userNameCheck))){
                      $("#userName_error").html("Please enter valid User Name");
                      $("#userName_error").attr("style","display:block");
+                     $("p.userNote").attr("style","display:block");
                       flag="N";
                 }
                 else{
@@ -454,6 +504,7 @@
                if(!(password.match(passwordCheck))){
                      $("#password_error").html("Please enter valid Password");
                      $("#password_error").attr("style","display:block");
+                     $("p.userNote").attr("style","display:block");
                      flag="N";
                 }
             }
@@ -521,7 +572,7 @@
             document.getElementById("userrole-tab").classList.remove("disable");
             document.getElementById("userrole-tab").click();
             document.getElementById("userinfo-tab").classList.add("disable");
-            
+
 
         }
         function ShowUserInfoData()
@@ -529,11 +580,11 @@
             document.getElementById("userinfo-tab").classList.remove("disable");
             document.getElementById("userinfo-tab").click();
             document.getElementById("userrole-tab").classList.add("disable");
-            
+
 
         }
-     $("#NewUserName").on("blur", function() {
-         var userName=$("#NewUserName").val();
+     $("#UserName").on("blur", function() {
+         var userName=$("#UserName").val();
          if(userName.trim()==""){
             $("#userName_error").html("Please enter User Name");
             $("#userName_error").attr("style","display:block");
@@ -543,6 +594,7 @@
             if(!(userName.match(userNameCheck))){
                  $("#userName_error").html("Please enter valid User Name");
                  $("#userName_error").attr("style","display:block");
+                 $("p.userNote").attr("style","display:block");
             }
             else{
                     $.ajax({
@@ -555,18 +607,20 @@
                             if (status == 'success' && v == '0') {
                                 $("#userName_error").html("User Name already Exists");
                                 $("#userName_error").attr("style","display:block");
+
                             }
                             else {
                                 $("#userName_error").html("");
                                 $("#userName_error").attr("style","display:none");
+                                $("p.userNote").attr("style","display:none");
                             }
                         }
                     });
                 }
         }
     });
-     $("#NewEmail").on("blur", function() {
-         var newEmail=$("#NewEmail").val();
+     $("#Email").on("blur", function() {
+         var newEmail=$("#Email").val();
          if(newEmail.trim()==""){
             $("#email_error").html("Please enter Email");
             $("#email_error").attr("style","display:block");
@@ -584,8 +638,8 @@
 
         }
     });
-     $("#NewPassword").on("blur", function() {
-         var password=$("#NewPassword").val();
+     $("#Password").on("blur", function() {
+         var password=$("#Password").val();
          if(password.trim()==""){
             $("#password_error").html("Please enter Password");
             $("#password_error").attr("style","display:block");
@@ -595,23 +649,25 @@
            if(!(password.match(passwordCheck))){
                  $("#password_error").html("Please enter valid Password");
                  $("#password_error").attr("style","display:block");
+                 $("p.passNote").attr("style","display:block");
             }
             else{
                  $("#password_error").html("");
                  $("#password_error").attr("style","display:none");
+                 $("p.passNote").attr("style","display:none");
             }
 
         }
     });
-     $("#NewConfirmPassword").on("blur", function() {
-         var confirm=$("#NewConfirmPassword").val();
+     $("#ConfirmPassword").on("blur", function() {
+         var confirm=$("#ConfirmPassword").val();
          if(confirm.trim()==""){
             $("#confirmPassword_error").html("Please enter Confirm Password");
             $("#confirmPassword_error").attr("style","display:block");
 
         }
         else{
-            var password=$("#NewPassword").val();
+            var password=$("#Password").val();
             if(password!=""){
                 if(confirm!=password){
                      $("#confirmPassword_error").html("Please enter same Password");
@@ -629,8 +685,8 @@
 
         }
     });
-    $("#NewSecretAnswer").on("blur", function() {
-         var secretAns=$("#NewSecretAnswer").val();
+    $("#SecretAnswer").on("blur", function() {
+         var secretAns=$("#SecretAnswer").val();
          if(secretAns.trim()==""){
             $("#secretAns_error").html("Please enter Password Answer");
             $("#secretAns_error").attr("style","display:block");
@@ -642,7 +698,7 @@
 
         }
     });
-    $("#NewSecretQuestion").change(function () {
+    $("#SecretQuestion").change(function () {
         var id = this.value;
         if (id == 0) {
             $("#secretQuestion_error").html("Please select Secret Question");
