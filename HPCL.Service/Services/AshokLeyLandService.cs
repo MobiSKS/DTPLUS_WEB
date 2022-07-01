@@ -676,7 +676,7 @@ namespace HPCL.Service.Services
 
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
-            var response = await _requestService.CommonRequestService(content, WebApiUrl.updateAlCustomerDetail);
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.alUpdateCustomer);
 
             var settings = new JsonSerializerSettings
             {
