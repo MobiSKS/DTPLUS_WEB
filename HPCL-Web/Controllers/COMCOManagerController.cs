@@ -85,6 +85,10 @@ namespace HPCL_Web.Controllers
             var modals = await _comCOManagerService.GetSetCreditLimitChequeDetailsPartialView(objCardDetails);
             return PartialView("~/Views/COMCOManager/_SetCreditLimitChequeDetails.cshtml", modals);
         }
+        public IActionResult CreditLimit()
+        {
+            return View();
+        }
 
     }
 }

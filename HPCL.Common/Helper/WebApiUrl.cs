@@ -232,6 +232,8 @@
         public static string InsertAddManageRole = "api/dtplus/UserManage/Insert_Add_Manage_Role";
         public static string userCreationApproval = "api/dtplus/UserManage/user_creation_approval";
         public static string userApprovalRejection = "api/dtplus/UserManage/user_approval_rejection";
+        public static string getuserrolesandregions = "api/dtplus/UserManage/get_user_roles_and_regions";
+        public static string manageeditusers = "api/dtplus/UserManage/manage_edit_users";
         #endregion
 
         #region DriverCard
@@ -296,10 +298,11 @@
         public static string alAddonOTCCard = "api/dtplus/ashokleyland/al_addon_otc_card";
         public static string getAlSalesExeEmpidAddonOtcCardMapping = "api/dtplus/ashokleyland/get_al_sales_exe_empid_addon_otc_card_mapping";
         public static string getAlCustomerDetail = "api/dtplus/ashokleyland/get_al_customer_detail";
-        public static string updateAlCustomerDetail = "api/dtplus/ashokleyland/update_al_customer_detail";
+        public static string alUpdateCustomer = "api/dtplus/ashokleyland/al_update_customer";
         public static string getAlCustomerDetailForVerification = "api/dtplus/ashokleyland/get_al_customer_detail_for_verification";
         public static string updateAlCustomerStatus = "api/dtplus/ashokleyland/update_al_customer_status";
         public static string getAlCustomerStatus = "api/dtplus/ashokleyland/get_al_customer_status";
+        public static string checkVinNo = "api/dtplus/ashokleyland/check_vin_no";
         #endregion
 
         #region Customer Financial
@@ -461,6 +464,7 @@
         public static string HdfcCcmsRechargeUrl = "api/dtplus/HDFCCreditPouch/insert_cp_pg_log";
         public static string GetRequestAuthorizationDetailsUrl = "api/dtplus/HDFCCreditPouch/get_cp_by_bank_auth";
         public static string RequestAuthorizationActionUrl = "api/dtplus/HDFCCreditPouch/auth_action_cp";
+        public static string HdfcInitiateCcmsRechargeUrl = "api/dtplus/HDFCCreditPouch/initiate_cp_recharge";
         #endregion
 
         #region "CCMS Recharge"
@@ -481,6 +485,7 @@
         public static string getparentcustomerdispatchdetails = "api/dtplus/ParentCustomer/get_parent_customer_dispatch_details";
         public static string updateparentcustomer = "api/dtplus/ParentCustomer/update_parent_customer";
         public static string getparentcustomertoupdate = "api/dtplus/ParentCustomer/get_parent_customer_to_update";
+        public static string getparentcustomerstatus = "api/dtplus/ParentCustomer/get_parent_customer_status";
 
         #endregion
         #region Volvo Eicher
@@ -500,7 +505,7 @@
 
         #region "AMEX Bank Credit Pouch"
         public static string AMEXGetCustomerDetailsUrl = "api/dtplus/AMEXCreditPouch/get_dtail_mo";
-        public static string AMEXEnrollExceptionReqUrl = " api/dtplus/AMEXcreditPouch/insrt_cp_rqst";
+        public static string AMEXEnrollExceptionReqUrl = "api/dtplus/AMEXcreditPouch/insrt_cp_rqst";
         public static string AMEXGetExApprovalUrl = "api/dtplus/AMEXcreditPouch/Get_cp_by_bank";
         public static string AMEXSubmitExApprovalUrl = "api/dtplus/AMEXcreditPouch/action_cp";
 

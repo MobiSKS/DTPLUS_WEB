@@ -192,7 +192,7 @@
                                  + "<td style='display:flex;'><input type='text' maxlength='30' id='NameId_"+i+"' style='width:80%;' onblur='nameOnChange(this," + (i) + ")' class='form-control nm'/><i style='display:none;margin-top:10px;margin-left:5px;' class='fa fa-exclamation-triangle errs' id='nameErr"+i+"' aria-hidden='true'></i></td>"
                                  + "<td style='vertical-align:middle'>Designation</td>"
                                  + "<td style='display:flex;'><input type='text' maxlength='30' id='DesignationId_"+i+"' style='width:80%;' onblur='designationOnChange(this," + (i) + ")' class='form-control desgn'/><i style='display:none;margin-top:10px;margin-left:5px;' class='fa fa-exclamation-triangle errs' id='designationErr"+i+"' aria-hidden='true'></i></td>"
-                                 + "<td class='deleteButton'><button class='btn btn_primary dlt' type='button'>Delete</button></td>"
+                                 + "<td class='deleteButton'></td>"
                                  + "</tr></tbody>";
 
                 $("#alternameMobSection").append(appendFields);
@@ -213,11 +213,11 @@
 
                     var Mob = row.find('.mbNo').val();
                     if(Mob == ''){
-                        row.find('.dlt').css("display", "none");
+                        row.find('.deleteButton').append("");
                         row.find('.mbNo').attr("readonly", false);
                         row.find('.mbNo').removeClass("rdn");
                     }else{
-                        row.find('.dlt').css("display", "block");
+                        row.find('.deleteButton').append("<button class='btn btn_primary dlt' type='button'>Delete</button>");
                         row.find('.mbNo').attr("readonly", true);
                         row.find('.mbNo').addClass("rdn");
                         cnt++;
@@ -244,6 +244,8 @@
     });
 
      function updateAlertnateMob(){
+
+         document.getElementById("successDelete").style.display = "none";
 
          var updateArray = new Array();
          var flag = "Y";
@@ -285,15 +287,6 @@
                         document.getElementById('mobNoErr'+count).title="Invalid Mobile Number";
                         document.getElementById('mobNoErr'+count).style.display = "block";
                         flag = "N";
-                    }else{
-                        $('#alternameMobSection tbody tr').each(function () {
-                            var row = $(this);
-                            var index=row[0].rowIndex;
-                            var mobNo = row.find("td.mbbNo input[type='text']").val();
-                            if(mobNo==MobileNo && index!=count){
-                                    cntFlag++;
-                            }
-                        });
                     }
                 }
 
@@ -374,88 +367,92 @@
         var CustomerID = $("#CustomerDefaultVal").val();
         var MobileNo = currentRow.find('.mbNo').val();
 
-        if (confirm('Are you sure you want to delete ?')) {
-                console.log('ok');
+        if(currentRow.find('.deleteButton').html() != ''){
+            if (confirm('Are you sure you want to delete ?')) {
+                    console.log('ok');
 
-            $.ajax({
-                url: "@Url.Action("DeleteSmsAlertForMultipleMobileDetail", "CustomerRequest")",
-                type: "POST",
-                traditional: true,
-                data: { CustomerID:CustomerID, MobileNo:MobileNo },
-                success: function (res) {
+                $.ajax({
+                    url: "@Url.Action("DeleteSmsAlertForMultipleMobileDetail", "CustomerRequest")",
+                    type: "POST",
+                    traditional: true,
+                    data: { CustomerID:CustomerID, MobileNo:MobileNo },
+                    success: function (res) {
 
-                    if(res.reasonList[0].status == 1){
-                            document.getElementById("alternameMobSection").deleteRow(indexS);
+                        console.log("res",res);
 
-                              $.ajax({
-                                url: "@Url.Action("ConfigureSMSAlertstoMultipleMobileNumber", "CustomerRequest")",
-                                type: "POST",
-                                traditional: true,
-                                data: $('#formVal').serialize(),
-                                success: function (res) {
+                        if(res.reasonList[0].status == 1){
+                                document.getElementById("alternameMobSection").deleteRow(indexS);
 
-                                   console.log("res duplicate",res);
+                                  $.ajax({
+                                    url: "@Url.Action("ConfigureSMSAlertstoMultipleMobileNumber", "CustomerRequest")",
+                                    type: "POST",
+                                    traditional: true,
+                                    data: $('#formVal').serialize(),
+                                    success: function (res) {
 
-                                     var alternameMobDetails = res.searchList.data.customerMultipleMobileDetail;
+                                       console.log("res duplicate",res);
 
-                                     $("#alternameMobSection td").parent().remove();
+                                         var alternameMobDetails = res.searchList.data.customerMultipleMobileDetail;
 
-                                     for(var i =0; i<4;i++){
-                                         var appendFields = "<tbody><tr>"
-                                                             + "<td style='vertical-align:middle'>Mobile Number</td>"
-                                                             + "<td style='display:flex;' class='mbbNo'><input type='text' id='MobNoId_"+i+"' maxlength='10' onkeypress='return isNumberKey(event)' onblur='mobNoChange(this," + (i) + ")' style='width:50%;' class='form-control mbNo cgl'/><i style='display:none;margin-top:10px;margin-left:5px;' class='fa fa-exclamation-triangle errs' id='mobNoErr"+i+"' aria-hidden='true'></i></td>"
-                                                             + "<td style='vertical-align:middle'>Name</td>"
-                                                             + "<td style='display:flex;'><input type='text' id='NameId_"+i+"' maxlength='30' style='width:50%;' onblur='nameOnChange(this," + (i) + ")' class='form-control nm'/><i style='display:none;margin-top:10px;margin-left:5px;' class='fa fa-exclamation-triangle errs' id='nameErr"+i+"' aria-hidden='true'></i></td>"
-                                                             + "<td style='vertical-align:middle'>Designation</td>"
-                                                             + "<td style='display:flex;'><input type='text' id='DesignationId_"+i+"' maxlength='30' style='width:50%;' onblur='designationOnChange(this," + (i) + ")' class='form-control desgn'/><i style='display:none;margin-top:10px;margin-left:5px;' class='fa fa-exclamation-triangle errs' id='designationErr"+i+"' aria-hidden='true'></i></td>"
-                                                             + "<td class='deleteButton'><button class='btn btn_primary dlt' type='button'>Delete</button></td>"
-                                                             + "</tr></tbody>";
+                                         $("#alternameMobSection td").parent().remove();
 
-                                        $("#alternameMobSection").append(appendFields);
-                                     }
+                                         for(var i =0; i<4;i++){
+                                             var appendFields = "<tbody><tr>"
+                                                                 + "<td style='vertical-align:middle'>Mobile Number</td>"
+                                                                 + "<td style='display:flex;' class='mbbNo'><input type='text' id='MobNoId_"+i+"' maxlength='10' onkeypress='return isNumberKey(event)' onblur='mobNoChange(this," + (i) + ")' style='width:50%;' class='form-control mbNo cgl'/><i style='display:none;margin-top:10px;margin-left:5px;' class='fa fa-exclamation-triangle errs' id='mobNoErr"+i+"' aria-hidden='true'></i></td>"
+                                                                 + "<td style='vertical-align:middle'>Name</td>"
+                                                                 + "<td style='display:flex;'><input type='text' id='NameId_"+i+"' maxlength='30' style='width:50%;' onblur='nameOnChange(this," + (i) + ")' class='form-control nm'/><i style='display:none;margin-top:10px;margin-left:5px;' class='fa fa-exclamation-triangle errs' id='nameErr"+i+"' aria-hidden='true'></i></td>"
+                                                                 + "<td style='vertical-align:middle'>Designation</td>"
+                                                                 + "<td style='display:flex;'><input type='text' id='DesignationId_"+i+"' maxlength='30' style='width:50%;' onblur='designationOnChange(this," + (i) + ")' class='form-control desgn'/><i style='display:none;margin-top:10px;margin-left:5px;' class='fa fa-exclamation-triangle errs' id='designationErr"+i+"' aria-hidden='true'></i></td>"
+                                                                 + "<td class='deleteButton'></td>"
+                                                                 + "</tr></tbody>";
 
-                                     for(var j=0;j<alternameMobDetails.length;j++){
-                                         $("#MobNoId_"+j).val(alternameMobDetails[j].mobileNo);
-                                         $("#NameId_"+j).val(alternameMobDetails[j].name);
-                                         $("#DesignationId_"+j).val(alternameMobDetails[j].designation);
-                                     }
+                                            $("#alternameMobSection").append(appendFields);
+                                         }
 
-                                     $("#alternameMobSection .deleteButton").each(function () {
+                                         for(var j=0;j<alternameMobDetails.length;j++){
+                                             $("#MobNoId_"+j).val(alternameMobDetails[j].mobileNo);
+                                             $("#NameId_"+j).val(alternameMobDetails[j].name);
+                                             $("#DesignationId_"+j).val(alternameMobDetails[j].designation);
+                                         }
 
-                                            var row = $(this).closest("tr");
+                                         $("#alternameMobSection .deleteButton").each(function () {
 
-                                            var Mob = row.find('.mbNo').val();
-                                            if(Mob == ''){
-                                                row.find('.dlt').css("display", "none");
-                                                row.find('.mbNo').attr("readonly", false);
-                                            }else{
-                                                row.find('.dlt').css("display", "block");
-                                                row.find('.mbNo').attr("readonly", true);
-                                            }
-                                     });
+                                                var row = $(this).closest("tr");
 
-                                     $("#submitSection").show();
-                                },
-                                error: function (ex) {
-                                    alert('Failed' + ex);
-                                }
-                            });
+                                                var Mob = row.find('.mbNo').val();
+                                                if(Mob == ''){
+                                                    row.find('.deleteButton').append("");
+                                                    row.find('.mbNo').attr("readonly", false);
+                                                }else{
+                                                    row.find('.deleteButton').append("<button class='btn btn_primary dlt' type='button'>Delete</button>");
+                                                    row.find('.mbNo').attr("readonly", true);
+                                                }
+                                         });
 
+                                         $("#submitSection").show();
+                                    },
+                                    error: function (ex) {
+                                        alert('Failed' + ex);
+                                    }
+                                });
 
-                    }else{
-                        document.getElementById("successDelete").style.display = "none";
-                        $("#successDelete").html("");
-                        $("#successDelete").append("<span>" + res.reasonList[0].reason + "</span>");
-                        document.getElementById("successDelete").style.display = "block";
+                            $("#successDelete").html("");
+                            $("#successDelete").append("<span>" + res.reasonList[0].reason + "</span>");
+                            document.getElementById("successDelete").style.display = "block";
+
+                        }else{
+                            document.getElementById("successDelete").style.display = "none";
+                        }
+                    },
+                    error: function (ex) {
+                        alert('Failed' + ex);
                     }
-                },
-                error: function (ex) {
-                    alert('Failed' + ex);
-                }
-            });
+                });
 
-        } else {
-            console.log('cancel')
+            } else {
+                console.log('cancel')
+            }
         }
     });
 
@@ -469,24 +466,9 @@
                     return false;
                 }else{
                      document.getElementById('mobNoErr'+rowSelected).style.display = "none";
-                     var cntFlag=0;
-                     $('#alternameMobSection tbody tr').each(function () {
-                        debugger;
-                        var row = $(this);
-                        var index=row[0].rowIndex;
-                        var mobNo = row.find("td.mbbNo input[type='text']").val();
-                        if(mobNo==mobileNo && index!=rowSelected)
-                        {
-                             cntFlag++;
-                        }
-
-                     });
-                     if(cntFlag>0){
-                         alert("Duplicate Mobile Number");
-                     }
-                 }
+                }
            }
-      }
+    }
 
     function nameOnChange(o, rowSelected){
         var name = o.value;

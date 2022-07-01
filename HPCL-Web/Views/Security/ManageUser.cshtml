@@ -3,8 +3,7 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ajax-unobtrusive/3.2.6/jquery.unobtrusive-ajax.js"></script>
 
-
-<div class="col-lg-12 p-4 p-md-4">
+<div class="col-lg-12">
     <div class="bg-white p-2 p-md-4">
         <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
             <li class="breadcrumb-item"><a href="@Url.Action("Index")" class="text_primary">Security</a> </li>
@@ -17,10 +16,10 @@
                         <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Manage Users</p>
                         <div class="col-lg-12 col-md-12 col-12 pb-0 pt-3">
                             <div class="d-flex align-items-center flex-wrap">
-                                <div class="col-lg-7 col-12">
+                                <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-0">
-                                        <label class="font-weight-normal col-md-3 col-12">Search Users</label>
-                                        <div class="col-md-7 col-12">
+                                        <label class="font-weight-normal col-md-2 col-12 px-0">Search Users</label>
+                                        <div class="col-md-5 col-12">
                                             <div class="dropdown">
                                                 <input type="text" id="searchField" placeholder="Start Searching" class="dropbtn form-control" disabled="disabled"/>
                                                 <div class="dropdown-content">
@@ -41,21 +40,21 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-lg-4 col-12">
-                                            <div class="d-flex align-items-center flex-wrap mb-0">
-                                                <div class="px-2">
+                                        <div class="col-lg-5 col-12 pl-0">
+                                            <div class="d-flex align-items-center justify-content-end flex-wrap mb-0">
+                                                <div class="px-1">
                                                     <button class="btn btn_primary" type="button" onclick="searchUsers()">Search</button>
                                                 </div>
-                                                <div class="px-2">
-                                                    <button class="btn btn_primary" type="button">Reset</button>
+                                                <div class="px-1">
+                                                    <button class="btn btn_primary" id="btnReset" onclick="resetClick()" type="button">Reset</button>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-lg-5 col-12">
-                                    <div class="d-flex align-items-center flex-wrap mb-0">
-                                        <div class="col-md-7 col-12">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center justify-content-end flex-wrap mb-0">
+                                        <div class="col-md-4 col-12">
                                             <div class="custom_select">
                                                 <div class="form-check">
                                                     <input type="checkbox" class="form-check-input" name="disChk" id="exampleCheck1">
@@ -63,24 +62,24 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-lg-5 col-12 px-0">
+                                        <div class="col-lg-6 col-12 px-0">
                                             <div class="d-flex align-items-center justify-content-end flex-wrap mb-0">
-                                                <div class="px-2">
+                                                <div class="px-1">
                                                     <a class="btn btn_primary" href="@Url.Action("AddNewUser","Security")">Add</a>
                                                 </div>
-                                                <div class="px-2">
+                                                <div class="px-1">
                                                     <button class="btn btn_primary" type="button" onclick="deleteUser()">Delete</button>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="mb-3 text-center alert alert-danger" style="display:none;" id="noRecord"></div>
+                                
                             </div>
                         </div>
                         <div class="clearfix"></div>
                     </div>
-
+                    <div class="mb-3 text-center alert alert-danger" style="display:none;" id="noRecord"></div>
                     <div class="mb-3 text-center alert alert-danger" style="display:none;" id="errMsg"></div>
                     <div class="mb-3 text-center alert alert-success" style="display:none;" id="sucssMsg"></div>
 
@@ -88,10 +87,10 @@
                         <table id="UserMappingTable" class="table table-striped d-md-table d-block table-bordered table-responsive nowrap mt-3" style="width:100%;">
                             <thead>
                                 <tr>
-                                    <th>Sr No</th>
+                                    <th>S.No.</th>
                                     <th>
                                         <div class="form-check">
-                                            <input class="form-check-input position-static" type="checkbox" id="blankCheckbox" value="option1" aria-label="...">
+                                            <input class="form-check-input position-static" type="checkbox" id="ChkAllUsers" value="" aria-label="...">
                                         </div>
                                     </th>
                                     <th>User Name</th>
@@ -114,6 +113,10 @@
 
 
 <script>
+       $("#ChkAllUsers").click(function () {
+        $('input:checkbox[name=enableRow]').not(this).prop('checked', this.checked);
+
+    });
 
     $(document).ready(function (){
        $('.chk').on('change', function() {
@@ -232,13 +235,13 @@
                         var actions;
 
                         if(disVal == 1){
-                            actions = "<span class='actionName' style='display:none;'>enable</span><a href='#' tooltip='Edit'><i title='Edit' class='fa fa-edit text-primary'></i></a>"
-                                     +"<a href='#' tooltip='Enable' class='dbs'><i title='Enable' class='fa fa-check text-primary'></i></a>"
-                                     +"<a href='#' tooltip='Reset Password' class='reset'><i title='Reset Password' class='fa fa-gear text-primary'></i></a>";
+                            actions = "<span class='actionName' style='display:none;'>enable</span><a href='#' tooltip='Edit' class='edit'><i title='Edit' class='fa fa-edit'></i></a>"
+                                     +"<a href='#' tooltip='Enable' class='dbs'><i title='Enable' class='fa fa-check'></i></a>"
+                                     +"<a href='#' tooltip='Reset Password' class='reset'><i title='Reset Password' class='fa fa-gear'></i></a>";
                         }else{
-                            actions = "<span class='actionName' style='display:none;'>disable</span><a href='#' tooltip='Edit'><i title='Edit' class='fa fa-edit text-primary'></i></a>"
-                                     +"<a href='#' tooltip='Disable' class='dbs'><i title='Disable' class='fa fa-ban text-primary'></i></a>"
-                                     +"<a href='#' tooltip='Reset Password' class='reset'><i title='Reset Password' class='fa fa-gear text-primary'></i></a>";                            
+                            actions = "<span class='actionName' style='display:none;'>disable</span><a href='#' tooltip='Edit'  class='edit'><i title='Edit' class='fa fa-edit'></i></a>"
+                                     +"<a href='#' tooltip='Disable' class='dbs'><i title='Disable' class='fa fa-ban'></i></a>"
+                                     +"<a href='#' tooltip='Reset Password' class='reset'><i title='Reset Password' class='fa fa-gear '></i></a>";                            
                         }
 
                         var srNumber = (i + 1);
@@ -275,7 +278,9 @@
 
     }
 
-
+    function resetClick(){
+        window.location.reload();
+    }
     $("#UserMappingTable").on('click', '.dbs', function (e) {
 
         document.getElementById("errMsg").style.display = "none";
@@ -288,25 +293,27 @@
 
 
         console.log(userName+"         "+action);
+        //Are you sure you want to disable user paytmtest ?
+        if (confirm('Are you sure you want to disable user '+userName+ ' ?')) {
+            $.ajax({
+                url: "@Url.Action("DisableUpdateManageUser", "Security")",
+                type: "POST",
+                dataType: "JSON",
+                data: { userName: userName, action: action },
+                success: function (res) {
 
-        $.ajax({
-            url: "@Url.Action("DisableUpdateManageUser", "Security")",
-            type: "POST",
-            dataType: "JSON",
-            data: { userName: userName, action: action },
-            success: function (res) {
+                    console.log("res",res);
 
-                console.log("res",res);
+                    if(res.reasonList[0].status == 1){
+                        searchUsers();
+                    }
 
-                if(res.reasonList[0].status == 1){
-                    searchUsers();
+                },
+                error: function (ex) {
+                    alert('Failed' + ex);
                 }
-
-            },
-            error: function (ex) {
-                alert('Failed' + ex);
-            }
-        });
+            });
+        }
     });
 
     $("#UserMappingTable").on('click', '.reset', function (e) {
@@ -335,7 +342,7 @@
                 url: "@Url.Action("UserResetPassword", "Security")",
                 type: "POST",
                 dataType: "JSON",
-                data: { userName: userName, action: action },
+                data: { userName: userName ,EmailId:email},
                 success: function (res) {
 
                     console.log("res",res);
@@ -420,6 +427,22 @@
         }
     }
 
+    $("#UserMappingTable").on('click', '.edit', function (e) {
+
+        document.getElementById("errMsg").style.display = "none";
+        document.getElementById("sucssMsg").style.display = "none";
+
+
+        var currentRow = $(this).closest("tr");
+        var userName = currentRow.find('.userNameVal').text();
+        var email = currentRow.find('.emailVal').text();
+
+
+        var url = '@Html.Raw(@Url.Action("UpdateUserandLocations", "Security",new {  UserName = "zzzzzzYzXz",Email="xxxXQqqqZzzz"}))';
+        url = url.replace("zzzzzzYzXz", encodeURIComponent(userName)).replace("xxxXQqqqZzzz",encodeURIComponent(email));
+        window.location.href=url;
+    });
+
 </script>
 
 
@@ -427,16 +450,52 @@
 
 <style>
 
+.checkbox-in-ddl input[type=checkbox] {
+    margin-left: 10px;
+    margin-right: 6px;
+}
+label {
+    font-size: 12px;
+    margin-bottom: 0;
+    vertical-align: middle;
+}
+.chk {
+    vertical-align: middle;
+}
 .dropdown {
-  position: relative;
-  display: inline-block;
+    position: relative;
+    display: inline-block;
 }
 
 .dropdown-content {
-  display: none;
-  position: absolute;
-  min-width: 160px;
-  z-index: 1;
+    display: none;
+    position: absolute;
+    background-color: #fff;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    margin: 0px;
+    padding: 10px;
+}
+
+.dropdown-content li {
+    color: #000;
+    padding: 6px 2px;
+    text-decoration: none;
+    display: block;
+    vertical-align: middle;
+}
+
+.dropdown-content a:hover {
+    background-color: #ddd;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown:hover .dropbtn {
+    background-color: #fff;
 }
 
 .dropdown:hover .dropdown-content {display: block;}

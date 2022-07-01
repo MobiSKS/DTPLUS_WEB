@@ -14,10 +14,14 @@ namespace HPCL_Web.Controllers
     public class SecurityController : Controller
     {
         private readonly ISecurityService _securityService;
-        public SecurityController(ISecurityService securityService)
+        private readonly ICommonActionService _commonActionService;
+        public SecurityController(ISecurityService securityService, ICommonActionService commonActionService)
         {
             _securityService = securityService;
+            _commonActionService = commonActionService;
         }
+        
+        
         public async Task<IActionResult> Index()
         {
             return View();
@@ -104,9 +108,9 @@ namespace HPCL_Web.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> UserResetPassword(string userName)
+        public async Task<JsonResult> UserResetPassword(string userName, string EmailId)
         {
-            var reasonList = await _securityService.UserResetPassword(userName);
+            var reasonList = await _securityService.UserResetPassword(userName,EmailId);
 
             ModelState.Clear();
             return Json(new { reasonList = reasonList });
@@ -127,10 +131,7 @@ namespace HPCL_Web.Controllers
             return PartialView("~/Views/Security/_ViewUserRoleLocationTbl.cshtml", model);
         }
 
-        public IActionResult AddNewUser()
-        {
-            return View();
-        }
+       
         public async Task<IActionResult> UserCreationApprovalNonRBE(UserCreationApprovalNonRBEModel model, string reset, string success, string error, string FirstName, string UserName)
         {
             var searchResult = await _securityService.UserCreationApprovalNonRBE(model);
@@ -211,6 +212,47 @@ namespace HPCL_Web.Controllers
         public async Task<JsonResult> UpdateManageRole([FromBody] ManageRolesRequestModel manageRolesRequestModel)
         {
             var result = await _securityService.UpdateManageRole(manageRolesRequestModel);
+            return Json(result);
+        }
+        public async Task<IActionResult> AddNewUser()
+        {
+            var modals = new ManageNewUserViewModel();
+            modals.CustomerSecretQueMdl.AddRange(await _commonActionService.GetCustomerSecretQuestionListForDropdown());
+            modals.getUserRolesandregions.Add(await _securityService.GetUserRolesAndRegions());
+            return View(modals);
+        }
+        [HttpPost]
+        public async Task<JsonResult> ValidateUserName(string UserName)
+        {
+            var check = await _securityService.ValidateManageUserName(UserName);
+
+            ModelState.Clear();
+            return Json(check);
+        }
+        [HttpPost]
+        public async Task<JsonResult> AddUser([FromBody] AddNewUserReq entity)
+        {
+            var result = await _securityService.AddUser(entity);
+
+            ModelState.Clear();
+            return Json(result);
+        }
+        
+        public async Task<IActionResult> UpdateUserandLocations(string UserName,string Email)
+        {
+
+            var modals = await _securityService.GetManageUserForEdit(UserName);
+            modals.UserName = UserName;
+            modals.Email = Email;
+            modals.getUserRolesandregions.Add(await _securityService.GetUserRolesAndRegions());
+            return View(modals);
+        }
+        [HttpPost]
+        public async Task<JsonResult> UpdateUser([FromBody] AddNewUserReq entity)
+        {
+            var result = await _securityService.UpdateUser(entity);
+
+            ModelState.Clear();
             return Json(result);
         }
     }

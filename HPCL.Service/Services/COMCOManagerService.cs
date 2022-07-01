@@ -173,7 +173,7 @@ namespace HPCL.Service.Services
                     model.Data = res.Data;
                 }
 
-                if (res != null && res.Data != null && res.Data.MerchantDetails.Count > 0 && !string.IsNullOrEmpty(res.Data.MerchantDetails[0].RegionalOfficeName))
+                if (res != null && res.Data != null && res.Data.MerchantDetails.Count > 0 && res.Data.MerchantDetails[0].Status == 1)
                 {
                     model.RegionalOfficeName = res.Data.MerchantDetails[0].RegionalOfficeName;
                     model.ZonalOfficeName = res.Data.MerchantDetails[0].ZonalOfficeName;
@@ -231,6 +231,8 @@ namespace HPCL.Service.Services
                 form.Add(new StringContent(model.FinanceCharges), "FinanceCharges");
                 form.Add(new StringContent(chequeBDSCRNumber.ToString()), "ChequeBDSCRNumber");
                 form.Add(new StringContent(chequeBDSCRDate.ToString()), "ChequeBDSCRDate");
+                form.Add(new StringContent("0"), "NoofCheques");
+                form.Add(new StringContent("0"), "ServicesCharges");
             }
             else
             {
@@ -246,6 +248,8 @@ namespace HPCL.Service.Services
                 form.Add(new StringContent(model.ServicesCharges), "ServicesCharges");
                 form.Add(new StringContent(chequeBDSCRNumber.ToString()), "ChequeBDSCRNumber");
                 form.Add(new StringContent(chequeBDSCRDate.ToString()), "ChequeBDSCRDate");
+                form.Add(new StringContent(model.NoOfCheques), "NoofCheques");
+                form.Add(new StringContent("0"), "FinanceCharges");
             }
 
             form.Add(new StringContent(_httpContextAccessor.HttpContext.Session.GetString("UserId")), "CreatedBy");

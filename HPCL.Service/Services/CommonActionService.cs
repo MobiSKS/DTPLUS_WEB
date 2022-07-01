@@ -1687,5 +1687,27 @@ namespace HPCL.Service.Services
 
             return SortedtList;
         }
+
+        public async Task<CustomerInserCardResponseData> CheckVINNoUsed(string VinNo)
+        {
+            var requestInfo = new VehicleDuplicationCheckRequestModel()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                VinNumber = VinNo
+            };
+
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(requestInfo), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.checkVinNo);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<CustomerInserCardResponseData> lst = jarr.ToObject<List<CustomerInserCardResponseData>>();
+            return lst[0];
+        }
+
     }
 }

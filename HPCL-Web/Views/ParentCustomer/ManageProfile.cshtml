@@ -45,7 +45,7 @@
                                             </div>
                                             <div class="col-lg-6 col-12">
                                                 <div class="form-group d-flex align-items-center flex-wrap">
-                                                    <label class="font-weight-normal col-md-4 col-12 mb-0">Name On Card</label>
+                                                    <label class="font-weight-normal col-md-4 col-12 mb-0">Name on Card</label>
                                                     <div class="col-md-7 col-12">
                                                         @Html.TextBoxFor(m => m.NameOnCard, new {@id="nameOnCard", @class = "form-control", maxlength = "30" })
                                                         @Html.ValidationMessageFor(m => m.NameOnCard, "", new {@id="NameOnCardErrMsg", @class = "text-danger" })
@@ -72,15 +72,15 @@
                         @if (Model.Data.Count() > 0)
                         {
                             <div id="CustomerSearch">
-                                <table class="table table-striped table-bordered d-md-table d-block text-nowrap display table-responsive" style="width:100%;">
+                                <table class="datatable table table-striped table-bordered d-md-table table-responsive" style="width:100%;word-wrap:break-word;table-layout:fixed;">
                                     <thead>
                                         <tr>
-                                            <th>S.No</th>
+                                            <th>S.No.</th>
                                             <th>
                                                 @Html.DisplayName("Customer ID")
                                             </th>
                                             <th>
-                                                @Html.DisplayName("Name On Card")
+                                                @Html.DisplayName("Name on Card")
                                             </th>
                                             <th>
                                                 @Html.DisplayName("Customer Name")
@@ -115,7 +115,15 @@
                                         @foreach (var item in Model.Data)
                                         {
                                             i = i + 1;
-
+                                            if (item.FormReceiptDate != null)
+                                            {
+                                                if (item.FormReceiptDate.IndexOf('/') != -1)
+                                                {
+                                                    string[] subs = item.FormReceiptDate.Split(' ');
+                                                    string[] date = subs[0].Split('/');
+                                                    item.FormReceiptDate = date[1] + "-" + date[0] + "-" + date[2];
+                                                }
+                                            }
                                             <tr>
                                                 <td>@i</td>
                                                 <td>
@@ -1044,6 +1052,11 @@
                             document.getElementById("basicInfo-tab").classList.add("disable");
                             document.getElementById("address-tab").classList.add("disable");
                             document.getElementById("officialDetails-tab").classList.add("disable");
+                            $("#nameOnCard").val("");
+                            $("#CustomerId").val("");
+                            $("#CustomerSearch").attr("style","display:none");
+                            $("#custErrMsg").html("");
+                            $("#NameOnCardErrMsg").html("");
 
                         }
                     function ShowBasicInfo()
@@ -3138,7 +3151,7 @@
                         $("#NameOnCardErrMsg").html("Please enter either Customer ID or Name on card");
                         flag = "N";
                     }
-                    else if(custtId != "")
+                    if(custtId != "")
                     {
                         if (!custtId.match(mappedCustomerId))
                         {
@@ -3147,17 +3160,27 @@
                             flag = "N";
                         }
                     }
-                    else
+                    if(nameOnCard!=""){
+                        if (!nameOnCard.match(nameWithSpaceCheck))
+                        {
+                            $("#NameOnCardErrMsg").html("Invalid Name on Card");
+                            flag = "N";
+                        }
+                    }
+                    @*else
                     {
                         $("#custErrMsg").html("");
                         $("#NameOnCardErrMsg").html("");
-                    }
+                    }*@
 
                     if (flag == "N")
                         e.preventDefault();
                     else{
-                        var url = '@Html.Raw(@Url.Action("ManageProfile", "ParentCustomer",new { CustomerId = "aa", NameOnCard = "mm" }))';
-                        url = url.replace("aa", encodeURIComponent(custtId)).replace("mm", encodeURIComponent(nameOnCard));
+                        
+                        $("#custErrMsg").html("");
+                        $("#NameOnCardErrMsg").html("");
+                        var url = '@Html.Raw(@Url.Action("ManageProfile", "ParentCustomer",new { CustomerId = "aa", NameOnCard = "mmzzzYz" }))';
+                        url = url.replace("aa", encodeURIComponent(custtId)).replace("mmzzzYz", encodeURIComponent(nameOnCard));
                         window.location.href=url;
                     }
 
@@ -3557,4 +3580,46 @@
                 });
 
             });
+            $("#CustomerId").on("blur", function ()
+                  {
+                    //debugger;
+                    if (document.getElementById("CustomerId").value.trim() != "")
+                    {
+                        if (!document.getElementById("CustomerId").value.match(mappedCustomerId))
+                        {
+                            document.getElementById("custErrMsg").innerHTML = "Invalid Customer ID";
+                            return false;
+                        }
+                        else
+                        {
+                            document.getElementById("custErrMsg").innerHTML = "";
+                        }
+                    }
+                     else
+                        {
+                            document.getElementById("custErrMsg").innerHTML = "";
+                        }
+
+                 });
+                  $("#nameOnCard").on("blur", function ()
+                  {
+                    //debugger;
+                    if (document.getElementById("nameOnCard").value.trim() != "")
+                    {
+                        if (!document.getElementById("nameOnCard").value.match(nameWithSpaceCheck))
+                        {
+                            document.getElementById("NameOnCardErrMsg").innerHTML = "Invalid Name on Card";
+                            return false;
+                        }
+                        else
+                        {
+                            document.getElementById("NameOnCardErrMsg").innerHTML = "";
+                        }
+                    }
+                     else
+                        {
+                            document.getElementById("NameOnCardErrMsg").innerHTML = "";
+                        }
+
+                 });
 </script>

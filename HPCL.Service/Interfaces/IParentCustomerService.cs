@@ -1,4 +1,5 @@
 ﻿using HPCL.Common.Models.RequestModel.Customer;
+using HPCL.Common.Models.ResponseModel.ParentCustomer;
 using HPCL.Common.Models.ViewModel.ParentCustomer;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -21,5 +22,6 @@ namespace HPCL.Service.Interfaces
         Task<ViewCustomerCardorDispatchDetails> GetDispatchDetails(string CustomerId, string RequestId);
         Task<ManageProfileViewModel> UpdateParentCustomer(string CustomerId, string RequestId);
         Task<ManageProfileViewModel> UpdateParentCustomer(ManageProfileViewModel cust);
+        Task<ParentCustomerReportModel> SearchParentCustomerRequestStatus(string ZonalOfficeId, string RegionalOfficeId, string FromDate, string ToDate, string FormNumber);
     }
 }

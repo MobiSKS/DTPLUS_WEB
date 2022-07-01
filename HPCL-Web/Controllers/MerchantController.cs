@@ -68,7 +68,7 @@ namespace HPCL_Web.Controllers
                 merchantMdl.SBUTypes.AddRange(await _commonActionService.GetSbuTypeList());
                 merchantMdl.RetailOutletStates.AddRange(await _commonActionService.GetStateList());
                 merchantMdl.CommStates.AddRange(await _commonActionService.GetStateList());
-                merchantMdl.ZonalOffices.AddRange(await _commonActionService.GetZonalOfficeList());
+                merchantMdl.ZonalOffices.AddRange(await _commonActionService.GetZonalOfficebySBUType(merchantMdl.SBUTypeId));
                 merchantMdl.Error = tuple.Item2;
                 merchantMdl.Success = "";
                 ViewBag.Reason = tuple.Item2;
@@ -83,7 +83,7 @@ namespace HPCL_Web.Controllers
                 merchantMdl2.SBUTypes.AddRange(await _commonActionService.GetSbuTypeList());
                 merchantMdl2.RetailOutletStates.AddRange(await _commonActionService.GetStateList());
                 merchantMdl2.CommStates.AddRange(await _commonActionService.GetStateList());
-                merchantMdl2.ZonalOffices.AddRange(await _commonActionService.GetZonalOfficeList());
+                merchantMdl2.ZonalOffices.AddRange(await _commonActionService.GetZonalOfficebySBUType(merchantMdl.SBUTypeId));
                 merchantMdl2.Error = "";
                 merchantMdl2.Success = tuple.Item2;
                 ModelState.Clear();

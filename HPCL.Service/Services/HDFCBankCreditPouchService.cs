@@ -178,6 +178,25 @@ namespace HPCL.Service.Services
             return searchList;
         }
 
+        public async Task<HdfcInitateRecharge> CCMSInitiateRechargeHDFC(string customerId, string amount)
+        {
+            var searchBody = new CcmsRechargeHdfc
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                CustomerId = customerId,
+                Amount = Convert.ToDecimal(amount)
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.HdfcCcmsRechargeUrl);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+
+            HdfcInitateRecharge checkList = obj.ToObject<HdfcInitateRecharge>();
+            return checkList;
+        }
+
         public async Task<CcmsRechargeHdfcRes> CCMSRechargeHDFC(string customerId, string amount)
         {
             var searchBody = new CcmsRechargeHdfc
@@ -192,6 +211,7 @@ namespace HPCL.Service.Services
             StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
             var response = await _requestService.CommonRequestService(content, WebApiUrl.HdfcCcmsRechargeUrl);
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+
             CcmsRechargeHdfcRes searchList = obj.ToObject<CcmsRechargeHdfcRes>();
             return searchList;
         }

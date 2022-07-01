@@ -197,13 +197,27 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6 col-12">
-                                    <div class="form-group d-flex align-items-center flex-wrap">
-                                        <label class="font-weight-normal col-md-5 col-12">@Label.SBUType<sup class="text-danger">*</sup></label>
-                                        <div class="col-md-7 col-12">
-                                            @Html.DropDownListFor(m => m.SBUTypeId, new SelectList(Model.SBUTypes, "SBUId", "SBUName"), new { @class = "form-control" })
-                                            <div class="error" id="sbuType_error"></div>
+                                    @if (Model.CreatedMerchant == "Y")
+                                    {
+                                        <div class="form-group d-flex align-items-center flex-wrap">
+                                            <label class="font-weight-normal col-md-5 col-12">@Label.SBUType<sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                @Html.DropDownListFor(m => m.SBUTypeId, new SelectList(Model.SBUTypes, "SBUId", "SBUName"), new { @class = "form-control" ,disabled="disabled"})
+                                                @Html.HiddenFor(m => m.SBUTypeId)
+                                                <div class="error" id="sbuType_error"></div>
+                                            </div>
                                         </div>
-                                    </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="form-group d-flex align-items-center flex-wrap">
+                                            <label class="font-weight-normal col-md-5 col-12">@Label.SBUType<sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                @Html.DropDownListFor(m => m.SBUTypeId, new SelectList(Model.SBUTypes, "SBUId", "SBUName"), new { @class = "form-control" })
+                                                <div class="error" id="sbuType_error"></div>
+                                            </div>
+                                        </div>
+                                    }
                                 </div>
                                 <div class="col-md-6 col-12">
                                     <div class="form-group d-flex align-items-center flex-wrap">
@@ -3546,6 +3560,48 @@
         else {
             document.getElementById("communicationCity_error").innerHTML = "";
         }
+    });
+
+    $("#SBUTypeId").change(function () {
+        var id = this.value;
+
+        $.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("GetZonalOfficebySBUType", "Common")',
+            data: { SBUTypeId: id },  // data to submit
+            dataType: "json",
+            success: function (data, status, xhr) {
+                var v = data;
+                if (status == 'success') {
+
+                    $("#ZonalOfficeId").html("");
+                    $.each(data, function (i, data) { // bind the dropdown list using json result
+                            if (i == 0) {
+                            $('<option>',
+                                {
+                                    value: 0,
+                                    text: "--Select--"
+                                }).html("--Select--").appendTo("#ZonalOfficeId");
+                            }
+                            else{
+                            $('<option>',
+                                {
+                                    value: data.zonalOfficeID,
+                                    text: data.zonalOfficeName
+                                }).html(data.zonalOfficeName).appendTo("#ZonalOfficeId");
+                            }
+                    });
+                    $("#ZonalOfficeId")[0].sumo.reload();
+                    $("#ZonalOfficeId").trigger("change");
+                }
+                else {
+                    console.log(v);
+                }
+            },
+            error: function (jqXhr, textStatus, errorMessage) {
+                alert("Error Populating Customer Zone");
+            }
+        });
     });
      
 </script>

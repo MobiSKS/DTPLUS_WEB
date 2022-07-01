@@ -43,5 +43,8 @@ namespace HPCL.Common.Models.ViewModel.AshokLeyLand
         [Required(ErrorMessage = "Email ID field cannot be left blank")]
         [RegularExpression(FieldValidation.ValidEmail, ErrorMessage = FieldValidation.ValidEmailErrMsg)]
         public string EmailId { get; set; }
+
+        [Required(ErrorMessage = "SBU Type field cannot be left blank")]
+        public int SBUId { get; set; }
     }
 }

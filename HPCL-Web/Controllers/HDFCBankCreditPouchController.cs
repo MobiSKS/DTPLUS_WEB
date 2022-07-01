@@ -110,11 +110,18 @@ namespace HPCL_Web.Controllers
             return View();
         }
 
+
+        [HttpPost]
+        public async Task<JsonResult> CCMSInitiateRechargeHDFC(string customerId, string amount)
+        {
+            var checkList = await _hDFCBankCreditPouchService.CCMSInitiateRechargeHDFC(customerId, amount);
+            return Json(new { checkList = checkList });
+        }
+
         [HttpPost]
         public async Task<JsonResult> CCMSRechargeThroughCreditPouch(string customerId, string amount)
         {
             var searchList = await _hDFCBankCreditPouchService.CCMSRechargeHDFC(customerId, amount);
-            ModelState.Clear();
             return Json(new { searchList = searchList });
         }
 
