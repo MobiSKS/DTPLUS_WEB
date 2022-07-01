@@ -92,7 +92,7 @@
                         <div class="clearfix"></div>
                         <div class="d-flex align-items-center justify-content-center mt-0">
                             <div class="px-0">
-                                <button class="btn btn_primary" id="btnCreate" type="button">Create User</button>
+                                <button class="btn btn_primary" id="btnNext" type="button">Next</button>
                             </div>
                         </div>
                     </div>
@@ -116,9 +116,13 @@
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td><a href="#">View Data Bank</a></td>
-                                        <td>NORTH ZONE,NORTH CENTRAL ZONE,WEST ZONE,NORTH WEST ZONE,EAST ZONE,SOUTH Z...</td>
-                                        <td><a href="#"><i class="fa fa-trash"></i></a></td>
+                                        <td>@*<a href="#">View Data Bank</a>*@
+                                            </td>
+                                        <td>@*NORTH ZONE,NORTH CENTRAL ZONE,WEST ZONE,NORTH WEST ZONE,EAST ZONE,SOUTH Z...*@
+
+                                        </td>
+                                        <td>@*<a href="#"><i class="fa fa-trash"></i></a>*@
+                                            </td>
                                     </tr>
 
 
@@ -126,6 +130,8 @@
                             </table>
                         </div>
                     </div>
+                     <div class="clearfix"></div>
+                        <div id="message" tabindex="0" class="mb-3 text-center alert alert-danger" style="display:none"></div>
                 </div>
                 <div class="clearfix"></div>
                 <div class="border-1 rounded border-grey w-100 mt-3">
@@ -137,11 +143,11 @@
                                 {
                                     if (Model.getUserRolesandregions.First().Data.UserRoles.Count() > 0)
                                     {
-                                        <ul style="max-height:400px; overflow-y:scroll;">
+                                        <ul id="UserRoleList" style="max-height:400px; overflow-y:scroll;">
                                             @foreach (var item in Model.getUserRolesandregions.First().Data.UserRoles)
                                             {
-                                                <li>@item.UserRole</li>
-
+                                                <li id="@item.ID">@item.UserRole</li>
+                                                
                                             }
 
                                         </ul>
@@ -150,6 +156,7 @@
 
                             </div>
                         </div>
+                 
                         <div class="col-12 col-sm-9 px-0">
                             <div class="LocationsArea">
                                 <h2>Locations Area</h2>
@@ -183,10 +190,10 @@
                                                             <div class="panel panel-default">
                                                                 <div class="panel-heading">
                                                                     <h4 class="panel-title"></h4>
-                                                                     <input class="form-check-input check_box_pos_sty" type="checkbox" id="inlineCheckbox1" value="option1">
+                                                                     <input class="form-check-input check_box_pos_sty" type="checkbox" name="zoneChk" onclick="chkAllRegion(this,@i)" id="check_@i" value="@item.ZonalOfficeID">
                                                                     <a class="collapsed" data-toggle="collapse" data-parent="#nested" href="#nested_@i">
                                                                         <div class="form-check form-check-inline">
-                                                                            <label class="form-check-label" for="inlineCheckbox1">@item.ZonalOfficeName</label>
+                                                                            <label class="form-check-label" for="check_@i">@item.ZonalOfficeName</label>
                                                                         </div>
                                                                     </a>
 
@@ -200,8 +207,8 @@
                                                                                 j++;
                                                                                 <li>
                                                                                     <div class="form-check form-check-inline">
-                                                                                        <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
-                                                                                        <label class="form-check-label" for="inlineCheckbox1">@item1.RegionalOfficeName</label>
+                                                                                        <input class="form-check-input chk_@i" type="checkbox" name="regionChk" id="check_@i@j-@item.ZonalOfficeID" value="@item1.RegionalOfficeID">
+                                                                                        <label class="form-check-label" for="check_@i@j">@item1.RegionalOfficeName</label>
                                                                                     </div>
                                                                                 </li>
                                                                             }
@@ -237,10 +244,10 @@
                 <div class="clearfix"></div>
                 <div class="d-flex align-items-center justify-content-center mt-3">
                     <div class="px-2">
-                        <button class="btn btn_primary" type="button">Previous</button>
+                        <button class="btn btn_primary" id="btnPrevious" type="button">Previous</button>
                     </div>
                     <div class="px-2">
-                        <button class="btn btn_primary" type="button">Create User</button>
+                        <button class="btn btn_primary" id="btnCreate" type="button">Create User</button>
                     </div>
                 </div>
             </div>
@@ -251,7 +258,33 @@
 <div class="clearfix"></div>
 
 <script type="text/javascript">
-      $("#btnCreate").on("click", (function (e) {
+    var selectedRole="";
+    function chkAllRegion(o,cnt){
+        $('input:checkbox.chk_'+cnt).not(this).prop('checked', o.checked);
+        $("#message").html("");
+        $("#message").attr("style","display:none");
+    }
+    $("#checkAll").click(function () {
+        $('input:checkbox').not(this).prop('checked', this.checked);
+        $("#message").html("");
+        $("#message").attr("style","display:none");
+    });
+    var li =document.getElementById("UserRoleList").getElementsByTagName('li');
+
+    for(var i = 0;i<li.length;i++){
+        li[i].addEventListener("click", selectItem);
+    }
+
+    function selectItem(e){
+        //alert(e.target.innerText);   
+        //alert(e.target.attributes.id.value);  
+        selectedRole=e.target.attributes.id.value;
+        $("#message").html("Please select location for this Role");
+        $("#message").attr("style","display:block");
+
+        
+    }
+      $("#btnNext").on("click", (function (e) {
          var userName=$("#NewUserName").val();
          var newEmail=$("#NewEmail").val();
          var password=$("#NewPassword").val();
@@ -338,7 +371,7 @@
                 flag="N";
 
             }
-            if (id == 0) {
+            if (secretQstn == 0) {
                 $("#secretQuestion_error").html("Please select Secret Question");
                 $("#secretQuestion_error").attr("style","display:block");
                 flag="N";
@@ -346,29 +379,156 @@
           if (flag == "N")
               e.preventDefault();
            else{
-              var ReqModel={};
-               $.ajax({
-               type: 'POST',  // http method
-               url: '@Url.Action("InsertNewUser", "Security")',
-               contentType: "application/json; charset=utf-8",
-               dataType: 'JSON',
-               data: JSON.stringify(ReqModel),
-               success: function (data, status, xhr) {
-                   var v = data;
-                   if (status == 'success') {
-
-                   }
-                   else {
-                       console.log(v);
-                   }
-               },
-               error: function (jqXhr, textStatus, errorMessage) {
-                   alert("Error"+ errorMessage);
-               }
-           });
+             
+                ShowUserRolesData();
                }
       })
       );
+      $("#btnPrevious").on("click", (function (e) {
+            ShowUserInfoData();
+      })
+      );
+       $("#btnCreate").on("click", (function (e) {
+         var userName=$("#NewUserName").val();
+         var newEmail=$("#NewEmail").val();
+         var password=$("#NewPassword").val();
+         var confirm=$("#NewConfirmPassword").val();
+         var secretAns=$("#NewSecretAnswer").val();
+          var secretQstn =$("#NewSecretQuestion").val();
+          var flag = "Y";
+
+            if(userName.trim()==""){
+                $("#userName_error").html("Please enter User Name");
+                $("#userName_error").attr("style","display:block");
+                flag="N";
+            }
+            else{
+                if(!(userName.match(userNameCheck))){
+                     $("#userName_error").html("Please enter valid User Name");
+                     $("#userName_error").attr("style","display:block");
+                      flag="N";
+                }
+                else{
+                    $.ajax({
+                        type: 'POST',  // http method
+                        url: '@Url.Action("ValidateUserName", "Security")',
+                        data: { UserName: userName.trim() },  // data to submit
+                        dataType: "json",
+                        success: function (data, status, xhr) {
+                            var v = data;
+                            if (status == 'success' && v == '0') {
+                                $("#userName_error").html("User Name already Exists");
+                                $("#userName_error").attr("style","display:block");
+                            }
+                            else {
+                                $("#userName_error").html("");
+                                $("#userName_error").attr("style","display:none");
+                            }
+                        }
+                    });
+                }
+
+            }
+            if(newEmail.trim()==""){
+                $("#email_error").html("Please enter Email");
+                $("#email_error").attr("style","display:block");
+                flag="N";
+            }
+            else{
+                if(!(newEmail.match(email))){
+                     $("#email_error").html("Please enter valid Email");
+                     $("#email_error").attr("style","display:block");
+                     flag="N";
+
+                }
+            }
+            if(password.trim()==""){
+                $("#password_error").html("Please enter Password");
+                $("#password_error").attr("style","display:block");
+                flag="N";
+            }
+            else{
+               if(!(password.match(passwordCheck))){
+                     $("#password_error").html("Please enter valid Password");
+                     $("#password_error").attr("style","display:block");
+                     flag="N";
+                }
+            }
+            if(confirm.trim()==""){
+                $("#confirmPassword_error").html("Please enter Confirm Password");
+                $("#confirmPassword_error").attr("style","display:block");
+                flag="N";
+
+            }
+            else{
+                if(password!=""){
+                    if(confirm!=password){
+                         $("#confirmPassword_error").html("Please enter same Password");
+                         $("#confirmPassword_error").attr("style","display:block");
+                         flag="N";
+                    }
+                }
+            }
+            if(secretAns.trim()==""){
+                $("#secretAns_error").html("Please enter Password Answer");
+                $("#secretAns_error").attr("style","display:block");
+                flag="N";
+
+            }
+            if (secretQstn == 0) {
+                $("#secretQuestion_error").html("Please select Secret Question");
+                $("#secretQuestion_error").attr("style","display:block");
+                flag="N";
+            }
+          if (flag == "N")
+              e.preventDefault();
+           else{
+               var userRoleSelected=selectedRole;
+               objUserRole=[];
+               $("input:checkbox[name=regionChk]:checked").each(function () {
+                   var chkROId=$(this).attr("id");
+                    var zoId=chkROId.substring(chkROId.indexOf('-') + 1);
+                    objUserRole.push({ RO: $(this).val(),ZO:zoId });
+               });
+               var ReqModel={UserName:userName,Email:newEmail,Password:password,ConfirmPassword:confirm,SecretQuestion:secretQstn,SecretQuestionAnswer:secretAns,UserRole:userRoleSelected,FirstName:"",LastName:"",StateId:"0",ActionType:"",TypeManageUsersAddUserRole:objUserRole};
+               $.ajax({
+                   type: 'POST',  // http method
+                   url: '@Url.Action("AddUser", "Security")',
+                   contentType: "application/json; charset=utf-8",
+                   dataType: 'JSON',
+                   data: JSON.stringify(ReqModel),
+                   success: function (data, status, xhr) {
+                       var v = data;
+                       if (status == 'success') {
+
+                       }
+                       else {
+                           console.log(v);
+                       }
+                   },
+                   error: function (jqXhr, textStatus, errorMessage) {
+                       alert("Error"+ errorMessage);
+                   }
+               });
+            }
+      })
+      );
+       function ShowUserRolesData()
+        {
+            document.getElementById("userrole-tab").classList.remove("disable");
+            document.getElementById("userrole-tab").click();
+            document.getElementById("userinfo-tab").classList.add("disable");
+            
+
+        }
+        function ShowUserInfoData()
+        {
+            document.getElementById("userinfo-tab").classList.remove("disable");
+            document.getElementById("userinfo-tab").click();
+            document.getElementById("userrole-tab").classList.add("disable");
+            
+
+        }
      $("#NewUserName").on("blur", function() {
          var userName=$("#NewUserName").val();
          if(userName.trim()==""){

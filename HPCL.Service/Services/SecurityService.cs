@@ -273,7 +273,7 @@ namespace HPCL.Service.Services
             return responseMsg;
         }
 
-        public async Task<List<SuccessResponse>> AddUser(AddNewUserReq entity)
+        public async Task<List<SuccessResponse>> AddUser([FromBody]AddNewUserReq entity)
         {
             var forms = new AddNewUserReq
             {
@@ -286,7 +286,14 @@ namespace HPCL.Service.Services
                 ConfirmPassword = entity.ConfirmPassword,
                 SecretQuestion = entity.SecretQuestion,
                 SecretQuestionAnswer = entity.SecretQuestionAnswer,
-                CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
+                CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                FirstName=entity.FirstName,
+                LastName=entity.LastName,
+                ActionType=entity.ActionType,
+                UserRole=entity.UserRole,
+                TypeManageUsersAddUserRole=entity.TypeManageUsersAddUserRole,
+                ModifiedBy= _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                StateId=entity.StateId
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");

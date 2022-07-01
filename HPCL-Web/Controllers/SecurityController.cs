@@ -229,5 +229,13 @@ namespace HPCL_Web.Controllers
             ModelState.Clear();
             return Json(check);
         }
+        [HttpPost]
+        public async Task<JsonResult> AddUser([FromBody] AddNewUserReq entity)
+        {
+            var result = await _securityService.AddUser(entity);
+
+            ModelState.Clear();
+            return Json(result);
+        }
     }
 }
