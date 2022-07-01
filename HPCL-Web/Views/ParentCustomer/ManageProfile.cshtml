@@ -1055,6 +1055,8 @@
                             $("#nameOnCard").val("");
                             $("#CustomerId").val("");
                             $("#CustomerSearch").attr("style","display:none");
+                            $("#custErrMsg").html("");
+                            $("#NameOnCardErrMsg").html("");
 
                         }
                     function ShowBasicInfo()
@@ -3149,7 +3151,7 @@
                         $("#NameOnCardErrMsg").html("Please enter either Customer ID or Name on card");
                         flag = "N";
                     }
-                    else if(custtId != "")
+                    if(custtId != "")
                     {
                         if (!custtId.match(mappedCustomerId))
                         {
@@ -3158,17 +3160,27 @@
                             flag = "N";
                         }
                     }
-                    else
+                    if(nameOnCard!=""){
+                        if (!nameOnCard.match(nameWithSpaceCheck))
+                        {
+                            $("#NameOnCardErrMsg").html("Invalid Name on Card");
+                            flag = "N";
+                        }
+                    }
+                    @*else
                     {
                         $("#custErrMsg").html("");
                         $("#NameOnCardErrMsg").html("");
-                    }
+                    }*@
 
                     if (flag == "N")
                         e.preventDefault();
                     else{
-                        var url = '@Html.Raw(@Url.Action("ManageProfile", "ParentCustomer",new { CustomerId = "aa", NameOnCard = "mm" }))';
-                        url = url.replace("aa", encodeURIComponent(custtId)).replace("mm", encodeURIComponent(nameOnCard));
+                        
+                        $("#custErrMsg").html("");
+                        $("#NameOnCardErrMsg").html("");
+                        var url = '@Html.Raw(@Url.Action("ManageProfile", "ParentCustomer",new { CustomerId = "aa", NameOnCard = "mmzzzYz" }))';
+                        url = url.replace("aa", encodeURIComponent(custtId)).replace("mmzzzYz", encodeURIComponent(nameOnCard));
                         window.location.href=url;
                     }
 
