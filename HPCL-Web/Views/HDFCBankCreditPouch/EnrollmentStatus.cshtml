@@ -306,7 +306,7 @@
 
                                 var enDate;
 
-                                if(((girdList[i].enrolledDate) == "01/1/0001 00:00:00") || ((girdList[i].enrolledDate) == "01/01/1900 00:00:00") || ((girdList[i].enrolledDate) == null)){
+                                if(((girdList[i].enrolledDate) == "01-1-0001") || ((girdList[i].enrolledDate) == "01-01-1900") || ((girdList[i].enrolledDate) == null)){
                                     enDate = "";
                                 }else{
                                     enDate = moment(girdList[i].enrolledDate, 'DD-MM-YYYY').format('DD-MM-YYYY');
@@ -376,11 +376,20 @@ $("#approvalHdfcList").on('click', '.viewListReport', function (e) {
             data: {customerId: customerId, requestId: requestId },  // data to submit
             success: function (res, status, xhr) {
                 
+                    console.log("view report",res);
+
                     if(res.searchList.success == true){
 
                         $("#reportList td").parent().remove();
 
                         for (var i = 0; i < res.searchList.data.length; i++) {
+
+                            var modifiedDate;
+                            if(((res.searchList.data[i].modifiedDate) == "01-1-0001") || ((res.searchList.data[i].modifiedDate) == "01-01-1900") || ((res.searchList.data[i].modifiedDate) == null)){
+                                modifiedDate = "";
+                            }else{
+                                modifiedDate = moment(res.searchList.data[i].modifiedDate, 'DD-MM-YYYY').format('DD-MM-YYYY');
+                            }
 
                             var rows = "<tbody><tr>"
                                 + "<td>"+(i+1)+"</td>"
@@ -388,7 +397,7 @@ $("#approvalHdfcList").on('click', '.viewListReport', function (e) {
                                 + "<td>" + (res.searchList.data[i].customerName || '') + "</td>"
                                 + "<td></td>"
                                 + "<td>" + (res.searchList.data[i].modifiedBy || '') + "</td>"
-                                + "<td>" + (res.searchList.data[i].modifiedDate || '') + "</td>"
+                                + "<td>" + (modifiedDate) + "</td>"
                                 + "<td>" + (res.searchList.data[i].status || '') + "</td>"
                                 + "</tr ></tbody>";
 
