@@ -1,5 +1,6 @@
 ﻿using HPCL.Common.Helper;
 using HPCL.Common.Models.CommonEntity;
+using HPCL.Common.Models.CommonEntity.RequestEnities;
 using HPCL.Common.Models.RequestModel.Security;
 using HPCL.Common.Models.ResponseModel.Security;
 using HPCL.Common.Models.ViewModel.Security;
@@ -272,7 +273,7 @@ namespace HPCL.Service.Services
             return responseMsg;
         }
 
-        public async Task<List<SuccessResponse>> AddUser(AddNewUserReq entity)
+        public async Task<List<SuccessResponse>> AddUser([FromBody]AddNewUserReq entity)
         {
             var forms = new AddNewUserReq
             {
@@ -285,7 +286,14 @@ namespace HPCL.Service.Services
                 ConfirmPassword = entity.ConfirmPassword,
                 SecretQuestion = entity.SecretQuestion,
                 SecretQuestionAnswer = entity.SecretQuestionAnswer,
-                CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
+                CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                FirstName=entity.FirstName,
+                LastName=entity.LastName,
+                ActionType=entity.ActionType,
+                UserRole=entity.UserRole,
+                TypeManageUsersAddUserRole=entity.TypeManageUsersAddUserRole,
+                ModifiedBy= _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                StateId=entity.StateId
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
@@ -510,6 +518,52 @@ namespace HPCL.Service.Services
             GetUserRolesAndRegions searchList = obj.ToObject<GetUserRolesAndRegions>();
             return searchList;
         }
-        
+        public async Task<string> ValidateManageUserName(string UserName)
+        {
+            var validateUserNameForms = new ValidateUserNameRequestModal
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserName = UserName,
+            };
+
+            StringContent validateUserNameContent = new StringContent(JsonConvert.SerializeObject(validateUserNameForms), Encoding.UTF8, "application/json");
+
+            var validateUserNameResponse = await _requestService.CommonRequestService(validateUserNameContent, WebApiUrl.validateUserName);
+
+            JObject validateUserNameObj = JObject.Parse(JsonConvert.DeserializeObject(validateUserNameResponse).ToString());
+            var validateUserNameJarr = validateUserNameObj["Data"].Value<JArray>();
+            List<SuccessResponse> validateUserNameLst = validateUserNameJarr.ToObject<List<SuccessResponse>>();
+
+            return validateUserNameLst[0].Status.ToString();
+        }
+        public async Task<List<SuccessResponse>> UpdateUser([FromBody] AddNewUserReq entity)
+        {
+            var forms = new AddNewUserReq
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserName = entity.UserName,
+                Email = entity.Email,
+                FirstName = entity.FirstName,
+                LastName = entity.LastName,
+                ActionType = entity.ActionType,
+                UserRole = entity.UserRole,
+                TypeManageUsersAddUserRole = entity.TypeManageUsersAddUserRole,
+                ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                StateId = entity.StateId
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.AddNewUserUrl);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<SuccessResponse> responseMsg = jarr.ToObject<List<SuccessResponse>>();
+            return responseMsg;
+        }
     }
 }

@@ -173,7 +173,7 @@ namespace HPCL.Service.Services
                     model.Data = res.Data;
                 }
 
-                if (res != null && res.Data != null && res.Data.MerchantDetails.Count > 0 && !string.IsNullOrEmpty(res.Data.MerchantDetails[0].RegionalOfficeName))
+                if (res != null && res.Data != null && res.Data.MerchantDetails.Count > 0 && res.Data.MerchantDetails[0].Status == 1)
                 {
                     model.RegionalOfficeName = res.Data.MerchantDetails[0].RegionalOfficeName;
                     model.ZonalOfficeName = res.Data.MerchantDetails[0].ZonalOfficeName;

@@ -221,5 +221,36 @@ namespace HPCL_Web.Controllers
             modals.getUserRolesandregions.Add(await _securityService.GetUserRolesAndRegions());
             return View(modals);
         }
+        [HttpPost]
+        public async Task<JsonResult> ValidateUserName(string UserName)
+        {
+            var check = await _securityService.ValidateManageUserName(UserName);
+
+            ModelState.Clear();
+            return Json(check);
+        }
+        [HttpPost]
+        public async Task<JsonResult> AddUser([FromBody] AddNewUserReq entity)
+        {
+            var result = await _securityService.AddUser(entity);
+
+            ModelState.Clear();
+            return Json(result);
+        }
+        
+        public async Task<IActionResult> UpdateUserandLocations(string UserName)
+        {
+            var modals = new ManageNewUserViewModel();
+            modals.getUserRolesandregions.Add(await _securityService.GetUserRolesAndRegions());
+            return View(modals);
+        }
+        [HttpPost]
+        public async Task<JsonResult> UpdateUser([FromBody] AddNewUserReq entity)
+        {
+            var result = await _securityService.UpdateUser(entity);
+
+            ModelState.Clear();
+            return Json(result);
+        }
     }
 }

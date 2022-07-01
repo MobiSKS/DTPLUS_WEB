@@ -297,7 +297,7 @@
         public static string alAddonOTCCard = "api/dtplus/ashokleyland/al_addon_otc_card";
         public static string getAlSalesExeEmpidAddonOtcCardMapping = "api/dtplus/ashokleyland/get_al_sales_exe_empid_addon_otc_card_mapping";
         public static string getAlCustomerDetail = "api/dtplus/ashokleyland/get_al_customer_detail";
-        public static string updateAlCustomerDetail = "api/dtplus/ashokleyland/update_al_customer_detail";
+        public static string alUpdateCustomer = "api/dtplus/ashokleyland/al_update_customer";
         public static string getAlCustomerDetailForVerification = "api/dtplus/ashokleyland/get_al_customer_detail_for_verification";
         public static string updateAlCustomerStatus = "api/dtplus/ashokleyland/update_al_customer_status";
         public static string getAlCustomerStatus = "api/dtplus/ashokleyland/get_al_customer_status";
