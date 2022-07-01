@@ -1,4 +1,5 @@
-﻿using HPCL.Common.Models.CommonEntity.ResponseEnities;
+﻿using HPCL.Common.Models.CommonEntity;
+using HPCL.Common.Models.CommonEntity.ResponseEnities;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -19,7 +20,7 @@ namespace HPCL.Common.Models.ViewModel.Merchant
             RetailOutletDistricts = new List<DistrictResponseModal>();
             CommStates = new List<StateResponseModal>();
             CommDistricts = new List<DistrictResponseModal>();
-            ZonalOffices = new List<ZonalOfficeResponseModal>();
+            ZonalOffices = new List<CustomerZonalOfficeModel>();
             SalesAreas = new List<SalesAreaResponseModal>();
             PreHighwayNumbers = new List<PreHighwayNumberResponseModal>();
             MerchantTypes.Add(new MerchantTypeResponseModal
@@ -32,11 +33,11 @@ namespace HPCL.Common.Models.ViewModel.Merchant
                 OutletCategoryCode = 0,
                 OutletCategoryName = "--Select--"
             });
-            SBUTypes.Add(new SbuTypeResponseModal
-            {
-                SBUId = 0,
-                SBUName = "--Select--"
-            });
+            //SBUTypes.Add(new SbuTypeResponseModal
+            //{
+            //    SBUId = 0,
+            //    SBUName = "--Select--"
+            //});
             RetailOutletStates.Add(new StateResponseModal
             {
                 CountryID = 0,
@@ -49,7 +50,7 @@ namespace HPCL.Common.Models.ViewModel.Merchant
                 StateID = 0,
                 StateName = "Select State"
             });
-            ZonalOffices.Add(new ZonalOfficeResponseModal
+            ZonalOffices.Add(new CustomerZonalOfficeModel
             {
                 ZonalOfficeID = 0,
                 ZonalOfficeName = "--Select--"
@@ -183,7 +184,7 @@ namespace HPCL.Common.Models.ViewModel.Merchant
         public virtual List<DistrictResponseModal> RetailOutletDistricts { get; set; }
         public virtual List<StateResponseModal> CommStates { get; set; }
         public virtual List<DistrictResponseModal> CommDistricts { get; set; }
-        public virtual List<ZonalOfficeResponseModal> ZonalOffices { get; set; }
+        public virtual List<CustomerZonalOfficeModel> ZonalOffices { get; set; }
         public virtual List<SalesAreaResponseModal> SalesAreas { get; set; }
         public virtual List<PreHighwayNumberResponseModal> PreHighwayNumbers { get; set; }
     }

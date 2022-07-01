@@ -47,7 +47,7 @@
                                                     <button class="btn btn_primary" type="button" onclick="searchUsers()">Search</button>
                                                 </div>
                                                 <div class="px-1">
-                                                    <button class="btn btn_primary" type="button">Reset</button>
+                                                    <button class="btn btn_primary" id="btnReset" onclick="resetClick()" type="button">Reset</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -75,12 +75,12 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="mb-3 text-center alert alert-danger" style="display:none;" id="noRecord"></div>
+                                
                             </div>
                         </div>
                         <div class="clearfix"></div>
                     </div>
-
+                    <div class="mb-3 text-center alert alert-danger" style="display:none;" id="noRecord"></div>
                     <div class="mb-3 text-center alert alert-danger" style="display:none;" id="errMsg"></div>
                     <div class="mb-3 text-center alert alert-success" style="display:none;" id="sucssMsg"></div>
 
@@ -91,7 +91,7 @@
                                     <th>S.No.</th>
                                     <th>
                                         <div class="form-check">
-                                            <input class="form-check-input position-static" type="checkbox" id="blankCheckbox" value="option1" aria-label="...">
+                                            <input class="form-check-input position-static" type="checkbox" id="ChkAllUsers" value="" aria-label="...">
                                         </div>
                                     </th>
                                     <th>User Name</th>
@@ -114,6 +114,10 @@
 
 
 <script>
+       $("#ChkAllUsers").click(function () {
+        $('input:checkbox[name=enableRow]').not(this).prop('checked', this.checked);
+
+    });
 
     $(document).ready(function (){
        $('.chk').on('change', function() {
@@ -275,7 +279,9 @@
 
     }
 
-
+    function resetClick(){
+        window.location.reload();
+    }
     $("#UserMappingTable").on('click', '.dbs', function (e) {
 
         document.getElementById("errMsg").style.display = "none";
@@ -288,25 +294,27 @@
 
 
         console.log(userName+"         "+action);
+        //Are you sure you want to disable user paytmtest ?
+        if (confirm('Are you sure you want to disable user '+userName+ ' ?')) {
+            $.ajax({
+                url: "@Url.Action("DisableUpdateManageUser", "Security")",
+                type: "POST",
+                dataType: "JSON",
+                data: { userName: userName, action: action },
+                success: function (res) {
 
-        $.ajax({
-            url: "@Url.Action("DisableUpdateManageUser", "Security")",
-            type: "POST",
-            dataType: "JSON",
-            data: { userName: userName, action: action },
-            success: function (res) {
+                    console.log("res",res);
 
-                console.log("res",res);
+                    if(res.reasonList[0].status == 1){
+                        searchUsers();
+                    }
 
-                if(res.reasonList[0].status == 1){
-                    searchUsers();
+                },
+                error: function (ex) {
+                    alert('Failed' + ex);
                 }
-
-            },
-            error: function (ex) {
-                alert('Failed' + ex);
-            }
-        });
+            });
+        }
     });
 
     $("#UserMappingTable").on('click', '.reset', function (e) {
@@ -335,7 +343,7 @@
                 url: "@Url.Action("UserResetPassword", "Security")",
                 type: "POST",
                 dataType: "JSON",
-                data: { userName: userName, action: action },
+                data: { userName: userName ,EmailId:email},
                 success: function (res) {
 
                     console.log("res",res);

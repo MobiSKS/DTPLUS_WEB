@@ -209,7 +209,7 @@ namespace HPCL.Service.Services
             return searchList;
         }
 
-        public async Task<List<SuccessResponse>> UserResetPassword(string userName)
+        public async Task<List<SuccessResponse>> UserResetPassword(string userName, string EmailId)
         {
             var forms = new GetUserResetPassword
             {
@@ -217,7 +217,8 @@ namespace HPCL.Service.Services
                 UserIp = CommonBase.userip,
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserName = userName,
-                ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
+                ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                EmailId=EmailId
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");

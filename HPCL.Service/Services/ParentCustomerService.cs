@@ -1,4 +1,5 @@
 ﻿using HPCL.Common.Helper;
+using HPCL.Common.Models;
 using HPCL.Common.Models.CommonEntity;
 using HPCL.Common.Models.RequestModel.Customer;
 using HPCL.Common.Models.RequestModel.ParentCustomer;
@@ -356,12 +357,13 @@ namespace HPCL.Service.Services
             if (respObj["Status_Code"].ToString() == "200")
             {
                 var respJarr = respObj["Data"].Value<JArray>();
-                List<SuccessResponse> successResponseList = respJarr.ToObject<List<SuccessResponse>>();
+                List<ParentCustomerSuccessResponse> successResponseList = respJarr.ToObject<List<ParentCustomerSuccessResponse>>();
 
                 if (successResponseList.Count > 0)
                 {
+                    messageList.Add(successResponseList[0].Reason);
                     foreach (var item in successResponseList)
-                        messageList.Add(item.Reason);
+                        messageList.Add(item.customerId);
                 }
                 return messageList;
             }
