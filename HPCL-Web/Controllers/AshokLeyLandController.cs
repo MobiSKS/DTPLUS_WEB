@@ -254,5 +254,20 @@ namespace HPCL_Web.Controllers
             return Json(Model);
         }
 
+        [HttpPost]
+        public async Task<JsonResult> BindCustomerDetailsForSearch(string CustomerId, string NameOnCard)
+        {
+            var customerCardInfo = await _ashokLeyLandService.BindCustomerDetailsForSearch(CustomerId, NameOnCard);
+            ModelState.Clear();
+            return Json(customerCardInfo);
+        }
+        [HttpPost]
+        public async Task<JsonResult> CardDetailsForSearch(String CustomerId, String CustomerTypeId)
+        {
+            var customerCardInfo = await _ashokLeyLandService.CardDetailsForSearch(CustomerId, CustomerTypeId);
+            ModelState.Clear();
+            return Json(customerCardInfo);
+        }
+
     }
 }

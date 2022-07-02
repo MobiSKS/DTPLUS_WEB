@@ -303,6 +303,8 @@
         public static string updateAlCustomerStatus = "api/dtplus/ashokleyland/update_al_customer_status";
         public static string getAlCustomerStatus = "api/dtplus/ashokleyland/get_al_customer_status";
         public static string checkVinNo = "api/dtplus/ashokleyland/check_vin_no";
+        public static string getAlCustomerDetails = "api/dtplus/ashokleyland/get_al_customer_details";
+        public static string searchAlManageCard = "api/dtplus/ashokleyland/search_al_manage_card";
         #endregion
 
         #region Customer Financial
@@ -508,7 +510,7 @@
         public static string AMEXEnrollExceptionReqUrl = "api/dtplus/AMEXcreditPouch/insrt_cp_rqst";
         public static string AMEXGetExApprovalUrl = "api/dtplus/AMEXcreditPouch/Get_cp_by_bank";
         public static string AMEXSubmitExApprovalUrl = "api/dtplus/AMEXcreditPouch/action_cp";
-
+        public static string GetAmexPlanUrl = "api/dtplus/AMEXCreditPouch/get_plan";
         public static string AMEXGetEnrollStatusUrl = "api/dtplus/AMEXCreditPouch/get_cp_status";
         public static string AMEXGetEnrollStatusReportUrl = "api/dtplus/AMEXCreditPouch/get_cp_status_Report";
         public static string AMEXHdfcCcmsRechargeUrl = "api/dtplus/HDFCCreditPouch/insert_cp_pg_log";

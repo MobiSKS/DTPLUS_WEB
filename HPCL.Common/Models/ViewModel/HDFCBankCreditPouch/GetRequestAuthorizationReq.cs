@@ -7,5 +7,6 @@ namespace HPCL.Common.Models.ViewModel.HDFCBankCreditPouch
         public string CustomerId { get; set; }
         public string ToDate { get; set; }
         public string FromDate { get; set; }
+        //public int BankNameId { get; set; }
     }
 }

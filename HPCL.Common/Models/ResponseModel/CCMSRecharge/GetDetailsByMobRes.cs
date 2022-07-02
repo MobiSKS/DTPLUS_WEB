@@ -14,5 +14,8 @@ namespace HPCL.Common.Models.ResponseModel.CCMSRecharge
         public string CustomerName { get; set; }
         public string CustomerType { get; set; }
         public string ControlCardNo { get; set; }
+        public string MobileNo { get; set; }
+        public int Status { get; set; }
+        public string Reason { get; set; }
     }
 }
