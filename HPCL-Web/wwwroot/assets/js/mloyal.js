@@ -573,22 +573,22 @@ function showOfficialDetails() {
     }
 
     if (document.applicationForm.CommunicationPinCode.value.trim() == "") {
-        document.getElementById("comm_pincode_error").innerHTML = "Pin code field cannot be left blank";
+        document.getElementById("comm_pincode_error").innerHTML = "PIN Code field cannot be left blank";
         ret = false;
     }
     else {
         if (document.applicationForm.CommunicationPinCode.value.substring(0, 1) == "0") {
-            document.getElementById("comm_pincode_error").innerHTML = "Invalid Pin code. Min-Max 6 digits";
+            document.getElementById("comm_pincode_error").innerHTML = "Invalid PIN Code. Min-Max 6 digits";
             ret = false;
         }
         else if (document.applicationForm.CommunicationPinCode.value.length < 6)
         {
-            document.getElementById("comm_pincode_error").innerHTML = "Invalid Pin code. Min-Max 6 digits";
+            document.getElementById("comm_pincode_error").innerHTML = "Invalid PIN Code. Min-Max 6 digits";
             ret = false;
         }
         else if (!document.applicationForm.CommunicationPinCode.value.match(pincode))
         {
-            document.getElementById("comm_pincode_error").innerHTML = "Invalid Pin Code. Min-Max 6 digits";
+            document.getElementById("comm_pincode_error").innerHTML = "Invalid PIN Code. Min-Max 6 digits";
             ret = false;
         }
         else
@@ -856,22 +856,22 @@ function showOfficialDetails() {
 
 
     if (document.getElementById("PerOrRegAddressPinCode").value.trim() == "") {
-        document.getElementById("perma_pincode_error").innerHTML = "Pin code field cannot be left blank";
+        document.getElementById("perma_pincode_error").innerHTML = "PIN Code field cannot be left blank";
         ret = false;
     }
     else
     {
         if (document.getElementById("PerOrRegAddressPinCode").value.substring(0, 1) == "0") {
-            document.getElementById("perma_pincode_error").innerHTML = "Invalid Pin code. Min-Max 6 digits";
+            document.getElementById("perma_pincode_error").innerHTML = "Invalid PIN Code. Min-Max 6 digits";
             ret = false;
         }
         else if (document.getElementById("PerOrRegAddressPinCode").value.length < 6) {
-            document.getElementById("perma_pincode_error").innerHTML = "Invalid Pin code. Min-Max 6 digits";
+            document.getElementById("perma_pincode_error").innerHTML = "Invalid PIN Code. Min-Max 6 digits";
             ret = false;
         }
         else if (!document.getElementById("PerOrRegAddressPinCode").value.match(pincode))
         {
-            document.getElementById("perma_pincode_error").innerHTML = "Invalid Pin Code. Min-Max 6 digits";
+            document.getElementById("perma_pincode_error").innerHTML = "Invalid PIN Code. Min-Max 6 digits";
             ret = false;
         }
         else
@@ -1086,24 +1086,24 @@ function showCardDetails() {
 
     if (document.getElementById("PerOrRegAddressPinCode").value.trim() == "")
     {
-        document.getElementById("perma_pincode_error").innerHTML = "Pin code field cannot be left blank";
+        document.getElementById("perma_pincode_error").innerHTML = "PIN Code field cannot be left blank";
         ret = false;
     }
     else
     {
         if (document.getElementById("PerOrRegAddressPinCode").value.substring(0, 1) == "0")
         {
-            document.getElementById("perma_pincode_error").innerHTML = "Invalid Pin code. Min-Max 6 digits";
+            document.getElementById("perma_pincode_error").innerHTML = "Invalid PIN Code. Min-Max 6 digits";
             ret = false;
         }
         else if (document.getElementById("PerOrRegAddressPinCode").value.length < 6)
         {
-            document.getElementById("perma_pincode_error").innerHTML = "Invalid Pin code. Min-Max 6 digits";
+            document.getElementById("perma_pincode_error").innerHTML = "Invalid PIN Code. Min-Max 6 digits";
             ret = false;
         }
         else if (!document.getElementById("PerOrRegAddressPinCode").value.match(pincode))
         {
-            document.getElementById("perma_pincode_error").innerHTML = "Invalid Pin code. Min-Max 6 digits";
+            document.getElementById("perma_pincode_error").innerHTML = "Invalid PIN Code. Min-Max 6 digits";
             ret = false;
         }
         else
