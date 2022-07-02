@@ -17,6 +17,9 @@ namespace HPCL.Common.Models.ResponseModel.CustomerFeeWaiver
         public string CustomerName { get; set; }
         public string MobileNo { get; set; }
         public string CreatedRoleName { get; set; }
+        public string CreatedBy { get; set; }
+        public string CreatedDate { get; set; }
+        public string CardType { get; set; }
     }
 
     public class BindPendingCustomerRes : ResponseMsg
