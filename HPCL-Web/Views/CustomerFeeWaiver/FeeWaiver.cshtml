@@ -8,6 +8,7 @@
             <li class="breadcrumb-item"><a href="@Url.Action("Index","Enrollments")" class="text_primary">Enrollments</a> </li>
             <li class="breadcrumb-item font-weight-light">Approve Fee Waiver</li>
         </ul>
+        <div id="approveRejectSuccess" class="mb-3 text-center alert alert-success" style="display:none;"></div>
         <div class="tab-content mt-3" id="myTabContent">
             <div class="tab-pane fade show active" id="basicInfo" role="tabpanel" aria-labelledby="basicInfo-tab">
                 <div class="border-1 rounded border-grey h-100 mt-3">
@@ -16,9 +17,10 @@
                         <div class="w-100">
 
                             <div id="approveRejectFail" class="mb-3 text-center alert alert-danger" style="display:none;"></div>
-                            <div id="approveRejectSuccess" class="mb-3 text-center alert alert-success" style="display:none;"></div>
-
-                            <form id="formVal" method="post" data-ajax="true" asp-controller="CustomerFeeWaiver" asp-action="FeeWaiver" data-ajax-method="POST" data-ajax-success="OnSuccessFeeWaiverLoad" data-ajax-failure="OnFailure">
+                            
+                            @*<form id="formVal" method="post" data-ajax="true" asp-controller="CustomerFeeWaiver" asp-action="FeeWaiver" data-ajax-method="POST" data-ajax-success="OnSuccessFeeWaiverLoad" data-ajax-failure="OnFailure">*@
+                            @using (Html.BeginForm(null, null, FormMethod.Get, new { id = "formVal", @class = "toBeHiddenOnSuccess" }))
+                            {
                                 <div>
                                     <div class="d-flex align-items-center justify-content-between flex-wrap">
                                         <div class="col-md-12 col-12 px-0">
@@ -44,7 +46,7 @@
 
                                     <div class="clearfix"></div>
                                     
-                                    <div class="mt-3" id="customerSearchDiv" style="display:none;">
+                                    @*<div class="mt-3" id="customerSearchDiv" style="display:none;">
                                         <table id="customerSearchTblBind" class="datatable table table-striped d-block table-bordered table-responsive" style="width:100%;">
                                             <thead>
                                                 <tr>
@@ -84,9 +86,88 @@
                                                 </tr>
                                             </thead>
                                         </table>
-                                    </div>
+                                    </div>*@
                                 </div>
-                            </form>
+                                <div>
+                                @if (ViewBag.Reset != "Y")
+                                {
+                                    <div id="tblResponse">
+                                        @if (Model.data.Count() > 0)
+                                        {
+                                            <table id="customerSearchTblBind" class="datatable table table-striped table-bordered table-responsive" style="width:100%;">
+                                                <thead>
+                                                    <tr>
+                                                        <th>
+                                                            S.No.
+                                                        </th>
+                                                        <th>
+                                                            Form Number
+                                                        </th>
+                                                        <th style="width:1%">
+                                                            Zonal
+                                                        </th>
+                                                        <th>
+                                                            Regional
+                                                        </th>
+                                                        <th>
+                                                            Customer Name
+                                                        </th>
+                                                        <th>
+                                                            Role Name
+                                                        </th>
+                                                        <th>
+                                                            Created Date
+                                                        </th>
+                                                        <th>
+                                                            Created By
+                                                        </th>
+                                                        <th>
+                                                            Card Type
+                                                        </th>
+                                                        <th>
+                                                            Mobile No.
+                                                        </th>
+                                                        <th>
+                                                            Action
+                                                        </th>
+                                                    </tr>
+
+                                                </thead>
+                                                <tbody id="searchMerchantTableBody">
+                                                    @{
+                                                        int y = 0;
+                                                    }
+                                                    @foreach (var item in Model.data)
+                                                    {
+                                                        y = y + 1;
+                                                        <tr>
+                                                            <td>@y</td>
+                                                            <td><a href='#aaa' class='formNumberValCr'>@item.FormNumber</a></td>
+                                                            <td>@item.ZonalOfficeName</td>
+                                                            <td>@item.RegionalOfficeName</td>
+                                                            <td>@item.CustomerName</td>
+                                                            <td>@item.CreatedRoleName</td>
+                                                            <td>@item.CreatedDate</td>
+                                                            <td>@item.CreatedBy</td>
+                                                            <td>@item.CardType</td>
+                                                            <td>@item.MobileNo</td>
+                                                            <td><a href='#aa' class='approveDtls' onclick='gotopage()'>APPROVE</a></td>
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        }
+                                        @* else
+                                        {
+                                            <div class="col-12 text-center alert-danger p-2 mt-3" id="NoRecord">
+                                                @Model.Message
+                                            </div>
+                                        }*@
+                                    </div>
+                                }
+                                     </div>
+                            }
+                            @*</form>*@
 
                             <div id="detailsSection">
                                 <div class="form-group d-flex align-items-center flex-wrap">
@@ -300,6 +381,22 @@
                 <div id="noRecord" class="mt-3 text-center alert alert-danger mb-0" style="display:none;"></div>
             </div>
         </div>
+            <div>
+            @if (ViewBag.Reset != "Y")
+            {
+                <div id="tblResponse">
+                    @if (Model.data.Count() > 0)
+                    {
+                    }
+                    else
+                    {
+                        <div class="col-12 text-center alert-danger p-2 mt-3" id="NoRecord">
+                            @Model.Message
+                        </div>
+                    }
+                </div>
+            }
+            </div>
     </div>
 </div>
 
@@ -327,8 +424,9 @@
 
 <script>
 
-    function resetClick() {
-        window.location.reload(true);
+    function resetClick() 
+    {
+        window.location.href ='@Url.Action("FeeWaiver", "CustomerFeeWaiver", new { reset="Y" })';
     }
 
     $(document).ready(function () {
@@ -1023,6 +1121,7 @@
                     if(res.responseMsg[0].status == 1)
                     {
                         $("#detailsSection").hide();
+                        $("#myTabContent").hide();
                         $("#formVal").hide();
                         $("#approveRejectSuccess").html("");
                         $("#approveRejectSuccess").append("<span>" + (res.responseMsg[0].reason) + "</span>");
