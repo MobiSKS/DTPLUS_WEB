@@ -1,6 +1,8 @@
 ﻿
 using HPCL.Common.Models.CommonEntity;
+using HPCL.Common.Models.ResponseModel.CustomerFeeWaiver;
 using HPCL.Common.Resources;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Numerics;
 
@@ -27,6 +29,13 @@ namespace HPCL.Common.Models.ViewModel.CustomerFeeWaiver
         public string VechileOwnerName { get; set; }
 
         public string Comments { get; set; }
+        public string Message { get; set; }
+
+        public List<PendingCustResponseBody> data { get; set; }
+        public PendingCustomer()
+        {
+            data = new List<PendingCustResponseBody>();
+        }
     }
 
     public class ApproveRejectWaiver : BaseEntity
