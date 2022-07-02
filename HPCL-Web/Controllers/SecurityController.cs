@@ -255,5 +255,10 @@ namespace HPCL_Web.Controllers
             ModelState.Clear();
             return Json(result);
         }
+        public async Task<IActionResult> DeleteLocationMapping(string RoleId)
+        {
+            var searchResult = await _securityService.DeleteLocationMapping(RoleId);
+            return View(searchResult);
+        }
     }
 }
