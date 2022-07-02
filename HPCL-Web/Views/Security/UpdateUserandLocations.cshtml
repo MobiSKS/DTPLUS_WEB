@@ -22,7 +22,7 @@
                                     <label class="font-weight-normal col-md-5 col-12">User Name <sup class="text-danger">*</sup></label>
                                     <div class="col-md-7 col-12">
                                         <div class="custom_select">
-                                            @Html.TextBoxFor(m => m.UserName, new { @class = "form-control", maxlength = "50", @readonly = "readonly" })
+                                            @Html.TextBoxFor(m => m.Data.mstKeyDetail[0].LoginKey, new {@id="UserName", @class = "form-control", maxlength = "50", @readonly = "readonly" })
 
                                         </div>
                                     </div>
@@ -33,7 +33,7 @@
                                     <label class="font-weight-normal offset-md-1 col-md-4 col-12">Email <sup class="text-danger">*</sup></label>
                                     <div class="col-md-7 col-12">
                                         <div class="custom_select">
-                                            @Html.TextBoxFor(m => m.Email, new { @class = "form-control", maxlength = "50"})
+                                            @Html.TextBoxFor(m => m.Data.mstKeyDetail[0].Email, new {@id="Email", @class = "form-control", maxlength = "50"})
                                             <span class="error" style="display:none" id="email_error"></span>
                                         </div>
                                     </div>
@@ -47,7 +47,7 @@
                                     <div class="col-md-7 col-12">
                                         <div class="custom_select">
 
-                                            @Html.LabelFor(m => m.CreatedDate, new { @class = "form-control"})
+                                            @Html.LabelFor(m => m.Data.mstKeyDetail[0].CreatedDate, new {@id="CreatedDate", @class = "form-control"})
                                         </div>
                                     </div>
                                 </div>
@@ -57,7 +57,7 @@
                                     <label class="font-weight-normal offset-md-1 col-md-4 col-12">Last Login Date</label>
                                     <div class="col-md-7 col-12">
                                         <div class="custom_select">
-                                            @Html.LabelFor(m => m.LastLogin, new { @class = "form-control"})
+                                            @Html.LabelFor(m => m.Data.mstKeyDetail[0].LastLogin, new { @id="LastLogin",@class = "form-control"})
                                         </div>
                                     </div>
                                 </div>
@@ -78,7 +78,7 @@
             <div class="tab-pane fade show" id="userrole" role="tabpanel" aria-labelledby="userrole-tab">
                 <div class="border-1 rounded border-grey w-100 mt-3">
                     <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">User Roles</p>
-                    @if (Model.Data.Count() > 0)
+                    @if (Model.Data.tblMainAndSubLevel.Count() > 0)
                     {
                         <div class="d-flex align-items-start flex-wrap mt-3">
                             <div class="col-12 col-lg-12">
@@ -95,7 +95,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach (var item in Model.Data)
+                                        @foreach (var item in Model.Data.tblMainAndSubLevel)
                                         {
                                             <tr>
                                                 <td>
@@ -105,7 +105,8 @@
                                                     @item.Location
                                                 </td>
                                                 <td>
-                                                    <a href="#"><i class="fa fa-trash"></i></a>
+                                                    @*<a href="#"><i class="fa fa-trash"></i></a>*@
+                                                    <a asp-action="DeleteLocationMapping" class="d-block" asp-route-RoleId="@item.RoleId" data-toggle="tooltip" title="" tooltip="Delete"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
                                                 </td>
                                                 <td class="roleId" style="display:none">@item.RoleId</td>
                                                 <td class="zoneId" style="display:none">@item.ZonalOfficeId</td>
