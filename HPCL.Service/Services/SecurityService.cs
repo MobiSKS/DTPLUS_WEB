@@ -584,5 +584,22 @@ namespace HPCL.Service.Services
             ManageNewUserViewModel searchList = obj.ToObject<ManageNewUserViewModel>();
             return searchList;
         }
+        public async Task<List<SuccessResponse>> DeleteLocationMapping(string RoleId)
+        {
+            var reqBody = new ManageRolesRequestModel
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                RoleId = RoleId
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.DeleteTeamMapping);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<SuccessResponse> res = jarr.ToObject<List<SuccessResponse>>();
+            return res;
+        }
     }
 }

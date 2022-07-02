@@ -233,7 +233,7 @@
         public static string userCreationApproval = "api/dtplus/UserManage/user_creation_approval";
         public static string userApprovalRejection = "api/dtplus/UserManage/user_approval_rejection";
         public static string getuserrolesandregions = "api/dtplus/UserManage/get_user_roles_and_regions";
-        public static string manageeditusers = "api/dtplus/UserManage/manage_edit_users";
+        public static string manageeditusers = "api/dtplus/UserManage/manage_edit_user";
         #endregion
 
         #region DriverCard
@@ -303,6 +303,8 @@
         public static string updateAlCustomerStatus = "api/dtplus/ashokleyland/update_al_customer_status";
         public static string getAlCustomerStatus = "api/dtplus/ashokleyland/get_al_customer_status";
         public static string checkVinNo = "api/dtplus/ashokleyland/check_vin_no";
+        public static string getAlCustomerDetails = "api/dtplus/ashokleyland/get_al_customer_details";
+        public static string searchAlManageCard = "api/dtplus/ashokleyland/search_al_manage_card";
         #endregion
 
         #region Customer Financial

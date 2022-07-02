@@ -19,7 +19,7 @@ namespace HPCL.Common.Models.ViewModel.Security
                 SecretQuestionName = "Select Secret Question"
             });
             getUserRolesandregions = new List<GetUserRolesAndRegions>();
-            Data = new List<RolesAssigned>();
+            
         }
         public string UserName { get; set; }
         public string Email { get; set; }
@@ -29,17 +29,29 @@ namespace HPCL.Common.Models.ViewModel.Security
         public string SecretAnswer { get; set; }
         public virtual List<CustomerSecretQueModel> CustomerSecretQueMdl { get; set; }
         public virtual List<GetUserRolesAndRegions> getUserRolesandregions { get; set; }
-        
+
+        public RolesAssigned Data { get; set; }
+    }
+    public class RolesAssigned
+    {
+        public List<mstKeyDetail> mstKeyDetail { get; set; }
+        public List<tblMainAndSubLevel> tblMainAndSubLevel { get; set; }
+    
+    }
+    public class mstKeyDetail
+    {
+        public string LoginKey { get; set; }
         public string CreatedDate { get; set; }
         public string LastLogin { get; set; }
         public string UserType { get; set; }
-        public List<RolesAssigned> Data { get; set; }
+        public string Email { get; set; }
     }
-    public class RolesAssigned
+    public class tblMainAndSubLevel
     {
         public string UserRole { get; set; }
         public string Location { get; set; }
         public string RoleId { get; set; }
+
         public string ZonalOfficeId { get; set; }
         public string RegionalOfficeId { get; set; }
     }
