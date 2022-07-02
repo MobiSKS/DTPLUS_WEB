@@ -16,5 +16,6 @@ namespace HPCL.Common.Models.ResponseModel.HDFCBankCreditPouch
         public string ModifiedDate { get; set; }
         public string Status { get; set; }
         public int RequestNo { get; set; }
+        public string PlanName { get; set; }
     }
 }
