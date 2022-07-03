@@ -279,10 +279,12 @@
                                         <label class="font-weight-normal col-12">Remarks <sup class="text-danger">*</sup></label>
                                     </div>
                                     <div class="col-lg-9">
-                                        <textarea class="form-control" id="comments" name="comments" rows="4" cols="50" style=" border-radius: 10px;resize:none" maxlength="200"></textarea>
+                                        <textarea class="form-control" id="comments" name="comments" rows="4" cols="50" style=" border-radius: 10px;resize:none" maxlength="250"></textarea>
                                         <div class="error" id="comment_error"></div>
                                         <div style="display:none;" id="custRefNo">@Model[0].CustomerReferenceNo</div>
                                         <div style="display:none;" id="frmNumber">@Model[0].FormNumber</div>
+
+                                        <p id="charRemining"></p>
                                     </div>
                                 </div>
                             </div>
@@ -311,6 +313,19 @@ else
 }
 
 <script type="text/javascript">
+    $(document).ready(function () {
+        var text_max = 250;
+        $('#charRemining').html('(<i>' + text_max +' characters remaining</i>)');
+
+        $('#comments').keyup(function () {
+            var text_length = $('#comments').val().length;
+            var text_remaining = text_max - text_length;
+
+            $('#charRemining').html('(<i>' + text_remaining + ' characters remaining</i>)');
+        });
+
+    });
+
     function approveReject(action) 
     {
         debugger;

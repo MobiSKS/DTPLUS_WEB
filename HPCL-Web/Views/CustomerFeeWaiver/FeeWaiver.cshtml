@@ -353,8 +353,10 @@
                                                 <div class="form-group d-flex align-items-center flex-wrap">
                                                     <label class="font-weight-normal col-md-3 col-12">Remarks : </label>
                                                     <div class="col-md-9 col-12">
-                                                        @Html.TextAreaFor(m => m.Comments, new {@maxlength = "100", @id = "commentId", @class = "form-control", @type = "Date", @style = "resize: none;" })
+                                                        @Html.TextAreaFor(m => m.Comments, new {@maxlength = "250", @id = "commentId", @class = "form-control", @type = "Date", @style = "resize: none;" })
                                                         @Html.ValidationMessageFor(m => m.Comments, "", new { @id = "cmtError", @class = "text-danger" })
+
+                                                        <p id="charRemining"></p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -423,6 +425,18 @@
 <script src="https://rawgit.com/moment/moment/2.2.1/min/moment.min.js"></script>
 
 <script>
+    $(document).ready(function () {
+        var text_max = 250;
+        $('#charRemining').html('(<i>' + text_max +' characters remaining</i>)');
+
+        $('#commentId').keyup(function () {
+            var text_length = $('#commentId').val().length;
+            var text_remaining = text_max - text_length;
+
+            $('#charRemining').html('(<i>' + text_remaining + ' characters remaining</i>)');
+        });
+
+    });
 
     function resetClick() 
     {
@@ -871,7 +885,8 @@
 
                  console.log("res", res);
 
-                 if (res.searchList.success == true) {
+                 if (res.searchList.success == true) 
+                 {
 
                      document.getElementById("noRecord").style.display = "none";
                      document.getElementById("cardInsideSection").style.display = "none";
@@ -1037,8 +1052,10 @@
                              document.getElementById('detailsWaiverSection').style.display = 'block';
                          }
                      }
-
-                 } else {
+                     //$('#commentId').val("");
+                 } 
+                 else 
+                 {
                      document.getElementById("detailsWaiverSection").style.display = "none";
                      $("#noRecord").html("");
                      $("#noRecord").append("<span>" + res.searchList.message + "</span>");
@@ -1069,18 +1086,23 @@
 
         var comments = $("#commentId").val();
 
-        if (comments.trim() == '') {
+        if (comments.trim() == '') 
+        {
             $('#cmtError').text("Please enter Remarks");
             return false;
         }
-        if(comments.trim() != ''){
-             if(!comments.trim().match(atLeastOneAlphabet)){
-                $('#cmtError').text("Invalid Remarks");
-                return false;
-            }else{
-                $('#cmtError').text("");
-            }
+        else
+        {
+            $('#cmtError').text("");
         }
+        //if(comments.trim() != ''){
+        //     if(!comments.trim().match(atLeastOneAlphabet)){
+        //        $('#cmtError').text("Invalid Remarks");
+        //        return false;
+        //    }else{
+        //        $('#cmtError').text("");
+        //    }
+        //}
 
     });
 
@@ -1096,12 +1118,12 @@
             $('#cmtError').text("Please enter Remarks");
             flag = "N";
         }
-        if(comments.trim() != ''){
-            if(!comments.trim().match(atLeastOneAlphabet)){
-                $('#cmtError').text("Invalid Remarks");
-                flag = "N";
-            }
-        }
+        //if(comments.trim() != ''){
+        //    if(!comments.trim().match(atLeastOneAlphabet)){
+        //        $('#cmtError').text("Invalid Remarks");
+        //        flag = "N";
+        //    }
+        //}
 
         if (flag == "N")
             e.preventDefault();
