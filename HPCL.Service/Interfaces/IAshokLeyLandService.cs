@@ -37,5 +37,6 @@ namespace HPCL.Service.Interfaces
         Task<ALCustomerProfileModel> ManageProfile();
         Task<List<CustomerProfileResponse>> BindCustomerDetailsForSearch(string CustomerId, string NameOnCard);
         Task<List<SearchGridResponse>> CardDetailsForSearch(string CustomerId, string CustomerTypeId);
+        Task<InsertResponse> UpdateAlCostomerProfile(string str);
     }
 }

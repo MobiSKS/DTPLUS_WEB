@@ -143,19 +143,25 @@
                                 <div class="form-group d-flex align-items-center flex-wrap">
                                     <label class="font-weight-normal col-md-5 col-12">SBU Type: <sup class="text-danger">*</sup></label>
                                     <div class="col-md-7 col-12">
-                                        @Html.DropDownListFor(m => m.SBUTypeID, new SelectList(Model.SBUTypes, "SBUId", "SBUName"), new { @class = "form-control" })
+                                        @Html.DropDownListFor(m => m.SBUTypeID, new SelectList(Model.SBUTypes, "SBUId", "SBUName"), new { @class = "form-control SBUIdVal" })
                                     </div>
                                 </div>
                                 <div class="form-group d-flex align-items-center flex-wrap">
                                     <label class="font-weight-normal col-md-5 col-12">Zonal Office: <sup class="text-danger">*</sup></label>
                                     <div class="col-md-7 col-12">
-                                        @Html.DropDownListFor(m => m.CustomerZonalOfficeID, Enumerable.Empty<SelectListItem>(), new { @class = "form-control" })
+                                        <div class="custom_select">
+                                          @Html.DropDownListFor(m => m.CustomerZonalOfficeID, Enumerable.Empty<SelectListItem>(), new { @class = "form-control zonalVal" })
+                                          <span class="error" id="zonalOffice_error"></span>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="form-group d-flex align-items-center flex-wrap">
                                     <label class="font-weight-normal col-md-5 col-12">Regional Office: <sup class="text-danger">*</sup></label>
                                     <div class="col-md-7 col-12">
-                                        @Html.DropDownListFor(m => m.CustomerRegionalOfficeID, Enumerable.Empty<SelectListItem>(), new { @id = "CustomerRegionalOfficeID", @class = "form-control" })
+                                        <div class="custom_select">
+                                          @Html.DropDownListFor(m => m.CustomerRegionalOfficeID, Enumerable.Empty<SelectListItem>(), new { @class = "form-control regionalVal" })
+                                          <span class="error" id="regionalOffice_error"></span>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="form-group d-flex align-items-center flex-wrap">
@@ -180,10 +186,11 @@
                                 <div class="form-group d-flex align-items-center flex-wrap">
                                     <label class="font-weight-normal col-md-5 col-12">Sales Area: <sup class="text-danger">*</sup></label>
                                     <div class="col-md-7 col-12">
-                                        @Html.TextBoxFor(m => m.SalesArea, new { id = "sales-area", @class = "form-control", @readonly = true })
-                                        @*@Html.DropDownListFor(m => m.CustomerSalesAreaID, Enumerable.Empty<SelectListItem>(), new { @class = "form-control" })*@
+                                        <div class="custom_select">
+                                          @Html.DropDownListFor(m => m.CustomerSalesAreaID, Enumerable.Empty<SelectListItem>(), new { @class = "form-control salesAreaVal" })
+                                          <span class="error" id="salesArea_error"></span>
+                                        </div>
                                     </div>
-                                    <span class="error" id="salesArea_error"></span>
                                 </div>
                                 </div>
                                 <div id="divFormNumber">
@@ -318,10 +325,16 @@
                                     </div>
                                 </div>
                                 </div>
+                                <div class="form-group align-items-center flex-wrap" id="lblCustPOI">
+                                        <p class="alert alert-info" style="padding: 5px 10px;">** Please provide the document details that you are going to upload as POI.</p>
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="clearfix">
+                    </div>
+                    <div class="px-2">
+                        <button class="btn btn_primary" type="button" onclick="submitProfile()">UPDATE</button>
                     </div>
                 </div>
 
@@ -440,7 +453,7 @@
                                             <div class="form-group d-flex align-items-center flex-wrap">
                                                 <label class="font-weight-normal col-md-5 col-12" id="lblCEmail">Email:<sup class="text-danger">*</sup></label>
                                                 <div class="col-md-7 col-12">
-                                                    @Html.TextBoxFor(m => m.CommunicationEmail, new { @id = "CommunicationEmail", @class = "form-control", @style = "text-transform:lowercase", autocomplete = "off", maxlength = "50" })
+                                                    @Html.TextBoxFor(m => m.CommunicationEmail, new { @class = "form-control", @style = "text-transform:lowercase", autocomplete = "off", maxlength = "50" })
                                                     <div class="error" id="comm_email_error"></div>
                                                 </div>
                                             </div>
@@ -759,6 +772,37 @@
 
             </div>
         </div>
+        @Html.HiddenFor(model => Model.ExternalPANAPIStatus)
+        @Html.HiddenFor(model => Model.CustomerIdSelected)
+            <!-- Modal : Dialog -->
+            <!-- PAN ErrorMsg Modal -->
+            <div class="modal fade" id="PANErrorMsg" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header py-2">
+                            <h5 class="modal-title" id="exampleModalLabel" style="font-size:18px;">PAN Validation</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="col-lg-12 col-12">
+                                <div class="d-flex align-items-center justify-content-center flex-wrap mb-0">
+                                    <p class="mb-0">Entered PAN No. does not match with selected Type of Business Entity</p>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-center mt-3">
+                                <div class="px-2">
+                                    <button class="btn btn_primary" type="button" onclick="HidePANErrorMsgPopup(this)">OK</button>
+                                </div>
+                                <div class="px-2">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Modal : Dialog -->
     </form>
 </div>
 
@@ -1122,40 +1166,40 @@ debugger;
               });
       };
 
-      function GetRegionId(zonalId, regionId) {
-          //debugger;
-           var id = zonalId;
-              if (id != 0) {
-                  $("#regionalOffice_error").html("");
-              }
-              $.ajax({
-                  type: 'POST',  // http method
-                  url: '@Url.Action("GetRegionalDetails", "Customer")',
-                  data: { ZonalOfficeID: zonalId },  // data to submit
-                  dataType: "json",
-                  success: function (data, status, xhr) {
-                      var v = data;
-                      if (status == 'success') {
-                          $("#CustomerRegionalOfficeID").html("");
-                          $.each(data, function (i, data) { // bind the dropdown list using json result
-                              $('<option>',
-                                  {
-                                      value: data.regionalOfficeID,
-                                      text: data.regionalOfficeName
-                                  }).html(data.regionalOfficeName).appendTo("#CustomerRegionalOfficeID");
-                          });
-                          $("#CustomerRegionalOfficeID").val(regionId);
-                          $("#CustomerRegionalOfficeID")[0].sumo.reload();
-                      }
-                      else {
-                          console.log(v);
-                      }
-                  },
-                  error: function (jqXhr, textStatus, errorMessage) {
-                      alert("Error Populating Customer Region");
-                  }
-              });
-      };
+      //function GetRegionId(zonalId, regionId) {
+      //    //debugger;
+      //     var id = zonalId;
+      //        if (id != 0) {
+      //            $("#regionalOffice_error").html("");
+      //        }
+      //        $.ajax({
+      //            type: 'POST',  // http method
+      //            url: '@Url.Action("GetRegionalDetails", "Customer")',
+      //            data: { ZonalOfficeID: zonalId },  // data to submit
+      //            dataType: "json",
+      //            success: function (data, status, xhr) {
+      //                var v = data;
+      //                if (status == 'success') {
+      //                    $("#CustomerRegionalOfficeID").html("");
+      //                    $.each(data, function (i, data) { // bind the dropdown list using json result
+      //                        $('<option>',
+      //                            {
+      //                                value: data.regionalOfficeID,
+      //                                text: data.regionalOfficeName
+      //                            }).html(data.regionalOfficeName).appendTo("#CustomerRegionalOfficeID");
+      //                    });
+      //                    $("#CustomerRegionalOfficeID").val(regionId);
+      //                    $("#CustomerRegionalOfficeID")[0].sumo.reload();
+      //                }
+      //                else {
+      //                    console.log(v);
+      //                }
+      //            },
+      //            error: function (jqXhr, textStatus, errorMessage) {
+      //                alert("Error Populating Customer Region");
+      //            }
+      //        });
+      //};
 
       function GetSubType(typeId, subTypeId) {
           var id = typeId;
@@ -1211,7 +1255,7 @@ debugger;
               data: { CustomerId: CustomerId },
               success: function (res)
               {
-
+                  console.log(res,"res");
                   if (res.length > 0) {
                       for (var i = 0; i < res.length; i++) {
                           if (res[i].customerID == CustomerId) {
@@ -1345,9 +1389,10 @@ debugger;
                               document.getElementById("divSignedOn").style.display = "block";
                           }
 
-                              $('#customet-id').val(res[i].customerID);
+                              $('#CustomerIdSelected').val(res[i].customerID);
+                              console.log('Select CustomerId: ' + $('#CustomerIdSelected').val())
                               $('#customertype-name').val(res[i].customerTypeName);
-                              $('#sales-area').val(res[i].salesArea);
+                              //$('#sales-area').val(res[i].salesArea);
                               $('#form-number').val(res[i].formNumber);
                              // $('#application-date').val(res[i].dateOfApplication);
                               //var dApplication = new Date(res[i].dateOfApplication);
@@ -1357,24 +1402,47 @@ debugger;
                               document.getElementById('CustomerSignedOn').value=res[i].signedOn;
                               $('#IndividualOrgName').val(res[i].individualOrgName);
                               $('#CustomerNameOnCard').val(res[i].nameOnCard);
-                              $('#type-business-entity').val(res[i].typeOfBusinessEntityName);
+                              if(res[i].typeOfBusinessEntityName!=null)
+                              {
+                                $('#CustomerTbentityID').val(res[i].typeOfBusinessEntityName);
+                              }
+
+                            var customerTbentityID = $('#CustomerTbentityID').val();
+                            console.log(customerTbentityID);
+                            if (customerTbentityID == "10") 
+                            {
+                                $('#lblCustPOI').show();
+                                document.getElementById("CustomerIncomeTaxPan").maxLength = 30;
+                            }
+                            else 
+                            {
+                                $('#lblCustPOI').hide();
+                                document.getElementById("CustomerIncomeTaxPan").maxLength = 10;
+                            }
+
                               $('#CustomerIncomeTaxPan').val(res[i].incomeTaxPan);
                               //$('#CustomerZonalOfficeID').val(res[i].zonalOfficeID);
                               //$('#CustomerZonalOfficeID')[0].sumo.selectItem(res[i].zonalOfficeID);
                               //GetRegionId(res[i].zonalOfficeID, res[i].regionalOfficeID);
-                              $('#CustomerZonalOfficeID').html("");
-                              var CustomerZonalOffice = $('<option value="' + res[i].zonalOfficeName + '">' + res[i].zonalOfficeName + '</option>');
-                              $('#CustomerZonalOfficeID').append(CustomerZonalOffice);
-                              $("#CustomerZonalOfficeID")[0].sumo.reload();
+                               $('#SBUTypeID')[0].sumo.selectItem(res[i].sbuId);
+
+                               GetZonalOfficeId(res[i].sbuId, res[i].zonalOfficeID);
+                               GetRegionId(res[i].zonalOfficeID, res[i].regionalOfficeID);
+                               //GetSalesArea(res[i].regionalOfficeID,res[i].customerSalesAreaID);
+
+                              //$('#CustomerZonalOfficeID').html("");
+                              //var CustomerZonalOffice = $('<option value="' + res[i].zonalOfficeName + '">' + res[i].zonalOfficeName + '</option>');
+                              //$('#CustomerZonalOfficeID').append(CustomerZonalOffice);
+                              //$("#CustomerZonalOfficeID")[0].sumo.reload();
                               //$('#CustomerRegionalOfficeID').val(res[i].regionalOfficeID);
                               //$('#CustomerRegionalOfficeID')[0].sumo.selectItem(res[i].regionalOfficeID);
                               //$('#CustomerTypeID').val(res[i].customerTypeId);
                               //$('#CustomerTypeID')[0].sumo.selectItem(res[i].customerTypeId);
 
-                              $('#CustomerRegionalOfficeID').html("");
-                              var regionalOffice = $('<option value="' + res[i].regionalOfficeName + '">' + res[i].regionalOfficeName + '</option>');
-                              $('#CustomerRegionalOfficeID').append(regionalOffice);
-                              $("#CustomerRegionalOfficeID")[0].sumo.reload();
+                              //$('#CustomerRegionalOfficeID').html("");
+                              //var regionalOffice = $('<option value="' + res[i].regionalOfficeName + '">' + res[i].regionalOfficeName + '</option>');
+                              //$('#CustomerRegionalOfficeID').append(regionalOffice);
+                              //$("#CustomerRegionalOfficeID")[0].sumo.reload();
 
                                $('#CustomerTypeId').html("");
                                var CustomerType = $('<option value="' + res[i].customerTypeName + '">' + res[i].customerTypeName + '</option>');
@@ -1532,11 +1600,6 @@ debugger;
           $("#CustomerSubTypeID").val(id);
       });
 
-      //$("#CustomerRegionalOfficeID").change(function () {
-      //    var id = this.value;
-      //    $("#CustomerRegionID").val(id);
-      //});
-
       $("#CommunicationDistrictId").change(function () {
           var id = this.value;
           $("#CommunicationDistrictId").val(id);
@@ -1583,38 +1646,39 @@ debugger;
               });
       });
 
-      $("#CustomerZonalOfficeID").change(function () {
-          var id = this.value;
-              if (id != 0) {
-                  $("#regionalOffice_error").html("");
-              }
-              $.ajax({
-                  type: 'POST',  // http method
-                  url: '@Url.Action("GetRegionalDetails", "Customer")',
-                  data: { ZonalOfficeID: id },  // data to submit
-                  dataType: "json",
-                  success: function (data, status, xhr) {
-                      var v = data;
-                      if (status == 'success') {
-                          $("#CustomerRegionalOfficeID").html("");
-                          $.each(data, function (i, data) { // bind the dropdown list using json result
-                              $('<option>',
-                                  {
-                                      value: data.regionalOfficeID,
-                                      text: data.regionalOfficeName
-                                  }).html(data.regionalOfficeName).appendTo("#CustomerRegionalOfficeID");
-                          });
+      //$("#CustomerZonalOfficeID").change(function () {
+      //    var id = this.value;
+      //        if (id != 0) {
+      //            $("#regionalOffice_error").html("");
+      //        }
+      //        $.ajax({
+      //            type: 'POST',  // http method
+      //            url: '@Url.Action("GetRegionalDetails", "Customer")',
+      //            data: { ZonalOfficeID: id },  // data to submit
+      //            dataType: "json",
+      //            success: function (data, status, xhr) {
+      //                var v = data;
+      //                if (status == 'success') {
+      //                    $("#CustomerRegionalOfficeID").html("");
+      //                    $.each(data, function (i, data) { // bind the dropdown list using json result
+      //                        $('<option>',
+      //                            {
+      //                                value: data.regionalOfficeID,
+      //                                text: data.regionalOfficeName
+      //                            }).html(data.regionalOfficeName).appendTo("#CustomerRegionalOfficeID");
+      //                    });
 
-                      }
-                      else {
-                          console.log(v);
-                      }
-                  },
-                  error: function (jqXhr, textStatus, errorMessage) {
-                      alert("Error Populating Customer Region");
-                  }
-              });
-      });
+      //                }
+      //                else {
+      //                    console.log(v);
+      //                }
+      //            },
+      //            error: function (jqXhr, textStatus, errorMessage) {
+      //                alert("Error Populating Customer Region");
+      //            }
+      //        });
+      //});
+
       $("#CommunicationStateID").change(function () {
               var id = this.value;
 
@@ -2014,7 +2078,7 @@ $("#CustomerNameOnCard").on("blur", function () {
                             }
                     });
                     $("#CustomerZonalOfficeID")[0].sumo.reload();
-                    $("#CustomerZonalOfficeID").trigger("change");
+                    //$("#CustomerZonalOfficeID").trigger("change");
                 }
                 else {
                     console.log(v);
@@ -2025,5 +2089,1113 @@ $("#CustomerNameOnCard").on("blur", function () {
             }
         });
     });
+
+    function submitProfile()
+    {
+        debugger;
+        var ret=true;
+        var invalidAddress=true;
+
+        if(document.getElementById("CustomerZonalOfficeID").value == "0" || document.getElementById("CustomerZonalOfficeID").value == "") 
+        {
+          document.getElementById("zonalOffice_error").innerHTML = "Zonal Office field cannot be left blank";
+          ret = false;
+        }
+        else 
+        {
+            document.getElementById("zonalOffice_error").innerHTML = "";
+        }
+
+        if(document.getElementById("CustomerRegionalOfficeID").value == "0" || document.getElementById("CustomerRegionalOfficeID").value == "" || document.getElementById("CustomerRegionalOfficeID").value == "--Select--") 
+        {
+          document.getElementById("regionalOffice_error").innerHTML = "Regional Office field cannot be left blank";
+          ret = false;
+        }
+        else 
+        {
+            document.getElementById("regionalOffice_error").innerHTML = "";
+        }
+
+        if(document.getElementById("CustomerSalesAreaID").value == "0" || document.getElementById("CustomerSalesAreaID").value == "") 
+        {
+            document.getElementById("salesArea_error").innerHTML = "Sales Area field cannot be left blank";
+            ret = false;
+        }
+        else 
+        {
+            document.getElementById("salesArea_error").innerHTML = "";
+        }
+
+        if(document.getElementById("CustomerSignedOn").value == "") 
+        {
+            document.getElementById("CustomerSignedOn_error").innerHTML = "Signed On field cannot be left blank";
+            ret = false;
+        }
+        else 
+        {
+            document.getElementById("CustomerSignedOn_error").innerHTML = "";
+        }
+        
+        if (document.getElementById("IndividualOrgNameTitle").value == "-1") 
+        {
+            document.getElementById("salutaion_error").innerHTML = "Select Title";
+            ret = false;
+        }
+        else 
+        {
+            document.getElementById("salutaion_error").innerHTML = "";
+        }
+
+
+        if (document.getElementById("IndividualOrgName").value == "") 
+        {
+            document.getElementById("individualName_error").innerHTML = "Individual/Org. Name is required";
+            ret = false;
+        }
+        else if (!isNaN(document.getElementById("IndividualOrgName").value.trim())) 
+        {
+            document.getElementById("individualName_error").innerHTML = "Invalid Individual/Org. Name";
+            ret = false;
+        }
+        else if (!document.getElementById("IndividualOrgName").value.match(nameWithSpaceCheck)) 
+        {
+            document.getElementById("individualName_error").innerHTML = "Invalid Individual/Org. Name";
+            ret = false;
+        }
+        else 
+        {
+            document.getElementById("individualName_error").innerHTML = "";
+        }
+        
+
+        if (document.getElementById("CustomerNameOnCard").value.trim() == "") 
+        {
+            document.getElementById("nameOnCard_error").innerHTML = "Name on Card field cannot be left blank";
+            ret = false;
+        }
+        else if (!isNaN(document.getElementById("CustomerNameOnCard").value.trim())) 
+        {
+            document.getElementById("nameOnCard_error").innerHTML = "Invalid Name on Card";
+            ret = false;
+        }
+        else if (!document.getElementById("CustomerNameOnCard").value.match(nameWithSpaceCheck)) 
+        {
+            document.getElementById("nameOnCard_error").innerHTML = "Invalid Name on Card";
+            ret = false;
+        }
+        else 
+        {
+            document.getElementById("nameOnCard_error").innerHTML = "";
+        }
+        
+        if (document.getElementById("CustomerTbentityID").value == "0") 
+        {
+            document.getElementById("typeOfbusiness_error").innerHTML = "Select Type of Business Entity";
+            ret = false;
+        }
+        else 
+        {
+            document.getElementById("typeOfbusiness_error").innerHTML = "";
+        }
+
+        if (document.getElementById("CustomerResidenceStatus").value == "-1") 
+        {
+            document.getElementById("residenceStatus_error").innerHTML = "Residential Status field cannot be left blank";
+            ret = false;
+        }
+        else 
+        {
+            document.getElementById("residenceStatus_error").innerHTML = "";
+        }
+
+        var TypeofBusinessEntityId = document.getElementById("CustomerTbentityID").value;
+        var panno=document.getElementById("CustomerIncomeTaxPan").value.trim();
+
+        if (TypeofBusinessEntityId != 10)
+        {
+            if (panno != "")
+            {
+                panno = panno.toUpperCase();
+            }
+
+            if (panno == "")
+            {
+                document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN field cannot be left blank";
+                document.getElementById("incomeTaxPan_error").className = "error";
+                ret = false;
+            }
+            else if (!panno.match(pancard))
+            {
+                document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
+                document.getElementById("incomeTaxPan_error").className = "error";
+                ret = false;
+            }
+            else if (panno.length < 10)
+            {
+                document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
+                document.getElementById("incomeTaxPan_error").className = "error";
+                ret = false;
+            }
+            else if (TypeofBusinessEntityId != 10)
+            {
+                let forthdigitPan = panno.substr(3, 1);
+                console.log(forthdigitPan);
+                if (TypeofBusinessEntityId == 2 && forthdigitPan != 'P')
+                {
+                    document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
+                    document.getElementById("incomeTaxPan_error").className = "error";
+                    ret = false;
+                }
+                else if (TypeofBusinessEntityId == 3 && forthdigitPan != 'C')
+                {
+                    document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
+                    document.getElementById("incomeTaxPan_error").className = "error";
+                    ret = false;
+                }
+                else if (TypeofBusinessEntityId == 4 && forthdigitPan != 'H')
+                {
+                    document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
+                    document.getElementById("incomeTaxPan_error").className = "error";
+                    ret = false;
+                }
+                else if (TypeofBusinessEntityId == 8 && forthdigitPan != 'A')
+                {
+                    document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
+                    document.getElementById("incomeTaxPan_error").className = "error";
+                    ret = false;
+                }
+                else if ((TypeofBusinessEntityId == 1 || TypeofBusinessEntityId == 5 || TypeofBusinessEntityId == 6 || TypeofBusinessEntityId == 7 || TypeofBusinessEntityId == 9) && (forthdigitPan == 'A' || forthdigitPan == 'P' || forthdigitPan == 'C' || forthdigitPan == 'H'))
+                {
+                    document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
+                    document.getElementById("incomeTaxPan_error").className = "error";
+                    ret = false;
+                }
+                else if (localStorage.getItem("INVALIDPAN") == 0)
+                {
+                    document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
+                    document.getElementById("incomeTaxPan_error").className = "error";
+                    ret = false;
+                }
+                else if (localStorage.getItem("PANNAMEMATCHING") == 0)
+                {
+                    document.getElementById("incomeTaxPan_error").innerHTML = "Individual name not match with pan name";
+                    document.getElementById("incomeTaxPan_error").className = "error";
+                    ret = false;
+                }
+                else
+                {
+                    document.getElementById("incomeTaxPan_error").innerHTML = "";
+                }
+            }
+            else if (localStorage.getItem("INVALIDPAN") == 0)
+            {
+                document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
+                document.getElementById("incomeTaxPan_error").className = "error";
+                ret = false;
+            }
+            else if (localStorage.getItem("PANNAMEMATCHING") == 0)
+            {
+                document.getElementById("incomeTaxPan_error").innerHTML = "Individual name not match with pan name";
+                document.getElementById("incomeTaxPan_error").className = "error";
+                ret = false;
+            }
+            else
+            {
+                document.getElementById("incomeTaxPan_error").innerHTML = "";
+            }
+        }
+        else
+        {
+            if (panno == "")
+            {
+                document.getElementById("incomeTaxPan_error").innerHTML = "Govt. Dept. Identification Details required";
+                document.getElementById("incomeTaxPan_error").className = "error";
+                ret = false;
+            }
+            else
+            {
+                document.getElementById("incomeTaxPan_error").innerHTML = "";
+            }
+        }
+
+        var Address = document.getElementById("CommunicationAddress1").value.trim();
+        if (Address == "") 
+        {
+            document.getElementById("comm_address1_error").innerHTML = "Address field cannot be left blank";
+            ret=false;
+            invalidAddress=false;
+        }
+        else if (!isNaN(document.getElementById("CommunicationAddress1").value.trim())) 
+        {
+            document.getElementById("comm_address1_error").innerHTML = "Invalid Address";
+            ret=false;
+            invalidAddress=false;
+        }
+        else if (!document.getElementById("CommunicationAddress1").value.match(atLeastOneAlphabet)) 
+        {
+            document.getElementById("comm_address1_error").innerHTML = "Invalid Address";
+            ret=false;
+            invalidAddress=false;
+        }
+        else 
+        {
+            document.getElementById("comm_address1_error").innerHTML = "";
+        }
+
+        var Address = document.getElementById("CommunicationAddress2").value.trim();
+        if (Address == "") 
+        {
+            document.getElementById("comm_address2_error").innerHTML = "Address field cannot be left blank";
+            ret=false;
+            invalidAddress=false;
+        }
+        else if (!isNaN(document.getElementById("CommunicationAddress2").value.trim())) 
+        {
+            document.getElementById("comm_address2_error").innerHTML = "Invalid Address";
+            ret=false;
+            invalidAddress=false;
+        }
+        else if (!document.getElementById("CommunicationAddress2").value.match(atLeastOneAlphabet)) 
+        {
+            document.getElementById("comm_address2_error").innerHTML = "Invalid Address";
+            ret=false;
+        }
+        else 
+        {
+            document.getElementById("comm_address2_error").innerHTML = "";
+        }
+
+        if (document.getElementById("CommunicationAddress3").value.trim() != "") 
+        {
+            if (!isNaN(document.getElementById("CommunicationAddress3").value.trim())) 
+            {
+                document.getElementById("comm_address3_error").innerHTML = "Invalid Address";
+                ret=false;
+                invalidAddress=false;
+            }
+            else if (!document.getElementById("CommunicationAddress3").value.match(atLeastOneAlphabet)) 
+            {
+                document.getElementById("comm_address3_error").innerHTML = "Invalid Address";
+                ret=false;
+                invalidAddress=false;
+            }
+            else 
+            {
+                document.getElementById("comm_address3_error").innerHTML = "";
+            }
+        }
+        else
+        {
+            document.getElementById("comm_address3_error").innerHTML = "";
+        }
+
+        if (document.getElementById("CommunicationLocation").value.trim() != "") 
+        {
+            if (!isNaN(document.getElementById("CommunicationLocation").value.trim())) 
+            {
+                document.getElementById("comm_location_error").innerHTML = "Invalid Location";
+                ret=false;
+                invalidAddress=false;
+            }
+            else if (!document.getElementById("CommunicationLocation").value.match(atLeastOneAlphabet)) 
+            {
+                document.getElementById("comm_location_error").innerHTML = "Invalid Location";
+                ret=false;
+                invalidAddress=false;
+            }
+            else 
+            {
+                document.getElementById("comm_location_error").innerHTML = "";
+            }
+        }
+        else 
+        {
+            document.getElementById("comm_location_error").innerHTML = "";
+        }
+
+        var city = document.getElementById("CommunicationCity").value.trim();
+        if (city == "") 
+        {
+            document.getElementById("comm_city_error").innerHTML = "City field cannot be left blank";
+            ret=false;
+            invalidAddress=false;
+        }
+        else 
+        {
+            if (!isNaN(document.getElementById("CommunicationCity").value.trim())) 
+            {
+                document.getElementById("comm_city_error").innerHTML = "Invalid City";
+                ret=false;
+                invalidAddress=false;
+            }
+            else if (!document.getElementById("CommunicationCity").value.match(atLeastOneAlphabet)) 
+            {
+                document.getElementById("comm_city_error").innerHTML = "Invalid City";
+                ret=false;
+                invalidAddress=false;
+            }
+            else 
+            {
+                document.getElementById("comm_city_error").innerHTML = "";
+            }
+        }
+
+        if (document.getElementById("CommunicationPinCode").value.trim() == "") 
+        {
+            document.getElementById("comm_pincode_error").innerHTML = "PIN Code field cannot be left blank";
+            ret=false;
+            invalidAddress=false;
+        }
+        else if (document.getElementById("CommunicationPinCode").value.substring(0, 1) == "0") 
+        {
+            document.getElementById("comm_pincode_error").innerHTML = "Invalid PIN Code. Min-Max 6 digits";
+            ret=false;
+            invalidAddress=false;
+        }
+        else if (document.getElementById("CommunicationPinCode").value.length < 6) 
+        {
+            document.getElementById("comm_pincode_error").innerHTML = "Invalid PIN Code. Min-Max 6 digits";
+            ret=false;
+        }
+        else if (!document.getElementById("CommunicationPinCode").value.match(pincode)) 
+        {
+            document.getElementById("comm_pincode_error").innerHTML = "Invalid PIN Code. Min-Max 6 digits";
+            ret=false;
+            invalidAddress=false;
+        }
+        else 
+        {
+            document.getElementById("comm_pincode_error").innerHTML = "";    
+        }
+
+        if (document.getElementById("CommunicationStateID").value == "0" || document.getElementById("CommunicationStateID").value == "") 
+        {
+            document.getElementById("comm_states_error").innerHTML = "State field cannot be left blank";
+            ret = false;
+            invalidAddress=false;
+        }
+        else 
+        {
+            document.getElementById("comm_states_error").innerHTML = "";
+        }
+
+        if (document.getElementById("CommunicationDistrictId").value == "0" || document.getElementById("CommunicationDistrictId").value == "")
+        {
+            document.getElementById("comm_district_error").innerHTML = "District field cannot be left blank";
+            ret = false;
+            invalidAddress=false;
+        }
+        else 
+        {
+            document.getElementById("comm_district_error").innerHTML = "";
+        }
+
+        var communicationMobile = document.getElementById("CommunicationMobileNumber").value.trim();
+        if (communicationMobile == "") 
+        {
+            document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile Number field cannot be left blank";
+            ret=false;
+            invalidAddress=false;
+        }
+        else if (document.getElementById("CommunicationMobileNumber").value.substring(0, 1) == "0") 
+        {
+            document.getElementById("comm_mobileNumber_error").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
+            ret=false;
+            invalidAddress=false;
+        }
+        else if (document.getElementById("CommunicationMobileNumber").value.length < 10) 
+        {
+            document.getElementById("comm_mobileNumber_error").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
+            ret=false;
+            invalidAddress=false;
+        }
+        else if (document.getElementById("CommunicationMobileNumber").value.match(phoneno)) 
+        {
+            document.getElementById("comm_mobileNumber_error").innerHTML = "";
+        }
+        else 
+        {
+            document.getElementById("comm_mobileNumber_error").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
+            ret=false;
+            invalidAddress=false;
+        }
+
+        var communicationEmail = document.getElementById("CommunicationEmail").value.trim();
+        if (communicationEmail == "")
+        {
+            document.getElementById("comm_email_error").innerHTML = "Email field cannot be left blank";
+            ret=false;
+            invalidAddress=false;
+        }
+        else if (!communicationEmail.match(email)) 
+        {
+            document.getElementById("comm_email_error").innerHTML = "Invalid email id (e.g.: abc@gmail.com)";
+            ret=false;
+            invalidAddress=false;
+        }
+        else 
+        {
+            document.getElementById("comm_email_error").innerHTML = "";
+        }
+        
+        if(!invalidAddress)
+        {
+          $('#Address-tab').tab('show');
+        }
+
+        if (ret==true) 
+        {
+
+            var DealerCode = $("#dealerCodedFetchVal").val();
+            var DealerName = $("#dealerNameFetchVal").val();
+            var Address1 = $("#add1Val").val();
+            var Address2 = $("#add2Val").val();
+            var Address3 = $("#add3Val").val();
+            var ZonalOfficeId = $(".zonalVal").val();
+            var RegionalOfficeId = $(".regionalVal").val();
+            var CityName = $("#cityFetchVal").val();
+            var StateId = $(".stateVal").val();
+            var DistrictId = $(".distVal").val();
+            var MobileNo = $("#mobFetchVal").val();
+            var Pin = $("#pinFetchVal").val();
+            var EmailId = $("#emailFetchVal").val();
+
+            var getAllData = [];
+
+            getAllData.push({
+                DealerCode: DealerCode,
+                DealerName: DealerName,
+                Address1: Address1,
+                Address2: Address2,
+                Address3: Address3,
+                ZonalOfficeId: ZonalOfficeId,
+                RegionalOfficeId: RegionalOfficeId,
+                CityName: CityName,
+                StateId: StateId,
+                DistrictId: DistrictId,
+                MobileNo: MobileNo,
+                Pin: Pin,
+                EmailId: EmailId
+            })
+
+
+
+            $.ajax({
+                url: "@Url.Action("AlEnroll", "AshokLeyLand")",
+                type: "POST",
+                data: { str: JSON.stringify(getAllData) },
+                dataType: "JSON",
+                success: function (res) 
+                {
+                    console.log(res);
+                    if (res.result.success == true) 
+                    {
+                        $("input:text").each(function () {
+                            $(this).val("");
+                        });
+                        $("textarea").each(function () {
+                            $(this).val("");
+                        });
+                        $(".zonalVal").val("");
+                        $(".regionalVal").val("");
+                        $(".stateVal").val("");
+                        $(".distVal").val("");
+
+                        //$("#responseMsg").append("<span>" + res.result.data[0].reason + ". Dealer ID is : " + res.result.data[0].dealerId + "</span>");
+                        $("#responseMsg").append("<span>" + res.result.data[0].reason + "</span>");
+
+                        document.getElementById("responseMsg").style.display = "block";
+                        document.getElementById("failureMsg").style.display = "none";
+                        document.getElementById("failureMsg").innerHTML="";
+                        document.getElementById("divDealerEnrollment").style.display = "none";
+                        document.getElementById("divCommunicationAddress").style.display = "none";
+                    }
+                    else
+                    {
+                        document.getElementById("failureMsg").style.display = "block";
+                        document.getElementById("responseMsg").style.display = "none";
+                        document.getElementById("failureMsg").innerHTML="";
+                        document.getElementById("failureMsg").innerHTML=res.result.data[0].reason;
+                        document.getElementById("divDealerEnrollment").style.display = "block";
+                        document.getElementById("divCommunicationAddress").style.display = "block";
+                    }
+
+                },
+                error: function (ex) 
+                {
+                    alert('Failed' + ex);
+                }
+            });
+        } 
+        else 
+        {
+            return false;
+        }
+    }
+
+    $("#CustomerIncomeTaxPan").on("blur", function () {
+            debugger;
+            var panNumber = document.getElementById("CustomerIncomeTaxPan").value.trim();
+
+            var customerTbentityid = $("#CustomerTbentityID").val();
+            localStorage.setItem("PANNOALREADYUSED", "1");
+            localStorage.setItem("DUPLICATEPANUSED", "1");
+            localStorage.setItem("PANNAMEMATCHING", "1");
+            localStorage.setItem("INVALIDPAN", "1");
+            var correctPANName = '';
+
+            if (customerTbentityid == 10)
+            {
+                document.getElementById("incomeTaxPan_error").innerHTML = "";
+                if (panNumber == "")
+                {
+                    document.getElementById("incomeTaxPan_error").innerHTML = "Govt. Dept. Identification Details required";
+                    document.getElementById("incomeTaxPan_error").className = "error";
+                }
+                else
+                {
+                    document.getElementById("incomeTaxPan_error").innerHTML = "";
+                }
+                return (false);
+            }
+
+            if (panNumber == "")
+            {
+                document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN field cannot be left blank";
+                document.getElementById("incomeTaxPan_error").className = "error";
+                return (false);
+            }
+            else
+            {
+                document.getElementById("incomeTaxPan_error").innerHTML = "";
+            }
+
+            document.getElementById("CustomerIncomeTaxPan").value = document.getElementById("CustomerIncomeTaxPan").value.trim().toUpperCase();
+            panNumber = document.getElementById("CustomerIncomeTaxPan").value.trim();
+
+            if ($('#CustomerIncomeTaxPan').val().match(pancard))
+            {
+                document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN Number is valid";
+                document.getElementById("incomeTaxPan_error").className = "error text-success";
+            }
+            else
+            {
+                document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
+                document.getElementById("incomeTaxPan_error").className = "error";
+                $("#btnshowregAddress").attr("disabled", false);
+                return (false);
+            }
+
+            //solo Propritorship 4th Char Pan should be 'P'--> 2
+            //Public/Private Ltd Co 4th Char Pan should be 'C' --> 3
+            //HUF (Hindu Undivided Family) 4th Char Pan should be 'H'--> 4
+            //A stands for Association of Persons (AOP)—(Trust Foundation) 4th Char Pan should be 'A'-->8
+            if (customerTbentityid !=10) 
+            {
+                let forthdigitPan = panNumber.substr(3, 1);
+                console.log(forthdigitPan);
+                if (customerTbentityid == 2 && forthdigitPan != 'P')
+                {
+                    document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
+                    document.getElementById("incomeTaxPan_error").className = "error";
+                    $('#PANErrorMsg').modal('show');
+                    return (false);
+                }
+                else if (customerTbentityid == 3 && forthdigitPan != 'C')
+                {
+                    document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
+                    document.getElementById("incomeTaxPan_error").className = "error";
+                    $('#PANErrorMsg').modal('show');
+                    return (false);
+                }
+                else if (customerTbentityid == 4 && forthdigitPan != 'H')
+                {
+                    document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
+                    document.getElementById("incomeTaxPan_error").className = "error";
+                    $('#PANErrorMsg').modal('show');
+                    return (false);
+                }
+                else if (customerTbentityid == 8 && forthdigitPan != 'A')
+                {
+                    document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
+                    document.getElementById("incomeTaxPan_error").className = "error";
+                    $('#PANErrorMsg').modal('show');
+                    return (false);
+                }
+                else if ((customerTbentityid == 1 || customerTbentityid == 5 || customerTbentityid == 6 || customerTbentityid == 7 || customerTbentityid == 9) && (forthdigitPan == 'A' || forthdigitPan == 'P'|| forthdigitPan == 'C'|| forthdigitPan == 'H'))
+                {
+                    document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
+                    document.getElementById("incomeTaxPan_error").className = "error";
+                    $('#PANErrorMsg').modal('show');
+                    return (false);
+                }
+                else
+                {
+                    document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN Number is valid";
+                    document.getElementById("incomeTaxPan_error").className = "error text-success";
+                }
+            }
+
+            var OrgName = $('#IndividualOrgName').val().trim();
+            var districtId = $("#CommunicationDistrictId").val();
+
+            var externalPANAPIStatus="Y";
+
+            externalPANAPIStatus = document.getElementById("ExternalPANAPIStatus").value.trim();
+
+            console.log(externalPANAPIStatus);
+
+    if(externalPANAPIStatus=="Y")
+    {
+
+           $.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("PANValidation", "Customer")',
+            data: { PANNumber: panNumber },  // data to submit
+            dataType: "json",
+            success: function (data, status, xhr) {
+                debugger;
+                var jsonData = JSON.parse(data);
+                console.log(jsonData);
+                if (status == 'success' && jsonData['status-code'] == '101')
+                {
+                    //document.applicationForm.IndividualOrgName.value = jsonData["result"]["name"];
+                    correctPANName = jsonData["result"]["name"];
+
+                    document.getElementById("incomeTaxPan_error").innerHTML = "";
+                    document.getElementById("incomeTaxPan_error").className = "error text-success";
+
+                    console.log(correctPANName);
+                    console.log(OrgName);
+                    if (correctPANName.toUpperCase() != OrgName.toUpperCase())
+                    {
+                        document.getElementById("incomeTaxPan_error").innerHTML = "Individual name not match with pan name";
+                        document.getElementById("incomeTaxPan_error").className = "error";
+                        localStorage.setItem("PANNAMEMATCHING", "0");
+                    }
+                    else
+                    {
+                        document.getElementById("incomeTaxPan_error").innerHTML = "";
+                        document.getElementById("incomeTaxPan_error").className = "error text-success";
+
+                    }
+
+                }
+                else
+                {
+                    document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
+                    document.getElementById("incomeTaxPan_error").className = "error";
+                    localStorage.setItem("INVALIDPAN", "0");
+                    console.log('Not Success');
+                }
+            },
+            error: function (jqXhr, textStatus, errorMessage)
+            {
+                document.getElementById("incomeTaxPan_error").innerHTML = "Invalid Income Tax PAN Number";
+                console.log(jsonData['status-code']);
+                document.getElementById("incomeTaxPan_error").className = "error";
+            }
+        });
+
+    }
+    else
+    {
+        localStorage.setItem("INVALIDPAN", "1");
+        localStorage.setItem("PANNAMEMATCHING", "1");
+
+    }
+
+
+        });
+
+    $("#CustomerIncomeTaxPan").keydown(function (e) {
+        var k = e.keyCode || e.which;
+        var ok = k >= 65 && k <= 90 || // A-Z
+            k >= 96 && k <= 105 || // a-z
+            k >= 35 && k <= 40 || // arrows
+            k == 9 || //tab
+            k == 46 || //del
+            k == 8 || // backspaces
+            (!e.shiftKey && k >= 48 && k <= 57); // only 0-9 (ignore SHIFT options)
+
+        if (!ok || (e.ctrlKey && e.altKey)) {
+            e.preventDefault();
+        }
+    });
+
+function HidePANErrorMsgPopup(o)
+{
+    debugger;
+    $('#PANErrorMsg').modal('hide');
+}
+
+function GetZonalOfficeId(sbuId, zOfficeID) {
+        var id = sbuId;
+
+        if(id == "")
+        {
+            $(".zonalVal").html("");
+            $(".zonalVal")[0].sumo.reload();
+            return false;
+        }
+
+
+        if (id != 0) 
+        {
+            $("#zonalOffice_error").html("");
+        }
+        $.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("GetZonalOfficebySBUType", "Common")',
+            data: { SBUTypeId: id },  // data to submit
+            dataType: "json",
+            success: function (data, status, xhr) {
+                var v = data;
+                if (status == 'success') 
+                {
+                    $(".zonalVal").html("");
+                    $('<option value="">--Select--</option>').appendTo(".zonalVal");
+                    $.each(data, function (i, data) { // bind the dropdown list using json result
+                        $('<option>',
+                            {
+                                value: data.zonalOfficeID,
+                                text: data.zonalOfficeName
+                            }).html(data.zonalOfficeName).appendTo(".zonalVal");
+                    });
+                    $(".zonalVal")[0].sumo.reload();
+
+                    setTimeout(function(){
+                                $('#CustomerZonalOfficeID')[0].sumo.selectItem(zOfficeID);
+                            },500);
+                    //console.log($(".zonalVal").html());
+                    //console.log(zOfficeID);
+                }
+                else 
+                {
+                    console.log(v);
+                }
+            },
+            error: function (jqXhr, textStatus, errorMessage) {
+                alert("Error Populating Zonal Office");
+            }
+        });
+            
+};
+
+function GetRegionId(zonalId, regionId) {
+         var id = zonalId;
+
+           if(id == "")
+           {
+                $(".regionalVal").html("");
+                $(".regionalVal")[0].sumo.reload();
+                return false;
+           }
+
+
+            if (id != 0) 
+            {
+                $("#regionalOffice_error").html("");
+            }
+            $.ajax({
+                type: 'POST',  // http method
+                url: '@Url.Action("GetRegionalOfcDetails", "Common")',
+                data: { zonalOfcId: zonalId },  // data to submit
+                dataType: "json",
+                success: function (data, status, xhr) {
+                    var v = data;
+                    if (status == 'success') 
+                    {
+                        $(".regionalVal").html("");
+                        $('<option value="">--Select--</option>').appendTo(".regionalVal");
+                        $.each(data, function (i, data) { // bind the dropdown list using json result
+                            $('<option>',
+                                {
+                                    value: data.regionalOfficeID,
+                                    text: data.regionalOfficeName
+                                }).html(data.regionalOfficeName).appendTo(".regionalVal");
+                        });
+                        $(".regionalVal")[0].sumo.reload();
+
+                         setTimeout(function(){
+                                   $('#CustomerRegionalOfficeID')[0].sumo.selectItem(regionId);
+                               },500);
+                        console.log($(".regionalVal").html());
+                        console.log(regionId);
+                        console.log($('#CustomerRegionalOfficeID').val());
+                    }
+                    else 
+                    {
+                        console.log(v);
+                    }
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+                    alert("Error Populating Regional Office");
+                }
+            });
+    };
+
+    $(".SBUIdVal").change(function () {
+            var id = this.value;
+
+            
+            if(id == "")
+            {
+                $(".zonalVal").html("");
+                $(".zonalVal")[0].sumo.reload();
+                return false;
+            }
+
+            if (id != 0) 
+            {
+                $("#zonalOffice_error").html("");
+            }
+            $.ajax({
+                type: 'POST',  // http method
+                url: '@Url.Action("GetZonalOfficebySBUType", "Common")',
+                data: { SBUTypeId: id },  // data to submit
+                dataType: "json",
+                success: function (data, status, xhr) {
+                    var v = data;
+                    if (status == 'success') 
+                    {
+                        $(".zonalVal").html("");
+                        $('<option value="">--Select--</option>').appendTo(".zonalVal");
+                        $.each(data, function (i, data) { // bind the dropdown list using json result
+                            $('<option>',
+                                {
+                                    value: data.zonalOfficeID,
+                                    text: data.zonalOfficeName
+                                }).html(data.zonalOfficeName).appendTo(".zonalVal");
+                        });
+                        $(".zonalVal")[0].sumo.reload();
+                        //$('.zonalVal').trigger('change');
+                    }
+                    else {
+                        console.log(v);
+                    }
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+                    alert("Error Populating Regional Office");
+                }
+            });
+     });
+
+     $("#CustomerZonalOfficeID").change(function () {
+            var id = this.value;
+
+            
+            if(id == "")
+            {
+                $(".regionalVal").html("");
+                $(".regionalVal")[0].sumo.reload();
+                return false;
+            }
+
+            if (id != 0) 
+            {
+                $("#zonalOffice_error").html("");
+            }
+            $.ajax({
+                type: 'POST',  // http method
+                url: '@Url.Action("GetRegionalOfcDetails", "Common")',
+                data: { zonalOfcId: id },  // data to submit
+                dataType: "json",
+                success: function (data, status, xhr) {
+                    var v = data;
+                    if (status == 'success') 
+                    {
+                        $(".regionalVal").html("");
+                        $('<option value="">--Select--</option>').appendTo(".regionalVal");
+                        $.each(data, function (i, data) { // bind the dropdown list using json result
+                            $('<option>',
+                                {
+                                    value: data.regionalOfficeID,
+                                    text: data.regionalOfficeName
+                                }).html(data.districtName).appendTo(".regionalVal");
+                        });
+                        $(".regionalVal")[0].sumo.reload();
+                        //$('.regionalVal').trigger('change');
+                    }
+                    else {
+                        console.log(v);
+                    }
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+                    alert("Error Populating Regional Office");
+                }
+            });
+     });
+
+    $("#CustomerRegionalOfficeID").change(function () {
+        var id = this.value;
+        if (id != 0) {
+            $("#regionalOffice_error").html("");
+        }
+        $.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("GetsalesAreaDetails", "Customer")',
+            data: { RegionID: id },  // data to submit
+            dataType: "json",
+            success: function (data, status, xhr) {
+                var v = data;
+                if (status == 'success') {
+                    $("#CustomerSalesAreaID").html("");
+                    $.each(data, function (i, data) { // bind the dropdown list using json result
+                        $('<option>',
+                            {
+                                value: data.salesAreaID,
+                                text: data.salesAreaName
+                            }).html(data.salesAreaName).appendTo("#CustomerSalesAreaID");
+                    });
+                    $("#CustomerSalesAreaID")[0].sumo.reload();
+                }
+                else {
+                    console.log(v);
+                }
+            },
+            error: function (jqXhr, textStatus, errorMessage) {
+                alert("Error Populating Sales Area");
+            }
+        });
+
+});
+
+function GetSalesArea(regionId,customerSalesAreaID) {
+         var id = regionId;
+
+           if(id == "")
+           {
+                $(".salesAreaVal").html("");
+                $(".salesAreaVal")[0].sumo.reload();
+                return false;
+            }
+
+
+            if (id != 0) {
+                $("#salesArea_error").html("");
+            }
+            $.ajax({
+                type: 'POST',  // http method
+                url: '@Url.Action("GetsalesAreaDetails", "Customer")',
+                data: { RegionID: id },  // data to submit
+                dataType: "json",
+                success: function (data, status, xhr) {
+                    var v = data;
+                    if (status == 'success') 
+                    {
+                        $(".salesAreaVal").html("");
+                        $('<option value="">--Select--</option>').appendTo(".salesAreaVal");
+                        $.each(data, function (i, data) { // bind the dropdown list using json result
+                            $('<option>',
+                                {
+                                    value: data.salesAreaID,
+                                    text: data.salesAreaName
+                                }).html(data.salesAreaName).appendTo(".salesAreaVal");
+                        });
+                        $(".salesAreaVal")[0].sumo.reload();
+
+                        if(customerSalesAreaID!=null)
+                        {
+                         setTimeout(function(){
+                                   $('#CustomerSalesAreaID')[0].sumo.selectItem(customerSalesAreaID);
+                               },500);
+                        }
+                        //console.log($(".salesAreaVal").html());
+                        //console.log(regionId);
+                    }
+                    else {
+                        console.log(v);
+                    }
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+                    alert("Error Populating Sales Area");
+                }
+            });
+    };
+
+    $("#CustomerSalesAreaID").change(function () {
+            var id = this.value;
+
+            if (id != 0) {
+                $("#salesArea_error").html("");
+            }
+        });
+
+        $("#CustomerTbentityID").change(function () {
+            var id = this.value;
+            if (id != 0) {
+                $("#incomeTaxPan_error").html("");
+                $("#typeOfbusiness_error").html("");
+            }
+
+            document.getElementById("CustomerIncomeTaxPan").value = "";
+            document.getElementById("incomeTaxPan_error").className = "error";
+
+            if (id == 10) 
+            {
+                $('#lblPanText').text('');
+                $('#lblPanText').append('Govt. Dept. Identification Details<sup class="text-danger">*</sup>');
+                $('#btnVerify').hide();
+                $('#lblCustPOI').show();
+                document.getElementById("CustomerIncomeTaxPan").maxLength = 30;
+                document.getElementById("dvPan").className = "col-md-7 col-12";
+            }
+            else 
+            {
+                $('#lblPanText').text('');
+                $('#lblPanText').append('Income Tax PAN<sup class="text-danger">*</sup>');
+                $('#btnVerify').show();
+                $('#lblCustPOI').hide();
+                document.getElementById("CustomerIncomeTaxPan").maxLength = 10;
+                document.getElementById("dvPan").className = "col-md-5 col-12";
+            }
+
+            var panNumber = document.getElementById("CustomerIncomeTaxPan").value.trim();
+
+            if (id == 10)
+            {
+                if (panNumber == "")
+                {
+                    document.getElementById("incomeTaxPan_error").innerHTML = "Govt. Dept. Identification Details required";
+                    document.getElementById("incomeTaxPan_error").className = "error";
+                    return (false);
+                }
+                else
+                {
+                    document.getElementById("incomeTaxPan_error").innerHTML = "";
+                }
+            }
+            else
+            {
+                if (panNumber == "")
+                {
+                    document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN field cannot be left blank";
+                    document.getElementById("incomeTaxPan_error").className = "error";
+                    return (false);
+                }
+                else
+                {
+                    document.getElementById("incomeTaxPan_error").innerHTML = "";
+                }
+            }
+
+        });
+
+        $("#CustomerSignedOn").on("change", function () {
+
+            var selectedDate = document.getElementById("CustomerSignedOn").value.trim();
+
+            if (selectedDate == "") 
+            {
+               document.getElementById("CustomerSignedOn_error").innerHTML = "Signed On date field cannot be left blank";
+            }
+            else 
+            {
+                document.getElementById("CustomerSignedOn_error").innerHTML = "";
+            }
+
+
+        });
 
 </script>
