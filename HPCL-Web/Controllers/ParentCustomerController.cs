@@ -113,13 +113,20 @@ namespace HPCL_Web.Controllers
         public async Task<IActionResult> ParentCustomerRequestStatus()
         {
             var modals = new ParentCustomerStatusReport();
+            modals.SBUTypes.AddRange(await _commonActionService.GetSbuTypeList());
+            modals.ZonalOffices.AddRange(await _commonActionService.GetZonalOfficebySBUType("1"));
             return View(modals);
         }
         
-        public async Task<IActionResult> SearchParentCustomerRequestStatus(string ZonalOfficeId, string RegionalOfficeId,string FromDate, string ToDate, string FormNumber)
+        public async Task<IActionResult> SearchParentCustomerRequestStatus(string ZonalOfficeId, string RegionalOfficeId,string FromDate, string ToDate, string FormNumber,string SBUtypeId)
         {
-            var modals = await _customerService.SearchParentCustomerRequestStatus(ZonalOfficeId, RegionalOfficeId, FromDate, ToDate, FormNumber);
+            var modals = await _customerService.SearchParentCustomerRequestStatus(ZonalOfficeId, RegionalOfficeId, FromDate, ToDate, FormNumber, SBUtypeId);
             return PartialView("~/Views/ParentCustomer/_ParentCustomerRequestStatusTbl.cshtml", modals);
+        }
+        public async Task<IActionResult> SearchParentCustomerRequestStatusReport(string FormNumber,string RequestId)
+        {
+            var modals = await _customerService.SearchParentCustomerRequestStatusReport( FormNumber,RequestId);
+            return PartialView("~/Views/ParentCustomer/_ParentCustomerStatusReportTbl.cshtml", modals);
         }
         
     }

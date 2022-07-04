@@ -905,7 +905,7 @@ namespace HPCL.Service.Services
 
             return cust;
         }
-        public async Task<ParentCustomerReportModel> SearchParentCustomerRequestStatus(string ZonalOfficeId, string RegionalOfficeId, string FromDate, string ToDate, string FormNumber)
+        public async Task<ParentCustomerReportModel> SearchParentCustomerRequestStatus(string ZonalOfficeId, string RegionalOfficeId, string FromDate, string ToDate, string FormNumber,string SBUtypeId)
         {
             ParentCustomerReportModel parentCustomerReportModel = new ParentCustomerReportModel();
             if (!string.IsNullOrEmpty(FromDate) && !string.IsNullOrEmpty(FromDate))
@@ -927,7 +927,8 @@ namespace HPCL.Service.Services
                 ZO = ZonalOfficeId==null?"0":ZonalOfficeId,
                 RO = RegionalOfficeId == null ? "0" : RegionalOfficeId,
                 FromDate = FromDate,
-                ToDate = ToDate
+                ToDate = ToDate,
+                SBUTypeId= SBUtypeId,
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
@@ -936,5 +937,26 @@ namespace HPCL.Service.Services
             parentCustomerReportModel = obj.ToObject<ParentCustomerReportModel>();
             return parentCustomerReportModel;
         }
+        public async Task<ParentCustomerReportModel> SearchParentCustomerRequestStatusReport(string FormNumber,string RequestId)
+        {
+            ParentCustomerReportModel parentCustomerReportModel = new ParentCustomerReportModel();
+    
+            var searchBody = new ParentCustomerRequestModel
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                FormNumber = FormNumber == null ? "0" : FormNumber,
+                RequestId=RequestId
+                
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getparentcustomerstatusreport);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            parentCustomerReportModel = obj.ToObject<ParentCustomerReportModel>();
+            return parentCustomerReportModel;
+        }
+        
     }
 }

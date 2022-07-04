@@ -20,8 +20,8 @@ namespace HPCL_Web.Controllers
             _securityService = securityService;
             _commonActionService = commonActionService;
         }
-        
-        
+
+
         public async Task<IActionResult> Index()
         {
             return View();
@@ -101,7 +101,7 @@ namespace HPCL_Web.Controllers
         [HttpPost]
         public async Task<JsonResult> DisableUpdateManageUser(string userName, string action)
         {
-            var reasonList = await _securityService.DisableUpdateManageUser(userName,action);
+            var reasonList = await _securityService.DisableUpdateManageUser(userName, action);
 
             ModelState.Clear();
             return Json(new { reasonList = reasonList });
@@ -110,7 +110,7 @@ namespace HPCL_Web.Controllers
         [HttpPost]
         public async Task<JsonResult> UserResetPassword(string userName, string EmailId)
         {
-            var reasonList = await _securityService.UserResetPassword(userName,EmailId);
+            var reasonList = await _securityService.UserResetPassword(userName, EmailId);
 
             ModelState.Clear();
             return Json(new { reasonList = reasonList });
@@ -131,7 +131,7 @@ namespace HPCL_Web.Controllers
             return PartialView("~/Views/Security/_ViewUserRoleLocationTbl.cshtml", model);
         }
 
-       
+
         public async Task<IActionResult> UserCreationApprovalNonRBE(UserCreationApprovalNonRBEModel model, string reset, string success, string error, string FirstName, string UserName)
         {
             var searchResult = await _securityService.UserCreationApprovalNonRBE(model);
@@ -152,14 +152,14 @@ namespace HPCL_Web.Controllers
 
             return Json(new { customer = updateKycResponse });
         }
-        public async Task<IActionResult> ManageRole(ManageRolesRequestModel manageRolesRequestModel,string success,string error)
+        public async Task<IActionResult> ManageRole(ManageRolesRequestModel manageRolesRequestModel, string success, string error)
         {
             var modals = await _securityService.SelectUserManageRolesRequest(manageRolesRequestModel);
             ViewBag.SuccessMessage = success;
             ViewBag.ErrorMessage = error;
             return View(modals);
         }
-        public async Task<IActionResult> RolePermissionSummaryView (string RoleName,string RoleDescription,string RoleId)
+        public async Task<IActionResult> RolePermissionSummaryView(string RoleName, string RoleDescription, string RoleId)
         {
             var modals = await _securityService.GetUserManageRoleList(RoleId);
             modals.RoleDescription = RoleDescription;
@@ -169,7 +169,7 @@ namespace HPCL_Web.Controllers
         public async Task<IActionResult> AddRolesandPermissions()
         {
             var modals = await _securityService.GetUserManageMenuList();
-            
+
             return View(modals);
         }
         [HttpPost]
@@ -184,7 +184,7 @@ namespace HPCL_Web.Controllers
             var result = await _securityService.DeleteRoles(manageRolesRequestModel);
             return Json(result);
         }
-        public async Task<IActionResult> DeleteRoleRow(string RoleName,string RoleDescription)
+        public async Task<IActionResult> DeleteRoleRow(string RoleName, string RoleDescription)
         {
             ManageRolesRequestModel manageRolesRequestModel = new ManageRolesRequestModel();
             List<DeleteRoleModel> roleModelList = new List<DeleteRoleModel>();
@@ -214,11 +214,19 @@ namespace HPCL_Web.Controllers
             var result = await _securityService.UpdateManageRole(manageRolesRequestModel);
             return Json(result);
         }
-        public async Task<IActionResult> AddNewUser()
+        public async Task<IActionResult> AddNewUser(string UserName, string Email, string update)
         {
             var modals = new ManageNewUserViewModel();
+            if (update != null && update == "Yes")
+            {
+                modals = await _securityService.GetManageUserForEdit(UserName);
+                ViewBag.update = "Yes";
+                modals.UserName = UserName;
+                modals.Email = Email;
+            }
             modals.CustomerSecretQueMdl.AddRange(await _commonActionService.GetCustomerSecretQuestionListForDropdown());
             modals.getUserRolesandregions.Add(await _securityService.GetUserRolesAndRegions());
+
             return View(modals);
         }
         [HttpPost]
@@ -230,35 +238,52 @@ namespace HPCL_Web.Controllers
             return Json(check);
         }
         [HttpPost]
-        public async Task<JsonResult> AddUser([FromBody] AddNewUserReq entity)
+        public async Task<IActionResult> AddNewUser([FromBody] AddNewUserReq entity)
         {
             var result = await _securityService.AddUser(entity);
-
-            ModelState.Clear();
-            return Json(result);
+            if (result[0].Status == 1)
+            {
+                return RedirectToAction("AddNewUser", new { UserName = entity.UserName, Email = entity.Email, update = "Yes" });
+            }
+            return View(result);
         }
-        
-        public async Task<IActionResult> UpdateUserandLocations(string UserName,string Email)
+
+        public async Task<IActionResult> UpdateUserandLocations(string UserName,string Email, string update)
         {
 
             var modals = await _securityService.GetManageUserForEdit(UserName);
-            modals.UserName = UserName;
-            modals.Email = Email;
             modals.getUserRolesandregions.Add(await _securityService.GetUserRolesAndRegions());
+            ViewBag.Update = String.IsNullOrEmpty(update) ? "No" : update;
             return View(modals);
         }
         [HttpPost]
-        public async Task<JsonResult> UpdateUser([FromBody] AddNewUserReq entity)
+        public async Task<IActionResult> UpdateUserandLocations([FromBody] AddNewUserReq entity)
         {
             var result = await _securityService.UpdateUser(entity);
 
+            if (result[0].Status == 1)
+            {
+                if (entity.UpdateStatus == "Add")
+                {
+                    return RedirectToAction("AddNewUser", new { UserName = entity.UserName, Email = entity.Email, update = "Yes" });
+                }
+                else
+                    return RedirectToAction("UpdateUserandLocations", new { UserName = entity.UserName, Email = entity.Email, update = "Yes" });
+            }
             ModelState.Clear();
-            return Json(result);
+            return View(result);
         }
         public async Task<IActionResult> DeleteLocationMapping(string RoleId)
         {
             var searchResult = await _securityService.DeleteLocationMapping(RoleId);
             return View(searchResult);
+        }
+
+        public async Task<JsonResult> GetManageUserForEdit(string UserName)
+        {
+            var modals = await _securityService.GetManageUserForEdit(UserName);
+            modals.getUserRolesandregions.Add(await _securityService.GetUserRolesAndRegions());
+            return Json(modals);
         }
     }
 }

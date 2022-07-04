@@ -23,6 +23,11 @@ namespace HPCL.Common.Models.ResponseModel.ParentCustomer
         public string NameOnCard { get; set; }
         public string CreatedDate { get; set; }
         public string RequestStatus { get; set; }
-       
+
+        public string ModifiedBy { get; set; }
+        public string ModifiedDate { get; set; }
+        public string Status { get; set; }
+
+
     }
 }

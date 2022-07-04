@@ -290,7 +290,7 @@ namespace HPCL.Service.Services
                 CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 FirstName=entity.FirstName,
                 LastName=entity.LastName,
-                ActionType=entity.ActionType,
+                ActionType="Insert",
                 UserRole=entity.UserRole,
                 TypeManageUsersAddUserRole=entity.TypeManageUsersAddUserRole,
                 ModifiedBy= _httpContextAccessor.HttpContext.Session.GetString("UserId"),
@@ -548,18 +548,15 @@ namespace HPCL.Service.Services
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserName = entity.UserName,
                 Email = entity.Email,
-                FirstName = entity.FirstName,
-                LastName = entity.LastName,
-                ActionType = entity.ActionType,
                 UserRole = entity.UserRole,
                 TypeManageUsersAddUserRole = entity.TypeManageUsersAddUserRole,
-                ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 StateId = entity.StateId
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
 
-            var response = await _requestService.CommonRequestService(content, WebApiUrl.AddNewUserUrl);
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.updateuserrolelocation);
 
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
             var jarr = obj["Data"].Value<JArray>();
@@ -595,7 +592,7 @@ namespace HPCL.Service.Services
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
-            var response = await _requestService.CommonRequestService(content, WebApiUrl.DeleteTeamMapping);
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.manageusersrolelocationdelete);
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
             var jarr = obj["Data"].Value<JArray>();
             List<SuccessResponse> res = jarr.ToObject<List<SuccessResponse>>();

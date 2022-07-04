@@ -234,6 +234,10 @@
         public static string userApprovalRejection = "api/dtplus/UserManage/user_approval_rejection";
         public static string getuserrolesandregions = "api/dtplus/UserManage/get_user_roles_and_regions";
         public static string manageeditusers = "api/dtplus/UserManage/manage_edit_user";
+        public static string updateuserrolelocation = "api/dtplus/UserManage/update_user_role_location";
+        public static string manageusersrolelocationdelete = "api/dtplus/UserManage/manage_users_role_location_delete";
+        
+
         #endregion
 
         #region DriverCard
@@ -488,6 +492,7 @@
         public static string updateparentcustomer = "api/dtplus/ParentCustomer/update_parent_customer";
         public static string getparentcustomertoupdate = "api/dtplus/ParentCustomer/get_parent_customer_to_update";
         public static string getparentcustomerstatus = "api/dtplus/ParentCustomer/get_parent_customer_status";
+        public static string getparentcustomerstatusreport = "api/dtplus/ParentCustomer/get_parent_customer_status_report";
 
         #endregion
         #region Volvo Eicher
