@@ -3,6 +3,7 @@ using HPCL.Common.Models.ResponseModel.Customer;
 using HPCL.Common.Models.ViewModel.CustomerFeeWaiver;
 using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -17,19 +18,25 @@ namespace HPCL_Web.Controllers
             _customerFeeWaiverServices = customerFeeWaiverServices;
         }
 
-        public async Task<IActionResult> FeeWaiver()
-        {
-            PendingCustomer pendingCustomer = new PendingCustomer();
-            return View(pendingCustomer);
-        }
+        //public async Task<IActionResult> FeeWaiver()
+        //{
+        //    PendingCustomer pendingCustomer = new PendingCustomer();
+        //    return View(pendingCustomer);
+        //}
 
-        [HttpPost]
-        public async Task<JsonResult> FeeWaiver(PendingCustomer entity)
-        {
-            var pendingList = await _customerFeeWaiverServices.FeeWaiver(entity);
+        //[HttpPost]
+        //public async Task<JsonResult> FeeWaiver(PendingCustomer entity)
+        //{
+        //    var pendingList = await _customerFeeWaiverServices.FeeWaiver(entity);
 
-            ModelState.Clear();
-            return Json(new { pendingList = pendingList });
+        //    ModelState.Clear();
+        //    return Json(new { pendingList = pendingList });
+        //}
+        public async Task<IActionResult> FeeWaiver(PendingCustomer entity, string reset)
+        {
+            var modals = await _customerFeeWaiverServices.FeeWaiver(entity);
+            ViewBag.Reset = String.IsNullOrEmpty(reset) ? "" : reset;
+            return View(modals);
         }
 
         [HttpPost]

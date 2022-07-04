@@ -92,7 +92,7 @@
                         <div class="clearfix"></div>
                         <div class="d-flex align-items-center justify-content-center mt-0">
                             <div class="px-0">
-                                <button class="btn btn_primary" id="btnNext" type="button">Next</button>
+                                <button class="btn btn_primary" id="btnCreate" type="button">Create User</button>
                             </div>
                         </div>
                     </div>
@@ -105,50 +105,74 @@
             <div class="tab-pane fade show" id="userrole" role="tabpanel" aria-labelledby="userrole-tab">
                 <div class="border-1 rounded border-grey w-100 mt-3">
                     <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">User Roles</p>
-                    @if (Model.Data.tblMainAndSubLevel.Count() > 0)
+                    @if (Model.Data != null)
                     {
-                        <div class="d-flex align-items-start flex-wrap mt-3">
-                            <div class="col-12 col-lg-12">
+                        string roleId = "";
+                        @if (Model.Data.tblMainAndSubLevel.Count() > 0)
+                        {
+                            <div class="d-flex align-items-start flex-wrap mt-3">
+                                <div class="col-12 col-lg-12">
 
-                                <table id="LocRoleMappingTbl" class="table table-striped d-block d-md-table table-bordered table-responsive mt-3" style="width:100%;">
-                                    <thead>
-                                        <tr>
-                                            <th>Role</th>
-                                            <th>Location</th>
-                                            <th>Action</th>
-                                            <th>Id</th>
-                                            <th>ZonalID</th>
-                                            <th>RegionalId</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach (var item in Model.Data.tblMainAndSubLevel)
-                                        {
+                                    <table id="LocRoleMappingTbl" class="table table-striped d-block d-md-table table-bordered table-responsive mt-3" style="width:100%;">
+                                        <thead>
                                             <tr>
-                                                <td>
-                                                    <a href="#" class="roleSelect">@item.UserRole</a>
-                                                </td>
-                                                <td>
-                                                    @item.Location
-                                                </td>
-                                                <td>
-                                                    
-                                                    <a asp-action="DeleteLocationMapping" class="d-block" asp-route-RoleId="@item.RoleId" data-toggle="tooltip" title="" tooltip="Delete"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
-                                                </td>
-                                                <td class="roleId" style="display:none">@item.RoleId</td>
-                                                <td class="zoneId" style="display:none">@item.ZonalOfficeId</td>
-                                                <td class="regionId" style="display:none">@item.RegionalOfficeId</td>
+                                                <th>Role</th>
+                                                <th>Location</th>
+                                                <th>Action</th>
+                                                <th>Id</th>
+                                                <th>ZonalID</th>
+                                                <th>RegionalId</th>
                                             </tr>
-                                        }
-                                       
-                                    </tbody>
-                                </table>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var item in Model.Data.tblMainAndSubLevel)
+                                            {
+                                                @if (roleId != item.RoleId)
+                                                {
+                                                    roleId = item.RoleId;
+                                                    string Location = "",ZoneIds="",regionIds="";
+                                                    @foreach (var item1 in Model.Data.tblMainAndSubLevel.Where(t=>t.RoleId==roleId))
+                                                    {
+                                                        Location = Location + item1.RegionalOfficeName + " ,";
+                                                        if(item.RegionalOfficeId==null || item.RegionalOfficeId == "0")
+                                                        {
+                                                            ZoneIds = @item.ZonalOfficeId;
+                                                        }
+                                                        else
+                                                        {
+                                                            regionIds = regionIds + item1.RegionalOfficeId + " ,";
+                                                        }
+                                                    }
+                                                    Location.Remove(Location.Length - 1);
+                                                    regionIds.Remove(regionIds.Length - 1);
+                                                    <tr>
+                                                        <td>
+                                                            <a href="#" class="roleSelect">@item.UserRole</a>
+                                                        </td>
+                                                        <td>
+                                                           @Location
+                                                        </td>
+                                                        <td>
+
+                                                            <a asp-action="DeleteLocationMapping" class="d-block" asp-route-RoleId="@item.RoleId" data-toggle="tooltip" title="" tooltip="Delete"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                                                        </td>
+                                                        <td class="roleId" style="display:none">@item.RoleId</td>
+                                                        <td class="zoneId" style="display:none">@ZoneIds</td>
+                                                        <td class="regionId" style="display:none">@regionIds</td>
+                                                    </tr>
+                                                }
+
+                                    }
+
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
-                        </div>
-                    }
-                    else
-                    {
-                        <div id="message" tabindex="0" class="mb-3 text-center alert alert-danger">No Roles Assigned to This User</div>
+                        }
+                        else
+                        {
+                            <div id="message" tabindex="0" class="mb-3 text-center alert alert-danger">No Roles Assigned to This User</div>
+                        }
                     }
                     <div class="clearfix"></div>
                     <div id="message" tabindex="0" class="mb-3 text-center alert alert-danger" style="display:none"></div>
@@ -207,7 +231,7 @@
                                                         @if (ZoneId != item.ZonalOfficeID)
                                                         {
                                                             ZoneId = item.ZonalOfficeID;
-                                                            <div class="panel panel-default">
+                                                            <div class="panel panel-default zoneArea class_@item.ZonalOfficeID">
                                                                 <div class="panel-heading">
                                                                     <h4 class="panel-title"></h4>
                                                                     <input class="form-check-input check_box_pos_sty" type="checkbox" name="zoneChk" onclick="chkAllRegion(this,@i)" id="check_@i" value="@item.ZonalOfficeID">
@@ -227,7 +251,7 @@
                                                                                 j++;
                                                                                 <li>
                                                                                     <div class="form-check form-check-inline">
-                                                                                        <input class="form-check-input chk_@i" type="checkbox" name="regionChk" id="check_@i@j-@item.ZonalOfficeID" value="@item1.RegionalOfficeID">
+                                                                                        <input class="form-check-input chk_@i" type="checkbox" onclick="DisableArea(this,@i)" name="regionChk" id="check_@i@j-@item.ZonalOfficeID" value="@item1.RegionalOfficeID">
                                                                                         <label class="form-check-label" for="check_@i@j">@item1.RegionalOfficeName</label>
                                                                                     </div>
                                                                                 </li>
@@ -263,11 +287,11 @@
                 </div>
                 <div class="clearfix"></div>
                 <div class="d-flex align-items-center justify-content-center mt-3">
-                    <div class="px-2">
+                   @* <div class="px-2">
                         <button class="btn btn_primary" id="btnPrevious" type="button">Previous</button>
-                    </div>
+                    </div>*@
                     <div class="px-2">
-                        <button class="btn btn_primary" id="btnCreate" type="button">Create User</button>
+                        <button class="btn btn_primary" id="btnSave" type="button">Save</button>
                     </div>
                 </div>
             </div>
@@ -279,10 +303,39 @@
 
 <script type="text/javascript">
     var selectedRole="";
+    var userNameVal="";
+    var emailVal="";
+     $(document).ready(function (){
+       var update="@ViewBag.Update";
+       userNameVal="@ViewBag.UserName";
+       emailVal="@ViewBag.Email";
+       if(update=="Yes"){
+           ShowUserRolesData();
+       }
+      });
     function chkAllRegion(o,cnt){
+        var zoneId=o.value;
         $('input:checkbox.chk_'+cnt).not(this).prop('checked', o.checked);
+        if(o.checked){
+            $(".zoneArea").addClass("disable");
+            $(".class_"+zoneId).removeClass("disable");
+        }
+        else{
+             $(".zoneArea").removeClass("disable");
+        }
         $("#message").html("");
         $("#message").attr("style","display:none");
+    }
+    
+    function DisableArea(o,cnt){
+        var chkROId=o.id;
+        var zoneId=chkROId.substring(chkROId.indexOf('-') + 1);
+        if(o.checked){
+            $(".zoneArea").addClass("disable");
+            $(".class_"+zoneId).removeClass("disable");
+        }
+        if(!$('input:checkbox.chk_'+cnt).prop('checked'))
+            $(".zoneArea").removeClass("disable");
     }
     $("#checkAll").click(function () {
         $('input:checkbox').not(this).prop('checked', this.checked);
@@ -314,120 +367,60 @@
        debugger;
         var currentRow = $(this).closest("tr");
         var roleId = currentRow.find('.roleId').text();
-        var regionId = currentRow.find('.regionId').text();
+        var regionIdsList = currentRow.find('.regionId').text();
+        var regionIdsList = currentRow.find('.regionId').text();
+        var zoneId = currentRow.find('.zoneId').text();
         
+        var regionIdArr=regionIdsList.split(',');
          $('li').removeClass("usr_active");
      
         $('#roleId').addClass("usr_active");
-        $('input[type=checkbox][name=regionChk][value='+regionId+']').prop("checked",true); 
+        for(var i=0;i<regionIdArr.length;i++){
+            $('input[type=checkbox][name=regionChk][value='+regionIdArr[i]+']').prop("checked",true); 
+        }
+        if(zoneId!="0")
+            $('input[type=checkbox][name=zoneChk][value='+zoneId+']').prop("checked",true); 
+        
      
     });
-      $("#btnNext").on("click", (function (e) {
+     $("#btnSave").on("click", (function (e) {
          var userName=$("#UserName").val();
          var newEmail=$("#Email").val();
-         var password=$("#Password").val();
-         var confirm=$("#ConfirmPassword").val();
-         var secretAns=$("#SecretAnswer").val();
-          var secretQstn =$("#SecretQuestion").val();
-          var flag = "Y";
-
-            if(userName.trim()==""){
-                $("#userName_error").html("Please enter User Name");
-                $("#userName_error").attr("style","display:block");
-                flag="N";
-            }
-            else{
-                if(!(userName.match(userNameCheck))){
-                     $("#userName_error").html("Please enter valid User Name");
-                     $("#userName_error").attr("style","display:block");
-                     $("p.userNote").attr("style","display:block");
-                      flag="N";
-                }
-                else{
-                    $.ajax({
-                        type: 'POST',  // http method
-                        url: '@Url.Action("ValidateUserName", "Security")',
-                        data: { UserName: userName.trim() },  // data to submit
-                        dataType: "json",
-                        success: function (data, status, xhr) {
-                            var v = data;
-                            if (status == 'success' && v == '0') {
-                                $("#userName_error").html("User Name already Exists");
-                                $("#userName_error").attr("style","display:block");
-                            }
-                            else {
-                                $("#userName_error").html("");
-                                $("#userName_error").attr("style","display:none");
-                            }
-                        }
-                    });
-                }
-
-            }
-            if(newEmail.trim()==""){
-                $("#email_error").html("Please enter Email");
-                $("#email_error").attr("style","display:block");
-                flag="N";
-            }
-            else{
-                if(!(newEmail.match(email))){
-                     $("#email_error").html("Please enter valid Email");
-                     $("#email_error").attr("style","display:block");
-                     flag="N";
-
-                }
-            }
-            if(password.trim()==""){
-                $("#password_error").html("Please enter Password");
-                $("#password_error").attr("style","display:block");
-                flag="N";
-            }
-            else{
-               if(!(password.match(passwordCheck))){
-                     $("#password_error").html("Please enter valid Password");
-                     $("#password_error").attr("style","display:block");
-                     $("p.passNote").attr("style","display:block");
-                     flag="N";
-                }
-            }
-            if(confirm.trim()==""){
-                $("#confirmPassword_error").html("Please enter Confirm Password");
-                $("#confirmPassword_error").attr("style","display:block");
-                flag="N";
-
-            }
-            else{
-                if(password!=""){
-                    if(confirm!=password){
-                         $("#confirmPassword_error").html("Please enter same Password");
-                         $("#confirmPassword_error").attr("style","display:block");
-                         flag="N";
-                    }
-                }
-            }
-            if(secretAns.trim()==""){
-                $("#secretAns_error").html("Please enter Password Answer");
-                $("#secretAns_error").attr("style","display:block");
-                flag="N";
-
-            }
-            if (secretQstn == 0) {
-                $("#secretQuestion_error").html("Please select Secret Question");
-                $("#secretQuestion_error").attr("style","display:block");
-                flag="N";
-            }
-          if (flag == "N")
-              e.preventDefault();
-           else{
-
-                ShowUserRolesData();
-               }
+       
+         debugger;
+               var userRoleSelected=selectedRole;
+               objUserRole=[];
+               $("input:checkbox[name=regionChk]:checked").each(function () {
+                   var chkROId=$(this).attr("id");
+                    var zoId=chkROId.substring(chkROId.indexOf('-') + 1);
+                    objUserRole.push({ RO: $(this).val(),ZO:zoId });
+               });
+               //var ReqModel={UserName:userName,Email:newEmail,Password:password,ConfirmPassword:confirm,SecretQuestion:secretQstn,SecretQuestionAnswer:secretAns,UserRole:"0",FirstName:"",LastName:"",StateId:"0",ActionType:"",TypeManageUsersAddUserRole:objUserRole};
+               var ReqModel={UserName:userName,Email:newEmail,Password:"",ConfirmPassword:"",SecretQuestion:"0",SecretQuestionAnswer:"",UserRole:userRoleSelected,FirstName:"",LastName:"",StateId:"0",ActionType:"",TypeManageUsersAddUserRole:objUserRole,UpdateStatus:"Add"};
+               $.ajax({
+                   type: 'POST',  // http method
+                   url: '@Url.Action("UpdateUserandLocations", "Security")',
+                   contentType: "application/json; charset=utf-8",
+                   dataType: 'text',
+                   data: JSON.stringify(ReqModel),
+                   success: function (data, status, xhr) {
+                       var v = data;
+                       if (status == 'success') {
+                      
+                           ShowUserRolesData();
+                       }
+                       else {
+                           console.log(v);
+                       }
+                   },
+                   error: function (jqXhr, textStatus, errorMessage) {
+                       alert("Error"+ errorMessage);
+                   }
+               });
+            
       })
       );
-      $("#btnPrevious").on("click", (function (e) {
-            ShowUserInfoData();
-      })
-      );
+
        $("#btnCreate").on("click", (function (e) {
          var userName=$("#UserName").val();
          var newEmail=$("#Email").val();
@@ -527,26 +520,21 @@
            else{
                var userRoleSelected=selectedRole;
                objUserRole=[];
-               $("input:checkbox[name=regionChk]:checked").each(function () {
+               @*$("input:checkbox[name=regionChk]:checked").each(function () {
                    var chkROId=$(this).attr("id");
                     var zoId=chkROId.substring(chkROId.indexOf('-') + 1);
                     objUserRole.push({ RO: $(this).val(),ZO:zoId });
-               });
-               var ReqModel={UserName:userName,Email:newEmail,Password:password,ConfirmPassword:confirm,SecretQuestion:secretQstn,SecretQuestionAnswer:secretAns,UserRole:userRoleSelected,FirstName:"",LastName:"",StateId:"0",ActionType:"",TypeManageUsersAddUserRole:objUserRole};
+               });*@
+               var ReqModel={UserName:userName,Email:newEmail,Password:password,ConfirmPassword:confirm,SecretQuestion:secretQstn,SecretQuestionAnswer:secretAns,UserRole:"0",FirstName:"",LastName:"",StateId:"0",ActionType:"",TypeManageUsersAddUserRole:objUserRole};
                $.ajax({
                    type: 'POST',  // http method
-                   url: '@Url.Action("AddUser", "Security")',
+                   url: '@Url.Action("AddNewUser", "Security")',
                    contentType: "application/json; charset=utf-8",
-                   dataType: 'JSON',
+                   dataType: 'text',
                    data: JSON.stringify(ReqModel),
                    success: function (data, status, xhr) {
                        var v = data;
-                       if (status == 'success') {
-
-                       }
-                       else {
-                           console.log(v);
-                       }
+                       ShowUserRolesData();
                    },
                    error: function (jqXhr, textStatus, errorMessage) {
                        alert("Error"+ errorMessage);
