@@ -47,7 +47,7 @@
                                     <div class="col-md-7 col-12">
                                         <div class="custom_select">
 
-                                            @Html.LabelFor(m => m.Data.mstKeyDetail[0].CreatedDate, new {@id="CreatedDate", @class = "form-control"})
+                                            @Html.TextBoxFor(m => m.Data.mstKeyDetail[0].CreatedDate, new {@id="CreatedDate", @class = "form-control",@readonly="readonly"})
                                         </div>
                                     </div>
                                 </div>
@@ -57,7 +57,7 @@
                                     <label class="font-weight-normal offset-md-1 col-md-4 col-12">Last Login Date</label>
                                     <div class="col-md-7 col-12">
                                         <div class="custom_select">
-                                            @Html.LabelFor(m => m.Data.mstKeyDetail[0].LastLogin, new { @id="LastLogin",@class = "form-control"})
+                                            @Html.TextBoxFor(m => m.Data.mstKeyDetail[0].LastLogin, new { @id="LastLogin",@class = "form-control",@readonly="readonly"})
                                         </div>
                                     </div>
                                 </div>
@@ -80,6 +80,7 @@
                     <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">User Roles</p>
                     @if (Model.Data.tblMainAndSubLevel.Count() > 0)
                     {
+                        string roleId = "";
                         <div class="d-flex align-items-start flex-wrap mt-3">
                             <div class="col-12 col-lg-12">
 
@@ -97,23 +98,44 @@
                                     <tbody>
                                         @foreach (var item in Model.Data.tblMainAndSubLevel)
                                         {
-                                            <tr>
-                                                <td>
-                                                    <a href="#" class="roleSelect">@item.UserRole</a>
-                                                </td>
-                                                <td>
-                                                    @item.Location
-                                                </td>
-                                                <td>
-                                                    @*<a href="#"><i class="fa fa-trash"></i></a>*@
-                                                    <a asp-action="DeleteLocationMapping" class="d-block" asp-route-RoleId="@item.RoleId" data-toggle="tooltip" title="" tooltip="Delete"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
-                                                </td>
-                                                <td class="roleId" style="display:none">@item.RoleId</td>
-                                                <td class="zoneId" style="display:none">@item.ZonalOfficeId</td>
-                                                <td class="regionId" style="display:none">@item.RegionalOfficeId</td>
-                                            </tr>
+                                            @if (roleId != item.RoleId)
+                                            {
+                                                roleId = item.RoleId;
+                                                string Location = "", ZoneIds = "", regionIds = "";
+                                                @foreach (var item1 in Model.Data.tblMainAndSubLevel.Where(t => t.RoleId == roleId))
+                                                {
+                                                    Location = Location + item1.RegionalOfficeName + ",";
+                                                    if (item.RegionalOfficeId == null || item.RegionalOfficeId == "0")
+                                                    {
+                                                        ZoneIds = @item.ZonalOfficeId;
+                                                    }
+                                                    else
+                                                    {
+                                                        ZoneIds = @item.ZonalOfficeId;
+                                                        regionIds = regionIds + item1.RegionalOfficeId + ",";
+                                                    }
+                                                }
+                                                Location = Location.Remove(Location.Length - 1);
+                                                regionIds = regionIds.Remove(regionIds.Length - 1);
+                                                <tr>
+                                                    <td>
+                                                        <a href="#" class="roleSelect">@item.UserRole</a>
+                                                    </td>
+                                                    <td>
+                                                        @Location
+                                                    </td>
+                                                    <td>
+
+                                                        <a asp-action="DeleteLocationMapping" class="d-block" asp-route-RoleId="@item.RoleId" data-toggle="tooltip" title="" tooltip="Delete"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                                                    </td>
+                                                    <td class="roleId" style="display:none">@item.RoleId</td>
+                                                    <td class="zoneId" style="display:none">@ZoneIds</td>
+                                                    <td class="regionId" style="display:none">@regionIds</td>
+                                                </tr>
+                                            }
+
                                         }
-                                         
+
                                     </tbody>
                                 </table>
                             </div>
@@ -180,11 +202,11 @@
                                                         @if (ZoneId != item.ZonalOfficeID)
                                                         {
                                                             ZoneId = item.ZonalOfficeID;
-                                                            <div class="panel panel-default">
+                                                            <div class="panel panel-default zoneArea class_@item.ZonalOfficeID">
                                                                 <div class="panel-heading">
                                                                     <h4 class="panel-title"></h4>
-                                                                    <input class="form-check-input check_box_pos_sty" type="checkbox" name="zoneChk" onclick="chkAllRegion(this,@i)" id="check_@i" value="@item.ZonalOfficeID">
-                                                                    <a class="collapsed" data-toggle="collapse" data-parent="#nested" href="#nested_@i">
+                                                                    <input class="form-check-input check_box_pos_sty" type="checkbox" name="zoneChk" onclick="chkAllRegion(this,@i)" id="check_@item." value="@item.ZonalOfficeID">
+                                                                    <a class="collapsed class_@item.ZonalOfficeID" data-toggle="collapse" data-parent="#nested" href="#nested_@i" id="id_@item.ZonalOfficeID">
                                                                         <div class="form-check form-check-inline">
                                                                             <label class="form-check-label" for="check_@i">@item.ZonalOfficeName</label>
                                                                         </div>
@@ -192,7 +214,7 @@
 
                                                                 </div>
                                                                 <!--/.panel-heading -->
-                                                        <div id="nested_@i" class="panel-collapse collapse in">
+                                                        <div id="nested_@i" class="panel-collapse regionArea collapse in">
                                                                     <div class="panel-body">
                                                                         <ul style="padding-left: 25px;">
                                                                             @foreach (var item1 in Model.getUserRolesandregions.First().Data.Locations.Where(x => x.ZonalOfficeID == item.ZonalOfficeID).OrderBy(x => x.ZonalOfficeID))
@@ -200,14 +222,13 @@
                                                                                 j++;
                                                                                 <li>
                                                                                     <div class="form-check form-check-inline">
-                                                                                        <input class="form-check-input chk_@i" type="checkbox" name="regionChk" id="check_@i@j-@item.ZonalOfficeID" value="@item1.RegionalOfficeID">
+                                                                                        <input class="form-check-input chk_@i" type="checkbox" onclick="DisableArea(this,@i)" name="regionChk" id="check_@i@j-@item.ZonalOfficeID" value="@item1.RegionalOfficeID">
                                                                                         <label class="form-check-label" for="check_@i@j">@item1.RegionalOfficeName</label>
                                                                                     </div>
                                                                                 </li>
                                                                             }
-
-
                                                                         </ul>
+
                                                                     </div>
                                                                     <!--/.panel-body -->
                                                         </div>
@@ -225,6 +246,7 @@
                                             <!--/.panel-body -->
 
                                         </div>
+                                        </ul>
                                         <!--/.panel-collapse -->
                                     </div>
                                     <!-- /.panel -->
@@ -252,265 +274,311 @@
 
 <script type="text/javascript">
     var selectedRole="";
-    function chkAllRegion(o,cnt){
-        $('input:checkbox.chk_'+cnt).not(this).prop('checked', o.checked);
-        $("#message").html("");
-        $("#message").attr("style","display:none");
-    }
-    $("#checkAll").click(function () {
-        $('input:checkbox').not(this).prop('checked', this.checked);
-        $("#message").html("");
-        $("#message").attr("style","display:none");
-    });
-    var li =document.getElementById("UserRoleList").getElementsByTagName('li');
+       var userNameVal="";
+       var emailVal="";
+        $(document).ready(function (){
+          var update="@ViewBag.Update";
+          userNameVal="@ViewBag.UserName";
+          emailVal="@ViewBag.Email";
+          if(update=="Yes"){
+              ShowUserRolesData();
+          }
+         });
+       function chkAllRegion(o,cnt){
+           var zoneId=o.value;
+           $('input[type=checkbox][name=regionChk]').prop("checked",false);
+           $('input:checkbox.chk_'+cnt).not(this).prop('checked', o.checked);
+           if(o.checked){
+               $(".zoneArea").addClass("disable");
+               $(".class_"+zoneId).removeClass("disable");
+           }
+           else{
+                $(".zoneArea").removeClass("disable");
+           }
+           $("#message").html("");
+           $("#message").attr("style","display:none");
+       }
 
-    for(var i = 0;i<li.length;i++){
-        li[i].addEventListener("click", selectItem);
-    }
+       function DisableArea(o,cnt){
+           var chkROId=o.id;
+           var zoneId=chkROId.substring(chkROId.indexOf('-') + 1);
+           if(o.checked){
+               $(".zoneArea").addClass("disable");
+               $(".class_"+zoneId).removeClass("disable");
+           }
+           if(!$('input:checkbox.chk_'+cnt).prop('checked'))
+               $(".zoneArea").removeClass("disable");
+       }
+        $("#checkAll").click(function () {
+            $('input:checkbox').not(this).prop('checked', this.checked);
+            $("#message").html("");
+            $("#message").attr("style","display:none");
+        });
+        var li =document.getElementById("UserRoleList").getElementsByTagName('li');
 
-    function selectItem(e){
-        //alert(e.target.innerText);
-        //alert(e.target.attributes.id.value);
-        selectedRole=e.target.attributes.id.value;
-        $("#message").html("Please select location for this Role");
-        $("#message").attr("style","display:block");
-         $('li').removeClass("usr_active");
-        $(e.target).addClass("usr_active");
+        for(var i = 0;i<li.length;i++){
+            li[i].addEventListener("click", selectItem);
+        }
 
-    }
+        function selectItem(e){
+            //alert(e.target.innerText);
+            //alert(e.target.attributes.id.value);
+            selectedRole=e.target.attributes.id.value;
+            $("#message").html("Please select location for this Role");
+            $("#message").attr("style","display:block");
+             $('li').removeClass("usr_active");
+            $(e.target).addClass("usr_active");
 
-   $("#LocRoleMappingTbl").on('click', '.roleSelect', function (e) {
+        }
+
+       $("#LocRoleMappingTbl").on('click', '.roleSelect', function (e) {
 
 
-       debugger;
-        var currentRow = $(this).closest("tr");
-        var roleId = currentRow.find('.roleId').text();
-        var regionId = currentRow.find('.regionId').text();
-        
-         $('li').removeClass("usr_active");
-     
-        $('li#'+roleId).addClass("usr_active");
-        $('input[type=checkbox][name=regionChk]').prop("checked",false);
-        $('input[type=checkbox][name=regionChk][value='+regionId+']').prop("checked",true); 
-     
-    });
+           debugger;
+            var currentRow = $(this).closest("tr");
+            var roleId = currentRow.find('.roleId').text();
+            var regionId = currentRow.find('.regionId').text();
 
-      $("#btnNext").on("click", (function (e) {
-         var userName=$("#UserName").val();
-         var newEmail=$("#Email").val();
+             $('li').removeClass("usr_active");
 
-          var flag = "Y";
-
-            if(userName.trim()==""){
-                $("#userName_error").html("Please enter User Name");
-                $("#userName_error").attr("style","display:block");
-                flag="N";
+            $('li#'+roleId).addClass("usr_active");
+            $('input[type=checkbox][name=regionChk]').prop("checked",false);
+            var chkROId=$('input[type=checkbox][name=regionChk][value='+regionId+']').attr("id");
+            var zoneId=chkROId.substring(chkROId.indexOf('-') + 1);
+            if($(".zoneArea").closest("a").hasClass("collapsed")){
             }
             else{
-                if(!(userName.match(userNameCheck))){
-                     $("#userName_error").html("Please enter valid User Name");
-                     $("#userName_error").attr("style","display:block");
-                      flag="N";
+                 $(".zoneArea").closest("a").addClass("collapsed");
+                 $(".zoneArea").closest("a").attr("aria-expanded",false);
+                 $(".regionArea").removeClass("show");
+            }
+            $("#id_"+zoneId).removeClass("collapsed");
+            $("#id_"+zoneId).attr("aria-expanded",true);
+            var nestedId=$("#id_"+zoneId).attr("href");
+            $(nestedId).addClass("show");
+            $('input[type=checkbox][name=regionChk][value='+regionId+']').prop("checked",true);
+            $(".zoneArea").addClass("disable");
+            $(".class_"+zoneId).removeClass("disable");
+
+        });
+
+          $("#btnNext").on("click", (function (e) {
+             var userName=$("#UserName").val();
+             var newEmail=$("#Email").val();
+
+              var flag = "Y";
+
+                if(userName.trim()==""){
+                    $("#userName_error").html("Please enter User Name");
+                    $("#userName_error").attr("style","display:block");
+                    flag="N";
                 }
                 else{
-                    $.ajax({
-                        type: 'POST',  // http method
-                        url: '@Url.Action("ValidateUserName", "Security")',
-                        data: { UserName: userName.trim() },  // data to submit
-                        dataType: "json",
-                        success: function (data, status, xhr) {
-                            var v = data;
-                            if (status == 'success' && v == '0') {
-                                $("#userName_error").html("User Name already Exists");
-                                $("#userName_error").attr("style","display:block");
+                    if(!(userName.match(userNameCheck))){
+                         $("#userName_error").html("Please enter valid User Name");
+                         $("#userName_error").attr("style","display:block");
+                          flag="N";
+                    }
+                    else{
+                        $.ajax({
+                            type: 'POST',  // http method
+                            url: '@Url.Action("ValidateUserName", "Security")',
+                            data: { UserName: userName.trim() },  // data to submit
+                            dataType: "json",
+                            success: function (data, status, xhr) {
+                                var v = data;
+                                if (status == 'success' && v == '0') {
+                                    $("#userName_error").html("User Name already Exists");
+                                    $("#userName_error").attr("style","display:block");
+                                }
+                                else {
+                                    $("#userName_error").html("");
+                                    $("#userName_error").attr("style","display:none");
+                                }
                             }
-                            else {
-                                $("#userName_error").html("");
-                                $("#userName_error").attr("style","display:none");
-                            }
-                        }
-                    });
-                }
-
-            }
-            if(newEmail.trim()==""){
-                $("#email_error").html("Please enter Email");
-                $("#email_error").attr("style","display:block");
-                flag="N";
-            }
-            else{
-                if(!(newEmail.match(email))){
-                     $("#email_error").html("Please enter valid Email");
-                     $("#email_error").attr("style","display:block");
-                     flag="N";
+                        });
+                    }
 
                 }
-            }
-
-          if (flag == "N")
-              e.preventDefault();
-           else{
-
-                ShowUserRolesData();
-               }
-      })
-      );
-      $("#btnPrevious").on("click", (function (e) {
-            ShowUserInfoData();
-      })
-      );
-       $("#btnCreate").on("click", (function (e) {
-         var userName=$("#UserName").val();
-         var newEmail=$("#Email").val();
-        
-          var flag = "Y";
-
-            if(userName.trim()==""){
-                $("#userName_error").html("Please enter User Name");
-                $("#userName_error").attr("style","display:block");
-                flag="N";
-            }
-            else{
-                if(!(userName.match(userNameCheck))){
-                     $("#userName_error").html("Please enter valid User Name");
-                     $("#userName_error").attr("style","display:block");
-                      flag="N";
+                if(newEmail.trim()==""){
+                    $("#email_error").html("Please enter Email");
+                    $("#email_error").attr("style","display:block");
+                    flag="N";
                 }
                 else{
-                    $.ajax({
-                        type: 'POST',  // http method
-                        url: '@Url.Action("ValidateUserName", "Security")',
-                        data: { UserName: userName.trim() },  // data to submit
-                        dataType: "json",
-                        success: function (data, status, xhr) {
-                            var v = data;
-                            if (status == 'success' && v == '0') {
-                                $("#userName_error").html("User Name already Exists");
-                                $("#userName_error").attr("style","display:block");
-                            }
-                            else {
-                                $("#userName_error").html("");
-                                $("#userName_error").attr("style","display:none");
-                            }
-                        }
-                    });
+                    if(!(newEmail.match(email))){
+                         $("#email_error").html("Please enter valid Email");
+                         $("#email_error").attr("style","display:block");
+                         flag="N";
+
+                    }
                 }
 
-            }
-            if(newEmail.trim()==""){
-                $("#email_error").html("Please enter Email");
-                $("#email_error").attr("style","display:block");
-                flag="N";
-            }
-            else{
-                if(!(newEmail.match(email))){
-                     $("#email_error").html("Please enter valid Email");
-                     $("#email_error").attr("style","display:block");
-                     flag="N";
+              if (flag == "N")
+                  e.preventDefault();
+               else{
 
-                }
-            }
-
-          if (flag == "N")
-              e.preventDefault();
-           else{
-               var userRoleSelected=selectedRole;
-               objUserRole=[];
-               $("input:checkbox[name=regionChk]:checked").each(function () {
-                   var chkROId=$(this).attr("id");
-                    var zoId=chkROId.substring(chkROId.indexOf('-') + 1);
-                    objUserRole.push({ RO: $(this).val(),ZO:zoId });
-               });
-               var ReqModel={UserName:userName,Email:newEmail,UserRole:userRoleSelected,FirstName:"",LastName:"",StateId:"0",ActionType:"",TypeManageUsersAddUserRole:objUserRole};
-               $.ajax({
-                   type: 'POST',  // http method
-                   url: '@Url.Action("UpdateUser", "Security")',
-                   contentType: "application/json; charset=utf-8",
-                   dataType: 'JSON',
-                   data: JSON.stringify(ReqModel),
-                   success: function (data, status, xhr) {
-                       var v = data;
-                       if (status == 'success') {
-
-                       }
-                       else {
-                           console.log(v);
-                       }
-                   },
-                   error: function (jqXhr, textStatus, errorMessage) {
-                       alert("Error"+ errorMessage);
+                    ShowUserRolesData();
                    }
-               });
-            }
-      })
-      );
-       function ShowUserRolesData()
-        {
-            document.getElementById("userrole-tab").classList.remove("disable");
-            document.getElementById("userrole-tab").click();
-            document.getElementById("userinfo-tab").classList.add("disable");
+          })
+          );
+          $("#btnPrevious").on("click", (function (e) {
+                ShowUserInfoData();
+          })
+          );
+           $("#btnCreate").on("click", (function (e) {
+             var userName=$("#UserName").val();
+             var newEmail=$("#Email").val();
 
+              var flag = "Y";
 
-        }
-        function ShowUserInfoData()
-        {
-            document.getElementById("userinfo-tab").classList.remove("disable");
-            document.getElementById("userinfo-tab").click();
-            document.getElementById("userrole-tab").classList.add("disable");
-
-
-        }
-     $("#UserName").on("blur", function() {
-         var userName=$("#UserName").val();
-         if(userName.trim()==""){
-            $("#userName_error").html("Please enter User Name");
-            $("#userName_error").attr("style","display:block");
-
-        }
-        else{
-            if(!(userName.match(userNameCheck))){
-                 $("#userName_error").html("Please enter valid User Name");
-                 $("#userName_error").attr("style","display:block");
-            }
-            else{
-                    $.ajax({
-                        type: 'POST',  // http method
-                        url: '@Url.Action("ValidateUserName", "Security")',
-                        data: { UserName: userName.trim() },  // data to submit
-                        dataType: "json",
-                        success: function (data, status, xhr) {
-                            var v = data;
-                            if (status == 'success' && v == '0') {
-                                $("#userName_error").html("User Name already Exists");
-                                $("#userName_error").attr("style","display:block");
-                            }
-                            else {
-                                $("#userName_error").html("");
-                                $("#userName_error").attr("style","display:none");
-                            }
-                        }
-                    });
+                if(userName.trim()==""){
+                    $("#userName_error").html("Please enter User Name");
+                    $("#userName_error").attr("style","display:block");
+                    flag="N";
                 }
-        }
-    });
-     $("#Email").on("blur", function() {
-         var newEmail=$("#Email").val();
-         if(newEmail.trim()==""){
-            $("#email_error").html("Please enter Email");
-            $("#email_error").attr("style","display:block");
+                else{
+                    if(!(userName.match(userNameCheck))){
+                         $("#userName_error").html("Please enter valid User Name");
+                         $("#userName_error").attr("style","display:block");
+                          flag="N";
+                    }
+                    else{
+                        $.ajax({
+                            type: 'POST',  // http method
+                            url: '@Url.Action("ValidateUserName", "Security")',
+                            data: { UserName: userName.trim() },  // data to submit
+                            dataType: "json",
+                            success: function (data, status, xhr) {
+                                var v = data;
+                                if (status == 'success' && v == '0') {
+                                    $("#userName_error").html("User Name already Exists");
+                                    $("#userName_error").attr("style","display:block");
+                                }
+                                else {
+                                    $("#userName_error").html("");
+                                    $("#userName_error").attr("style","display:none");
+                                }
+                            }
+                        });
+                    }
 
-        }
-        else{
-            if(!(newEmail.match(email))){
-                 $("#email_error").html("Please enter valid Email");
-                 $("#email_error").attr("style","display:block");
+                }
+                if(newEmail.trim()==""){
+                    $("#email_error").html("Please enter Email");
+                    $("#email_error").attr("style","display:block");
+                    flag="N";
+                }
+                else{
+                    if(!(newEmail.match(email))){
+                         $("#email_error").html("Please enter valid Email");
+                         $("#email_error").attr("style","display:block");
+                         flag="N";
+
+                    }
+                }
+
+              if (flag == "N")
+                  e.preventDefault();
+               else{
+                   var userRoleSelected=selectedRole;
+                   objUserRole=[];
+                   $("input:checkbox[name=regionChk]:checked").each(function () {
+                       var chkROId=$(this).attr("id");
+                        var zoId=chkROId.substring(chkROId.indexOf('-') + 1);
+                        objUserRole.push({ RO: $(this).val(),ZO:zoId });
+                   });
+                   var ReqModel={UserName:userName,Email:newEmail,Password:"",ConfirmPassword:"",SecretQuestion:"",SecretQuestionAnswer:"",UserRole:userRoleSelected,FirstName:"",LastName:"",StateId:"0",ActionType:"",TypeManageUsersAddUserRole:objUserRole,UpdateStatus:"Update"};
+                   $.ajax({
+                       type: 'POST',  // http method
+                       url: '@Url.Action("UpdateUserandLocations", "Security")',
+                       contentType: "application/json; charset=utf-8",
+                       dataType: 'JSON',
+                       data: JSON.stringify(ReqModel),
+                       success: function (data, status, xhr) {
+                           var v = data;
+                           if (status == 'success') {
+
+                                ShowUserRolesData();
+                           }
+                           else {
+                               console.log(v);
+                           }
+                       },
+                       error: function (jqXhr, textStatus, errorMessage) {
+                           alert("Error"+ errorMessage);
+                       }
+                   });
+                }
+          })
+          );
+           function ShowUserRolesData()
+            {
+                document.getElementById("userrole-tab").classList.remove("disable");
+                document.getElementById("userrole-tab").click();
+                document.getElementById("userinfo-tab").classList.add("disable");
+
+
+            }
+            function ShowUserInfoData()
+            {
+                document.getElementById("userinfo-tab").classList.remove("disable");
+                document.getElementById("userinfo-tab").click();
+                document.getElementById("userrole-tab").classList.add("disable");
+
+
+            }
+         $("#UserName").on("blur", function() {
+             var userName=$("#UserName").val();
+             if(userName.trim()==""){
+                $("#userName_error").html("Please enter User Name");
+                $("#userName_error").attr("style","display:block");
+
             }
             else{
-                 $("#email_error").html("");
-                 $("#email_error").attr("style","display:none");
+                if(!(userName.match(userNameCheck))){
+                     $("#userName_error").html("Please enter valid User Name");
+                     $("#userName_error").attr("style","display:block");
+                }
+                else{
+                        $.ajax({
+                            type: 'POST',  // http method
+                            url: '@Url.Action("ValidateUserName", "Security")',
+                            data: { UserName: userName.trim() },  // data to submit
+                            dataType: "json",
+                            success: function (data, status, xhr) {
+                                var v = data;
+                                if (status == 'success' && v == '0') {
+                                    $("#userName_error").html("User Name already Exists");
+                                    $("#userName_error").attr("style","display:block");
+                                }
+                                else {
+                                    $("#userName_error").html("");
+                                    $("#userName_error").attr("style","display:none");
+                                }
+                            }
+                        });
+                    }
             }
+        });
+         $("#Email").on("blur", function() {
+             var newEmail=$("#Email").val();
+             if(newEmail.trim()==""){
+                $("#email_error").html("Please enter Email");
+                $("#email_error").attr("style","display:block");
 
-        }
-    });
+            }
+            else{
+                if(!(newEmail.match(email))){
+                     $("#email_error").html("Please enter valid Email");
+                     $("#email_error").attr("style","display:block");
+                }
+                else{
+                     $("#email_error").html("");
+                     $("#email_error").attr("style","display:none");
+                }
+
+            }
+        });
 
 </script>
