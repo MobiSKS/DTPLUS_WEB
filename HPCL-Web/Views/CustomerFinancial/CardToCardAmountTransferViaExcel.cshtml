@@ -21,7 +21,7 @@
                                         <label class="font-weight-normal col-md-2 col-12">Customer ID <sup class="text-danger">*</sup></label>
                                         <div class="col-md-3 col-12">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.CustomerId, new { @id = "CustomerDefaultVal", @class = "form-control", @readonly="readonly" })
+                                                @Html.TextBoxFor(m => m.CustomerId, new { @id = "CustomerDefaultVal", @class = "form-control", @readonly="readonly", onkeypress = "return isNumberKey(event)" })
                                                 @Html.ValidationMessageFor(m => m.CustomerId, "", new {@id="CustomerIdErr", @class = "text-danger" })
                                             </div>
                                         </div>
@@ -39,7 +39,7 @@
                                    
                                 </div>
                             </div>
-                            <div class="align-items-start flex-wrap" id="uploadSection">
+                            <div class="align-items-start flex-wrap" id="uploadSection" style="display:none;">
                                 <div class="col-lg-12 col-12">
                                     <p class="text-dark px-0 pb-2 mb-3 font-weight-bold" style="border-bottom: 1px solid #ccc;">
                                         Upload Card(s) Balance Transfer File
@@ -110,6 +110,46 @@
 
 <script>
 
+    $(document).ready(function (){
+
+        function isNumberKey(evt) {
+            var charCode = (evt.which) ? evt.which : event.keyCode;
+            if (charCode != 46 && charCode > 31
+                && (charCode < 48 || charCode > 57))
+                return false;
+
+            return true;
+        }
+
+        var custId = $("#CustomerDefaultVal").val();
+
+        $.ajax({
+            url: "@Url.Action("SearchCardToCardBalanceTransfer", "CustomerFinancial")",
+            type: "POST",
+            dataType: "JSON",
+            data: { customerId: custId},
+            success: function (res) {
+
+                console.log("res",res);
+
+                if(res.searchList.success == true){
+                    $("#CustomerDefaultVal").attr("readonly",true);
+                    document.getElementById("uploadSection").style.display = "block";
+                }else{
+                    $("#CustomerDefaultVal").attr("readonly",true);
+                    document.getElementById("uploadSection").style.display = "none";
+                    $("#noRecord").html("");
+                    $("#noRecord").append("<span>" + res.searchList.message + "</span>");
+                    document.getElementById("noRecord").style.display = "block";
+                }
+
+            },
+            error: function (ex) {
+                console.log('Failed' + ex);
+            }
+        });
+    });
+
     function searchCustomer(){
 
         var custId = $("#CustomerDefaultVal").val();
@@ -149,10 +189,10 @@
 
                     if(res.searchList.success == true){
                         $("#CustomerDefaultVal").attr("readonly",true);
-                        $("#uploadSection").show();
+                        document.getElementById("uploadSection").style.display = "block";
                     }else{
                         $("#CustomerDefaultVal").attr("readonly",true);
-                        $("#uploadSection").hide();
+                        document.getElementById("uploadSection").style.display = "none";
                         $("#noRecord").html("");
                         $("#noRecord").append("<span>" + res.searchList.message + "</span>");
                         document.getElementById("noRecord").style.display = "block";
@@ -169,7 +209,7 @@
 
 
         function resetClick(){
-            $("#uploadSection").hide();
+            document.getElementById("uploadSection").style.display = "none";
             $("#CustomerDefaultVal").attr("readonly",false);
             $("#CustomerDefaultVal").val('');
             document.getElementById("ExcelDataError").style.display = "none";
@@ -262,6 +302,23 @@
                         $("tr:first").append("<td class ='errMsg'>Error Msg</td>");
                         $("tr:not(:first)").append("<td class ='errMsg'></td>");
 
+                        $('#ExcelTable tr').each(function(index, tr) {
+                                var FromCardNo = $(tr).find(':nth-child(1)').text();
+                                var ToCardNo = $(tr).find(':nth-child(2)').text();
+                                var FromMobileNo = $(tr).find(':nth-child(3)').text();
+                                var ToMobileNo = $(tr).find(':nth-child(4)').text();
+                                var TransferAmount = $(tr).find(':nth-child(5)').text();
+
+                                if(index == 0){
+                                    if(FromCardNo != "FromCardNumber" || ToCardNo != "ToCardNumber" || FromMobileNo != "FromMobileNumber" || ToMobileNo != "ToMobileNumber" || TransferAmount != "Amount\n"){
+                                        $("#ExcelDataError").html('');
+                                        $("#ExcelDataError").append("<span>Invalid File column Name</span>");
+                                        $("#excel_file").val('');
+                                        document.getElementById("ExcelDataError").style.display = "block";
+                                        return false;
+                                    }
+                                }
+                        });
 
                         if(rows.length != 0){
                             $('#ExcelTable tr:gt(0)').each(function(index, tr) {
@@ -273,13 +330,6 @@
 
                                 var currentIndex = index + 1;
 
-                                //if(FromCardNo.trim() == ''){
-                                //    $("#ExcelDataError").html('');
-                                //    $("#ExcelDataError").append("<span>Record No "+currentIndex+":- From Card Number should not blank</span>");
-                                //    $("#excel_file").val('');
-                                //    document.getElementById("ExcelDataError").style.display = "block";
-                                //    return false;
-                                //}else{
                                     if(FromCardNo.trim() != ''){
                                         if(!FromCardNo.trim().match(/^\d{16}$/)){
                                             $("#ExcelDataError").html('');
@@ -289,15 +339,7 @@
                                             return false;
                                         }
                                     }
-                                //}
-
-                                //if(ToCardNo.trim() == ''){
-                                //    $("#ExcelDataError").html('');
-                                //    $("#ExcelDataError").append("<span>Record No "+currentIndex+":- To Card Number should not blank</span>");
-                                //    $("#excel_file").val('');
-                                //    document.getElementById("ExcelDataError").style.display = "block";
-                                //    return false;
-                                //}else{
+                       
                                     if(ToCardNo.trim() != ''){
                                         if(!ToCardNo.trim().match(/^\d{16}$/)){
                                             $("#ExcelDataError").html('');
@@ -307,15 +349,7 @@
                                             return false;
                                         }
                                     }
-                                //}
-
-                                //if(FromMobileNo.trim() == ''){
-                                //    $("#ExcelDataError").html('');
-                                //    $("#ExcelDataError").append("<span>Record No "+currentIndex+":- From Mobile Number should not blank</span>");
-                                //    $("#excel_file").val('');
-                                //    document.getElementById("ExcelDataError").style.display = "block";
-                                //    return false;
-                                //}else{
+                             
                                     if(FromMobileNo.trim() != ''){
                                         if(!FromMobileNo.trim().match(/^[6789]\d{9}$/)){
                                             $("#ExcelDataError").html('');
@@ -325,15 +359,7 @@
                                             return false;
                                         }
                                     }
-                                //}
-
-                                //if(ToMobileNo.trim() == ''){
-                                //    $("#ExcelDataError").html('');
-                                //    $("#ExcelDataError").append("<span>Record No "+currentIndex+":- To Mobile Number should not blank</span>");
-                                //    $("#excel_file").val('');
-                                //    document.getElementById("ExcelDataError").style.display = "block";
-                                //    return false;
-                                //}else{
+                            
                                     if(ToMobileNo.trim() != ''){
                                         if(!ToMobileNo.trim().match(/^[6789]\d{9}$/)){
                                             $("#ExcelDataError").html('');
@@ -343,7 +369,7 @@
                                             return false;
                                         }
                                     }
-                                //}
+                                
 
                                 if(TransferAmount.trim()==''){
                                     $("#ExcelDataError").html('');
@@ -381,6 +407,22 @@
                                 if(ToCardNo.trim() != "" && ToMobileNo.trim() != ""){
                                     $("#ExcelDataError").html('');
                                     $("#ExcelDataError").append("<span>Invalid Record "+currentIndex+":- Either provide card Number or Mobile Number</span>");
+                                    $("#excel_file").val('');
+                                    document.getElementById("ExcelDataError").style.display = "block";
+                                    return false;
+                                }
+
+                                if(FromCardNo == ToCardNo){
+                                    $("#ExcelDataError").html('');
+                                    $("#ExcelDataError").append("<span>Invalid Record "+currentIndex+":- Duplicate Card Number</span>");
+                                    $("#excel_file").val('');
+                                    document.getElementById("ExcelDataError").style.display = "block";
+                                    return false;
+                                }
+
+                                if(FromMobileNo == ToMobileNo){
+                                    $("#ExcelDataError").html('');
+                                    $("#ExcelDataError").append("<span>Invalid Record "+currentIndex+":- Duplicate Mobile Number</span>");
                                     $("#excel_file").val('');
                                     document.getElementById("ExcelDataError").style.display = "block";
                                     return false;
@@ -466,36 +508,42 @@
                         }else{
 
                             if(res.reasonList.data != null){
-                                $("#checkRecord").html('');
-                                $("#checkRecord").append("<span>"+res.reasonList.message+"</span>");
-                                $('#ExcelTable tr:gt(0)').each(function(index, tr) {
+                                if(res.reasonList.data.length > 0){
+                                    $("#checkRecord").html('');
+                                    $("#checkRecord").append("<span>"+res.reasonList.message+"</span>");
+                                    $('#ExcelTable tr:gt(0)').each(function(index, tr) {
 
-                                    var currentIndex = index + 1;
+                                        var currentIndex = index + 1;
 
-                                    var FromCardNo = $(tr).find(':nth-child(1)').text();
-                                    var FromMobNo = $(tr).find(':nth-child(3)').text();
+                                        var FromCardNo = $(tr).find(':nth-child(1)').text();
+                                        var FromMobNo = $(tr).find(':nth-child(3)').text();
 
-                                    for(var i =0;i<res.reasonList.data.length;i++){
-                                        if(res.reasonList.data[i].status == 0){
+                                        for(var i =0;i<res.reasonList.data.length;i++){
+                                            if(res.reasonList.data[i].status == 0){
 
-                                            if(FromCardNo == res.reasonList.data[i].fromCardNo || FromMobNo == res.reasonList.data[i].fromMobileNo){
-                                                var bindRes = "<span>Record No "+currentIndex+":- "+(res.reasonList.data[i].reason)+"</span><br>";
+                                                if(FromCardNo == res.reasonList.data[i].fromCardNo){
+                                                    var bindRes = "<span>Record No "+currentIndex+":- "+(res.reasonList.data[i].reason)+"</span><br>";
 
-                                                $(tr).find(':nth-child(6)').append(bindRes);
+                                                    $(tr).find(':nth-child(6)').append(bindRes);
+                                                }
                                             }
                                         }
-                                    }
-                                });
+                                    });
 
-                                $('#ExcelTable tr:gt(0)').each(function(index, tr){
-                                    var err = $(tr).find(':nth-child(6)').text();
-                                    if(err == ''){
-                                        $(this).hide();
-                                    }
-                                });
+                                    $('#ExcelTable tr:gt(0)').each(function(index, tr){
+                                        var err = $(tr).find(':nth-child(6)').text();
+                                        if(err == ''){
+                                            $(this).hide();
+                                        }
+                                    });
 
-                                $("#excel_file").val('');
-                                document.getElementById("reponseErr").style.display = "grid";
+                                    $("#excel_file").val('');
+                                    document.getElementById("reponseErr").style.display = "grid";
+                                }else{
+                                    $("#ExcelDataError").html('');
+                                    $("#ExcelDataError").append("<span>"+res.reasonList.message+"</span>");
+                                    document.getElementById("ExcelDataError").style.display = "block";
+                                }
                             }else{
                                 $("#ExcelDataError").html('');
                                 $("#ExcelDataError").append("<span>"+res.reasonList.message+"</span>");

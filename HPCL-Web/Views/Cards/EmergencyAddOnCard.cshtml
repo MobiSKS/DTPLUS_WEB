@@ -123,37 +123,39 @@
 
         if (res.searchList.success == true) {
 
-            $("#bindCheckBox").html('');
-            $("#cardsTxtBox").html('');
+            if(res.searchList.data[0].status == 1){
+                $("#bindCheckBox").html('');
+                $("#cardsTxtBox").html('');
 
-            document.getElementById("noRecord").style.display = "none";
-            document.getElementById("successUpdate").style.display = "none";
-            document.getElementById("errMsg").style.display = "none";
+                document.getElementById("noRecord").style.display = "none";
+                document.getElementById("successUpdate").style.display = "none";
+                document.getElementById("errMsg").style.display = "none";
 
-            for(var i =0; i < res.searchList.data.length; i++){
-                if ( i%5 == 0 )
-                {
-                   $("#bindCheckBox").append("<br>");
+                for(var i =0; i < res.searchList.data.length; i++){
+                    if ( i%5 == 0 )
+                    {
+                       $("#bindCheckBox").append("<br>");
+                    }
+                    $("#bindCheckBox").append("<div class='form-check form-check-inline'><input class='form-check-input' type='checkbox'  id='cardNumerId"+i+"' value='"+res.searchList.data[i].cardNo+"' /><label class='form-check-label' for='cardNumerId"+i+"'>"+res.searchList.data[i].cardNo+"</label></div>");
                 }
-                $("#bindCheckBox").append("<div class='form-check form-check-inline'><input class='form-check-input' type='checkbox'  id='cardNumerId"+i+"' value='"+res.searchList.data[i].cardNo+"' /><label class='form-check-label' for='cardNumerId"+i+"'>"+res.searchList.data[i].cardNo+"</label></div>");
-            }
 
-            var noOfCards = $("#NoOfTatkalCards").val();
+                var noOfCards = $("#NoOfTatkalCards").val();
 
-            console.log("noOfCards",noOfCards)
+                console.log("noOfCards",noOfCards)
 
-            for(var j = 0; j<noOfCards; j++){
-                if ( j%5 == 0 )
-                {
-                    $("#cardsTxtBox").append("<br>");
+                for(var j = 0; j<noOfCards; j++){
+                    if ( j%5 == 0 )
+                    {
+                        $("#cardsTxtBox").append("<br>");
+                    }
+                    $("#cardsTxtBox").append("<div style='margin-top:2%' class='col-6 col-md-3'><input class='form-control cardsBox' maxlength='16' id='cardEntryFieldId"+j+"' onkeypress='return isNumberKey(event)' onchange='cardEntryFieldChange(this," + (j) + ")' name='formnumber' type='text' width='24px'><span style='display:none' class='error' id='cardEntryFieldErr"+j+"'></span></div>");
                 }
-                $("#cardsTxtBox").append("<div style='margin-top:2%' class='col-6 col-md-3'><input class='form-control cardsBox' maxlength='16' id='cardEntryFieldId"+j+"' onkeypress='return isNumberKey(event)' onchange='cardEntryFieldChange(this," + (j) + ")' name='formnumber' type='text' width='24px'><span style='display:none' class='error' id='cardEntryFieldErr"+j+"'></span></div>");
+
+                $("#CustomerDefaultVal").attr("readonly", true);
+                $("#NoOfTatkalCards").attr("readonly", true);
+
+                document.getElementById("cardMapSection").style.display = "block";
             }
-
-            $("#CustomerDefaultVal").attr("readonly", true);
-            $("#NoOfTatkalCards").attr("readonly", true);
-
-            document.getElementById("cardMapSection").style.display = "block";
         }else{
             document.getElementById("cardMapSection").style.display = "none";
             $("#noRecord").html("");
@@ -301,6 +303,7 @@
                 dataType: "JSON",
                 data: { objCards: JSON.stringify(cardArray)},
                 success: function (res) {
+                    console.log("res",res);
                     if(res.reasonList[0].status == 1){
                         document.getElementById("errMsg").style.display = "none";
                         document.getElementById("noRecord").style.display = "none";
@@ -311,7 +314,7 @@
                         document.getElementById("successUpdate").style.display = "none";
                         document.getElementById("noRecord").style.display = "none";
                         $("#errMsg").html('');
-                        $("#successUpdate").append("<span>"+res.reasonList[0].reason+"</span>");
+                        $("#errMsg").append("<span>"+res.reasonList[0].reason+"</span>");
                         document.getElementById("errMsg").style.display = "block";
                     }
                 },

@@ -146,11 +146,11 @@ namespace HPCL.Service.Services
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
-                CustomerId = entity.CustomerId,
+                CustomerId = entity.CustomerId ?? "",
                 ZO = Convert.ToInt32(entity.ZO),
                 RO = Convert.ToInt32(entity.RO),
-                FromDate = entity.FromDate,
-                ToDate = entity.ToDate
+                FromDate = entity.FromDate ?? "",
+                ToDate = entity.ToDate ?? ""
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");

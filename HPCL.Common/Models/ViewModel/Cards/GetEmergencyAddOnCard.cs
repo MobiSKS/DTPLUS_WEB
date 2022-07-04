@@ -14,5 +14,6 @@ namespace HPCL.Common.Models.ViewModel.Cards
         [Required(ErrorMessage = FieldValidation.NoOfTatkalCardsNotEmpty)]
         [RegularExpression(FieldValidation.NoOfTatkalCardsNum, ErrorMessage = FieldValidation.NoOfTatkalCardsNumErrMsg)]
         public string NoOfTatkalCards { get; set; }
+        public string RegionalOfficeId { get; set; }
     }
 }

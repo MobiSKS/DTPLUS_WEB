@@ -472,6 +472,8 @@
         public static string GetRequestAuthorizationDetailsUrl = "api/dtplus/HDFCCreditPouch/get_cp_by_bank_auth";
         public static string RequestAuthorizationActionUrl = "api/dtplus/HDFCCreditPouch/auth_action_cp";
         public static string HdfcInitiateCcmsRechargeUrl = "api/dtplus/HDFCCreditPouch/initiate_cp_recharge";
+        public static string RequestToAvailCheckUrl = "api/dtplus/HDFCCreditPouch/chk_eligibility";
+        public static string RequestToAvailEnrollUrl = "api/dtplus/HDFCCreditPouch/insrt_cp_rqst_by_customer";
         #endregion
 
         #region "CCMS Recharge"
