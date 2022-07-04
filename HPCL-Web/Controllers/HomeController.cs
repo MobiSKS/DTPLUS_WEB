@@ -136,7 +136,7 @@ namespace HPCL_Web.Controllers
 
                                 SessionMenuModel.sessionList.AddRange(sessionData);
                             //}
-
+                            HttpContext.Session.SetString("RegionalOfcId", loginRes[0].RegionalOfficeID);
                             HttpContext.Session.SetString("LocalStorage", num.ToString());
                             HttpContext.Session.SetString("UserName", loginRes[0].UserName);
                             //HttpContext.Session.SetString("LoginType", loginRes[0].LoginType);
