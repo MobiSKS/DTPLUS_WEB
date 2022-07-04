@@ -25,14 +25,14 @@ namespace HPCL.Service.Services
             _requestService = requestServices;
         }
 
-        public async Task<PendingCustResponse> FeeWaiver(PendingCustomer entity)
+        public async Task<PendingCustomer> FeeWaiver(PendingCustomer entity)
         {
             var custDetails = new PendingCustomer
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
-                FormNumber = entity.FormNumber
+                FormNumber = string.IsNullOrEmpty(entity.FormNumber) ? "" : entity.FormNumber
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(custDetails), Encoding.UTF8, "application/json");
@@ -40,7 +40,18 @@ namespace HPCL.Service.Services
 
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
             PendingCustResponse pendingList = obj.ToObject<PendingCustResponse>();
-            return pendingList;
+
+            if (pendingList != null && pendingList.data != null && pendingList.data.Count > 0)
+            {
+                entity.data = pendingList.data;
+            }
+            else
+            {
+                entity.data = new List<PendingCustResponseBody>();
+                entity.Message = obj["Message"].ToString();
+            }
+
+            return entity;
         }
 
         public async Task<BindPendingCustomerRes> BindPendingCustomer(string formNumber)
