@@ -39,7 +39,7 @@
                                    
                                 </div>
                             </div>
-                            <div class="align-items-start flex-wrap" id="uploadSection">
+                            <div class="align-items-start flex-wrap" id="uploadSection" style="display:none;">
                                 <div class="col-lg-12 col-12">
                                     <p class="text-dark px-0 pb-2 mb-3 font-weight-bold" style="border-bottom: 1px solid #ccc;">
                                         Upload Card(s) Balance Transfer File
@@ -110,6 +110,36 @@
 
 <script>
 
+    $(document).ready(function (){
+        var custId = $("#CustomerDefaultVal").val();
+
+        $.ajax({
+            url: "@Url.Action("SearchCardToCardBalanceTransfer", "CustomerFinancial")",
+            type: "POST",
+            dataType: "JSON",
+            data: { customerId: custId},
+            success: function (res) {
+
+                console.log("res",res);
+
+                if(res.searchList.success == true){
+                    $("#CustomerDefaultVal").attr("readonly",true);
+                    document.getElementById("uploadSection").style.display = "block";
+                }else{
+                    $("#CustomerDefaultVal").attr("readonly",true);
+                    document.getElementById("uploadSection").style.display = "none";
+                    $("#noRecord").html("");
+                    $("#noRecord").append("<span>" + res.searchList.message + "</span>");
+                    document.getElementById("noRecord").style.display = "block";
+                }
+
+            },
+            error: function (ex) {
+                console.log('Failed' + ex);
+            }
+        });
+    });
+
     function searchCustomer(){
 
         var custId = $("#CustomerDefaultVal").val();
@@ -149,10 +179,10 @@
 
                     if(res.searchList.success == true){
                         $("#CustomerDefaultVal").attr("readonly",true);
-                        $("#uploadSection").show();
+                        document.getElementById("uploadSection").style.display = "block";
                     }else{
                         $("#CustomerDefaultVal").attr("readonly",true);
-                        $("#uploadSection").hide();
+                        document.getElementById("uploadSection").style.display = "none";
                         $("#noRecord").html("");
                         $("#noRecord").append("<span>" + res.searchList.message + "</span>");
                         document.getElementById("noRecord").style.display = "block";
@@ -169,7 +199,7 @@
 
 
         function resetClick(){
-            $("#uploadSection").hide();
+            document.getElementById("uploadSection").style.display = "none";
             $("#CustomerDefaultVal").attr("readonly",false);
             $("#CustomerDefaultVal").val('');
             document.getElementById("ExcelDataError").style.display = "none";
@@ -478,7 +508,7 @@
                                     for(var i =0;i<res.reasonList.data.length;i++){
                                         if(res.reasonList.data[i].status == 0){
 
-                                            if(FromCardNo == res.reasonList.data[i].fromCardNo || FromMobNo == res.reasonList.data[i].fromMobileNo){
+                                            if(FromCardNo == res.reasonList.data[i].fromCardNo){
                                                 var bindRes = "<span>Record No "+currentIndex+":- "+(res.reasonList.data[i].reason)+"</span><br>";
 
                                                 $(tr).find(':nth-child(6)').append(bindRes);

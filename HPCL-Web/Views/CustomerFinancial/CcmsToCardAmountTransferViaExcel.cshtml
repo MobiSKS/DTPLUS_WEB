@@ -38,17 +38,19 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <label class="font-weight-normal col-md-2 col-12">Available CCMS Balance</label>
-                                        <div class="col-md-3 col-12">
+                                
+                                        <label class="font-weight-normal col-md-2 col-12" id="avalccmslbl" style="display:none;">Available CCMS Balance</label>
+                                        <div class="col-md-3 col-12" id="avalccmsVal" style="display:none;">
                                             <div class="custom_select">
                                                 @Html.TextBoxFor(m => m.AvailableCcmsBalance, new {@id="availableCCMSVal", @class = "form-control-plaintext", @readonly="readonly" })
                                             </div>
                                         </div>
+                                       
                                     </div>
                                     <div class="mb-3 text-center alert alert-danger" id="noRecord" style="display:none;"></div>
                                 </div>
                             </div>
-                            <div class="align-items-start flex-wrap" id="uploadSection">
+                            <div class="align-items-start flex-wrap" id="uploadSection" style="display:none;">
                                 <div class="col-lg-12 col-12">
                                     <p class="text-dark px-0 pb-2 mb-3 font-weight-bold" style="border-bottom: 1px solid #ccc;">
                                         Upload CCMS Balance Transfer File
@@ -113,6 +115,44 @@
 
 <script>
 
+    $(document).ready(function (){
+        var custId = $("#CustomerDefaultVal").val();
+
+        $.ajax({
+            url: "@Url.Action("SearchCcmsToCardBalanceTransfer", "CustomerFinancial")",
+            type: "POST",
+            dataType: "JSON",
+            data: { customerId: custId},
+            success: function (res) {
+
+                console.log("res",res);
+
+                if(res.searchList.success == true){
+                    $("#CustomerDefaultVal").attr("readonly",true);
+
+                    $("#avalccmslbl").show();
+                    $("#avalccmsVal").show();
+                    $("#availableCCMSVal").val('');
+                    $("#availableCCMSVal").val(res.searchList.data.availableCcmsBalanceModelOutput[0].availableCcmsBalance);
+
+                    document.getElementById("uploadSection").style.display = "block";
+                }else{
+                    $("#avalccmsVal").hide();
+                    $("#avalccmslbl").hide();
+                    $("#CustomerDefaultVal").attr("readonly",true);
+                    document.getElementById("uploadSection").style.display = "none";
+                    $("#noRecord").html("");
+                    $("#noRecord").append("<span>" + res.searchList.message + "</span>");
+                    document.getElementById("noRecord").style.display = "block";
+                }
+
+            },
+            error: function (ex) {
+                console.log('Failed' + ex);
+            }
+        });
+    });
+
        function searchCustomer(){
 
         $("#excel_file_error").attr("style", "display:none");
@@ -152,12 +192,15 @@
 
                     if(res.searchList.success == true){
                         $("#CustomerDefaultVal").attr("readonly",true);
-
+                        $("#avalccmsVal").show();
+                        $("#avalccmslbl").show();
                         $("#availableCCMSVal").val('');
                         $("#availableCCMSVal").val(res.searchList.data.availableCcmsBalanceModelOutput[0].availableCcmsBalance);
 
                         $("#uploadSection").show();
                     }else{
+                        $("#avalccmsVal").hide();
+                        $("#avalccmslbl").hide();
                         $("#CustomerDefaultVal").attr("readonly",true);
                         $("#uploadSection").hide();
                         $("#noRecord").html("");
@@ -176,6 +219,8 @@
 
 
     function resetClick(){
+        $("#avalccmsVal").hide();
+        $("#avalccmslbl").hide();
         $("#uploadSection").hide();
         $("#CustomerDefaultVal").attr("readonly",false);
         $("#CustomerDefaultVal").val('');
@@ -431,7 +476,7 @@
 
                                     for(var i =0;i<res.reasonList.data.length;i++){
                                         if(res.reasonList.data[i].status == 0){
-                                            if(Cardno == res.reasonList.data[i].cardNo || MobNo == res.reasonList.data[i].mobileNo){
+                                            if(Cardno == res.reasonList.data[i].cardNo){
                                                 var bindRes = "<span>Record No "+currentIndex+":- "+(res.reasonList.data[i].reason)+"</span><br>";
 
                                                 $(tr).find(':nth-child(4)').append(bindRes);

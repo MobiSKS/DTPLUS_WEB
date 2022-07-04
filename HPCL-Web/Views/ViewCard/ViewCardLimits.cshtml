@@ -31,6 +31,9 @@
                                                 <div class="px-2">
                                                     <button class="btn btn_primary" type="button" id="btnAddMobile"><i class="fa fa-plus">&nbsp;</i> ADD/EDIT MOBILE</button>
                                                 </div>
+                                                <div class="px-2">
+                                                    <button class="btn btn_primary" type="button" onclick="tableToCSVViewCard()"><i class="fa fa-plus">&nbsp;</i> Download Excel</button>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -85,6 +88,8 @@
                  success: function (data, status, xhr) {
                      var v = data;
                      if (status == 'success') {
+
+
                          $("#show_Table").html(data);
                          $('html, body').animate({
                              scrollTop: $("#show_Table").offset().top
@@ -146,5 +151,56 @@
             window.location.href = '@Url.Action("AddOrEditMobile", "ViewCard")?CustomerId='+customerId;
    }));
    
+
+
+   
+
+    function downloadCSVFile(csv_data,fileName) {
+
+        CSVFile = new Blob([csv_data], {
+            type: "text/csv"
+        });
+
+        var temp_link = document.createElement('a');
+
+        temp_link.download = fileName;
+        var url = window.URL.createObjectURL(CSVFile);
+        temp_link.href = url;
+
+        temp_link.style.display = "none";
+        document.body.appendChild(temp_link);
+
+        temp_link.click();
+        document.body.removeChild(temp_link);
+    }
+
+
+
+    function tableToCSVViewCard(){
+        var csv_data = [];
+
+        var rows = document.getElementById("ViewCardTbl").getElementsByTagName('tr');
+
+        console.log("rows",rows);
+
+        if (rows.length > 0) {
+
+            for (var i = 0; i < rows.length; i++) {
+
+                var cols = rows[i].querySelectorAll('td,th');
+
+                var csvrow = [];
+                for (var j = 0; j < cols.length; j++) {
+                    csvrow.push("" + cols[j].innerText);
+                }
+                csv_data.push(csvrow.join(","));
+            }
+
+            csv_data = csv_data.join('\n');
+
+            var fileName = "ViewCard.csv";
+            downloadCSVFile(csv_data, fileName);
+        }
+    }
 
     </script>

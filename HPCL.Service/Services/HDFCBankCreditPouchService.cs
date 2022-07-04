@@ -223,10 +223,9 @@ namespace HPCL.Service.Services
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
-                CustomerId = entity.CustomerId ?? "",
-                FromDate = entity.FromDate ?? "",
-                ToDate = entity.ToDate ?? ""
-                //BankNameId = 1
+                CustomerId = entity.CustomerId,
+                FromDate = entity.FromDate,
+                ToDate = entity.ToDate
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
@@ -250,6 +249,47 @@ namespace HPCL.Service.Services
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
             var response = await _requestService.CommonRequestService(content, WebApiUrl.RequestAuthorizationActionUrl);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<SuccessResponse> reasonList = jarr.ToObject<List<SuccessResponse>>();
+            return reasonList;
+        }
+
+        public async Task<CheckEligibleRes> CheckEligibility(CheckEligibleReq entity)
+        {
+            var searchBody = new CheckEligibleReq
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                CustomerId = entity.CustomerId
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.RequestToAvailCheckUrl);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            CheckEligibleRes reasonList = obj.ToObject<CheckEligibleRes>();
+            return reasonList;
+        }
+
+        public async Task<List<SuccessResponse>> ReqAvailEnroll(string customerId, string planTypeId)
+        {
+            var searchBody = new ReqAvailEnrollReq
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                CustomerId = customerId,
+                FuleConsumptionCapacity = 0,
+                PlanTypeId = Convert.ToInt32(planTypeId),
+                ReferenceNo = null,
+                CustomerRemarks = "Request By Customer",
+                ActionType = 1,
+                RequestedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.RequestToAvailEnrollUrl);
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
             var jarr = obj["Data"].Value<JArray>();
             List<SuccessResponse> reasonList = jarr.ToObject<List<SuccessResponse>>();
