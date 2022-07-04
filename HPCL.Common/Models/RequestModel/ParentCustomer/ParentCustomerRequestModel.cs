@@ -14,5 +14,7 @@ namespace HPCL.Common.Models.RequestModel.ParentCustomer
         public string FromDate { get; set; }
         public string ToDate { get; set; }
         public string FormId { get; set; }
+        public string FormNumber { get; set; }
+        public string RequestId { get; set; }
     }
 }
