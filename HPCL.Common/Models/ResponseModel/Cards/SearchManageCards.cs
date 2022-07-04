@@ -34,5 +34,8 @@ namespace HPCL.Common.Models.ResponseModel.Cards
         public string CardIdentifier { get; set; }
         public string LimitTypeName { get; set; }
         public string CCMSReloadSaleLimitValue { get; set; }
+        public string CardPreference { get; set; }
+        public string IndividualOrgName { get; set; }
+        public string RegionalOfficeName { get; set; }
     }
 }
