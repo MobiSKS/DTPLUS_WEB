@@ -186,5 +186,7 @@ namespace HPCL.Common.Models.ViewModel.AshokLeyLand
 
         public virtual List<SbuTypeResponseModal> SBUTypes { get; set; }
         public int SBUTypeID { get; set; }
+        public int CustomerSalesAreaID { get; set; }
+        
     }
 }

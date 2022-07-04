@@ -1001,10 +1001,10 @@ namespace HPCL.Service.Services
                         {
                             response.NameOnCard = "";
                         }
-                        //if (!string.IsNullOrEmpty(response.DateOfApplication))
-                        //{
-                        //    response.CustomerApplicationDate = response.DateOfApplication;
-                        //}
+                        if (!string.IsNullOrEmpty(response.DateOfApplication))
+                        {
+                            response.CustomerApplicationDate = response.DateOfApplication;
+                        }
                         if (string.IsNullOrEmpty(response.RegionalOfficeName))
                         {
                             response.RegionalOfficeName = "";
