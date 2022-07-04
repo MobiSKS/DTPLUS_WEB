@@ -1096,6 +1096,8 @@ namespace HPCL.Service.Services
             JArray objs = JArray.Parse(JsonConvert.DeserializeObject(str).ToString());
             List<UpdateAlCustomerProfileRequest> arrs = objs.ToObject<List<UpdateAlCustomerProfileRequest>>();
 
+            string dateOfApplication = await _commonActionService.changeDateFormat(arrs[0].DateOfApplication);
+
             var insertServiceBody = new UpdateAlCustomerProfileRequest
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
@@ -1104,8 +1106,8 @@ namespace HPCL.Service.Services
                 CustomerID = arrs[0].CustomerID,
                 ZonalOffice = arrs[0].ZonalOffice,
                 RegionalOffice = arrs[0].RegionalOffice,
-                formNumber = arrs[0].formNumber,
-                DateOfApplication = arrs[0].DateOfApplication,
+                formNumber = "0",
+                DateOfApplication = dateOfApplication,
                 salesArea = arrs[0].salesArea,
                 IndividualOrgNameTitle = arrs[0].IndividualOrgNameTitle,
                 IndividualOrgName = arrs[0].IndividualOrgName,
@@ -1121,8 +1123,8 @@ namespace HPCL.Service.Services
                 CommunicationPincode = arrs[0].CommunicationPincode,
                 CommunicationStateId = arrs[0].CommunicationStateId,
                 CommunicationDistrictId = arrs[0].CommunicationDistrictId,
-                CommunicationPhoneNo = "-",
-                CommunicationFax = "-",
+                CommunicationPhoneNo = arrs[0].CommunicationPhoneNo,
+                CommunicationFax = arrs[0].CommunicationFax,
                 CommunicationMobileNo = arrs[0].CommunicationMobileNo,
                 CommunicationEmailid = arrs[0].CommunicationEmailid
             };

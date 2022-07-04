@@ -206,7 +206,7 @@
                                 <div class="form-group d-flex align-items-center flex-wrap">
                                     <label class="font-weight-normal col-md-5 col-12">Application Date:  </label>
                                     <div class="col-md-7 col-12">
-                                        @Html.TextBoxFor(m => m.CustomerApplicationDate, new { id = "application-date", @class = "form-control", @readonly = true })
+                                        @Html.TextBoxFor(m => m.CustomerApplicationDate, new { @class = "form-control", @readonly = true })
                                         <span class="error" id="CustomerApplicationDate_error"></span>
                                     </div>
                                 </div>
@@ -234,10 +234,11 @@
                                                 <div class="custom_select">
                                                     @Html.DropDownListFor(m => m.IndividualOrgNameTitle, new List<SelectListItem>
                                                     {
-                                                    new SelectListItem() {Text = "Mr", Value="1"},
-                                                    new SelectListItem() {Text = "Mrs", Value="2"},
-                                                    new SelectListItem() {Text = "Ms", Value="3"}
-                                                    }, new { @class = "form-control", @id = "IndividualOrgNameTitle" })
+                                                    new SelectListItem(){ Text = "Title", Value = "-1" },
+                                                    new SelectListItem(){ Text = "Mr", Value = "Mr"},
+                                                    new SelectListItem(){ Text = "Ms", Value = "Ms"},
+                                                    new SelectListItem(){ Text = "M/s", Value = "M/s"},
+                                                    }, null, new { @class = "form-control px-0" })
                                                 </div>
                                                 <span class="error" id="salutaion_error"></span>
                                             </div>
@@ -1118,8 +1119,11 @@ debugger;
                                       text: data.districtName
                                   }).html(data.districtName).appendTo("#CommunicationDistrictId");
                           });
-                          $("#CommunicationDistrictId").val(districtId);
                           $("#CommunicationDistrictId")[0].sumo.reload();
+                          //$("#CommunicationDistrictId").val(districtId);
+                           setTimeout(function(){
+                                $('#CommunicationDistrictId')[0].sumo.selectItem(districtId);
+                            },500);
                       }
                       else {
                           console.log(v);
@@ -1259,7 +1263,7 @@ debugger;
                   if (res.length > 0) {
                       for (var i = 0; i < res.length; i++) {
                           if (res[i].customerID == CustomerId) {
-                              GetComDistrict(res[i].communicationStateId, res[i].communicationDistrictId);
+                              //GetComDistrict(res[i].communicationStateId, res[i].communicationDistrictId);
                               //GetPerDistrict(res[i].permanentStateId, res[i].permanentDistrictId);
                               //GetSubType(res[i].customerTypeId, res[i].customerSubtypeId);
                               customerType=res[i].customerTypeName;
@@ -1394,10 +1398,10 @@ debugger;
                               $('#customertype-name').val(res[i].customerTypeName);
                               //$('#sales-area').val(res[i].salesArea);
                               $('#form-number').val(res[i].formNumber);
-                             // $('#application-date').val(res[i].dateOfApplication);
+                             // $('#CustomerApplicationDate').val(res[i].dateOfApplication);
                               //var dApplication = new Date(res[i].dateOfApplication);
-                              //document.getElementById('application-date').valueAsDate = new Date(dApplication.getFullYear(), dApplication.getMonth(), dApplication.getDate(), 12);
-                              document.getElementById('application-date').value=res[i].customerApplicationDate;
+                              //document.getElementById('CustomerApplicationDate').valueAsDate = new Date(dApplication.getFullYear(), dApplication.getMonth(), dApplication.getDate(), 12);
+                              document.getElementById('CustomerApplicationDate').value=res[i].customerApplicationDate;
                               //var son = new Date(res[i].approvedon);
                               document.getElementById('CustomerSignedOn').value=res[i].signedOn;
                               $('#IndividualOrgName').val(res[i].individualOrgName);
@@ -1450,7 +1454,10 @@ debugger;
                                 $("#CustomerTypeId")[0].sumo.reload();
 
                               //$('#residenceStatus').val(res[i].residenceStatus);
-                              $('#CustomerResidenceStatus')[0].sumo.selectItem(res[i].residenceStatus);
+                              if(res[i].residenceStatus!=null)
+                              {
+                                $('#CustomerResidenceStatus')[0].sumo.selectItem(res[i].residenceStatus);
+                              }
                               $('#CustomerTbentityID')[0].sumo.selectItem(res[i].typeOfBusinessEntityId);
                               //$('#customerSubType').val(res[i].customerSubtype);
                               //$('#customerSubType')[0].sumo.selectItem(res[i].customerSubtype);
@@ -1526,22 +1533,25 @@ debugger;
                               //$('#PerOrRegAddressPhoneNumber').val(res[i].permanentPhoneNo);
                               //$('#PermanentFaxCode').val(res[i].permanentFaxCode);
                               //$('#PermanentFax').val(res[i].permanentFax);
-                              var individualOrgNameTitleId = "0";
-                              if (res[i].individualOrgNameTitle != "") 
-                              {
-                                  if (res[i].individualOrgNameTitle == "Mr" || res[i].individualOrgNameTitle == "Mr.")
-                                      individualOrgNameTitleId = "1";
-                                  else if (res[i].individualOrgNameTitle == "Mrs" || res[i].individualOrgNameTitle == "Mrs.")
-                                      individualOrgNameTitleId = "2";
-                                  else if (res[i].individualOrgNameTitle == "Ms" || res[i].individualOrgNameTitle == "Ms.")
-                                      individualOrgNameTitleId = "3";
-                                  else
-                                      individualOrgNameTitleId = "1";
-                              }
-                              console.log(individualOrgNameTitleId);
+                              //var individualOrgNameTitleId = "0";
+                              //if (res[i].individualOrgNameTitle != "") 
+                              //{
+                              //    if (res[i].individualOrgNameTitle == "Mr" || res[i].individualOrgNameTitle == "Mr.")
+                              //        individualOrgNameTitleId = "1";
+                              //    else if (res[i].individualOrgNameTitle == "Mrs" || res[i].individualOrgNameTitle == "Mrs.")
+                              //        individualOrgNameTitleId = "2";
+                              //    else if (res[i].individualOrgNameTitle == "Ms" || res[i].individualOrgNameTitle == "Ms.")
+                              //        individualOrgNameTitleId = "3";
+                              //    else
+                              //        individualOrgNameTitleId = "1";
+                              //}
+                              //console.log(individualOrgNameTitleId);
                               //$('#IndividualOrgNameTitle').val(individualOrgNameTitleId);
-                              $('#IndividualOrgNameTitle')[0].sumo.selectItem(individualOrgNameTitleId);
-                              $('#CustomerResidenceStatus').val(res[i].residenceStatus);
+                              $('#IndividualOrgNameTitle')[0].sumo.selectItem(res[i].individualOrgNameTitle);
+                              if(res[i].residenceStatus!=null)
+                              {
+                                 $('#CustomerResidenceStatus')[0].sumo.selectItem(res[i].residenceStatus);
+                              }
                               //$('#CustomerTypeOfFleetID').val(res[i].keyOfficialTypeOfFleetId);
                               //$('#CustomerTypeOfFleetID')[0].sumo.selectItem(res[i].keyOfficialTypeOfFleetId);
                               //if (res[i].areaOfOperation != "") 
@@ -1560,6 +1570,7 @@ debugger;
                               //console.log(res[i]);
                               //$('#TypeOfCustomerID')[0].sumo.selectItem(res[i].typeOfCustomerID);
                               //$('#TierOfCustomerID')[0].sumo.selectItem(res[i].tierOfCustomerID);
+                              GetComDistrict(res[i].communicationStateId, res[i].communicationDistrictId);
                           }
                       }
 console.log(customerType);                     
@@ -2542,46 +2553,63 @@ $("#CustomerNameOnCard").on("blur", function () {
         {
           $('#Address-tab').tab('show');
         }
-
+debugger;
         if (ret==true) 
         {
 
-            var DealerCode = $("#dealerCodedFetchVal").val();
-            var DealerName = $("#dealerNameFetchVal").val();
-            var Address1 = $("#add1Val").val();
-            var Address2 = $("#add2Val").val();
-            var Address3 = $("#add3Val").val();
-            var ZonalOfficeId = $(".zonalVal").val();
-            var RegionalOfficeId = $(".regionalVal").val();
-            var CityName = $("#cityFetchVal").val();
-            var StateId = $(".stateVal").val();
-            var DistrictId = $(".distVal").val();
-            var MobileNo = $("#mobFetchVal").val();
-            var Pin = $("#pinFetchVal").val();
-            var EmailId = $("#emailFetchVal").val();
-
+            var customerID = $("#CustomerIdSelected").val();
+            var zonalOffice = $("#CustomerZonalOfficeID").val();
+            var regionalOffice = $("#CustomerRegionalOfficeID").val();
+            var dateOfApplication = $("#CustomerApplicationDate").val();
+            var salesArea = $("#CustomerSalesAreaID").val();
+            var individualOrgNameTitle = $("#IndividualOrgNameTitle").val();
+            var individualOrgName = $("#IndividualOrgName").val();
+            var customerNameOnCard = $("#CustomerNameOnCard").val();
+            var communicationAddress1 = $("#CommunicationAddress1").val();
+            var communicationAddress2 = $("#CommunicationAddress2").val();
+            var communicationAddress3 = $("#CommunicationAddress3").val();
+            var communicationLocation = $("#CommunicationLocation").val();
+            var communicationCity = $("#CommunicationCity").val();
+            var communicationPinCode = $("#CommunicationPinCode").val();
+            var communicationStateID = $("#CommunicationStateID").val();
+            var communicationDistrictId = $("#CommunicationDistrictId").val();
+            var communicationMobileNumber = $("#CommunicationMobileNumber").val();
+            var communicationEmail = $("#CommunicationEmail").val();
+            var customerIncomeTaxPan = $("#CustomerIncomeTaxPan").val();
+            var customerResidenceStatus = $("#CustomerResidenceStatus").val();
+            var customerTbentityID = $("#CustomerTbentityID").val();
+            
             var getAllData = [];
 
             getAllData.push({
-                DealerCode: DealerCode,
-                DealerName: DealerName,
-                Address1: Address1,
-                Address2: Address2,
-                Address3: Address3,
-                ZonalOfficeId: ZonalOfficeId,
-                RegionalOfficeId: RegionalOfficeId,
-                CityName: CityName,
-                StateId: StateId,
-                DistrictId: DistrictId,
-                MobileNo: MobileNo,
-                Pin: Pin,
-                EmailId: EmailId
+                CustomerID: customerID,
+                ZonalOffice: zonalOffice,
+                RegionalOffice: regionalOffice,
+                DateOfApplication: dateOfApplication,
+                salesArea : salesArea,
+                IndividualOrgNameTitle: individualOrgNameTitle,
+                IndividualOrgName : individualOrgName,
+                NameOnCard : customerNameOnCard,
+                TypeOfBusinessEntity : customerTbentityID,
+                ResidenceStatus : customerResidenceStatus,
+                IncomeTaxPan : customerIncomeTaxPan,
+                CommunicationAddress1 : communicationAddress1,
+                CommunicationAddress2 : communicationAddress2,
+                CommunicationAddress3 : communicationAddress3,
+                CommunicationLocation : communicationLocation,
+                CommunicationCityName : communicationCity,
+                CommunicationPincode  : communicationPinCode,
+                CommunicationStateId  : communicationStateID,
+                CommunicationDistrictId : communicationDistrictId,
+                CommunicationPhoneNo : "-",
+                CommunicationFax : "-",
+                CommunicationMobileNo : communicationMobileNumber,
+                CommunicationEmailid : communicationEmail
             })
 
 
-
             $.ajax({
-                url: "@Url.Action("AlEnroll", "AshokLeyLand")",
+                url: "@Url.Action("UpdateAlCostomerProfile", "AshokLeyLand")",
                 type: "POST",
                 data: { str: JSON.stringify(getAllData) },
                 dataType: "JSON",
