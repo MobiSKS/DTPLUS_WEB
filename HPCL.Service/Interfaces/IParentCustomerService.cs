@@ -22,6 +22,7 @@ namespace HPCL.Service.Interfaces
         Task<ViewCustomerCardorDispatchDetails> GetDispatchDetails(string CustomerId, string RequestId);
         Task<ManageProfileViewModel> UpdateParentCustomer(string CustomerId, string RequestId);
         Task<ManageProfileViewModel> UpdateParentCustomer(ManageProfileViewModel cust);
-        Task<ParentCustomerReportModel> SearchParentCustomerRequestStatus(string ZonalOfficeId, string RegionalOfficeId, string FromDate, string ToDate, string FormNumber);
+        Task<ParentCustomerReportModel> SearchParentCustomerRequestStatus(string ZonalOfficeId, string RegionalOfficeId, string FromDate, string ToDate, string FormNumber,string SBUtypeId);
+        Task<ParentCustomerReportModel> SearchParentCustomerRequestStatusReport(string FormNumber, string RequestId);
     }
 }

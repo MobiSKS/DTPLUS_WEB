@@ -1,4 +1,5 @@
-﻿using HPCL.Common.Models.CommonEntity.ResponseEnities;
+﻿using HPCL.Common.Models.CommonEntity;
+using HPCL.Common.Models.CommonEntity.ResponseEnities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,8 +12,8 @@ namespace HPCL.Common.Models.ViewModel.ParentCustomer
     {
         public ParentCustomerStatusReport()
         {
-            ZonalOffices = new List<ZonalOfficeResponseModal>();
-            ZonalOffices.Add(new ZonalOfficeResponseModal
+            ZonalOffices = new List<CustomerZonalOfficeModel>();
+            ZonalOffices.Add(new CustomerZonalOfficeModel
             {
                 ZonalOfficeID = 0,
                 ZonalOfficeName = "--All--"
@@ -33,7 +34,7 @@ namespace HPCL.Common.Models.ViewModel.ParentCustomer
         public string FromDate { get; set; }
         public string ToDate { get; set; }
       
-        public virtual List<ZonalOfficeResponseModal> ZonalOffices { get; set; }
+        public virtual List<CustomerZonalOfficeModel> ZonalOffices { get; set; }
 
         
     }
