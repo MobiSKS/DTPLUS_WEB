@@ -23,7 +23,7 @@
                     <li id="Address" class="nav-item">
                         <a class="nav-link disabled" id="Address-tab" data-toggle="tab" href="#AddressSection" role="tab">Address</a>
                     </li>
-                    <li id="KeyOfficialDetails" class="nav-item">
+                    <li id="KeyOfficialDetails" class="nav-item" style="display:none">
                         <a class="nav-link disabled" id="OfficialDetails-tab" data-toggle="tab" href="#OfficialDetails" role="tab">Key Official Details</a>
                     </li>
                 </ul>
@@ -39,7 +39,7 @@
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                         <label class="font-weight-normal col-md-4 col-12 mb-0">Customer ID:</label>
                                         <div class="col-md-7 col-12">
-                                            @Html.TextBoxFor(m => m.CustomerId, new { @id = "CustomerId", @class = "form-control", maxlength = "10" })
+                                            @Html.TextBoxFor(m => m.CustomerId, new { @class = "form-control", maxlength = "10" })
                                             @Html.ValidationMessageFor(m => m.CustomerId, "", new {@id="custErrMsg", @class = "text-danger" })
                                         </div>
                                     </div>
@@ -48,7 +48,7 @@
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                         <label class="font-weight-normal col-md-4 col-12 offset-md-1 mb-0">Name on Card:</label>
                                         <div class="col-md-7 col-12">
-                                            @Html.TextBoxFor(m => m.NameOnCard, new {@id="nameOnCard", @class = "form-control", maxlength = "30" })
+                                            @Html.TextBoxFor(m => m.NameOnCard, new { id="nameOnCard",@class = "form-control", maxlength = "22" })
                                             @Html.ValidationMessageFor(m => m.NameOnCard, "", new {@id="NameOnCardErrMsg", @class = "text-danger" })
                                         </div>
                                     </div>
@@ -68,11 +68,6 @@
                       </div>
 
 
-                    @*<div class="d-flex align-items-center justify-content-center mt-3">
-                        <div class="px-2">
-                        <button class="btn" type="submit" id="btnSearch" name="submit" onclick="document.getElementById('CustomerSearch').style.display = 'block';" style="background-color:#084693;color:white;">SEARCH</button>
-                        </div>
-                        </div>*@
                     <div id="CustomerSearch" style="display:none;">
                         <table class="table table-striped table-bordered d-md-table d-block text-nowrap display table-responsive" style="width:100%;">
                             <thead>
@@ -146,28 +141,29 @@
                             <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Application Details</p>
                             <div class="py-3 px-2 px-md-4">
                                 <div class="form-group d-flex align-items-center flex-wrap">
+                                    <label class="font-weight-normal col-md-5 col-12">SBU Type: <sup class="text-danger">*</sup></label>
+                                    <div class="col-md-7 col-12">
+                                        @Html.DropDownListFor(m => m.SBUTypeID, new SelectList(Model.SBUTypes, "SBUId", "SBUName"), new { @class = "form-control" })
+                                    </div>
+                                </div>
+                                <div class="form-group d-flex align-items-center flex-wrap">
                                     <label class="font-weight-normal col-md-5 col-12">Zonal Office: <sup class="text-danger">*</sup></label>
                                     <div class="col-md-7 col-12">
-                                        @*@Html.DropDownListFor(m => m.CustomerZonalOfficeID, new SelectList(Model.CustomerZonalOfficeMdl, "ZonalOfficeID", "ZonalOfficeName"), new { @id = "CustomerZonalOfficeID", @class = "form-control", disabled = "true" })*@
-                                        @Html.DropDownListFor(m => m.CustomerZonalOfficeID, Enumerable.Empty<SelectListItem>(), new { @class = "form-control", @readonly = "readonly", disabled = "disabled" })
+                                        @Html.DropDownListFor(m => m.CustomerZonalOfficeID, Enumerable.Empty<SelectListItem>(), new { @class = "form-control" })
                                     </div>
                                 </div>
                                 <div class="form-group d-flex align-items-center flex-wrap">
                                     <label class="font-weight-normal col-md-5 col-12">Regional Office: <sup class="text-danger">*</sup></label>
                                     <div class="col-md-7 col-12">
-                                        @*<div class="custom_select">*@
-                                        @*@Html.DropDownListFor(m => m.CustomerRegionalOfficeID, new SelectList(Model.CustomerRegionMdl, "RegionalOfficeID", "RegionalOfficeName"), new { @id = "CustomerRegionalOfficeID", @class = "form-control", disabled = "true" })*@
-                                        @*  <select id="CustomerRegionalOfficeID" class="form-control"></select>*@
-                                        @*</div>*@
-                                        @Html.DropDownListFor(m => m.CustomerRegionalOfficeID, Enumerable.Empty<SelectListItem>(), new { @id = "CustomerRegionalOfficeID", @class = "form-control", disabled = "true" })
+                                        @Html.DropDownListFor(m => m.CustomerRegionalOfficeID, Enumerable.Empty<SelectListItem>(), new { @id = "CustomerRegionalOfficeID", @class = "form-control" })
                                     </div>
                                 </div>
                                 <div class="form-group d-flex align-items-center flex-wrap">
                                     <label class="font-weight-normal col-md-5 col-12">Customer Type: <sup class="text-danger">*</sup></label>
                                     <div class="col-md-7 col-12">
                                         <div class="custom_select">
-                                            @*@Html.DropDownListFor(m => m.CustomertypeId, new SelectList(Model.CustomerTypeMdl, "CustomerTypeID", "CustomerTypeName"), new { @id = "CustomerTypeID", @class = "form-control", disabled = "true" })*@
                                             @Html.DropDownListFor(m => m.CustomerTypeId, Enumerable.Empty<SelectListItem>(), new { @class = "form-control", @readonly = "readonly", disabled = "disabled" })
+                                            @Html.HiddenFor(m => m.CustomerTypeId)
                                         </div>
                                     </div>
                                 </div>
@@ -176,6 +172,7 @@
                                     <div class="col-md-7 col-12">
                                         <div class="custom_select">
                                             @Html.DropDownListFor(m => m.CustomerSubtypeId, Enumerable.Empty<SelectListItem>(), new { @class = "form-control", @readonly = "readonly", disabled = "disabled" })
+                                            @Html.HiddenFor(m => m.CustomerSubtypeId)
                                         </div>
                                     </div>
                                 </div>
@@ -184,7 +181,9 @@
                                     <label class="font-weight-normal col-md-5 col-12">Sales Area: <sup class="text-danger">*</sup></label>
                                     <div class="col-md-7 col-12">
                                         @Html.TextBoxFor(m => m.SalesArea, new { id = "sales-area", @class = "form-control", @readonly = true })
+                                        @*@Html.DropDownListFor(m => m.CustomerSalesAreaID, Enumerable.Empty<SelectListItem>(), new { @class = "form-control" })*@
                                     </div>
+                                    <span class="error" id="salesArea_error"></span>
                                 </div>
                                 </div>
                                 <div id="divFormNumber">
@@ -192,7 +191,7 @@
                                     <label class="font-weight-normal col-md-5 col-12">Form Number: <sup class="text-danger">*</sup></label>
                                     <div class="col-md-7 col-12">
                                         @Html.TextBoxFor(m => m.CustomerFormNumber, new { id = "form-number", @class = "form-control", @readonly = true })
-                                        <span class="error" id="salesArea_error"></span>
+                                        <span class="error" id="CustomerFormNumber_error"></span>
                                     </div>
                                 </div>
                                 </div>
@@ -200,18 +199,16 @@
                                 <div class="form-group d-flex align-items-center flex-wrap">
                                     <label class="font-weight-normal col-md-5 col-12">Application Date:  </label>
                                     <div class="col-md-7 col-12">
-                                        @*<input type="text" name="salesArea" class="form-control">*@
                                         @Html.TextBoxFor(m => m.CustomerApplicationDate, new { id = "application-date", @class = "form-control", @readonly = true })
-                                        <span class="error" id="salesArea_error"></span>
+                                        <span class="error" id="CustomerApplicationDate_error"></span>
                                     </div>
                                 </div>
                                 <div id="divSignedOn">
                                 <div class="form-group d-flex align-items-center flex-wrap">
                                     <label class="font-weight-normal col-md-5 col-12">Signed On: <sup class="text-danger">*</sup></label>
                                     <div class="col-md-7 col-12">
-                                        @Html.TextBoxFor(m => m.CustomerSignedOn, new { id = "signed-on", @class = "form-control", @readonly = true })
-                                        @*<input type="date" name="applicationDate" class="form-control">*@
-                                        <span class="error" id="applicationDate_error"></span>
+                                        @Html.TextBoxFor(m => m.CustomerSignedOn, new { @class = "form-control fromDate", @readonly = true })
+                                        <span class="error" id="CustomerSignedOn_error"></span>
                                     </div>
                                 </div>
                                 </div>
@@ -233,15 +230,14 @@
                                                     new SelectListItem() {Text = "Mr", Value="1"},
                                                     new SelectListItem() {Text = "Mrs", Value="2"},
                                                     new SelectListItem() {Text = "Ms", Value="3"}
-                                                    }, new { @class = "form-control", @id = "IndividualOrgNameTitle", disabled = "true" })
+                                                    }, new { @class = "form-control", @id = "IndividualOrgNameTitle" })
                                                 </div>
                                                 <span class="error" id="salutaion_error"></span>
                                             </div>
                                             <div class="col-7 pl-0">
-                                                @Html.TextBoxFor(m => m.IndividualOrgName, new { @id = "individual-org-name", @class = "form-control", @readonly = true })
+                                                @Html.TextBoxFor(m => m.IndividualOrgName, new { @class = "form-control", maxlength = "80" })
                                                 <span class="error" id="individualName_error"></span>
                                             </div>
-                                            @*<a href="#" class="form_info" title="Name of Individual/Org.">?</a>*@
                                         </div>
                                     </div>
                                 </div>
@@ -249,8 +245,8 @@
                                 <div class="form-group d-flex align-items-center flex-wrap">
                                     <label class="font-weight-normal col-md-5 col-12">Name on Card: <sup class="text-danger">*</sup></label>
                                     <div class="col-md-7 col-12">
-                                        @Html.TextBoxFor(m => m.CustomerNameOnCard, new { @id = "name-on-card", @class = "form-control", @readonly = true })
-                                        <span class="error" id="nameOnCard_error"></span> @*<a href="#" class="form_info" title="As it will appear on the card, characters including spaces not to exceed 22">?</a>*@
+                                        @Html.TextBoxFor(m => m.CustomerNameOnCard, new { @class = "form-control", maxlength = "22" })
+                                        <span class="error" id="nameOnCard_error"></span>
                                     </div>
                                 </div>
                                 </div>
@@ -259,9 +255,9 @@
                                     <label class="font-weight-normal col-md-5 col-12">Type of Business Entity: <sup class="text-danger">*</sup></label>
                                     <div class="col-md-7 col-12">
                                         <div class="custom_select">
-                                            @Html.DropDownListFor(m => m.CustomerTbentityID, new SelectList(Model.CustomerTbentityMdl, "TBEntityID", "TBEntityName"), new { @id = "table-entity-id", @class = "form-control", disabled = "true" })
+                                            @Html.DropDownListFor(m => m.CustomerTbentityID, new SelectList(Model.CustomerTbentityMdl, "TBEntityID", "TBEntityName"), new { @class = "form-control" })
                                         </div>
-                                        <span class="error" id="typeOfbusiness_error"></span> @*<a href="#" class="form_info" title="Type of Business Entity">?</a>*@
+                                        <span class="error" id="typeOfbusiness_error"></span>
                                     </div>
                                 </div>
                                 </div>
@@ -270,12 +266,13 @@
                                     <label class="font-weight-normal col-md-5 col-12">Residence Status:</label>
                                     <div class="col-md-7 col-12">
                                         <div class="custom_select">
-                                            @Html.DropDownListFor(m => m.CustomerResidenceStatus, new List<SelectListItem>
-                                            {
-                                            new SelectListItem() {Text = "NRI", Value="NRI"},
-                                            new SelectListItem() {Text = "Indian", Value="Indian"}
-                                            }, new { @class = "form-control", @id = "CustomerResidenceStatus", disabled = "true" })
+                                            @Html.DropDownListFor(x => x.CustomerResidenceStatus, new[]{
+                                                new SelectListItem(){ Text = "Select Residence Status", Value = "-1"},
+                                                new SelectListItem(){ Text = "Indian", Value = "Indian", Selected = true},
+                                                new SelectListItem(){ Text = "NRI", Value = "NRI"},
+                                                }, null, new { @class = "form-control" })
                                         </div>
+                                        <span class="error" id="residenceStatus_error"></span>
                                     </div>
                                 </div>
                                 </div>
@@ -283,9 +280,12 @@
                                 <div id="divIncomeTaxPAN">
                                 <div class="form-group d-flex align-items-center flex-wrap">
                                     <label class="font-weight-normal col-md-5 col-12">Income Tax PAN:<sup class="text-danger">*</sup></label>
-                                    <div class="col-md-7 col-12">
-                                        @Html.TextBoxFor(m => m.CustomerIncomeTaxPan, new { @id = "income-tax-pan", @class = "form-control", @readonly = true })
+                                    <div class="col-md-5 col-12" id="dvPan">
+                                        @Html.TextBoxFor(m => m.CustomerIncomeTaxPan, new { @class = "form-control", @style = "text-transform:uppercase", autocomplete = "off" })
                                         <span class="error" id="incomeTaxPan_error"></span>
+                                    </div>
+                                    <div class="col-md-2 col-12 pl-md-0">
+                                        <button class="btn btn_primary" type="button" id="btnVerify" onclick="ValidatePAN()">Verify</button>
                                     </div>
                                 </div>
                                 </div>
@@ -337,8 +337,8 @@
                                             <div class="form-group d-flex align-items-center flex-wrap">
                                                 <label class="font-weight-normal offset-md-1 col-md-4 col-12" id="lblCAddress1">Address 1:<sup class="text-danger">*</sup></label>
                                                 <div class="col-md-7 col-12">
-                                                    @Html.TextBoxFor(m => m.CommunicationAddress1, new { @id = "CommunicationAddress1", @class = "form-control", @readonly = true })
-                                                    <div class="error" id="perma_address1_error"></div>
+                                                    @Html.TextBoxFor(m => m.CommunicationAddress1, new { @class = "form-control", maxlength = "50" })
+                                                    <span class="error" id="comm_address1_error"></span>
                                                 </div>
                                             </div>
                                         </div>
@@ -346,8 +346,8 @@
                                             <div class="form-group d-flex align-items-center flex-wrap">
                                                 <label class="font-weight-normal col-md-5 col-12">Address 2:<sup class="text-danger">*</sup></label>
                                                 <div class="col-md-7 col-12">
-                                                    @Html.TextBoxFor(m => m.CommunicationAddress2, new { @id = "CommunicationAddress2", @class = "form-control", @readonly = true })
-                                                    @*<input type="text" name="perma_address2" class="form-control">*@
+                                                    @Html.TextBoxFor(m => m.CommunicationAddress2, new { @class = "form-control", maxlength = "50" })
+                                                    <span class="error" id="comm_address2_error"></span>
                                                 </div>
                                             </div>
                                         </div>
@@ -355,8 +355,8 @@
                                             <div class="form-group d-flex align-items-center flex-wrap">
                                                 <label class="font-weight-normal offset-md-1 col-md-4 col-12">Address 3:</label>
                                                 <div class="col-md-7 col-12">
-                                                    @Html.TextBoxFor(m => m.CommunicationAddress3, new { @id = "CommunicationAddress3", @class = "form-control", @readonly = true })
-                                                    @*<input type="text" name="perma_address3" class="form-control">*@
+                                                    @Html.TextBoxFor(m => m.CommunicationAddress3, new { @class = "form-control", maxlength = "50" })
+                                                    <span class="error" id="comm_address3_error"></span>
                                                 </div>
                                             </div>
                                         </div>
@@ -364,9 +364,8 @@
                                             <div class="form-group d-flex align-items-center flex-wrap">
                                                 <label class="font-weight-normal col-md-5 col-12">Location:</label>
                                                 <div class="col-md-7 col-12">
-                                                    @Html.TextBoxFor(m => m.CommunicationLocation, new { @id = "CommunicationLocation", @class = "form-control", @readonly = true })
-                                                    @*<input type="text" name="perma_location" class="form-control">*@
-                                                    <span class="error" id="perma_location_error"></span>
+                                                    @Html.TextBoxFor(m => m.CommunicationLocation, new { @class = "form-control", maxlength = "20" })
+                                                    <span class="error" id="comm_location_error"></span>
                                                 </div>
                                             </div>
                                         </div>
@@ -374,18 +373,17 @@
                                             <div class="form-group d-flex align-items-center flex-wrap">
                                                 <label class="font-weight-normal offset-md-1 col-md-4 col-12">City:<sup class="text-danger">*</sup></label>
                                                 <div class="col-md-7 col-12">
-                                                    @Html.TextBoxFor(m => m.CommunicationCity, new { @id = "CommunicationCity", @class = "form-control", @readonly = true })
-                                                    @*<input type="text" name="perma_city" class="form-control">*@
-                                                    <span class="error" id="perma_city_error"></span>
+                                                    @Html.TextBoxFor(m => m.CommunicationCity, new { @class = "form-control", maxlength = "20" })
+                                                    <span class="error" id="comm_city_error"></span>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-md-6 col-12" id="divCPinCode">
                                             <div class="form-group d-flex align-items-center flex-wrap">
-                                                <label class="font-weight-normal col-md-5 col-12" id="lblCPinCode">Pin code:<sup class="text-danger">*</sup></label>
+                                                <label class="font-weight-normal col-md-5 col-12" id="lblCPinCode">PIN Code:<sup class="text-danger">*</sup></label>
                                                 <div class="col-md-7 col-12">
-                                                    @Html.TextBoxFor(m => m.CommunicationPinCode, new { @id = "CommunicationPinCode", @class = "form-control", @readonly = true })
-                                                    <span class="error" id="perma_pincode_error"></span>
+                                                    @Html.TextBoxFor(m => m.CommunicationPinCode, new { @class = "form-control", maxlength = "6", onkeypress = "return isNumberKey(event)" })
+                                                    <span class="error" id="comm_pincode_error"></span>
                                                 </div>
                                             </div>
                                         </div>
@@ -394,9 +392,9 @@
                                                 <label class="font-weight-normal offset-md-1 col-md-4 col-12">State:<sup class="text-danger">*</sup></label>
                                                 <div class="col-md-7 col-12">
                                                     <div class="custom_select">
-                                                        @Html.DropDownListFor(m => m.CommunicationStateID, new SelectList(Model.CustomerStateMdl, "StateID", "StateName"), new { @id = "CommunicationStateID", @class = "form-control", disabled = "true" })
+                                                        @Html.DropDownListFor(m => m.CommunicationStateID, new SelectList(Model.CustomerStateMdl, "StateID", "StateName"), new { @id = "CommunicationStateID", @class = "form-control" })
                                                     </div>
-                                                    <span class="error" id="perma_state_error"></span>
+                                                    <span class="error" id="comm_states_error"></span>
                                                 </div>
                                             </div>
                                         </div>
@@ -405,10 +403,9 @@
                                                 <label class="font-weight-normal col-md-5 col-12">District:<sup class="text-danger">*</sup></label>
                                                 <div class="col-md-7 col-12">
                                                     <div class="custom_select">
-                                                        @Html.DropDownListFor(m => m.CommunicationDistrictId, new SelectList(Model.CustomerDistrictMdl, "DistrictID", "DistrictName"), new { @id = "CommunicationDistrictId", @class = "form-control", disabled = "true" })
-                                                        @*<select id="CommunicationDistrictId" class="form-control"></select>*@
+                                                        @Html.DropDownListFor(m => m.CommunicationDistrictId, new SelectList(Model.CustomerDistrictMdl, "DistrictID", "DistrictName"), new { @id = "CommunicationDistrictId", @class = "form-control" })
                                                     </div>
-                                                    <span class="error" id="perma_district_error"></span>
+                                                    <span class="error" id="comm_district_error"></span>
                                                 </div>
                                             </div>
                                         </div>
@@ -433,7 +430,7 @@
                                                 <label class="font-weight-normal offset-md-1 col-md-4 col-12" id="lblCMobile">Mobile: <sup class="text-danger">*</sup></label>
                                                 <div class="col-md-7 col-12">
                                                     <div class="custom_select">
-                                                        @Html.TextBoxFor(m => m.CommunicationMobileNumber, new { @id = "CommunicationMobileNumber", @class = "form-control", @readonly = true })
+                                                        @Html.TextBoxFor(m => m.CommunicationMobileNumber, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)" })
                                                         <div class="error" id="comm_mobileNumber_error"></div>
                                                     </div>
                                                 </div>
@@ -443,7 +440,7 @@
                                             <div class="form-group d-flex align-items-center flex-wrap">
                                                 <label class="font-weight-normal col-md-5 col-12" id="lblCEmail">Email:<sup class="text-danger">*</sup></label>
                                                 <div class="col-md-7 col-12">
-                                                    @Html.TextBoxFor(m => m.CommunicationEmail, new { @id = "CommunicationEmail", @class = "form-control", @readonly = true })
+                                                    @Html.TextBoxFor(m => m.CommunicationEmail, new { @id = "CommunicationEmail", @class = "form-control", @style = "text-transform:lowercase", autocomplete = "off", maxlength = "50" })
                                                     <div class="error" id="comm_email_error"></div>
                                                 </div>
                                             </div>
@@ -1208,7 +1205,7 @@ debugger;
 
           //var CustomerId = o.innerText;
           $.ajax({
-              url: "@Url.Action("BindCustomerDetails", "CustomerManage")",
+              url: "@Url.Action("BindCustomerDetailsForSearch", "AshokLeyland")",
               type: "POST",
               dataType: "JSON",
               data: { CustomerId: CustomerId },
@@ -1219,7 +1216,7 @@ debugger;
                       for (var i = 0; i < res.length; i++) {
                           if (res[i].customerID == CustomerId) {
                               GetComDistrict(res[i].communicationStateId, res[i].communicationDistrictId);
-                              GetPerDistrict(res[i].permanentStateId, res[i].permanentDistrictId);
+                              //GetPerDistrict(res[i].permanentStateId, res[i].permanentDistrictId);
                               //GetSubType(res[i].customerTypeId, res[i].customerSubtypeId);
                               customerType=res[i].customerTypeName;
 debugger;
@@ -1337,14 +1334,15 @@ debugger;
                               document.getElementById("KeyOfficialDetails").style.display = "none";
                               document.getElementById("OfficialDetails-tab").style.display = "none";
                               document.getElementById("divPermanentOfcAddress").style.display = "none";
-                              document.getElementById("divSalesArea").style.display = "none";
-                              document.getElementById("divTypeOfBusinessEntity").style.display = "none";
-                              document.getElementById("divResidenceStatus").style.display = "none";
+                              document.getElementById("divSalesArea").style.display = "block";
+                              document.getElementById("divTypeOfBusinessEntity").style.display = "block";
+                              document.getElementById("divResidenceStatus").style.display = "block";
                               document.getElementById("divTypeOfCustomer").style.display = "none";
                               document.getElementById("divFormNumber").style.display = "none";
-                              document.getElementById("divAddress3").style.display = "none";
-                              document.getElementById("divLocation").style.display = "none";
-                              document.getElementById("divIncomeTaxPAN").style.display = "none";
+                              document.getElementById("divAddress3").style.display = "block";
+                              document.getElementById("divLocation").style.display = "block";
+                              document.getElementById("divIncomeTaxPAN").style.display = "block";
+                              document.getElementById("divSignedOn").style.display = "block";
                           }
 
                               $('#customet-id').val(res[i].customerID);
@@ -1356,12 +1354,11 @@ debugger;
                               //document.getElementById('application-date').valueAsDate = new Date(dApplication.getFullYear(), dApplication.getMonth(), dApplication.getDate(), 12);
                               document.getElementById('application-date').value=res[i].customerApplicationDate;
                               //var son = new Date(res[i].approvedon);
-                              //document.getElementById('signed-on').valueAsDate = new Date(son.getFullYear(), son.getMonth(), son.getDate(), 12);
-                              document.getElementById('signed-on').value=res[i].signedOn;
-                              $('#individual-org-name').val(res[i].individualOrgName);
-                              $('#name-on-card').val(res[i].nameOnCard);
+                              document.getElementById('CustomerSignedOn').value=res[i].signedOn;
+                              $('#IndividualOrgName').val(res[i].individualOrgName);
+                              $('#CustomerNameOnCard').val(res[i].nameOnCard);
                               $('#type-business-entity').val(res[i].typeOfBusinessEntityName);
-                              $('#income-tax-pan').val(res[i].incomeTaxPan);
+                              $('#CustomerIncomeTaxPan').val(res[i].incomeTaxPan);
                               //$('#CustomerZonalOfficeID').val(res[i].zonalOfficeID);
                               //$('#CustomerZonalOfficeID')[0].sumo.selectItem(res[i].zonalOfficeID);
                               //GetRegionId(res[i].zonalOfficeID, res[i].regionalOfficeID);
@@ -1379,62 +1376,62 @@ debugger;
                               $('#CustomerRegionalOfficeID').append(regionalOffice);
                               $("#CustomerRegionalOfficeID")[0].sumo.reload();
 
-                               $('#CustomertypeId').html("");
+                               $('#CustomerTypeId').html("");
                                var CustomerType = $('<option value="' + res[i].customerTypeName + '">' + res[i].customerTypeName + '</option>');
-                                $('#CustomertypeId').append(CustomerType);
-                                $("#CustomertypeId")[0].sumo.reload();
+                                $('#CustomerTypeId').append(CustomerType);
+                                $("#CustomerTypeId")[0].sumo.reload();
 
                               //$('#residenceStatus').val(res[i].residenceStatus);
                               $('#CustomerResidenceStatus')[0].sumo.selectItem(res[i].residenceStatus);
-                              //$('#table-entity-id').val(res[i].typeOfBusinessEntityId);
-                              $('#table-entity-id')[0].sumo.selectItem(res[i].typeOfBusinessEntityId);
+                              $('#CustomerTbentityID')[0].sumo.selectItem(res[i].typeOfBusinessEntityId);
                               //$('#customerSubType').val(res[i].customerSubtype);
                               //$('#customerSubType')[0].sumo.selectItem(res[i].customerSubtype);
 
-                              $('#CustomerSubTypeID').html("");
+                              $('#CustomerSubtypeId').html("");
                               var custSubType = $('<option value="' + res[i].customerSubtypeName + '">' + res[i].customerSubtypeName + '</option>');
-                              $('#CustomerSubTypeID').append(custSubType);
-                              $("#CustomerSubTypeID")[0].sumo.reload();
-                              $('#KeyOfficialIndividualInitials').val(res[i].keyOfficialIndividualInitials);
-                              $('#KeyOffNameofIndividual').val(res[i].KeyOfficialNameofIndividual);
-                              $('#KeyOffFirstName').val(res[i].keyOfficialFirstName);
-                              $('#KeyOffLastName').val(res[i].keyOfficialLastName);
-                              $('#KeyOffMiddleName').val(res[i].keyOfficialMiddleName);
-                              $('#KeyOffDesignation').val(res[i].keyOfficialDesignation);
-                              //var dob = new Date(res[i].keyOfficialDOB);
-                              //document.getElementById('officialDOB').valueAsDate = new Date(dob.getFullYear(), dob.getMonth(), dob.getDate(), 12);
-                              document.getElementById('officialDOB').value = res[i].keyOfficialDOB;
-                              var keyOfficialTitleId = "0";
-                              if (res[i].keyOfficialTitle != "") 
-                              {
-                                  if (res[i].keyOfficialTitle == "Mr" || res[i].keyOfficialTitle == "Mr.")
-                                      keyOfficialTitleId = "1";
-                                  else if (res[i].keyOfficialTitle == "Mrs" || res[i].keyOfficialTitle == "Mrs.")
-                                      keyOfficialTitleId = "2";
-                                  else if (res[i].keyOfficialTitle == "Ms" || res[i].keyOfficialTitle == "Ms.")
-                                      keyOfficialTitleId = "3";
-                                  else
-                                      keyOfficialTitleId = "1";
-                              }
-                              //$('#KeyOffTitle').val(keyOfficialTitleId);
-                              $('#KeyOffTitle')[0].sumo.selectItem(keyOfficialTitleId);
-                              //$('#KeyOffDialCode').val(res[i].keyOffDialCode);
-                              //$('#KeyOffPhoneNumber').val(res[i].keyOfficialPhoneNo);
-                              $('#KeyOffMobileNumber').val(res[i].keyOfficialMobile);
-                              //$('#KeyOffFaxCode').val(res[i].keyOffFaxCode);
-                              //$('#KeyOffFax').val(res[i].keyOffFax);
-                              $('#KeyOffEmail').val(res[i].keyOfficialEmail);
-                              //var doa = new Date(res[i].keyOfficialDOA);
-                              //document.getElementById('KeyOffDateOfAnniversary').valueAsDate = new Date(doa.getFullYear(), doa.getMonth(), doa.getDate(), 12);
-                              document.getElementById('KeyOffDateOfAnniversary').value = res[i].keyOfficialDOA;
-                              $('#FleetSizeNoOfVechileOwnedHCV').val(res[i].fleetSizeNoOfVechileOwnedHCV);
-                              $('#FleetSizeNoOfVechileOwnedLCV').val(res[i].fleetSizeNoOfVechileOwnedLCV);
-                              $('#FleetSizeNoOfVechileOwnedMUVSUV').val(res[i].fleetSizeNoOfVechileOwnedMUVSUV);
-                              $('#FleetSizeNoOfVechileOwnedCarJeep').val(res[i].fleetSizeNoOfVechileOwnedCarJeep);
-                              $('#CustomerTypeOfFleetID').val(res[i].eyOfficialTypkeOfFleetId);
-                              $('#KeyOfficialCardAppliedFor').val(res[i].keyOfficialCardAppliedFor);
-                              $('#KeyOfficialApproxMonthlySpendsonVechile2').val(res[i].keyOfficialApproxMonthlySpendsonVechile2);
-                              $('#KeyOfficialApproxMonthlySpendsonVechile1').val(res[i].keyOfficialApproxMonthlySpendsonVechile1);
+                              $('#CustomerSubtypeId').append(custSubType);
+                              $("#CustomerSubtypeId")[0].sumo.reload();
+
+                              //$('#KeyOfficialIndividualInitials').val(res[i].keyOfficialIndividualInitials);
+                              //$('#KeyOffNameofIndividual').val(res[i].KeyOfficialNameofIndividual);
+                              //$('#KeyOffFirstName').val(res[i].keyOfficialFirstName);
+                              //$('#KeyOffLastName').val(res[i].keyOfficialLastName);
+                              //$('#KeyOffMiddleName').val(res[i].keyOfficialMiddleName);
+                              //$('#KeyOffDesignation').val(res[i].keyOfficialDesignation);
+                              ////var dob = new Date(res[i].keyOfficialDOB);
+                              ////document.getElementById('officialDOB').valueAsDate = new Date(dob.getFullYear(), dob.getMonth(), dob.getDate(), 12);
+                              //document.getElementById('officialDOB').value = res[i].keyOfficialDOB;
+                              //var keyOfficialTitleId = "0";
+                              //if (res[i].keyOfficialTitle != "") 
+                              //{
+                              //    if (res[i].keyOfficialTitle == "Mr" || res[i].keyOfficialTitle == "Mr.")
+                              //        keyOfficialTitleId = "1";
+                              //    else if (res[i].keyOfficialTitle == "Mrs" || res[i].keyOfficialTitle == "Mrs.")
+                              //        keyOfficialTitleId = "2";
+                              //    else if (res[i].keyOfficialTitle == "Ms" || res[i].keyOfficialTitle == "Ms.")
+                              //        keyOfficialTitleId = "3";
+                              //    else
+                              //        keyOfficialTitleId = "1";
+                              //}
+                              ////$('#KeyOffTitle').val(keyOfficialTitleId);
+                              //$('#KeyOffTitle')[0].sumo.selectItem(keyOfficialTitleId);
+                              ////$('#KeyOffDialCode').val(res[i].keyOffDialCode);
+                              ////$('#KeyOffPhoneNumber').val(res[i].keyOfficialPhoneNo);
+                              //$('#KeyOffMobileNumber').val(res[i].keyOfficialMobile);
+                              ////$('#KeyOffFaxCode').val(res[i].keyOffFaxCode);
+                              ////$('#KeyOffFax').val(res[i].keyOffFax);
+                              //$('#KeyOffEmail').val(res[i].keyOfficialEmail);
+                              ////var doa = new Date(res[i].keyOfficialDOA);
+                              ////document.getElementById('KeyOffDateOfAnniversary').valueAsDate = new Date(doa.getFullYear(), doa.getMonth(), doa.getDate(), 12);
+                              //document.getElementById('KeyOffDateOfAnniversary').value = res[i].keyOfficialDOA;
+                              //$('#FleetSizeNoOfVechileOwnedHCV').val(res[i].fleetSizeNoOfVechileOwnedHCV);
+                              //$('#FleetSizeNoOfVechileOwnedLCV').val(res[i].fleetSizeNoOfVechileOwnedLCV);
+                              //$('#FleetSizeNoOfVechileOwnedMUVSUV').val(res[i].fleetSizeNoOfVechileOwnedMUVSUV);
+                              //$('#FleetSizeNoOfVechileOwnedCarJeep').val(res[i].fleetSizeNoOfVechileOwnedCarJeep);
+                              //$('#CustomerTypeOfFleetID').val(res[i].eyOfficialTypkeOfFleetId);
+                              //$('#KeyOfficialCardAppliedFor').val(res[i].keyOfficialCardAppliedFor);
+                              //$('#KeyOfficialApproxMonthlySpendsonVechile2').val(res[i].keyOfficialApproxMonthlySpendsonVechile2);
+                              //$('#KeyOfficialApproxMonthlySpendsonVechile1').val(res[i].keyOfficialApproxMonthlySpendsonVechile1);
                               $('#CommunicationAddress1').val(res[i].communicationAddress1);
                               $('#CommunicationAddress2').val(res[i].communicationAddress2);
                               $('#CommunicationAddress3').val(res[i].communicationAddress3);
@@ -1449,15 +1446,15 @@ debugger;
                               //$('#CommunicationFaxCode').val(res[i].communicationFaxCode);
                               //$('#CommunicationFax').val(res[i].communicationFax);
                               $('#CommunicationEmail').val(res[i].communicationEmailid);
-                              $('#PerOrRegAddress1').val(res[i].permanentAddress1);
-                              $('#PerOrRegAddress2').val(res[i].permanentAddress2);
-                              $('#PerOrRegAddress3').val(res[i].permanentAddress3);
-                              $('#PerOrRegAddressLocation').val(res[i].permanentLocation);
-                              $('#PerOrRegAddressCity').val(res[i].permanentCityName);
-                              $('#PerOrRegAddressPinCode').val(res[i].permanentPincode);
-                              //$('#PerOrRegAddressStateID').val(res[i].permanentStateId);
-                              $('#PerOrRegAddressStateID')[0].sumo.selectItem(res[i].permanentStateId);
-                              //$('#PerOrRegAddressDialCode').val(res[i].perOrRegAddressDialCode);
+                              //$('#PerOrRegAddress1').val(res[i].permanentAddress1);
+                              //$('#PerOrRegAddress2').val(res[i].permanentAddress2);
+                              //$('#PerOrRegAddress3').val(res[i].permanentAddress3);
+                              //$('#PerOrRegAddressLocation').val(res[i].permanentLocation);
+                              //$('#PerOrRegAddressCity').val(res[i].permanentCityName);
+                              //$('#PerOrRegAddressPinCode').val(res[i].permanentPincode);
+                              ////$('#PerOrRegAddressStateID').val(res[i].permanentStateId);
+                              //$('#PerOrRegAddressStateID')[0].sumo.selectItem(res[i].permanentStateId);
+                              ////$('#PerOrRegAddressDialCode').val(res[i].perOrRegAddressDialCode);
                               //$('#PerOrRegAddressPhoneNumber').val(res[i].permanentPhoneNo);
                               //$('#PermanentFaxCode').val(res[i].permanentFaxCode);
                               //$('#PermanentFax').val(res[i].permanentFax);
@@ -1478,23 +1475,23 @@ debugger;
                               $('#IndividualOrgNameTitle')[0].sumo.selectItem(individualOrgNameTitleId);
                               $('#CustomerResidenceStatus').val(res[i].residenceStatus);
                               //$('#CustomerTypeOfFleetID').val(res[i].keyOfficialTypeOfFleetId);
-                              $('#CustomerTypeOfFleetID')[0].sumo.selectItem(res[i].keyOfficialTypeOfFleetId);
-                              if (res[i].areaOfOperation != "") 
-                              {
-                                  var areaOfOperation=res[i].areaOfOperation;
-                                  console.log(areaOfOperation);
-                                  console.log(areaOfOperation.includes("Inter State"));
-                                  if (areaOfOperation.includes("Inter State"))
-                                      document.getElementById("interstate").checked = true;
-                                  if (areaOfOperation.includes("Inter City"))
-                                      document.getElementById("intercity").checked = true;
-                                  if (areaOfOperation.includes("Intra City"))
-                                      document.getElementById("intracity").checked = true;
-                              }
+                              //$('#CustomerTypeOfFleetID')[0].sumo.selectItem(res[i].keyOfficialTypeOfFleetId);
+                              //if (res[i].areaOfOperation != "") 
+                              //{
+                              //    var areaOfOperation=res[i].areaOfOperation;
+                              //    console.log(areaOfOperation);
+                              //    console.log(areaOfOperation.includes("Inter State"));
+                              //    if (areaOfOperation.includes("Inter State"))
+                              //        document.getElementById("interstate").checked = true;
+                              //    if (areaOfOperation.includes("Inter City"))
+                              //        document.getElementById("intercity").checked = true;
+                              //    if (areaOfOperation.includes("Intra City"))
+                              //        document.getElementById("intracity").checked = true;
+                              //}
                               debugger;
                               //console.log(res[i]);
-                              $('#TypeOfCustomerID')[0].sumo.selectItem(res[i].typeOfCustomerID);
-                              $('#TierOfCustomerID')[0].sumo.selectItem(res[i].tierOfCustomerID);
+                              //$('#TypeOfCustomerID')[0].sumo.selectItem(res[i].typeOfCustomerID);
+                              //$('#TierOfCustomerID')[0].sumo.selectItem(res[i].tierOfCustomerID);
                           }
                       }
 console.log(customerType);                     
@@ -1622,7 +1619,7 @@ debugger;
               var id = this.value;
 
               if (id != 0) {
-                  $("#state_error").html("");
+                  $("#comm_states_error").html("");
               }
 
               $.ajax({
@@ -1641,6 +1638,7 @@ debugger;
                                       text: data.districtName
                                   }).html(data.districtName).appendTo("#CommunicationDistrictId");
                           });
+                          $("#CommunicationDistrictId")[0].sumo.reload();
                       }
                       else {
                           console.log(v);
@@ -1694,5 +1692,338 @@ $('#CustomerId').keypress(function (e)
         $('#btnSearch').click();
     }
 });
+
+ $("#CommunicationAddress1").on("blur", function () {
+        //debugger;
+        var Address = document.getElementById("CommunicationAddress1").value.trim();
+        if (Address == "") 
+        {
+            document.getElementById("comm_address1_error").innerHTML = "Address field cannot be left blank";
+            return (false);
+        }
+        else if (!isNaN(document.getElementById("CommunicationAddress1").value.trim())) 
+        {
+            document.getElementById("comm_address1_error").innerHTML = "Invalid Address";
+            return false;
+        }
+        else if (!document.getElementById("CommunicationAddress1").value.match(atLeastOneAlphabet)) 
+        {
+            document.getElementById("comm_address1_error").innerHTML = "Invalid Address";
+            return false;
+        }
+        else 
+        {
+            document.getElementById("comm_address1_error").innerHTML = "";
+        }
+
+  });
+
+$("#CommunicationAddress2").on("blur", function () {
+    //debugger;
+    var Address = document.getElementById("CommunicationAddress2").value.trim();
+    if (Address == "") 
+    {
+        document.getElementById("comm_address2_error").innerHTML = "Address field cannot be left blank";
+        return (false);
+    }
+    else if (!isNaN(document.getElementById("CommunicationAddress2").value.trim())) 
+    {
+        document.getElementById("comm_address2_error").innerHTML = "Invalid Address";
+        return false;
+    }
+    else if (!document.getElementById("CommunicationAddress2").value.match(atLeastOneAlphabet)) 
+    {
+        document.getElementById("comm_address2_error").innerHTML = "Invalid Address";
+        return false;
+    }
+    else 
+    {
+        document.getElementById("comm_address2_error").innerHTML = "";
+    }
+
+});
+
+$("#CommunicationAddress3").on("blur", function () 
+{
+    //debugger;
+    if (document.getElementById("CommunicationAddress3").value.trim() != "") 
+    {
+        if (!isNaN(document.getElementById("CommunicationAddress3").value.trim())) 
+        {
+            document.getElementById("comm_address3_error").innerHTML = "Invalid Address";
+            return false;
+        }
+        else if (!document.getElementById("CommunicationAddress3").value.match(atLeastOneAlphabet)) 
+        {
+            document.getElementById("comm_address3_error").innerHTML = "Invalid Address";
+            return false;
+        }
+        else 
+        {
+            document.getElementById("comm_address3_error").innerHTML = "";
+        }
+
+    }
+    else 
+    {
+        document.getElementById("comm_address3_error").innerHTML = "";
+    }
+});
+
+$("#CommunicationLocation").on("blur", function () {
+    //debugger;
+    if (document.getElementById("CommunicationLocation").value.trim() != "") 
+    {
+        if (!isNaN(document.getElementById("CommunicationLocation").value.trim())) 
+        {
+            document.getElementById("comm_location_error").innerHTML = "Invalid Location";
+            return false;
+        }
+        else if (!document.getElementById("CommunicationLocation").value.match(atLeastOneAlphabet)) 
+        {
+            document.getElementById("comm_location_error").innerHTML = "Invalid Location";
+            return false;
+        }
+        else 
+        {
+            document.getElementById("comm_location_error").innerHTML = "";
+        }
+    }
+    else 
+    {
+        document.getElementById("comm_location_error").innerHTML = "";
+    }
+});
+
+$("#CommunicationCity").on("blur", function () {
+    //debugger;
+    var city = document.getElementById("CommunicationCity").value.trim();
+    if (city == "") 
+    {
+        document.getElementById("comm_city_error").innerHTML = "City field cannot be left blank";
+        return (false);
+    }
+    else 
+    {
+        if (!isNaN(document.getElementById("CommunicationCity").value.trim())) 
+        {
+            document.getElementById("comm_city_error").innerHTML = "Invalid City";
+            return false;
+        }
+        else if (!document.getElementById("CommunicationCity").value.match(atLeastOneAlphabet)) 
+        {
+            document.getElementById("comm_city_error").innerHTML = "Invalid City";
+            return false;
+        }
+        else 
+        {
+            document.getElementById("comm_city_error").innerHTML = "";
+        }
+    }
+});
+
+$("#CommunicationPinCode").on("blur", function () {
+    //debugger;
+    if (document.getElementById("CommunicationPinCode").value.trim() == "") 
+    {
+        document.getElementById("comm_pincode_error").innerHTML = "PIN Code field cannot be left blank";
+        return false;
+    }
+    else if (document.getElementById("CommunicationPinCode").value.substring(0, 1) == "0") 
+    {
+        document.getElementById("comm_pincode_error").innerHTML = "Invalid PIN Code. Min-Max 6 digits";
+        return false;
+    }
+    else if (document.getElementById("CommunicationPinCode").value.length < 6) 
+    {
+        document.getElementById("comm_pincode_error").innerHTML = "Invalid PIN Code. Min-Max 6 digits";
+        return false;
+    }
+    else if (!document.getElementById("CommunicationPinCode").value.match(pincode)) 
+    {
+        document.getElementById("comm_pincode_error").innerHTML = "Invalid PIN Code. Min-Max 6 digits";
+        return false;
+    }
+    else 
+    {
+        document.getElementById("comm_pincode_error").innerHTML = "";    
+    }
+
+});
+
+$("#CommunicationDistrictId").change(function () {
+    debugger;
+    var id = this.value;
+
+    if (id != 0) {
+        $("#comm_district_error").html("");
+    }
+
+
+ });
+
+$("#CommunicationMobileNumber").on("blur", function () {
+    //debugger;
+    var communicationMobile = document.getElementById("CommunicationMobileNumber").value.trim();
+    if (communicationMobile == "") 
+    {
+        document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile Number field cannot be left blank";
+        return (false);
+    }
+    else if (document.getElementById("CommunicationMobileNumber").value.substring(0, 1) == "0") 
+    {
+        document.getElementById("comm_mobileNumber_error").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
+        return false;
+    }
+    else if (document.getElementById("CommunicationMobileNumber").value.length < 10) 
+    {
+        document.getElementById("comm_mobileNumber_error").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
+        return false;
+    }
+    else if (document.getElementById("CommunicationMobileNumber").value.match(phoneno)) 
+    {
+        document.getElementById("comm_mobileNumber_error").innerHTML = "";
+    }
+    else 
+    {
+        document.getElementById("comm_mobileNumber_error").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
+        return false;
+    }
+
+});
+
+$("#CommunicationEmail").on("blur", function () {
+    //debugger;
+    var communicationEmail = document.getElementById("CommunicationEmail").value.trim();
+    if (communicationEmail == "") 
+    {
+        document.getElementById("comm_email_error").innerHTML = "Email field cannot be left blank";
+        return (false);
+    }
+    else if (communicationEmail.match(email)) 
+    {
+        document.getElementById("comm_email_error").innerHTML = "";
+    }
+    else 
+    {
+        document.getElementById("comm_email_error").innerHTML = "Invalid email id (e.g.: abc@gmail.com)";
+        return (false);
+    }
+
+});
+
+$("#CustomerNameOnCard").on("blur", function () {
+    //debugger;
+    var customerNameOnCard = document.getElementById("CustomerNameOnCard").value.trim();
+    if (customerNameOnCard == "") 
+    {
+        document.getElementById("nameOnCard_error").innerHTML = "Name on Card field cannot be left blank";
+        return (false);
+    }
+    else if (!isNaN(document.getElementById("CustomerNameOnCard").value.trim())) 
+    {
+        document.getElementById("nameOnCard_error").innerHTML = "Invalid Name on Card";
+        return false;
+    }
+    else if (!document.getElementById("CustomerNameOnCard").value.match(nameWithSpaceCheck)) 
+    {
+        document.getElementById("nameOnCard_error").innerHTML = "Invalid Name on Card";
+        return false;
+    }
+    else 
+    {
+        document.getElementById("nameOnCard_error").innerHTML = "";
+    }
+});
+
+$("#IndividualOrgName").on("blur", function () {
+    //debugger;
+    var individualOrgName = document.getElementById("IndividualOrgName").value.trim();
+    if (individualOrgName == "") 
+    {
+        document.getElementById("individualName_error").innerHTML = "Individual/Org. Name is required";
+        return (false);
+    }
+    else if (!isNaN(document.getElementById("IndividualOrgName").value.trim())) 
+    {
+        document.getElementById("individualName_error").innerHTML = "Invalid Individual/Org. Name";
+        return false;
+    }
+    else if (!document.getElementById("IndividualOrgName").value.match(nameWithSpaceCheck)) 
+    {
+        document.getElementById("individualName_error").innerHTML = "Invalid Individual/Org. Name";
+        return false;
+    }
+    else 
+    {
+        document.getElementById("individualName_error").innerHTML = "";
+    }
+});
+
+$("#CustomerNameOnCard").on("blur", function () {
+    //debugger;
+    var customerNameOnCard = document.getElementById("CustomerNameOnCard").value.trim();
+    if (customerNameOnCard == "") 
+    {
+        document.getElementById("nameOnCard_error").innerHTML = "Name on Card field cannot be left blank";
+        return (false);
+    }
+    else if (!isNaN(document.getElementById("CustomerNameOnCard").value.trim())) 
+    {
+        document.getElementById("nameOnCard_error").innerHTML = "Invalid Name on Card";
+        return false;
+    }
+    else if (!document.getElementById("CustomerNameOnCard").value.match(nameWithSpaceCheck)) 
+    {
+        document.getElementById("nameOnCard_error").innerHTML = "Invalid Name on Card";
+        return false;
+    }
+    else 
+    {
+        document.getElementById("nameOnCard_error").innerHTML = "";
+    }
+});
+
+ $("#SBUTypeID").change(function () {
+        var id = this.value;
+
+        $.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("GetZonalOfficebySBUType", "Common")',
+            data: { SBUTypeId: id },  // data to submit
+            dataType: "json",
+            success: function (data, status, xhr) {
+                var v = data;
+                if (status == 'success') {
+
+                    $("#CustomerZonalOfficeID").html("");
+                    $.each(data, function (i, data) { // bind the dropdown list using json result
+                            if (i == 0) {
+                            $('<option>',
+                                {
+                                    value: 0,
+                                    text: "Select Zonal Office"
+                                }).html("Select Zonal Office").appendTo("#CustomerZonalOfficeID");
+                            }
+                            else{
+                            $('<option>',
+                                {
+                                    value: data.zonalOfficeID,
+                                    text: data.zonalOfficeName
+                                }).html(data.zonalOfficeName).appendTo("#CustomerZonalOfficeID");
+                            }
+                    });
+                    $("#CustomerZonalOfficeID")[0].sumo.reload();
+                    $("#CustomerZonalOfficeID").trigger("change");
+                }
+                else {
+                    console.log(v);
+                }
+            },
+            error: function (jqXhr, textStatus, errorMessage) {
+                alert("Error Populating Customer Zone");
+            }
+        });
+    });
 
 </script>
