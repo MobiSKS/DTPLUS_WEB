@@ -16,8 +16,7 @@ namespace HPCL.Common.Models.ViewModel.Cards
         [StringLength(10)]
         [RegularExpression(FieldValidation.ValidMobileNumber, ErrorMessage = FieldValidation.ValidMobileNumberErrMsg)]
         public string MobileNo { get; set; }
-        [MinLength(6)]
-        [MaxLength(10)]
+        [StringLength(10, ErrorMessage = FieldValidation.ValidVachileNumberErrMsg, MinimumLength = 6)]
         [RegularExpression(FieldValidation.ValidVachileNumber, ErrorMessage = FieldValidation.ValidVachileNumberErrMsg)]
         public string VechileNo { get; set; }
     }

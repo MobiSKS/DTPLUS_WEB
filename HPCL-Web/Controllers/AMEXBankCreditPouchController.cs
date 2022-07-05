@@ -149,5 +149,10 @@ namespace HPCL_Web.Controllers
             ModelState.Clear();
             return Json(new { reasonList = reasonList });
         }
+
+        public IActionResult RequestAvailEnroll()
+        {
+            return View();
+        }
     }
 }
