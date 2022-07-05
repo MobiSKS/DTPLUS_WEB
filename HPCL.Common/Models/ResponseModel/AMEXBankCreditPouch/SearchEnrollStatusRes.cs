@@ -23,5 +23,6 @@ namespace HPCL.Common.Models.ResponseModel.AMEXBankCreditPouch
         public string Status { get; set; }
         public Decimal CreditLimitAssigned { get; set; }
         public string BankName { get; set; }
+        public string PlanName { get; set; }
     }
 }

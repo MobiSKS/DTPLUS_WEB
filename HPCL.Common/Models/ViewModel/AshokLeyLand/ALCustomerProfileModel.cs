@@ -180,11 +180,15 @@ namespace HPCL.Common.Models.ViewModel.AshokLeyLand
         public string CustomerRegionalOfficeID { get; set; }
         [StringLength(10)]
         public string CustomerId { get; set; }
+        public string CustomerIdSelected { get; set; }
         public string NameOnCard { get; set; }
 
         public string IncomeTaxPan { get; set; }
 
         public virtual List<SbuTypeResponseModal> SBUTypes { get; set; }
         public int SBUTypeID { get; set; }
+        public int CustomerSalesAreaID { get; set; }
+        public string ExternalPANAPIStatus { get; set; }
+
     }
 }

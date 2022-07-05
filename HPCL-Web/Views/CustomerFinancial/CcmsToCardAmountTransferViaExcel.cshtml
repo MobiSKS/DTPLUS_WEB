@@ -24,7 +24,7 @@
                                         <label class="font-weight-normal col-md-2 col-12">Customer ID <sup class="text-danger">*</sup></label>
                                         <div class="col-md-3 col-12">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.CustomerId, new { @id = "CustomerDefaultVal", @class = "form-control", @readonly="readonly" })
+                                                @Html.TextBoxFor(m => m.CustomerId, new { @id = "CustomerDefaultVal", @class = "form-control", @readonly="readonly", onkeypress = "return isNumberKey(event)" })
                                                 @Html.ValidationMessageFor(m => m.CustomerId, "", new {@id="CustomerIdErr", @class = "text-danger" })
                                             </div>
                                         </div>
@@ -38,17 +38,19 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <label class="font-weight-normal col-md-2 col-12">Available CCMS Balance</label>
-                                        <div class="col-md-3 col-12">
+                                
+                                        <label class="font-weight-normal col-md-2 col-12" id="avalccmslbl" style="display:none;">Available CCMS Balance</label>
+                                        <div class="col-md-3 col-12" id="avalccmsVal" style="display:none;">
                                             <div class="custom_select">
                                                 @Html.TextBoxFor(m => m.AvailableCcmsBalance, new {@id="availableCCMSVal", @class = "form-control-plaintext", @readonly="readonly" })
                                             </div>
                                         </div>
+                                       
                                     </div>
                                     <div class="mb-3 text-center alert alert-danger" id="noRecord" style="display:none;"></div>
                                 </div>
                             </div>
-                            <div class="align-items-start flex-wrap" id="uploadSection">
+                            <div class="align-items-start flex-wrap" id="uploadSection" style="display:none;">
                                 <div class="col-lg-12 col-12">
                                     <p class="text-dark px-0 pb-2 mb-3 font-weight-bold" style="border-bottom: 1px solid #ccc;">
                                         Upload CCMS Balance Transfer File
@@ -113,6 +115,54 @@
 
 <script>
 
+    $(document).ready(function (){
+
+        function isNumberKey(evt) {
+            var charCode = (evt.which) ? evt.which : event.keyCode;
+            if (charCode != 46 && charCode > 31
+                && (charCode < 48 || charCode > 57))
+                return false;
+
+            return true;
+        }
+
+        var custId = $("#CustomerDefaultVal").val();
+
+        $.ajax({
+            url: "@Url.Action("SearchCcmsToCardBalanceTransfer", "CustomerFinancial")",
+            type: "POST",
+            dataType: "JSON",
+            data: { customerId: custId},
+            success: function (res) {
+
+                console.log("res",res);
+
+                if(res.searchList.success == true){
+                    $("#CustomerDefaultVal").attr("readonly",true);
+
+                    $("#avalccmslbl").show();
+                    $("#avalccmsVal").show();
+                    $("#availableCCMSVal").val('');
+                    $("#availableCCMSVal").val(res.searchList.data.availableCcmsBalanceModelOutput[0].availableCcmsBalance);
+
+                    document.getElementById("uploadSection").style.display = "block";
+                }else{
+                    $("#avalccmsVal").hide();
+                    $("#avalccmslbl").hide();
+                    $("#CustomerDefaultVal").attr("readonly",true);
+                    document.getElementById("uploadSection").style.display = "none";
+                    $("#noRecord").html("");
+                    $("#noRecord").append("<span>" + res.searchList.message + "</span>");
+                    document.getElementById("noRecord").style.display = "block";
+                }
+
+            },
+            error: function (ex) {
+                console.log('Failed' + ex);
+            }
+        });
+    });
+
        function searchCustomer(){
 
         $("#excel_file_error").attr("style", "display:none");
@@ -152,12 +202,15 @@
 
                     if(res.searchList.success == true){
                         $("#CustomerDefaultVal").attr("readonly",true);
-
+                        $("#avalccmsVal").show();
+                        $("#avalccmslbl").show();
                         $("#availableCCMSVal").val('');
                         $("#availableCCMSVal").val(res.searchList.data.availableCcmsBalanceModelOutput[0].availableCcmsBalance);
 
                         $("#uploadSection").show();
                     }else{
+                        $("#avalccmsVal").hide();
+                        $("#avalccmslbl").hide();
                         $("#CustomerDefaultVal").attr("readonly",true);
                         $("#uploadSection").hide();
                         $("#noRecord").html("");
@@ -176,6 +229,8 @@
 
 
     function resetClick(){
+        $("#avalccmsVal").hide();
+        $("#avalccmslbl").hide();
         $("#uploadSection").hide();
         $("#CustomerDefaultVal").attr("readonly",false);
         $("#CustomerDefaultVal").val('');
@@ -189,7 +244,7 @@
     function exportReportToExcel() {
         var csv_data = [];
         var csvrow = [];
-        csvrow.push("Card Number", "Mobile Number", "Transfer Amount");
+        csvrow.push("Card Number", "Mobile Number", "Amount");
         csv_data.push(csvrow.join(","));
         csv_data = csv_data.join('\n');
         downloadCSVFile(csv_data);
@@ -269,6 +324,23 @@
                         $("tr:first").append("<td class ='errMsg'>Error Msg</td>");
                         $("tr:not(:first)").append("<td class ='errMsg'></td>");
 
+                        $('#ExcelTable tr').each(function(index, tr) {
+                                var CardNo = $(tr).find(':nth-child(1)').text();
+                                var MobileNo = $(tr).find(':nth-child(2)').text();
+                                var TransferAmount = $(tr).find(':nth-child(3)').text();
+
+                                console.log(CardNo+"  "+MobileNo+"    "+TransferAmount);
+
+                                if(index == 0){
+                                    if(CardNo != "Card Number" || MobileNo != "Mobile Number" || TransferAmount != "Amount"){
+                                        $("#ExcelDataError").html('');
+                                        $("#ExcelDataError").append("<span>Invalid File column Name</span>");
+                                        $("#excel_file").val('');
+                                        document.getElementById("ExcelDataError").style.display = "block";
+                                        return false;
+                                    }
+                                }
+                        });
 
                         if(rows.length != 0){
                             $('#ExcelTable tr:gt(0)').each(function(index, tr) {
@@ -278,13 +350,6 @@
 
                                 var currentIndex = index + 1;
 
-                                //if(CardNo.trim() == ''){
-                                //    $("#ExcelDataError").html('');
-                                //    $("#ExcelDataError").append("<span>Record No "+currentIndex+":- Card Number should not blank</span>");
-                                //    $("#excel_file").val('');
-                                //    document.getElementById("ExcelDataError").style.display = "block";
-                                //    return false;
-                                //}else{
                                     if(CardNo.trim() != ''){
                                         if(!CardNo.trim().match(/^\d{16}$/)){
                                             $("#ExcelDataError").html('');
@@ -294,15 +359,7 @@
                                             return false;
                                         }
                                     }
-                                //}
-
-                                //if(MobileNo.trim() == ''){
-                                //    $("#ExcelDataError").html('');
-                                //    $("#ExcelDataError").append("<span>Record No "+currentIndex+":- Mobile Number should not blank</span>");
-                                //    $("#excel_file").val('');
-                                //    document.getElementById("ExcelDataError").style.display = "block";
-                                //    return false;
-                                //}else{
+                               
                                     if(MobileNo.trim() != ''){
                                         if(!MobileNo.trim().match(/^[6789]\d{9}$/)){
                                             $("#ExcelDataError").html('');
@@ -312,8 +369,7 @@
                                             return false;
                                         }
                                     }
-                                //}
-
+                               
                                 if(TransferAmount.trim()==''){
                                     $("#ExcelDataError").html('');
                                     $("#ExcelDataError").append("<span>Record No "+currentIndex+":- Transfer Amount should not blank</span>");
@@ -346,7 +402,6 @@
                                     document.getElementById("ExcelDataError").style.display = "block";
                                     return false;
                                 }
-
                             })
                         }
                     }
@@ -420,35 +475,43 @@
                             document.getElementById("successUpdate").style.display = "block";
                         }else{
                             if(res.reasonList.data != null){
-                                $("#checkRecord").html('');
-                                $("#checkRecord").append("<span>"+res.reasonList.message+"</span>")
-                                $('#ExcelTable tr:gt(0)').each(function(index, tr) {
 
-                                    var currentIndex = index + 1;
+                                if(res.reasonList.data.length > 0){
+                                    $("#checkRecord").html('');
+                                    $("#checkRecord").append("<span>"+res.reasonList.message+"</span>");
+                                    $('#ExcelTable tr:gt(0)').each(function(index, tr) {
 
-                                    var Cardno = $(tr).find(':nth-child(1)').text();
-                                    var MobNo = $(tr).find(':nth-child(2)').text();
+                                        var currentIndex = index + 1;
 
-                                    for(var i =0;i<res.reasonList.data.length;i++){
-                                        if(res.reasonList.data[i].status == 0){
-                                            if(Cardno == res.reasonList.data[i].cardNo || MobNo == res.reasonList.data[i].mobileNo){
-                                                var bindRes = "<span>Record No "+currentIndex+":- "+(res.reasonList.data[i].reason)+"</span><br>";
+                                        var Cardno = $(tr).find(':nth-child(1)').text();
+                                        var MobNo = $(tr).find(':nth-child(2)').text();
 
-                                                $(tr).find(':nth-child(4)').append(bindRes);
+
+                                        for(var i =0;i<res.reasonList.data.length;i++){
+                                            if(res.reasonList.data[i].status == 0){
+                                                if(Cardno == res.reasonList.data[i].cardNo){
+                                                    var bindRes = "<span>Record No "+currentIndex+":- "+(res.reasonList.data[i].reason)+"</span><br>";
+
+                                                    $(tr).find(':nth-child(4)').append(bindRes);
+                                                }
                                             }
                                         }
-                                    }
-                                });
+                                    });
 
-                                $('#ExcelTable tr:gt(0)').each(function(index, tr){
-                                    var err = $(tr).find(':nth-child(4)').text();
-                                    if(err == ''){
-                                        $(this).hide();
-                                    }
-                                });
+                                    $('#ExcelTable tr:gt(0)').each(function(index, tr){
+                                        var err = $(tr).find(':nth-child(4)').text();
+                                        if(err == ''){
+                                            $(this).hide();
+                                        }
+                                    });
 
-                                $("#excel_file").val('');
-                                document.getElementById("reponseErr").style.display = "grid";
+                                    $("#excel_file").val('');
+                                    document.getElementById("reponseErr").style.display = "grid";
+                                }else{
+                                    $("#ExcelDataError").html('');
+                                    $("#ExcelDataError").append("<span>"+res.reasonList.message+"</span>");
+                                    document.getElementById("ExcelDataError").style.display = "block";
+                                }
                             }else{
                                 $("#ExcelDataError").html('');
                                 $("#ExcelDataError").append("<span>"+res.reasonList.message+"</span>");

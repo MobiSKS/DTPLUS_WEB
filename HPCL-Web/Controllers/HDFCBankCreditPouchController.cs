@@ -156,5 +156,26 @@ namespace HPCL_Web.Controllers
             ModelState.Clear();
             return Json(new { reasonList = reasonList });
         }
+
+        public IActionResult RequestToAvail()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> CheckEligibility(CheckEligibleReq entity)
+        {
+            var searchList = await _hDFCBankCreditPouchService.CheckEligibility(entity);
+            ModelState.Clear();
+            return Json(new { searchList = searchList });
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> ReqAvailEnroll(string customerId, string planTypeId)
+        {
+            var searchList = await _hDFCBankCreditPouchService.ReqAvailEnroll(customerId,planTypeId);
+            ModelState.Clear();
+            return Json(new { searchList = searchList });
+        }
     }
 }
