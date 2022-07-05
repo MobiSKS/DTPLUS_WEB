@@ -45,8 +45,10 @@ namespace HPCL.Common.Models.ViewModel.Terminal
             });
             FromDate = DateTime.Now.AddMonths(-1).ToString("dd-MM-yyyy");
             ToDate = DateTime.Now.ToString("dd-MM-yyyy");
+            SBUTypes = new List<SbuTypeResponseModal>();
         }
-
+        public virtual List<SbuTypeResponseModal> SBUTypes { get; set; }
+        public string SBUTypeId { get; set; }
         public string MerchantId { get; set; }
         public string TerminalId { get; set; }
         public string ZonalOfficeId { get; set; }

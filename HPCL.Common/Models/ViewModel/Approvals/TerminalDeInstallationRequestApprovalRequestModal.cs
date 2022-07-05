@@ -24,7 +24,10 @@ namespace HPCL.Common.Models.ViewModel.Approvals
             });
             FromDate = DateTime.Now.AddMonths(-1).ToString("dd-MM-yyyy");
             ToDate = DateTime.Now.ToString("dd-MM-yyyy");
+            SBUTypes = new List<SbuTypeResponseModal>();
         }
+        public virtual List<SbuTypeResponseModal> SBUTypes { get; set; }
+        public string SBUTypeId { get; set; }
         public string ZonalOfficeId { get; set; }
         public string RegionalOfficeId { get; set; }
         public string FromDate { get; set; }
@@ -33,5 +36,6 @@ namespace HPCL.Common.Models.ViewModel.Approvals
         public string TerminalID { get; set; }
         public virtual List<RegionalOfficeResponseModal> RegionMdl { get; set; }
         public virtual List<ZonalOfficeResponseModal> ZoneMdl { get; set; }
+
     }
 }

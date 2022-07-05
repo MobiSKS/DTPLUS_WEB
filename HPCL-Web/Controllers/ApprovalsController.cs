@@ -29,9 +29,9 @@ namespace HPCL_Web.Controllers
             var modals = await _approvalServices.TerminalDeInstallationRequestApproval();
             return View(modals);
         }
-        public async Task<IActionResult> GetTerminalsForApproval(string zonalOfcID, string regionalOfcID, string fromDate, string toDate, string merchantId, string terminalId)
+        public async Task<IActionResult> GetTerminalsForApproval(string zonalOfcID, string regionalOfcID, string fromDate, string toDate, string merchantId, string terminalId, string SBUTypeId)
         {
-            var modals = await _approvalServices.GetTerminalsForApproval(zonalOfcID, regionalOfcID, fromDate, toDate, merchantId, terminalId);
+            var modals = await _approvalServices.GetTerminalsForApproval(zonalOfcID, regionalOfcID, fromDate, toDate, merchantId, terminalId,SBUTypeId);
             return PartialView("~/Views/Approvals/_TerminalsForApprovalTable.cshtml", modals);
         }
         public async Task<JsonResult> TerminalDeInstallRequestApprovalRejection([FromBody] TerminalDeInstallationApprovalSubmit approvalRejectionMdl)
@@ -44,9 +44,9 @@ namespace HPCL_Web.Controllers
             var modals = await _approvalServices.TerminalDeInstallationRequestAuthorization();
             return View(modals);
         }
-        public async Task<IActionResult> GetTerminalsForAuthorization(string zonalOfcID, string regionalOfcID, string fromDate, string toDate, string merchantId, string terminalId)
+        public async Task<IActionResult> GetTerminalsForAuthorization(string zonalOfcID, string regionalOfcID, string fromDate, string toDate, string merchantId, string terminalId, string SBUTypeId)
         {
-            var modals = await _approvalServices.GetTerminalsForAuthorization(zonalOfcID, regionalOfcID, fromDate, toDate, merchantId, terminalId);
+            var modals = await _approvalServices.GetTerminalsForAuthorization(zonalOfcID, regionalOfcID, fromDate, toDate, merchantId, terminalId,SBUTypeId);
             return PartialView("~/Views/Approvals/_TerminalsForAuthorizationTable.cshtml", modals);
         }
         public async Task<JsonResult> TerminalDeInstallRequestApprovalRejectionAuth([FromBody] TerminalDeInstallationAuthorizationSubmit AuthorizeRejectionMdl)

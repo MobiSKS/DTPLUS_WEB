@@ -24,7 +24,10 @@ namespace HPCL.Common.Models.ViewModel.MyHpOTCCardCustomer
             });
             FromDate = DateTime.Now.ToString("dd-MM-yyyy");
             ToDate = DateTime.Now.ToString("dd-MM-yyyy");
+            SBUTypes = new List<SbuTypeResponseModal>();
         }
+        public virtual List<SbuTypeResponseModal> SBUTypes { get; set; }
+        public string SBUTypeId { get; set; }
         public string ZonalOfficeId { get; set; }
         public string RegionalOfficeId { get; set; }
         public string FromDate { get; set; }
