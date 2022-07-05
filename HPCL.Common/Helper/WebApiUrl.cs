@@ -524,6 +524,8 @@
         public static string AMEXHdfcCcmsRechargeUrl = "api/dtplus/HDFCCreditPouch/insert_cp_pg_log";
         public static string AMEXGetRequestAuthorizationDetailsUrl = "api/dtplus/AMEXcreditPouch/get_cp_by_bank_auth";
         public static string AMEXRequestAuthorizationActionUrl = "api/dtplus/AMEXcreditPouch/auth_action_cp";
+        public static string AMEXRequestToAvailCheckUrl = "api/dtplus/AMEXCreditPouch/chk_eligibility";
+        public static string AMEXRequestToAvailEnrollUrl = "api/dtplus/AMEXCreditPouch/insrt_cp_rqst_by_customer";
         #endregion
     }
 }

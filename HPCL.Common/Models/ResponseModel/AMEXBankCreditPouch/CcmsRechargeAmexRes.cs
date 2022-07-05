@@ -2,7 +2,7 @@
 
 namespace HPCL.Common.Models.ResponseModel.AMEXBankCreditPouch
 {
-    public class CcmsRechargeHdfcRes : ResponseMsg
+    public class CcmsRechargeAmexRes : ResponseMsg
     {
         public CcmsRechargeHdfcResData data { get; set; }
     }
