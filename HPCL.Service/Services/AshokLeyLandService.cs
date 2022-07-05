@@ -76,6 +76,9 @@ namespace HPCL.Service.Services
         {
             JArray objs = JArray.Parse(JsonConvert.DeserializeObject(str).ToString());
             List<AlEnrollment> arrs = objs.ToObject<List<AlEnrollment>>();
+            var email = "";
+
+            email = arrs[0].EmailId.ToLower();
 
             var insertServiceBody = new AlEnrollment
             {
@@ -94,7 +97,7 @@ namespace HPCL.Service.Services
                 DistrictId = arrs[0].DistrictId,
                 Pin = arrs[0].Pin,
                 MobileNo = arrs[0].MobileNo,
-                EmailId = arrs[0].EmailId,
+                EmailId = email,
                 CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
             };
 
