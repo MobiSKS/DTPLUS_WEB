@@ -237,6 +237,7 @@
                                 }
                         });
                        $("#ZonalOfficeId")[0].sumo.reload();
+                       $("#ZonalOfficeId").trigger("change");
                     }
                     else {
                         console.log(v);
@@ -260,35 +261,40 @@ $(".zonalFetchId").change(function () {
     if (id != 0) {
         $("#state_error").html("");
     }
-
-    $.ajax({
-        type: 'POST',  // http method
-        url: '@Url.Action("GetRegionalOfcDetails", "Common")',
-        data: { zonalOfcId: id },  // data to submit
-        dataType: "json",
-        success: function (data, status, xhr) {
-            var v = data;
-            if (status == 'success') {
-                $(".regionalFetchId").html("");
-                $('<option>',{value: 0,text: "All"}).html("All").appendTo(".regionalFetchId");
-                //$('<option>--Select Regional Office--</option>').appendTo(".regionalFetchId");
-                $.each(data, function (i, data) { // bind the dropdown list using json result
-                    $('<option>',
-                        {
-                            value: data.regionalOfficeID,
-                            text: data.regionalOfficeName
-                        }).html(data.districtName).appendTo(".regionalFetchId");
-                });
-                $(".regionalFetchId")[0].sumo.reload();
-            }
-            else {
-                console.log(v);
-            }
-        },
-        error: function (jqXhr, textStatus, errorMessage) {
-            alert("Error Populating Regional Office");
+     if(id>0){
+            $.ajax({
+                type: 'POST',  // http method
+                url: '@Url.Action("GetRegionalOfcDetails", "Common")',
+                data: { zonalOfcId: id },  // data to submit
+                dataType: "json",
+                success: function (data, status, xhr) {
+                    var v = data;
+                    if (status == 'success') {
+                        $(".regionalFetchId").html("");
+                        $('<option>',{value: 0,text: "All"}).html("All").appendTo(".regionalFetchId");
+                        //$('<option>--Select Regional Office--</option>').appendTo(".regionalFetchId");
+                        $.each(data, function (i, data) { // bind the dropdown list using json result
+                            $('<option>',
+                                {
+                                    value: data.regionalOfficeID,
+                                    text: data.regionalOfficeName
+                                }).html(data.districtName).appendTo(".regionalFetchId");
+                        });
+                        $(".regionalFetchId")[0].sumo.reload();
+                    }
+                    else {
+                        console.log(v);
+                    }
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+                    alert("Error Populating Regional Office");
+                }
+            });
         }
-    });
+    else{
+    $(".regionalFetchId").html('');
+    $(".regionalFetchId")[0].sumo.reload();
+    }
 });
 
     function searchClick() {
