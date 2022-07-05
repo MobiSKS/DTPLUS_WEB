@@ -306,8 +306,10 @@
                                 var MobileNo = $(tr).find(':nth-child(2)').text();
                                 var TransferAmount = $(tr).find(':nth-child(3)').text();
 
+                                console.log(CardNo+"           "+MobileNo+"      "+TransferAmount);
+
                                 if(index == 0){
-                                    if(CardNo != "Card Number" || MobileNo != "Mobile Number" || TransferAmount != "Amount\n"){
+                                    if(CardNo != "Card Number" || MobileNo != "Mobile Number" || TransferAmount.trim() != "Amount"){
                                         $("#ExcelDataError").html('');
                                         $("#ExcelDataError").append("<span>Invalid File column Name</span>");
                                         $("#excel_file").val('');
@@ -466,7 +468,13 @@
 
                                         for(var i =0;i<res.reasonList.data.length;i++){
                                             if(res.reasonList.data[i].status == 0){
-                                                if(Cardno == res.reasonList.data[i].cardNo){
+
+                                                var n = res.reasonList.data[i].reason.split(' ');
+                                                var resMobNo = n[n.length - 1];
+
+                                                console.log(resMobNo);
+
+                                                if(Cardno == res.reasonList.data[i].cardNo || MobNo == resMobNo){
                                                     var bindRes = "<span>Record No "+currentIndex+":- "+(res.reasonList.data[i].reason)+"</span><br>";
 
                                                     $(tr).find(':nth-child(4)').append(bindRes);

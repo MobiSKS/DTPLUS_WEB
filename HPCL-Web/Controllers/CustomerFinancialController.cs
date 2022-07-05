@@ -126,7 +126,7 @@ namespace HPCL_Web.Controllers
 
             AmountTransferExcel uploadExcel = new AmountTransferExcel();
             uploadExcel.CustomerId = CustomerId;
-            uploadExcel.AvailableCcmsBalance = searchList.data.availableCcmsBalanceModelOutput[0].AvailableCcmsBalance;
+            //uploadExcel.AvailableCcmsBalance = searchList.data.availableCcmsBalanceModelOutput[0].AvailableCcmsBalance;
             return View(uploadExcel);
         }
 
