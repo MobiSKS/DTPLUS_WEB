@@ -8,7 +8,7 @@
 
     <form id="formSub">
         <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
-            <li class="breadcrumb-item"><a href="@Url.Action("Index", "CustomerManage")" class="text_primary">Profile</a> </li>
+            <li class="breadcrumb-item"><a href="@Url.Action("Index", "AshokLeyLand")" class="text_primary">Profile</a> </li>
             <li class="breadcrumb-item font-weight-light">Manage Profile</li>
         </ul>
         <div class="w-100">
@@ -136,6 +136,14 @@
 
 
                 <div class="tab-pane" id="BasicInfo" role="tabpanel" aria-labelledby="BasicInfo-tab">
+                    <div class="col-12 col-md-12 px-0">
+                        <div class="alert alert-success text-center mt-3 mb-0" role="alert" style="display:none;" id="responseMsg">
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-12 px-0">
+                        <div style="display:none;" class="alert alert-danger mt-3 mb-0 text-center" id="failureMsg">
+                        </div>
+                    </div>
                     <div class="col-lg-6 col-md-12 col-12 pl-0 pl-0 pb-2">
                         <div class="border-1 rounded border-grey h-100">
                             <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Application Details</p>
@@ -1250,7 +1258,9 @@ debugger;
           var customerType = o.closest('tr').childNodes[2].innerText;
 
           console.log(CustomerId+"     "+customerType);
-
+          var zonalID="";
+          var regionalOfficeID="";
+          var customerSalesAreaID="";
           //var CustomerId = o.innerText;
           $.ajax({
               url: "@Url.Action("BindCustomerDetailsForSearch", "AshokLeyland")",
@@ -1267,6 +1277,7 @@ debugger;
                               //GetPerDistrict(res[i].permanentStateId, res[i].permanentDistrictId);
                               //GetSubType(res[i].customerTypeId, res[i].customerSubtypeId);
                               customerType=res[i].customerTypeName;
+                              $('#SBUTypeID')[0].sumo.selectItem(res[i].sbuId);
 debugger;
                           if(res[i].customerTypeName=="Driver")
                           {
@@ -1428,12 +1439,35 @@ debugger;
                               //$('#CustomerZonalOfficeID').val(res[i].zonalOfficeID);
                               //$('#CustomerZonalOfficeID')[0].sumo.selectItem(res[i].zonalOfficeID);
                               //GetRegionId(res[i].zonalOfficeID, res[i].regionalOfficeID);
-                               $('#SBUTypeID')[0].sumo.selectItem(res[i].sbuId);
+                              zonalID=res[i].zonalOfficeID;
+                              regionalOfficeID = res[i].regionalOfficeID;
+                              customerSalesAreaID = res[i].customerSalesAreaID;
+                              setTimeout(function(){
+                                    console.log(zonalID);
+                                    $('#CustomerZonalOfficeID')[0].sumo.selectItem(zonalID);
+                                    console.log($('#CustomerZonalOfficeID').html());
+                                },3000);
 
-                               GetZonalOfficeId(res[i].sbuId, res[i].zonalOfficeID);
-                               GetRegionId(res[i].zonalOfficeID, res[i].regionalOfficeID);
+                                setTimeout(function(){
+                                    console.log(regionalOfficeID);
+                                    $('#CustomerRegionalOfficeID')[0].sumo.selectItem(regionalOfficeID);
+                                    console.log($('#CustomerRegionalOfficeID').html());
+                                },6000);
+
+                                if(customerSalesAreaID!=null)
+                                {
+                                    setTimeout(function(){
+                                        console.log(customerSalesAreaID);
+                                        $('#CustomerSalesAreaID')[0].sumo.selectItem(customerSalesAreaID);
+                                        console.log($('#CustomerSalesAreaID').html());
+                                    },8000);
+                                }
+                               
+                               //GetZonalOfficeId(res[i].sbuId, res[i].zonalOfficeID);
+                               //GetRegionId(res[i].zonalOfficeID, res[i].regionalOfficeID);
                                //GetSalesArea(res[i].regionalOfficeID,res[i].customerSalesAreaID);
 
+                                                             
                               //$('#CustomerZonalOfficeID').html("");
                               //var CustomerZonalOffice = $('<option value="' + res[i].zonalOfficeName + '">' + res[i].zonalOfficeName + '</option>');
                               //$('#CustomerZonalOfficeID').append(CustomerZonalOffice);
@@ -1571,6 +1605,10 @@ debugger;
                               //$('#TypeOfCustomerID')[0].sumo.selectItem(res[i].typeOfCustomerID);
                               //$('#TierOfCustomerID')[0].sumo.selectItem(res[i].tierOfCustomerID);
                               GetComDistrict(res[i].communicationStateId, res[i].communicationDistrictId);
+
+                               //setTimeout(function(){
+                               //    $('#CustomerRegionalOfficeID')[0].sumo.selectItem(res[i].regionalOfficeID);
+                               // },500);
                           }
                       }
 console.log(customerType);                     
@@ -2059,47 +2097,6 @@ $("#CustomerNameOnCard").on("blur", function () {
     }
 });
 
- $("#SBUTypeID").change(function () {
-        var id = this.value;
-
-        $.ajax({
-            type: 'POST',  // http method
-            url: '@Url.Action("GetZonalOfficebySBUType", "Common")',
-            data: { SBUTypeId: id },  // data to submit
-            dataType: "json",
-            success: function (data, status, xhr) {
-                var v = data;
-                if (status == 'success') {
-
-                    $("#CustomerZonalOfficeID").html("");
-                    $.each(data, function (i, data) { // bind the dropdown list using json result
-                            if (i == 0) {
-                            $('<option>',
-                                {
-                                    value: 0,
-                                    text: "Select Zonal Office"
-                                }).html("Select Zonal Office").appendTo("#CustomerZonalOfficeID");
-                            }
-                            else{
-                            $('<option>',
-                                {
-                                    value: data.zonalOfficeID,
-                                    text: data.zonalOfficeName
-                                }).html(data.zonalOfficeName).appendTo("#CustomerZonalOfficeID");
-                            }
-                    });
-                    $("#CustomerZonalOfficeID")[0].sumo.reload();
-                    //$("#CustomerZonalOfficeID").trigger("change");
-                }
-                else {
-                    console.log(v);
-                }
-            },
-            error: function (jqXhr, textStatus, errorMessage) {
-                alert("Error Populating Customer Zone");
-            }
-        });
-    });
 
     function submitProfile()
     {
@@ -2629,14 +2626,11 @@ debugger;
                         $(".stateVal").val("");
                         $(".distVal").val("");
 
-                        //$("#responseMsg").append("<span>" + res.result.data[0].reason + ". Dealer ID is : " + res.result.data[0].dealerId + "</span>");
                         $("#responseMsg").append("<span>" + res.result.data[0].reason + "</span>");
 
                         document.getElementById("responseMsg").style.display = "block";
                         document.getElementById("failureMsg").style.display = "none";
                         document.getElementById("failureMsg").innerHTML="";
-                        document.getElementById("divDealerEnrollment").style.display = "none";
-                        document.getElementById("divCommunicationAddress").style.display = "none";
                     }
                     else
                     {
@@ -2644,8 +2638,6 @@ debugger;
                         document.getElementById("responseMsg").style.display = "none";
                         document.getElementById("failureMsg").innerHTML="";
                         document.getElementById("failureMsg").innerHTML=res.result.data[0].reason;
-                        document.getElementById("divDealerEnrollment").style.display = "block";
-                        document.getElementById("divCommunicationAddress").style.display = "block";
                     }
 
                 },
@@ -2927,7 +2919,7 @@ function GetRegionId(zonalId, regionId) {
             }
             $.ajax({
                 type: 'POST',  // http method
-                url: '@Url.Action("GetRegionalOfcDetails", "Common")',
+                url: '@Url.Action("GetRegionalOfcDetails", "AshokLeyLand")',
                 data: { zonalOfcId: zonalId },  // data to submit
                 dataType: "json",
                 success: function (data, status, xhr) {
@@ -2947,10 +2939,10 @@ function GetRegionId(zonalId, regionId) {
 
                          setTimeout(function(){
                                    $('#CustomerRegionalOfficeID')[0].sumo.selectItem(regionId);
-                               },500);
+                                   console.log($('#CustomerRegionalOfficeID').val());
+                               },700);
                         console.log($(".regionalVal").html());
                         console.log(regionId);
-                        console.log($('#CustomerRegionalOfficeID').val());
                     }
                     else 
                     {
@@ -2962,6 +2954,48 @@ function GetRegionId(zonalId, regionId) {
                 }
             });
     };
+
+    // $("#SBUTypeID").change(function () {
+    //    var id = this.value;
+
+    //    $.ajax({
+    //        type: 'POST',  // http method
+    //        url: '@Url.Action("GetZonalOfficebySBUType", "Common")',
+    //        data: { SBUTypeId: id },  // data to submit
+    //        dataType: "json",
+    //        success: function (data, status, xhr) {
+    //            var v = data;
+    //            if (status == 'success') {
+
+    //                $("#CustomerZonalOfficeID").html("");
+    //                $.each(data, function (i, data) { // bind the dropdown list using json result
+    //                        if (i == 0) {
+    //                        $('<option>',
+    //                            {
+    //                                value: 0,
+    //                                text: "Select Zonal Office"
+    //                            }).html("Select Zonal Office").appendTo("#CustomerZonalOfficeID");
+    //                        }
+    //                        else{
+    //                        $('<option>',
+    //                            {
+    //                                value: data.zonalOfficeID,
+    //                                text: data.zonalOfficeName
+    //                            }).html(data.zonalOfficeName).appendTo("#CustomerZonalOfficeID");
+    //                        }
+    //                });
+    //                $("#CustomerZonalOfficeID")[0].sumo.reload();
+    //                //$("#CustomerZonalOfficeID").trigger("change");
+    //            }
+    //            else {
+    //                console.log(v);
+    //            }
+    //        },
+    //        error: function (jqXhr, textStatus, errorMessage) {
+    //            alert("Error Populating Customer Zone");
+    //        }
+    //    });
+    //});
 
     $(".SBUIdVal").change(function () {
             var id = this.value;
@@ -2999,17 +3033,18 @@ function GetRegionId(zonalId, regionId) {
                         $(".zonalVal")[0].sumo.reload();
                         //$('.zonalVal').trigger('change');
                     }
-                    else {
+                    else 
+                    {
                         console.log(v);
                     }
                 },
                 error: function (jqXhr, textStatus, errorMessage) {
-                    alert("Error Populating Regional Office");
+                    alert("Error Populating Zonal Office");
                 }
             });
      });
 
-     $("#CustomerZonalOfficeID").change(function () {
+     $(".zonalVal").change(function () {
             var id = this.value;
 
             
@@ -3026,7 +3061,7 @@ function GetRegionId(zonalId, regionId) {
             }
             $.ajax({
                 type: 'POST',  // http method
-                url: '@Url.Action("GetRegionalOfcDetails", "Common")',
+                url: '@Url.Action("GetRegionalOfcDetails", "AshokLeyLand")',
                 data: { zonalOfcId: id },  // data to submit
                 dataType: "json",
                 success: function (data, status, xhr) {
@@ -3040,24 +3075,27 @@ function GetRegionId(zonalId, regionId) {
                                 {
                                     value: data.regionalOfficeID,
                                     text: data.regionalOfficeName
-                                }).html(data.districtName).appendTo(".regionalVal");
+                                }).html(data.regionalOfficeName).appendTo(".regionalVal");
                         });
                         $(".regionalVal")[0].sumo.reload();
                         //$('.regionalVal').trigger('change');
                     }
-                    else {
+                    else 
+                    {
                         console.log(v);
                     }
                 },
-                error: function (jqXhr, textStatus, errorMessage) {
+                error: function (jqXhr, textStatus, errorMessage) 
+                {
                     alert("Error Populating Regional Office");
                 }
             });
      });
 
-    $("#CustomerRegionalOfficeID").change(function () {
+    $(".regionalVal").change(function () {
         var id = this.value;
-        if (id != 0) {
+        if (id != 0) 
+        {
             $("#regionalOffice_error").html("");
         }
         $.ajax({
@@ -3069,7 +3107,8 @@ function GetRegionId(zonalId, regionId) {
                 var v = data;
                 if (status == 'success') {
                     $("#CustomerSalesAreaID").html("");
-                    $.each(data, function (i, data) { // bind the dropdown list using json result
+                    $.each(data, function (i, data) 
+                    { // bind the dropdown list using json result
                         $('<option>',
                             {
                                 value: data.salesAreaID,
@@ -3078,7 +3117,8 @@ function GetRegionId(zonalId, regionId) {
                     });
                     $("#CustomerSalesAreaID")[0].sumo.reload();
                 }
-                else {
+                else 
+                {
                     console.log(v);
                 }
             },
