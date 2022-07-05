@@ -268,6 +268,12 @@ namespace HPCL_Web.Controllers
             ModelState.Clear();
             return Json(customerCardInfo);
         }
+        [HttpPost]
+        public async Task<JsonResult> UpdateAlCostomerProfile(string str)
+        {
+            var result = await _ashokLeyLandService.UpdateAlCostomerProfile(str);
+            return Json(new { result = result });
+        }
 
     }
 }

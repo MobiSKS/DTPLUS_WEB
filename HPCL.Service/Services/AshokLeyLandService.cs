@@ -821,6 +821,12 @@ namespace HPCL.Service.Services
             custMdl.CustomerTbentityMdl.AddRange(await _commonActionService.GetCustomerTbentityListDropdown());
             custMdl.CustomerStateMdl.AddRange(await _commonActionService.GetStateList());
 
+            custMdl.ExternalPANAPIStatus = _configuration.GetSection("ExternalAPI:PANAPI").Value.ToString();
+            if (string.IsNullOrEmpty(custMdl.ExternalPANAPIStatus))
+            {
+                custMdl.ExternalPANAPIStatus = "Y";
+            }
+
             return custMdl;
         }
 
@@ -1083,6 +1089,53 @@ namespace HPCL.Service.Services
 
                 return searchList;
             }
+        }
+
+        public async Task<InsertResponse> UpdateAlCostomerProfile(string str)
+        {
+            JArray objs = JArray.Parse(JsonConvert.DeserializeObject(str).ToString());
+            List<UpdateAlCustomerProfileRequest> arrs = objs.ToObject<List<UpdateAlCustomerProfileRequest>>();
+
+            string dateOfApplication = await _commonActionService.changeDateFormat(arrs[0].DateOfApplication);
+
+            var insertServiceBody = new UpdateAlCustomerProfileRequest
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                CustomerID = arrs[0].CustomerID,
+                ZonalOffice = arrs[0].ZonalOffice,
+                RegionalOffice = arrs[0].RegionalOffice,
+                formNumber = "0",
+                DateOfApplication = dateOfApplication,
+                salesArea = arrs[0].salesArea,
+                IndividualOrgNameTitle = arrs[0].IndividualOrgNameTitle,
+                IndividualOrgName = arrs[0].IndividualOrgName,
+                NameOnCard = arrs[0].NameOnCard,
+                TypeOfBusinessEntity = arrs[0].TypeOfBusinessEntity,
+                ResidenceStatus = arrs[0].ResidenceStatus,
+                IncomeTaxPan = arrs[0].IncomeTaxPan,
+                CommunicationAddress1 = arrs[0].CommunicationAddress1,
+                CommunicationAddress2 = arrs[0].CommunicationAddress2,
+                CommunicationAddress3 = arrs[0].CommunicationAddress3,
+                CommunicationLocation = arrs[0].CommunicationLocation,
+                CommunicationCityName = arrs[0].CommunicationCityName,
+                CommunicationPincode = arrs[0].CommunicationPincode,
+                CommunicationStateId = arrs[0].CommunicationStateId,
+                CommunicationDistrictId = arrs[0].CommunicationDistrictId,
+                CommunicationPhoneNo = arrs[0].CommunicationPhoneNo,
+                CommunicationFax = arrs[0].CommunicationFax,
+                CommunicationMobileNo = arrs[0].CommunicationMobileNo,
+                CommunicationEmailid = arrs[0].CommunicationEmailid
+            };
+
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(insertServiceBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.updateAlCustomerDetail);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            InsertResponse result = obj.ToObject<InsertResponse>();
+            return result;
         }
 
     }

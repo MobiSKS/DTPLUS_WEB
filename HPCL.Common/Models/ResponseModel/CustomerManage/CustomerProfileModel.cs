@@ -394,6 +394,7 @@ namespace HPCL.Common.Models.ResponseModel.CustomerManage
         public string DrivingLicence { get; set; }
         public string CustomerName { get; set; }
         public string SignedOn { get; set; }
+        public string SBUId { get; set; }
     }
     public class SearchGridResponse
     {

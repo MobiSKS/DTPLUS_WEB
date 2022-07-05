@@ -309,6 +309,7 @@
         public static string checkVinNo = "api/dtplus/ashokleyland/check_vin_no";
         public static string getAlCustomerDetails = "api/dtplus/ashokleyland/get_al_customer_details";
         public static string searchAlManageCard = "api/dtplus/ashokleyland/search_al_manage_card";
+        public static string updateAlCustomerDetail = "api/dtplus/ashokleyland/update_al_customer_detail";
         #endregion
 
         #region Customer Financial
