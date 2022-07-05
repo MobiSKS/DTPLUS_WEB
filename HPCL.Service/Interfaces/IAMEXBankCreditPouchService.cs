@@ -15,8 +15,11 @@ namespace HPCL.Service.Interfaces
         Task<List<SuccessResponse>> SubmitRequestApproval(string bankEntryDetail);
         Task<SearchEnrollStatusRes> GetEnrollStatus(SearchEnrollStatusClone entity);
         Task<GetEnrollStatusReportRes> GetEnrollStatusReport(string customerId, int requestId);
-        Task<CcmsRechargeHdfcRes> CCMSRechargeHDFC(string customerId, string amount);
+        Task<CcmsRechargeAmexRes> CCMSRechargeAMEX(string customerId, string amount);
+        Task<AmexInitateRecharge> CCMSInitiateRechargeAMEX(string customerId, string amount);
         Task<GetRequestAuthorizationRes> GetRequestAuthorizationDetails(GetRequestAuthorizationReq entity);
         Task<List<SuccessResponse>> AuthorizationAction(string authReq);
+        Task<CheckEligibleRes> CheckEligibility(CheckEligibleReq entity);
+        Task<List<SuccessResponse>> ReqAvailEnroll(string customerId, string planTypeId);
     }
 }
