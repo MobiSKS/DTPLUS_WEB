@@ -137,7 +137,8 @@ namespace HPCL.Service.Services
         public async Task<TatkalViewRequestModel> ViewAllocatedMapCard()
         {
             TatkalViewRequestModel custModel = new TatkalViewRequestModel();
-            custModel.ZonalOffices.AddRange(await _commonActionService.GetZonalOfficeList());
+            custModel.SBUTypes.AddRange(await _commonActionService.GetSbuTypeList());
+            custModel.ZonalOffices.AddRange(await _commonActionService.GetZonalOfficeListbySBUtype("1"));
             custModel.FromDate = DateTime.Now.ToString("dd-MM-yyyy");
             custModel.ToDate = DateTime.Now.ToString("dd-MM-yyyy");
             return custModel;
@@ -332,7 +333,8 @@ namespace HPCL.Service.Services
                 RegionalOfficeID = entity.RegionalOfficeID == "0" ? "" : entity.RegionalOfficeID,
                 FromDate = entity.FromDate,
                 ToDate = entity.ToDate,
-                StatusId = entity.StatusId == "-1" ? "" : entity.StatusId
+                StatusId = entity.StatusId == "-1" ? "" : entity.StatusId,
+                SBUTypeId=entity.SBUTypeId,
 
             };
             StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");

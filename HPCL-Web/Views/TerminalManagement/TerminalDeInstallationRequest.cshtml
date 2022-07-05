@@ -17,6 +17,17 @@
                             <div class="d-flex align-items-center flex-wrap">
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">SBU Type <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.DropDownListFor(m => m.SBUTypeId, new SelectList(Model.SBUTypes, "SBUId", "SBUName"), new { @class = "form-control" })
+                                                <span class="error" id="sbuType_error"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
                                         <label class="font-weight-normal col-md-4 col-12">Zonal Office <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
@@ -26,6 +37,9 @@
                                         </div>
                                     </div>
                                 </div>
+
+                            </div>
+                            <div class="d-flex align-items-center flex-wrap">
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
                                         <label class="font-weight-normal col-md-4 col-12">Regional Office <sup class="text-danger">*</sup></label>
@@ -37,8 +51,6 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="d-flex align-items-center flex-wrap">
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
                                         <label class="font-weight-normal col-md-4 col-12">Merchant ID<sup class="text-danger">*</sup></label>
@@ -48,6 +60,9 @@
                                         </div>
                                     </div>
                                 </div>
+
+                            </div>
+                            <div class="d-flex align-items-center flex-wrap">
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
                                         <label class="font-weight-normal col-md-4 col-12">Terminal ID</label>
@@ -65,8 +80,6 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="d-flex align-items-center flex-wrap">
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
                                         <label class="font-weight-normal col-md-4 col-12">Deinstallation Type <sup class="text-danger">*</sup></label>
@@ -103,132 +116,189 @@
     </div>
 </div>
 <script type="text/javascript">
-     //debugger;
-
-     var zonalID = $("#ZonalOfficeId").val();
-     var regionalID = $("#RegionalOfcIdVal").val();
-
-
-     $(document).ready(function () {
-
-     });
-
-     $("#btnSearch").on("click", (function (e) {
          //debugger;
-         var deInstallationType = $("#DeinstallationTypeID :selected").val();
-         var merchantID = $("#MerchantId").val();
-         var terminalId = $("#TerminalId").val();
-         var flag = "Y";
-         if (merchantID == "") {
-             $("#Merchant_error").attr("style", "display:block");
-             $("#Merchant_error").html("Merchant ID required");
-             flag = "N";
-         }
-         else {
-             if (!merchantID.match(mappedMerchantID)) {
+
+         var zonalID = $("#ZonalOfficeId").val();
+         var regionalID = $("#RegionalOfcIdVal").val();
+
+
+         $(document).ready(function () {
+
+         });
+       $("#SBUTypeId").change(function () {
+        var id = this.value;
+
+        $.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("GetZonalOfficebySBUType", "Common")',
+            data: { SBUTypeId: id },  // data to submit
+            dataType: "json",
+            success: function (data, status, xhr) {
+                var v = data;
+                if (status == 'success') {
+
+                    $("#ZonalOfficeId").html("");
+                    $.each(data, function (i, data) { // bind the dropdown list using json result
+                            if (i == 0) {
+                            $('<option>',
+                                {
+                                    value: 0,
+                                    text: "--All--"
+                                }).html("--All--").appendTo("#ZonalOfficeId");
+                            }
+                            else{
+                            $('<option>',
+                                {
+                                    value: data.zonalOfficeID,
+                                    text: data.zonalOfficeName
+                                }).html(data.zonalOfficeName).appendTo("#ZonalOfficeId");
+                            }
+                    });
+                    $("#ZonalOfficeId")[0].sumo.reload();
+                    $("#ZonalOfficeId").trigger("change");
+                }
+                else {
+                    console.log(v);
+                }
+            },
+            error: function (jqXhr, textStatus, errorMessage) {
+                alert("Error Populating Customer Zone");
+            }
+        });
+    });
+         $("#btnSearch").on("click", (function (e) {
+             //debugger;
+             var deInstallationType = $("#DeinstallationTypeID :selected").val();
+             var merchantID = $("#MerchantId").val();
+             var terminalId = $("#TerminalId").val();
+             var flag = "Y";
+             if (merchantID == "") {
                  $("#Merchant_error").attr("style", "display:block");
-                 $("#Merchant_error").html("Please enter valid Merchant ID");
+                 $("#Merchant_error").html("Merchant ID required");
                  flag = "N";
              }
              else {
-                 $("#Merchant_error").attr("style", "display:none");
-                 $("#Merchant_error").html("");
+                 if (!merchantID.match(mappedMerchantID)) {
+                     $("#Merchant_error").attr("style", "display:block");
+                     $("#Merchant_error").html("Please enter valid Merchant ID");
+                     flag = "N";
+                 }
+                 else {
+                     $("#Merchant_error").attr("style", "display:none");
+                     $("#Merchant_error").html("");
+                 }
              }
-         }
-         if (terminalId != "") {
-             if (!terminalId.match(mappedterminalID)) {
-                 $("#terminalId_error").attr("style", "display:block");
-                 $("#terminalId_error").html("Please enter valid Terminal ID");
+             if (terminalId != "") {
+                 if (!terminalId.match(mappedterminalID)) {
+                     $("#terminalId_error").attr("style", "display:block");
+                     $("#terminalId_error").html("Please enter valid Terminal ID");
+                     flag = "N";
+                 }
+             }
+             if (deInstallationType == "0") {
+                 $("#type_error").html("Select Deinstallation Type");
                  flag = "N";
              }
-         }
-         if (deInstallationType == "0") {
-             $("#type_error").html("Select Deinstallation Type");
-             flag = "N";
-         }
-         else {
-             $("#type_error").html("");
-             if (deInstallationType == "1") {
+             else {
+                 $("#type_error").html("");
+                 if (deInstallationType == "1") {
+                     $("#TerminalId").val("");
+                     $("#TerminalId").prop("readonly", true);
+                 }
+                 else
+                     $("#TerminalId").prop("readonly", false);
+             }
+             if (flag == "N")
+                 e.preventDefault();
+                 else{
+
+                      var zoID = $("#ZonalOfficeId").val();
+                      var roID = $("#RegionalOfficeId").val();
+                      var sbuTypeid = $("#SBUTypeId").val();
+                     var terminationReqmodel = { MerchantId: merchantID, TerminalId: terminalId, ZonalOfficeId: zoID, RegionalOfficeId: roID,DeinstallationTypeID:deInstallationType,SBUTypeId:sbuTypeid};
+                      $.ajax({
+                          type: 'GET',
+                          url: '@Url.Action("SearchTerminalDeInstallationRequest", "TerminalManagement")',
+                          contentType: "application/json; charset=utf-8",
+                          data: terminationReqmodel,
+                          success: function (data) {
+                                $("#show_Table").html(data);
+                                $('html, body').animate({
+                                    scrollTop: $("#show_Table").offset().top
+                                }, 2000);
+
+                                 $("#MerchantId").attr("disabled",true);
+                                 $("#TerminalId").attr("disabled",true);
+                                 $("#ZonalOfficeId").attr("disabled",true);
+                                 $("#RegionalOfficeId").attr("disabled",true);
+                                 $("#DeinstallationTypeID").attr("disabled",true);
+                                 $("#SBUTypeId").attr("disabled",true);
+                          },
+                          error: function (ex) {
+                              alert('Error.' + ex);
+                          }
+                      });
+                 }
+
+         })
+         );
+         $("#btnReset").click(function () {
+             window.location.reload(true);
+
+         });
+
+         $("#RegionalOfficeId").change(function () {
+             var id = this.value;
+             $("#RegionalOfcIdVal").val(id);
+         });
+         function changeterminalId() {
+             var deInstallationTypeID = $("#DeinstallationTypeID :selected").val();
+             if (deInstallationTypeID == "1") {
                  $("#TerminalId").val("");
                  $("#TerminalId").prop("readonly", true);
              }
              else
                  $("#TerminalId").prop("readonly", false);
+             $("#show_Table").html("");
          }
-         if (flag == "N")
-             e.preventDefault();
-             else{
 
-                  var zoID = $("#ZonalOfficeId").val();
-                  var roID = $("#RegionalOfficeId").val();
-                 var terminationReqmodel = { MerchantId: merchantID, TerminalId: terminalId, ZonalOfficeId: zoID, RegionalOfficeId: roID,DeinstallationTypeID:deInstallationType };
+
+        function getMerchantRegionalOfc() {
+             var id = $('#ZonalOfficeId :selected').val();
+             var regionalID = $("#RegionalOfcIdVal").val();
+             if(id>0){
                   $.ajax({
-                      type: 'GET',
-                      url: '@Url.Action("SearchTerminalDeInstallationRequest", "TerminalManagement")',
-                      contentType: "application/json; charset=utf-8",
-                      data: terminationReqmodel,
-                      success: function (data) {
-                            $("#show_Table").html(data);
-                            $('html, body').animate({
-                                scrollTop: $("#show_Table").offset().top
-                            }, 2000);
-                           
-                             $("#MerchantId").attr("disabled",true);
-                             $("#TerminalId").attr("disabled",true);
-                             $("#ZonalOfficeId").attr("disabled",true);
-                             $("#RegionalOfficeId").attr("disabled",true);
-                             $("#DeinstallationTypeID").attr("disabled",true);
-                      },
-                      error: function (ex) {
-                          alert('Error.' + ex);
-                      }
-                  });
-             }
-
-     })
-     );
-     $("#btnReset").click(function () {
-         window.location.reload(true);
-
-     });
-
-     $("#RegionalOfficeId").change(function () {
-         var id = this.value;
-         $("#RegionalOfcIdVal").val(id);
-     });
-     function changeterminalId() {
-         var deInstallationTypeID = $("#DeinstallationTypeID :selected").val();
-         if (deInstallationTypeID == "1") {
-             $("#TerminalId").val("");
-             $("#TerminalId").prop("readonly", true);
-         }
-         else
-             $("#TerminalId").prop("readonly", false);
-         $("#show_Table").html("");
-     }
-
-
-    function getMerchantRegionalOfc() {
-         var id = $('#ZonalOfficeId :selected').val();
-         var regionalID = $("#RegionalOfcIdVal").val();
-         if(id>0){
-              $.ajax({
-                  type: 'POST',  // http method
-                  url: '@Url.Action("GetRegionalOfcDetails", "Common")',
-                  data: { ZonalOfcID: id },  // data to submit
-                  dataType: "json",
-                  success: function (data, status, xhr) {
-                      var v = data;
-                      if (status == 'success') {
-                          $("#RegionalOfficeId").html("");
-                          $.each(data, function (i, data) { // bind the dropdown list using json result
-                              if (i == 0) {
-                                  $('<option>',
-                                      {
-                                          value: 0,
-                                          text: "--All--"
-                                      }).html("--All--").appendTo("#RegionalOfficeId");
-                                  if (data.regionalOfficeID == regionalID) {
+                      type: 'POST',  // http method
+                      url: '@Url.Action("GetRegionalOfcDetails", "Common")',
+                      data: { ZonalOfcID: id },  // data to submit
+                      dataType: "json",
+                      success: function (data, status, xhr) {
+                          var v = data;
+                          if (status == 'success') {
+                              $("#RegionalOfficeId").html("");
+                              $.each(data, function (i, data) { // bind the dropdown list using json result
+                                  if (i == 0) {
+                                      $('<option>',
+                                          {
+                                              value: 0,
+                                              text: "--All--"
+                                          }).html("--All--").appendTo("#RegionalOfficeId");
+                                      if (data.regionalOfficeID == regionalID) {
+                                          $('<option selected = "selected">',
+                                              {
+                                                  value: data.regionalOfficeID,
+                                                  text: data.regionalOfficeName
+                                              }).html(data.regionalOfficeName).appendTo("#RegionalOfficeId");
+                                      }
+                                      else {
+                                          $('<option>',
+                                              {
+                                                  value: data.regionalOfficeID,
+                                                  text: data.regionalOfficeName
+                                              }).html(data.regionalOfficeName).appendTo("#RegionalOfficeId");
+                                      }
+                                  }
+                                  else if (data.regionalOfficeID == regionalID) {
                                       $('<option selected = "selected">',
                                           {
                                               value: data.regionalOfficeID,
@@ -242,90 +312,75 @@
                                               text: data.regionalOfficeName
                                           }).html(data.regionalOfficeName).appendTo("#RegionalOfficeId");
                                   }
-                              }
-                              else if (data.regionalOfficeID == regionalID) {
-                                  $('<option selected = "selected">',
-                                      {
-                                          value: data.regionalOfficeID,
-                                          text: data.regionalOfficeName
-                                      }).html(data.regionalOfficeName).appendTo("#RegionalOfficeId");
-                              }
-                              else {
-                                  $('<option>',
-                                      {
-                                          value: data.regionalOfficeID,
-                                          text: data.regionalOfficeName
-                                      }).html(data.regionalOfficeName).appendTo("#RegionalOfficeId");
-                              }
-                          });
-                          $("#RegionalOfficeId")[0].sumo.reload();
+                              });
+                              $("#RegionalOfficeId")[0].sumo.reload();
+                          }
+                          else {
+                              console.log(v);
+                          }
+                      },
+                      error: function (jqXhr, textStatus, errorMessage) {
+                          alert("Error Populating Regional Office Data");
                       }
-                      else {
-                          console.log(v);
-                      }
-                  },
-                  error: function (jqXhr, textStatus, errorMessage) {
-                      alert("Error Populating Regional Office Data");
-                  }
-              });
-          }
-          else{
-             $("#RegionalOfficeId").html('');
-             $("#RegionalOfficeId")[0].sumo.reload();
-          }
-      };
-        $('select').SumoSelect({
-             placeholder: '-All-',
-             search: true,
-             searchText: 'Enter Text here.'
-         });
+                  });
+              }
+              else{
+                 $("#RegionalOfficeId").html('');
+                 $("#RegionalOfficeId")[0].sumo.reload();
+              }
+          };
+            $('select').SumoSelect({
+                 placeholder: '-All-',
+                 search: true,
+                 searchText: 'Enter Text here.'
+             });
 
 
 
-      $("#MerchantId").on("blur", function () {
-          var merchantId = $("#MerchantId").val();
-          if (merchantId != "") {
-             if (!merchantId.match(mappedMerchantID)) {
+          $("#MerchantId").on("blur", function () {
+              var merchantId = $("#MerchantId").val();
+              if (merchantId != "") {
+                 if (!merchantId.match(mappedMerchantID)) {
+                     $("#Merchant_error").attr("style", "display:block");
+                     $("#Merchant_error").html("Please enter valid Merchant ID");
+
+                 }
+                 else{
+                     $("#Merchant_error").attr("style", "display:none");
+                     $("#Merchant_error").html("");
+                 }
+              }
+              else{
                  $("#Merchant_error").attr("style", "display:block");
-                 $("#Merchant_error").html("Please enter valid Merchant ID");
-
-             }
-             else{
-                 $("#Merchant_error").attr("style", "display:none");
-                 $("#Merchant_error").html("");
-             }
-          }
-          else{
-             $("#Merchant_error").attr("style", "display:block");
-             $("#Merchant_error").html("Merchant ID required");
-          }
-      });
-      $("#TerminalId").on("blur", function () {
-          var terminalId = $("#TerminalId").val();
-          if (terminalId != "") {
-              if (!terminalId.match(mappedterminalID)) {
-                  $("#terminalId_error").attr("style", "display:block");
-                  $("#terminalId_error").html("Please enter valid Terminal ID");
+                 $("#Merchant_error").html("Merchant ID required");
+              }
+          });
+          $("#TerminalId").on("blur", function () {
+              var terminalId = $("#TerminalId").val();
+              if (terminalId != "") {
+                  if (!terminalId.match(mappedterminalID)) {
+                      $("#terminalId_error").attr("style", "display:block");
+                      $("#terminalId_error").html("Please enter valid Terminal ID");
+                  }
+                  else{
+                      $("#terminalId_error").attr("style", "display:none");
+                      $("#terminalId_error").html("");
+                  }
               }
               else{
                   $("#terminalId_error").attr("style", "display:none");
                   $("#terminalId_error").html("");
               }
-          }
-          else{
-              $("#terminalId_error").attr("style", "display:none");
-              $("#terminalId_error").html("");
-          }
-      });
-      $("#DeinstallationTypeID").on("change", function () {
-          var deInstallationType = $("#DeinstallationTypeID :selected").val();
-          if (deInstallationType == "0") {
-             $("#type_error").html("Select Deinstallation Type");
-         }
-         else {
-             $("#type_error").html("");
-         }
-      });
+          });
+          $("#DeinstallationTypeID").on("change", function () {
+              var deInstallationType = $("#DeinstallationTypeID :selected").val();
+              if (deInstallationType == "0") {
+                 $("#type_error").html("Select Deinstallation Type");
+             }
+             else {
+                 $("#type_error").html("");
+             }
+          });
 
 
 </script>

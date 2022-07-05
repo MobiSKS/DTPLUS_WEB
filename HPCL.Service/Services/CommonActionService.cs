@@ -1708,6 +1708,54 @@ namespace HPCL.Service.Services
             List<CustomerInserCardResponseData> lst = jarr.ToObject<List<CustomerInserCardResponseData>>();
             return lst[0];
         }
+        public async Task<List<ZonalOfficeResponseModal>> GetZonalOfficeListbySBUtype(string SBUTypeId)
+        {
+            var zonalOfficeForms = new BaseEntity
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                ZonalId = CommonBase.zonalid,
+                RegionalId = CommonBase.regionalid,
+                SBUTypeId = SBUTypeId
+            };
 
+            StringContent zonalOfficeContent = new StringContent(JsonConvert.SerializeObject(zonalOfficeForms), Encoding.UTF8, "application/json");
+
+            var zonalOfficeResponse = await _requestService.CommonRequestService(zonalOfficeContent, WebApiUrl.getZonalOffice);
+
+            JObject zonalOfficeObj = JObject.Parse(JsonConvert.DeserializeObject(zonalOfficeResponse).ToString());
+            var zonalOfficeJarr = zonalOfficeObj["Data"].Value<JArray>();
+            List<ZonalOfficeResponseModal> zonalOfficeLst = zonalOfficeJarr.ToObject<List<ZonalOfficeResponseModal>>();
+
+            if (_httpContextAccessor.HttpContext.Session.GetString("ZonalId") != "0")
+            {
+                List<ZonalOfficeResponseModal> zonalOfficeLstCopy = zonalOfficeLst.ToList();
+
+                string[] AssignedZones = _httpContextAccessor.HttpContext.Session.GetString("ZonalId").Split(',');
+
+                char flag = 'N';
+
+                foreach (var item in zonalOfficeLstCopy)
+                {
+                    flag = 'N';
+
+                    for (int i = 0; i < AssignedZones.Length; i++)
+                    {
+                        if (item.ZonalOfficeID.ToString() == AssignedZones[i])
+                        {
+                            flag = 'Y';
+                            break;
+                        }
+                    }
+                    if (flag == 'N')
+                    {
+                        zonalOfficeLst.Remove(item);
+                    }
+                }
+            }
+
+            return zonalOfficeLst;
+        }
     }
 }
