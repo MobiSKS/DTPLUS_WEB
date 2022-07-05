@@ -383,7 +383,8 @@ namespace HPCL.Service.Services
         public async Task<GetCardAllocationActivation> MyHPOTCCardAllocationandActivation()
         {
             GetCardAllocationActivation GetCardAllocationActivation = new GetCardAllocationActivation();
-            GetCardAllocationActivation.ZoneMdl.AddRange(await _commonActionService.GetZonalOfficeList());
+            GetCardAllocationActivation.SBUTypes. AddRange(await _commonActionService.GetSbuTypeList());
+            GetCardAllocationActivation.ZoneMdl.AddRange(await _commonActionService.GetZonalOfficeListbySBUtype("1"));
             return GetCardAllocationActivation;
         }
         public async Task<MyCardAllocationandActivationModel> SearchCardActivationandAllocation(GetCardAllocationActivation entity)
@@ -405,6 +406,7 @@ namespace HPCL.Service.Services
                 ZonalOfficeId = string.IsNullOrEmpty(entity.ZonalOfficeId) || entity.ZonalOfficeId == "0" ? "" : entity.ZonalOfficeId,
                 RegionalOfficeId = string.IsNullOrEmpty(entity.RegionalOfficeId) || entity.RegionalOfficeId == "0" ? "" : entity.RegionalOfficeId,
                 CustomerId = string.IsNullOrEmpty(entity.CustomerId) ? "" : entity.CustomerId,
+                SBUTypeId=entity.SBUTypeId,
             };
 
             StringContent stringContent = new StringContent(JsonConvert.SerializeObject(cardAllocationforms), Encoding.UTF8, "application/json");

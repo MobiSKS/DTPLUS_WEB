@@ -16,6 +16,17 @@
                             <div class="d-flex align-items-center flex-wrap">
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">SBU Type <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.DropDownListFor(m => m.SBUTypeId, new SelectList(Model.SBUTypes, "SBUId", "SBUName"), new { @class = "form-control" })
+                                                <span class="error" id="sbuType_error"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
                                         <label class="font-weight-normal col-md-4 col-12">Zonal Office <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
@@ -26,6 +37,9 @@
                                         </div>
                                     </div>
                                 </div>
+
+                            </div>
+                            <div class="d-flex align-items-center flex-wrap">
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
                                         <label class="font-weight-normal col-md-4 col-12">Regional Office <sup class="text-danger">*</sup></label>
@@ -37,8 +51,6 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="d-flex align-items-center flex-wrap">
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
                                         <label class="font-weight-normal col-md-4 col-12">From Date <sup class="text-danger">*</sup></label>
@@ -50,6 +62,9 @@
                                         </div>
                                     </div>
                                 </div>
+
+                            </div>
+                            <div class="d-flex align-items-center flex-wrap">
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
                                         <label class="font-weight-normal col-md-4 col-12">To Date <sup class="text-danger">*</sup></label>
@@ -61,8 +76,6 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="d-flex align-items-center flex-wrap">
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
                                         <label class="font-weight-normal col-md-4 col-12">Merchant ID</label>
@@ -72,6 +85,10 @@
                                         </div>
                                     </div>
                                 </div>
+
+                            </div>
+                            <div class="d-flex align-items-center flex-wrap">
+
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
                                         <label class="font-weight-normal col-md-4 col-12">Terminal ID</label>
@@ -99,9 +116,9 @@
             </div>
             <div class="clearfix"></div>
         }
-        <div id="show_Table" class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3" >
+        <div id="show_Table" class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3">
         </div>
-       <div class="clearfix"></div>
+        <div class="clearfix"></div>
 
     </div>
 </div>
@@ -120,11 +137,51 @@
         //setDates();
         //getMerchantRegionalOfc();
     });
+    $("#SBUTypeId").change(function () {
+            var id = this.value;
+
+            $.ajax({
+                type: 'POST',  // http method
+                url: '@Url.Action("GetZonalOfficebySBUType", "Common")',
+                data: { SBUTypeId: id },  // data to submit
+                dataType: "json",
+                success: function (data, status, xhr) {
+                    var v = data;
+                    if (status == 'success') {
+
+                        $("#ZonalOfficeId").html("");
+                        $.each(data, function (i, data) { // bind the dropdown list using json result
+                                if (i == 0) {
+                                $('<option>',
+                                    {
+                                        value: 0,
+                                        text: "--All--"
+                                    }).html("--All--").appendTo("#ZonalOfficeId");
+                                }
+                                else{
+                                $('<option>',
+                                    {
+                                        value: data.zonalOfficeID,
+                                        text: data.zonalOfficeName
+                                    }).html(data.zonalOfficeName).appendTo("#ZonalOfficeId");
+                                }
+                        });
+                        $("#ZonalOfficeId")[0].sumo.reload();
+                    }
+                    else {
+                        console.log(v);
+                    }
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+                    alert("Error Populating Customer Zone");
+                }
+            });
+        });
     $("#btnReset").click(function () {
 
        window.location.reload(true);
     });
- 
+
     $("#btnSearch").on("click", (function (e) {
         var fromdate = $("#FromDate").val();
         var todate = $("#ToDate").val();
@@ -172,13 +229,13 @@
            else{
                  var zoID = $("#ZonalOfficeId").val();
                  var roID = $("#RegionalOfficeId").val();
-            
+                  var sbuTypeid = $("#SBUTypeId").val();
                  $.ajax({
                  type: 'GET',  // http method
                  url: '@Url.Action("SeacrhTerminalInstallationRequestStatus", "TerminalManagement")',
                  contentType: "application/json; charset=utf-8",
                  dataType: 'text',
-                 data: { ZonalOfficeId: zoID, RegionalOfficeId: roID, FromDate: fromdate, ToDate: todate, MerchantId: merchantId,TerminalId:terminalId},
+                 data: { ZonalOfficeId: zoID, RegionalOfficeId: roID, FromDate: fromdate, ToDate: todate, MerchantId: merchantId,TerminalId:terminalId,SBUTypeId:sbuTypeid},
                  success: function (data, status, xhr) {
                      var v = data;
                      if (status == 'success') {
@@ -192,6 +249,7 @@
                          $("#TerminalId").attr("disabled",true);
                          $("#ZonalOfficeId").attr("disabled",true);
                          $("#RegionalOfficeId").attr("disabled",true);
+                         $("#SBUTypeId").attr("disabled",true);
                      }
                      else {
                          console.log(v);
@@ -284,7 +342,7 @@
             if (!merchantId.match(mappedMerchantID)) {
                 $("#merchantId_error").attr("style", "display:block");
                 $("#merchantId_error").html("Please enter valid Merchant ID");
-                
+
             }
             else{
                 $("#merchantId_error").attr("style", "display:none");
@@ -313,5 +371,5 @@
              $("#terminalId_error").html("");
          }
      });
- 
+
 </script>

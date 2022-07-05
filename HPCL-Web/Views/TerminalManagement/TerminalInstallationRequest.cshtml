@@ -19,6 +19,18 @@
                             <div class="d-flex align-items-center flex-wrap">
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">SBU Type <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                
+                                                @Html.DropDownListFor(m => m.SBUTypeId, Enumerable.Empty<SelectListItem>(),null, new { @class = "form-control sbuType" })
+                                                <span class="error" id="sbuType_error"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
                                         <label class="font-weight-normal col-md-4 col-12">Zonal Office <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
@@ -27,9 +39,12 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-lg-6 col-12">
+                              
+                            </div>
+                            <div class="d-flex align-items-center flex-wrap">
+                                  <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal offset-md-1 col-md-4 col-12">Regional Office <sup class="text-danger">*</sup></label>
+                                        <label class="font-weight-normal  col-md-4 col-12">Regional Office <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
                                                 @Html.DropDownListFor(m => m.RegionalOfficeId, Enumerable.Empty<SelectListItem>(), "All", new { @class = "form-control regionalFetchId" })
@@ -37,8 +52,6 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="d-flex align-items-center flex-wrap">
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
                                         <label class="font-weight-normal col-md-4 col-12">Merchant ID <sup class="text-danger">*</sup></label>
@@ -50,17 +63,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-lg-6 col-12">
-                                    <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal col-md-4 col-12"> </label>
-                                        <div class="col-md-7 col-12">
-                                            <div class="d-flex align-items-center justify-content- mt-0 mb-3">
-                                                <div class="px-2">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                               
                             </div>
                             <div class="d-flex align-items-center justify-content-center mt-0">
                                 <div class="px-2">
@@ -248,27 +251,67 @@
              search: true,
              searchText: 'Enter Text here.'
          });
-
           $.ajax({
                  type: 'POST',  // http method
-                 url: '@Url.Action("GetzonalOfficeList", "Common")',
+                 url: '@Url.Action("GetSbuTypeList", "Common")',
                  dataType: "json",
               success: function (data, status, xhr) {
 
                   console.log(data);
-
-                  $.each(data.zonalOfficeLst, function (i, option) {
-                      $("<option/>").val(option.zonalOfficeID).text(option.zonalOfficeName).appendTo(".zonalFetchId");
+                  debugger;
+                  $.each(data.sbuTypeResponseList, function (i, option) {
+                      $("<option/>").val(option.sbuId).text(option.sbuName).appendTo(".sbuType");
                   });
-
-                  $(".zonalFetchId")[0].sumo.reload();
+                  
+                  $(".sbuType")[0].sumo.reload();
+                  $(".sbuType").trigger("change");
               },
               error: function (jqXhr, textStatus, errorMessage) {
-                  alert("Error Populating Zonal Office");
+                  alert("Error Populating SBU Type");
               }
           });
+       
      });
+       $("#SBUTypeId").change(function () {
+            var id = this.value;
 
+            $.ajax({
+                type: 'POST',  // http method
+                url: '@Url.Action("GetZonalOfficebySBUType", "Common")',
+                data: { SBUTypeId: id },  // data to submit
+                dataType: "json",
+                success: function (data, status, xhr) {
+                    var v = data;
+                    if (status == 'success') {
+
+                        $("#ZonalOfficeId").html("");
+                        $.each(data, function (i, data) { // bind the dropdown list using json result
+                                if (i == 0) {
+                                $('<option>',
+                                    {
+                                        value: 0,
+                                        text: "All"
+                                    }).html("All").appendTo("#ZonalOfficeId");
+                                }
+                                else{
+                                $('<option>',
+                                    {
+                                        value: data.zonalOfficeID,
+                                        text: data.zonalOfficeName
+                                    }).html(data.zonalOfficeName).appendTo("#ZonalOfficeId");
+                                }
+                        });
+                       $("#ZonalOfficeId")[0].sumo.reload();
+                    }
+                    else {
+                        console.log(v);
+                    }
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+                    alert("Error Populating Customer Zone");
+                }
+            });
+        });
      $(".zonalFetchId").change(function () {
              var id = this.value;
 
@@ -497,8 +540,8 @@
          if (flag=="Y") {
              var zoID = $("#ZonalOfficeId :selected").val();
              var roID = $("#RegionalOfficeId :selected").val();
-
-             var model = { ZonalOfficeId: zoID, RegionalOfficeId: roID, MerchantId: merchantID };
+             var sbuTypeId=$("#SBUTypeId :selected").val();
+             var model = { ZonalOfficeId: zoID, RegionalOfficeId: roID, MerchantId: merchantID,SBUTypeId:sbuTypeId };
              $.ajax({
                  type: 'POST',
                  url: '@Url.Action("TerminalInstallationRequest", "TerminalManagement")',

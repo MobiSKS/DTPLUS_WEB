@@ -33,10 +33,11 @@ namespace HPCL.Service.Services
         public async Task<TerminalDeInstallationRequestApprovalRequestModal> TerminalDeInstallationRequestApproval()
         {
             TerminalDeInstallationRequestApprovalRequestModal terminalDeInstallationRequestApprovalRequestModal = new TerminalDeInstallationRequestApprovalRequestModal();
-            terminalDeInstallationRequestApprovalRequestModal.ZoneMdl.AddRange(await _commonActionService.GetZonalOfficeList());
+            terminalDeInstallationRequestApprovalRequestModal.SBUTypes.AddRange(await _commonActionService.GetSbuTypeList());
+            terminalDeInstallationRequestApprovalRequestModal.ZoneMdl.AddRange(await _commonActionService.GetZonalOfficeListbySBUtype("1"));
             return terminalDeInstallationRequestApprovalRequestModal;
         }
-        public async Task<TerminalDeInstallationRequestApprovalWithRemark> GetTerminalsForApproval(string zonalOfcID, string regionalOfcID, string fromDate, string toDate, string merchantId, string terminalId)
+        public async Task<TerminalDeInstallationRequestApprovalWithRemark> GetTerminalsForApproval(string zonalOfcID, string regionalOfcID, string fromDate, string toDate, string merchantId, string terminalId, string SBUTypeId)
         {
             TerminalDeInstallationRequestApprovalWithRemark getTerminalDeInstallationRequestApprovalReponseModals = new TerminalDeInstallationRequestApprovalWithRemark();
             if (!string.IsNullOrEmpty(fromDate) && !string.IsNullOrEmpty(fromDate))
@@ -59,7 +60,8 @@ namespace HPCL.Service.Services
                 ZonalOfficeId = string.IsNullOrEmpty(zonalOfcID) || zonalOfcID == "0" ? "" : zonalOfcID,
                 RegionalOfficeId = string.IsNullOrEmpty(regionalOfcID) || regionalOfcID == "0" ? "" : regionalOfcID,
                 MerchantId = string.IsNullOrEmpty(merchantId) ? "" : merchantId,
-                TerminalId = string.IsNullOrEmpty(terminalId) ? "" : terminalId
+                TerminalId = string.IsNullOrEmpty(terminalId) ? "" : terminalId,
+                SBUTypeId=SBUTypeId
             };
 
             StringContent terminalDetailsForDeInstallationApprovalContent = new StringContent(JsonConvert.SerializeObject(terminalDetailsForDeInstallationApprovalForms), Encoding.UTF8, "application/json");
@@ -107,10 +109,11 @@ namespace HPCL.Service.Services
         public async Task<TerminalDeInstallationRequestAuthorizationRequestModal> TerminalDeInstallationRequestAuthorization()
         {
             TerminalDeInstallationRequestAuthorizationRequestModal terminalDeInstallationRequestAuthorizationRequestModal = new TerminalDeInstallationRequestAuthorizationRequestModal();
-            terminalDeInstallationRequestAuthorizationRequestModal.ZoneMdl.AddRange(await _commonActionService.GetZonalOfficeList());
+            terminalDeInstallationRequestAuthorizationRequestModal.SBUTypes.AddRange(await _commonActionService.GetSbuTypeList());
+            terminalDeInstallationRequestAuthorizationRequestModal.ZoneMdl.AddRange(await _commonActionService.GetZonalOfficeListbySBUtype("1"));
             return terminalDeInstallationRequestAuthorizationRequestModal;
         }
-        public async Task<TerminalDeInstallationRequestAuthorizationWithRemark> GetTerminalsForAuthorization(string zonalOfcID, string regionalOfcID, string fromDate, string toDate, string merchantId, string terminalId)
+        public async Task<TerminalDeInstallationRequestAuthorizationWithRemark> GetTerminalsForAuthorization(string zonalOfcID, string regionalOfcID, string fromDate, string toDate, string merchantId, string terminalId, string SBUTypeId)
         {
             TerminalDeInstallationRequestAuthorizationWithRemark getTerminalDeInstallationRequestAuthorizationReponseModals = new TerminalDeInstallationRequestAuthorizationWithRemark();
             if (!string.IsNullOrEmpty(fromDate) && !string.IsNullOrEmpty(fromDate))
@@ -133,7 +136,8 @@ namespace HPCL.Service.Services
                 ZonalOfficeId = string.IsNullOrEmpty(zonalOfcID) || zonalOfcID == "0" ? "" : zonalOfcID,
                 RegionalOfficeId = string.IsNullOrEmpty(regionalOfcID) || regionalOfcID == "0" ? "" : regionalOfcID,
                 MerchantId = string.IsNullOrEmpty(merchantId) ? "" : merchantId,
-                TerminalId = string.IsNullOrEmpty(terminalId) ? "" : terminalId
+                TerminalId = string.IsNullOrEmpty(terminalId) ? "" : terminalId,
+                SBUTypeId=SBUTypeId
             };
 
             StringContent terminalDetailsForDeInstallationAuthorizationContent = new StringContent(JsonConvert.SerializeObject(terminalDetailsForDeInstallationAuthorizationForms), Encoding.UTF8, "application/json");

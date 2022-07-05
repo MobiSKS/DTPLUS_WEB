@@ -308,7 +308,11 @@
                $(".zoneArea").addClass("disable");
                $(".class_"+zoneId).removeClass("disable");
            }
-           if(!$('input:checkbox.chk_'+cnt).prop('checked'))
+           var checkedCnt=0;
+           $('input:checkbox.chk_'+cnt+':checked').each(function () {
+               checkedCnt=checkedCnt+1;
+           });
+           if(checkedCnt==0)
                $(".zoneArea").removeClass("disable");
        }
         $("#checkAll").click(function () {
@@ -339,27 +343,30 @@
            debugger;
             var currentRow = $(this).closest("tr");
             var roleId = currentRow.find('.roleId').text();
-            var regionId = currentRow.find('.regionId').text();
-
+            var regionIdsList = currentRow.find('.regionId').text();
+            var regionIdArr=regionIdsList.split(',');
+            //var zoneId = currentRow.find('.zoneId').text();
              $('li').removeClass("usr_active");
 
             $('li#'+roleId).addClass("usr_active");
+             selectedRole=roleId;
             $('input[type=checkbox][name=regionChk]').prop("checked",false);
-            var chkROId=$('input[type=checkbox][name=regionChk][value='+regionId+']').attr("id");
-            var zoneId=chkROId.substring(chkROId.indexOf('-') + 1);
-            //if(!($(".class_a_ZoneArea").hasClass("collapsed"))){
-                $(".class_a_ZoneArea").addClass("collapsed");
-                 $(".class_a_ZoneArea").attr("aria-expanded",false);
-                 $(".regionArea").removeClass("show");
-            //}
-           
-            $("#id_"+zoneId).removeClass("collapsed");
-            $("#id_"+zoneId).attr("aria-expanded",true);
-            var nestedId=$("#id_"+zoneId).attr("href");
-            $(nestedId).addClass("show");
-            $('input[type=checkbox][name=regionChk][value='+regionId+']').prop("checked",true);
+            $(".class_a_ZoneArea").addClass("collapsed");
+            $(".class_a_ZoneArea").attr("aria-expanded",false);
+            $(".regionArea").removeClass("show");
             $(".zoneArea").addClass("disable");
-            $(".class_"+zoneId).removeClass("disable");
+            for(var i=0;i<regionIdArr.length;i++){
+                $('input[type=checkbox][name=regionChk][value='+regionIdArr[i]+']').prop("checked",true); 
+                var chkROId=$('input[type=checkbox][name=regionChk][value='+regionIdArr[i]+']').attr("id");
+                var zoneId=chkROId.substring(chkROId.indexOf('-') + 1);
+            
+                $("#id_"+zoneId).removeClass("collapsed");
+                $("#id_"+zoneId).attr("aria-expanded",true);
+                var nestedId=$("#id_"+zoneId).attr("href");
+                $(nestedId).addClass("show");
+                $(".class_"+zoneId).removeClass("disable");
+            }
+            
 
         });
 
@@ -489,12 +496,12 @@
                         var zoId=chkROId.substring(chkROId.indexOf('-') + 1);
                         objUserRole.push({ RO: $(this).val(),ZO:zoId });
                    });
-                   var ReqModel={UserName:userName,Email:newEmail,Password:"",ConfirmPassword:"",SecretQuestion:"",SecretQuestionAnswer:"",UserRole:userRoleSelected,FirstName:"",LastName:"",StateId:"0",ActionType:"",TypeManageUsersAddUserRole:objUserRole,UpdateStatus:"Update"};
+                   var ReqModel={UserName:userName,Email:newEmail,Password:"",ConfirmPassword:"",SecretQuestion:"0",SecretQuestionAnswer:"",UserRole:userRoleSelected,FirstName:"",LastName:"",StateId:"0",ActionType:"",TypeManageUsersAddUserRole:objUserRole,UpdateStatus:"Update"};
                    $.ajax({
                        type: 'POST',  // http method
                        url: '@Url.Action("UpdateUserandLocations", "Security")',
                        contentType: "application/json; charset=utf-8",
-                       dataType: 'JSON',
+                       dataType: 'text',
                        data: JSON.stringify(ReqModel),
                        success: function (data, status, xhr) {
                            var v = data;

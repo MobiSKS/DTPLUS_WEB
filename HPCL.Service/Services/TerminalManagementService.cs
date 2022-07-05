@@ -47,6 +47,7 @@ namespace HPCL.Service.Services
                     ZonalOfficeId = entity.ZonalOfficeId,
                     RegionalOfficeId = entity.RegionalOfficeId,
                     MerchantId = entity.MerchantId,
+                    SBUTypeId=entity.SBUTypeId,
                 };
             }
             else if (_httpContextAccessor.HttpContext.Session.GetString("LoginType") == "Merchant")
@@ -58,7 +59,8 @@ namespace HPCL.Service.Services
                     UserIp = CommonBase.userip,
                     ZonalOfficeId = entity.ZonalOfficeId,
                     RegionalOfficeId = entity.RegionalOfficeId,
-                    MerchantId = _httpContextAccessor.HttpContext.Session.GetString("UserId")
+                    MerchantId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                    SBUTypeId=entity.SBUTypeId,
                 };
             }
 
@@ -109,7 +111,7 @@ namespace HPCL.Service.Services
             return MessageList;
         }
 
-        public async Task<TerminalManagementRequestViewModel> TerminalInstallationRequestClose(string ZonalOfficeId, string RegionalOfficeId, string FromDate, string ToDate, string MerchantId, string TerminalId)
+        public async Task<TerminalManagementRequestViewModel> TerminalInstallationRequestClose(string ZonalOfficeId, string RegionalOfficeId, string FromDate, string ToDate, string MerchantId, string TerminalId,string SBUTypeId)
         {
             //string fromDate = "", toDate = "";
             TerminalManagementRequestViewModel terminalReq = new TerminalManagementRequestViewModel();
@@ -133,7 +135,8 @@ namespace HPCL.Service.Services
                 MerchantId = MerchantId,
                 TerminalId = TerminalId,
                 ZonalOfficeId = ZonalOfficeId != "0" ? ZonalOfficeId : "",
-                RegionalOfficeId = RegionalOfficeId != "0" ? RegionalOfficeId : ""
+                RegionalOfficeId = RegionalOfficeId != "0" ? RegionalOfficeId : "",
+                SBUTypeId=SBUTypeId
             };
             StringContent ResponseContent = new StringContent(JsonConvert.SerializeObject(TerminalManagementRequest), Encoding.UTF8, "application/json");
 
@@ -173,7 +176,7 @@ namespace HPCL.Service.Services
             return MessageList;
 
         }
-        public async Task<TerminalManagementRequestViewModel> ViewTerminalInstallationRequestStatus(string ZonalOfficeId, string RegionalOfficeId, string FromDate, string ToDate, string MerchantId, string TerminalId)
+        public async Task<TerminalManagementRequestViewModel> ViewTerminalInstallationRequestStatus(string ZonalOfficeId, string RegionalOfficeId, string FromDate, string ToDate, string MerchantId, string TerminalId,string SBUTypeId)
         {
             TerminalManagementRequestViewModel terminalReq = new TerminalManagementRequestViewModel();
             if (!string.IsNullOrEmpty(FromDate) && !string.IsNullOrEmpty(FromDate))
@@ -196,7 +199,8 @@ namespace HPCL.Service.Services
                 MerchantId = MerchantId,
                 TerminalId = TerminalId,
                 ZonalOfficeId = ZonalOfficeId != "0" ? ZonalOfficeId : "",
-                RegionalOfficeId = RegionalOfficeId != "0" ? RegionalOfficeId : ""
+                RegionalOfficeId = RegionalOfficeId != "0" ? RegionalOfficeId : "",
+                SBUTypeId = SBUTypeId
             };
             StringContent ResponseContent = new StringContent(JsonConvert.SerializeObject(TerminalManagementRequest), Encoding.UTF8, "application/json");
 
@@ -224,7 +228,8 @@ namespace HPCL.Service.Services
                 MerchantId = terminalReq.MerchantId != null ? terminalReq.MerchantId : "",
                 TerminalId = terminalReq.TerminalId != null ? terminalReq.TerminalId : "",
                 ZonalOfficeId = terminalReq.ZonalOfficeId != "0" ? terminalReq.ZonalOfficeId : "",
-                RegionalOfficeId = terminalReq.RegionalOfficeId != "0" ? terminalReq.RegionalOfficeId : ""
+                RegionalOfficeId = terminalReq.RegionalOfficeId != "0" ? terminalReq.RegionalOfficeId : "",
+                SBUTypeId=terminalReq.SBUTypeId
             };
             StringContent ResponseContent = new StringContent(JsonConvert.SerializeObject(TerminalManagementRequest), Encoding.UTF8, "application/json");
 
@@ -275,7 +280,7 @@ namespace HPCL.Service.Services
 
         }
 
-        public async Task<TerminalDeinstallationRequestViewModel> TerminalDeInstallationRequestClose(string ZonalOfficeId, string RegionalOfficeId, string FromDate, string ToDate, string MerchantId, string TerminalId)
+        public async Task<TerminalDeinstallationRequestViewModel> TerminalDeInstallationRequestClose(string ZonalOfficeId, string RegionalOfficeId, string FromDate, string ToDate, string MerchantId, string TerminalId, string SBUTypeId)
         {
             //string fromDate = "", toDate = "";
             TerminalDeinstallationRequestViewModel terminalReq = new TerminalDeinstallationRequestViewModel();
@@ -299,7 +304,8 @@ namespace HPCL.Service.Services
                 MerchantId = MerchantId,
                 TerminalId = TerminalId,
                 ZonalOfficeId = ZonalOfficeId != "0" ? ZonalOfficeId : "",
-                RegionalOfficeId = RegionalOfficeId != "0" ? RegionalOfficeId : ""
+                RegionalOfficeId = RegionalOfficeId != "0" ? RegionalOfficeId : "",
+                SBUTypeId=SBUTypeId,
             };
             StringContent ResponseContent = new StringContent(JsonConvert.SerializeObject(TerminalManagementRequest), Encoding.UTF8, "application/json");
 
@@ -343,7 +349,7 @@ namespace HPCL.Service.Services
 
         }
 
-        public async Task<TerminalDeinstallationRequestViewModel> ViewTerminalDeinstallationRequestStatus(string ZonalOfficeId, string RegionalOfficeId, string FromDate, string ToDate, string MerchantId, string TerminalId)
+        public async Task<TerminalDeinstallationRequestViewModel> ViewTerminalDeinstallationRequestStatus(string ZonalOfficeId, string RegionalOfficeId, string FromDate, string ToDate, string MerchantId, string TerminalId, string SBUTypeId)
         {
             //string fromDate = "", toDate = "";
             TerminalDeinstallationRequestViewModel terminalReq = new TerminalDeinstallationRequestViewModel();
@@ -367,7 +373,8 @@ namespace HPCL.Service.Services
                 MerchantId = MerchantId,
                 TerminalId = TerminalId,
                 ZonalOfficeId = ZonalOfficeId != "0" ? ZonalOfficeId : "",
-                RegionalOfficeId = RegionalOfficeId != "0" ? RegionalOfficeId : ""
+                RegionalOfficeId = RegionalOfficeId != "0" ? RegionalOfficeId : "",
+                SBUTypeId = SBUTypeId
             };
             StringContent ResponseContent = new StringContent(JsonConvert.SerializeObject(TerminalManagementRequest), Encoding.UTF8, "application/json");
 
@@ -406,7 +413,8 @@ namespace HPCL.Service.Services
                 ToDate = toDate,
                 Category = entity.Category,
                 ZonalOfficeId = entity.ZonalOfficeId == "0" ? "" : entity.ZonalOfficeId,
-                RegionalOfficeId = entity.RegionalOfficeId == "0" ? "" : entity.RegionalOfficeId
+                RegionalOfficeId = entity.RegionalOfficeId == "0" ? "" : entity.RegionalOfficeId,
+                SBUTypeId= entity.SBUTypeId,
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
@@ -476,7 +484,7 @@ namespace HPCL.Service.Services
             MessageList.Add(responseMsg[0].Reason);
             return MessageList;
         }
-        public async Task<TerminalDeinstallationRequestViewModel> ProblematicDeInstalledToDeInstalled(string ZonalOfficeId, string RegionalOfficeId, string FromDate, string ToDate, string MerchantId, string TerminalId)
+        public async Task<TerminalDeinstallationRequestViewModel> ProblematicDeInstalledToDeInstalled(string ZonalOfficeId, string RegionalOfficeId, string FromDate, string ToDate, string MerchantId, string TerminalId, string SBUTypeId)
         {
             //string fromDate = "", toDate = "";
             TerminalDeinstallationRequestViewModel terminalReq = new TerminalDeinstallationRequestViewModel();
@@ -500,7 +508,8 @@ namespace HPCL.Service.Services
                 MerchantId = MerchantId,
                 TerminalId = TerminalId,
                 ZonalOfficeId = ZonalOfficeId != "0" ? ZonalOfficeId : "",
-                RegionalOfficeId = RegionalOfficeId != "0" ? RegionalOfficeId : ""
+                RegionalOfficeId = RegionalOfficeId != "0" ? RegionalOfficeId : "",
+                SBUTypeId = SBUTypeId 
             };
             StringContent ResponseContent = new StringContent(JsonConvert.SerializeObject(deInstallForms), Encoding.UTF8, "application/json");
 

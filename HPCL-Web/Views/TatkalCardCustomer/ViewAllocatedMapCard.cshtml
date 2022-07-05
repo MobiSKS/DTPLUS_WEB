@@ -23,6 +23,15 @@
                             <div class="d-flex align-items-center flex-wrap">
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">SBU Type</label>
+                                        <div class="col-md-7 col-12">
+                                            @Html.DropDownListFor(m => m.SBUTypeId, new SelectList(Model.SBUTypes, "SBUId", "SBUName"), new { @class = "form-control" })
+                                            <span class="error" id="sbuType_error"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
                                         <label class="font-weight-normal col-md-4 col-12">Zonal Office </label>
                                         <div class="col-md-7 col-12">
                                             @Html.DropDownListFor(m => m.ZonalOfficeId, new SelectList(Model.ZonalOffices, "ZonalOfficeID", "ZonalOfficeName"), new { @class = "form-control", onchange = "getViewAllocatedCardRegionalOfc()" })
@@ -33,6 +42,9 @@
                                         </div>
                                     </div>
                                 </div>
+
+                            </div>
+                            <div class="d-flex align-items-center flex-wrap">
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
                                         <label class="font-weight-normal col-md-4 col-12">Regional Office</label>
@@ -45,8 +57,6 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="d-flex align-items-center flex-wrap">
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
                                         <label class="font-weight-normal col-md-4 col-12">From Date </label>
@@ -58,6 +68,10 @@
                                         </div>
                                     </div>
                                 </div>
+
+
+                            </div>
+                            <div class="d-flex align-items-center flex-wrap">
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
                                         <label class="font-weight-normal col-md-4 col-12">To Date </label>
@@ -69,24 +83,23 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                                <div class="col-lg-6 col-12">
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-4 col-12  mb-0">Status</label>
+                                        <div class="col-md-7 col-12">
+                                            @*@Html.DropDownListFor(m => m.StatusFlag, new SelectList(Model.StatusModals, "StatusId", "StatusName"), new { @class = "form-control" })*@
 
-                            <div class="col-lg-6 col-12">
-                                <div class="form-group d-flex align-items-center flex-wrap">
-                                    <label class="font-weight-normal col-md-4 col-12  mb-0">Status</label>
-                                    <div class="col-md-7 col-12">
-                                        @*@Html.DropDownListFor(m => m.StatusFlag, new SelectList(Model.StatusModals, "StatusId", "StatusName"), new { @class = "form-control" })*@
-
-                                        <div class="custom_select">
-                                           @*@Html.DropDownListFor(m => m.StatusId, new SelectList(Model.StatusName, "StatusId", "StatusName"), new {  @class = "form-control" })*@
-                                            <select name="StatusId" id="StatusId" class="form-control">
+                                            <div class="custom_select">
+                                                @*@Html.DropDownListFor(m => m.StatusId, new SelectList(Model.StatusName, "StatusId", "StatusName"), new {  @class = "form-control" })*@
+                                                <select name="StatusId" id="StatusId" class="form-control">
                                                     <option selected="selected" value="-1">--All--</option>
                                                     <option value="0">Pending</option>
                                                     <option value="1">Mapped</option>
                                                 </select>
+                                            </div>
+
+
                                         </div>
-
-
                                     </div>
                                 </div>
                             </div>
@@ -101,7 +114,7 @@
                                             <div class="px-2">
                                                 <button class="btn btn_primary" onclick="ResetFields()" type="button">Reset</button>
                                             </div>
-                                             <div style="display:none;">@Html.TextBoxFor(m => m.RegionalOfcIdVal)</div>
+                                            <div style="display:none;">@Html.TextBoxFor(m => m.RegionalOfcIdVal)</div>
                                         </div>
 
 
@@ -114,7 +127,7 @@
                         <div class="clearfix"></div>
                         <div id="show_Table" class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3">
                         </div>
-                       
+
                     </div>
                 </div>
             </div>
@@ -140,7 +153,46 @@
        window.location.reload(true);
     };
 
+ $("#SBUTypeId").change(function () {
+        var id = this.value;
 
+        $.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("GetZonalOfficebySBUType", "Common")',
+            data: { SBUTypeId: id },  // data to submit
+            dataType: "json",
+            success: function (data, status, xhr) {
+                var v = data;
+                if (status == 'success') {
+
+                    $("#ZonalOfficeId").html("");
+                    $.each(data, function (i, data) { // bind the dropdown list using json result
+                            if (i == 0) {
+                            $('<option>',
+                                {
+                                    value: 0,
+                                    text: "--All--"
+                                }).html("--All--").appendTo("#ZonalOfficeId");
+                            }
+                            else{
+                            $('<option>',
+                                {
+                                    value: data.zonalOfficeID,
+                                    text: data.zonalOfficeName
+                                }).html(data.zonalOfficeName).appendTo("#ZonalOfficeId");
+                            }
+                    });
+                    $("#ZonalOfficeId")[0].sumo.reload();
+                }
+                else {
+                    console.log(v);
+                }
+            },
+            error: function (jqXhr, textStatus, errorMessage) {
+                alert("Error Populating Customer Zone");
+            }
+        });
+    });
     $("#btnSearch").click(function () {
         var fromdate = $("#FromDate").val();
         var todate = $("#ToDate").val();
@@ -161,7 +213,8 @@
             var zonalId = $("#ZonalOfficeId").val();
             var regionID = $("#CustomerRegionID").val();
             var statusId =  $("#StatusId").val();
-            var model = { FromDate: fromdate, ToDate: todate, StatusId: statusId,ZonalOfficeID:zonalId,RegionalOfficeID: regionID};
+             var sbuTypeid = $("#SBUTypeId").val();
+            var model = { FromDate: fromdate, ToDate: todate, StatusId: statusId,ZonalOfficeID:zonalId,RegionalOfficeID: regionID,SBUTypeId:sbuTypeid};
 
             $.ajax({
                 type: 'POST',  // http method
@@ -170,7 +223,7 @@
                 contentType: "application/json; charset=utf-8",
                 success: function (data) {
                    var v = data;
-                   //debugger;    
+                   //debugger;
                      //if (status == 'success') {
                          $("#show_Table").html(data);
                          $('html, body').animate({

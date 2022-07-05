@@ -55,7 +55,10 @@ namespace HPCL.Common.Models.ViewModel.TatkalCardCustomer
 
             });
 
+            SBUTypes = new List<SbuTypeResponseModal>();
         }
+        public virtual List<SbuTypeResponseModal> SBUTypes { get; set; }
+        public string SBUTypeId { get; set; }
 
         public string MerchantId { get; set; }
         public string TerminalId { get; set; }
