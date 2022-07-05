@@ -270,5 +270,13 @@ namespace HPCL_Web.Controllers
 
             return Json(new { sbuTypeResponseList = sbuTypeResponseLst });
         }
+        [HttpPost]
+        public async Task<JsonResult> GetZonalOfficeListbySBUtype(string SBUTypeId)
+        {
+            var sortedtList = await _commonActionService.GetZonalOfficeListbySBUtype(SBUTypeId);
+
+            ModelState.Clear();
+            return Json(sortedtList);
+        }
     }
 }

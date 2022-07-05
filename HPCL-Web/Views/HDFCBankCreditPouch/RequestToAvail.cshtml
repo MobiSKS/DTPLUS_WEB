@@ -1,0 +1,164 @@
+﻿@model HPCL.Common.Models.ViewModel.HDFCBankCreditPouch.CustomerDetailsReq
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ajax-unobtrusive/3.2.6/jquery.unobtrusive-ajax.js"></script>
+
+<div class="col-lg-12 px-0">
+    <div class="bg-white p-2 p-md-4">
+        <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
+            <li class="breadcrumb-item"><a href="@Url.Action("Index")" class="text_primary">HDFC Bank Credit Pouch</a> </li>
+            <li class="breadcrumb-item font-weight-light">Request to avail HDFC Bank Credit Pouch</li>
+        </ul>
+
+        <div class="w-100">
+            <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
+                <div class="border-1 rounded border-grey">
+                    <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Request to avail HDFC Bank Credit Pouch</p>
+
+                    <div id="EnrollSuccess" class="mb-3 text-center alert alert-success" style="display:none;"></div>
+
+                    <form id="formVal">
+                        <div class="col-lg-12 col-md-12 col-12 py-3">
+
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-12 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-2 col-12">Customer ID <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-3 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.CustomerId, new { @id = "CustomerDefaultVal", @class = "form-control" })
+                                                @Html.ValidationMessageFor(m => m.CustomerId, "", new {@id="customerIdValErr", @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                        <div class="col-md-7 col-12">
+                                            <div class="d-flex align-items-center justify-content-start mt-0">
+                                                <div class="px-2">
+                                                    <button class="btn btn_primary" type="button" onclick="RequestEnroll()">Submit</button>
+                                                </div>
+                                                <div class="px-2">
+                                                    <button class="btn btn_primary" type="button" onclick="resetClick()">Reset</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-12 col-12">
+                                            <div class="form-group d-flex align-items-center flex-wrap mb-3 mt-3">
+                                                <div class="col-md-12 col-12">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" id="gridCheck">
+                                                        <label class="form-check-label" for="gridCheck" style="margin-top: 4px;">
+                                                            I agree with the terms and conditions mentioned above <a target="_blank" href="http://182.74.202.219/docs/ApplicationFormTemplate/Terms_and_Conditions_Credit_Pouch.pdf">View Terms &amp; Conditions</a>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="clearfix"></div>
+                    <div id="noRecord" class="mb-3 text-center alert alert-danger ml-3 mr-3" style="display:none;"></div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="clearfix"></div>
+    </div>
+</div>
+<div class="clearfix"></div>
+
+<script>
+
+    function resetClick() {
+        window.location.reload(true);
+    }
+
+    function RequestEnroll() {
+
+        var flag = "Y";
+        
+        var customerId = $("#CustomerDefaultVal").val();
+
+        if(customerId == ""){
+            $('#customerIdValErr').text("Please enter Customer ID");
+            flag = "N";
+        }
+        if(customerId.trim() != ''){
+            if(!customerId.trim().match(mappedCustomerId)){
+                $('#customerIdValErr').text("Invalid Customer ID");
+                flag = "N";
+            }
+        }
+
+        if(customerId.trim() != ""){
+            if($("#gridCheck").prop('checked') == false){
+                alert("Please accept the terms and conditions.");
+                flag = "N";
+            }
+        }
+
+        if (flag == "N")
+            e.preventDefault();
+
+        if (flag == "Y") {
+            if ($("#formVal").valid()) {
+
+                if (confirm('Are you sure you want to apply for HDFC Bank Credit Pouch ? Please read terms and conditions thoroughly before submission.')) {
+                console.log('ok');
+
+                    $.ajax({
+                        type: 'POST',  // http method
+                        url: '@Url.Action("CheckEligibility", "HDFCBankCreditPouch")',
+                        data: $('#formVal').serialize(),   // data to submit
+                        success: function (res) {
+
+                            document.getElementById("noRecord").style.display = "none";
+
+                            console.log(res);
+
+                            if (res.searchList.success == true) {
+
+                                if(res.searchList.data[0].status == 1){
+
+                                    $.ajax({
+                                        type: 'POST',  // http method
+                                        url: '@Url.Action("ReqAvailEnroll", "HDFCBankCreditPouch")',
+                                        data: {customerId: $("#CustomerDefaultVal").val(),planTypeId: res.searchList.data[0].planTypeId},  // data to submit
+                                        success: function (response, status, xhr) {
+
+                                            if(response.searchList.status == 1){
+                                                $("#formVal").hide();
+                                                document.getElementById("EnrollSuccess").style.display = "block";
+                                            }
+
+                                        },
+                                        error: function (jqXhr, textStatus, errorMessage) {
+                                            console.log("Error");
+                                        }
+                                    });
+
+                                }else{
+                                    $("#noRecord").html("");
+                                    $("#noRecord").append("<span>" + res.searchList.data[0].reason + "</span>");
+                                    document.getElementById("noRecord").style.display = "block";
+                                }
+                            }else{
+                                $("#noRecord").html("");
+                                $("#noRecord").append("<span>" + res.searchList.message + "</span>");
+                                document.getElementById("noRecord").style.display = "block";
+                            }
+
+                        },
+                        error: function (jqXhr, textStatus, errorMessage) {
+                            console.log("Error");
+                        }
+                    });
+                }
+            } else {
+                return false;
+            }
+        }
+
+    }
+</script>

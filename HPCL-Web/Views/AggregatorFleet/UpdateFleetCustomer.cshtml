@@ -145,7 +145,6 @@
                                         <div class="col-md-8 col-12">
                                             <div class="custom_select">
                                                 @Html.DropDownListFor(x => x.CustomerResidenceStatus, new[]{
-                                                new SelectListItem(){ Text = "Select Residence Status", Value = "-1"},
                                                 new SelectListItem(){ Text = "Indian", Value = "Indian"},
                                                 new SelectListItem(){ Text = "NRI", Value = "NRI"},
                                                 }, null, new { @class = "form-control" })
@@ -240,7 +239,7 @@
                                 </div>
                                 <div class="col-md-6 col-12">
                                     <div class="form-group d-flex align-items-center flex-wrap">
-                                        <label class="font-weight-normal offset-md-1 col-md-3 col-12">Pin code<sup class="text-danger">*</sup></label>
+                                        <label class="font-weight-normal offset-md-1 col-md-3 col-12">PIN code<sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             @Html.TextBoxFor(m => m.CommunicationPinCode, new { @class = "form-control", maxlength = "6", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
                                             <span class="error" id="comm_pincode_error"></span>
@@ -381,7 +380,7 @@
                                     </div>
                                     <div class="col-md-6 col-12">
                                         <div class="form-group d-flex align-items-center flex-wrap">
-                                            <label class="font-weight-normal offset-md-2 col-md-3 col-12">Pin code<sup class="text-danger">*</sup></label>
+                                            <label class="font-weight-normal offset-md-2 col-md-3 col-12">PIN code<sup class="text-danger">*</sup></label>
                                             <div class="col-md-7 col-12">
                                                 @Html.TextBoxFor(m => m.PerOrRegAddressPinCode, new { @class = "form-control", maxlength = "6", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
                                                 <span class="error" id="perma_pincode_error"></span>
@@ -826,7 +825,52 @@
                 localStorage.setItem("EMAILIDALREADYUSED", "1");
                 localStorage.setItem("DUPLICATEPANUSED", "1");
                 setDOAFormat();
+                 if (customerTbentityID == 10) {
+                            $('#lblPanText').text('');
+                            $('#lblPanText').append('Govt. Dept. Identification Details<sup class="text-danger">*</sup>');
+                            $('#btnVerify').hide();
+                            $('#lblCustPOI').show();
+                            document.getElementById('IsDuplicatePanNo').value = "1";
+                            document.getElementById("CustomerIncomeTaxPan").maxLength = 30;
+                            document.getElementById("dvPan").className = "col-md-8 col-12";
+                        }
+                        else {
+                            $('#lblPanText').text('');
+                            $('#lblPanText').append('Income Tax PAN<sup class="text-danger">*</sup>');
+                            $('#btnVerify').show();
+                            $('#lblCustPOI').hide();
+                            document.getElementById("CustomerIncomeTaxPan").maxLength = 10;
+                            document.getElementById("dvPan").className = "col-md-6 col-12";
+                        }
 
+                        var panNumber = document.getElementById("CustomerIncomeTaxPan").value.trim();
+
+                        if (customerTbentityID == 10)
+                        {
+                            if (panNumber == "")
+                            {
+                                document.getElementById("incomeTaxPan_error").innerHTML = "Govt. Dept. Identification Details required";
+                                document.getElementById("incomeTaxPan_error").className = "error";
+                                return (false);
+                            }
+                            else
+                            {
+                                document.getElementById("incomeTaxPan_error").innerHTML = "";
+                            }
+                        }
+                        else
+                        {
+                            if (panNumber == "")
+                            {
+                                document.getElementById("incomeTaxPan_error").innerHTML = "Income Tax PAN field cannot be left blank";
+                                document.getElementById("incomeTaxPan_error").className = "error";
+                                return (false);
+                            }
+                            else
+                            {
+                                document.getElementById("incomeTaxPan_error").innerHTML = "";
+                            }
+                        }
                 //if (notFoundError == "") {
                 //    if (custDateOfApplication == "") {
                 //        $("#CustomerDateOfApplication").datepicker({

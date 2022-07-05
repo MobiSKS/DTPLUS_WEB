@@ -268,6 +268,20 @@ namespace HPCL_Web.Controllers
             ModelState.Clear();
             return Json(customerCardInfo);
         }
+        [HttpPost]
+        public async Task<JsonResult> UpdateAlCostomerProfile(string str)
+        {
+            var result = await _ashokLeyLandService.UpdateAlCostomerProfile(str);
+            return Json(new { result = result });
+        }
+        [HttpPost]
+        public async Task<JsonResult> GetRegionalOfcDetails(string zonalOfcId)
+        {
+            var sortedtList = await _commonActionService.GetRegionalOfficeList(zonalOfcId);
+
+            ModelState.Clear();
+            return Json(sortedtList);
+        }
 
     }
 }

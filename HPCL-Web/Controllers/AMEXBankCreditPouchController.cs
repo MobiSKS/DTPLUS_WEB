@@ -111,14 +111,20 @@ namespace HPCL_Web.Controllers
         }
 
         [HttpPost]
+        public async Task<JsonResult> CCMSInitiateRechargeAMEX(string customerId, string amount)
+        {
+            var checkList = await _amexXBankCreditPouchService.CCMSInitiateRechargeAMEX(customerId, amount);
+            return Json(new { checkList = checkList });
+        }
+
+        [HttpPost]
         public async Task<JsonResult> CCMSRechargeThroughCreditPouch(string customerId, string amount)
         {
-            var searchList = await _amexXBankCreditPouchService.CCMSRechargeHDFC(customerId, amount);
-            ModelState.Clear();
+            var searchList = await _amexXBankCreditPouchService.CCMSRechargeAMEX(customerId, amount);
             return Json(new { searchList = searchList });
         }
 
-        public async Task<IActionResult> HdfcRedirectToPaymentGateway(string inputTxtValues)
+        public async Task<IActionResult> AmexRedirectToPaymentGateway(string inputTxtValues)
         {
             CcmsRechargeHdfcResData arrs = JsonConvert.DeserializeObject<CcmsRechargeHdfcResData>(inputTxtValues);
 
@@ -148,6 +154,27 @@ namespace HPCL_Web.Controllers
             var reasonList = await _amexXBankCreditPouchService.AuthorizationAction(authReq);
             ModelState.Clear();
             return Json(new { reasonList = reasonList });
+        }
+
+        public IActionResult RequestAvailEnroll()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> CheckEligibility(CheckEligibleReq entity)
+        {
+            var searchList = await _amexXBankCreditPouchService.CheckEligibility(entity);
+            ModelState.Clear();
+            return Json(new { searchList = searchList });
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> ReqAvailEnroll(string customerId, string planTypeId)
+        {
+            var searchList = await _amexXBankCreditPouchService.ReqAvailEnroll(customerId, planTypeId);
+            ModelState.Clear();
+            return Json(new { searchList = searchList });
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿@model HPCL.Common.Models.ViewModel.HDFCBankCreditPouch.SearchEnrollStatusClone
+﻿@model HPCL.Common.Models.ViewModel.AMEXBankCreditPouch.SearchEnrollStatusClone
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ajax-unobtrusive/3.2.6/jquery.unobtrusive-ajax.js"></script>
 
@@ -202,7 +202,7 @@
 
                 $.ajax({
                     type: 'POST',  // http method
-                    url: '@Url.Action("RequestAuthorization", "HDFCBankCreditPouch")',
+                    url: '@Url.Action("RequestAuthorization", "AMEXBankCreditPouch")',
                     data: $('#formValid').serialize(),  // data to submit
                     success: function (res, status, xhr) {
 
@@ -251,7 +251,7 @@
                                 var refNo = (girdList[i].referenceNo || '');
                                 var zo = (girdList[i].zo || '');
                                 var ro = (girdList[i].ro || '');
-                                var customerId = "</span class='getCustId'>"+(girdList[i].customerId || '')+"</span>";
+                                var customerId = "<span class='getCustId'>"+(girdList[i].customerId || '')+"</span>";
                                 var customerName = (girdList[i].customerName || '');
                                 var address =  (girdList[i].address || '');
                                 var mobNo = (girdList[i].mobileNo || '');
@@ -326,12 +326,12 @@
 
             var row = $(this).closest("tr");
 
-            CustomerId = row.find('.custVal').text();
+            CustomerId = row.find('.getCustId').text();
             var RequestId = row.find('.reqId').text();
             var AuthorizationRemark = row.find('.remarksVal').val();
             var ActionType = row.find('.actionVal option:selected').val();
             var CreditLimitAssigned = row.find('.cLimit').val();
-            var AuthorizBy = row.find('.custVal').text();
+            var AuthorizBy = row.find('.getCustId').text();
             
             updateArray.push({
                 CustomerId: CustomerId,
@@ -393,7 +393,7 @@
                 });
 
                 $.ajax({
-                    url: "@Url.Action("AuthorizationAction", "HDFCBankCreditPouch")",
+                    url: "@Url.Action("AuthorizationAction", "AMEXBankCreditPouch")",
                     type: "POST",
                     traditional: true,
                     data: { authReq: JSON.stringify(updateArray) },

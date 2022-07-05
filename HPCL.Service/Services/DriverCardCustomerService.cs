@@ -417,7 +417,7 @@ namespace HPCL.Service.Services
         }
 
 
-        public async Task<DriverCardAllocationanadActivationViewModel> GetDriverCardActivationAllocationDetails(string zonalOfficeID, string regionalOfficeID, string fromDate, string toDate, string customerId)
+        public async Task<DriverCardAllocationanadActivationViewModel> GetDriverCardActivationAllocationDetails(string zonalOfficeID, string regionalOfficeID, string fromDate, string toDate, string customerId,string SBUTypeId)
         {
             DriverCardAllocationanadActivationViewModel getDrtiverAllocationandActivation = new DriverCardAllocationanadActivationViewModel();
             if (!string.IsNullOrEmpty(fromDate) && !string.IsNullOrEmpty(fromDate))
@@ -436,6 +436,7 @@ namespace HPCL.Service.Services
                 ZonalOfficeId = string.IsNullOrEmpty(zonalOfficeID) || zonalOfficeID == "0" ? "" : zonalOfficeID,
                 RegionalOfficeId = string.IsNullOrEmpty(regionalOfficeID) || regionalOfficeID == "0" ? "" : regionalOfficeID,
                 CustomerId = string.IsNullOrEmpty(customerId) ? "" : customerId,
+                SBUTypeId = SBUTypeId
             };
 
             StringContent stringContent = new StringContent(JsonConvert.SerializeObject(cardAllocationforms), Encoding.UTF8, "application/json");
@@ -453,7 +454,8 @@ namespace HPCL.Service.Services
         public async Task<DriverCardAllocationanadActivationViewModel> DriverCardAllocationandActivation()
         {
             DriverCardAllocationanadActivationViewModel GetCardAllocationActivation = new DriverCardAllocationanadActivationViewModel();
-            GetCardAllocationActivation.ZoneMdl.AddRange(await _commonActionService.GetZonalOfficeList());
+            GetCardAllocationActivation.SBUTypes.AddRange(await _commonActionService.GetSbuTypeList());
+            GetCardAllocationActivation.ZoneMdl.AddRange(await _commonActionService.GetZonalOfficeListbySBUtype("1"));
             return GetCardAllocationActivation;
         }
         public async Task<DealerWiseDriverCardRequestModel> DealerDriverCardRequests()

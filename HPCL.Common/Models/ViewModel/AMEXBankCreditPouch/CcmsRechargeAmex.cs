@@ -1,11 +1,11 @@
 ﻿using HPCL.Common.Models.CommonEntity;
-using System;
 using HPCL.Common.Resources;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace HPCL.Common.Models.ViewModel.AMEXBankCreditPouch
 {
-    public class CcmsRechargeHdfc : BaseEntity
+    public class CcmsRechargeAmex : BaseEntity
     {
         [Required(ErrorMessage = FieldValidation.CustomerNotEmpty)]
         [StringLength(10)]

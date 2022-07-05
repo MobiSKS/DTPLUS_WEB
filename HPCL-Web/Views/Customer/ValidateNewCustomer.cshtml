@@ -1065,8 +1065,10 @@
                                         <div class="form-group d-flex align-items-center flex-wrap w-100">
                                             <label class="font-weight-normal col-md-5 col-12">Remarks <sup class="text-danger">*</sup></label>
                                             <div class="col-md-7 col-12">
-                                                @Html.TextBoxFor(m => m.Remarks, new { @class = "form-control" })
+                                                @Html.TextAreaFor(m => m.Remarks, new { @class = "form-control", @row = "5", @style = "resize: none;", maxlength="250" })
                                                 <span class="error" id="Remarks_error"></span>
+
+                                                <p id="charRemining"></p>
                                             </div>
                                         </div>
                                     </div>
@@ -1139,6 +1141,17 @@
             });
 
             //$("#CustomerRegionID")[0].sumo.reload();
+
+        var text_max = 250;
+        $('#charRemining').html('(<i>' + text_max +' characters remaining</i>)');
+
+        $('#Remarks').keyup(function () 
+        {
+            var text_length = $('#Remarks').val().length;
+            var text_remaining = text_max - text_length;
+
+            $('#charRemining').html('(<i>' + text_remaining + ' characters remaining</i>)');
+        });
 
 
             let tableCustData = sessionStorage.getItem("tableCustData");

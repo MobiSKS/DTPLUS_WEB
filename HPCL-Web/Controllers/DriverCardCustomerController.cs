@@ -230,9 +230,9 @@ namespace HPCL_Web.Controllers
             var modals = await _driverCardCustomerService.ViewDriverCardMerchantAllocation(MerchantId, CardNo);
             return PartialView("~/Views/DriverCardCustomer/_DriverCardMerchantAllocationTable.cshtml", modals);
         }
-        public async Task<IActionResult> GetDriverCardActivationAllocationDetails(string zonalOfcID, string regionalOfcID, string fromDate, string toDate, string customerId)
+        public async Task<IActionResult> GetDriverCardActivationAllocationDetails(string zonalOfcID, string regionalOfcID, string fromDate, string toDate, string customerId,string SBUTypeId)
         {
-            var modals = await _driverCardCustomerService.GetDriverCardActivationAllocationDetails(zonalOfcID, regionalOfcID, fromDate, toDate, customerId);
+            var modals = await _driverCardCustomerService.GetDriverCardActivationAllocationDetails(zonalOfcID, regionalOfcID, fromDate, toDate, customerId, SBUTypeId);
             return PartialView("~/Views/DriverCardCustomer/_DriverCardActivAllocationTbl.cshtml", modals);
         }
         public async Task<IActionResult> DriverCardAllocationandActivation()

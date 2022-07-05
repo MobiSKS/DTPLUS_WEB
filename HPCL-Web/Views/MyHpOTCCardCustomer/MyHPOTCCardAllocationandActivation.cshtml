@@ -17,6 +17,17 @@
                             <div class="d-flex align-items-center flex-wrap">
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">SBU Type</label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                              @Html.DropDownListFor(m => m.SBUTypeId, new SelectList(Model.SBUTypes, "SBUId", "SBUName"), new { @class = "form-control" })
+                                                <span class="error" id="sbuType_error"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
                                         <label class="font-weight-normal col-md-4 col-12">@Label.ZonalOfc</label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
@@ -25,7 +36,10 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-lg-6 col-12">
+                               
+                            </div>
+                            <div class="d-flex align-items-center flex-wrap">
+                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
                                         <label class="font-weight-normal col-md-4 col-12">@Label.RegionalOfc</label>
                                         <div class="col-md-7 col-12">
@@ -36,8 +50,6 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="d-flex align-items-center flex-wrap">
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
                                         <label class="font-weight-normal col-md-4 col-12">From Date</label>
@@ -49,7 +61,10 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-lg-6 col-12">
+                              
+                            </div>
+                            <div class="d-flex align-items-center flex-wrap">
+                                  <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
                                         <label class="font-weight-normal col-md-4 col-12">To Date</label>
                                         <div class="col-md-7 col-12">
@@ -60,8 +75,6 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="d-flex align-items-center flex-wrap">
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
                                         <label class="font-weight-normal col-md-4 col-12">@Label.CustomerId</label>
@@ -110,6 +123,47 @@
     $("#btnReset").click(function () {
         window.location.reload(true);
 
+    });
+ $("#SBUTypeId").change(function () {
+        var id = this.value;
+
+        $.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("GetZonalOfficebySBUType", "Common")',
+            data: { SBUTypeId: id },  // data to submit
+            dataType: "json",
+            success: function (data, status, xhr) {
+                var v = data;
+                if (status == 'success') {
+
+                    $("#ZonalOfficeId").html("");
+                    $.each(data, function (i, data) { // bind the dropdown list using json result
+                            if (i == 0) {
+                            $('<option>',
+                                {
+                                    value: 0,
+                                    text: "--All--"
+                                }).html("--All--").appendTo("#ZonalOfficeId");
+                            }
+                            else{
+                            $('<option>',
+                                {
+                                    value: data.zonalOfficeID,
+                                    text: data.zonalOfficeName
+                                }).html(data.zonalOfficeName).appendTo("#ZonalOfficeId");
+                            }
+                    });
+                    $("#ZonalOfficeId")[0].sumo.reload();
+                    $("#ZonalOfficeId").trigger("change");
+                }
+                else {
+                    console.log(v);
+                }
+            },
+            error: function (jqXhr, textStatus, errorMessage) {
+                alert("Error Populating Customer Zone");
+            }
+        });
     });
     function getCustomerRegionalOfc() {
         var id = $('#ZonalOfficeId :selected').val();
@@ -207,7 +261,7 @@
         var roID = $("#RegionalOfficeId").val();
         var fromDate = $("#FromDate").val();
         var toDate = $("#ToDate").val();
-        
+        var sbuTypeid = $("#SBUTypeId").val();
         
         $.ajax({
             type: 'POST',  // http method

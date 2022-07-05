@@ -19,5 +19,7 @@ namespace HPCL.Service.Interfaces
         Task<GetRequestAuthorizationRes> GetRequestAuthorizationDetails(GetRequestAuthorizationReq entity);
         Task<List<SuccessResponse>> AuthorizationAction(string authReq);
         Task<HdfcInitateRecharge> CCMSInitiateRechargeHDFC(string customerId, string amount);
+        Task<CheckEligibleRes> CheckEligibility(CheckEligibleReq entity);
+        Task<List<SuccessResponse>> ReqAvailEnroll(string customerId, string planTypeId);
     }
 }

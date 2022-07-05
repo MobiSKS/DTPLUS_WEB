@@ -14,28 +14,40 @@
                         <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Terminal Installation Request Approval</p>
                         <div class="col-lg-12 col-md-12 col-12 py-3">
                             <div class="d-flex align-items-center flex-wrap">
+                                 <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">SBU Type <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.DropDownListFor(m => m.SBUTypeId, Enumerable.Empty<SelectListItem>(),null, new { @class = "form-control sbuType" })
+                                                <span class="error" id="sbuType_error"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
                                         <label class="font-weight-normal col-md-4 col-12">Zonal Office <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.DropDownListFor(m => m.ZonalOfficeId, Enumerable.Empty<SelectListItem>(), "--Select--", new { @class = "form-control zonalFetchId" })
+                                                @Html.DropDownListFor(m => m.ZonalOfficeId, Enumerable.Empty<SelectListItem>(), "All", new { @class = "form-control zonalFetchId" })
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-lg-6 col-12">
-                                    <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal offset-md-1 col-md-4 col-12">Regional Office <sup class="text-danger">*</sup></label>
-                                        <div class="col-md-7 col-12">
-                                            <div class="custom_select">
-                                                @Html.DropDownListFor(m => m.RegionalOfficeId, Enumerable.Empty<SelectListItem>(), "--Select--", new { @class = "form-control regionalFetchId" })
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                
                             </div>
                             <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">Regional Office <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.DropDownListFor(m => m.RegionalOfficeId, Enumerable.Empty<SelectListItem>(), "All", new { @class = "form-control regionalFetchId" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
                                         <label class="font-weight-normal col-md-4 col-12">From Date <sup class="text-danger">*</sup></label>
@@ -47,9 +59,12 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-lg-6 col-12">
+                               
+                            </div>
+                            <div class="d-flex align-items-center flex-wrap">
+                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal offset-md-1 col-md-4 col-12">To Date <sup class="text-danger">*</sup></label>
+                                        <label class="font-weight-normal col-md-4 col-12">To Date <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
                                                 @Html.TextBoxFor(m => m.ToDate, new { @class = "form-control toDate",@placeholder="dd-mm-yyyy", @autocomplete = "off", @onchange = "checkDates('fromDate_error');" })
@@ -58,8 +73,6 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="d-flex align-items-center flex-wrap">
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
                                         <label class="font-weight-normal col-md-4 col-12">Select Category <sup class="text-danger">*</sup></label>
@@ -174,25 +187,67 @@
         });
 
         $.ajax({
-            type: 'POST',  // http method
-            url: '@Url.Action("GetzonalOfficeList", "Common")',
-            dataType: "json",
-            success: function (data, status, xhr) {
+                 type: 'POST',  // http method
+                 url: '@Url.Action("GetSbuTypeList", "Common")',
+                 dataType: "json",
+              success: function (data, status, xhr) {
 
-                console.log(data);
+                  console.log(data);
+                  debugger;
+                  $.each(data.sbuTypeResponseList, function (i, option) {
+                      $("<option/>").val(option.sbuId).text(option.sbuName).appendTo(".sbuType");
+                  });
+                  
+                  $(".sbuType")[0].sumo.reload();
+                  $(".sbuType").trigger("change");
+              },
+              error: function (jqXhr, textStatus, errorMessage) {
+                  alert("Error Populating SBU Type");
+              }
+          });
+       
+     });
+       $("#SBUTypeId").change(function () {
+            var id = this.value;
 
-                $.each(data.zonalOfficeLst, function (i, option) {
-                    $("<option/>").val(option.zonalOfficeID).text(option.zonalOfficeName).appendTo(".zonalFetchId");
-                });
-                $(".zonalFetchId")[0].sumo.reload();
-            },
-            error: function (jqXhr, textStatus, errorMessage) {
-                alert("Error Populating Zonal Office");
-            }
+            $.ajax({
+                type: 'POST',  // http method
+                url: '@Url.Action("GetZonalOfficebySBUType", "Common")',
+                data: { SBUTypeId: id },  // data to submit
+                dataType: "json",
+                success: function (data, status, xhr) {
+                    var v = data;
+                    if (status == 'success') {
+
+                        $("#ZonalOfficeId").html("");
+                        $.each(data, function (i, data) { // bind the dropdown list using json result
+                                if (i == 0) {
+                                $('<option>',
+                                    {
+                                        value: 0,
+                                        text: "All"
+                                    }).html("All").appendTo("#ZonalOfficeId");
+                                }
+                                else{
+                                $('<option>',
+                                    {
+                                        value: data.zonalOfficeID,
+                                        text: data.zonalOfficeName
+                                    }).html(data.zonalOfficeName).appendTo("#ZonalOfficeId");
+                                }
+                        });
+                       $("#ZonalOfficeId")[0].sumo.reload();
+                       $("#ZonalOfficeId").trigger("change");
+                    }
+                    else {
+                        console.log(v);
+                    }
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+                    alert("Error Populating Customer Zone");
+                }
+            });
         });
-    });
-
-
 
 $(".zonalFetchId").change(function () {
     var id = this.value;
@@ -206,35 +261,40 @@ $(".zonalFetchId").change(function () {
     if (id != 0) {
         $("#state_error").html("");
     }
-
-    $.ajax({
-        type: 'POST',  // http method
-        url: '@Url.Action("GetRegionalOfcDetails", "Common")',
-        data: { zonalOfcId: id },  // data to submit
-        dataType: "json",
-        success: function (data, status, xhr) {
-            var v = data;
-            if (status == 'success') {
-                $(".regionalFetchId").html("");
-                $('<option>',{value: 0,text: "--Select Regional Office--"}).html("--Select Regional Office--").appendTo(".regionalFetchId");
-                //$('<option>--Select Regional Office--</option>').appendTo(".regionalFetchId");
-                $.each(data, function (i, data) { // bind the dropdown list using json result
-                    $('<option>',
-                        {
-                            value: data.regionalOfficeID,
-                            text: data.regionalOfficeName
-                        }).html(data.districtName).appendTo(".regionalFetchId");
-                });
-                $(".regionalFetchId")[0].sumo.reload();
-            }
-            else {
-                console.log(v);
-            }
-        },
-        error: function (jqXhr, textStatus, errorMessage) {
-            alert("Error Populating Regional Office");
+     if(id>0){
+            $.ajax({
+                type: 'POST',  // http method
+                url: '@Url.Action("GetRegionalOfcDetails", "Common")',
+                data: { zonalOfcId: id },  // data to submit
+                dataType: "json",
+                success: function (data, status, xhr) {
+                    var v = data;
+                    if (status == 'success') {
+                        $(".regionalFetchId").html("");
+                        $('<option>',{value: 0,text: "All"}).html("All").appendTo(".regionalFetchId");
+                        //$('<option>--Select Regional Office--</option>').appendTo(".regionalFetchId");
+                        $.each(data, function (i, data) { // bind the dropdown list using json result
+                            $('<option>',
+                                {
+                                    value: data.regionalOfficeID,
+                                    text: data.regionalOfficeName
+                                }).html(data.districtName).appendTo(".regionalFetchId");
+                        });
+                        $(".regionalFetchId")[0].sumo.reload();
+                    }
+                    else {
+                        console.log(v);
+                    }
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+                    alert("Error Populating Regional Office");
+                }
+            });
         }
-    });
+    else{
+    $(".regionalFetchId").html('');
+    $(".regionalFetchId")[0].sumo.reload();
+    }
 });
 
     function searchClick() {
@@ -334,7 +394,7 @@ $(".zonalFetchId").change(function () {
                              $("#ZonalOfficeId").attr("disabled",true);
                              $("#Category").attr("disabled",true);
                         $("#RegionalOfficeId").attr("disabled",true);
-                        
+                         $("#SBUTypeId").attr("disabled",true);
                         }
 
                     },

@@ -26,7 +26,10 @@ namespace HPCL.Common.Models.ViewModel.DriverCardCustomer
             });
             FromDate = DateTime.Now.ToString("dd-MM-yyyy");
             ToDate = DateTime.Now.ToString("dd-MM-yyyy");
+            SBUTypes = new List<SbuTypeResponseModal>();
         }
+        public virtual List<SbuTypeResponseModal> SBUTypes { get; set; }
+        public string SBUTypeId { get; set; }
 
         public List<DriverCardAllocationandActivationDetails> DriverCardAllocationandActivationDetails { get; set; }
         public string ZonalOfficeId { get; set; }

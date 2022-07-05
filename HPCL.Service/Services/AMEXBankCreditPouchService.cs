@@ -146,11 +146,11 @@ namespace HPCL.Service.Services
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
-                CustomerId = entity.CustomerId,
+                CustomerId = entity.CustomerId ?? "",
                 ZO = Convert.ToInt32(entity.ZO),
                 RO = Convert.ToInt32(entity.RO),
-                FromDate = entity.FromDate,
-                ToDate = entity.ToDate
+                FromDate = entity.FromDate ?? "",
+                ToDate = entity.ToDate ?? ""
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
@@ -178,9 +178,9 @@ namespace HPCL.Service.Services
             return searchList;
         }
 
-        public async Task<CcmsRechargeHdfcRes> CCMSRechargeHDFC(string customerId, string amount)
+        public async Task<CcmsRechargeAmexRes> CCMSRechargeAMEX(string customerId, string amount)
         {
-            var searchBody = new CcmsRechargeHdfc
+            var searchBody = new CcmsRechargeAmex
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
@@ -192,8 +192,27 @@ namespace HPCL.Service.Services
             StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
             var response = await _requestService.CommonRequestService(content, WebApiUrl.HdfcCcmsRechargeUrl);
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
-            CcmsRechargeHdfcRes searchList = obj.ToObject<CcmsRechargeHdfcRes>();
+            CcmsRechargeAmexRes searchList = obj.ToObject<CcmsRechargeAmexRes>();
             return searchList;
+        }
+
+        public async Task<AmexInitateRecharge> CCMSInitiateRechargeAMEX(string customerId, string amount)
+        {
+            var searchBody = new CcmsRechargeAmex
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                CustomerId = customerId,
+                Amount = Convert.ToDecimal(amount)
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.HdfcCcmsRechargeUrl);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+
+            AmexInitateRecharge checkList = obj.ToObject<AmexInitateRecharge>();
+            return checkList;
         }
 
         public async Task<GetRequestAuthorizationRes> GetRequestAuthorizationDetails(GetRequestAuthorizationReq entity)
@@ -229,6 +248,47 @@ namespace HPCL.Service.Services
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
             var response = await _requestService.CommonRequestService(content, WebApiUrl.AMEXRequestAuthorizationActionUrl);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<SuccessResponse> reasonList = jarr.ToObject<List<SuccessResponse>>();
+            return reasonList;
+        }
+
+        public async Task<CheckEligibleRes> CheckEligibility(CheckEligibleReq entity)
+        {
+            var searchBody = new CheckEligibleReq
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                CustomerId = entity.CustomerId
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.AMEXRequestToAvailCheckUrl);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            CheckEligibleRes reasonList = obj.ToObject<CheckEligibleRes>();
+            return reasonList;
+        }
+
+        public async Task<List<SuccessResponse>> ReqAvailEnroll(string customerId, string planTypeId)
+        {
+            var searchBody = new ReqAvailEnrollReq
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                CustomerId = customerId,
+                FuleConsumptionCapacity = 0,
+                PlanTypeId = Convert.ToInt32(planTypeId),
+                ReferenceNo = null,
+                CustomerRemarks = "Request By Customer",
+                ActionType = 1,
+                RequestedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.AMEXRequestToAvailEnrollUrl);
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
             var jarr = obj["Data"].Value<JArray>();
             List<SuccessResponse> reasonList = jarr.ToObject<List<SuccessResponse>>();

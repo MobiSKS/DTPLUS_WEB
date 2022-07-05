@@ -309,6 +309,7 @@
         public static string checkVinNo = "api/dtplus/ashokleyland/check_vin_no";
         public static string getAlCustomerDetails = "api/dtplus/ashokleyland/get_al_customer_details";
         public static string searchAlManageCard = "api/dtplus/ashokleyland/search_al_manage_card";
+        public static string updateAlCustomerDetail = "api/dtplus/ashokleyland/update_al_customer_detail";
         #endregion
 
         #region Customer Financial
@@ -471,6 +472,8 @@
         public static string GetRequestAuthorizationDetailsUrl = "api/dtplus/HDFCCreditPouch/get_cp_by_bank_auth";
         public static string RequestAuthorizationActionUrl = "api/dtplus/HDFCCreditPouch/auth_action_cp";
         public static string HdfcInitiateCcmsRechargeUrl = "api/dtplus/HDFCCreditPouch/initiate_cp_recharge";
+        public static string RequestToAvailCheckUrl = "api/dtplus/HDFCCreditPouch/chk_eligibility";
+        public static string RequestToAvailEnrollUrl = "api/dtplus/HDFCCreditPouch/insrt_cp_rqst_by_customer";
         #endregion
 
         #region "CCMS Recharge"
@@ -521,6 +524,8 @@
         public static string AMEXHdfcCcmsRechargeUrl = "api/dtplus/HDFCCreditPouch/insert_cp_pg_log";
         public static string AMEXGetRequestAuthorizationDetailsUrl = "api/dtplus/AMEXcreditPouch/get_cp_by_bank_auth";
         public static string AMEXRequestAuthorizationActionUrl = "api/dtplus/AMEXcreditPouch/auth_action_cp";
+        public static string AMEXRequestToAvailCheckUrl = "api/dtplus/AMEXCreditPouch/chk_eligibility";
+        public static string AMEXRequestToAvailEnrollUrl = "api/dtplus/AMEXCreditPouch/insrt_cp_rqst_by_customer";
         #endregion
     }
 }
