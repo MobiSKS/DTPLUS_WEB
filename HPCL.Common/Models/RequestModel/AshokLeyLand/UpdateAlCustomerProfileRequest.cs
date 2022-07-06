@@ -33,6 +33,7 @@ namespace HPCL.Common.Models.RequestModel.AshokLeyLand
         public string CommunicationFax { get; set; }
         public string CommunicationMobileNo { get; set; }
         public string CommunicationEmailid { get; set; }
+        public string SignedOnDate { get; set; }
 
     }
 }
