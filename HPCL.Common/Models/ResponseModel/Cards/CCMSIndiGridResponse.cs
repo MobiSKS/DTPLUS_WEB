@@ -12,6 +12,6 @@ namespace HPCL.Common.Models.ResponseModel.Cards
         public string Mobileno { get; set; }
         public int Limittype { get; set; }
         public string limitTypeText { get; set; }
-        public Decimal Amount { get; set; }
+        public string Amount { get; set; }
     }
 }
