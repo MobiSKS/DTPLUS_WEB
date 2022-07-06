@@ -1,20 +1,20 @@
-﻿@model HPCL.Common.Models.ViewModel.HDFCBankCreditPouch.CustomerDetailsReq
+﻿@model HPCL.Common.Models.ViewModel.ICICIBankCreditPouch.CustomerDetailsReq
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ajax-unobtrusive/3.2.6/jquery.unobtrusive-ajax.js"></script>
 
 <div class="col-lg-12 px-0">
     <div class="bg-white p-2 p-md-4">
         <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
-            <li class="breadcrumb-item"><a href="@Url.Action("Index")" class="text_primary">HDFC Bank Credit Pouch</a> </li>
-            <li class="breadcrumb-item font-weight-light">Exception Request to Add Customer for HDFC Bank Credit Pouch</li>
+            <li class="breadcrumb-item"><a href="@Url.Action("Index")" class="text_primary">ICICI Bank Credit Pouch</a> </li>
+            <li class="breadcrumb-item font-weight-light">Exception Request to Add Customer for ICICI Bank Credit Pouch</li>
         </ul>
 
         <div class="w-100">
             <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
                 <div class="border-1 rounded border-grey">
-                    <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Exception Request to Add Customer for HDFC Bank Credit Pouch</p>
+                    <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Exception Request to Add Customer for ICICI Bank Credit Pouch</p>
 
-                    <form id="formVal" method="post" data-ajax="true" asp-controller="HDFCBankCreditPouch" asp-action="ExceptionRequestToAddCustomer" data-ajax-method="POST" data-ajax-success="OnSuccess" data-ajax-failure="OnFailure">
+                    <form id="formVal" method="post" data-ajax="true" asp-controller="ICICIBankCreditPouch" asp-action="ExceptionRequestToAddCustomer" data-ajax-method="POST" data-ajax-success="OnSuccess" data-ajax-failure="OnFailure">
                         <div class="col-lg-12 col-md-12 col-12 py-3">
 
                             <div id="EnrollSuccess" class="mb-3 text-center alert alert-success" style="display:none;"></div>
@@ -182,13 +182,11 @@
                                 <div class="d-flex align-items-center flex-wrap">
                                     <div class="col-lg-6 col-12">
                                         <div class="d-flex align-items-center flex-wrap mb-3">
-                                            <label class="font-weight-normal col-md-4 col-12">Remarks<sup class="text-danger">*</sup></label>
+                                            <label class="font-weight-normal col-md-4 col-12">Comment<sup class="text-danger">*</sup></label>
                                             <div class="col-md-7 col-12">
                                                 <div class="custom_select">
-                                                    <textarea id="cmnts" maxlength="250" class="form-control" rows="2"></textarea>
+                                                    <textarea id="cmnts" maxlength="100" class="form-control" rows="2"></textarea>
                                                     <span style="display:none" class="error" id="comments_error"></span>
-
-                                                    <p id="charRemining"></p>
                                                 </div>
                                             </div>
                                         </div>
@@ -224,9 +222,8 @@
         }
     });
 
-    function resetClick() 
-    {
-        window.location.href = '@Url.Action("ExceptionRequestToAddCustomer", "HDFCBankCreditPouch")';
+    function resetClick() {
+        window.location.reload(true);
     }
 
     $('input').on('paste', function (event) {
@@ -238,17 +235,6 @@
     $(document).ready(function () {
 
         //$('select.disableSumo')[0].sumo.unload();
-
-        var text_max = 250;
-        $('#charRemining').html('(<i>' + text_max +' characters remaining</i>)');
-
-        $('#cmnts').keyup(function () 
-        {
-            var text_length = $('#cmnts').val().length;
-            var text_remaining = text_max - text_length;
-
-            $('#charRemining').html('(<i>' + text_remaining + ' characters remaining</i>)');
-        });
 
         function isNumberKey(evt) {
             var charCode = (evt.which) ? evt.which : event.keyCode;
@@ -284,7 +270,7 @@
 
                 var transDate;
 
-                if(((res.searchList.data[0].lastTransactionDate) == "01/01/0001 00:00:00") || ((res.searchList.data[0].lastTransactionDate) == "01/01/1900 00:00:00") || ((res.searchList.data[0].lastTransactionDate) == null)){
+                if(((res.searchList.data[0].lastTransactionDate) == "01-01-0001") || ((res.searchList.data[0].lastTransactionDate) == "01-01-1900") || ((res.searchList.data[0].lastTransactionDate) == null)){
                     transDate = "";
                 }else{
                     transDate = moment(res.searchList.data[0].lastTransactionDate, 'DD-MM-YYYY').format('DD-MM-YYYY');
@@ -370,13 +356,13 @@
         var comments = $("#cmnts").val();
 
         if (comments.trim() == '') {
-            $("#comments_error").html("Please enter Remarks");
+            $("#comments_error").html("Please enter comment");
             $("#comments_error").attr("style", "display:block");
             return false;
         }
         if(comments.trim() != ''){
              if(!comments.trim().match(atLeastOneAlphabet)){
-                $("#comments_error").html("Invalid Remarks");
+                $("#comments_error").html("Invalid Comment");
                 $("#comments_error").attr("style", "display:block");
                 return false;
             }else{
@@ -418,13 +404,13 @@
             }
         }
         if(MoComment == ''){
-            $("#comments_error").html("Please enter Remarks");
+            $("#comments_error").html("Please enter comment");
             $("#comments_error").attr("style", "display:block");
             flag = "N";
         }
         if(MoComment.trim() != ''){
             if(!MoComment.trim().match(atLeastOneAlphabet)){
-                $("#comments_error").html("Invalid Remarks");
+                $("#comments_error").html("Invalid Comment");
                 $("#comments_error").attr("style", "display:block");
                 flag = "N";
             }
@@ -447,7 +433,7 @@
                 console.log('ok');
 
                   $.ajax({
-                    url: "@Url.Action("EnrollExceptionRequest", "HDFCBankCreditPouch")",
+                    url: "@Url.Action("EnrollExceptionRequest", "ICICIBankCreditPouch")",
                     data: { enrollList: JSON.stringify(enrollArray)},
                     type: "POST",
                     dataType: "JSON",

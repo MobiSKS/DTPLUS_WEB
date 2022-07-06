@@ -33,6 +33,6 @@ namespace HPCL.Service.Interfaces
         Task<string> ValidateManageUserName(string UserName);
         Task<List<SuccessResponse>> UpdateUser([FromBody] AddNewUserReq entity);
         Task<ManageNewUserViewModel> GetManageUserForEdit(string UserName);
-        Task<List<SuccessResponse>> DeleteLocationMapping(string RoleId);
+        Task<List<SuccessResponse>> DeleteLocationMapping([FromBody] AddNewUserReq entity);
     }
 }

@@ -521,11 +521,26 @@
         public static string GetAmexPlanUrl = "api/dtplus/AMEXCreditPouch/get_plan";
         public static string AMEXGetEnrollStatusUrl = "api/dtplus/AMEXCreditPouch/get_cp_status";
         public static string AMEXGetEnrollStatusReportUrl = "api/dtplus/AMEXCreditPouch/get_cp_status_Report";
-        public static string AMEXHdfcCcmsRechargeUrl = "api/dtplus/HDFCCreditPouch/insert_cp_pg_log";
+        public static string AMEXHdfcCcmsRechargeUrl = "api/dtplus/AMEXCreditPouch/insert_cp_pg_log";
         public static string AMEXGetRequestAuthorizationDetailsUrl = "api/dtplus/AMEXcreditPouch/get_cp_by_bank_auth";
         public static string AMEXRequestAuthorizationActionUrl = "api/dtplus/AMEXcreditPouch/auth_action_cp";
         public static string AMEXRequestToAvailCheckUrl = "api/dtplus/AMEXCreditPouch/chk_eligibility";
         public static string AMEXRequestToAvailEnrollUrl = "api/dtplus/AMEXCreditPouch/insrt_cp_rqst_by_customer";
+        #endregion
+
+        #region "ICICI Bank Credit Pouch"
+        public static string ICICIGetCustomerDetailsUrl = "api/dtplus/ICICICreditPouch/get_dtail_mo";
+        public static string ICICIEnrollExceptionReqUrl = "api/dtplus/ICICIcreditPouch/insrt_cp_rqst";
+        public static string ICICIGetExApprovalUrl = "api/dtplus/ICICIcreditPouch/Get_cp_by_bank";
+        public static string ICICISubmitExApprovalUrl = "api/dtplus/ICICIcreditPouch/action_cp";
+        public static string GetICICIPlanUrl = "api/dtplus/ICICICreditPouch/get_plan";
+        public static string ICICIGetEnrollStatusUrl = "api/dtplus/ICICICreditPouch/get_cp_status";
+        public static string ICICIGetEnrollStatusReportUrl = "api/dtplus/ICICICreditPouch/get_cp_status_Report";
+        public static string ICICICcmsRechargeUrl = "api/dtplus/ICICICreditPouch/insert_cp_pg_log";
+        public static string ICICIGetRequestAuthorizationDetailsUrl = "api/dtplus/ICICIcreditPouch/get_cp_by_bank_auth";
+        public static string ICICIRequestAuthorizationActionUrl = "api/dtplus/ICICIcreditPouch/auth_action_cp";
+        public static string ICICIRequestToAvailCheckUrl = "api/dtplus/ICICICreditPouch/chk_eligibility";
+        public static string ICICIRequestToAvailEnrollUrl = "api/dtplus/ICICICreditPouch/insrt_cp_rqst_by_customer";
         #endregion
     }
 }
