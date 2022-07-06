@@ -282,95 +282,95 @@ namespace HPCL_Web.Controllers
 
             if (Customer != null)
             {
-                if (!string.IsNullOrEmpty(Customer.CommunicationPhoneNo))
-                {
-                    string[] subs = Customer.CommunicationPhoneNo.Split('-');
+                //if (!string.IsNullOrEmpty(Customer.CommunicationPhoneNo))
+                //{
+                //    string[] subs = Customer.CommunicationPhoneNo.Split('-');
 
-                    if (subs.Count() > 1)
-                    {
-                        Customer.CommunicationDialCode = subs[0].ToString();
-                        Customer.CommunicationPh = subs[1].ToString();
-                    }
-                    else
-                    {
-                        Customer.CommunicationPh = Customer.CommunicationPhoneNo;
-                    }
-                }
+                //    if (subs.Count() > 1)
+                //    {
+                //        Customer.CommunicationDialCode = subs[0].ToString();
+                //        Customer.CommunicationPh = subs[1].ToString();
+                //    }
+                //    else
+                //    {
+                //        Customer.CommunicationPh = Customer.CommunicationPhoneNo;
+                //    }
+                //}
 
-                if (!string.IsNullOrEmpty(Customer.CommunicationFax))
-                {
-                    string[] subs = Customer.CommunicationFax.Split('-');
+                //if (!string.IsNullOrEmpty(Customer.CommunicationFax))
+                //{
+                //    string[] subs = Customer.CommunicationFax.Split('-');
 
-                    if (subs.Count() > 1)
-                    {
-                        Customer.CommunicationFaxCode = subs[0].ToString();
-                        Customer.CommunicationFaxPh = subs[1].ToString();
-                    }
-                    else
-                    {
-                        Customer.CommunicationFaxPh = Customer.CommunicationFax;
-                    }
-                }
+                //    if (subs.Count() > 1)
+                //    {
+                //        Customer.CommunicationFaxCode = subs[0].ToString();
+                //        Customer.CommunicationFaxPh = subs[1].ToString();
+                //    }
+                //    else
+                //    {
+                //        Customer.CommunicationFaxPh = Customer.CommunicationFax;
+                //    }
+                //}
 
-                if (!string.IsNullOrEmpty(Customer.PermanentFax))
-                {
-                    string[] subs = Customer.PermanentFax.Split('-');
+                //if (!string.IsNullOrEmpty(Customer.PermanentFax))
+                //{
+                //    string[] subs = Customer.PermanentFax.Split('-');
 
-                    if (subs.Count() > 1)
-                    {
-                        Customer.PermanentFaxCode = subs[0].ToString();
-                        Customer.PermanentFaxPh = subs[1].ToString();
-                    }
-                    else
-                    {
-                        Customer.PermanentFaxPh = Customer.CommunicationFax;
-                    }
-                }
+                //    if (subs.Count() > 1)
+                //    {
+                //        Customer.PermanentFaxCode = subs[0].ToString();
+                //        Customer.PermanentFaxPh = subs[1].ToString();
+                //    }
+                //    else
+                //    {
+                //        Customer.PermanentFaxPh = Customer.CommunicationFax;
+                //    }
+                //}
 
-                if (!string.IsNullOrEmpty(Customer.PermanentPhoneNo))
-                {
-                    string[] subs = Customer.PermanentPhoneNo.Split('-');
+                //if (!string.IsNullOrEmpty(Customer.PermanentPhoneNo))
+                //{
+                //    string[] subs = Customer.PermanentPhoneNo.Split('-');
 
-                    if (subs.Count() > 1)
-                    {
-                        Customer.PerOrRegAddressDialCode = subs[0].ToString();
-                        Customer.PerOrRegAddressPh = subs[1].ToString();
-                    }
-                    else
-                    {
-                        Customer.PerOrRegAddressPh = Customer.PermanentPhoneNo;
-                    }
-                }
+                //    if (subs.Count() > 1)
+                //    {
+                //        Customer.PerOrRegAddressDialCode = subs[0].ToString();
+                //        Customer.PerOrRegAddressPh = subs[1].ToString();
+                //    }
+                //    else
+                //    {
+                //        Customer.PerOrRegAddressPh = Customer.PermanentPhoneNo;
+                //    }
+                //}
 
-                if (!string.IsNullOrEmpty(Customer.KeyOfficialPhoneNo))
-                {
-                    string[] subs = Customer.KeyOfficialPhoneNo.Split('-');
+                //if (!string.IsNullOrEmpty(Customer.KeyOfficialPhoneNo))
+                //{
+                //    string[] subs = Customer.KeyOfficialPhoneNo.Split('-');
 
-                    if (subs.Count() > 1)
-                    {
-                        Customer.KeyOffDialCode = subs[0].ToString();
-                        Customer.KeyOffPh = subs[1].ToString();
-                    }
-                    else
-                    {
-                        Customer.KeyOffPh = Customer.KeyOfficialPhoneNo;
-                    }
-                }
+                //    if (subs.Count() > 1)
+                //    {
+                //        Customer.KeyOffDialCode = subs[0].ToString();
+                //        Customer.KeyOffPh = subs[1].ToString();
+                //    }
+                //    else
+                //    {
+                //        Customer.KeyOffPh = Customer.KeyOfficialPhoneNo;
+                //    }
+                //}
 
-                if (!string.IsNullOrEmpty(Customer.KeyOfficialFax))
-                {
-                    string[] subs = Customer.KeyOfficialFax.Split('-');
+                //if (!string.IsNullOrEmpty(Customer.KeyOfficialFax))
+                //{
+                //    string[] subs = Customer.KeyOfficialFax.Split('-');
 
-                    if (subs.Count() > 1)
-                    {
-                        Customer.KeyOffFaxCode = subs[0].ToString();
-                        Customer.KeyOffFaxPh = subs[1].ToString();
-                    }
-                    else
-                    {
-                        Customer.KeyOffPh = Customer.KeyOfficialFax;
-                    }
-                }
+                //    if (subs.Count() > 1)
+                //    {
+                //        Customer.KeyOffFaxCode = subs[0].ToString();
+                //        Customer.KeyOffFaxPh = subs[1].ToString();
+                //    }
+                //    else
+                //    {
+                //        Customer.KeyOffPh = Customer.KeyOfficialFax;
+                //    }
+                //}
 
                 string applicationDate = "";
                 if (!string.IsNullOrEmpty(Customer.DateOfApplication))
