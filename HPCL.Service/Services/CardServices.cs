@@ -613,7 +613,7 @@ namespace HPCL.Service.Services
                     UserAgent = CommonBase.useragent,
                     UserIp = CommonBase.userip,
                     CustomerId = entity.CustomerId,
-                    RegionalOfficeId = "3"
+                    RegionalOfficeId = _httpContextAccessor.HttpContext.Session.GetString("RegionalOfcId")
                 };
             }
             else if (_httpContextAccessor.HttpContext.Session.GetString("LoginType") == "Customer")
@@ -624,7 +624,7 @@ namespace HPCL.Service.Services
                     UserAgent = CommonBase.useragent,
                     UserIp = CommonBase.userip,
                     CustomerId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
-                    RegionalOfficeId = "3"
+                    RegionalOfficeId = _httpContextAccessor.HttpContext.Session.GetString("RegionalOfcId")
                 };
             }
 
