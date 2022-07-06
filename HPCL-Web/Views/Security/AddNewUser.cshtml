@@ -125,13 +125,13 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach (var item in Model.Data.tblMainAndSubLevel)
+                                            @foreach (var item in Model.Data.tblMainAndSubLevel.OrderBy(x => x.RoleId))
                                             {
                                                 @if (roleId != item.RoleId)
                                                 {
                                                     roleId = item.RoleId;
                                                     string Location = "", ZoneIds = "", regionIds = "";
-                                                    @foreach (var item1 in Model.Data.tblMainAndSubLevel.Where(t => t.RoleId == roleId))
+                                                    @foreach (var item1 in Model.Data.tblMainAndSubLevel.Where(t => t.RoleId == roleId).OrderBy(t => t.RoleId))
                                                     {
                                                         Location = Location + item1.RegionalOfficeName + ",";
                                                         if (item.RegionalOfficeId == null || item.RegionalOfficeId == "0")
@@ -144,9 +144,9 @@
                                                             regionIds = regionIds + item1.RegionalOfficeId + ",";
                                                         }
                                                     }
-                                                    if(Location.Length>0)
+                                                    if (Location.Length > 0)
                                                         Location = Location.Remove(Location.Length - 1);
-                                                    if(regionIds.Length>0)
+                                                    if (regionIds.Length > 0)
                                                         regionIds = regionIds.Remove(regionIds.Length - 1);
                                                     <tr>
                                                         <td>
@@ -157,7 +157,7 @@
                                                         </td>
                                                         <td>
 
-                                                            <a asp-action="DeleteLocationMapping" class="d-block" asp-route-RoleId="@item.RoleId" data-toggle="tooltip" title="" tooltip="Delete"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                                                            <a class="delete" data-toggle="tooltip" title="" tooltip="Delete"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
                                                         </td>
                                                         <td class="roleId" style="display:none">@item.RoleId</td>
                                                         <td class="zoneId" style="display:none">@ZoneIds</td>
@@ -244,7 +244,6 @@
                                                                         </div>
                                                                     </a>
 
-
                                                                 </div>
                                                                 <!--/.panel-heading -->
                                                         <div id="nested_@i" class="panel-collapse regionArea collapse in">
@@ -279,6 +278,7 @@
                                             <!--/.panel-body -->
 
                                         </div>
+                                        </ul>
                                         <!--/.panel-collapse -->
                                     </div>
                                     <!-- /.panel -->
@@ -310,13 +310,12 @@
      var emailVal="";
       $(document).ready(function (){
         var update="@ViewBag.Update";
-        userNameVal="@ViewBag.UserName";
-        emailVal="@ViewBag.Email";
+
         if(update=="Yes"){
             ShowUserRolesData();
         }
        });
-      function chkAllRegion(o,cnt){
+        function chkAllRegion(o,cnt){
            var zoneId=o.value;
            $('input[type=checkbox][name=regionChk]').prop("checked",false);
            $('input:checkbox.chk_'+cnt).not(this).prop('checked', o.checked);
@@ -338,7 +337,11 @@
                $(".zoneArea").addClass("disable");
                $(".class_"+zoneId).removeClass("disable");
            }
-           if(!$('input:checkbox.chk_'+cnt).prop('checked'))
+           var checkedCnt=0;
+           $('input:checkbox.chk_'+cnt+':checked').each(function () {
+               checkedCnt=checkedCnt+1;
+           });
+           if(checkedCnt==0)
                $(".zoneArea").removeClass("disable");
        }
         $("#checkAll").click(function () {
@@ -369,29 +372,38 @@
            debugger;
             var currentRow = $(this).closest("tr");
             var roleId = currentRow.find('.roleId').text();
-            var regionId = currentRow.find('.regionId').text();
+            var regionIdsList = currentRow.find('.regionId').text();
+            var regionIdArr=[];
+            if(regionIdsList.indexOf(',')!=-1)
+                regionIdArr=regionIdsList.split(',');
+            else
+                regionIdArr[0]=regionIdsList;
 
+            //var zoneId = currentRow.find('.zoneId').text();
              $('li').removeClass("usr_active");
 
             $('li#'+roleId).addClass("usr_active");
+             selectedRole=roleId;
             $('input[type=checkbox][name=regionChk]').prop("checked",false);
-            var chkROId=$('input[type=checkbox][name=regionChk][value='+regionId+']').attr("id");
-            var zoneId=chkROId.substring(chkROId.indexOf('-') + 1);
-            //if(!($(".class_a_ZoneArea").hasClass("collapsed"))){
-                $(".class_a_ZoneArea").addClass("collapsed");
-                 $(".class_a_ZoneArea").attr("aria-expanded",false);
-                 $(".regionArea").removeClass("show");
-            //}
-           
-            $("#id_"+zoneId).removeClass("collapsed");
-            $("#id_"+zoneId).attr("aria-expanded",true);
-            var nestedId=$("#id_"+zoneId).attr("href");
-            $(nestedId).addClass("show");
-            $('input[type=checkbox][name=regionChk][value='+regionId+']').prop("checked",true);
+            $(".class_a_ZoneArea").addClass("collapsed");
+            $(".class_a_ZoneArea").attr("aria-expanded",false);
+            $(".regionArea").removeClass("show");
             $(".zoneArea").addClass("disable");
-            $(".class_"+zoneId).removeClass("disable");
+            for(var i=0;i<regionIdArr.length;i++){
+                $('input[type=checkbox][name=regionChk][value='+regionIdArr[i]+']').prop("checked",true);
+                var chkROId=$('input[type=checkbox][name=regionChk][value='+regionIdArr[i]+']').attr("id");
+                var zoneId=chkROId.substring(chkROId.indexOf('-') + 1);
+
+                $("#id_"+zoneId).removeClass("collapsed");
+                $("#id_"+zoneId).attr("aria-expanded",true);
+                var nestedId=$("#id_"+zoneId).attr("href");
+                $(nestedId).addClass("show");
+                $(".class_"+zoneId).removeClass("disable");
+            }
+
 
         });
+
       $("#btnSave").on("click", (function (e) {
           var userName=$("#UserName").val();
           var newEmail=$("#Email").val();
@@ -404,19 +416,20 @@
                      var zoId=chkROId.substring(chkROId.indexOf('-') + 1);
                      objUserRole.push({ RO: $(this).val(),ZO:zoId });
                 });
-                //var ReqModel={UserName:userName,Email:newEmail,Password:password,ConfirmPassword:confirm,SecretQuestion:secretQstn,SecretQuestionAnswer:secretAns,UserRole:"0",FirstName:"",LastName:"",StateId:"0",ActionType:"",TypeManageUsersAddUserRole:objUserRole};
-                var ReqModel={UserName:userName,Email:newEmail,Password:"",ConfirmPassword:"",SecretQuestion:"0",SecretQuestionAnswer:"",UserRole:userRoleSelected,FirstName:"",LastName:"",StateId:"0",ActionType:"",TypeManageUsersAddUserRole:objUserRole,UpdateStatus:"Add"};
+                var ReqModel={UserName:userName,Email:newEmail,Password:"",ConfirmPassword:"",SecretQuestion:"0",SecretQuestionAnswer:"",UserRole:userRoleSelected,FirstName:"",LastName:"",StateId:"0",ActionType:"",TypeManageUsersAddUserRole:objUserRole,UpdateStatus:"Update"};
                 $.ajax({
                     type: 'POST',  // http method
-                    url: '@Url.Action("UpdateUserandLocations", "Security")',
+                    url: '@Url.Action("UpdateUser", "Security")',
                     contentType: "application/json; charset=utf-8",
-                    dataType: 'text',
+                    dataType: 'JSON',
                     data: JSON.stringify(ReqModel),
                     success: function (data, status, xhr) {
                         var v = data;
                         if (status == 'success') {
 
-                            ShowUserRolesData();
+                              var url = '@Html.Raw(@Url.Action("AddNewUser", "Security",new { UserName = "zzXXyyZZZZZZZzz", Email = "QQPPppSSAAQQ", update = "Yes" }))';
+                                url = url.replace("zzXXyyZZZZZZZzz", encodeURIComponent(userName)).replace("QQPPppSSAAQQ", encodeURIComponent(newEmail));
+                                window.location.href=url;
                         }
                         else {
                             console.log(v);
@@ -537,13 +550,15 @@
                 var ReqModel={UserName:userName,Email:newEmail,Password:password,ConfirmPassword:confirm,SecretQuestion:secretQstn,SecretQuestionAnswer:secretAns,UserRole:"0",FirstName:"",LastName:"",StateId:"0",ActionType:"",TypeManageUsersAddUserRole:objUserRole};
                 $.ajax({
                     type: 'POST',  // http method
-                    url: '@Url.Action("AddNewUser", "Security")',
+                    url: '@Url.Action("AddUser", "Security")',
                     contentType: "application/json; charset=utf-8",
-                    dataType: 'text',
+                    dataType: 'JSON',
                     data: JSON.stringify(ReqModel),
                     success: function (data, status, xhr) {
                         var v = data;
-                        ShowUserRolesData();
+                          var url = '@Html.Raw(@Url.Action("AddNewUser", "Security",new { UserName = "zzXXyyZZZZZZZzz", Email = "QQPPppSSAAQQ", update = "Yes" }))';
+                                url = url.replace("zzXXyyZZZZZZZzz", encodeURIComponent(userName)).replace("QQPPppSSAAQQ", encodeURIComponent(newEmail));
+                                window.location.href=url;
                     },
                     error: function (jqXhr, textStatus, errorMessage) {
                         alert("Error"+ errorMessage);
@@ -694,4 +709,47 @@
              $("#secretQuestion_error").attr("style","display:none");
          }
      });
+      $("#LocRoleMappingTbl").on('click', '.delete', function (e) {
+
+            var currentRow = $(this).closest("tr");
+            var roleId = currentRow.find('.roleId').text();
+            var regionIdsList = currentRow.find('.regionId').text();
+            var regionIdArr=[];
+            if(regionIdsList.indexOf(',')!=-1)
+                regionIdArr=regionIdsList.split(',');
+            else
+                regionIdArr[0]=regionIdsList;
+            var zoneId = currentRow.find('.zoneId').text();
+              var userName=$("#UserName").val();
+             var newEmail=$("#Email").val();
+            var userRoleSelected=roleId;
+                   objUserRole=[];
+                    for(var i=0;i<regionIdArr.length;i++){
+                        objUserRole.push({ RO: regionIdArr[i],ZO:zoneId });
+                    }
+                   var ReqModel={UserName:userName,RoleId:userRoleSelected,TypeManageUsersAddUserRole:objUserRole,UpdateStatus:"Update"};
+                   $.ajax({
+                       type: 'POST',  // http method
+                       url: '@Url.Action("DeleteLocationMapping", "Security")',
+                       contentType: "application/json; charset=utf-8",
+                       dataType: 'JSON',
+                       data: JSON.stringify(ReqModel),
+                       success: function (data, status, xhr) {
+                           var v = data;
+                           if (status == 'success') {
+
+                               var url = '@Html.Raw(@Url.Action("AddNewUser", "Security",new { UserName = "zzXXyyZZZZZZZzz", Email = "QQPPppSSAAQQ", update = "Yes" }))';
+                                url = url.replace("zzXXyyZZZZZZZzz", encodeURIComponent(userName)).replace("QQPPppSSAAQQ", encodeURIComponent(newEmail));
+                                window.location.href=url;
+                           }
+                           else {
+                               console.log(v);
+                           }
+                       },
+                       error: function (jqXhr, textStatus, errorMessage) {
+                           alert("Error"+ errorMessage);
+                       }
+                   });
+
+        });
 </script>

@@ -581,17 +581,21 @@ namespace HPCL.Service.Services
             ManageNewUserViewModel searchList = obj.ToObject<ManageNewUserViewModel>();
             return searchList;
         }
-        public async Task<List<SuccessResponse>> DeleteLocationMapping(string RoleId)
+        public async Task<List<SuccessResponse>> DeleteLocationMapping([FromBody] AddNewUserReq entity)
         {
-            var reqBody = new ManageRolesRequestModel
+        
+            var forms = new AddNewUserReq
             {
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
-                RoleId = RoleId
-            };
+                UserName = entity.UserName,
+                RoleId = entity.RoleId,
+                TypeManageUsersAddUserRole = entity.TypeManageUsersAddUserRole,
+                ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+            };  
 
-            StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
+            StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
             var response = await _requestService.CommonRequestService(content, WebApiUrl.manageusersrolelocationdelete);
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
             var jarr = obj["Data"].Value<JArray>();
