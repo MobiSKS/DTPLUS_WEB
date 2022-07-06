@@ -96,13 +96,13 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach (var item in Model.Data.tblMainAndSubLevel)
+                                        @foreach (var item in Model.Data.tblMainAndSubLevel.OrderBy(x=>x.RoleId))
                                         {
                                             @if (roleId != item.RoleId)
                                             {
                                                 roleId = item.RoleId;
                                                 string Location = "", ZoneIds = "", regionIds = "";
-                                                @foreach (var item1 in Model.Data.tblMainAndSubLevel.Where(t => t.RoleId == roleId))
+                                                @foreach (var item1 in Model.Data.tblMainAndSubLevel.Where(t => t.RoleId == roleId).OrderBy(t=>t.RoleId))
                                                 {
                                                     Location = Location + item1.RegionalOfficeName + ",";
                                                     if (item.RegionalOfficeId == null || item.RegionalOfficeId == "0")
@@ -128,7 +128,7 @@
                                                     </td>
                                                     <td>
 
-                                                        <a asp-action="DeleteLocationMapping" class="d-block" asp-route-RoleId="@item.RoleId" data-toggle="tooltip" title="" tooltip="Delete"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                                                        <a class="delete" data-toggle="tooltip" title="" tooltip="Delete"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
                                                     </td>
                                                     <td class="roleId" style="display:none">@item.RoleId</td>
                                                     <td class="zoneId" style="display:none">@ZoneIds</td>
@@ -280,8 +280,8 @@
        var emailVal="";
         $(document).ready(function (){
           var update="@ViewBag.Update";
-          userNameVal="@ViewBag.UserName";
-          emailVal="@ViewBag.Email";
+       @*   userNameVal="@ViewBag.UserName";
+          emailVal="@ViewBag.Email";*@
           if(update=="Yes"){
               ShowUserRolesData();
           }
@@ -344,7 +344,12 @@
             var currentRow = $(this).closest("tr");
             var roleId = currentRow.find('.roleId').text();
             var regionIdsList = currentRow.find('.regionId').text();
-            var regionIdArr=regionIdsList.split(',');
+            var regionIdArr=[];
+            if(regionIdsList.indexOf(',')!=-1)
+                regionIdArr=regionIdsList.split(',');
+            else
+                regionIdArr[0]=regionIdsList;
+
             //var zoneId = currentRow.find('.zoneId').text();
              $('li').removeClass("usr_active");
 
@@ -499,15 +504,17 @@
                    var ReqModel={UserName:userName,Email:newEmail,Password:"",ConfirmPassword:"",SecretQuestion:"0",SecretQuestionAnswer:"",UserRole:userRoleSelected,FirstName:"",LastName:"",StateId:"0",ActionType:"",TypeManageUsersAddUserRole:objUserRole,UpdateStatus:"Update"};
                    $.ajax({
                        type: 'POST',  // http method
-                       url: '@Url.Action("UpdateUserandLocations", "Security")',
+                       url: '@Url.Action("UpdateUser", "Security")',
                        contentType: "application/json; charset=utf-8",
-                       dataType: 'text',
+                       dataType: 'JSON',
                        data: JSON.stringify(ReqModel),
                        success: function (data, status, xhr) {
                            var v = data;
                            if (status == 'success') {
-
-                                ShowUserRolesData();
+                                var url = '@Html.Raw(@Url.Action("UpdateUserandLocations", "Security",new { UserName = "zzXXyyZZZZZZZzz", Email = "QQPPppSSAAQQ", update = "Yes" }))';
+                                url = url.replace("zzXXyyZZZZZZZzz", encodeURIComponent(userName)).replace("QQPPppSSAAQQ", encodeURIComponent(newEmail));
+                                window.location.href=url;
+                              
                            }
                            else {
                                console.log(v);
@@ -588,5 +595,48 @@
 
             }
         });
+        $("#LocRoleMappingTbl").on('click', '.delete', function (e) {
 
+            var currentRow = $(this).closest("tr");
+            var roleId = currentRow.find('.roleId').text();
+            var regionIdsList = currentRow.find('.regionId').text();
+            var regionIdArr=[];
+            if(regionIdsList.indexOf(',')!=-1)
+                regionIdArr=regionIdsList.split(',');
+            else
+                regionIdArr[0]=regionIdsList;
+            var zoneId = currentRow.find('.zoneId').text();
+              var userName=$("#UserName").val();
+             var newEmail=$("#Email").val();
+            var userRoleSelected=roleId;
+                   objUserRole=[];
+                    for(var i=0;i<regionIdArr.length;i++){
+                        objUserRole.push({ RO: regionIdArr[i],ZO:zoneId });
+                    }
+                   var ReqModel={UserName:userName,RoleId:userRoleSelected,TypeManageUsersAddUserRole:objUserRole,UpdateStatus:"Update"};
+                   $.ajax({
+                       type: 'POST',  // http method
+                       url: '@Url.Action("DeleteLocationMapping", "Security")',
+                       contentType: "application/json; charset=utf-8",
+                       dataType: 'JSON',
+                       data: JSON.stringify(ReqModel),
+                       success: function (data, status, xhr) {
+                           var v = data;
+                           if (status == 'success') {
+
+                               var url = '@Html.Raw(@Url.Action("UpdateUserandLocations", "Security",new { UserName = "zzXXyyZZZZZZZzz", Email = "QQPPppSSAAQQ", update = "Yes" }))';
+                                url = url.replace("zzXXyyZZZZZZZzz", encodeURIComponent(userName)).replace("QQPPppSSAAQQ", encodeURIComponent(newEmail));
+                                window.location.href=url;
+                           }
+                           else {
+                               console.log(v);
+                           }
+                       },
+                       error: function (jqXhr, textStatus, errorMessage) {
+                           alert("Error"+ errorMessage);
+                       }
+                   });
+         
+        });
+       
 </script>

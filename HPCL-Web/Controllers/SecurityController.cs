@@ -238,14 +238,11 @@ namespace HPCL_Web.Controllers
             return Json(check);
         }
         [HttpPost]
-        public async Task<IActionResult> AddNewUser([FromBody] AddNewUserReq entity)
+        public async Task<JsonResult> AddUser([FromBody] AddNewUserReq entity)
         {
             var result = await _securityService.AddUser(entity);
-            if (result[0].Status == 1)
-            {
-                return RedirectToAction("AddNewUser", new { UserName = entity.UserName, Email = entity.Email, update = "Yes" });
-            }
-            return View(result);
+            
+            return Json(result);
         }
 
         public async Task<IActionResult> UpdateUserandLocations(string UserName,string Email, string update)
@@ -253,29 +250,35 @@ namespace HPCL_Web.Controllers
 
             var modals = await _securityService.GetManageUserForEdit(UserName);
             modals.getUserRolesandregions.Add(await _securityService.GetUserRolesAndRegions());
+            modals.UserName=UserName;
+            modals.Email=Email;
             ViewBag.Update = String.IsNullOrEmpty(update) ? "No" : update;
             return View(modals);
         }
         [HttpPost]
-        public async Task<IActionResult> UpdateUserandLocations([FromBody] AddNewUserReq entity)
+        public async Task<JsonResult> UpdateUser([FromBody] AddNewUserReq entity)
         {
             var result = await _securityService.UpdateUser(entity);
 
-            if (result[0].Status == 1)
-            {
-                if (entity.UpdateStatus == "Add")
-                {
-                    return RedirectToAction("AddNewUser", new { UserName = entity.UserName, Email = entity.Email, update = "Yes" });
-                }
-                else
-                    return RedirectToAction("UpdateUserandLocations", new { UserName = entity.UserName, Email = entity.Email, update = "Yes" });
-            }
+            //if (result[0].Status == 1)
+            //{
+            //    ManageNewUserViewModel manageNewUserViewModel = new ManageNewUserViewModel();
+            //    manageNewUserViewModel.UserName= entity.UserName;
+            //    manageNewUserViewModel.Email= entity.Email;
+            //    return View(manageNewUserViewModel);
+            //    //if (entity.UpdateStatus == "Add")
+            //    //{
+            //    //    return RedirectToAction("AddNewUser", new { UserName = entity.UserName, Email = entity.Email, update = "Yes" });
+            //    //}
+            //    //else
+            //    //    return RedirectToAction("UpdateUserandLocations", new { UserName = entity.UserName, Email = entity.Email, update = "Yes" });
+            //}
             ModelState.Clear();
-            return View(result);
+            return Json(result);
         }
-        public async Task<IActionResult> DeleteLocationMapping(string RoleId)
+        public async Task<IActionResult> DeleteLocationMapping([FromBody] AddNewUserReq entity)
         {
-            var searchResult = await _securityService.DeleteLocationMapping(RoleId);
+            var searchResult = await _securityService.DeleteLocationMapping(entity);
             return View(searchResult);
         }
 
