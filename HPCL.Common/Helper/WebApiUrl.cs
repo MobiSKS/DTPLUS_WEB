@@ -536,7 +536,7 @@
         public static string GetICICIPlanUrl = "api/dtplus/ICICICreditPouch/get_plan";
         public static string ICICIGetEnrollStatusUrl = "api/dtplus/ICICICreditPouch/get_cp_status";
         public static string ICICIGetEnrollStatusReportUrl = "api/dtplus/ICICICreditPouch/get_cp_status_Report";
-        public static string ICICIHdfcCcmsRechargeUrl = "api/dtplus/ICICICreditPouch/insert_cp_pg_log";
+        public static string ICICICcmsRechargeUrl = "api/dtplus/ICICICreditPouch/insert_cp_pg_log";
         public static string ICICIGetRequestAuthorizationDetailsUrl = "api/dtplus/ICICIcreditPouch/get_cp_by_bank_auth";
         public static string ICICIRequestAuthorizationActionUrl = "api/dtplus/ICICIcreditPouch/auth_action_cp";
         public static string ICICIRequestToAvailCheckUrl = "api/dtplus/ICICICreditPouch/chk_eligibility";
