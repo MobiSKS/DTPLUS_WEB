@@ -18,6 +18,7 @@ namespace HPCL.Common.Models.ViewModel.Security
         public string UserRole { get; set; }
         public virtual List<UserLocations> TypeManageUsersAddUserRole { get; set; }
         public string UpdateStatus { get; set; }
+        public string RoleId { get; set; }
     }
     public class UserLocations
     {
