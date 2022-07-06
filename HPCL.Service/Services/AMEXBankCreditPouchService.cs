@@ -129,28 +129,16 @@ namespace HPCL.Service.Services
 
         public async Task<SearchEnrollStatusRes> GetEnrollStatus(SearchEnrollStatusClone entity)
         {
-            string fromDate = "", toDate = "";
-            if (!string.IsNullOrEmpty(entity.FromDate) && !string.IsNullOrEmpty(entity.FromDate))
-            {
-                fromDate = await _commonActionService.changeDateFormat(entity.FromDate);
-                toDate = await _commonActionService.changeDateFormat(entity.ToDate);
-            }
-            else
-            {
-                fromDate = DateTime.Now.AddMonths(-1).ToString("yyyy-MM-dd");
-                toDate = DateTime.Now.ToString("yyyy-MM-dd");
-            }
-
             var searchBody = new SearchEnrollStatus
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
-                CustomerId = entity.CustomerId ?? "",
+                CustomerId = entity.CustomerId,
                 ZO = Convert.ToInt32(entity.ZO),
                 RO = Convert.ToInt32(entity.RO),
-                FromDate = entity.FromDate ?? "",
-                ToDate = entity.ToDate ?? ""
+                FromDate = entity.FromDate,
+                ToDate = entity.ToDate
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
