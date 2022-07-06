@@ -9,7 +9,7 @@
             <li class="breadcrumb-item"><a href="@Url.Action("Index")" class="text_primary">Cards</a> </li>
             <li class="breadcrumb-item font-weight-light">Mapping User Cards to Merchants</li>
         </ul>
-        <form method="post" data-ajax="true" data-ajax-controller="Cards" data-ajax-action="MappingCardToMerchant" data-ajax-method="POST" data-ajax-success="OnSuccessGetDetails" data-ajax-failure="OnFailure">
+        <form id="formVal">
             <div class="w-100">
                 <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
                     <div class="border-1 rounded border-grey pb-3">
@@ -18,7 +18,7 @@
                             <div class="d-flex align-items-center flex-wrap">
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal col-md-4 col-12">Card Number <sup class="text-danger">*</sup></label>
+                                        <label class="font-weight-normal col-md-4 col-12">Card Number</label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
                                                 @{
@@ -33,17 +33,18 @@
                                                         @Html.ValidationMessageFor(m => m.CardNumber, "", new { @class = "text-danger" })
                                                     }
                                                 }
-                                                @Html.ValidationMessageFor(m => m.CardNumber, "", new { @id = "cardNumberValErr", @class = "text-danger" })
+                                                @Html.ValidationMessage("All", "", new {@id="cardNumberValErr", @class = "text-danger" })
+                                                @*<span style="display:none" class="error" id="cardNumberValErr"></span>*@
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal offset-md-1 col-md-4 col-12">Merchant ID <sup class="text-danger">*</sup></label>
+                                        <label class="font-weight-normal offset-md-1 col-md-4 col-12">Merchant ID</label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.MerchantId, new { @id = "merchantIdVal", @class = "form-control restrictPaste", onkeypress = "return isNumberKey(event)" })
+                                                @Html.TextBoxFor(m => m.MerchantId, new { @class = "form-control restrictPaste", onkeypress = "return isNumberKey(event)" })
                                                 @Html.ValidationMessageFor(m => m.MerchantId, "", new { @id = "merchantIdValErr", @class = "text-danger" })
                                             </div>
                                         </div>
@@ -53,10 +54,10 @@
                             <div class="d-flex align-items-center flex-wrap">
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal col-md-4 col-12">Customer ID <sup class="text-danger">*</sup></label>
+                                        <label class="font-weight-normal col-md-4 col-12">Customer ID</label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.CustomerId, new { @id = "customerIdVal", @class = "form-control restrictPaste", onkeypress = "return isNumberKey(event)" })
+                                                @Html.TextBoxFor(m => m.CustomerId, new { @class = "form-control restrictPaste", onkeypress = "return isNumberKey(event)" })
                                                 @Html.ValidationMessageFor(m => m.CustomerId, "", new { @id = "customerIdValErr", @class = "text-danger" })
                                             </div>
                                         </div>
@@ -66,7 +67,7 @@
                             <div class="clearfix"></div>
                             <div class="d-flex align-items-center justify-content-center mt-0">
                                 <div class="px-2">
-                                    <button class="btn btn_primary" id="searchFire" type="button" onclick="checkSearchVal()">Search</button>
+                                    <button class="btn btn_primary" id="searchFire" type="button">Search</button>
                                 </div>
                                 <div class="px-2">
                                     <a class="btn btn_primary" href="@Url.Action("ManageMapping")">Manage Card Mapping</a>
@@ -124,7 +125,7 @@
 
 <script type="text/javascript">
 
-        $('.restrictPaste').on('paste', function (event) {
+    $('.restrictPaste').on('paste', function (event) {
         if (event.originalEvent.clipboardData.getData('Text').match(/[^\d]/)) {
             event.preventDefault();
         }
@@ -133,53 +134,6 @@
     function resetClick() {
         window.location.reload(true);
     }
-
-    function checkSearchVal() {
-
-        //var $inputs = $('input[name=CardNumber],input[name=MerchantId],input[name=CustomerId]');
-
-        //$inputs.on('input', function () {
-        //    $inputs.not(this).prop('required', !$(this).val().length);
-        //});
-
-        //if ($('#cardNumberVal').val() == "") {
-        //    $('#cardNumberValErr').text("Card Number should not be empty");
-        //    return false;
-        //}
-
-        //if ($('#merchantIdVal').val() == "") {
-        //    $('#merchantIdValErr').text("Merchant ID should not be empty");
-        //    return false;
-        //}
-
-        //if (!$('#merchantIdVal').val() == "") {
-        //    if (!$('#merchantIdVal').val().match(/^(?=(3))[0-9]{10}$/)) {
-        //        $('#merchantIdValErr').text("Should start with 3 and 10 Digits Only");
-        //        return false;
-        //    }
-        //}
-
-        //if ($('#customerIdVal').val() == "") {
-        //    $('#customerIdValErr').text("Customer ID should not be empty");
-        //    return false;
-        //}
-
-        //if (!$('#customerIdVal').val() == "") {
-        //    if (!$('#customerIdVal').val().match(mappedCustomerId)) {
-        //        $('#customerIdValErr').text("Should start with 2 and 10 Digits Only");
-        //        return false;
-        //    }
-        //}
-
-        $('#cardNumberValErr').text("");
-        $('#merchantIdValErr').text("");
-        $('#customerIdValErr').text("");
-
-        if ($("#searchFire").valid()) {
-            $("#searchFire").submit();
-        }
-    }
-
 
     $(document).ready(function () {
 
@@ -210,37 +164,78 @@
          });
     });
 
-    function OnSuccessGetDetails(res) {
-        console.log(res);
+    $("#searchFire").on("click", (function (e) {
 
-        if (res.searchList.success == true) {
+        var cardNo = $("#CardNumber").val();
+        var merchantId = $("#MerchantId").val();
+        var customerId = $("#CustomerId").val();
 
-            document.getElementById("noRecord").style.display = "none";
+        var flag = "Y";
 
-            $("#getDetails td").parent().remove();
-
-            for (var i = 0; i < res.searchList.data.length; i++) {
-
-                var rows = "<tbody><tr>"
-                    + "<td><input type='checkbox' class='rowSelect' name='rowCheck'></td>"
-                    + "<td><span class='cardNoVal'>" + (res.searchList.data[i].cardNo || '') + "</span></td>"
-                    + "<td><span class='merchantVal'>" + (res.searchList.data[i].merchantID || '') + "</span></td>"
-                    + "<td><span class='customerVal'>" + (res.searchList.data[i].customerID || '') + "</span></td>"
-                    + "<td>" + (res.searchList.data[i].merchantName || '') + "</td>"
-                    + "<td>" + (res.searchList.data[i].status || '') + "</td>"
-                    + "</tr ></tbody>";
-
-                $('#getDetails').append(rows);
-            }
-
-            document.getElementById("fetchDetails").style.display = "block";
-        } else {
-            document.getElementById("fetchDetails").style.display = "none";
-            $("#noRecord").html("");
-            $("#noRecord").append("<span>" + res.searchList.message + "</span>");
-            document.getElementById("noRecord").style.display = "block";
+        if(cardNo.trim() == '' && merchantId.trim() == '' && customerId == ''){
+            $("#cardNumberValErr").attr("style", "display:block");
+            $("#cardNumberValErr").html("Please enter either Customer ID or Card Number or Merchant ID");
+            flag = "N";
         }
-    }
+
+        if (flag == "N")
+            e.preventDefault();
+        else{
+            $("#cardNumberValErr").html("");
+            $("#cardNumberValErr").attr("style", "display:none");
+        }
+
+        if (flag == "Y") {
+            if ($("#formVal").valid()) {
+
+                $.ajax({
+                    type: 'POST',  // http method
+                    url: '@Url.Action("MappingCardToMerchant", "Cards")',
+                    data: $('#formVal').serialize(),
+                    success: function (res, status, xhr) {
+
+                        console.log(res);
+
+                        if (res.searchList.success == true) {
+
+                            document.getElementById("noRecord").style.display = "none";
+
+                            $("#getDetails td").parent().remove();
+
+                            for (var i = 0; i < res.searchList.data.length; i++) {
+
+                                var rows = "<tbody><tr>"
+                                    + "<td><input type='checkbox' class='rowSelect' name='rowCheck'></td>"
+                                    + "<td><span class='cardNoVal'>" + (res.searchList.data[i].cardNo || '') + "</span></td>"
+                                    + "<td><span class='merchantVal'>" + (res.searchList.data[i].merchantID || '') + "</span></td>"
+                                    + "<td><span class='customerVal'>" + (res.searchList.data[i].customerID || '') + "</span></td>"
+                                    + "<td>" + (res.searchList.data[i].merchantName || '') + "</td>"
+                                    + "<td>" + (res.searchList.data[i].status || '') + "</td>"
+                                    + "</tr ></tbody>";
+
+                                $('#getDetails').append(rows);
+                            }
+
+                            document.getElementById("fetchDetails").style.display = "block";
+                        } else {
+                            document.getElementById("fetchDetails").style.display = "none";
+                            $("#noRecord").html("");
+                            $("#noRecord").append("<span>" + res.searchList.message + "</span>");
+                            document.getElementById("noRecord").style.display = "block";
+                        }
+
+                    },
+                    error: function (jqXhr, textStatus, errorMessage) {
+                         alert("Error Populating Cards");
+                    }
+                });
+
+            } else {
+                return false;
+            }
+        }
+    })
+    );
 
     $(".checkAll").click(function () {
         if (this.checked) {
