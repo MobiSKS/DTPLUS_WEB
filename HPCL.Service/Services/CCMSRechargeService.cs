@@ -69,7 +69,7 @@ namespace HPCL.Service.Services
                 UserId = "demo",
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
-                Mobileno = mobNo,
+                Mobileno = mobNo ?? "",
                 CustomerId = customerId
             };
 

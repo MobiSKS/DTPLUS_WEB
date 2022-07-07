@@ -44,7 +44,7 @@
                     <div class="form-group d-flex align-items-center flex-wrap">
                         <label class="font-weight-normal col-md-4 col-12">Amount <sup class="text-danger">*</sup></label>
                         <div class="col-md-8 col-12">
-                            <input type="text" id="amountVal" class="form-control">
+                            <input type="text" id="amountVal" onblur="AmountBlur(this)" class="form-control" maxlength="10">
                             @Html.ValidationMessage("amountVal", "", new { @id = "amountValErr", @class = "text-danger" })
                         </div>
                     </div>
@@ -228,15 +228,15 @@
      });
 
     function cancelOtpClick(){
-        locaion.reload();
+        window.location.reload(true);
     }
 
     function cancelClick(){
-        locaion.reload();
+        window.location.reload(true);
     }
 
     function resetClick(){
-        location.reload();
+        window.location.reload(true);
         $("#mobNoVal").attr("readonly", false);
         $("#customerIdVal").attr("readonly", false);
         $("#controlCardNoVal").attr("readonly", false);
@@ -366,6 +366,8 @@
                         $("#customerNameVal").val(res.searchList.data[0].customerName);
                         $("#controlCardNoVal").val(res.searchList.data[0].controlCardNo);
 
+                        $("#controlCardNoValErr").attr("style", "display:none");
+
                         document.getElementById("cutomerName").style.display = "flex";
                         $("#mobNoVal").attr("readonly", true);
                         $("#customerIdVal").attr("readonly", true);
@@ -397,6 +399,13 @@
             $("#customerNameVal").val(currentRow.find('.customerNameVal').text());
             $("#controlCardNoVal").val(currentRow.find('.conCardNoVal').text());
 
+            if($("#customerIdVal").val().trim() != ''){
+                $("#customerIdValErr").attr("style", "display:none");
+            }
+
+            if($("#controlCardNoVal").val().trim() != ''){
+                $("#controlCardNoValErr").attr("style", "display:none");
+            }
         }
     });
 
@@ -593,6 +602,16 @@
             return false;
         }else{
              $("#otpValErr").text('');
+        }
+    }
+
+    function AmountBlur(o){
+        var otp = o.value;
+        if(otpVal == ""){
+            $("#amountValErr").text("Please enter Amount");
+            return false;
+        }else{
+             $("#amountValErr").text('');
         }
     }
 
