@@ -1334,7 +1334,7 @@
 
                                 var rows = "<tbody><tr class='gen'>"
                                     + "<td>"+(i+1)+"</td>"
-                                    + "<td>" + (searchGrid[i].cardNumber || '') + "</td>"
+                                    + "<td><span>" + (searchGrid[i].cardNumber || '') + "</span></td>"
                                     + "<td>" + (searchGrid[i].vechileNo || '')+ "</td>"
                                     + "<td>" + (searchGrid[i].vehicleMake || '') + "</td>"
                                     + "<td>" + (searchGrid[i].vehicleType || '') + "</td>"
@@ -1358,13 +1358,27 @@
 
                                     var csvrow = [];
                                     for (var j = 0; j < cols.length; j++) {
-                                        csvrow.push("" + cols[j].innerText);
+
+                                        const cardVal = cols[j].querySelector('span');
+                                        console.log("cardSpan       :",cardVal);
+
+                                        //var sel = document.getElementsByClassName("cpl")[j].defaultValue;
+                                        //console.log("sel",sel);
+                                        //if (selectElem) {
+                                        //    csvrow.push(selectElem.value);
+                                        //}else 
+
+                                        if(cardVal){
+                                            csvrow.push("`"+cardVal.innerText);
+                                        }else {
+                                            csvrow.push(cols[j].innerText);
+                                        } 
                                     }
                                     csv_data.push(csvrow.join(","));
                                     }
 
                                     csv_data = csv_data.join('\n');
-                                    var fileName = "ManageCard.csv";
+                                    var fileName = "ManageCardGenericOrAttached.csv";
                                     downloadCSVFile(csv_data,fileName);
                                 }
                             } else {
@@ -1405,31 +1419,74 @@
 
 
     function tableToCSVManageCard(){
+
+
         var csv_data = [];
-
         var rows = document.getElementById("CardSearchTbl").getElementsByTagName('tr');
-
-        console.log("rows",rows);
-
         if (rows.length > 0) {
-
             for (var i = 0; i < rows.length; i++) {
-
                 var cols = rows[i].querySelectorAll('td,th');
-
                 var csvrow = [];
                 for (var j = 0; j < cols.length; j++) {
-                    csvrow.push("" + cols[j].innerText);
+
+                    console.log("cols[j]", cols[j]);
+
+                    //const selectElem = cols[j].querySelector('input');
+
+                    const cardVal = cols[j].querySelector('a');
+                    console.log("cardSpan       :",cardVal);
+
+                    //var sel = document.getElementsByClassName("cpl")[j].defaultValue;
+                    //console.log("sel",sel);
+                    //if (selectElem) {
+                    //    csvrow.push(selectElem.value);
+                    //}else 
+
+                    if(cardVal){
+                        csvrow.push("`"+cardVal.innerText);
+                    }else {
+                        csvrow.push(cols[j].innerText);
+                    } 
                 }
+
                 csv_data.push(csvrow.join(","));
             }
-
             csv_data = csv_data.join('\n');
 
             var fileName = "ManageCard.csv";
-            downloadCSVFile(csv_data, fileName);
+
+            downloadCSVFile(csv_data,fileName);
         }
     }
+
+
+
+        //var csv_data = [];
+
+        //var rows = document.getElementById("CardSearchTbl").getElementsByTagName('tr');
+
+        //console.log("rows",rows);
+
+        //if (rows.length > 0) {
+
+        //    for (var i = 0; i < rows.length; i++) {
+
+        //        var cols = rows[i].querySelectorAll('td,th');
+
+        //        var csvrow = [];
+        //        for (var j = 0; j < cols.length; j++) {
+        //            csvrow.push("`" + cols[j].innerText);
+
+        //        }
+        //        csv_data.push(csvrow.join(","));
+        //    }
+
+        //    csv_data = csv_data.join('\n');
+
+        //    var fileName = "ManageCard.csv";
+        //    downloadCSVFile(csv_data, fileName);
+        //}
+    //}
 </script>
 <style>
     .nav-item > li.active > a,
