@@ -1209,16 +1209,16 @@ namespace HPCL.Service.Services
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
             PendingKYCCustomerDetailsModel res = obj.ToObject<PendingKYCCustomerDetailsModel>();
 
-            if (res != null && res.Data != null)
+            Model.Message = res.Message;
+            Model.Internel_Status_Code = res.Internel_Status_Code;
+            if (res != null && res.Data != null && res.Data.Count > 0 && res.Data[0].Status == 1)
             {
                 Model.Data = res.Data;
             }
-
-            Model.Message = res.Message;
-            Model.Internel_Status_Code = res.Internel_Status_Code;
-            if (res != null && res.Data != null && res.Data.Count > 0)
+            else if (res != null && res.Data != null && res.Data.Count > 0 && res.Data[0].Status == 0)
             {
-                Model.Data = res.Data;
+                Model.Message = res.Data[0].Reason;
+                Model.Data = new List<PendingKYCCustomerData>();
             }
             else
             {
