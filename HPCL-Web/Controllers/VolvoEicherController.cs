@@ -64,6 +64,24 @@ namespace HPCL_Web.Controllers
             return View(custMdl);
 
         }
+        public IActionResult VEDealerEnrollment()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> VEDealerEnrollment(string str)
+        {
+            var result = await _volvoEicherService.InsertVEDealerEnrollment(str);
+            return Json(new { result = result });
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> SearchVEDealer(string dealerCode, string dtpCode)
+        {
+            var searchList = await _volvoEicherService.SearchVEDealer(dealerCode, dtpCode);
+            return Json(new { searchList = searchList });
+        }
 
     }
 }

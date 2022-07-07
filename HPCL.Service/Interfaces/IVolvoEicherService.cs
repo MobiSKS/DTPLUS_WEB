@@ -1,4 +1,5 @@
-﻿using HPCL.Common.Models.ResponseModel.CustomerManage;
+﻿using HPCL.Common.Models.ResponseModel.AshokLayland;
+using HPCL.Common.Models.ResponseModel.CustomerManage;
 using HPCL.Common.Models.ViewModel.VolvoEicher;
 using System;
 using System.Collections.Generic;
@@ -12,5 +13,7 @@ namespace HPCL.Service.Interfaces
     {
         Task<VEDealerOTCCardStatusViewModel> GetVEDealerCardStatus(string DealerCode);
         Task<List<VECustomerProfileResponse>> BindCustomerDetails(string CustomerId, string NameOnCard);
+        Task<InsertResponse> InsertVEDealerEnrollment(string str);
+        Task<SearchAlResult> SearchVEDealer(string dealerCode, string dtpCode);
     }
 }

@@ -508,10 +508,12 @@
         
 
         #endregion
+
         #region Volvo Eicher
         public static string viewvolvoeicherdealerotccardstatus = "api/dtplus/VE/view_volvo_eicher_dealer_otc_card_status";
         public static string getvolvoeichercustomerdetail = "api/dtplus/VE/get_volvo_eicher_customer_detail";
-
+        public static string insertVolvoEicherDealerEnrollment = "api/dtplus/VE/insert_volvo_eicher_dealer_enrollment";
+        public static string getVolvoEicherDealerDetail = "api/dtplus/VE/get_volvo_eicher_dealer_detail";
         #endregion
 
         #region COMCO Manager
