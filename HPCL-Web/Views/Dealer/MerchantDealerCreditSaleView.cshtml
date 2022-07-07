@@ -4,19 +4,30 @@
     <div class="bg-white p-2 p-md-4">
         <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
             <li class="breadcrumb-item"><a href="@Url.Action("Index", "Dealer")" class="text_primary">Dealer Credit Management</a> </li>
-            <li class="breadcrumb-item font-weight-light">Dealer Credit Sale View</li>
+            <li class="breadcrumb-item font-weight-light">Credit Sale View</li>
         </ul>
         @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "form1" }))
         {
             <div class="w-100">
                 <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mb-3">
                     <div class="border-1 rounded border-grey">
-                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Dealer Credit Sale View</p>
+                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Credit Sale View</p>
                         <div class="col-lg-12 col-md-12 col-12 py-3">
                             <div class="d-flex align-items-center flex-wrap">
+                                 <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">Merchant ID<sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                               @Html.TextBoxFor(m => m.MerchantID, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                <span class="error" id="merchantId_error"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal col-md-4 col-12">Customer ID<sup class="text-danger">*</sup></label>
+                                        <label class="font-weight-normal col-md-4 col-12">Customer ID</label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
 
@@ -26,17 +37,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-lg-6 col-12">
-                                    <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal col-md-4 col-12">Merchant ID</label>
-                                        <div class="col-md-7 col-12">
-                                            <div class="custom_select">
-                                               @Html.TextBoxFor(m => m.MerchantID, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
-                                                <span class="error" id="merchantId_error"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                               
                             </div>
                             <div class="d-flex align-items-center flex-wrap">
                                 <div class="col-lg-6 col-12">
@@ -131,6 +132,11 @@
                   flag = "N";
               }
           }
+          else{
+              $("#merchantId_error").attr("style", "display:block");
+              $("#merchantId_error").html("Merchant ID field can not be left blank");
+              flag = "N";
+          }
           if (customerId != "") {
               if (!customerId.match(mappedCustomerId)) {
                   $("#customerId_error").attr("style", "display:block");
@@ -138,11 +144,7 @@
                   flag = "N";
               }
           }
-          else{
-              $("#customerId_error").attr("style", "display:block");
-              $("#customerId_error").html("Customer ID field can not be left blank");
-              flag = "N";
-          }
+          
           if (flag == "Y") {
               $("#toDate_error").attr("style", "display:none");
               $("#toDate_error").html("");
@@ -159,7 +161,7 @@
                
                $.ajax({
                type: 'GET',  // http method
-               url: '@Url.Action("GetDealerCreditSaleView", "Dealer")',
+               url: '@Url.Action("GetMerchantDealerCreditSaleView", "Dealer")',
                contentType: "application/json; charset=utf-8",
                dataType: 'text',
                data: { CustomerID: customerId, MerchantID: merchantId, FromDate: fromdate, ToDate: todate},
@@ -200,8 +202,8 @@
             }
          }
          else{
-             $("#merchantId_error").attr("style", "display:none");
-             $("#merchantId_error").html("");
+             $("#merchantId_error").attr("style", "display:block");
+             $("#merchantId_error").html("Merchant ID field can not be left blank");
          }
      });
      $("#CustomerID").on("blur", function () {
@@ -216,10 +218,7 @@
                  $("#customerId_error").html("");
              }
          }
-         else{
-             $("#customerId_error").attr("style", "display:block");
-             $("#customerId_error").html("Customer ID field can not be left blank");
-         }
+         
      });
     
 

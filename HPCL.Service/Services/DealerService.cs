@@ -220,14 +220,15 @@ namespace HPCL.Service.Services
             }
             return RequestResponseList;
         }
-        public async Task<DealerCreditPaymentinBulk> GetDealerCreditPaymentBulk()
+        public async Task<DealerCreditPaymentinBulk> GetDealerCreditPaymentBulk(string CustomerId)
         {
             DealerCreditPaymentinBulk dealerCreditPaymentinBulk = new DealerCreditPaymentinBulk();
             var searchBody = new DealerRequestModel
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip
+                UserIp = CommonBase.userip,
+                CustomerID= CustomerId
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
@@ -262,6 +263,36 @@ namespace HPCL.Service.Services
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
             var response = await _requestService.CommonRequestService(content, WebApiUrl.getdealercreditsaleview);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            dealerCreditSaleViewModel = obj.ToObject<DealerCreditSaleViewModel>();
+            return dealerCreditSaleViewModel;
+        }
+        public async Task<DealerCreditSaleViewModel> GetMerchantDealerCreditSaleView(string CustomerID, string MerchantID, string FromDate, string ToDate)
+        {
+            DealerCreditSaleViewModel dealerCreditSaleViewModel = new DealerCreditSaleViewModel();
+            if (!string.IsNullOrEmpty(FromDate) && !string.IsNullOrEmpty(FromDate))
+            {
+                FromDate = await _commonActionService.changeDateFormat(FromDate);
+                ToDate = await _commonActionService.changeDateFormat(ToDate);
+            }
+            else
+            {
+                FromDate = DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd");
+                ToDate = DateTime.Now.ToString("yyyy-MM-dd");
+            }
+            var searchBody = new DealerRequestModel
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                CustomerID = CustomerID == null ? "" : CustomerID,
+                MerchantID = MerchantID ,
+                FromDate = FromDate,
+                ToDate = ToDate,
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getmerchantcreditsaleview);
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
             dealerCreditSaleViewModel = obj.ToObject<DealerCreditSaleViewModel>();
             return dealerCreditSaleViewModel;

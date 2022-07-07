@@ -21,5 +21,6 @@ namespace HPCL.Common.Models.ViewModel.Dealer
         public string OutletNameAndLocation { get; set; }
         public string Outstanding { get; set; }
         public string Amount { get; set; }
+        public string RetailOutletName { get; set; }
     }
 }

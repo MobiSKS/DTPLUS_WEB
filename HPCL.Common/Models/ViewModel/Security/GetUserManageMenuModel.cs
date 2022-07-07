@@ -24,5 +24,6 @@ namespace HPCL.Common.Models.ViewModel.Security
         public string MenuNameId { get; set; }
         public string Reason { get; set; }
         public string AllowedAction { get; set; }
+        public string IsFinalPage { get; set; }
     }
 }
