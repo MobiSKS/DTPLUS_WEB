@@ -53,7 +53,7 @@
                                 <div class="ManageRoleArea disable" id="menuArea">
                                     <div class="panel-group" id="accordion">
                                         @{
-                                            int i = 0, j = 0;
+                                            int i = 0, j = 0, k = 0;
                                         }
                                         @foreach (var item in Model.Data.Where(x => x.MenuId == x.ParentMenuId).OrderBy(x => x.MenuOrder))
                                         {
@@ -75,79 +75,146 @@
                                                     <div class="panel-group" id="nested_@i">
                                                             @foreach (var item1 in Model.Data.Where(x => x.ParentMenuId == item.MenuId && x.MenuId != item.MenuId).OrderBy(x => x.MenuOrder))
                                                             {
-                                                                j++;
+                                                                if (item1.IsFinalPage == "0")
+                                                                {
+                                                                    j++;
 
-                                                                <div class="panel panel-default">
-                                                                    <div class="panel-heading">
-                                                                        <h4 class="panel-title">
-                                                                            <a data-toggle="collapse" data-parent="#nested_@i" href="#nested-collapse_@j" class="collapsed">
-                                                                                <label class="form-check-label" for="inlineCheckbox1">@item1.MenuName</label>
-                                                                            </a>
-                                                                        </h4>
-                                                                    </div>
-                                                                    <!--/.panel-heading -->
+                                                                    <div class="panel panel-default">
+                                                                        <div class="panel-heading">
+                                                                            <h4 class="panel-title">
+                                                                                <a data-toggle="collapse" data-parent="#nested_@i" href="#nested-collapse_@j" class="collapsed">
+                                                                                    <label class="form-check-label" for="inlineCheckbox1">@item1.MenuName</label>
+                                                                                </a>
+                                                                            </h4>
+                                                                        </div>
+                                                                        <!--/.panel-heading -->
                                                                     <div id="nested-collapse_@j" class="panel-collapse collapse in">
 
-                                                                        <div class="panel-body">
-                                                                            <table class="table table-striped d-md-table d-block table-bordered table-responsive" id="Permissiontable_@j" style="width:100%;">
-                                                                                <thead>
-                                                                                    <tr class="text-center" style="font-size: 16px;">
-                                                                                        <th colspan="3">Permissions</th>
-                                                                                    </tr>
-                                                                                    <tr>
-                                                                                        <th>Pages</th>
-                                                                                        <th>View</th>
-                                                                                        <th>All</th>
-                                                                                        <th style="display:none" >MainLevelId</th>
-                                                                                        <th style="display:none" >SubLevelID</th>
-                                                                                        <th style="display:none" >SubLevelname</th>
-                                                                                        <th style="display:none" >Menu ID</th>
-                                                                                    </tr>
-                                                                                </thead>
-                                                                                <tbody>
-                                                                                    <tr>
-                                                                                        <td></td>
-                                                                                        <td>Allow</td>
-                                                                                        <td>Allow</td>
-                                                                                        <td style="display:none" >MainLevelId</td>
-                                                                                        <td style="display:none" >SubLevelID</td>
-                                                                                        <td style="display:none" >SubLevelname</td>
-                                                                                        <td style="display:none" >Menu ID</td>
-                                                                                    </tr>
-                                                                                    @foreach (var item2 in Model.Data.Where(x => x.ParentMenuId == item1.MenuId && x.MenuId != item1.MenuId).OrderBy(x => x.MenuOrder))
-                                                                                    {
-                                                                                        <tr>
-                                                                                            <td>@item2.MenuName</td>
-
-                                                                                            <td>
-
-                                                                                                <div class="form-check">
-                                                                                                    <input class="form-check-input position-static" type="checkbox" name="chkView_@item2.MenuId" id="chkView_@item2.MenuId" value="1" aria-label="...">
-                                                                                                </div>
-
-                                                                                            </td>
-                                                                                            <td>
-                                                                                                <div class="form-check">
-                                                                                                    <input class="form-check-input position-static" type="checkbox" name="chkAll_@item2.MenuId" id="chkAll_@item2.MenuId" value="2" aria-label="...">
-                                                                                                </div>
-                                                                                            </td>
-                                                                                            <td style="display:none" >@item.MenuId</td>@*Parent ID*@
-                                                                                            <td style="display:none" >@item1.MenuId</td> @*Sublevel ID*@
-                                                                                            <td style="display:none" >@item1.MenuName</td> @*subLevelName*@
-                                                                                            <td style="display:none" >@item2.MenuId</td> @*Menu ID*@
-
+                                                                            <div class="panel-body">
+                                                                                <table class="table table-striped d-md-table d-block table-bordered table-responsive" id="Permissiontable_@j" style="width:100%;">
+                                                                                    <thead>
+                                                                                        <tr class="text-center" style="font-size: 16px;">
+                                                                                            <th colspan="3">Permissions</th>
                                                                                         </tr>
-                                                                                    }
+                                                                                        <tr>
+                                                                                            <th>Pages</th>
+                                                                                            <th>View</th>
+                                                                                            <th>All</th>
+                                                                                            <th style="display:none" >MainLevelId</th>
+                                                                                            <th style="display:none" >SubLevelID</th>
+                                                                                            <th style="display:none" >SubLevelname</th>
+                                                                                            <th style="display:none" >Menu ID</th>
+                                                                                        </tr>
+                                                                                    </thead>
+                                                                                    <tbody>
+                                                                                        <tr>
+                                                                                            <td></td>
+                                                                                            <td>Allow</td>
+                                                                                            <td>Allow</td>
+                                                                                            <td style="display:none" >MainLevelId</td>
+                                                                                            <td style="display:none" >SubLevelID</td>
+                                                                                            <td style="display:none" >SubLevelname</td>
+                                                                                            <td style="display:none" >Menu ID</td>
+                                                                                        </tr>
+                                                                                        @foreach (var item2 in Model.Data.Where(x => x.ParentMenuId == item1.MenuId && x.MenuId != item1.MenuId).OrderBy(x => x.MenuOrder))
+                                                                                        {
+                                                                                            if (item2.IsFinalPage == "1")
+                                                                                            {
+                                                                                                <tr>
+                                                                                                    <td>@item2.MenuName</td>
 
-                                                                                </tbody>
-                                                                            </table>
-                                                                        </div>
+                                                                                                    <td>
 
-                                                                        <!--/.panel-body -->
+                                                                                                        <div class="form-check">
+                                                                                                            <input class="form-check-input position-static" type="checkbox" name="chkView_@item2.MenuId" id="chkView_@item2.MenuId" value="1" aria-label="...">
+                                                                                                        </div>
+
+                                                                                                    </td>
+                                                                                                    <td>
+                                                                                                        <div class="form-check">
+                                                                                                            <input class="form-check-input position-static" type="checkbox" name="chkAll_@item2.MenuId" id="chkAll_@item2.MenuId" value="2" aria-label="...">
+                                                                                                        </div>
+                                                                                                    </td>
+                                                                                                    <td style="display:none" >@item.MenuId</td>@*Parent ID*@
+                                                                                                    <td style="display:none" >@item1.MenuId</td> @*Sublevel ID*@
+                                                                                                    <td style="display:none" >@item1.MenuName</td> @*subLevelName*@
+                                                                                                    <td style="display:none" >@item2.MenuId</td> @*Menu ID*@
+
+                                                                                                </tr>
+                                                                                            }
+                                                                                        }
+
+                                                                                    </tbody>
+                                                                                </table>
+                                                                            </div>
+
+                                                                            <!--/.panel-body -->
                                                                     </div>
-                                                                    <!--/.panel-collapse -->
+                                                                        <!--/.panel-collapse -->
                                                                 </div>
+                                                                }
+                                                                else
+                                                                {
+                                                                    j++;
+                                                                    <div id="nested-collapse_@j" class="panel-collapse collapse in show">
 
+                                                                            <div class="panel-body">
+                                                                                <table class="table table-striped d-md-table d-block table-bordered table-responsive" id="Permissiontable_@j" style="width:100%;">
+                                                                                    <thead>
+                                                                                        <tr class="text-center" style="font-size: 16px;">
+                                                                                            <th colspan="3">Permissions</th>
+                                                                                        </tr>
+                                                                                        <tr>
+                                                                                            <th>Pages</th>
+                                                                                            <th>View</th>
+                                                                                            <th>All</th>
+                                                                                            <th style="display:none" >MainLevelId</th>
+                                                                                            <th style="display:none" >SubLevelID</th>
+                                                                                            <th style="display:none" >SubLevelname</th>
+                                                                                            <th style="display:none" >Menu ID</th>
+                                                                                        </tr>
+                                                                                    </thead>
+                                                                                    <tbody>
+                                                                                        <tr>
+                                                                                            <td></td>
+                                                                                            <td>Allow</td>
+                                                                                            <td>Allow</td>
+                                                                                            <td style="display:none" >MainLevelId</td>
+                                                                                            <td style="display:none" >SubLevelID</td>
+                                                                                            <td style="display:none" >SubLevelname</td>
+                                                                                            <td style="display:none" >Menu ID</td>
+                                                                                        </tr>
+                                                                                        
+                                                                                            <tr>
+                                                                                                <td>@item1.MenuName</td>
+
+                                                                                                <td>
+
+                                                                                                    <div class="form-check">
+                                                                                                        <input class="form-check-input position-static" type="checkbox" name="chkView_@item1.MenuId" id="chkView_@item1.MenuId" value="1" aria-label="...">
+                                                                                                    </div>
+
+                                                                                                </td>
+                                                                                                <td>
+                                                                                                    <div class="form-check">
+                                                                                                        <input class="form-check-input position-static" type="checkbox" name="chkAll_@item1.MenuId" id="chkAll_@item1.MenuId" value="2" aria-label="...">
+                                                                                                    </div>
+                                                                                                </td>
+                                                                                                <td style="display:none" >@item.MenuId</td>@*Parent ID*@
+                                                                                                <td style="display:none" >@item.MenuId</td> @*Sublevel ID*@
+                                                                                                <td style="display:none" >@item.MenuName</td> @*subLevelName*@
+                                                                                                <td style="display:none" >@item1.MenuId</td> @*Menu ID*@
+
+                                                                                            </tr>
+                                                                                        
+
+                                                                                    </tbody>
+                                                                                </table>
+                                                                            </div>
+
+                                                                            <!--/.panel-body -->
+                                                                    </div>
+                                                                }
                                                                 <!-- nested -->
                                                                 <!--/.panel-collapse -->
                                                                 <!-- /.panel -->
