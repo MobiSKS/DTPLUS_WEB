@@ -15,5 +15,6 @@ namespace HPCL.Service.Interfaces
         Task<List<VECustomerProfileResponse>> BindCustomerDetails(string CustomerId, string NameOnCard);
         Task<InsertResponse> InsertVEDealerEnrollment(string str);
         Task<SearchAlResult> SearchVEDealer(string dealerCode, string dtpCode);
+        Task<InsertResponse> VEDealerEnrollmentUpdate(string getAllData);
     }
 }

@@ -301,6 +301,43 @@ namespace HPCL.Service.Services
 
             return searchList;
         }
+        public async Task<InsertResponse> VEDealerEnrollmentUpdate(string getAllData)
+        {
+
+            JArray objs = JArray.Parse(JsonConvert.DeserializeObject(getAllData).ToString());
+            List<AlEnrollment> arrs = objs.ToObject<List<AlEnrollment>>();
+
+            var email = "";
+
+            email = arrs[0].EmailId.ToLower();
+
+            var insertServiceBody = new AlEnrollment
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                DealerCode = arrs[0].DealerCode,
+                ZonalOfficeId = arrs[0].ZonalOfficeId,
+                RegionalOfficeId = arrs[0].RegionalOfficeId,
+                Address1 = arrs[0].Address1,
+                Address2 = arrs[0].Address2,
+                Address3 = arrs[0].Address3,
+                StateId = arrs[0].StateId,
+                CityName = arrs[0].CityName,
+                DistrictId = arrs[0].DistrictId,
+                Pin = arrs[0].Pin,
+                MobileNo = arrs[0].MobileNo,
+                EmailId = email,
+                ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(insertServiceBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.updateVolvoEicherDealerEnrollment);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            InsertResponse result = obj.ToObject<InsertResponse>();
+            return result;
+        }
 
     }
 }

@@ -83,5 +83,12 @@ namespace HPCL_Web.Controllers
             return Json(new { searchList = searchList });
         }
 
+        [HttpPost]
+        public async Task<JsonResult> VEDealerEnrollmentUpdate(string getAllData)
+        {
+            var result = await _volvoEicherService.VEDealerEnrollmentUpdate(getAllData);
+            return Json(new { result = result });
+        }
+
     }
 }
