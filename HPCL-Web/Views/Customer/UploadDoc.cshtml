@@ -211,6 +211,27 @@
                                 </div>
                             </div>
                         </div>
+                        <!-- Modal : Dialog -->
+                        <!-- Image Download Modal -->
+                        <div class="modal fade" id="dvViewImage" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+                            <div class="modal-dialog" role="document" style="max-width:700px; width:100%;">
+                                <div class="modal-content">
+                                    <div class="modal-header py-2">
+                                        <h5 class="modal-title" id="exampleModalLabel" style="font-size:14px;">View Image</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="col-12 col-sm-12">
+                                        <img style="max-width:100%;width:100%;" src="/assets/images/id-card.png" alt="Image" id="imgAttachment" /> @*class="imgZoom py-3"*@
+                                    </div>
+                                    <div class="d-flex align-items-center justify-content-start flex-wrap px-3 mb-3">
+                                        <button type="button" id="ImgDownload" class="btn btn_primary down_btn_sty">Download Image</button>
+                                    </div>
+                                </div> 
+                            </div>
+                        </div>
+                        <!-- Modal : Dialog -->
                     </form>
                 </div>
 
@@ -350,34 +371,113 @@
                     var ibimg="@Model.IdProofBackimg";
                     var afimg="@Model.AddProofFrontimg";
                     var abimg="@Model.AddProofBackimg";
-                    if(ifimg!=""){
-                        
-                        $("#idPfrontImg").append("<img class='imgZoom'/><button class='btn btn_primary' style='margin-top:2%' type='button' onclick='idfimgClick()'>Download Image</button>");
-                        $('#idPfrontImg img').attr('src',  ifimg);
-                        $("#idPfrontImg img").attr("style", "width: 200px");
-                        $("#idPfrontImg img").attr("style", "height: 100px");
-                        $("#idPfrontImg img").show();
+                    if(ifimg!="")
+                    {     
+                        //$("#idPfrontImg").append("<img class='imgZoom'/><button class='btn btn_primary' style='margin-top:2%' type='button' onclick='idfimgClick()'>Download Image</button>");
+                        //$('#idPfrontImg img').attr('src',  ifimg);
+                        //$("#idPfrontImg img").attr("style", "width: 200px");
+                        //$("#idPfrontImg img").attr("style", "height: 100px");
+                        //$("#idPfrontImg img").show();
+
+                        var extension = ifimg.substring(ifimg.lastIndexOf('.')+1);
+
+                        if(extension.toLowerCase()=="gif" || extension.toLowerCase()=="png" || extension.toLowerCase()=="jpeg" || extension.toLowerCase()=="jpg")
+                        {
+                            $("#idPfrontImg").append("<img id='IdProofFrontSrc' class='imgZoom'/><a href='#' id='IdProofFrontDownloadlnk' onclick='OpenModelPOPup(1); return false;'><b>Enlarge " + extension + " </b></a>");
+                            $('#idPfrontImg img').attr('src',  ifimg);
+                            $("#idPfrontImg img").attr("style", "width: 200px");
+                            $("#idPfrontImg img").attr("style", "height: 100px");
+                            $("#idPfrontImg img").show();
+                        }
+                        else
+                        {
+                            $("#idPfrontImg").append("<img id='IdProofFrontSrc' class='imgZoom'/><a href='#' id='IdProofFrontDownloadlnk' onclick='OpenModelPOPup(1); return false;'><b>Download " + extension + "</b></a>");
+                            $('#idPfrontImg img').attr('src',  ifimg);
+                            $("#idPfrontImg img").attr("style", "width: 200px");
+                            $("#idPfrontImg img").attr("style", "height: 100px");
+                            $("#idPfrontImg img").show();
+                        }
+
                     }
-                     if(ibimg!=""){
-                        $("#idPbackImg").append("<img class='imgZoom'/><button class='btn btn_primary' style='margin-top:2%' type='button' onclick='idbimgClick()'>Download Image</button>");
-                        $('#idPbackImg img').attr('src',  ibimg);
-                        $("#idPbackImg img").attr("style", "width: 200px");
-                        $("#idPbackImg img").attr("style", "height: 100px");
-                        $("#idPbackImg img").show();
+                    if(ibimg!="")
+                    {
+                        var extension = ibimg.substring(ibimg.lastIndexOf('.')+1);
+                        //$("#idPbackImg").append("<img class='imgZoom'/><button class='btn btn_primary' style='margin-top:2%' type='button' onclick='idbimgClick()'>Download Image</button>");
+                        //$('#idPbackImg img').attr('src',  ibimg);
+                        //$("#idPbackImg img").attr("style", "width: 200px");
+                        //$("#idPbackImg img").attr("style", "height: 100px");
+                        //$("#idPbackImg img").show();
+
+                        if(extension.toLowerCase()=="gif" || extension.toLowerCase()=="png" || extension.toLowerCase()=="jpeg" || extension.toLowerCase()=="jpg")
+                        {
+                            $("#idPbackImg").append("<img id='IdProofBackSrc' class='imgZoom'/><a href='#' id='IdProofBackDownloadlnk' onclick='OpenModelPOPup(2); return false;'><b>Enlarge " + extension + " </b></a>");
+                            $('#idPbackImg img').attr('src',  ibimg);
+                            $("#idPbackImg img").attr("style", "width: 200px");
+                            $("#idPbackImg img").attr("style", "height: 100px");
+                            $("#idPbackImg img").show();
+                        }
+                        else
+                        {
+                            $("#idPbackImg").append("<img id='IdProofBackSrc' class='imgZoom'/><a href='#' id='IdProofBackDownloadlnk' onclick='OpenModelPOPup(2); return false;'><b>Download " + extension + "</b></a>");
+                            $('#idPbackImg img').attr('src',  ibimg);
+                            $("#idPbackImg img").attr("style", "width: 200px");
+                            $("#idPbackImg img").attr("style", "height: 100px");
+                            $("#idPbackImg img").show();
+                        }
+
                     }
-                     if(afimg!=""){
-                        $("#idAfrontImg").append("<img class='imgZoom'/><button class='btn btn_primary' style='margin-top:2%' type='button' onclick='adfimgClick()'>Download Image</button>");
-                        $('#idAfrontImg img').attr('src',  afimg);
-                        $("#idAfrontImg img").attr("style", "width: 200px");
-                        $("#idAfrontImg img").attr("style", "height: 100px");
-                        $("#idAfrontImg img").show();
+                    if(afimg!="")
+                    {
+                        //$("#idAfrontImg").append("<img class='imgZoom'/><button class='btn btn_primary' style='margin-top:2%' type='button' onclick='adfimgClick()'>Download Image</button>");
+                        //$('#idAfrontImg img').attr('src',  afimg);
+                        //$("#idAfrontImg img").attr("style", "width: 200px");
+                        //$("#idAfrontImg img").attr("style", "height: 100px");
+                        //$("#idAfrontImg img").show();
+                        var extension = afimg.substring(afimg.lastIndexOf('.')+1);
+
+                        if(extension.toLowerCase()=="gif" || extension.toLowerCase()=="png" || extension.toLowerCase()=="jpeg" || extension.toLowerCase()=="jpg")
+                        {
+                            $("#idAfrontImg").append("<img id='AddressProofFrontSrc' class='imgZoom'/><a href='#' id='AddressProofFrontDownloadlnk' onclick='OpenModelPOPup(3); return false;'><b>Enlarge " + extension + " </b></a>");
+                            $('#idAfrontImg img').attr('src',  afimg);
+                            $("#idAfrontImg img").attr("style", "width: 200px");
+                            $("#idAfrontImg img").attr("style", "height: 100px");
+                            $("#idAfrontImg img").show();
+                        }
+                        else
+                        {
+                            $("#idAfrontImg").append("<img id='AddressProofFrontSrc' class='imgZoom'/><a href='#' id='AddressProofFrontDownloadlnk' onclick='OpenModelPOPup(3); return false;'><b>Download " + extension + "</b></a>");
+                            $('#idAfrontImg img').attr('src',  afimg);
+                            $("#idAfrontImg img").attr("style", "width: 200px");
+                            $("#idAfrontImg img").attr("style", "height: 100px");
+                            $("#idAfrontImg img").show();
+                        }
                     }
-                     if(abimg!=""){
-                        $("#idAbackImg").append("<img class='imgZoom'/><button class='btn btn_primary' style='margin-top:2%' type='button'  onclick='adbimgClick()'>Download Image</button>");
-                        $('#idAbackImg img').attr('src',  abimg);
-                        $("#idAbackImg img").attr("style", "width: 200px");
-                        $("#idAbackImg img").attr("style", "height: 100px");
-                        $("#idAbackImg img").show();
+                    if(abimg!="")
+                    {
+                        //$("#idAbackImg").append("<img class='imgZoom'/><button class='btn btn_primary' style='margin-top:2%' type='button'  onclick='adbimgClick()'>Download Image</button>");
+                        //$('#idAbackImg img').attr('src',  abimg);
+                        //$("#idAbackImg img").attr("style", "width: 200px");
+                        //$("#idAbackImg img").attr("style", "height: 100px");
+                        //$("#idAbackImg img").show();
+
+                        var extension = abimg.substring(abimg.lastIndexOf('.')+1);
+
+                        if(extension.toLowerCase()=="gif" || extension.toLowerCase()=="png" || extension.toLowerCase()=="jpeg" || extension.toLowerCase()=="jpg")
+                        {
+                            $("#idAbackImg").append("<img id='AddressProofBackSrc' class='imgZoom'/><a href='#' id='AddressProofBackDownloadlnk' onclick='OpenModelPOPup(4); return false;'><b>Enlarge " + extension + " </b></a>");
+                            $('#idAbackImg img').attr('src',  abimg);
+                            $("#idAbackImg img").attr("style", "width: 200px");
+                            $("#idAbackImg img").attr("style", "height: 100px");
+                            $("#idAbackImg img").show();
+                        }
+                        else
+                        {
+                            $("#idAbackImg").append("<img id='AddressProofBackSrc' class='imgZoom'/><a href='#' id='AddressProofBackDownloadlnk' onclick='OpenModelPOPup(4); return false;'><b>Download " + extension + "</b></a>");
+                            $('#idAbackImg img').attr('src',  abimg);
+                            $("#idAbackImg img").attr("style", "width: 200px");
+                            $("#idAbackImg img").attr("style", "height: 100px");
+                            $("#idAbackImg img").show();
+                        }
                     }
                         
                  
@@ -705,7 +805,87 @@
      function OnFailure(data) {
          alert('HTTP Status Code: ' + data + '  Error Message: ' + data);
     }
-    
+
+    function OpenModelPOPup(selectedbutton)
+    {
+        if(selectedbutton==1)
+        {
+          var txt = $("#IdProofFrontDownloadlnk").html();
+          let arr = txt.split(' ');
+          if(arr[1].toLowerCase()=="gif" || arr[1].toLowerCase()=="png" || arr[1].toLowerCase()=="jpeg" || arr[1].toLowerCase()=="jpg")
+          {
+              $('#dvViewImage').modal('show');
+              $('#imgAttachment').attr('src',$('#IdProofFrontSrc').prop('src'));
+          }
+          else
+          {
+              var upath = document.getElementById("IdProofFrontSrc").src;
+              var url = '@Html.Raw(@Url.Action("CreateFileResult","Customer", new { Filepath="zzzzxx"  }))';
+              url = url.replace("zzzzxx", upath);
+              window.location.href = url;
+          }
+        }
+        else if(selectedbutton==2)
+        {
+          var txt = $("#IdProofBackDownloadlnk").html();
+          let arr = txt.split(' ');
+          if(arr[1].toLowerCase()=="gif" || arr[1].toLowerCase()=="png" || arr[1].toLowerCase()=="jpeg" || arr[1].toLowerCase()=="jpg")
+          {
+              $('#dvViewImage').modal('show');
+              $('#imgAttachment').attr('src',$('#IdProofBackSrc').prop('src'));
+          }
+          else
+          {
+              var upath = document.getElementById("IdProofBackSrc").src;
+              var url = '@Html.Raw(@Url.Action("CreateFileResult","Customer", new { Filepath="zzzzxx"  }))';
+              url = url.replace("zzzzxx", upath);
+              window.location.href = url;
+          }
+        }
+        else if(selectedbutton==3)
+        {
+          var txt = $("#AddressProofFrontDownloadlnk").html();
+          let arr = txt.split(' ');
+          if(arr[1].toLowerCase()=="gif" || arr[1].toLowerCase()=="png" || arr[1].toLowerCase()=="jpeg" || arr[1].toLowerCase()=="jpg")
+          {
+              $('#dvViewImage').modal('show');
+              $('#imgAttachment').attr('src',$('#AddressProofFrontSrc').prop('src'));
+          }
+          else
+          {
+              var upath = document.getElementById("AddressProofFrontSrc").src;
+              var url = '@Html.Raw(@Url.Action("CreateFileResult","Customer", new { Filepath="zzzzxx"  }))';
+              url = url.replace("zzzzxx", upath);
+              window.location.href = url;
+          }
+        }
+        else if(selectedbutton==4)
+        {
+          var txt = $("#AddressProofBackDownloadlnk").html();
+          let arr = txt.split(' ');
+          if(arr[1].toLowerCase()=="gif" || arr[1].toLowerCase()=="png" || arr[1].toLowerCase()=="jpeg" || arr[1].toLowerCase()=="jpg")
+          {
+              $('#dvViewImage').modal('show');
+              $('#imgAttachment').attr('src',$('#AddressProofBackSrc').prop('src'));
+          }
+          else
+          {
+              var upath = document.getElementById("AddressProofBackSrc").src;
+              var url = '@Html.Raw(@Url.Action("CreateFileResult","Customer", new { Filepath="zzzzxx"  }))';
+              url = url.replace("zzzzxx", upath);
+              window.location.href = url;
+          }
+        }
+    }
+
+    $("#ImgDownload").click(function () 
+    {
+        var upath = document.getElementById("imgAttachment").src;
+        var url = '@Html.Raw(@Url.Action("CreateFileResult","Customer", new { Filepath="zzzzxx"  }))';
+        //url = url.replace("zzzzxx", encodeURIComponent(upath));
+        url = url.replace("zzzzxx", upath);
+        window.location.href = url;
+    });
 </script>
 
 
