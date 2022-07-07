@@ -27,6 +27,10 @@ namespace HPCL_Web.Controllers
         {
             return View();
         }
+        public IActionResult Financial()
+        {
+            return View();
+        }
         public IActionResult Approval()
         {
             return View();
@@ -128,6 +132,32 @@ namespace HPCL_Web.Controllers
             var modals = await _customerService.SearchParentCustomerRequestStatusReport( FormNumber,RequestId);
             return PartialView("~/Views/ParentCustomer/_ParentCustomerStatusReportTbl.cshtml", modals);
         }
-        
+
+        public async Task<IActionResult> BalanceInfo(ParentCustomerBalanceInfoModel requestInfo)
+        {
+
+            ParentCustomerBalanceInfoModel customerBalanceResponse = new ParentCustomerBalanceInfoModel();
+            if (requestInfo.CustomerId != null && requestInfo.CustomerId != "")
+                customerBalanceResponse = await _customerService.GetCustomerBalanceInfo(requestInfo.CustomerId);
+      
+            return View(customerBalanceResponse);
+        }
+        public async Task<IActionResult> GetCustomerCardWiseBalance(string CustomerID)
+        {
+            var modals = await _customerService.GetCustomerCardWiseBalance(CustomerID);
+            return PartialView("~/Views/ParentCustomer/_ParentCustomerCardWiseBalancesTbl.cshtml", modals);
+        }
+        public async Task<IActionResult> GetCCMSBalanceDetails(string CustomerID)
+        {
+
+            var modals = await _customerService.GetCCMSBalanceDetails(CustomerID);
+            return PartialView("~/Views/ParentCustomer/_ParentCustomerCCMSBalanceDetails.cshtml", modals);
+        }
+        public async Task<IActionResult> GetCustomerDetailsByCustomerID(string CustomerID)
+        {
+            ParentCustomerBalanceInfoModel result = await _customerService.GetCustomerDetailsByCustomerID(CustomerID);
+            return PartialView("~/Views/Customer/_CustomerSummaryView.cshtml", result);
+         
+        }
     }
 }

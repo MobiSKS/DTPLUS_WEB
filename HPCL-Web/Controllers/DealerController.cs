@@ -102,10 +102,9 @@ namespace HPCL_Web.Controllers
             var result = await _dealerService.UpdateDealerCreditPaymentBulk(DealerRequestModel);
             return Json(result);
         }
-        [HttpPost]
-        public async Task<JsonResult> GetDealerCreditPaymentBulk()
+        public async Task<JsonResult> GetDealerCreditPaymentBulk(string CustomerId)
         {
-            var result = await _dealerService.GetDealerCreditPaymentBulk();
+            var result = await _dealerService.GetDealerCreditPaymentBulk(CustomerId);
             return Json(result);
         }
         private ClosedXML.Excel.XLWorkbook GenerateClosedXMLWorkbook(List<LimitTypeModal> sortedtList)
@@ -155,10 +154,17 @@ namespace HPCL_Web.Controllers
             var modals = await _dealerService.GetDealerCreditSaleView(CustomerID, MerchantID, FromDate, ToDate);
             return PartialView("~/Views/Dealer/_DealerCreditSaleViewtbl.cshtml", modals);
         }
-        public async Task<JsonResult> GetDealerCreditSaleViewForExcelExport(string CustomerID, string MerchantID, string FromDate, string ToDate)
+        public async Task<IActionResult> MerchantDealerCreditSaleView()
         {
-            var modals = await _dealerService.GetDealerCreditSaleView(CustomerID, MerchantID, FromDate, ToDate);
-            return Json(modals);
+            DealerCreditSaleViewModel dealerCreditSaleViewModel = new DealerCreditSaleViewModel();
+            return View(dealerCreditSaleViewModel);
         }
+        public async Task<IActionResult> GetMerchantDealerCreditSaleView(string CustomerID, string MerchantID, string FromDate, string ToDate)
+        {
+            var modals = await _dealerService.GetMerchantDealerCreditSaleView(CustomerID, MerchantID, FromDate, ToDate);
+            return PartialView("~/Views/Dealer/_MerchantDealerCreditSaleViewtbl.cshtml", modals);
+        }
+     
+        
     }
 }

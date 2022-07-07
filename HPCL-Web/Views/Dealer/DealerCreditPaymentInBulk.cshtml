@@ -107,10 +107,12 @@
     });
 
        function exportReportToExcel() {
+           var customerId=$("#CustomerID").val();
             $.ajax({
                     url: "@Url.Action("GetDealerCreditPaymentBulk", "Dealer")",
                     contentType: "application/json; charset=utf-8",
-                    type: "POST",
+                    type: "GET",
+                    data:{CustomerId:customerId},
                     dataType: "JSON",
                     success: function (res) {
 
@@ -230,6 +232,7 @@
                                     return false;
                                 }
                                 else{
+                                    customerID=customerID.slice(1);
                                     if(!customerID.match(mappedCustomerId)){
                                         $("#ExcelDataError").html('');
                                         $("#ExcelDataError").append("<span>Record No "+currentIndex+":- Invalid Customer ID</span>");
@@ -247,6 +250,7 @@
                                 }
 
                                 else{
+                                    merchantID=merchantID.slice(1);
                                     if(!merchantID.match(mappedMerchantID)){
                                         $("#ExcelDataError").html('');
                                         $("#ExcelDataError").append("<span>Record No "+currentIndex+":- Invalid Merchant ID</span>");
@@ -310,6 +314,7 @@
                                         return false;
                                     }
                                 }
+                                document.getElementById("ExcelDataError").style.display = "none";
                             });
                         }
                         else{
@@ -336,8 +341,8 @@
 
             var updateArray = [];
             $('#ExcelTable tr:gt(0)').each(function(index, tr) {
-                var customerID = $(tr).find(':nth-child(1)').text().trim();
-                var merchantID = $(tr).find(':nth-child(2)').text().trim();
+                var customerID = $(tr).find(':nth-child(1)').text().trim().slice(1);
+                var merchantID = $(tr).find(':nth-child(2)').text().trim().slice(1);
                 var retailOutletName = $(tr).find(':nth-child(3)').text().trim();
                 var outstanding = $(tr).find(':nth-child(4)').text().trim();
                 var amount = $(tr).find(':nth-child(5)').text().trim();
