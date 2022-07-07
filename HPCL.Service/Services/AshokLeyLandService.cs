@@ -1104,6 +1104,7 @@ namespace HPCL.Service.Services
             List<UpdateAlCustomerProfileRequest> arrs = objs.ToObject<List<UpdateAlCustomerProfileRequest>>();
 
             string dateOfApplication = await _commonActionService.changeDateFormat(arrs[0].DateOfApplication);
+            string signedOnDate = await _commonActionService.changeDateFormat(arrs[0].SignedOnDate);
 
             var insertServiceBody = new UpdateAlCustomerProfileRequest
             {
@@ -1133,7 +1134,8 @@ namespace HPCL.Service.Services
                 CommunicationPhoneNo = arrs[0].CommunicationPhoneNo,
                 CommunicationFax = arrs[0].CommunicationFax,
                 CommunicationMobileNo = arrs[0].CommunicationMobileNo,
-                CommunicationEmailid = arrs[0].CommunicationEmailid
+                CommunicationEmailid = arrs[0].CommunicationEmailid,
+                SignedOnDate = signedOnDate
             };
 
 
