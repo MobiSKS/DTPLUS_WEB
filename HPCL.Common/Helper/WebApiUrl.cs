@@ -457,8 +457,10 @@
         public static string updatedealercreditpaymentinbulk = "api/dtplus/dealercredit/update_dealer_credit_payment_in_bulk";
         public static string getdealercreditpaymentinbulk = "api/dtplus/dealercredit/get_dealer_credit_payment_in_bulk";
         public static string getdealercreditsaleview = "api/dtplus/dealercredit/get_dealer_credit_sale_view";
-        public static string getmerchantcreditsaleview = "api/dtplus/dealercredit/get_credit_sale_view";
-        
+        public static string getmerchantcreditsaleview = "api/dtplus/dealercredit/get_credit_sale_view"; 
+        public static string getstatementdatelist = "api/dtplus/dealercredit/get_statement_date_list";
+        public static string getmerchantdealercreditsalestatement = "api/dtplus/dealercredit/get_merchant_dealer_credit_sale_statement";
+
 
         #endregion
 
