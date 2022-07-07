@@ -47,9 +47,9 @@ namespace HPCL_Web.Controllers
         {
             RedirectToPGResponseData arrs = JsonConvert.DeserializeObject<RedirectToPGResponseData>(inputTxtValues);
 
-            HttpContext.Session.SetString("pgurl",arrs.response.apiurl);
-            HttpContext.Session.SetString("reqhash", arrs.response.request_Hash);
-            HttpContext.Session.SetString("accesscode", arrs.response.accessCode);
+            HttpContext.Session.SetString("pgurl_ccmsrec",arrs.response.apiurl);
+            HttpContext.Session.SetString("reqhash_ccmsrec", arrs.response.request_Hash);
+            HttpContext.Session.SetString("accesscode_ccmsrec", arrs.response.accessCode);
 
             return View(arrs);
         }
