@@ -230,7 +230,7 @@ namespace HPCL.Service.Services
         {
             var searchBody = new GetHotlistCardsPermanently();
 
-            if (entity.CustomerID != null)
+            if (entity.CustomerID != null || entity.CardNo != null)
             {
                 searchBody = new GetHotlistCardsPermanently
                 {
