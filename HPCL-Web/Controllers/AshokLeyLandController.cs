@@ -282,6 +282,57 @@ namespace HPCL_Web.Controllers
             ModelState.Clear();
             return Json(sortedtList);
         }
+        public async Task<IActionResult> UploadALDoc(string CustomerID)
+        {
+            UploadALDoc uploadDoc = new UploadALDoc();
+            uploadDoc.FormNumber = "";
+            uploadDoc.IdProofType = 0;
+            uploadDoc.AddressProofType = 0;
+            uploadDoc.IdProofDocumentNo = "";
+            uploadDoc.AddressProofDocumentNo = "";
+
+            if (!string.IsNullOrEmpty(CustomerID))
+            {
+                uploadDoc.CustomerID = CustomerID;
+                uploadDoc.Type = "1";
+
+                var response = await _ashokLeyLandService.UploadALDoc(CustomerID);
+
+                if (response != null)
+                {
+                    uploadDoc.IdProofType = Convert.ToInt32(response.IdProofTypeId);
+                    uploadDoc.IdProofDocumentNo = response.IdProofDocumentNo;
+                    uploadDoc.IdProofFrontSRC = response.IdProofFront;
+
+                    uploadDoc.AddressProofType = Convert.ToInt32(response.AddressProofTypeId);
+                    uploadDoc.AddressProofDocumentNo = response.AddressProofDocumentNo;
+                    uploadDoc.IdProofFrontimg = response.IDProofofOwnerPartner;
+                    uploadDoc.AddProofFrontimg = response.CustomerAddressProof;
+                    uploadDoc.PanFrontimg = response.PANCarddetails;
+                    uploadDoc.VehFrontimg = response.VehicleDetails;
+                    uploadDoc.CustFrontimg = response.SignedCustomerForm;
+                }
+            }
+            return View(uploadDoc);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> UploadALDoc(UploadALDoc entity)
+        {
+            var searchCustomer = _ashokLeyLandService.UploadALDoc(entity);
+
+            ModelState.Clear();
+            return Json(new { searchCustomer = searchCustomer });
+        }
+        public async Task<IActionResult> ALPendingKYCCustomerDetail(PendingKYCCustomerDetailsModel model, string reset, string success, string error, string CustomerID)
+        {
+            var searchResult = await _ashokLeyLandService.ALPendingKYCCustomerDetail(model);
+            ViewBag.Reset = String.IsNullOrEmpty(reset) ? "" : reset;
+            ViewBag.SuccessMessage = success;
+            ViewBag.ErrorMessage = error;
+
+            return View(searchResult);
+        }
 
     }
 }
