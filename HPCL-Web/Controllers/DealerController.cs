@@ -28,7 +28,11 @@ namespace HPCL_Web.Controllers
         {
             return View();
         }
-
+        public IActionResult MerchantIndex()
+        {
+            return View();
+        }
+        
         public async Task<IActionResult> DealerCreditMapping(DealerCreditMappingViewModel entity, string reset, string CustomerID, string success, string error)
         {
             if (!string.IsNullOrEmpty(CustomerID))
@@ -164,7 +168,23 @@ namespace HPCL_Web.Controllers
             var modals = await _dealerService.GetMerchantDealerCreditSaleView(CustomerID, MerchantID, FromDate, ToDate);
             return PartialView("~/Views/Dealer/_MerchantDealerCreditSaleViewtbl.cshtml", modals);
         }
-     
-        
+        public async Task<IActionResult> MerchantDealerCreditSaleStatement()
+        {
+            DealerCreditSaleViewModel dealerCreditSaleViewModel = new DealerCreditSaleViewModel();
+            return View(dealerCreditSaleViewModel);
+        }
+        [HttpPost]
+        public async Task<JsonResult> GetMerchantSaleStatementDate(string CustomerID,string MerchantID)
+        {
+            var sortedtList = await _dealerService.GetMerchantSaleStatementDate(CustomerID,MerchantID);
+
+            ModelState.Clear();
+            return Json(sortedtList);
+        }
+        public async Task<IActionResult> GetMerchantDealerCreditSaleStatement(string CustomerID, string MerchantID, string SearchDate)
+        {
+            var modals = await _dealerService.GetMerchantDealerCreditSaleStatement(CustomerID, MerchantID, SearchDate);
+            return PartialView("~/Views/Dealer/_MerchantDealerCreditSaleStatementTbl.cshtml", modals);
+        }
     }
 }
