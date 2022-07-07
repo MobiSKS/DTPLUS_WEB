@@ -22,5 +22,7 @@ namespace HPCL.Service.Interfaces
         Task<DealerCreditPaymentinBulk> GetDealerCreditPaymentBulk(string CustomerId);
         Task<DealerCreditSaleViewModel> GetDealerCreditSaleView(string CustomerID, string MerchantID, string FromDate, string ToDate);
         Task<DealerCreditSaleViewModel> GetMerchantDealerCreditSaleView(string CustomerID, string MerchantID, string FromDate, string ToDate);
+        Task<List<StatementDateModel>> GetMerchantSaleStatementDate(string CustomerID, string MerchantID);
+        Task<MerchanDealerSaleStatementModel> GetMerchantDealerCreditSaleStatement(string CustomerID, string MerchantID, string SearchDate);
     }
 }
