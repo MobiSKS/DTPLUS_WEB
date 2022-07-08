@@ -1,5 +1,6 @@
 ﻿using HPCL.Common.Helper;
 using HPCL.Common.Models;
+using HPCL.Common.Models.RequestModel.AshokLeyLand;
 using HPCL.Common.Models.RequestModel.Merchant;
 using HPCL.Common.Models.RequestModel.VolvoEicher;
 using HPCL.Common.Models.ResponseModel.AshokLayland;
@@ -402,6 +403,23 @@ namespace HPCL.Service.Services
             }
 
             return model;
+        }
+        public async Task<InsertResponse> ResetVEDealerPassword(string UserName)
+        {
+            var requestBody = new UpdateAlDealePasswordReset
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserName = UserName
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.updateVECommunicationEmailResetPassword);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            InsertResponse result = obj.ToObject<InsertResponse>();
+            return result;
         }
 
     }

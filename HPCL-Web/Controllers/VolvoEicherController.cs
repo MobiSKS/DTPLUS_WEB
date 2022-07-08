@@ -131,5 +131,12 @@ namespace HPCL_Web.Controllers
             ViewBag.Message = Message;
             return View();
         }
+
+        [HttpPost]
+        public async Task<JsonResult> ResetVEDealerPassword(string UserName)
+        {
+            var result = await _volvoEicherService.ResetVEDealerPassword(UserName);
+            return Json(new { result = result });
+        }
     }
 }
