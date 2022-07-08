@@ -337,6 +337,25 @@ namespace HPCL.Service.Services
             merchanDealerSaleStatementModel = obj.ToObject<MerchanDealerSaleStatementModel>();
             return merchanDealerSaleStatementModel;
         }
+        public async Task<MerchantCreditSaleOutstandingViewModel> GetCreditSaleOutstandingDetails( string MerchantID)
+        {
+            MerchantCreditSaleOutstandingViewModel merchantCreditSaleOutstandingViewModel = new MerchantCreditSaleOutstandingViewModel();
+
+            var searchBody = new DealerRequestModel
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                MerchantID = MerchantID,
+
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getcreditsaleoutstandingdetails);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            merchantCreditSaleOutstandingViewModel = obj.ToObject<MerchantCreditSaleOutstandingViewModel>();
+            return merchantCreditSaleOutstandingViewModel;
+        }
     }
 
 }
