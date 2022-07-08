@@ -26,7 +26,8 @@ namespace HPCL.Common.Models.RequestModel.Dealer
         public List<DealerRequestDetails> TypeUpdateDealerCreditMapping { get; set; }
         public List<DealerCreditPaymentDetails> TypeUpdateDealerCreditPaymentInBulk { get; set; }
         public string SearchDate { get; set; }
-        
+        public string SourceofPaymnet { get; set; }
+        public string Amount { get; set; }
     }
     public class DealerRequestDetails
     {
