@@ -782,6 +782,67 @@
         document.getElementById("noRecord").style.display = "none";
     }
 
+    $("#dealerCodedFetchVal").on("blur", function () 
+    {
+        debugger;
+        localStorage.setItem("DEALERFOUND", "0");
+        var isValid=true;
+
+        var dealerCode = document.getElementById("dealerCodedFetchVal").value.trim();
+        if (dealerCode == "") 
+        {
+            document.getElementById("dealerCodeError").innerHTML = "Dealer Code field cannot be left blank";
+            isValid=false;
+        }
+        else 
+        {
+            document.getElementById("dealerCodeError").innerHTML = "";
+        }
+
+
+        if(isValid)
+        {
+
+            $.ajax({
+                type: 'POST',  // http method
+                url: '@Url.Action("CheckVEDealerCodeExists", "VolvoEicher")',
+                data: { DealerCode: dealerCode },  // data to submit
+                dataType: "json",
+                success: function (data, status, xhr) 
+                {
+                    console.log(data);
+                    console.log(status);
+                    console.log(data.status);
+    debugger;
+                    if (status == 'success') 
+                    {
+                        if (data.status == 1) 
+                        {
+                            document.getElementById("dealerCodeError").innerHTML = "Dealer code already exists";
+                            localStorage.setItem("DEALERFOUND", "1");
+                        }
+                        else 
+                        {
+                            document.getElementById("dealerCodeError").innerHTML = "";
+                            localStorage.setItem("DEALERFOUND", "0");
+                        }
+                    }
+                    else 
+                    {
+                        document.getElementById("dealerCodeError").innerHTML = "";
+                        localStorage.setItem("DEALERFOUND", "0");
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) 
+                {
+                    document.getElementById("dealerCodeError").innerHTML = "";
+                    localStorage.setItem("DEALERFOUND", "0");
+                }
+            });
+
+        }
+
+    });
 
     function submitEnroll() 
     {
@@ -795,18 +856,21 @@
             $("#dealerCodeError").html("Dealer Code field cannot be left blank");
             ret=false;
         }
+        else if (!(dealerCode.match(forVehicleNo)))
+        {
+            $("#dealerCodeError").attr("style", "display:block");
+            $("#dealerCodeError").html("Dealer Code should be alphanumeric");
+            ret=false;
+        }
+        else if(localStorage.getItem("DEALERFOUND")=="1")
+        {
+            $("#dealerCodeError").attr("style", "display:block");
+            $("#dealerCodeError").html("Dealer code already exists");
+            ret=false;
+        }
         else
         {
-            if (!(dealerCode.match(forVehicleNo)))
-            {
-                $("#dealerCodeError").attr("style", "display:block");
-                $("#dealerCodeError").html("Dealer Code should be alphanumeric");
-                ret=false;
-            }
-            else
-            {
-                $("#dealerCodeError").html("");
-            }
+            $("#dealerCodeError").html("");
         }
 
         var dealerName = document.getElementById("dealerNameFetchVal").value.trim();

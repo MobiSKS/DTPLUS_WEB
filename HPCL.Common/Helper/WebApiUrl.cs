@@ -518,6 +518,7 @@
         public static string insertVolvoEicherDealerEnrollment = "api/dtplus/VE/insert_volvo_eicher_dealer_enrollment";
         public static string getVolvoEicherDealerDetail = "api/dtplus/VE/get_volvo_eicher_dealer_detail";
         public static string updateVolvoEicherDealerEnrollment = "api/dtplus/VE/update_volvo_eicher_dealer_enrollment";
+        public static string checkvedealercode = "api/dtplus/VE/check_dealer_code";
         #endregion
 
         #region COMCO Manager
