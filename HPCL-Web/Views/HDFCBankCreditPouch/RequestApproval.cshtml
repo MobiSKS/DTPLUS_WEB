@@ -72,7 +72,7 @@
                                     <a class="btn btn_primary" href="#" id="btnCancel" name="cancel" onclick="resetClick()">Reset</a>
                                 </div>
                                 <div class="px-md-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2">
-                                    <a class="btn btn_primary" href="#" id="btnCancel" name="cancel">Export to Excel</a>
+                                      <button class="btn btn_primary" type="button" onclick="tableToCSV()">Download Excel</button>
                                 </div>
                             </div>
 
@@ -88,7 +88,7 @@
                                     <thead>
                                         <tr>
                                             <th>S.No.</th>
-                                            <th>Select</th>
+                                            <th class="checkX">Select</th>
                                             <th>Reference No.</th>
                                             <th>ZO</th>
                                             <th>RO</th>
@@ -286,7 +286,7 @@
                 }
 
                 var srNumber = (i + 1);
-                var checkBx = "<input type='checkbox' class='checkRow' name='checkRowName'>";
+                var checkBx = "<input type='checkbox' class='checkRow checkX' name='checkRowName'>";
                 var referenceNo = (res.searchList.data[i].referenceNo || '');
                 var zo = (res.searchList.data[i].zo || '');
                 var ro =  (res.searchList.data[i].ro || '');
@@ -447,6 +447,113 @@
                     document.getElementById('remarks_error_'+rowSelected).style.display = "none";
                 }
             }
+        }
+    }
+
+
+    function downloadCSVFile(csv_data,fileName) {
+
+        CSVFile = new Blob([csv_data], {
+            type: "text/csv"
+        });
+
+        var temp_link = document.createElement('a');
+
+        temp_link.download = fileName;
+        var url = window.URL.createObjectURL(CSVFile);
+        temp_link.href = url;
+
+        temp_link.style.display = "none";
+        document.body.appendChild(temp_link);
+
+        temp_link.click();
+        document.body.removeChild(temp_link);
+    }
+
+    function tableToCSV(){
+
+
+        var csv_data = [];
+        var rows = document.getElementById("approvalHdfcList").getElementsByTagName('tr');
+        if (rows.length > 0) {
+            //for (var i = 0; i < rows.length; i++) {
+            //    var cols = rows[i].querySelectorAll('td,th');
+            //    var csvrow = [];
+            //    for (var j = 0; j < cols.length; j++) {
+
+            //        console.log("cols[j]", cols[j]);
+
+            //        const checkBox = cols[j].querySelector('input[class="checkX"]');
+
+            //        const custVal = cols[j].querySelector('span');
+            //        const remarks = cols[j].querySelector('textarea');
+            //        const action = cols[j].querySelector('select');
+
+            //        if(!checkBox){
+            //            if(custVal){
+            //                csvrow.push(custVal.innerText);
+            //            }else if(remarks){
+            //                csvrow.push(remarks.value);
+            //            }else if(action){
+            //                csvrow.push(action);
+            //            }else{
+            //                csvrow.push(cols[j].innerText);
+            //            } 
+            //        }
+            //    }
+
+            //    csv_data.push(csvrow.join(","));
+            //}
+            //csv_data = csv_data.join('\n');
+
+            $('#approvalHdfcList tr').each(function(index, tr) {
+
+                var csvrow = [];
+
+                csvrow.push($(tr).find(':nth-child(1)').text());
+                csvrow.push($(tr).find(':nth-child(2)').text());
+                csvrow.push($(tr).find(':nth-child(3)').text());
+                csvrow.push($(tr).find(':nth-child(4)').text());
+                csvrow.push($(tr).find(':nth-child(5)').text());
+                csvrow.push($(tr).find(':nth-child(6)').text());
+                csvrow.push($(tr).find(':nth-child(7)').text());
+                csvrow.push($(tr).find(':nth-child(8)').text());
+                csvrow.push($(tr).find(':nth-child(9)').text());
+                csvrow.push($(tr).find(':nth-child(10)').text());
+                csvrow.push($(tr).find(':nth-child(11)').text());
+                csvrow.push($(tr).find(':nth-child(12)').val());
+                csvrow.push($(tr).find(':nth-child(13) option:selected').text());
+
+                csv_data.push(csvrow.join(","));
+            });
+
+            csv_data = csv_data.join('\n');
+
+
+            //var tableName = $('#approvalHdfcList').DataTable();
+            //tableName.rows().every(function(){
+
+            //    var csvrow = [];
+
+            //    csvrow.push(this.data()[0]);
+            //    csvrow.push(this.data()[1]);
+            //    csvrow.push(this.data()[2]);
+            //    csvrow.push(this.data()[3]);
+            //    csvrow.push("'"+this.data()[4]);
+            //    csvrow.push(this.data()[5]);
+            //    csvrow.push(this.data()[6]);
+            //    csvrow.push(this.data()[7]);
+            //    csvrow.push(this.data()[8]);
+
+            //    csv_data.push(csvrow.join(","));
+            //});
+
+            //csv_data = csv_data.join('\n');
+
+
+            var fileName = "HDFCCreditPouchRequest.csv";
+
+            downloadCSVFile(csv_data,fileName);
         }
     }
 </script>
