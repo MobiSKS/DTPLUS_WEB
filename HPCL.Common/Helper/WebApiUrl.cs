@@ -463,7 +463,12 @@
         public static string getstatementdatelist = "api/dtplus/dealercredit/get_statement_date_list";
         public static string getmerchantdealercreditsalestatement = "api/dtplus/dealercredit/get_merchant_dealer_credit_sale_statement";
         public static string getcreditsaleoutstandingdetails = "api/dtplus/dealercredit/get_credit_sale_outstanding_details";
-        
+        public static string getdealercreditsaledetails = "api/dtplus/dealercredit/get_dealer_credit_sale_details";
+        public static string getcreditclosepayment = "api/dtplus/dealercredit/get_credit_close_payment";
+        public static string generateotpcreditclosepayment = "api/dtplus/dealercredit/generate_otp_credit_close_payment";
+        public static string validateotpupdatecreditclosepayment = "api/dtplus/dealercredit/validate_otp_update_credit_close_payment";
+
+
 
 
         #endregion
@@ -519,6 +524,9 @@
         public static string insertVolvoEicherDealerEnrollment = "api/dtplus/VE/insert_volvo_eicher_dealer_enrollment";
         public static string getVolvoEicherDealerDetail = "api/dtplus/VE/get_volvo_eicher_dealer_detail";
         public static string updateVolvoEicherDealerEnrollment = "api/dtplus/VE/update_volvo_eicher_dealer_enrollment";
+        public static string checkvedealercode = "api/dtplus/VE/check_dealer_code";
+        public static string insertDealerWiseVolvoEicherOtcCardRequest = "api/dtplus/VE/insert_dealer_wise_volvo_eicher_otc_card_request";
+        public static string updateVECommunicationEmailResetPassword = "api/dtplus/VE/update_ve_communication_email_reset_password";
         #endregion
 
         #region COMCO Manager

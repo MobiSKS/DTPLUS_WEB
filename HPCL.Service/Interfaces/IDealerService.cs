@@ -25,5 +25,9 @@ namespace HPCL.Service.Interfaces
         Task<List<StatementDateModel>> GetMerchantSaleStatementDate(string CustomerID, string MerchantID);
         Task<MerchanDealerSaleStatementModel> GetMerchantDealerCreditSaleStatement(string CustomerID, string MerchantID, string SearchDate);
         Task<MerchantCreditSaleOutstandingViewModel> GetCreditSaleOutstandingDetails(string MerchantID);
+        Task<DealerCreditSaleStatement> GetCreditSaleDetails(string CustomerID, string MerchantID, string FromDate, string ToDate);
+        Task<DealerCreditClosePaymentModel> GetCreditClosePayment(string CustomerID, string MerchantID);
+        Task<DealerCreditClosePaymentModel> GenerateOTPCreditClosePayment([FromBody] DealerRequestModel dealerRequestModel);
+        Task<List<SuccessResponse>> ValidateotpCreditClosePayment([FromBody] DealerRequestModel dealerRequestModel);
     }
 }

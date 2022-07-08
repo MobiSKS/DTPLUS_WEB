@@ -50,7 +50,7 @@
                                 <div class="ManageRoleArea">
                                     <div class="panel-group" id="accordion">
                                         @{
-                                            int i = 0, j = 0;
+                                            int i = 0, j = 0, k = 0;
                                         }
                                         @foreach (var item in Model.Data.tblMenuDetails.Where(x => x.MenuId == x.ParentMenuId).OrderBy(x => x.MenuOrder))
                                         {
@@ -70,31 +70,248 @@
                                                     <div class="panel-body">
                                                         <!-- nested -->
                                                     <div class="panel-group" id="nested_@i">
-                                                            @foreach (var item1 in Model.Data.tblMenuDetails.Where(x => x.ParentMenuId == item.MenuId && x.MenuId != item.MenuId).OrderBy(x => x.MenuOrder))
+                                                            @foreach (var item1 in Model.Data.tblMenuDetails.Where(x => x.ParentMenuId == item.MenuId && x.MenuId != item.MenuId).OrderBy(x => x.IsFinalPage).OrderBy(x => x.MenuOrder))
                                                             {
-                                                                j++;
+                                                                if (item1.IsFinalPage == "0")
+                                                                {
+                                                                    j++;
 
-                                                                <div class="panel panel-default">
-                                                                    <div class="panel-heading">
-                                                                        <h4 class="panel-title">
-                                                                            <a data-toggle="collapse" data-parent="#nested_@i" href="#nested-collapse_@j" id="title_@j" class="collapsed">
-                                                                                <label class="form-check-label" for="inlineCheckbox1">@item1.MenuName</label>
-                                                                            </a>
-                                                                        </h4>
-                                                                    </div>
-                                                                    <!--/.panel-heading -->
+                                                                    <div class="panel panel-default">
+                                                                        <div class="panel-heading">
+                                                                            <h4 class="panel-title">
+                                                                                <a data-toggle="collapse" data-parent="#nested_@i" href="#nested-collapse_@j" id="title_@j" class="collapsed">
+                                                                                    <label class="form-check-label" for="inlineCheckbox1">@item1.MenuName</label>
+                                                                                </a>
+                                                                            </h4>
+                                                                        </div>
+                                                                        <!--/.panel-heading -->
                                                             <div id="nested-collapse_@j" class="panel-collapse collapse in">
+
+                                                                            <div class="panel-body">
+                                                                                <table class="table table-striped d-md-table d-block table-bordered table-responsive" id="Permissiontable_@j" style="width:100%;">
+                                                                                    <thead>
+                                                                                        <tr class="text-center" style="font-size: 16px;">
+                                                                                            <th colspan="3">Permissions</th>
+                                                                                        </tr>
+                                                                                        <tr>
+                                                                                            <th>Pages</th>
+                                                                                            <th>View</th>
+                                                                                            <th>All</th>
+                                                                                            <th style="display:none"></th>
+                                                                                            <th style="display:none"></th>
+                                                                                            <th style="display:none"></th>
+                                                                                            <th style="display:none"></th>
+                                                                                        </tr>
+                                                                                    </thead>
+                                                                                    <tbody>
+                                                                                        <tr>
+                                                                                            <td></td>
+                                                                                            <td>Allow</td>
+                                                                                            <td>Allow</td>
+                                                                                            <td style="display:none"></td>
+                                                                                            <td style="display:none">parentTitle_@i</td>
+                                                                                            <td style="display:none">collapse_@i</td>
+                                                                                            <td style="display:none">title_@j</td>
+
+                                                                                        </tr>
+                                                                                        @foreach (var item2 in Model.Data.tblMenuDetails.Where(x => x.ParentMenuId == item1.MenuId && x.MenuId != item1.MenuId).OrderBy(x => x.IsFinalPage).OrderBy(x => x.MenuOrder))
+                                                                                        {
+                                                                                            if (item2.IsFinalPage == "1")
+                                                                                            {
+                                                                                                <tr>
+                                                                                                    <td>@item2.MenuName</td>
+                                                                                                    @if (item2.AllowedAction == "2")
+                                                                                                    {
+                                                                                                        <td>
+
+                                                                                                            <div class="form-check">
+                                                                                                                <input class="form-check-input position-static" type="checkbox" name="chkView_@item2.MenuId" id="chkView_@item2.MenuId" checked disabled aria-label="...">
+                                                                                                            </div>
+
+                                                                                                        </td>
+                                                                                                        <td>
+                                                                                                            <div class="form-check">
+                                                                                                                <input class="form-check-input position-static" type="checkbox" id="blankCheckbox" value="option1" checked disabled aria-label="...">
+                                                                                                            </div>
+                                                                                                        </td>
+                                                                                                    }
+                                                                                                    else if (item2.AllowedAction == "1")
+                                                                                                    {
+                                                                                                        <td>
+
+                                                                                                            <div class="form-check">
+                                                                                                                <input class="form-check-input position-static" type="checkbox" name="chkView_@item2.MenuId" id="chkView_@item2.MenuId" checked disabled aria-label="...">
+                                                                                                            </div>
+
+                                                                                                        </td>
+                                                                                                        <td>
+                                                                                                            <div class="form-check">
+                                                                                                                <input class="form-check-input position-static" type="checkbox" name="chkAll_@item2.MenuId" id="chkAll_@item2.MenuId" disabled aria-label="...">
+                                                                                                            </div>
+                                                                                                        </td>
+                                                                                                    }
+                                                                                                    else if (item2.AllowedAction == "0")
+                                                                                                    {
+                                                                                                        <td>
+
+                                                                                                            <div class="form-check">
+                                                                                                                <input class="form-check-input position-static" type="checkbox" name="chkView_@item2.MenuId" id="chkView_@item2.MenuId" disabled aria-label="...">
+                                                                                                            </div>
+
+                                                                                                        </td>
+                                                                                                        <td>
+                                                                                                            <div class="form-check">
+                                                                                                                <input class="form-check-input position-static" type="checkbox" name="chkAll_@item2.MenuId" id="chkAll_@item2.MenuId" disabled aria-label="...">
+                                                                                                            </div>
+                                                                                                        </td>
+                                                                                                    }
+                                                                                                    <td style="display:none">@item2.MenuId</td> @*Menu ID*@
+                                                                                                    <td style="display:none">parentTitle_@i</td>
+                                                                                                    <td style="display:none">collapse_@i</td>
+                                                                                                    <td style="display:none">title_@j</td>
+                                                                                                </tr>
+                                                                                            }
+                                                                                            else
+                                                                                            {
+                                                                                                j++;
+                                                                                                <tr>
+                                                                                                    <td colspan="5">
+                                                                                                        <div class="panel panel-default" id="subcollapse_@i">
+                                                                                                            <div class="panel-heading">
+                                                                                                                <h4 class="panel-title">
+                                                                                                                    <a data-toggle="collapse" data-parent="#nested_@i" href="#nested-collapse_@j" id="title_@j" class="collapsed">
+                                                                                                                        <label class="form-check-label" for="inlineCheckbox1">@item2.MenuName</label>
+                                                                                                                    </a>
+                                                                                                                </h4>
+                                                                                                            </div>
+                                                                                                            <!--/.panel-heading -->
+                                                                                        <div id="nested-collapse_@j" class="panel-collapse collapse in">
+
+                                                                                                                <div class="panel-body">
+                                                                                                                    <table class="table table-striped d-md-table d-block table-bordered table-responsive" id="Permissiontable_@j" style="width:100%;">
+                                                                                                                        <thead>
+                                                                                                                            <tr class="text-center" style="font-size: 16px;">
+                                                                                                                                <th colspan="3">Permissions</th>
+                                                                                                                            </tr>
+                                                                                                                            <tr>
+                                                                                                                                <th>Pages</th>
+                                                                                                                                <th>View</th>
+                                                                                                                                <th>All</th>
+                                                                                                                                <th style="display:none">Menu ID</th>
+                                                                                                                                <th style="display:none"></th>
+                                                                                                                                <th style="display:none"></th>
+                                                                                                                                <th style="display:none"></th>
+                                                                                                                            </tr>
+                                                                                                                        </thead>
+                                                                                                                        <tbody>
+                                                                                                                            <tr>
+                                                                                                                                <td></td>
+                                                                                                                                <td>Allow</td>
+                                                                                                                                <td>Allow</td>
+                                                                                                                                <td style="display:none">Menu ID</td>
+                                                                                                                                <td style="display:none">parentTitle_@i</td>
+                                                                                                                                <td style="display:none">collapse_@i</td>
+                                                                                                                                <td style="display:none">title_@j</td>
+                                                                                                                            </tr>
+                                                                                                                            @foreach (var item3 in Model.Data.tblMenuDetails.Where(x => x.ParentMenuId == item2.MenuId && x.MenuId != item2.MenuId).OrderBy(x => x.IsFinalPage).OrderBy(x => x.MenuOrder))
+                                                                                                                            {
+                                                                                                                                if (item3.IsFinalPage == "1")
+                                                                                                                                {
+                                                                                                                                    <tr>
+                                                                                                                                        <td>@item3.MenuName</td>
+
+                                                                                                                                        @if (item3.AllowedAction == "2")
+                                                                                                                                        {
+                                                                                                                                            <td>
+
+                                                                                                                                                <div class="form-check">
+                                                                                                                                                    <input class="form-check-input position-static" type="checkbox" name="chkView_@item3.MenuId" id="chkView_@item3.MenuId" checked disabled aria-label="...">
+                                                                                                                                                </div>
+
+                                                                                                                                            </td>
+                                                                                                                                            <td>
+                                                                                                                                                <div class="form-check">
+                                                                                                                                                    <input class="form-check-input position-static" type="checkbox" name="chkAll_@item3.MenuId" id="chkAll_@item3.MenuId" checked disabled aria-label="...">
+                                                                                                                                                </div>
+                                                                                                                                            </td>
+                                                                                                                                        }
+                                                                                                                                        else if (item3.AllowedAction == "1")
+                                                                                                                                        {
+                                                                                                                                            <td>
+
+                                                                                                                                                <div class="form-check">
+                                                                                                                                                    <input class="form-check-input position-static" type="checkbox" name="chkView_@item3.MenuId" id="chkView_@item3.MenuId" checked disabled aria-label="...">
+                                                                                                                                                </div>
+
+                                                                                                                                            </td>
+                                                                                                                                            <td>
+                                                                                                                                                <div class="form-check">
+                                                                                                                                                    <input class="form-check-input position-static" type="checkbox" name="chkAll_@item3.MenuId" id="chkAll_@item3.MenuId" disabled aria-label="...">
+                                                                                                                                                </div>
+                                                                                                                                            </td>
+                                                                                                                                        }
+                                                                                                                                        else if (item3.AllowedAction == "0")
+                                                                                                                                        {
+                                                                                                                                            <td>
+
+                                                                                                                                                <div class="form-check">
+                                                                                                                                                    <input class="form-check-input position-static" type="checkbox" name="chkView_@item3.MenuId" id="chkView_@item3.MenuId" disabled aria-label="...">
+                                                                                                                                                </div>
+
+                                                                                                                                            </td>
+                                                                                                                                            <td>
+                                                                                                                                                <div class="form-check">
+                                                                                                                                                    <input class="form-check-input position-static" type="checkbox" name="chkAll_@item3.MenuId" id="chkAll_@item3.MenuId" disabled aria-label="...">
+                                                                                                                                                </div>
+                                                                                                                                            </td>
+                                                                                                                                        }
+                                                                                                                                        <td style="display:none">@item3.MenuId</td> @*Menu ID*@
+                                                                                                                                        <td style="display:none">parentTitle_@i</td>
+                                                                                                                                        <td style="display:none">collapse_@i</td>
+                                                                                                                                        <td style="display:none">title_@j</td>
+                                                                                                                                    </tr>
+                                                                                                                                }
+                                                                                                                            }
+
+                                                                                                                        </tbody>
+                                                                                                                    </table>
+                                                                                                                </div>
+
+                                                                                                                <!--/.panel-body -->
+                                                                                        </div>
+                                                                                                            <!--/.panel-collapse -->
+                                                                                    </div>
+                                                                                                    </td>
+                                                                                                </tr>
+                                                                                            }
+                                                                                        }
+
+
+                                                                                    </tbody>
+                                                                                </table>
+                                                                            </div>
+
+                                                                            <!--/.panel-body -->
+                                                            </div>
+                                                                        <!--/.panel-collapse -->
+                                                        </div>
+                                                                }
+                                                                else
+                                                                {
+                                                                    j++;
+                                                                    <div id="nested-collapse_@j" class="panel-collapse collapse in show">
 
                                                                         <div class="panel-body">
                                                                             <table class="table table-striped d-md-table d-block table-bordered table-responsive" id="Permissiontable_@j" style="width:100%;">
                                                                                 <thead>
                                                                                     <tr class="text-center" style="font-size: 16px;">
-                                                                                        <th colspan="3">Permissions</th>
+                                                                                        <th colspan="7">Permissions</th>
                                                                                     </tr>
                                                                                     <tr>
                                                                                         <th>Pages</th>
                                                                                         <th>View</th>
                                                                                         <th>All</th>
+                                                                                        <th style="display:none">Menu ID</th>
                                                                                         <th style="display:none"></th>
                                                                                         <th style="display:none"></th>
                                                                                         <th style="display:none"></th>
@@ -105,65 +322,66 @@
                                                                                         <td></td>
                                                                                         <td>Allow</td>
                                                                                         <td>Allow</td>
-                                                                                        <td style="display:none"></td>
+                                                                                        <td style="display:none">Menu ID</td>
                                                                                         <td style="display:none">parentTitle_@i</td>
                                                                                         <td style="display:none">collapse_@i</td>
+                                                                                        <td style="display:none">title_@j</td>
+                                                                                    </tr>
+
+                                                                                    <tr>
+                                                                                        <td>@item1.MenuName</td>
+
+                                                                                        @if (item1.AllowedAction == "2")
+                                                                                        {
+                                                                                            <td>
+
+                                                                                                <div class="form-check">
+                                                                                                    <input class="form-check-input position-static" type="checkbox" name="chkView_@item1.MenuId" id="chkView_@item1.MenuId" checked disabled aria-label="...">
+                                                                                                </div>
+
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                <div class="form-check">
+                                                                                                    <input class="form-check-input position-static" type="checkbox" name="chkAll_@item1.MenuId" id="chkAll_@item1.MenuId" checked disabled aria-label="...">
+                                                                                                </div>
+                                                                                            </td>
+                                                                                        }
+                                                                                        else if (item1.AllowedAction == "1")
+                                                                                        {
+                                                                                            <td>
+
+                                                                                                <div class="form-check">
+                                                                                                    <input class="form-check-input position-static" type="checkbox" name="chkView_@item1.MenuId" id="chkView_@item1.MenuId" checked disabled aria-label="...">
+                                                                                                </div>
+
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                <div class="form-check">
+                                                                                                    <input class="form-check-input position-static" type="checkbox" name="chkAll_@item1.MenuId" id="chkAll_@item1.MenuId" disabled aria-label="...">
+                                                                                                </div>
+                                                                                            </td>
+                                                                                        }
+                                                                                        else if (item1.AllowedAction == "0")
+                                                                                        {
+                                                                                            <td>
+
+                                                                                                <div class="form-check">
+                                                                                                    <input class="form-check-input position-static" type="checkbox" name="chkView_@item1.MenuId" id="chkView_@item1.MenuId" disabled aria-label="...">
+                                                                                                </div>
+
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                <div class="form-check">
+                                                                                                    <input class="form-check-input position-static" type="checkbox" name="chkAll_@item1.MenuId" id="chkAll_@item1.MenuId" disabled aria-label="...">
+                                                                                                </div>
+                                                                                            </td>
+                                                                                        }
+                                                                                        <td style="display:none">@item1.MenuId</td> @*Menu ID*@
+                                                                                        <td style="display:none">parentTitle_@i</td>
+                                                                                        <td style="display:none">collapse_@i</td>
+                                                                                        <td style="display:none">title_@j</td>
 
                                                                                     </tr>
-                                                                                    @foreach (var item2 in Model.Data.tblMenuDetails.Where(x => x.ParentMenuId == item1.MenuId && x.MenuId != item1.MenuId).OrderBy(x => x.MenuOrder))
-                                                                                    {
-                                                                                        <tr>
-                                                                                            <td>@item2.MenuName</td>
-                                                                                            @if (item2.AllowedAction == "2")
-                                                                                            {
-                                                                                                <td>
-
-                                                                                                    <div class="form-check">
-                                                                                                        <input class="form-check-input position-static" type="checkbox" name="chkView_@item2.MenuId" id="chkView_@item2.MenuId" checked disabled aria-label="...">
-                                                                                                    </div>
-
-                                                                                                </td>
-                                                                                                <td>
-                                                                                                    <div class="form-check">
-                                                                                                        <input class="form-check-input position-static" type="checkbox" id="blankCheckbox" value="option1" checked disabled aria-label="...">
-                                                                                                    </div>
-                                                                                                </td>
-                                                                                            }
-                                                                                            else if (item2.AllowedAction == "1")
-                                                                                            {
-                                                                                                <td>
-
-                                                                                                    <div class="form-check">
-                                                                                                        <input class="form-check-input position-static" type="checkbox" name="chkView_@item2.MenuId" id="chkView_@item2.MenuId" checked disabled aria-label="...">
-                                                                                                    </div>
-
-                                                                                                </td>
-                                                                                                <td>
-                                                                                                    <div class="form-check">
-                                                                                                        <input class="form-check-input position-static" type="checkbox" name="chkAll_@item2.MenuId" id="chkAll_@item2.MenuId" disabled aria-label="...">
-                                                                                                    </div>
-                                                                                                </td>
-                                                                                            }
-                                                                                            else if (item2.AllowedAction == "0")
-                                                                                            {
-                                                                                                <td>
-
-                                                                                                    <div class="form-check">
-                                                                                                        <input class="form-check-input position-static" type="checkbox" name="chkView_@item2.MenuId" id="chkView_@item2.MenuId" disabled aria-label="...">
-                                                                                                    </div>
-
-                                                                                                </td>
-                                                                                                <td>
-                                                                                                    <div class="form-check">
-                                                                                                        <input class="form-check-input position-static" type="checkbox" name="chkAll_@item2.MenuId" id="chkAll_@item2.MenuId" disabled aria-label="...">
-                                                                                                    </div>
-                                                                                                </td>
-                                                                                            }
-                                                                                            <td style="display:none">@item2.MenuId</td> @*Menu ID*@
-                                                                                            <td style="display:none">parentTitle_@i</td>
-                                                                                            <td style="display:none">collapse_@i</td>
-                                                                                        </tr>
-                                                                                    }
 
 
                                                                                 </tbody>
@@ -171,13 +389,8 @@
                                                                         </div>
 
                                                                         <!--/.panel-body -->
-                                                            </div>
-                                                                    <!--/.panel-collapse -->
                                                         </div>
-
-                                                                <!-- nested -->
-                                                                <!--/.panel-collapse -->
-                                                                <!-- /.panel -->
+                                                                }
                                                             }
                                                         </div>
                                                         <!--/.panel-body -->
@@ -212,23 +425,29 @@
                  $("#Permissiontable_"+i+" tbody tr").each(function () {
                     var row = $(this);
                     if(row[0].rowIndex>2){
-                        debugger;
-                        var menuId = row[0].cells[3].textContent;
-                        var parentId=row[0].cells[4].textContent;
-                        var subParentId=row[0].cells[5].textContent;
+                        if(row[0].cells.length>1){
 
-                        if(row.find('input[name=chkView_'+menuId+']').is(":checked") || row.find('input[name=chkAll_'+menuId+']').is(":checked")){
-                            chkCount++;
-                            chkDataCount++;
-                            if(!($("#nested-collapse_"+i).hasClass("show")))
-                                $("#nested-collapse_"+i).addClass("show");
-                            $("#title_"+i).removeClass("collapsed");
-                            $("#title_"+i).attr("aria-expanded",true);
-                            $("#"+parentId).removeClass("collapsed");
-                            $("#"+parentId).attr("aria-expanded",true);
+                                debugger;
+                                var menuId = row[0].cells[3].textContent;
+                                var parentId=row[0].cells[4].textContent;
+                                var subParentId=row[0].cells[5].textContent;
+                                var title=row[0].cells[6].textContent;
+                                if(row.find('input[name=chkView_'+menuId+']').is(":checked") || row.find('input[name=chkAll_'+menuId+']').is(":checked")){
+                                    chkCount++;
+                                    chkDataCount++;
+                                    if(!($("#nested-collapse_"+i).hasClass("show")))
+                                        $("#nested-collapse_"+i).addClass("show");
+                                    $("#title_"+i).removeClass("collapsed");
+                                    $("#title_"+i).attr("aria-expanded",true);
+                                    
+                                    $("#"+parentId).addClass("roleParent");
+                                    $("#"+parentId).removeClass("collapsed");
+                                    $("#"+parentId).attr("aria-expanded",true);
 
-                            if(!($("#"+subParentId).hasClass("show")))
-                                $("#"+subParentId).addClass("show");
+                                    if(!($("#"+subParentId).hasClass("show")))
+                                        $("#"+subParentId).addClass("show");
+                                    $("#parentTitle_"+i).attr("style","display:block");
+                                }
 
                         }
                      }
@@ -236,14 +455,15 @@
                  if(chkCount==0){
                      $("#parentTitle_"+i).attr("style","display:none");
                      $("#title_"+i).attr("style","display:none");
-
+                     $("#nested-collapse_"+i).attr("style","display:none");
                  }
+                 
             }
         }
         if(chkDataCount==0){
             $("#noRecord").attr("style","display:block");
             $("#noRecord").html("No permission summary for this role");
-            
+
              $("#hideforNoRecord").attr("style","display:none");
         }
     });

@@ -3,6 +3,7 @@ using HPCL.Common.Models.CommonEntity;
 using HPCL.Common.Models.CommonEntity.ResponseEnities;
 using HPCL.Common.Models.ResponseModel.CustomerManage;
 using HPCL.Common.Models.ViewModel.VolvoEicher;
+using HPCL.Common.Resources;
 using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -90,5 +91,52 @@ namespace HPCL_Web.Controllers
             return Json(new { result = result });
         }
 
+        [HttpPost]
+        public async Task<JsonResult> CheckVEDealerCodeExists(string DealerCode)
+        {
+            var responseData = await _volvoEicherService.CheckVEDealerCodeExists(DealerCode);
+
+            ModelState.Clear();
+
+            if (responseData.Internel_Status_Code.ToString() == Constants.SuccessInternelStatusCode)
+            {
+                return Json(responseData);
+            }
+            else
+            {
+                return Json("Failed to load Dealer Details");
+            }
+        }
+
+        public async Task<IActionResult> VEDealerOTCCardRequest()
+        {
+            var modals = await _volvoEicherService.VEDealerOTCCardRequest();
+            return View(modals);
+        }
+        [HttpPost]
+        public async Task<IActionResult> VEDealerOTCCardRequest(VEOTCCardRequestModel model)
+        {
+            model = await _volvoEicherService.VEDealerOTCCardRequest(model);
+
+            if (model.Internel_Status_Code == 1000)
+            {
+                return RedirectToAction("SuccessRedirectVEDealerOTCCardRequest", new { Message = model.Remarks });
+            }
+
+            return View(model);
+        }
+
+        public async Task<IActionResult> SuccessRedirectVEDealerOTCCardRequest(string Message)
+        {
+            ViewBag.Message = Message;
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> ResetVEDealerPassword(string UserName)
+        {
+            var result = await _volvoEicherService.ResetVEDealerPassword(UserName);
+            return Json(new { result = result });
+        }
     }
 }
