@@ -22,6 +22,8 @@ using System.Linq;
 using HPCL.Common.Models.CommonEntity.ResponseEnities;
 using HPCL.Common.Models.CommonEntity.RequestEnities;
 using HPCL.Common.Models.ResponseModel.CustomerManage;
+using HPCL.Common.Models.ViewModel.Customer;
+using HPCL.Common.Models.RequestModel.Configure;
 
 namespace HPCL.Service.Services
 {
@@ -1104,6 +1106,7 @@ namespace HPCL.Service.Services
             List<UpdateAlCustomerProfileRequest> arrs = objs.ToObject<List<UpdateAlCustomerProfileRequest>>();
 
             string dateOfApplication = await _commonActionService.changeDateFormat(arrs[0].DateOfApplication);
+            string signedOnDate = await _commonActionService.changeDateFormat(arrs[0].SignedOnDate);
 
             var insertServiceBody = new UpdateAlCustomerProfileRequest
             {
@@ -1133,7 +1136,8 @@ namespace HPCL.Service.Services
                 CommunicationPhoneNo = arrs[0].CommunicationPhoneNo,
                 CommunicationFax = arrs[0].CommunicationFax,
                 CommunicationMobileNo = arrs[0].CommunicationMobileNo,
-                CommunicationEmailid = arrs[0].CommunicationEmailid
+                CommunicationEmailid = arrs[0].CommunicationEmailid,
+                SignedOnDate = signedOnDate
             };
 
 
@@ -1143,6 +1147,85 @@ namespace HPCL.Service.Services
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
             InsertResponse result = obj.ToObject<InsertResponse>();
             return result;
+        }
+        public async Task<UploadDocResponseBody> UploadALDoc(string CustomerID)
+        {
+            UploadDocResponseBody UploadDocResponseBody = new UploadDocResponseBody();
+
+            //if (!string.IsNullOrEmpty(FormNumber))
+            //{
+            //    JObject obj = await ViewCustomerDetails(FormNumber);
+
+            //    var searchRes = obj["Data"].Value<JObject>();
+            //    var custResult = searchRes["GetAggregatorCustomerDetails"].Value<JArray>();
+
+            //    var customerKYCDetailsResult = searchRes["AggregatorCustomerKYCDetails"].Value<JArray>();
+
+            //    List<CustomerFullDetails> customerList = custResult.ToObject<List<CustomerFullDetails>>();
+
+            //    List<UploadDocResponseBody> UploadDocList = customerKYCDetailsResult.ToObject<List<UploadDocResponseBody>>();
+
+            //    UploadDocResponseBody = UploadDocList.Where(t => t.FormNumber == FormNumber).FirstOrDefault();
+
+            //}
+
+            return UploadDocResponseBody;
+        }
+        public async Task<UploadDocResponse> UploadALDoc(UploadALDoc entity)
+        {
+            var searchBody = new UploadDoc
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                FormNumber = entity.FormNumber,
+                Type = String.IsNullOrEmpty(entity.Type) ? "0" : "1",
+            };
+
+            _httpContextAccessor.HttpContext.Session.SetString("FormNoVal", entity.FormNumber);
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getaggregatornameandformnumberbyreferenceno);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            UploadDocResponse searchCustomer = obj.ToObject<UploadDocResponse>();
+            return searchCustomer;
+        }
+
+        public async Task<PendingKYCCustomerDetailsModel> ALPendingKYCCustomerDetail(PendingKYCCustomerDetailsModel Model)
+        {
+            var reqBody = new GetSMSAlertstoIndividualCardUsersRequest
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                CustomerID = string.IsNullOrEmpty(Model.CustomerID) ? "" : Model.CustomerID
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getAlPendingKycCustomer);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            PendingKYCCustomerDetailsModel res = obj.ToObject<PendingKYCCustomerDetailsModel>();
+
+            Model.Message = res.Message;
+            Model.Internel_Status_Code = res.Internel_Status_Code;
+            if (res != null && res.Data != null && res.Data.Count > 0 && res.Data[0].Status == 1)
+            {
+                Model.Data = res.Data;
+            }
+            else if (res != null && res.Data != null && res.Data.Count > 0 && res.Data[0].Status == 0)
+            {
+                Model.Message = res.Data[0].Reason;
+                Model.Data = new List<PendingKYCCustomerData>();
+            }
+            else
+            {
+                Model.Data = new List<PendingKYCCustomerData>();
+            }
+
+            return Model;
         }
 
     }

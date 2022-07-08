@@ -36,4 +36,8 @@ namespace HPCL.Common.Models.ViewModel.Dealer
         public string TokenNumber { get; set; }
  
     }
+    public class StatementDateModel
+    {
+        public string StatementDate { get; set; }
+    }
 }

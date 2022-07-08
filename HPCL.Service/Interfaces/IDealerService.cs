@@ -19,7 +19,11 @@ namespace HPCL.Service.Interfaces
         Task<List<UpdateMerchantSuccessResponse>> UpdateDealerCreditmapping([FromBody] DealerRequestModel DealerRequestModel);
         Task<DealerCreditSaleStatement> GetCreditSaleStatement(string CustomerID, string MerchantID, string FromDate, string ToDate);
         Task<List<UpdateMerchantSuccessResponse>> UpdateDealerCreditPaymentBulk([FromBody] DealerRequestModel DealerRequestModel);
-        Task<DealerCreditPaymentinBulk> GetDealerCreditPaymentBulk();
+        Task<DealerCreditPaymentinBulk> GetDealerCreditPaymentBulk(string CustomerId);
         Task<DealerCreditSaleViewModel> GetDealerCreditSaleView(string CustomerID, string MerchantID, string FromDate, string ToDate);
+        Task<DealerCreditSaleViewModel> GetMerchantDealerCreditSaleView(string CustomerID, string MerchantID, string FromDate, string ToDate);
+        Task<List<StatementDateModel>> GetMerchantSaleStatementDate(string CustomerID, string MerchantID);
+        Task<MerchanDealerSaleStatementModel> GetMerchantDealerCreditSaleStatement(string CustomerID, string MerchantID, string SearchDate);
+        Task<MerchantCreditSaleOutstandingViewModel> GetCreditSaleOutstandingDetails(string MerchantID);
     }
 }

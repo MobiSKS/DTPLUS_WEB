@@ -7,8 +7,8 @@
             <li class="breadcrumb-item font-weight-light">Add User</li>
         </ul>
         <ul class="nav nav-tabs mt-2 form_tabs justify-content-end" id="formTab" role="tablist">
-            <li class="nav-item"> <a class="nav-link active" id="userinfo-tab" data-toggle="tab" href="#userinfo" role="tab" aria-controls="userinfo" aria-selected="true">User Info</a> </li>
-            <li class="nav-item"> <a class="nav-link" id="userrole-tab" data-toggle="tab" href="#userrole" role="tab" aria-controls="userrole" aria-selected="false">User Role</a> </li>
+            <li class="nav-item userInfoNav"> <a class="nav-link" id="userinfo-tab" data-toggle="tab" href="#userinfo" role="tab" aria-controls="userinfo" aria-selected="false">User Info</a> </li>
+            <li class="nav-item userRoleNav"> <a class="nav-link" id="userrole-tab" data-toggle="tab" href="#userrole" role="tab" aria-controls="userrole" aria-selected="false">User Role</a> </li>
 
         </ul>
         <div class="tab-content mt-3" id="myTabContent">
@@ -78,7 +78,7 @@
             <div class="tab-pane fade show" id="userrole" role="tabpanel" aria-labelledby="userrole-tab">
                 <div class="border-1 rounded border-grey w-100 mt-3">
                     <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">User Roles</p>
-                    @if (Model.Data.tblMainAndSubLevel.Count() > 0)
+                    @if (Model.Data.tblMainAndSubLevel.Count() > 0 && Model.Data.tblMainAndSubLevel[0].RoleId!="0")
                     {
                         string roleId = "";
                         <div class="d-flex align-items-start flex-wrap mt-3">
@@ -148,7 +148,7 @@
                         <div id="message" tabindex="0" class="mb-3 text-center alert alert-danger">No Roles Assigned to This User</div>
                     }
                     <div class="clearfix"></div>
-                    <div id="message" tabindex="0" class="mb-3 text-center alert alert-danger" style="display:none"></div>
+                    <div id="msgError" tabindex="0" class="mb-3 text-center alert alert-danger" style="display:none"></div>
                 </div>
                 <div class="clearfix"></div>
                 <div class="border-1 rounded border-grey w-100 mt-3">
@@ -248,8 +248,9 @@
                                             <!--/.panel-body -->
 
                                         </div>
-                                        </ul>
-                                        <!--/.panel-collapse -->
+                                        <!--/+
+                                            +
+                                        .panel-collapse -->
                                     </div>
                                     <!-- /.panel -->
                                 </div>
@@ -284,6 +285,9 @@
           emailVal="@ViewBag.Email";*@
           if(update=="Yes"){
               ShowUserRolesData();
+          }
+          else{
+              ShowUserInfoData();
           }
          });
        function chkAllRegion(o,cnt){
@@ -371,7 +375,8 @@
                 $(nestedId).addClass("show");
                 $(".class_"+zoneId).removeClass("disable");
             }
-            
+            $("#msgError").html("");
+            $("#msgError").attr("style","display:none");
 
         });
 
@@ -490,11 +495,17 @@
 
                     }
                 }
-
+                 var userRoleSelected=selectedRole;
+                 if(userRoleSelected==""){
+                      $("#msgError").html("Please Select Roles for User");
+                      $("#msgError").attr("style","display:block");
+                      $("#msgError").focus();
+                     flag="N";
+                 }
               if (flag == "N")
                   e.preventDefault();
                else{
-                   var userRoleSelected=selectedRole;
+                  
                    objUserRole=[];
                    $("input:checkbox[name=regionChk]:checked").each(function () {
                        var chkROId=$(this).attr("id");
@@ -610,9 +621,14 @@
              var newEmail=$("#Email").val();
             var userRoleSelected=roleId;
                    objUserRole=[];
-                    for(var i=0;i<regionIdArr.length;i++){
-                        objUserRole.push({ RO: regionIdArr[i],ZO:zoneId });
-                    }
+                   var rowCount=0;
+                   debugger;
+                   rowCount=$("#LocRoleMappingTbl tbody tr").length;
+                   if(rowCount==1){
+                        for(var i=0;i<regionIdArr.length;i++){
+                            objUserRole.push({ RO: regionIdArr[i],ZO:zoneId });
+                        }
+                   }
                    var ReqModel={UserName:userName,RoleId:userRoleSelected,TypeManageUsersAddUserRole:objUserRole,UpdateStatus:"Update"};
                    $.ajax({
                        type: 'POST',  // http method

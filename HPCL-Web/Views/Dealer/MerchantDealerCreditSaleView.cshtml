@@ -1,0 +1,225 @@
+﻿@model HPCL.Common.Models.ViewModel.Dealer.DealerCreditSaleViewModel
+@using Microsoft.AspNetCore.Http;
+<div class="col-lg-12">
+    <div class="bg-white p-2 p-md-4">
+        <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
+            <li class="breadcrumb-item"><a href="@Url.Action("Index", "Dealer")" class="text_primary">Dealer Credit Management</a> </li>
+            <li class="breadcrumb-item font-weight-light">Credit Sale View</li>
+        </ul>
+        @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "form1" }))
+        {
+            <div class="w-100">
+                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mb-3">
+                    <div class="border-1 rounded border-grey">
+                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Credit Sale View</p>
+                        <div class="col-lg-12 col-md-12 col-12 py-3">
+                            <div class="d-flex align-items-center flex-wrap">
+                                 <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">Merchant ID<sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                               @Html.TextBoxFor(m => m.MerchantID, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                <span class="error" id="merchantId_error"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">Customer ID</label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+
+                                                 @Html.TextBoxFor(m => m.CustomerID, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                <span class="error" id="customerId_error"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                               
+                            </div>
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">From Date <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.FromDate, new { @class = "form-control fromDate",@placeholder="dd-mm-yyyy", @autocomplete = "off", @onchange = "checkDates('fromDate_error','31');" })
+                                            </div>
+                                            <span class="error" id="fromDate_error"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">To Date <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.ToDate, new { @class = "form-control toDate",@placeholder="dd-mm-yyyy", @autocomplete = "off", @onchange = "checkDates('fromDate_error','31');" })
+                                            </div>
+                                            <span class="error" id="toDate_error"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                          
+                            <div class="clearfix"></div>
+                            <div class="d-flex align-items-center justify-content-center mt-0">
+                                <div class="px-2">
+                                    <button class="btn btn_primary" id="btnSearch" type="button">SEARCH</button>
+                                </div>
+                                <div class="px-2">
+                                    <button class="btn btn_primary" id="btnReset" type="button">RESET</button>
+                                </div>
+                                 <div class="px-2">
+                                    <button class="btn btn_primary" id="btnExport" onclick="tableToCSV()" type="button">EXPORT TO EXCEL</button>
+                                </div>
+                            </div>
+                           
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+        }
+        <div class="clearfix"></div>
+        <div id="show_Table" class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3 toBeHiddenOnSuccess">
+        </div>
+        <div class="clearfix"></div>
+
+    </div>
+</div>
+<script type="text/javascript">
+      //debugger;
+
+      var zonalID = $("#ZonalOfficeId").val();
+
+        var fromdate = $("#FromDate").val();
+      var todate = $("#ToDate").val();
+
+      $(document).ready(function () {
+
+      });
+      $("#btnReset").click(function () {
+          window.location.reload(true);
+      });
+      $("#btnSearch").on("click", (function (e) {
+          var fromdate = $("#FromDate").val();
+          var todate = $("#ToDate").val();
+          var merchantId = $("#MerchantID").val();
+          var customerId = $("#CustomerID").val();
+          var flag = "Y";
+          if (fromdate == "") {
+              $("#fromDate_error").attr("style", "display:block");
+              $("#fromDate_error").html("Select From Date");
+              flag = "N";
+          }
+
+          if (todate == "") {
+              $("#toDate_error").attr("style", "display:block");
+              $("#toDate_error").html("Select To Date");
+              flag = "N";
+          }
+          if (fromdate != "" && todate != "") {
+              flag = checkDates("fromDate_error","31");
+          }
+          if (merchantId != "") {
+              if (!merchantId.match(mappedMerchantID)) {
+                  $("#merchantId_error").attr("style", "display:block");
+                  $("#merchantId_error").html("Invalid Merchant ID");
+                  flag = "N";
+              }
+          }
+          else{
+              $("#merchantId_error").attr("style", "display:block");
+              $("#merchantId_error").html("Merchant ID field can not be left blank");
+              flag = "N";
+          }
+          if (customerId != "") {
+              if (!customerId.match(mappedCustomerId)) {
+                  $("#customerId_error").attr("style", "display:block");
+                  $("#customerId_error").html("Invalid Customer ID");
+                  flag = "N";
+              }
+          }
+          
+          if (flag == "Y") {
+              $("#toDate_error").attr("style", "display:none");
+              $("#toDate_error").html("");
+              $("#fromDate_error").attr("style", "display:none");
+              $("#fromDate_error").html("");
+              $("#merchantId_error").attr("style", "display:none");
+              $("#merchantId_error").html("");
+              $("#customerId_error").attr("style", "display:none");
+              $("#customerId_error").html("");
+          }
+          if (flag == "N")
+              e.preventDefault();
+           else{
+               
+               $.ajax({
+               type: 'GET',  // http method
+               url: '@Url.Action("GetMerchantDealerCreditSaleView", "Dealer")',
+               contentType: "application/json; charset=utf-8",
+               dataType: 'text',
+               data: { CustomerID: customerId, MerchantID: merchantId, FromDate: fromdate, ToDate: todate},
+               success: function (data, status, xhr) {
+                   var v = data;
+                   if (status == 'success') {
+                       $("#show_Table").html(data);
+                       $('html, body').animate({
+                           scrollTop: $("#show_Table").offset().top
+                       }, 2000);
+                        
+                   }
+                   else {
+                       console.log(v);
+                   }
+               },
+               error: function (jqXhr, textStatus, errorMessage) {
+                   alert("Error"+ errorMessage);
+               }
+           });
+               }
+      })
+      );
+
+
+
+       $("#MerchantID").on("blur", function () {
+         var merchantId = $("#MerchantID").val();
+         if (merchantId != "") {
+            if (!merchantId.match(mappedMerchantID)) {
+                $("#merchantId_error").attr("style", "display:block");
+                $("#merchantId_error").html("Invalid Merchant ID");
+                
+            }
+            else{
+                $("#merchantId_error").attr("style", "display:none");
+                $("#merchantId_error").html("");
+            }
+         }
+         else{
+             $("#merchantId_error").attr("style", "display:block");
+             $("#merchantId_error").html("Merchant ID field can not be left blank");
+         }
+     });
+     $("#CustomerID").on("blur", function () {
+         var customerId = $("#CustomerID").val();
+         if (customerId != "") {
+             if (!customerId.match(mappedCustomerId)) {
+                 $("#customerId_error").attr("style", "display:block");
+                 $("#customerId_error").html("Invalid Customer ID");
+             }
+             else{
+                 $("#customerId_error").attr("style", "display:none");
+                 $("#customerId_error").html("");
+             }
+         }
+         
+     });
+    
+
+</script>

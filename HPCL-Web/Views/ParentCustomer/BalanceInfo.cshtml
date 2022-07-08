@@ -1,0 +1,292 @@
+﻿@model HPCL.Common.Models.ViewModel.ParentCustomer.ParentCustomerBalanceInfoModel
+@using HPCL.Common.Resources
+@{
+    ViewData["Title"] = "Customer Balance Info";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="col-lg-12 px-0">
+    <div class="bg-white p-2 p-md-4" style="overflow: hidden;">
+        <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
+            <li class="breadcrumb-item"><a href="@Url.Action("Financial","ParentCustomer")" class="text_primary">Financials</a> </li>
+            <li class="breadcrumb-item font-weight-light">Balance Info</li>
+        </ul>
+        <form >
+            <div class="w-100">
+                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
+                    <div class="border-1 rounded border-grey pb-3">
+                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Balance Info</p>
+                       
+                        <div class="col-lg-12 col-md-12 col-12 py-3">
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">Customer ID <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12 offset-md-1">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.CustomerId, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                <span class="error" id="CustomerId_error"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="d-flex align-items-center justify-content-center mt-0">
+                                <div class="px-2">
+                                    <button class="btn btn_primary" type="submit" id="btnSearch">@Label.Search</button>
+                                </div>
+                                <div class="px-2">
+                                    <button class="btn btn_primary" type="button" id="btnReset">@Label.Reset</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+
+                </div>
+                <div class="clearfix"></div>
+
+            </div>
+        </form>
+        @if (Model.Data.Count() > 0)
+        {
+            <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3" id="dvCustomerBalance" style="width:100%;display:none;">
+                <table id="CustomerBalanceTbl" class="table1 table-striped d-md-table d-block table-bordered table-responsive mt-3" style="width:100%;">
+                    <thead>
+                        <tr>
+                            <th>Customer ID</th>
+                            <th>Customer Name</th>
+                            <th>Regional Office</th>
+                            <th>Card Balance</th>
+                            <th>CCMS Balance</th>
+                            <th>Drivestars</th>
+                            <th>Expired Drivestars</th>
+                            <th>Expiring Drivestars</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Data)
+                        {
+                            <tr>
+                                <td>@item.CustomerID</td>
+                                <td>@item.CustomerName</td>
+                                <td>@item.RegionalOfficeName</td>
+                                <td><a class='CardNumber' href='#' onclick='ViewCardDetails(this)' role='tab'><span class='rowCCMSBalance'>@item.CardBalance</span></a></td>
+                                <td><a class='CCMSBalance' href='#' onclick='ViewCCMSInfo(this)' role='tab'><span class='rowCCMSBalance'>@item.CCMSLimitValue</span></a></td>
+                                <td>@item.Drivestars</td>
+                                <td>@item.ExpiredDrivestars</td>
+                                <td>@item.ExpiringDrivestars</td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            @if (Model.Message != null)
+            {
+                <div class="mb-3 text-center alert alert-danger">
+                    @Model.Message
+                </div>
+            }
+        }
+        <!-- Modal : Card1 -->
+        <div class="modal fade" id="CustomerSummaryView" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document" style="max-width:960px;">
+
+                <!-- Modal content-->
+                <div class="modal-content" style=''>
+                    <div class="modal-header py-2">
+                        <h5 class="modal-title" id="exampleModalLabel" style="font-size:18px;">Customer Details</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" style="overflow:scroll;height:500px;">
+                        <div class="col-lg-12 col-md-12 col-12 toBeHiddenOnSuccess" id="CustomerSummaryData">
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Modal : Card1 -->
+
+        <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3 toBeHiddenOnSuccess" id="customerCardWiseBalancesTbl">
+        </div>
+        <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3 toBeHiddenOnSuccess" id="customerCCMSBalanceTbl">
+        </div>
+    </div>
+    <div class="clearfix"></div>
+</div>
+<script type="text/javascript">
+        $(document).ready(function () {
+
+        });
+
+        $("#btnReset").click(function ()
+        {
+            window.location.href = '@Url.Action("BalanceInfo", "ParentCustomer")';
+        });
+
+        $("#btnSearch").click(function () {
+
+            $("#customerCCMSBalanceTbl").hide();
+            $("#customerCardWiseBalancesTbl").hide();
+
+            //debugger;
+            var customerId = document.getElementById("CustomerId").value;
+            if (customerId == "") {
+                document.getElementById("CustomerId_error").innerHTML = "Please enter Customer ID";
+                $("#CustomerId").focus;
+                return (false);
+            }
+            else {
+                if (!customerId.match(mappedCustomerId)) {
+                    $("#CustomerId_error").attr("style", "display:block");
+                    $("#CustomerId_error").html("Invalid Customer ID");
+                    return (false);
+                }
+                else {
+                    document.getElementById("CustomerId_error").innerHTML = "";
+                }
+
+            }
+
+
+        });
+
+
+
+
+        function ViewCardDetails(o) {
+
+            var customerId = $("#CustomerId").val();
+            if (customerId == "") {
+                return (false);
+            }
+            $("#customerCCMSBalanceTbl").hide();
+            $("#customerCardWiseBalancesTbl").hide();
+         
+            $.ajax({
+                type: 'GET',  // http method
+                url: '@Url.Action("GetCustomerCardWiseBalance", "ParentCustomer")',
+                contentType: "application/json; charset=utf-8",
+                data: { CustomerID: customerId },
+                dataType: "text",
+                success: function (data, status, xhr) {
+                    var v = data;
+                    if (status == 'success') {
+                        $("#customerCardWiseBalancesTbl").html("");
+                        $("#customerCardWiseBalancesTbl").html(data);
+                        $("#customerCardWiseBalancesTbl").attr("style","display:block");
+                        $('html, body').animate({
+                            scrollTop: $("#customerCardWiseBalancesTbl").offset().top
+                        }, 2000);
+                    }
+                    else {
+                        console.log(v);
+                    }
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+                    alert("Error");
+                }
+            });
+
+
+        }
+
+        function ViewBasicInfo(o) {
+
+            var customerId = o.innerText;
+            $.ajax({
+                url: "@Url.Action("GetCustomerDetailsByCustomerID", "Customer")",
+                type: "GET",
+                contentType: "application/json; charset=utf-8",
+                data: { CustomerID: customerId },
+                dataType: "text",
+                success: function (data, status, xhr) {
+                var v = data;
+                    if (status == 'success') {
+                        $("#CustomerSummaryData").html("");
+                        $("#CustomerSummaryData").html(data);
+                      $('#CustomerSummaryView').modal('show');
+                    }
+                    else {
+                        console.log(v);
+                    }
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+                    alert("Error");
+                }
+            });
+
+        };
+        function ViewCCMSBalanceDetails(o) {
+
+            var customerId = $("#CustomerId").val();
+            if (customerId == "") {
+                return (false);
+            }
+             $("#customerCCMSBalanceTbl").hide();
+            $("#customerCardWiseBalancesTbl").hide();
+         
+            $.ajax({
+                type: 'GET',  // http method
+                url: '@Url.Action("GetCCMSBalanceDetails", "ParentCustomer")',
+                data: { CustomerID: customerId },
+                contentType: "application/json; charset=utf-8",
+                dataType: "text",
+                success: function (data,status,xhr) {
+                    var v = data;
+                    if (status == 'success') {
+                        $("#customerCCMSBalanceTbl").html("");
+                        $("#customerCCMSBalanceTbl").html(data);
+                        $("#customerCCMSBalanceTbl").attr("style","display:block");
+                        $('html, body').animate({
+                            scrollTop: $("#customerCCMSBalanceTbl").offset().top
+                        }, 2000);
+                    }
+                    else {
+                        console.log(v);
+                    }
+
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+                    alert("Error" + errorMessage);
+                }
+            });
+
+
+        }
+
+    $("#CustomerId").on("blur", function ()
+    {
+        //debugger;
+        if (document.getElementById("CustomerId").value.trim() == "")
+        {
+            $("#CustomerId_error").attr("style", "display:block");
+            $("#CustomerId_error").html("Please enter Customer ID");
+            return false;
+        }
+        else if (!$("#CustomerId").val().match(mappedCustomerId))
+        {
+            $("#CustomerId_error").attr("style", "display:block");
+            $("#CustomerId_error").html("Invalid Customer ID");
+            return false;
+        }
+        else
+        {
+            $("#CustomerId_error").html("");
+        }
+
+    });
+</script>

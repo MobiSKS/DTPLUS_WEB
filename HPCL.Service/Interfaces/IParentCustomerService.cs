@@ -1,4 +1,5 @@
 ﻿using HPCL.Common.Models.RequestModel.Customer;
+using HPCL.Common.Models.ResponseModel.Customer;
 using HPCL.Common.Models.ResponseModel.ParentCustomer;
 using HPCL.Common.Models.ViewModel.ParentCustomer;
 using Microsoft.AspNetCore.Mvc;
@@ -24,5 +25,9 @@ namespace HPCL.Service.Interfaces
         Task<ManageProfileViewModel> UpdateParentCustomer(ManageProfileViewModel cust);
         Task<ParentCustomerReportModel> SearchParentCustomerRequestStatus(string ZonalOfficeId, string RegionalOfficeId, string FromDate, string ToDate, string FormNumber,string SBUtypeId);
         Task<ParentCustomerReportModel> SearchParentCustomerRequestStatusReport(string FormNumber, string RequestId);
+        Task<ParentCustomerBalanceInfoModel> GetCustomerBalanceInfo(string CustomerID);
+        Task<ParentCustomerBalanceInfoModel> GetCustomerDetailsByCustomerID(string CustomerID);
+        Task<CustomerCCMSBalanceModel> GetCCMSBalanceDetails(string CustomerID);
+        Task<GetCustomerCardWiseBalanceResponse> GetCustomerCardWiseBalance(string CustomerID);
     }
 }

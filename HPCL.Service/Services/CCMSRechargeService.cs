@@ -69,7 +69,7 @@ namespace HPCL.Service.Services
                 UserId = "demo",
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
-                Mobileno = mobNo,
+                Mobileno = mobNo ?? "",
                 CustomerId = customerId
             };
 
@@ -89,7 +89,7 @@ namespace HPCL.Service.Services
                 UserIp = CommonBase.userip,
                 MobileNo = mobNo,
                 otp = otp,
-                customerId = _httpContextAccessor.HttpContext.Session.GetString("UserId")
+                customerId = customerId
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");

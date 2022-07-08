@@ -31,5 +31,6 @@ namespace HPCL.Common.Models.ViewModel.Security
         public string MenuLevel { get; set; }
         public string MenuOrder { get; set; }
         public string AllowedAction { get; set; }
+        public string IsFinalPage { get; set; }
     }
 }

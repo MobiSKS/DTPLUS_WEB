@@ -161,7 +161,7 @@
                                             <div class="col-md-7 col-12">
                                                 <div class="custom_select">
                                                     <select class="form-control disableSumo" disabled="disabled" readonly="readonly">
-                                                        <option>HDFC Bank</option>
+                                                        <option>ICICI Bank</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -185,7 +185,7 @@
                                             <label class="font-weight-normal col-md-4 col-12">Comment<sup class="text-danger">*</sup></label>
                                             <div class="col-md-7 col-12">
                                                 <div class="custom_select">
-                                                    <textarea id="cmnts" maxlength="100" class="form-control" rows="2"></textarea>
+                                                    <textarea id="cmnts" maxlength="250" class="form-control" rows="2"></textarea>
                                                     <span style="display:none" class="error" id="comments_error"></span>
                                                 </div>
                                             </div>
@@ -235,6 +235,17 @@
     $(document).ready(function () {
 
         //$('select.disableSumo')[0].sumo.unload();
+
+        var text_max = 250;
+        $('#charRemining').html('(<i>' + text_max +' characters remaining</i>)');
+
+        $('#cmnts').keyup(function () 
+        {
+            var text_length = $('#cmnts').val().length;
+            var text_remaining = text_max - text_length;
+
+            $('#charRemining').html('(<i>' + text_remaining + ' characters remaining</i>)');
+        });
 
         function isNumberKey(evt) {
             var charCode = (evt.which) ? evt.which : event.keyCode;
@@ -439,15 +450,17 @@
                     dataType: "JSON",
                     success: function (res) {
 
+                        console.log("res",res);
+
                         if(res.reasonList[0].status == 1){
                             document.getElementById("custEnrollUpdateSection").style.display = "none";
                             document.getElementById("customerDetailsSection").style.display = "none";
                             $("#EnrollSuccess").html('');
-                            $("#EnrollSuccess").append("<span>"+(res.reasonList[0].reason)+"</span>");
+                            $("#EnrollSuccess").append("<span>"+(res.reasonList[0].reason || '')+"</span>");
                             document.getElementById("EnrollSuccess").style.display = "block";
                         }else{
                             $("#failedEnroll").html('');
-                            $("#failedEnroll").append("<span>"+(res.reasonList[0].reason)+"</span>");
+                            $("#failedEnroll").append("<span>"+(res.reasonList[0].reason || '')+"</span>");
                             document.getElementById("failedEnroll").style.display = "block";
                         }
                     },

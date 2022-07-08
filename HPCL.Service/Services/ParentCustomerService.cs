@@ -957,6 +957,88 @@ namespace HPCL.Service.Services
             parentCustomerReportModel = obj.ToObject<ParentCustomerReportModel>();
             return parentCustomerReportModel;
         }
-        
+
+        public async Task<ParentCustomerBalanceInfoModel> GetCustomerBalanceInfo(string CustomerID)
+        {
+            ParentCustomerBalanceInfoModel customerBalanceResponse = new ParentCustomerBalanceInfoModel();
+
+            var Request = new GetCustomerBalanceRequest()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                CustomerID = CustomerID
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(Request), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getparentcustomerbalanceinfo);
+
+            customerBalanceResponse = JsonConvert.DeserializeObject<ParentCustomerBalanceInfoModel>(response);
+
+            return customerBalanceResponse;
+        }
+
+        public async Task<GetCustomerCardWiseBalanceResponse> GetCustomerCardWiseBalance(string CustomerID)
+        {
+            GetCustomerCardWiseBalanceResponse customerBalanceResponse = new GetCustomerCardWiseBalanceResponse();
+
+            var Request = new GetCustomerBalanceRequest()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                CustomerID = CustomerID
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(Request), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getparentcustomercardwisebalance);
+
+            customerBalanceResponse = JsonConvert.DeserializeObject<GetCustomerCardWiseBalanceResponse>(response);
+
+            return customerBalanceResponse;
+        }
+        public async Task<CustomerCCMSBalanceModel> GetCCMSBalanceDetails(string CustomerID)
+        {
+            CustomerCCMSBalanceModel customerCCMSBalance = new CustomerCCMSBalanceModel();
+
+            var Request = new GetCustomerBalanceRequest()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                CustomerID = CustomerID
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(Request), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getparentccmsbalanceinfoforcustomerId);
+
+            customerCCMSBalance = JsonConvert.DeserializeObject<CustomerCCMSBalanceModel>(response);
+
+            return customerCCMSBalance;
+        }
+        public async Task<ParentCustomerBalanceInfoModel> GetCustomerDetailsByCustomerID(string CustomerID)
+        {
+            var request = new GetCustomerByCustomerIdRequest()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                CustomerID = CustomerID
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
+            var ResponseContent = await _requestService.CommonRequestService(content, WebApiUrl.getparentcustomerdetailbycustomerId);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+            var searchRes = obj["Data"].Value<JObject>();
+            var custResult = searchRes["GetCustomerDetails"].Value<JArray>();
+
+            List<ParentCustomerBalanceInfoModel> customerList = custResult.ToObject<List<ParentCustomerBalanceInfoModel>>();
+
+            ParentCustomerBalanceInfoModel Customer = customerList.Where(t => t.CustomerId == CustomerID).FirstOrDefault();
+            return Customer;
+        }
     }
 }

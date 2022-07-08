@@ -310,6 +310,7 @@
         public static string getAlCustomerDetails = "api/dtplus/ashokleyland/get_al_customer_details";
         public static string searchAlManageCard = "api/dtplus/ashokleyland/search_al_manage_card";
         public static string updateAlCustomerDetail = "api/dtplus/ashokleyland/update_al_customer_detail";
+        public static string getAlPendingKycCustomer = "api/dtplus/ashokleyland/get_al_pending_kyc_customer";
         #endregion
 
         #region Customer Financial
@@ -457,6 +458,12 @@
         public static string updatedealercreditpaymentinbulk = "api/dtplus/dealercredit/update_dealer_credit_payment_in_bulk";
         public static string getdealercreditpaymentinbulk = "api/dtplus/dealercredit/get_dealer_credit_payment_in_bulk";
         public static string getdealercreditsaleview = "api/dtplus/dealercredit/get_dealer_credit_sale_view";
+        public static string getmerchantcreditsaleview = "api/dtplus/dealercredit/get_credit_sale_view"; 
+        public static string getstatementdatelist = "api/dtplus/dealercredit/get_statement_date_list";
+        public static string getmerchantdealercreditsalestatement = "api/dtplus/dealercredit/get_merchant_dealer_credit_sale_statement";
+        public static string getcreditsaleoutstandingdetails = "api/dtplus/dealercredit/get_credit_sale_outstanding_details";
+        
+
 
         #endregion
 
@@ -496,12 +503,20 @@
         public static string getparentcustomertoupdate = "api/dtplus/ParentCustomer/get_parent_customer_to_update";
         public static string getparentcustomerstatus = "api/dtplus/ParentCustomer/get_parent_customer_status";
         public static string getparentcustomerstatusreport = "api/dtplus/ParentCustomer/get_parent_customer_status_report";
+        public static string getparentcustomerbalanceinfo = "api/dtplus/ParentCustomer/get_parent_customer_balance_info";
+        public static string getparentcustomercardwisebalance = "api/dtplus/ParentCustomer/get_parent_customer_card_wise_balances";
+        public static string getparentccmsbalanceinfoforcustomerId = "api/dtplus/ParentCustomer/get_parent_ccms_balance_info_for_customerId";
+        public static string getparentcustomerdetailbycustomerId = "api/dtplus/ParentCustomer/get_parent_customer_detail_by_customerId";
+        
 
         #endregion
+
         #region Volvo Eicher
         public static string viewvolvoeicherdealerotccardstatus = "api/dtplus/VE/view_volvo_eicher_dealer_otc_card_status";
         public static string getvolvoeichercustomerdetail = "api/dtplus/VE/get_volvo_eicher_customer_detail";
-
+        public static string insertVolvoEicherDealerEnrollment = "api/dtplus/VE/insert_volvo_eicher_dealer_enrollment";
+        public static string getVolvoEicherDealerDetail = "api/dtplus/VE/get_volvo_eicher_dealer_detail";
+        public static string updateVolvoEicherDealerEnrollment = "api/dtplus/VE/update_volvo_eicher_dealer_enrollment";
         #endregion
 
         #region COMCO Manager

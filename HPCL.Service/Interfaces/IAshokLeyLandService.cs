@@ -1,8 +1,10 @@
 ﻿using HPCL.Common.Models.CommonEntity.ResponseEnities;
 using HPCL.Common.Models.ResponseModel.AshokLayland;
+using HPCL.Common.Models.ResponseModel.Customer;
 using HPCL.Common.Models.ResponseModel.CustomerManage;
 using HPCL.Common.Models.ResponseModel.MyHpOTCCardCustomer;
 using HPCL.Common.Models.ViewModel.AshokLeyLand;
+using HPCL.Common.Models.ViewModel.Customer;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -38,5 +40,8 @@ namespace HPCL.Service.Interfaces
         Task<List<CustomerProfileResponse>> BindCustomerDetailsForSearch(string CustomerId, string NameOnCard);
         Task<List<SearchGridResponse>> CardDetailsForSearch(string CustomerId, string CustomerTypeId);
         Task<InsertResponse> UpdateAlCostomerProfile(string str);
+        Task<UploadDocResponseBody> UploadALDoc(string CustomerID);
+        Task<UploadDocResponse> UploadALDoc(UploadALDoc entity);
+        Task<PendingKYCCustomerDetailsModel> ALPendingKYCCustomerDetail(PendingKYCCustomerDetailsModel Model);
     }
 }

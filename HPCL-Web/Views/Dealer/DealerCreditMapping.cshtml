@@ -15,6 +15,24 @@
         {
             <div id="reason" class="mb-3 text-center alert alert-danger">@ViewBag.ErrorMessage</div>
         }
+        @{
+            string CCMSBalance = "", strMsg = "";
+        }
+        @if (Model.Data != null && ViewBag.Reset != "Y")
+        {
+            @if (Model.Data.CustomerCCMSBalanceDetails != null)
+            {
+                @if (Model.Data.CustomerCCMSBalanceDetails.Count() > 0)
+                {
+                    @if (Model.Data.CustomerCCMSBalanceDetails.First().Status == "0")
+                    {
+                        strMsg = Model.Data.CustomerCCMSBalanceDetails.First().Reason;
+                    }
+
+                    CCMSBalance = Model.Data.CustomerCCMSBalanceDetails.First().CCMSBalance;
+                }
+            }
+        }
         <form>
             <div class="w-100">
                 <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
@@ -35,29 +53,24 @@
 
                                     </div>
                                 </div>
-                                @{
-                                    string CCMSBalance = "";
-                                }
-                                @if (Model.Data != null && ViewBag.Reset != "Y")
-                                {
-                                    @if (Model.Data.CustomerCCMSBalanceDetails.Count() > 0)
-                                    {
-                                        CCMSBalance = Model.Data.CustomerCCMSBalanceDetails.First().CCMSBalance;
-                                    }
-                                }
-                                <div class="col-lg-6 col-12">
-                                    <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal col-md-3 col-12">CCMS Balance :</label>
-                                        <div class="col-md-7 col-12 offset-md-1">
-                                            <div class="custom_select">
-                                                <label class="font-weight-normal col-md-3 col-12">
-                                                    @CCMSBalance
-                                                </label>
-                                            </div>
-                                        </div>
 
+
+                                @if (strMsg == "" && Model.Data!=null)
+                                {
+                                    <div class="col-lg-6 col-12">
+                                        <div class="d-flex align-items-center flex-wrap mb-3">
+                                            <label class="font-weight-normal col-md-3 col-12">CCMS Balance :</label>
+                                            <div class="col-md-7 col-12 offset-md-1">
+                                                <div class="custom_select">
+                                                    <label class="font-weight-normal col-md-3 col-12">
+                                                        @CCMSBalance
+                                                    </label>
+                                                </div>
+                                            </div>
+
+                                        </div>
                                     </div>
-                                </div>
+                                }
 
                             </div>
                             <div class="clearfix"></div>
@@ -73,7 +86,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                @if (Model.Data != null && ViewBag.Reset != "Y")
+                                @if (Model.Data != null && ViewBag.Reset != "Y" && strMsg == "")
                                 {
                                     <div class="col-lg-6 col-12">
                                         <div class="d-flex align-items-center flex-wrap mb-3">
@@ -163,10 +176,10 @@
                                         <button class="btn btn_primary" type="button" id="btnSearchStatement">SEARCH</button>
                                     </div>
                                     <div class="px-2">
-                                         <button class="btn btn_primary" type="button" id="btnExpExcel"  onclick="tableToCSV()">EXPORT TO EXCEL</button>
+                                        <button class="btn btn_primary" type="button" id="btnExpExcel" onclick="tableToCSV()">EXPORT TO EXCEL</button>
                                     </div>
                                     <div class="px-2">
-                                         <button class="btn btn_primary" type="button" onclick="generatePDF()" id="btnExpPDF">EXPORT TO PDF</button>
+                                        <button class="btn btn_primary" type="button" onclick="generatePDF()" id="btnExpPDF">EXPORT TO PDF</button>
                                     </div>
                                 </div>
 
@@ -181,139 +194,155 @@
                 </div>
             </div>
         </form>
-        <div id="show_Table" class="col-lg-12 col-md-12 col-12 pl-0 pr-0  toBeHiddenOnSuccess">
-            @if (Model.Message == "Success" && ViewBag.Reset != "Y")
-            {
-                @if (Model.Data != null)
+        <div class="clearfix"></div>
+        @if (strMsg == "")
+        {
+            <div id="show_Table" class="col-lg-12 col-md-12 col-12 pl-0 pr-0  toBeHiddenOnSuccess">
+                @if (Model.Message == "Success" && ViewBag.Reset != "Y")
                 {
-                    @if (Model.Data.CustomerDetails.Count() > 0)
+                    @if (Model.Data != null)
                     {
-                        <div class="border-1 rounded border-grey">
-                            <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Customer Details</p>
-                            <div class="col-lg-12 col-md-12 col-12 py-3">
-                                <div class="d-flex align-items-center flex-wrap">
-                                    <div class="col-lg-6 col-12">
-                                        <div class=" d-flex align-items-center flex-wrap">
-                                            <label class="font-weight-bold col-md-4 col-12">Customer Name:</label>
-                                            <div class="col-md-7 col-12">
-                                                <label class="font-weight-normal  col-12">@Model.Data.CustomerDetails.First().IndividualOrgName</label>
-
-                                            </div>
-                                        </div>
+                        @if (Model.Data.CustomerDetails != null)
+                        {
+                            @if (Model.Data.CustomerDetails.Count() > 0)
+                            {
+                                <div class="border-1 rounded border-grey">
+                                    <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Customer Details</p>
+                                    <div class="col-lg-12 col-md-12 col-12 py-3">
                                         <div class="d-flex align-items-center flex-wrap">
-                                            <label class="font-weight-bold col-md-4 col-12">Customer Address:</label>
-                                            <div class="col-md-7 col-12">
-                                                <label class="font-weight-normal  col-12">@Model.Data.CustomerDetails.First().CustomerAddress</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6 col-12">
+                                            <div class="col-lg-6 col-12">
+                                                <div class=" d-flex align-items-center flex-wrap">
+                                                    <label class="font-weight-bold col-md-4 col-12">Customer Name:</label>
+                                                    <div class="col-md-7 col-12">
+                                                        <label class="font-weight-normal  col-12">@Model.Data.CustomerDetails.First().IndividualOrgName</label>
 
-                                        <div class=" d-flex align-items-center flex-wrap">
-                                            <label class="font-weight-bold col-md-2 col-12">RO:</label>
-                                            <div class="col-md-7 col-12">
-                                                <label class="font-weight-normal  col-12">@Model.Data.CustomerDetails.First().RegionalOfficeName</label>
-
+                                                    </div>
+                                                </div>
+                                                <div class="d-flex align-items-center flex-wrap">
+                                                    <label class="font-weight-bold col-md-4 col-12">Customer Address:</label>
+                                                    <div class="col-md-7 col-12">
+                                                        <label class="font-weight-normal  col-12">@Model.Data.CustomerDetails.First().CustomerAddress</label>
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="d-flex align-items-center flex-wrap">
-                                            <label class="font-weight-bold col-md-2 col-12">ZO:</label>
-                                            <div class="col-md-7 col-12">
-                                                <label class="font-weight-normal  col-12">@Model.Data.CustomerDetails.First().ZonalOfficeName</label>
+                                            <div class="col-lg-6 col-12">
+
+                                                <div class=" d-flex align-items-center flex-wrap">
+                                                    <label class="font-weight-bold col-md-2 col-12">RO:</label>
+                                                    <div class="col-md-7 col-12">
+                                                        <label class="font-weight-normal  col-12">@Model.Data.CustomerDetails.First().RegionalOfficeName</label>
+
+                                                    </div>
+                                                </div>
+                                                <div class="d-flex align-items-center flex-wrap">
+                                                    <label class="font-weight-bold col-md-2 col-12">ZO:</label>
+                                                    <div class="col-md-7 col-12">
+                                                        <label class="font-weight-normal  col-12">@Model.Data.CustomerDetails.First().ZonalOfficeName</label>
+                                                    </div>
+                                                </div>
+
                                             </div>
                                         </div>
 
                                     </div>
                                 </div>
 
-                            </div>
-                        </div>
+                                <div class="clearfix"></div>
 
-                        <div class="clearfix"></div>
+                            }
+                        }
+                        @if (Model.Data.CustomerMerchantMappedDetails != null)
+                        {
+                            @if (Model.Data.CustomerMerchantMappedDetails.Count() > 0)
+                            {
 
+                                <div class="border-1 rounded border-grey">
+                                    <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Dealer Credit Limits</p>
+                                    <div class="col-lg-12 col-md-12 col-12 py-3">
+                                        <table class="datatable table table-striped table-bordered table-responsive" style="width:100%;" id="CustomerMerchantMappedDetails">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width:5%;">S.No.</th>
+                                                    <th style="width:10%;">Merchant ID</th>
+                                                    <th style="width:10%;">Outlet Name & Location</th>
+                                                    <th style="width:10%;">Outstanding</th>
+                                                    <th style="width:10%;">Credit Close Limit Type</th>
+                                                    <th style="width:10%;">Credit Close Limit Amount</th>
+                                                    <th style="width:10%;">Credit Close Limit Balance</th>
+                                                    <th style="width:10%;">Acion</th>
+                                                    <th style="display:none"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="searchTableBody">
+                                                @{
+                                                    int i = 0;
+                                                    string status = "", classToggle = "";
+                                                }
+                                                @foreach (var item in Model.Data.CustomerMerchantMappedDetails)
+                                                {
+                                                    i = i + 1;
+
+                                                    if (item.Action == "0")
+                                                    {
+                                                        classToggle = "fa-toggle-off";
+                                                        status = "Enable";
+                                                    }
+
+                                                    else
+                                                    {
+                                                        classToggle = "fa-toggle-on";
+                                                        status = "Disable";
+                                                    }
+                                                    <tr>
+                                                        <td>@i</td>
+                                                        <td>@item.MerchantId</td>
+                                                        <td>@item.OutletNameAndLocation</td>
+                                                        <td><a class='outStanding' href='#' onclick='ViewStatement(this)' role='tab'><span class='rowCCMSBalance'>@item.Outstanding</span></a></td>
+                                                        <td class="editCelldropdown" id="tdLimitType">@item.CreditCloseLimitType</td>
+                                                        <td class="editCell" id="tdLimitAmount">@item.CreditCloseLimit</td>
+                                                        <td>@item.CreditCloseLimitBalance</td>
+                                                        <td style="width:8px">
+                                                            <div class="d-flex align-items-center justify-content-start">
+                                                                @if (item.Action != "0")
+                                                                {
+                                                                    <a class="d-block " data-toggle="tooltip" title="" tooltip="Edit"><i class="fa fa-pencil-square-o edit  " aria-hidden="true"></i></a>
+                                                                    <a class="d-block" data-toggle="tooltip" title="" tooltip="Update"><i class="fa fa-floppy-o save" aria-hidden="true" style="display:none"></i></a>
+                                                                    <a class="d-block" data-toggle="tooltip" title="" tooltip="Cancel"><i class="fa fa-remove cancel" aria-hidden="true" style="display:none"></i></a>
+                                                                }
+                                                                <a asp-action="MerchantMapEnableorDisable" class="d-block" asp-route-customerID="@Model.CustomerID" asp-route-merchantID="@item.MerchantId" asp-route-actionID="@status" data-toggle="tooltip" title="" tooltip="@status"><i class="fa @classToggle enable" aria-hidden="true"></i></a>
+                                                            </div>
+                                                        </td>
+                                                        <td style="display:none">@item.CreditCloseLimitType</td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+
+                            }
+                        }
                     }
-                    @if (Model.Data.CustomerMerchantMappedDetails.Count() > 0)
-                    {
-
-                        <div class="border-1 rounded border-grey">
-                            <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Dealer Credit Limits</p>
-                            <div class="col-lg-12 col-md-12 col-12 py-3">
-                                <table class="table table-striped table-bordered table-responsive" style="width:100%;" id="CustomerMerchantMappedDetails">
-                                    <thead style="background-color:lightgray;">
-                                        <tr>
-                                            <th style="width:5%;">S.No.</th>
-                                            <th style="width:10%;">Merchant ID</th>
-                                            <th style="width:10%;">Outlet Name & Location</th>
-                                            <th style="width:10%;">Outstanding</th>
-                                            <th style="width:10%;">Credit Close Limit Type</th>
-                                            <th style="width:10%;">Credit Close Limit Amount</th>
-                                            <th style="width:10%;">Credit Close Limit Balance</th>
-                                            <th style="width:10%;">Acion</th>
-                                            <th style="display:none"></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="searchTableBody">
-                                        @{
-                                            int i = 0;
-                                            string status = "", classToggle = "";
-                                        }
-                                        @foreach (var item in Model.Data.CustomerMerchantMappedDetails)
-                                        {
-                                            i = i + 1;
-
-                                            if (item.Action == "0")
-                                            {
-                                                classToggle = "fa-toggle-off";
-                                                status = "Enable";
-                                            }
-
-                                            else
-                                            {
-                                                classToggle = "fa-toggle-on";
-                                                status = "Disable";
-                                            }
-                                            <tr>
-                                                <td>@i</td>
-                                                <td>@item.MerchantId</td>
-                                                <td>@item.OutletNameAndLocation</td>
-                                                <td><a class='outStanding' href='#' onclick='ViewStatement(this)' role='tab'><span class='rowCCMSBalance'>@item.Outstanding</span></a></td>"
-                                                <td class="editCelldropdown" id="tdLimitType">@item.CreditCloseLimitType</td>
-                                                <td class="editCell" id="tdLimitAmount">@item.CreditCloseLimit</td>
-                                                <td>@item.CreditCloseLimitBalance</td>
-                                                <td style="width:8px">
-                                                    <div class="d-flex align-items-center justify-content-start">
-                                                        @if (item.Action != "0")
-                                                        {
-                                                            <a class="d-block " data-toggle="tooltip" title="" tooltip="Edit"><i class="fa fa-pencil-square-o edit  " aria-hidden="true"></i></a>
-                                                            <a class="d-block" data-toggle="tooltip" title="" tooltip="Update"><i class="fa fa-floppy-o save" aria-hidden="true" style="display:none"></i></a>
-                                                            <a class="d-block" data-toggle="tooltip" title="" tooltip="Cancel"><i class="fa fa-remove cancel" aria-hidden="true" style="display:none"></i></a>
-                                                        }
-                                                        <a asp-action="MerchantMapEnableorDisable" class="d-block" asp-route-customerID="@Model.CustomerID" asp-route-merchantID="@item.MerchantId" asp-route-actionID="@status" data-toggle="tooltip" title="" tooltip="@status"><i class="fa @classToggle enable" aria-hidden="true"></i></a>
-                                                    </div>
-                                                </td>
-                                                <td style="display:none">@item.CreditCloseLimitType</td>
-                                            </tr>
-                                        }
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <div class="clearfix"></div>
-
-                    }
-
                 }
-            }
-            else
-            {
-                @if (!String.IsNullOrEmpty(Model.Message))
+                else
                 {
-                    <div class="mb-3 text-center alert alert-danger">
-                        @Model.Message
-                    </div>
+                    @if (!String.IsNullOrEmpty(Model.Message))
+                    {
+                        <div class="mb-3 text-center alert alert-danger">
+                            @Model.Message
+                        </div>
+                    }
                 }
-            }
-        </div>
+            </div>
+            <div class="clearfix"></div>
+        }
+        else
+        {
+            <div class="mb-3 text-center alert alert-danger">
+                @strMsg
+            </div>
+        }
         <div class="clearfix"></div>
     </div>
 </div>
@@ -326,14 +355,8 @@
         $(document).ready(function () {
             if(custID!="0"){
                  $("#CustomerID").attr("disabled",true);
-                    $('.table').DataTable({
-                    "lengthMenu": [10, 20, 50, 100, 200, 500],
-                    "oLanguage": {
-                        "sLengthMenu": "Display _MENU_ Records",
-                        "info": "Showing _START_ to _END_ of _TOTAL_ Records",
-                    }
 
-                });
+              
 
             }
         });
@@ -569,7 +592,7 @@
     //   return true;
     //}
     $("#CustomerMerchantMappedDetails").on('keydown', '.lAmt', function (event) {
-    
+
         if (event.shiftKey == true) {
             event.preventDefault();
         }
@@ -637,12 +660,12 @@
          var currentRow = o.closest("tr");
          var merchantId=currentRow.cells[1].textContent;
          $("#MerchantID").val(merchantId);
-         
+
          $("#viewCreditSaleStatement").html("");
          $("#FromDate").val(fromD);
          $("#ToDate").val(toD);
          $('#merchantDetails').modal('show');
-       
+
      }
      $("#btnSearchStatement").on("click",(function(e){
          var customerId = $("#CustomerID").val();
@@ -681,5 +704,5 @@
             });
         }
      }));
-      
+
 </script>

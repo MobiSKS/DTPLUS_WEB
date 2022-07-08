@@ -220,14 +220,15 @@ namespace HPCL.Service.Services
             }
             return RequestResponseList;
         }
-        public async Task<DealerCreditPaymentinBulk> GetDealerCreditPaymentBulk()
+        public async Task<DealerCreditPaymentinBulk> GetDealerCreditPaymentBulk(string CustomerId)
         {
             DealerCreditPaymentinBulk dealerCreditPaymentinBulk = new DealerCreditPaymentinBulk();
             var searchBody = new DealerRequestModel
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip
+                UserIp = CommonBase.userip,
+                CustomerID= CustomerId
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
@@ -265,6 +266,95 @@ namespace HPCL.Service.Services
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
             dealerCreditSaleViewModel = obj.ToObject<DealerCreditSaleViewModel>();
             return dealerCreditSaleViewModel;
+        }
+        public async Task<DealerCreditSaleViewModel> GetMerchantDealerCreditSaleView(string CustomerID, string MerchantID, string FromDate, string ToDate)
+        {
+            DealerCreditSaleViewModel dealerCreditSaleViewModel = new DealerCreditSaleViewModel();
+            if (!string.IsNullOrEmpty(FromDate) && !string.IsNullOrEmpty(FromDate))
+            {
+                FromDate = await _commonActionService.changeDateFormat(FromDate);
+                ToDate = await _commonActionService.changeDateFormat(ToDate);
+            }
+            else
+            {
+                FromDate = DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd");
+                ToDate = DateTime.Now.ToString("yyyy-MM-dd");
+            }
+            var searchBody = new DealerRequestModel
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                CustomerID = CustomerID == null ? "" : CustomerID,
+                MerchantID = MerchantID ,
+                FromDate = FromDate,
+                ToDate = ToDate,
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getmerchantcreditsaleview);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            dealerCreditSaleViewModel = obj.ToObject<DealerCreditSaleViewModel>();
+            return dealerCreditSaleViewModel;
+        }
+        public async Task<List<StatementDateModel>> GetMerchantSaleStatementDate(string CustomerID, string MerchantID)
+        {
+            var searchBody = new DealerRequestModel
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+               CustomerID=CustomerID,
+               MerchantID=MerchantID,
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getstatementdatelist);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+          
+            var responseJarr = obj["Data"].Value<JArray>();
+            List<StatementDateModel> statementDateList = responseJarr.ToObject<List<StatementDateModel>>();
+            return statementDateList;
+        }
+        public async Task<MerchanDealerSaleStatementModel> GetMerchantDealerCreditSaleStatement(string CustomerID, string MerchantID, string SearchDate)
+        {
+            MerchanDealerSaleStatementModel merchanDealerSaleStatementModel = new MerchanDealerSaleStatementModel();
+           
+            var searchBody = new DealerRequestModel
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                CustomerID = CustomerID == null ? "" : CustomerID,
+                MerchantID = MerchantID,
+                FromDate = SearchDate,
+                
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getmerchantdealercreditsalestatement);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            merchanDealerSaleStatementModel = obj.ToObject<MerchanDealerSaleStatementModel>();
+            return merchanDealerSaleStatementModel;
+        }
+        public async Task<MerchantCreditSaleOutstandingViewModel> GetCreditSaleOutstandingDetails( string MerchantID)
+        {
+            MerchantCreditSaleOutstandingViewModel merchantCreditSaleOutstandingViewModel = new MerchantCreditSaleOutstandingViewModel();
+
+            var searchBody = new DealerRequestModel
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                MerchantID = MerchantID,
+
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getcreditsaleoutstandingdetails);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            merchantCreditSaleOutstandingViewModel = obj.ToObject<MerchantCreditSaleOutstandingViewModel>();
+            return merchantCreditSaleOutstandingViewModel;
         }
     }
 

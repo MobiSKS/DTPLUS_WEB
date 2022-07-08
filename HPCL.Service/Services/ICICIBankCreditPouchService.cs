@@ -87,7 +87,7 @@ namespace HPCL.Service.Services
             return reasonList;
         }
 
-        public async Task<SearchRequestApprovalRes> SearchRequestApproval(SearchRequestApprovalClone entity)
+        public async Task<SearchRequestApprovalRes> SearchRequestApproval(SearchRequestApproval entity)
         {
             var searchBody = new SearchRequestApproval
             {
@@ -95,8 +95,8 @@ namespace HPCL.Service.Services
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
                 CustomerId = entity.CustomerId,
-                ZO = Convert.ToInt32(entity.ZO),
-                RO = Convert.ToInt32(entity.RO),
+                ZO = entity.ZO ?? "0",
+                RO = entity.RO ?? "0",
                 Status = entity.Status
             };
 
@@ -127,7 +127,7 @@ namespace HPCL.Service.Services
             return reasonList;
         }
 
-        public async Task<SearchEnrollStatusRes> GetEnrollStatus(SearchEnrollStatusClone entity)
+        public async Task<SearchEnrollStatusRes> GetEnrollStatus(SearchEnrollStatus entity)
         {
             string fromDate = "", toDate = "";
             if (!string.IsNullOrEmpty(entity.FromDate) && !string.IsNullOrEmpty(entity.FromDate))
@@ -137,7 +137,7 @@ namespace HPCL.Service.Services
             }
             else
             {
-                fromDate = DateTime.Now.AddMonths(-1).ToString("yyyy-MM-dd");
+                fromDate = DateTime.Now.ToString("yyyy-MM-dd");
                 toDate = DateTime.Now.ToString("yyyy-MM-dd");
             }
 
@@ -146,11 +146,11 @@ namespace HPCL.Service.Services
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
-                CustomerId = entity.CustomerId ?? "",
-                ZO = Convert.ToInt32(entity.ZO),
-                RO = Convert.ToInt32(entity.RO),
-                FromDate = entity.FromDate ?? "",
-                ToDate = entity.ToDate ?? ""
+                CustomerId = entity.CustomerId,
+                ZO = entity.ZO ?? "0",
+                RO = entity.RO ?? "0",
+                FromDate = fromDate,
+                ToDate = toDate
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
@@ -217,14 +217,26 @@ namespace HPCL.Service.Services
 
         public async Task<GetRequestAuthorizationRes> GetRequestAuthorizationDetails(GetRequestAuthorizationReq entity)
         {
+            string fromDate = "", toDate = "";
+            if (!string.IsNullOrEmpty(entity.FromDate) && !string.IsNullOrEmpty(entity.FromDate))
+            {
+                fromDate = await _commonActionService.changeDateFormat(entity.FromDate);
+                toDate = await _commonActionService.changeDateFormat(entity.ToDate);
+            }
+            else
+            {
+                fromDate = DateTime.Now.ToString("yyyy-MM-dd");
+                toDate = DateTime.Now.ToString("yyyy-MM-dd");
+            }
+
             var searchBody = new GetRequestAuthorizationReq
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
                 CustomerId = entity.CustomerId,
-                FromDate = entity.FromDate,
-                ToDate = entity.ToDate
+                FromDate = fromDate,
+                ToDate = toDate
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");

@@ -28,7 +28,11 @@ namespace HPCL_Web.Controllers
         {
             return View();
         }
-
+        public IActionResult MerchantIndex()
+        {
+            return View();
+        }
+        
         public async Task<IActionResult> DealerCreditMapping(DealerCreditMappingViewModel entity, string reset, string CustomerID, string success, string error)
         {
             if (!string.IsNullOrEmpty(CustomerID))
@@ -102,10 +106,9 @@ namespace HPCL_Web.Controllers
             var result = await _dealerService.UpdateDealerCreditPaymentBulk(DealerRequestModel);
             return Json(result);
         }
-        [HttpPost]
-        public async Task<JsonResult> GetDealerCreditPaymentBulk()
+        public async Task<JsonResult> GetDealerCreditPaymentBulk(string CustomerId)
         {
-            var result = await _dealerService.GetDealerCreditPaymentBulk();
+            var result = await _dealerService.GetDealerCreditPaymentBulk(CustomerId);
             return Json(result);
         }
         private ClosedXML.Excel.XLWorkbook GenerateClosedXMLWorkbook(List<LimitTypeModal> sortedtList)
@@ -155,10 +158,44 @@ namespace HPCL_Web.Controllers
             var modals = await _dealerService.GetDealerCreditSaleView(CustomerID, MerchantID, FromDate, ToDate);
             return PartialView("~/Views/Dealer/_DealerCreditSaleViewtbl.cshtml", modals);
         }
-        public async Task<JsonResult> GetDealerCreditSaleViewForExcelExport(string CustomerID, string MerchantID, string FromDate, string ToDate)
+        public async Task<IActionResult> MerchantDealerCreditSaleView()
         {
-            var modals = await _dealerService.GetDealerCreditSaleView(CustomerID, MerchantID, FromDate, ToDate);
-            return Json(modals);
+            DealerCreditSaleViewModel dealerCreditSaleViewModel = new DealerCreditSaleViewModel();
+            return View(dealerCreditSaleViewModel);
+        }
+        public async Task<IActionResult> GetMerchantDealerCreditSaleView(string CustomerID, string MerchantID, string FromDate, string ToDate)
+        {
+            var modals = await _dealerService.GetMerchantDealerCreditSaleView(CustomerID, MerchantID, FromDate, ToDate);
+            return PartialView("~/Views/Dealer/_MerchantDealerCreditSaleViewtbl.cshtml", modals);
+        }
+        public async Task<IActionResult> MerchantDealerCreditSaleStatement()
+        {
+            DealerCreditSaleViewModel dealerCreditSaleViewModel = new DealerCreditSaleViewModel();
+            return View(dealerCreditSaleViewModel);
+        }
+        [HttpPost]
+        public async Task<JsonResult> GetMerchantSaleStatementDate(string CustomerID,string MerchantID)
+        {
+            var sortedtList = await _dealerService.GetMerchantSaleStatementDate(CustomerID,MerchantID);
+
+            ModelState.Clear();
+            return Json(sortedtList);
+        }
+        public async Task<IActionResult> GetMerchantDealerCreditSaleStatement(string CustomerID, string MerchantID, string SearchDate)
+        {
+            var modals = await _dealerService.GetMerchantDealerCreditSaleStatement(CustomerID, MerchantID, SearchDate);
+            return PartialView("~/Views/Dealer/_MerchantDealerCreditSaleStatementTbl.cshtml", modals);
+        }
+        public async Task<IActionResult> DealerCreditSaleOutstanding(MerchantCreditSaleOutstandingViewModel entity)
+        {
+            MerchantCreditSaleOutstandingViewModel response = new MerchantCreditSaleOutstandingViewModel();
+            if (entity.MerchantID != null)
+            {
+                response = await _dealerService.GetCreditSaleOutstandingDetails(entity.MerchantID);
+                response.MerchantID = entity.MerchantID;
+            }
+      
+            return View(response);
         }
     }
 }
