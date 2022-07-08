@@ -281,7 +281,7 @@
                                                 <button class="btn btn_primary" type="button" onclick="updateExist()">Update</button>
                                             </div>
                                             <div class="px-2">
-                                                <button class="btn btn_primary" type="submit">Reset Password</button>
+                                                <button class="btn btn_primary" type="button" onclick="ResetPassword()">Reset Password</button>
                                             </div>
                                         </div>
                                     </div>
@@ -289,6 +289,7 @@
                                 <div class="clearfix"></div>
                             </div>
                         </div>
+                        @Html.HiddenFor(model => Model.UserName)
                     </form>
                 </div>
             </div>
@@ -687,8 +688,23 @@
                     $("#dealerNameFetchVal").val(alList[0].dealerName || '');
 
                     //$('select[name^="ZonalOfficeId"] option[value="' + alList[0].zonalOfficeID + '"]').attr("selected", "selected");
-                    $('#SBUId')[0].sumo.selectItem(alList[0].sbuId);
-                    GetZonalOfficeId(alList[0].sbuId, alList[0].zOfficeID);
+                    if($('#SBUId').val()!=alList[0].sbuId)
+                    {
+                      $('#SBUId')[0].sumo.selectItem(alList[0].sbuId);
+                    }
+                    else
+                    {
+                        $("#SBUId").trigger("change");
+                    }
+                    //GetZonalOfficeId(alList[0].sbuId, alList[0].zOfficeID);
+
+                    setTimeout(function(){
+                                    console.log(alList[0].zOfficeID);
+                                    $('#ZonalOfficeId')[0].sumo.selectItem(alList[0].zOfficeID);
+                                    //console.log($('#ZonalOfficeId').html());
+                                },2000);
+         
+
                     //$("#SBUId").trigger('change');
                     //setTimeout(function(){
                     //                     $('#ZonalOfficeId')[0].sumo.selectItem(alList[0].zOfficeID);
@@ -698,7 +714,13 @@
 
 
 
-                    GetRegionId(alList[0].zOfficeID, alList[0].rOfficeID);
+                    //GetRegionId(alList[0].zOfficeID, alList[0].rOfficeID);
+
+                    setTimeout(function(){
+                                    console.log(alList[0].rOfficeID);
+                                    $('#RegionalOfficeId')[0].sumo.selectItem(alList[0].rOfficeID);
+                                    //console.log($('#RegionalOfficeId').html());
+                                },4000);
 
   
                     //setTimeout(function(){
@@ -709,15 +731,23 @@
                     $("#add2Val").val(alList[0].address2 || '');
                     $("#add3Val").val(alList[0].address3 || '');
                     $("#cityFetchVal").val(alList[0].cityName || '');
+                    $("#UserName").val(alList[0].userName || '');
 
                     //$('select[name^="StateId"] option[value="' + alList[0].stateId + '"]').attr("selected", "selected");
-                    $('#StateId')[0].sumo.selectItem(alList[0].sId);
+                    if($('#StateId').val()!=alList[0].sId)
+                    {
+                      $('#StateId')[0].sumo.selectItem(alList[0].sId);
+                    }
+                    else
+                    {
+                        $("#StateId").trigger("change");
+                    }
                     //GetPerDistrict(alList[0].stateId, alList[0].districtId);
-                    GetPerDistrict(alList[0].stateId, alList[0].dId);
+                    //GetPerDistrict(alList[0].stateId, alList[0].dId);
 
                     setTimeout(function(){
                                        $('#DistrictId')[0].sumo.selectItem(alList[0].dId);
-                                       },500);
+                                       },1500);
 
                     $("#mobFetchVal").val(alList[0].mobileNo || '');
                     $("#pinFetchVal").val(alList[0].pin || '');
@@ -744,14 +774,77 @@
 
     }
 
-    function loadEnrollForm() {
+    function loadEnrollForm() 
+    {
         document.getElementById("responseMsg").style.display = "none";
         document.getElementById("failureMsg").style.display = "none";
         document.getElementById("searchAl").style.display = "none";
         document.getElementById("detailsSection").style.display = "block";
         document.getElementById("enrollNew").style.display = "block";
+        document.getElementById("noRecord").style.display = "none";
     }
 
+    $("#dealerCodedFetchVal").on("blur", function () 
+    {
+        debugger;
+        localStorage.setItem("DEALERFOUND", "0");
+        var isValid=true;
+
+        var dealerCode = document.getElementById("dealerCodedFetchVal").value.trim();
+        if (dealerCode == "") 
+        {
+            document.getElementById("dealerCodeError").innerHTML = "Dealer Code field cannot be left blank";
+            isValid=false;
+        }
+        else 
+        {
+            document.getElementById("dealerCodeError").innerHTML = "";
+        }
+
+
+        if(isValid)
+        {
+
+            $.ajax({
+                type: 'POST',  // http method
+                url: '@Url.Action("CheckDealerCodeIsValid", "Common")',
+                data: { DealerCode: dealerCode },  // data to submit
+                dataType: "json",
+                success: function (data, status, xhr) 
+                {
+                    console.log(data);
+                    console.log(status);
+                    console.log(data.status);
+    debugger;
+                    if (status == 'success') 
+                    {
+                        if (data.status == 1) 
+                        {
+                            document.getElementById("dealerCodeError").innerHTML = "Dealer code already exists";
+                            localStorage.setItem("DEALERFOUND", "1");
+                        }
+                        else 
+                        {
+                            document.getElementById("dealerCodeError").innerHTML = "";
+                            localStorage.setItem("DEALERFOUND", "0");
+                        }
+                    }
+                    else 
+                    {
+                        document.getElementById("dealerCodeError").innerHTML = "";
+                        localStorage.setItem("DEALERFOUND", "0");
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) 
+                {
+                    document.getElementById("dealerCodeError").innerHTML = "";
+                    localStorage.setItem("DEALERFOUND", "0");
+                }
+            });
+
+        }
+
+    });
 
     function submitEnroll() 
     {
@@ -765,18 +858,21 @@
             $("#dealerCodeError").html("Dealer Code field cannot be left blank");
             ret=false;
         }
+        else if (!(dealerCode.match(forVehicleNo)))
+        {
+            $("#dealerCodeError").attr("style", "display:block");
+            $("#dealerCodeError").html("Dealer Code should be alphanumeric");
+            ret=false;
+        }
+        else if(localStorage.getItem("DEALERFOUND")=="1")
+        {
+            $("#dealerCodeError").attr("style", "display:block");
+            $("#dealerCodeError").html("Dealer code already exists");
+            ret=false;
+        }
         else
         {
-            if (!(dealerCode.match(forVehicleNo)))
-            {
-                $("#dealerCodeError").attr("style", "display:block");
-                $("#dealerCodeError").html("Dealer Code should be alphanumeric");
-                ret=false;
-            }
-            else
-            {
-                $("#dealerCodeError").html("");
-            }
+            $("#dealerCodeError").html("");
         }
 
         var dealerName = document.getElementById("dealerNameFetchVal").value.trim();
@@ -1092,6 +1188,56 @@
         }
     }
 
+    function ResetPassword()
+    {
+        var ret=true;
+
+        var userName = document.getElementById("UserName").value.trim();
+        if (userName == "") 
+        {
+            alert("User Name is blank");
+            ret=false;
+        }
+
+        if (ret==true)
+        {
+
+            $.ajax({
+                url: "@Url.Action("ResetAlDealerPassword", "AshokLeyLand")",
+                type: "POST",
+                dataType: "JSON",
+                data: { UserName: userName },
+                success: function (res) 
+                {
+
+                    if (res.result.success == true) 
+                    {
+                        $("#responseMsg").append("<span>" + res.result.data[0].reason + "</span>");
+
+                        document.getElementById("responseMsg").style.display = "block";
+                        document.getElementById("failureMsg").style.display = "none";
+                        document.getElementById("divDealerEnrollment").style.display = "none";
+                        document.getElementById("divCommunicationAddress").style.display = "none";
+                    }
+                    else
+                    {
+                        document.getElementById("failureMsg").style.display = "block";
+                        document.getElementById("responseMsg").style.display = "none";
+                        document.getElementById("failureMsg").innerHTML=res.result.data[0].reason;
+                        document.getElementById("divDealerEnrollment").style.display = "block";
+                        document.getElementById("divCommunicationAddress").style.display = "block";
+                    }
+
+                },
+                error: function (ex) {
+                    alert('Failed' + ex);
+                }
+            });
+        }
+        else {
+            return false;
+        }
+    }
 
     function updateExist() 
     {

@@ -43,5 +43,6 @@ namespace HPCL.Service.Interfaces
         Task<UploadDocResponseBody> UploadALDoc(string CustomerID);
         Task<UploadDocResponse> UploadALDoc(UploadALDoc entity);
         Task<PendingKYCCustomerDetailsModel> ALPendingKYCCustomerDetail(PendingKYCCustomerDetailsModel Model);
+        Task<InsertResponse> ResetAlDealerPassword(string UserName);
     }
 }

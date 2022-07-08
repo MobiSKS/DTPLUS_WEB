@@ -334,5 +334,12 @@ namespace HPCL_Web.Controllers
             return View(searchResult);
         }
 
+        [HttpPost]
+        public async Task<JsonResult> ResetAlDealerPassword(string UserName)
+        {
+            var result = await _ashokLeyLandService.ResetAlDealerPassword(UserName);
+            return Json(new { result = result });
+        }
+
     }
 }
