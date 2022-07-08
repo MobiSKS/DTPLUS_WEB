@@ -24,5 +24,7 @@ namespace HPCL.Common.Models.ViewModel.AshokLeyLand
         public string Address { get; set; }
         public string CommunicationPhoneNo { get; set; }
         public string CommunicationMobileNo { get; set; }
+        public string Reason { get; set; }
+        public int Status { get; set; }
     }
 }
