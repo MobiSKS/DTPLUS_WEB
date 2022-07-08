@@ -24,5 +24,6 @@ namespace HPCL.Service.Interfaces
         Task<DealerCreditSaleViewModel> GetMerchantDealerCreditSaleView(string CustomerID, string MerchantID, string FromDate, string ToDate);
         Task<List<StatementDateModel>> GetMerchantSaleStatementDate(string CustomerID, string MerchantID);
         Task<MerchanDealerSaleStatementModel> GetMerchantDealerCreditSaleStatement(string CustomerID, string MerchantID, string SearchDate);
+        Task<MerchantCreditSaleOutstandingViewModel> GetCreditSaleOutstandingDetails(string MerchantID);
     }
 }

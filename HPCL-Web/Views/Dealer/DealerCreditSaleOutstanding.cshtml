@@ -1,0 +1,294 @@
+﻿@model HPCL.Common.Models.ViewModel.Dealer.MerchantCreditSaleOutstandingViewModel
+@using HPCL.Common.Resources
+
+<div class="col-lg-12 px-0">
+    <div class="bg-white p-2 p-md-4">
+        <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
+            <li class="breadcrumb-item"><a href="@Url.Action("MerchantIndex","Dealer")" class="text_primary">Dealer Credit Management</a> </li>
+            <li class="breadcrumb-item font-weight-light">Credit Sale Outstanding</li>
+        </ul>
+        @*     @if (ViewBag.SuccessMessage != "" && ViewBag.SuccessMessage != null)
+            {
+            <div id="reason" class="mb-3 text-center alert alert-success">@ViewBag.SuccessMessage</div>
+            }
+            @if (ViewBag.ErrorMessage != "" && ViewBag.ErrorMessage != null)
+            {
+            <div id="reason" class="mb-3 text-center alert alert-danger">@ViewBag.ErrorMessage</div>
+            }*@
+        <form>
+            <div class="w-100">
+                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
+                    <div class="border-1 rounded border-grey pb-3">
+                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Credit Sale Outstanding</p>
+
+                        <div class="col-lg-12 col-md-12 col-12 py-3">
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-3 col-12">Merchant ID <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.MerchantID, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                <span class="error" id="MerchantID_error"></span>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+
+
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="d-flex align-items-center flex-wrap">
+
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3 justify-content-center">
+                                        <div class="px-2">
+                                            <button class="btn btn_primary" type="submit" id="btnSearch">@Label.Search</button>
+                                        </div>
+                                        <div class="px-2">
+                                            <button class="btn btn_primary" type="button" id="btnReset" onclick="location.href='@Url.Action("DealerCreditMapping", "Dealer" ,new { reset="Y" })'">@Label.Reset</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+
+
+                </div>
+            </div>
+
+        </form>
+        <div id="show_Table" class="col-lg-12 col-md-12 col-12 pl-0 pr-0  toBeHiddenOnSuccess">
+            @if (Model.Message == "Success" && ViewBag.Reset != "Y")
+            {
+                @if (Model.Data != null)
+                {
+                    @if (Model.Data.MerchantDetails != null)
+                    {
+                        @if (Model.Data.MerchantDetails.Count() > 0)
+                        {
+                            <div class="border-1 rounded border-grey">
+                                <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Dealer Information</p>
+                                <div class="col-lg-12 col-md-12 col-12 py-3">
+                                    <div class="d-flex align-items-center flex-wrap">
+                                        <div class="col-lg-6 col-12">
+                                            <div class=" d-flex align-items-center flex-wrap">
+                                                <label class="font-weight-bold col-md-4 col-12">Merchant ID</label>
+                                                <div class="col-md-7 col-12">
+                                                    <label class="font-weight-normal  col-12">@Model.Data.MerchantDetails.First().MerchantId</label>
+
+                                                </div>
+                                            </div>
+                                            <div class="d-flex align-items-center flex-wrap">
+                                                <label class="font-weight-bold col-md-4 col-12">Retail Outlet Name</label>
+                                                <div class="col-md-7 col-12">
+                                                    <label class="font-weight-normal  col-12">@Model.Data.MerchantDetails.First().RetailOutletName</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 col-12">
+
+                                            <div class=" d-flex align-items-center flex-wrap">
+                                                <label class="font-weight-bold col-md-2 col-12">RO:</label>
+                                                <div class="col-md-7 col-12">
+                                                    <label class="font-weight-normal  col-12">@Model.Data.MerchantDetails.First().RegionalOfficeName</label>
+
+                                                </div>
+                                            </div>
+                                            <div class="d-flex align-items-center flex-wrap">
+                                                <label class="font-weight-bold col-md-2 col-12">ZO:</label>
+                                                <div class="col-md-7 col-12">
+                                                    <label class="font-weight-normal col-12">@Model.Data.MerchantDetails.First().ZonalOfficeName</label>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="clearfix"></div>
+
+                        }
+                    }
+                    @if (Model.Data.MerchantCustomerMappedDetails != null)
+                    {
+                        @if (Model.Data.MerchantCustomerMappedDetails.Count() > 0)
+                        {
+
+                            <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Customer wise outstanding</p>
+                            <table class="datatable table table-striped table-bordered table-responsive d-md-table" style="width:100%;word-wrap:break-word;table-layout:fixed;" id="CustomerMerchantMappedDetails">
+                                <thead style="background-color:lightgray;">
+                                    <tr>
+                                        <th style="width:5%;">S.No.</th>
+                                        <th style="width:10%;">Customer ID</th>
+                                        <th style="width:10%;">Customer Name</th>
+                                        <th style="width:10%;">Outstanding</th>
+                                        <th style="width:10%;">Credit Close Limit</th>
+                                        <th style="width:10%;">Limit Balance</th>
+                                        <th style="width:10%;">CCMS Balance Status</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody id="searchTableBody">
+                                    @{
+                                        int i = 0;
+                                    }
+                                    @foreach (var item in Model.Data.MerchantCustomerMappedDetails)
+                                    {
+                                        i++;
+                                        <tr>
+                                            <td>@i</td>
+                                            <td>@item.CustomerId</td>
+                                            <td>@item.IndividualOrgName</td>
+                                            <td><a class='outStanding' href='#' onclick='ViewStatement(this)' role='tab'><span class='rowCCMSBalance'>@item.Outstanding</span></a></td>
+                                            <td><a class='creditCloseLimit' href='#' onclick='ViewCreditCloseLimit(this)' role='tab'><span class='rowCreditCloseLimit'>@item.CreditCloseLimit</span></a></td>
+                                            <td>@item.LimitBalance</td>
+                                            <td>@item.CCMSBalanceStatus</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+
+                            <div class="clearfix"></div>
+
+                        }
+                    }
+                }
+            }
+            else
+            {
+                @if (!String.IsNullOrEmpty(Model.Message))
+                {
+                    <div class="mb-3 text-center alert alert-danger">
+                        @Model.Message
+                    </div>
+                }
+            }
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</div>
+<script type="text/javascript">
+    var activeRow="";
+    var merID=@ViewBag.MerchantID;
+    var fromD = $("#FromDate").val();
+    var toD = $("#ToDate").val();
+        $(document).ready(function () {
+            if(merID!="0"){
+                 $("#MerchantID").attr("disabled",true);
+
+
+            }
+        });
+
+     $("#btnSearch").on("click",(function(e){
+         var merchantID=$("#MerchantID").val();
+         var flag="Y";
+         if(merchantID.trim()!=""){
+             if (!merchantID.match(mappedMerchantID))
+                {
+                    $("#MerchantID_error").attr("style", "display:block");
+                    $("#MerchantID_error").html("Invalid Merchant ID");
+                    flag="N";
+                }
+         }
+         else{
+             $("#MerchantID_error").attr("style", "display:block");
+             $("#MerchantID_error").html("Merchant Id is required");
+             flag="N";
+         }
+         if(flag=="N")
+            e.preventDefault();
+
+     }));
+
+      $('select').SumoSelect({
+                placeholder: '--Select--',
+                search: true,
+                searchText: 'Enter Text here.'
+            });
+    $("#MerchantID").on("blur", function ()
+    {
+        if (document.getElementById("MerchantID").value.trim() == "")
+        {
+            $("#MerchantID_error").attr("style", "display:block");
+            $("#MerchantID_error").html("Merchant ID is required");
+            return false;
+        }
+        else if (!$("#MerchantID").val().match(mappedCustomerId))
+        {
+            $("#MerchantID_error").attr("style", "display:block");
+            $("#MerchantID_error").html("Invalid Merchant ID");
+            return false;
+        }
+        else
+        {
+            $("#MerchantID_error").attr("style", "display:none");
+            $("#MerchantID_error").html("");
+        }
+
+    });
+
+
+
+     function ViewStatement(o){
+         var customerId = $("#CustomerID").val();
+        if (customerId == "") {
+            return (false);
+        }
+         var currentRow = o.closest("tr");
+         var merchantId=currentRow.cells[1].textContent;
+         $("#MerchantID").val(merchantId);
+
+         $("#viewCreditSaleStatement").html("");
+         $("#FromDate").val(fromD);
+         $("#ToDate").val(toD);
+         $('#merchantDetails').modal('show');
+
+     }
+     $("#btnSearchStatement").on("click",(function(e){
+         var customerId = $("#CustomerID").val();
+         var merchantId=$("#MerchantID").val();
+          var fromdate = $("#FromDate").val();
+          var todate = $("#ToDate").val();
+         var flag = "Y";
+          if (fromdate == "") {
+              $("#fromDate_error").attr("style", "display:block");
+              $("#fromDate_error").html("Select From Date");
+              flag = "N";
+          }
+
+          if (todate == "") {
+              $("#toDate_error").attr("style", "display:block");
+              $("#toDate_error").html("Select To Date");
+              flag = "N";
+          }
+          if (fromdate != "" && todate != "") {
+              flag = checkDates("fromDate_error");
+          }
+          if(flag=="Y"){
+              $.ajax({
+                type: 'GET',  // http method
+                url: '@Url.Action("GetCreditSaleStatement", "Dealer")',
+                data: { CustomerID: customerId, MerchantID: merchantId, FromDate: fromdate, ToDate: todate},
+                contentType: "application/json; charset=utf-8",
+                dataType: "text",
+                success: function (data,status,xhr) {
+                    var v = data;
+                        $("#viewCreditSaleStatement").html(data);
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+                    alert("Error" + errorMessage);
+                }
+            });
+        }
+     }));
+
+</script>
