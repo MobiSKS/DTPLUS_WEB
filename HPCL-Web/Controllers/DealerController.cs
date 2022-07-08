@@ -186,5 +186,16 @@ namespace HPCL_Web.Controllers
             var modals = await _dealerService.GetMerchantDealerCreditSaleStatement(CustomerID, MerchantID, SearchDate);
             return PartialView("~/Views/Dealer/_MerchantDealerCreditSaleStatementTbl.cshtml", modals);
         }
+        public async Task<IActionResult> DealerCreditSaleOutstanding(MerchantCreditSaleOutstandingViewModel entity)
+        {
+            MerchantCreditSaleOutstandingViewModel response = new MerchantCreditSaleOutstandingViewModel();
+            if (entity.MerchantID != null)
+            {
+                response = await _dealerService.GetCreditSaleOutstandingDetails(entity.MerchantID);
+                response.MerchantID = entity.MerchantID;
+            }
+      
+            return View(response);
+        }
     }
 }

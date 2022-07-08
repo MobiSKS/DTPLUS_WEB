@@ -69,7 +69,7 @@ namespace HPCL_Web.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> RequestApproval(SearchRequestApprovalClone entity)
+        public async Task<JsonResult> RequestApproval(SearchRequestApproval entity)
         {
             var searchList = await _hDFCBankCreditPouchService.SearchRequestApproval(entity);
             ModelState.Clear();
@@ -86,11 +86,12 @@ namespace HPCL_Web.Controllers
 
         public IActionResult EnrollmentStatus()
         {
-            return View();
+            SearchEnrollStatus entity = new SearchEnrollStatus();
+            return View(entity);
         }
 
         [HttpPost]
-        public async Task<JsonResult> EnrollmentStatus(SearchEnrollStatusClone entity)
+        public async Task<JsonResult> EnrollmentStatus(SearchEnrollStatus entity)
         {
             var searchList = await _hDFCBankCreditPouchService.GetEnrollStatus(entity);
             ModelState.Clear();
@@ -138,7 +139,8 @@ namespace HPCL_Web.Controllers
 
         public IActionResult RequestAuthorization()
         {
-            return View();
+            GetRequestAuthorizationReq entity = new GetRequestAuthorizationReq();
+            return View(entity);
         }
 
         [HttpPost]
