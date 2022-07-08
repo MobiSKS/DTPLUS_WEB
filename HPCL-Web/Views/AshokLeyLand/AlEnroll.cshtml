@@ -281,7 +281,7 @@
                                                 <button class="btn btn_primary" type="button" onclick="updateExist()">Update</button>
                                             </div>
                                             <div class="px-2">
-                                                <button class="btn btn_primary" type="submit">Reset Password</button>
+                                                <button class="btn btn_primary" type="button" onclick="ResetPassword()">Reset Password</button>
                                             </div>
                                         </div>
                                     </div>
@@ -289,6 +289,7 @@
                                 <div class="clearfix"></div>
                             </div>
                         </div>
+                        @Html.HiddenFor(model => Model.UserName)
                     </form>
                 </div>
             </div>
@@ -730,6 +731,7 @@
                     $("#add2Val").val(alList[0].address2 || '');
                     $("#add3Val").val(alList[0].address3 || '');
                     $("#cityFetchVal").val(alList[0].cityName || '');
+                    $("#UserName").val(alList[0].userName || '');
 
                     //$('select[name^="StateId"] option[value="' + alList[0].stateId + '"]').attr("selected", "selected");
                     if($('#StateId').val()!=alList[0].sId)
@@ -1186,6 +1188,56 @@
         }
     }
 
+    function ResetPassword()
+    {
+        var ret=true;
+
+        var userName = document.getElementById("UserName").value.trim();
+        if (userName == "") 
+        {
+            alert("User Name is blank");
+            ret=false;
+        }
+
+        if (ret==true)
+        {
+
+            $.ajax({
+                url: "@Url.Action("ResetAlDealerPassword", "AshokLeyLand")",
+                type: "POST",
+                dataType: "JSON",
+                data: { UserName: userName },
+                success: function (res) 
+                {
+
+                    if (res.result.success == true) 
+                    {
+                        $("#responseMsg").append("<span>" + res.result.data[0].reason + "</span>");
+
+                        document.getElementById("responseMsg").style.display = "block";
+                        document.getElementById("failureMsg").style.display = "none";
+                        document.getElementById("divDealerEnrollment").style.display = "none";
+                        document.getElementById("divCommunicationAddress").style.display = "none";
+                    }
+                    else
+                    {
+                        document.getElementById("failureMsg").style.display = "block";
+                        document.getElementById("responseMsg").style.display = "none";
+                        document.getElementById("failureMsg").innerHTML=res.result.data[0].reason;
+                        document.getElementById("divDealerEnrollment").style.display = "block";
+                        document.getElementById("divCommunicationAddress").style.display = "block";
+                    }
+
+                },
+                error: function (ex) {
+                    alert('Failed' + ex);
+                }
+            });
+        }
+        else {
+            return false;
+        }
+    }
 
     function updateExist() 
     {
