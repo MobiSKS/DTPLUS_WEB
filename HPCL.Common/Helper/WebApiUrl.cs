@@ -311,6 +311,7 @@
         public static string searchAlManageCard = "api/dtplus/ashokleyland/search_al_manage_card";
         public static string updateAlCustomerDetail = "api/dtplus/ashokleyland/update_al_customer_detail";
         public static string getAlPendingKycCustomer = "api/dtplus/ashokleyland/get_al_pending_kyc_customer";
+        public static string updateAlCommunicationEmailResetPassword = "api/dtplus/ashokleyland/update_al_communication_email_reset_password";
         #endregion
 
         #region Customer Financial
@@ -486,6 +487,7 @@
         public static string HdfcInitiateCcmsRechargeUrl = "api/dtplus/HDFCCreditPouch/initiate_cp_recharge";
         public static string RequestToAvailCheckUrl = "api/dtplus/HDFCCreditPouch/chk_eligibility";
         public static string RequestToAvailEnrollUrl = "api/dtplus/HDFCCreditPouch/insrt_cp_rqst_by_customer";
+        public static string HdfcInitiateCpRechargeUrl = "api/dtplus/HDFCCreditPouch/initiate_cp_recharge";
         #endregion
 
         #region "CCMS Recharge"
@@ -522,6 +524,7 @@
         public static string insertVolvoEicherDealerEnrollment = "api/dtplus/VE/insert_volvo_eicher_dealer_enrollment";
         public static string getVolvoEicherDealerDetail = "api/dtplus/VE/get_volvo_eicher_dealer_detail";
         public static string updateVolvoEicherDealerEnrollment = "api/dtplus/VE/update_volvo_eicher_dealer_enrollment";
+        public static string checkvedealercode = "api/dtplus/VE/check_dealer_code";
         #endregion
 
         #region COMCO Manager

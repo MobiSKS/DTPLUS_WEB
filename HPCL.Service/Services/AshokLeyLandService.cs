@@ -1227,6 +1227,23 @@ namespace HPCL.Service.Services
 
             return Model;
         }
+        public async Task<InsertResponse> ResetAlDealerPassword(string UserName)
+        {
+            var requestBody = new UpdateAlDealePasswordReset
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserName = UserName
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.updateAlCommunicationEmailResetPassword);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            InsertResponse result = obj.ToObject<InsertResponse>();
+            return result;
+        }
 
     }
 }

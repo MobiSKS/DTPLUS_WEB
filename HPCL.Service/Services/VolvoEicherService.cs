@@ -1,4 +1,6 @@
 ﻿using HPCL.Common.Helper;
+using HPCL.Common.Models;
+using HPCL.Common.Models.RequestModel.Merchant;
 using HPCL.Common.Models.RequestModel.VolvoEicher;
 using HPCL.Common.Models.ResponseModel.AshokLayland;
 using HPCL.Common.Models.ResponseModel.CustomerManage;
@@ -337,6 +339,31 @@ namespace HPCL.Service.Services
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
             InsertResponse result = obj.ToObject<InsertResponse>();
             return result;
+        }
+
+        public async Task<CommonResponseData> CheckVEDealerCodeExists(string DealerCode)
+        {
+            CommonResponseData responseData = new CommonResponseData();
+
+            VerifyDealerRequestModel requestinfo = new VerifyDealerRequestModel()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                DealerCode = DealerCode
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(requestinfo), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.checkvedealercode);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<CommonResponseData> searchList = jarr.ToObject<List<CommonResponseData>>();
+            responseData = searchList[0];
+            responseData.Internel_Status_Code = Convert.ToInt32(obj["Internel_Status_Code"].ToString());
+
+            return responseData;
         }
 
     }
