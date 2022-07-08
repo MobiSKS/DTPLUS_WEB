@@ -462,7 +462,12 @@
         public static string getstatementdatelist = "api/dtplus/dealercredit/get_statement_date_list";
         public static string getmerchantdealercreditsalestatement = "api/dtplus/dealercredit/get_merchant_dealer_credit_sale_statement";
         public static string getcreditsaleoutstandingdetails = "api/dtplus/dealercredit/get_credit_sale_outstanding_details";
-        
+        public static string getdealercreditsaledetails = "api/dtplus/dealercredit/get_dealer_credit_sale_details";
+        public static string getcreditclosepayment = "api/dtplus/dealercredit/get_credit_close_payment";
+        public static string generateotpcreditclosepayment = "api/dtplus/dealercredit/generate_otp_credit_close_payment";
+        public static string validateotpupdatecreditclosepayment = "api/dtplus/dealercredit/validate_otp_update_credit_close_payment";
+
+
 
 
         #endregion
