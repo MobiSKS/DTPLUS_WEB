@@ -236,7 +236,8 @@ namespace HPCL.Service.Services
             }
             foreach (ALCardEntryDetails cardDetails in ashokLeylandCardCreationModel.ObjALCardEntryDetail)
             {
-                cardDetails.VechileNo = cardDetails.VechileNo.ToUpper();
+                if (!string.IsNullOrEmpty(cardDetails.VechileNo))
+                    cardDetails.VechileNo = cardDetails.VechileNo.ToUpper();
             }
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(ashokLeylandCardCreationModel), Encoding.UTF8, "application/json");
