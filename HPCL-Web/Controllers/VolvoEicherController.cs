@@ -108,5 +108,35 @@ namespace HPCL_Web.Controllers
             }
         }
 
+        public async Task<IActionResult> VEDealerOTCCardRequest()
+        {
+            var modals = await _volvoEicherService.VEDealerOTCCardRequest();
+            return View(modals);
+        }
+        [HttpPost]
+        public async Task<IActionResult> VEDealerOTCCardRequest(VEOTCCardRequestModel model)
+        {
+            model = await _volvoEicherService.VEDealerOTCCardRequest(model);
+
+            if (model.Internel_Status_Code == 1000)
+            {
+                return RedirectToAction("SuccessRedirectVEDealerOTCCardRequest", new { Message = model.Remarks });
+            }
+
+            return View(model);
+        }
+
+        public async Task<IActionResult> SuccessRedirectVEDealerOTCCardRequest(string Message)
+        {
+            ViewBag.Message = Message;
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> ResetVEDealerPassword(string UserName)
+        {
+            var result = await _volvoEicherService.ResetVEDealerPassword(UserName);
+            return Json(new { result = result });
+        }
     }
 }

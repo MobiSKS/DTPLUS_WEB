@@ -236,7 +236,8 @@ namespace HPCL.Service.Services
             }
             foreach (ALCardEntryDetails cardDetails in ashokLeylandCardCreationModel.ObjALCardEntryDetail)
             {
-                cardDetails.VechileNo = cardDetails.VechileNo.ToUpper();
+                if (!string.IsNullOrEmpty(cardDetails.VechileNo))
+                    cardDetails.VechileNo = cardDetails.VechileNo.ToUpper();
             }
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(ashokLeylandCardCreationModel), Encoding.UTF8, "application/json");
@@ -590,9 +591,15 @@ namespace HPCL.Service.Services
             else
             {
                 if (salesExecutiveEmployeeIDResponse.Data.Count > 0)
+                {
                     customerCardInfo.Reason = salesExecutiveEmployeeIDResponse.Data[0].Reason;
+                    customerCardInfo.SalesExecutiveEmployeeID = "";
+                }
                 else
-                    customerCardInfo.Reason = "Invalid Dealer Code";
+                {
+                    customerCardInfo.Reason = "";
+                    customerCardInfo.SalesExecutiveEmployeeID = "";
+                }
                 customerCardInfo.StatusCode = salesExecutiveEmployeeIDResponse.Internel_Status_Code;
             }
             return customerCardInfo;

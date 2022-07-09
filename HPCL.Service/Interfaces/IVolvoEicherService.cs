@@ -18,5 +18,8 @@ namespace HPCL.Service.Interfaces
         Task<SearchAlResult> SearchVEDealer(string dealerCode, string dtpCode);
         Task<InsertResponse> VEDealerEnrollmentUpdate(string getAllData);
         Task<CommonResponseData> CheckVEDealerCodeExists(string DealerCode);
+        Task<VEOTCCardRequestModel> VEDealerOTCCardRequest();
+        Task<VEOTCCardRequestModel> VEDealerOTCCardRequest(VEOTCCardRequestModel model);
+        Task<InsertResponse> ResetVEDealerPassword(string UserName);
     }
 }
