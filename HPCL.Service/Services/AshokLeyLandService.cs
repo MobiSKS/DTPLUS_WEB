@@ -590,9 +590,15 @@ namespace HPCL.Service.Services
             else
             {
                 if (salesExecutiveEmployeeIDResponse.Data.Count > 0)
+                {
                     customerCardInfo.Reason = salesExecutiveEmployeeIDResponse.Data[0].Reason;
+                    customerCardInfo.SalesExecutiveEmployeeID = "";
+                }
                 else
-                    customerCardInfo.Reason = "Invalid Dealer Code";
+                {
+                    customerCardInfo.Reason = "";
+                    customerCardInfo.SalesExecutiveEmployeeID = "";
+                }
                 customerCardInfo.StatusCode = salesExecutiveEmployeeIDResponse.Internel_Status_Code;
             }
             return customerCardInfo;
