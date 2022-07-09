@@ -64,7 +64,7 @@
                                     <a class="btn btn_primary" href="#" id="btnCancel" name="cancel" onclick="resetClick()">Reset</a>
                                 </div>
                                 <div class="px-md-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2">
-                                    <a class="btn btn_primary" href="#" id="btnCancel" name="cancel">Export to Excel</a>
+                                      <button class="btn btn_primary" type="button" onclick="tableToCSV()">Export to Excel</button>
                                 </div>
                             </div>
 
@@ -457,6 +457,66 @@
        
     }
 
+    function downloadCSVFile(csv_data,fileName) {
+
+        CSVFile = new Blob([csv_data], {
+            type: "text/excel"
+        });
+
+        var temp_link = document.createElement('a');
+
+        temp_link.download = fileName;
+        var url = window.URL.createObjectURL(CSVFile);
+        temp_link.href = url;
+
+        temp_link.style.display = "none";
+        document.body.appendChild(temp_link);
+
+        temp_link.click();
+        document.body.removeChild(temp_link);
+    }
+
+    function tableToCSV(){
+        var csv_data = [];
+        var rows = document.getElementById("authHdfcList").getElementsByTagName('tr');
+        if (rows.length > 0) {
+            for (var i = 0; i < rows.length; i++) {
+                var cols = rows[i].querySelectorAll('td,th');
+                var csvrow = [];
+                for (var j = 0; j < cols.length; j++) {
+
+                    if(j != 1 && j != 17){
+                        console.log("cols[j]", cols[j]);
+
+                        const checkBox = cols[j].querySelector('input[class="checkX"]');
+
+                        const custVal = cols[j].querySelector('span');
+                        const remarks = cols[j].querySelector('textarea');
+                        const amt = cols[j].querySelector('input');
+
+                        if(!checkBox){
+                            if(custVal){
+                                csvrow.push(custVal.innerText);
+                            }else if(remarks){
+                                csvrow.push(remarks.value);
+                            }else if(amt){
+                                csvrow.push(amt.value);
+                            }else{
+                                csvrow.push(cols[j].innerText.replace(/,/g, " "));
+                            } 
+                        }
+                    }
+                }
+
+                csv_data.push(csvrow.join(","));
+            }
+            csv_data = csv_data.join('\n');
+
+            var fileName = "HDFCCreditPouchRequestAuthorization.csv";
+
+            downloadCSVFile(csv_data,fileName);
+        }
+    }
 </script>
 
 <style>
