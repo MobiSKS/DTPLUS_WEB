@@ -206,7 +206,7 @@ namespace HPCL_Web.Controllers
         }
         public async Task<IActionResult> CreditClosePayment(string CustomerID,string MerchantID)
         {
-            DealerCreditClosePaymentModel dealerCreditClosePaymentModel = new DealerCreditClosePaymentModel();
+            DealerCreditClosePaymenDetails dealerCreditClosePaymentModel = new DealerCreditClosePaymenDetails();
             dealerCreditClosePaymentModel = await _dealerService.GetCreditClosePayment(CustomerID, MerchantID);
             return View(dealerCreditClosePaymentModel);
         }
