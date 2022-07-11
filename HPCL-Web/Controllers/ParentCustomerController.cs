@@ -137,8 +137,8 @@ namespace HPCL_Web.Controllers
         {
 
             ParentCustomerBalanceInfoModel customerBalanceResponse = new ParentCustomerBalanceInfoModel();
-            if (requestInfo.CustomerId != null && requestInfo.CustomerId != "")
-                customerBalanceResponse = await _customerService.GetCustomerBalanceInfo(requestInfo.CustomerId);
+            if (requestInfo.ParentCustomerID != null && requestInfo.ParentCustomerID != "")
+                customerBalanceResponse = await _customerService.GetCustomerBalanceInfo(requestInfo);
       
             return View(customerBalanceResponse);
         }

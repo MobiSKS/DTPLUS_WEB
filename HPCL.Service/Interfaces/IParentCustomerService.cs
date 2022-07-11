@@ -25,7 +25,7 @@ namespace HPCL.Service.Interfaces
         Task<ManageProfileViewModel> UpdateParentCustomer(ManageProfileViewModel cust);
         Task<ParentCustomerReportModel> SearchParentCustomerRequestStatus(string ZonalOfficeId, string RegionalOfficeId, string FromDate, string ToDate, string FormNumber,string SBUtypeId);
         Task<ParentCustomerReportModel> SearchParentCustomerRequestStatusReport(string FormNumber, string RequestId);
-        Task<ParentCustomerBalanceInfoModel> GetCustomerBalanceInfo(string CustomerID);
+        Task<ParentCustomerBalanceInfoModel> GetCustomerBalanceInfo(ParentCustomerBalanceInfoModel requestInfo);
         Task<ParentCustomerBalanceInfoModel> GetCustomerDetailsByCustomerID(string CustomerID);
         Task<CustomerCCMSBalanceModel> GetCCMSBalanceDetails(string CustomerID);
         Task<GetCustomerCardWiseBalanceResponse> GetCustomerCardWiseBalance(string CustomerID);
