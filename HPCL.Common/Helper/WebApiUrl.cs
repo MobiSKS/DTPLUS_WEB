@@ -569,5 +569,9 @@
         public static string ICICIRequestToAvailCheckUrl = "api/dtplus/ICICICreditPouch/chk_eligibility";
         public static string ICICIRequestToAvailEnrollUrl = "api/dtplus/ICICICreditPouch/insrt_cp_rqst_by_customer";
         #endregion
+
+        #region "Customer Search"
+        public static string CCPinResetUrl = "api/dtplus/customer/ccn_pin_reset";
+        #endregion
     }
 }
