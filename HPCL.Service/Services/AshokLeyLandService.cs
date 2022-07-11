@@ -398,7 +398,7 @@ namespace HPCL.Service.Services
                 addAddOnCard.VehicleVerifiedManually = Convert.ToBoolean(arrs[0].VehicleVerifiedManually);
             }
             //addAddOnCard.TableStringyfiedData = str;
-            if (arrs != null && arrs.Count > 0 && ((!string.IsNullOrEmpty(arrs[0].VechileNo))))
+            if (arrs != null && arrs.Count > 0 && ((!string.IsNullOrEmpty(arrs[0].CardNo))))
                 addAddOnCard.ObjCardDetail = arrs;
 
             addAddOnCard.ExternalVehicleAPIStatus = _configuration.GetSection("ExternalAPI:VehicleAPI").Value.ToString();
@@ -421,7 +421,7 @@ namespace HPCL.Service.Services
             addAddOnCard.CustomerId = arrs[0].CustomerId;
             addAddOnCard.NoOfCards = arrs[0].NoOfCards;
             //addAddOnCard.TableStringyfiedData = str;
-            if (arrs != null && arrs.Count > 0 && ((!string.IsNullOrEmpty(arrs[0].VechileNo))))
+            if (arrs != null && arrs.Count > 0 && ((!string.IsNullOrEmpty(arrs[0].CardNo))))
                 addAddOnCard.ObjCardDetail = arrs;
 
             addAddOnCard.ExternalVehicleAPIStatus = _configuration.GetSection("ExternalAPI:VehicleAPI").Value.ToString();
@@ -470,6 +470,14 @@ namespace HPCL.Service.Services
                         cardDetails.MobileNoMsg = "";
                         cardDetails.CardNoMsg = "";
                         cardDetails.VINNoMsg = "";
+                        if (string.IsNullOrEmpty(cardDetails.VechileNo))
+                        {
+                            cardDetails.VechileNo = "";
+                        }
+                        if (string.IsNullOrEmpty(cardDetails.MobileNo))
+                        {
+                            cardDetails.MobileNo = "";
+                        }
                     }
 
                     addAddOnCard.Message = customerInserCardResponse.Message;
@@ -733,7 +741,7 @@ namespace HPCL.Service.Services
             addAddOnCard.NoOfCards = arrs[0].NoOfCards;
             addAddOnCard.DealerCode = arrs[0].DealerCode;
 
-            if (arrs != null && arrs.Count > 0 && ((!string.IsNullOrEmpty(arrs[0].VechileNo))))
+            if (arrs != null && arrs.Count > 0 && ((!string.IsNullOrEmpty(arrs[0].CardNo))))
                 addAddOnCard.ObjALCardEntryDetail = arrs;
 
             addAddOnCard.ExternalVehicleAPIStatus = _configuration.GetSection("ExternalAPI:VehicleAPI").Value.ToString();
