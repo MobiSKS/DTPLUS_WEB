@@ -1062,5 +1062,28 @@ namespace HPCL.Service.Services
 
             return customerBalanceResponse;
         }
+        public async Task<ParentChildCustomerMappingViewModel> ParentChildCustomerMapping(ParentChildCustomerMappingRequest requestInfo)
+        {
+            ParentChildCustomerMappingViewModel parentChildCustomerMapping= new ParentChildCustomerMappingViewModel();
+
+            var Request = new ParentChildCustomerMappingRequest()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                ParentCustomerId = requestInfo.ParentCustomerId,
+               ObjParentCustomerDtl = requestInfo.ObjParentCustomerDtl,
+               CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(Request), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getparenttransactionssummary);
+
+            parentChildCustomerMapping = JsonConvert.DeserializeObject<ParentChildCustomerMappingViewModel>(response);
+
+            return parentChildCustomerMapping;
+        }
+        
     }
 }

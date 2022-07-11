@@ -529,6 +529,8 @@
         public static string insertDealerWiseVolvoEicherOtcCardRequest = "api/dtplus/VE/insert_dealer_wise_volvo_eicher_otc_card_request";
         public static string updateVECommunicationEmailResetPassword = "api/dtplus/VE/update_ve_communication_email_reset_password";
         public static string viewVolvoEicherDealerOtcCardDetail = "api/dtplus/VE/view_volvo_eicher_dealer_otc_card_detail";
+        public static string getVolvoEicherSalesExeEmpidAddonOtcCardMapping = "api/dtplus/VE/get_volvo_eicher_sales_exe_empid_addon_otc_card_mapping";
+        public static string insertVolvoEicherCustomer = "api/dtplus/VE/insert_volvo_eicher_customer";
         #endregion
 
         #region COMCO Manager
