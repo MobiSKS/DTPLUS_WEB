@@ -1,4 +1,5 @@
 ﻿using HPCL.Common.Models.RequestModel.Customer;
+using HPCL.Common.Models.RequestModel.ParentCustomer;
 using HPCL.Common.Models.ResponseModel.Customer;
 using HPCL.Common.Models.ResponseModel.ParentCustomer;
 using HPCL.Common.Models.ViewModel.ParentCustomer;
@@ -30,5 +31,6 @@ namespace HPCL.Service.Interfaces
         Task<CustomerCCMSBalanceModel> GetCCMSBalanceDetails(string CustomerID);
         Task<GetCustomerCardWiseBalanceResponse> GetCustomerCardWiseBalance(string CustomerID);
         Task<ParentCustomerTransactionViewModel> ParentCustomerTransactionDetails(ParentCustomerTransactionViewModel requestInfo);
+        Task<ParentChildCustomerMappingViewModel> ParentChildCustomerMapping(ParentChildCustomerMappingRequest requestInfo);
     }
 }
