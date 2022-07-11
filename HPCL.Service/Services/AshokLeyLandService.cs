@@ -398,7 +398,7 @@ namespace HPCL.Service.Services
                 addAddOnCard.VehicleVerifiedManually = Convert.ToBoolean(arrs[0].VehicleVerifiedManually);
             }
             //addAddOnCard.TableStringyfiedData = str;
-            if (arrs != null && arrs.Count > 0 && ((!string.IsNullOrEmpty(arrs[0].VechileNo))))
+            if (arrs != null && arrs.Count > 0 && ((!string.IsNullOrEmpty(arrs[0].CardNo))))
                 addAddOnCard.ObjCardDetail = arrs;
 
             addAddOnCard.ExternalVehicleAPIStatus = _configuration.GetSection("ExternalAPI:VehicleAPI").Value.ToString();
@@ -741,7 +741,7 @@ namespace HPCL.Service.Services
             addAddOnCard.NoOfCards = arrs[0].NoOfCards;
             addAddOnCard.DealerCode = arrs[0].DealerCode;
 
-            if (arrs != null && arrs.Count > 0 && ((!string.IsNullOrEmpty(arrs[0].VechileNo))))
+            if (arrs != null && arrs.Count > 0 && ((!string.IsNullOrEmpty(arrs[0].CardNo))))
                 addAddOnCard.ObjALCardEntryDetail = arrs;
 
             addAddOnCard.ExternalVehicleAPIStatus = _configuration.GetSection("ExternalAPI:VehicleAPI").Value.ToString();
