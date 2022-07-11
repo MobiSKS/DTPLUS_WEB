@@ -1,9 +1,6 @@
 ﻿@model HPCL.Common.Models.ViewModel.ParentCustomer.ParentCustomerBalanceInfoModel
 @using HPCL.Common.Resources
-@{
-    ViewData["Title"] = "Customer Balance Info";
-    Layout = "~/Views/Shared/_Layout.cshtml";
-}
+
 
 <div class="col-lg-12 px-0">
     <div class="bg-white p-2 p-md-4" style="overflow: hidden;">
@@ -62,33 +59,72 @@
         </form>
         @if (Model.Data.GetParentCustomerBalanceInfo.Count() > 0)
         {
-            <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3" id="dvCustomerBalance" style="width:100%;display:none;">
+            <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3" id="dvParentCustomerBalance" style="width:100%;">
+                <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Parent Customer Balance Info</p>
                 <table id="CustomerBalanceTbl" class="table1 table-striped d-md-table d-block table-bordered table-responsive mt-3" style="width:100%;">
                     <thead>
                         <tr>
-                            <th>Customer ID</th>
-                            <th>Customer Name</th>
-                            <th>Regional Office</th>
-                            <th>Card Balance</th>
+                            <th>Parent Customer ID</th>
+                            <th>Cash Balance</th>
                             <th>CCMS Balance</th>
                             <th>Drivestars</th>
                             <th>Expired Drivestars</th>
                             <th>Expiring Drivestars</th>
-
+                            <th>Daily Cash Limit</th>
+                            <th>Daily Cash Limit Balance</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach (var item in Model.Data.GetParentCustomerBalanceInfo)
                         {
                             <tr>
-                                <td>@item.CustomerID</td>
-                                <td>@item.CustomerName</td>
-                                <td>@item.RegionalOfficeName</td>
-                                <td><a class='CardNumber' href='#' onclick='ViewCardDetails(this)' role='tab'><span class='rowCCMSBalance'>@item.CardBalance</span></a></td>
-                                <td><a class='CCMSBalance' href='#' onclick='ViewCCMSInfo(this)' role='tab'><span class='rowCCMSBalance'>@item.CCMSLimitValue</span></a></td>
+                                <td><a class='basicInfo' href='#' onclick='ViewBasicInfo(this)' role='tab'><span class='basicInfo'>@item.ParentCustomerId</span></a></td>
+                                <td>@item.CardBalance</td>
+                                <td><a class='CCMSBalance' href='#' onclick='ViewCCMSBalanceDetails(this,@item.ParentCustomerId)' role='tab'><span class='rowCCMSBalance'>@item.CCMSBalance</span></a></td>
                                 <td>@item.Drivestars</td>
                                 <td>@item.ExpiredDrivestars</td>
                                 <td>@item.ExpiringDrivestars</td>
+                                <td>@item.DailyCashLimit</td>
+                                <td>@item.DailyCashLimitBalance</td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        }
+        @if (Model.Data.GetChildCustomerBalanceInfo.Count() > 0)
+        {
+            <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3" id="dvChildCustomerBalance" style="width:100%;">
+                <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Child Customer Balance Info</p>
+                <table id="CustomerBalanceTbl" class="table1 table-striped d-md-table d-block table-bordered table-responsive mt-3" style="width:100%;">
+                    <thead>
+                        <tr>
+                            <th>Child Customer ID</th>
+                            <th>Cash Balance</th>
+                            <th>CCMS Balance</th>
+                            <th>Drivestars</th>
+                            <th>Expired Drivestars</th>
+                            <th>Expiring Drivestars</th>
+                              <th>Daily Cash Limit</th>
+                            <th>Daily Cash Limit Balance</th>
+                            <th>Card-wise Balances</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Data.GetChildCustomerBalanceInfo)
+                        {
+                            <tr>
+                                <td><a class='basicInfo' href='#' onclick='ViewBasicInfo(this)' role='tab'><span class='basicInfo'>@item.ChildCustomerId</span></a></td>
+                                <td>@item.CardBalance</td>
+                                <td><a class='CCMSBalance' href='#' onclick='ViewCCMSBalanceDetails(this,@item.ChildCustomerId)' role='tab'><span class='rowCCMSBalance'>@item.CCMSBalance</span></a></td>
+                                <td>@item.Drivestars</td>
+                                <td>@item.ExpiredDrivestars</td>
+                                <td>@item.ExpiringDrivestars</td>
+                                <td>@item.DailyCashLimit</td>
+                                <td>@item.DailyCashLimitBalance</td>
+                                <td><a class='CardNumber' href='#' onclick='ViewCardDetails(this,@item.ChildCustomerId)' role='tab'><i class="fa fa-search" aria-hidden="true"></i></a></td>
                             </tr>
                         }
 
@@ -189,9 +225,9 @@
 
 
 
-        function ViewCardDetails(o) {
+        function ViewCardDetails(o,customerId) {
 
-            var customerId = $("#CustomerId").val();
+            //var customerId = $("#CustomerId").val();
             if (customerId == "") {
                 return (false);
             }
@@ -230,7 +266,7 @@
 
             var customerId = o.innerText;
             $.ajax({
-                url: "@Url.Action("GetCustomerDetailsByCustomerID", "Customer")",
+                url: "@Url.Action("GetCustomerDetailsByCustomerID", "ParentCustomer")",
                 type: "GET",
                 contentType: "application/json; charset=utf-8",
                 data: { CustomerID: customerId },
@@ -252,9 +288,9 @@
             });
 
         };
-        function ViewCCMSBalanceDetails(o) {
+        function ViewCCMSBalanceDetails(o,customerId) {
 
-            var customerId = $("#CustomerId").val();
+            //var customerId = $("#CustomerId").val();
             if (customerId == "") {
                 return (false);
             }

@@ -1034,12 +1034,33 @@ namespace HPCL.Service.Services
             var ResponseContent = await _requestService.CommonRequestService(content, WebApiUrl.getparentcustomerdetailbycustomerId);
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
             var searchRes = obj["Data"].Value<JObject>();
-            var custResult = searchRes["GetCustomerDetails"].Value<JArray>();
+            var custResult = searchRes["GetParentCustomerDetails"].Value<JArray>();
 
             List<ParentCustomerBalanceInfoModel> customerList = custResult.ToObject<List<ParentCustomerBalanceInfoModel>>();
 
             ParentCustomerBalanceInfoModel Customer = customerList.Where(t => t.CustomerId == CustomerID).FirstOrDefault();
             return Customer;
+        }
+        public async Task<ParentCustomerTransactionViewModel> ParentCustomerTransactionDetails(ParentCustomerTransactionViewModel requestInfo)
+        {
+            ParentCustomerTransactionViewModel customerBalanceResponse = new ParentCustomerTransactionViewModel();
+
+            var Request = new GetCustomerBalanceRequest()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                ParentCustomerID = requestInfo.ParentCustomerID,
+                ChildCustomerId = requestInfo.ChildCustomerId
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(Request), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getparenttransactionssummary);
+
+            customerBalanceResponse = JsonConvert.DeserializeObject<ParentCustomerTransactionViewModel>(response);
+
+            return customerBalanceResponse;
         }
     }
 }
