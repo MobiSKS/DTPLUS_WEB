@@ -138,5 +138,18 @@ namespace HPCL_Web.Controllers
             var result = await _volvoEicherService.ResetVEDealerPassword(UserName);
             return Json(new { result = result });
         }
+        public async Task<IActionResult> ViewVEDealerUnmappedOTCCardDetails()
+        {
+            ViewVEDealerOTCCardDetailsModel Model = new ViewVEDealerOTCCardDetailsModel();
+            Model = await _volvoEicherService.ViewVEDealerUnmappedOTCCardDetails();
+
+            return View(Model);
+        }
+        public async Task<IActionResult> GetViewVEOTCCardDealerAllocation(string DealerCode, string CardNo)
+        {
+            var modals = await _volvoEicherService.GetViewVEOTCCardDealerAllocation(DealerCode, CardNo);
+            return PartialView("~/Views/VolvoEicher/_VEOTCCardsDealerAllocationTable.cshtml", modals);
+        }
+
     }
 }

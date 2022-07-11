@@ -958,7 +958,7 @@ namespace HPCL.Service.Services
             return parentCustomerReportModel;
         }
 
-        public async Task<ParentCustomerBalanceInfoModel> GetCustomerBalanceInfo(string CustomerID)
+        public async Task<ParentCustomerBalanceInfoModel> GetCustomerBalanceInfo(ParentCustomerBalanceInfoModel requestInfo)
         {
             ParentCustomerBalanceInfoModel customerBalanceResponse = new ParentCustomerBalanceInfoModel();
 
@@ -967,7 +967,8 @@ namespace HPCL.Service.Services
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
-                CustomerID = CustomerID
+                ParentCustomerID = requestInfo.ParentCustomerID,
+                ChildCustomerId=requestInfo.ChildCustomerId
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(Request), Encoding.UTF8, "application/json");
