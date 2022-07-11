@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace HPCL.Common.Models.ViewModel.Dealer
 {
-    public class DealerCreditClosePaymentModel:CommonResponseBase
+    public class DealerCreditClosePaymentModel : CommonResponseBase
     {
         public DealerCreditClosePaymentModel()
         {
             Data = new List<DealerCreditClosePaymenDetails>();
         }
-       public List<DealerCreditClosePaymenDetails> Data { get; set; }
+        public List<DealerCreditClosePaymenDetails> Data { get; set; }
 
     }
     public class DealerCreditClosePaymenDetails
@@ -27,6 +27,7 @@ namespace HPCL.Common.Models.ViewModel.Dealer
         public string LimitBalance { get; set; }
         public string Amount { get; set; }
         public string SourceofPayment { get; set; }
-        public string OneTP { get; set; }
+        public string OTP { get; set; }
+        public string CustomerID { get; set; }
     }
 }
