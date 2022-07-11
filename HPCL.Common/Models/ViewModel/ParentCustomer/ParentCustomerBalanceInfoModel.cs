@@ -129,28 +129,30 @@ namespace HPCL.Common.Models.ViewModel.ParentCustomer
     }
     public class GetParentCustomerBalanceInfo
     {
-        public string CustomerID { get; set; }
+        public string ParentCustomerId { get; set; }
         public string CardBalance { get; set; }
-        public string CCMSLimitValue { get; set; }
+        public string CCMSBalance { get; set; }
         public string Drivestars { get; set; }
         public string ExpiredDrivestars { get; set; }
         public string ExpiringDrivestars { get; set; }
         public string CashPurseLimit { get; set; }
         public string DailyCashLimitBalance { get; set; }
+        public string DailyCashLimit { get; set; }
         public string IndividualOrgName { get; set; }
         public string RegionalOfficeName { get; set; }
         public string CustomerName { get; set; }
     }
     public class GetChildCustomerBalanceInfo
     {
-        public string CustomerID { get; set; }
+        public string ChildCustomerId { get; set; }
         public string CardBalance { get; set; }
-        public string CCMSLimitValue { get; set; }
+        public string CCMSBalance { get; set; }
         public string Drivestars { get; set; }
         public string ExpiredDrivestars { get; set; }
         public string ExpiringDrivestars { get; set; }
         public string CashPurseLimit { get; set; }
         public string DailyCashLimitBalance { get; set; }
+        public string DailyCashLimit { get; set; }
         public string IndividualOrgName { get; set; }
         public string RegionalOfficeName { get; set; }
         public string CustomerName { get; set; }

@@ -514,7 +514,8 @@
         public static string getparentcustomercardwisebalance = "api/dtplus/ParentCustomer/get_parent_customer_card_wise_balances";
         public static string getparentccmsbalanceinfoforcustomerId = "api/dtplus/ParentCustomer/get_parent_ccms_balance_info_for_customerId";
         public static string getparentcustomerdetailbycustomerId = "api/dtplus/ParentCustomer/get_parent_customer_detail_by_customerId";
-        
+        public static string getparenttransactionssummary = "api/dtplus/ParentCustomer/get_parent_transactions_summary";
+
 
         #endregion
 
