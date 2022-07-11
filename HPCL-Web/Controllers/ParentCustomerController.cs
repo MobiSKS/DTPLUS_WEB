@@ -145,19 +145,30 @@ namespace HPCL_Web.Controllers
         public async Task<IActionResult> GetCustomerCardWiseBalance(string CustomerID)
         {
             var modals = await _customerService.GetCustomerCardWiseBalance(CustomerID);
+            ViewBag.CustomerID = CustomerID;
             return PartialView("~/Views/ParentCustomer/_ParentCustomerCardWiseBalancesTbl.cshtml", modals);
         }
         public async Task<IActionResult> GetCCMSBalanceDetails(string CustomerID)
         {
 
             var modals = await _customerService.GetCCMSBalanceDetails(CustomerID);
+            ViewBag.CustomerID = CustomerID;
             return PartialView("~/Views/ParentCustomer/_ParentCustomerCCMSBalanceDetails.cshtml", modals);
         }
         public async Task<IActionResult> GetCustomerDetailsByCustomerID(string CustomerID)
         {
             ParentCustomerBalanceInfoModel result = await _customerService.GetCustomerDetailsByCustomerID(CustomerID);
-            return PartialView("~/Views/Customer/_CustomerSummaryView.cshtml", result);
+            return PartialView("~/Views/ParentCustomer/_CustomerSummaryView.cshtml", result);
          
+        }
+        public async Task<IActionResult> ParentCustomerTransactionDetails(ParentCustomerTransactionViewModel requestInfo)
+        {
+
+            ParentCustomerTransactionViewModel customerBalanceResponse = new ParentCustomerTransactionViewModel();
+            if (requestInfo.ParentCustomerID != null && requestInfo.ParentCustomerID != "")
+                customerBalanceResponse = await _customerService.ParentCustomerTransactionDetails(requestInfo);
+
+            return View(customerBalanceResponse);
         }
     }
 }
