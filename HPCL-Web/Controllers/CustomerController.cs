@@ -624,7 +624,12 @@ namespace HPCL_Web.Controllers
         {
             var result = await _commonActionService.CheckPanCardDuplicationByDistrictidForCustomerUpdate(DistrictId, IncomeTaxPan, FormNumber);
 
-            return Json(result);
+            return Json(new { customer = result });
+        }
+        public async Task<IActionResult> GetAllCustomersWithDuplicatePANForCustomerUpdate(string DistrictId, string IncomeTaxPan, string FormNumber)
+        {
+            var modals = await _commonActionService.CheckPanCardDuplicationByDistrictidForCustomerUpdate(DistrictId, IncomeTaxPan, FormNumber);
+            return PartialView("~/Views/Customer/_ViewCustomersWithDuplicatePANForUpdate.cshtml", modals);
         }
 
         [HttpPost]

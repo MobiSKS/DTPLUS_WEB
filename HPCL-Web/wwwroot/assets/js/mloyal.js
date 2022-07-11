@@ -399,6 +399,14 @@ function showregAddress() {
                 ret = false;
             }
         }
+        else if (document.getElementById("IsDuplicatePanNo").value == "0")
+        {
+            if (document.getElementById("AllowPanDuplication").value == "Y")
+            {
+                document.getElementById("lblPanCardRemarks").style.display = "block";
+                document.getElementById("PanCardRemarks").style.display = "block";
+            }
+        }
         else
         {
             document.getElementById("PanCardRemarks").value = "";
