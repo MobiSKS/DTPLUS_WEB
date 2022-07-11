@@ -262,15 +262,19 @@
      var addBack;
 
           function idFrontClick(){
-                var link = document.createElement('a');
-                link.href = $('#idPfrontImg img')[0].src;
-                link.download = $('#idPfrontImg img').attr('src');
+                var var link = document.createElement('a');
+                link.href = $('#idPbackImg img')[0].src;
+                link.download = $('#idPbackImg img').attr('src');
                 document.body.appendChild(link);
                 link.click();     
                 document.body.removeChild(link);
           }
 
-          
+          $( "#idFrontBtn" ).click(function() {
+              $(this).download = $('#idPfrontImg a').attr('href');
+          });
+
+
           function idbackClick(){
                 var link = document.createElement('a');
                 link.href = $('#idPbackImg img')[0].src;
@@ -299,8 +303,7 @@
                 link.click();     
                 document.body.removeChild(link);
           }
- function adfimgClick() 
-    {
+ function adfimgClick(){
         var upath = $('#idAfrontImg img')[0].src;
         var url = '@Html.Raw(@Url.Action("CreateFileResult","Customer", new { Filepath="zzzzxx"  }))';
         //url = url.replace("zzzzxx", encodeURIComponent(upath));
@@ -525,7 +528,7 @@
                          if (regexImage.test($(this).val())) 
                          {
                              $("#idPfrontImg").show();
-                             $("#idPfrontImg").append("<img class='imgZoom'/><button class='btn btn_primary' style='margin-top:2%' type='button' onclick='idFrontClick()' id='idFrontBtn'>Download Image</button>");
+                             $("#idPfrontImg").append("<img class='imgZoom'/><button class='btn btn_primary' style='margin-top:2%' type='button' onclick='idbackClick()' id='idBack_btn'>Download Image</button>");
                              var reader = new FileReader();
                              reader.onload = function (e) {
                                  $("#idPfrontImg img").attr("src", e.target.result);
@@ -537,12 +540,13 @@
                          else
                          {
                              $("#idPfrontImg").show();
-                             $("#idPfrontImg").append("<img /><button class='btn btn_primary' style='margin-top:2%' type='button' onclick='idFrontClick()' id='idFrontBtn'>Download File</button>");
+                             $("#idPfrontImg").append("<img /><a class='btn btn_primary' style='margin-top:2%' type='button' id='idFrontBtn'>Download File</a>");
                              var reader = new FileReader();
                              reader.onload = function (e) {
                                  $("#idPfrontImg img").attr("src", e.target.result);
                                  $("#idPfrontImg img").attr("style", "width: 200px");
                                  $("#idPfrontImg img").attr("style", "height: 100px");
+                                 $("#idPfrontImg a").attr("href", e.target.result);
                              }
                              reader.readAsDataURL($(this)[0].files[0]);
                          }

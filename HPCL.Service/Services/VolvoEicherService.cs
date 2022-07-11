@@ -6,6 +6,7 @@ using HPCL.Common.Models.RequestModel.VolvoEicher;
 using HPCL.Common.Models.ResponseModel.AshokLayland;
 using HPCL.Common.Models.ResponseModel.Customer;
 using HPCL.Common.Models.ResponseModel.CustomerManage;
+using HPCL.Common.Models.ResponseModel.VolvoEicher;
 using HPCL.Common.Models.ViewModel.AshokLeyLand;
 using HPCL.Common.Models.ViewModel.VolvoEicher;
 using HPCL.Service.Interfaces;
@@ -420,6 +421,33 @@ namespace HPCL.Service.Services
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
             InsertResponse result = obj.ToObject<InsertResponse>();
             return result;
+        }
+        public async Task<ViewVEDealerOTCCardDetailsModel> ViewVEDealerUnmappedOTCCardDetails()
+        {
+            ViewVEDealerOTCCardDetailsModel model = new ViewVEDealerOTCCardDetailsModel();
+            model.Remarks = "";
+            return model;
+        }
+        public async Task<VEOTCCardDealerAllocationResponse> GetViewVEOTCCardDealerAllocation(string DealerCode, string CardNo)
+        {
+            var searchBody = new GetALOTCCardDealerAllocationRequestModel()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                DealerCode = DealerCode,
+                CardNo = string.IsNullOrEmpty(CardNo) ? "" : CardNo
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+
+            var ResponseContent = await _requestService.CommonRequestService(content, WebApiUrl.viewVolvoEicherDealerOtcCardDetail);
+
+            VEOTCCardDealerAllocationResponse response = new VEOTCCardDealerAllocationResponse();
+
+            response = JsonConvert.DeserializeObject<VEOTCCardDealerAllocationResponse>(ResponseContent);
+
+            return response;
         }
 
     }
