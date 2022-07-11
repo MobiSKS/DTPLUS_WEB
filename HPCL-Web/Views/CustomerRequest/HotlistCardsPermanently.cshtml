@@ -178,75 +178,84 @@
             document.getElementById("successUpdate").style.display = "none";
             document.getElementById("responseTbl").style.display = "none";
 
-            var searchGrid = res.searchList.data;
+            if(res.searchList.data[0].status == 1){
 
-            $('#CardSearch').DataTable().clear().destroy();
+                var searchGrid = res.searchList.data;
 
-            var tbl = $('#CardSearch').DataTable({
-                paging: true,
-                searching: false,
-                stateSave: true,
-                "lengthMenu": [10, 20, 50, 100, 200, 500, 1000, 2000],
-                "autoWidth": false,
-                "oLanguage": {
-                    "sLengthMenu": "Display _MENU_ Records",
-                    "info": "Showing _START_ to _END_ of _TOTAL_ Records",
+                $('#CardSearch').DataTable().clear().destroy();
+
+                var tbl = $('#CardSearch').DataTable({
+                    paging: true,
+                    searching: false,
+                    stateSave: true,
+                    "lengthMenu": [10, 20, 50, 100, 200, 500, 1000, 2000],
+                    "autoWidth": false,
+                    "oLanguage": {
+                        "sLengthMenu": "Display _MENU_ Records",
+                        "info": "Showing _START_ to _END_ of _TOTAL_ Records",
+                    }
+                });
+
+                for (var i = 0; i < searchGrid.length; i++) {
+
+                    var yrOfReg;
+
+                    if((searchGrid[i].yearOfRegistration) == '0'){
+                        yrOfReg = '';
+                    }else{
+                        yrOfReg = searchGrid[i].yearOfRegistration;
+                    }
+
+                    var srNumber = (i+1);
+                    var pressCheck = "<input type='checkbox' class='checkEnable' name='enableRow'>";
+                    var cardNo = "<span class='getCardNo'>" + (searchGrid[i].cardNo || '') + "</span>";
+                    var userName = "<input class='form-control' type='text' value='" + (searchGrid[i].vechileNo || '') + "' readonly='readonly'>";
+                    var vehicleType = "<select readonly='readonly' disabled='disabled' class='form-control'><option value='" + (searchGrid[i].vechileType || '') + "'>" + (searchGrid[i].vechileType || '') + "</option></select>";
+                    var yrOfReg = "<input class='form-control' type='text' value='" + (yrOfReg) + "' readonly='readonly'>";
+                    var manufacturer = "<input class='form-control' type='text' value='" + (searchGrid[i].manufacturer || '') + "' readonly='readonly'>";
+                    var ownedAttched = "<select readonly='readonly' disabled='disabled' class='form-control'><option value='" + (searchGrid[i].ownedORAttachedId || '') + "'>" + (searchGrid[i].ownedORAttachedName || '') + "</option></select>";
+                    var cardCategory = "<select readonly='readonly' disabled='disabled' class='form-control'><option value='" + (searchGrid[i].cardCategory || '') + "'>" + (searchGrid[i].cardCategory || '') + "</option></select>";
+                    var hotlistReason = "<div style='width:160px;display:flex;'><select onblur='reasonOnChange(this," + (i) + ")' readonly='readonly' disabled='disabled' class='form-control htlstReason'><option value='0'>Select</option></select><i style='display:none;margin-top:10px;' class='fa fa-exclamation-triangle errss' id='hotlistreason_error_"+i+"' aria-hidden='true'></i></div>";
+
+                    tbl.row.add([
+                        srNumber,
+                        pressCheck,
+                        cardNo,
+                        userName,
+                        vehicleType,
+                        yrOfReg,
+                        manufacturer,
+                        ownedAttched,
+                        cardCategory,
+                        hotlistReason
+                    ]).draw();
                 }
-            });
 
-            for (var i = 0; i < searchGrid.length; i++) {
+                $.ajax({
+                    type: 'POST',  // http method
+                    url: '@Url.Action("GetHotlistReason", "Common")',
+                    dataType: "json",
+                    success: function (data, status, xhr) {
 
-                var yrOfReg;
+                        console.log(data);
 
-                if((searchGrid[i].yearOfRegistration) == '0'){
-                    yrOfReg = '';
-                }else{
-                    yrOfReg = searchGrid[i].yearOfRegistration;
-                }
+                        $.each(data.hotlistReasonList, function (i, option) {
+                            $("<option/>").val(option.statusId).text(option.statusName).appendTo(".htlstReason");
+                        });
+                    },
+                    error: function (jqXhr, textStatus, errorMessage) {
+                        alert("Error Populating Hotlist Reason Type");
+                    }
+                });
 
-                var srNumber = (i+1);
-                var pressCheck = "<input type='checkbox' class='checkEnable' name='enableRow'>";
-                var cardNo = "<span class='getCardNo'>" + (searchGrid[i].cardNo || '') + "</span>";
-                var userName = "<input class='form-control' type='text' value='" + (searchGrid[i].vechileNo || '') + "' readonly='readonly'>";
-                var vehicleType = "<select readonly='readonly' disabled='disabled' class='form-control'><option value='" + (searchGrid[i].vechileType || '') + "'>" + (searchGrid[i].vechileType || '') + "</option></select>";
-                var yrOfReg = "<input class='form-control' type='text' value='" + (yrOfReg) + "' readonly='readonly'>";
-                var manufacturer = "<input class='form-control' type='text' value='" + (searchGrid[i].manufacturer || '') + "' readonly='readonly'>";
-                var ownedAttched = "<select readonly='readonly' disabled='disabled' class='form-control'><option value='" + (searchGrid[i].ownedORAttachedId || '') + "'>" + (searchGrid[i].ownedORAttachedName || '') + "</option></select>";
-                var cardCategory = "<select readonly='readonly' disabled='disabled' class='form-control'><option value='" + (searchGrid[i].cardCategory || '') + "'>" + (searchGrid[i].cardCategory || '') + "</option></select>";
-                var hotlistReason = "<div style='width:160px;display:flex;'><select onblur='reasonOnChange(this," + (i) + ")' readonly='readonly' disabled='disabled' class='form-control htlstReason'><option value='0'>Select</option></select><i style='display:none;margin-top:10px;' class='fa fa-exclamation-triangle errss' id='hotlistreason_error_"+i+"' aria-hidden='true'></i></div>";
-
-                tbl.row.add([
-                    srNumber,
-                    pressCheck,
-                    cardNo,
-                    userName,
-                    vehicleType,
-                    yrOfReg,
-                    manufacturer,
-                    ownedAttched,
-                    cardCategory,
-                    hotlistReason
-                ]).draw();
+                document.getElementById("UpdateGrid").style.display = "block";
+            }else{
+                document.getElementById("UpdateGrid").style.display = "none";
+                document.getElementById("successUpdate").style.display = "none";
+                $("#noRecord").html("");
+                $("#noRecord").append("<span>" + res.searchList.data[0].reason + "</span>");
+                document.getElementById("noRecord").style.display = "block";
             }
-
-            $.ajax({
-                type: 'POST',  // http method
-                url: '@Url.Action("GetHotlistReason", "Common")',
-                dataType: "json",
-                success: function (data, status, xhr) {
-
-                    console.log(data);
-
-                    $.each(data.hotlistReasonList, function (i, option) {
-                        $("<option/>").val(option.statusId).text(option.statusName).appendTo(".htlstReason");
-                    });
-                },
-                error: function (jqXhr, textStatus, errorMessage) {
-                    alert("Error Populating Hotlist Reason Type");
-                }
-            });
-
-            document.getElementById("UpdateGrid").style.display = "block";
         } else {
             document.getElementById("UpdateGrid").style.display = "none";
             document.getElementById("successUpdate").style.display = "none";
