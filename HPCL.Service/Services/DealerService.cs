@@ -327,7 +327,7 @@ namespace HPCL.Service.Services
                 UserIp = CommonBase.userip,
                 CustomerID = CustomerID == null ? "" : CustomerID,
                 MerchantID = MerchantID,
-                FromDate = SearchDate,
+                SearchDate = SearchDate,
                 
             };
 
