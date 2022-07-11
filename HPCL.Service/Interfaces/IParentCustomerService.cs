@@ -29,5 +29,6 @@ namespace HPCL.Service.Interfaces
         Task<ParentCustomerBalanceInfoModel> GetCustomerDetailsByCustomerID(string CustomerID);
         Task<CustomerCCMSBalanceModel> GetCCMSBalanceDetails(string CustomerID);
         Task<GetCustomerCardWiseBalanceResponse> GetCustomerCardWiseBalance(string CustomerID);
+        Task<ParentCustomerTransactionViewModel> ParentCustomerTransactionDetails(ParentCustomerTransactionViewModel requestInfo);
     }
 }
