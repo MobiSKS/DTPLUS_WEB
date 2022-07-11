@@ -1,5 +1,6 @@
 ﻿using HPCL.Common.Helper;
 using HPCL.Common.Models.RequestModel.Customer;
+using HPCL.Common.Models.RequestModel.ParentCustomer;
 using HPCL.Common.Models.ViewModel.ParentCustomer;
 using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -169,6 +170,21 @@ namespace HPCL_Web.Controllers
                 customerBalanceResponse = await _customerService.ParentCustomerTransactionDetails(requestInfo);
 
             return View(customerBalanceResponse);
+        }
+        public async Task<IActionResult> ParentChildCustomerMapping()
+        {
+            ParentChildCustomerMappingViewModel parentChildCustomerMapping = new ParentChildCustomerMappingViewModel();
+            return View(parentChildCustomerMapping);
+        }
+            [HttpPost]
+        public async Task<IActionResult> ParentChildCustomerMapping(ParentChildCustomerMappingRequest requestInfo)
+        {
+
+            ParentChildCustomerMappingViewModel parentChildCustomerMapping = new ParentChildCustomerMappingViewModel();
+            if (requestInfo.ParentCustomerId != null && requestInfo.ParentCustomerId != "")
+                parentChildCustomerMapping = await _customerService.ParentChildCustomerMapping(requestInfo);
+
+            return View(parentChildCustomerMapping);
         }
     }
 }
