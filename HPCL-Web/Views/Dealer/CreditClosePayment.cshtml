@@ -1,4 +1,4 @@
-﻿@model HPCL.Common.Models.ViewModel.Dealer.DealerCreditClosePaymentModel
+﻿@model HPCL.Common.Models.ViewModel.Dealer.DealerCreditClosePaymenDetails
 <div class="col-lg-12 px-0">
     <div class="bg-white p-2 p-md-4">
         <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
@@ -18,7 +18,8 @@
                                         <label class="font-weight-normal col-md-5 col-12">Merchant ID :</label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Model.Data[0].MerchantID
+                                                 @Html.TextBoxFor(m => m.MerchantID, new {  @class = "form-control",@readonly=true })
+                                                  <span class="error" id="MerchantID_error"></span>
                                             </div>
                                         </div>
 
@@ -31,8 +32,7 @@
                                         <label class="font-weight-normal col-md-5 col-12">Retail Outlet Name :</label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-
-                                                @Model.Data[0].RetailOutletName
+                                                 @Html.TextBoxFor(m => m.RetailOutletName, new {  @class = "form-control",@readonly=true })
                                             </div>
                                         </div>
 
@@ -45,7 +45,8 @@
                                         <label class="font-weight-normal col-md-5 col-12">Customer ID :</label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Model.Data[0].CustomerId
+                                                @Html.TextBoxFor(m => m.CustomerID, new {  @class = "form-control",@readonly=true })
+                                                <span class="error" id="CustomerID_error"></span>
                                             </div>
                                         </div>
 
@@ -58,7 +59,7 @@
                                         <label class="font-weight-normal col-md-5 col-12">Customer Name :</label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Model.Data[0].IndividualOrgName
+                                                @Html.TextBoxFor(m => m.IndividualOrgName, new {  @class = "form-control",@readonly=true })
                                             </div>
                                         </div>
 
@@ -71,7 +72,7 @@
                                         <label class="font-weight-normal col-md-5 col-12">Outstanding :</label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Model.Data[0].Outstanding
+                                                @Html.TextBoxFor(m => m.Outstanding, new {  @class = "form-control",@readonly=true })
                                             </div>
                                         </div>
 
@@ -84,7 +85,7 @@
                                         <label class="font-weight-normal col-md-5 col-12">Limit :</label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Model.Data[0].Limit
+                                                @Html.TextBoxFor(m => m.Limit, new {  @class = "form-control",@readonly=true })
                                             </div>
                                         </div>
 
@@ -97,7 +98,7 @@
                                         <label class="font-weight-normal col-md-5 col-12">Limit Balance :</label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Model.Data[0].LimitBalance
+                                                @Html.TextBoxFor(m => m.LimitBalance, new {  @class = "form-control",@readonly=true })
                                             </div>
                                         </div>
 
@@ -110,7 +111,7 @@
                                         <label class="font-weight-normal col-md-5 col-12">Amount<sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.Data[0].Amount, new { @class = "form-control"})
+                                                @Html.TextBoxFor(m => m.Amount, new { @class = "form-control",maxlength="10"})
 
                                                 <span class="error" id="amount_error"></span>
                                             </div>
@@ -125,7 +126,7 @@
                                         <label class="font-weight-normal col-md-5 col-12">Source of Payment<sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.DropDownListFor(m => m.Data[0].SourceofPayment, new[]{
+                                                @Html.DropDownListFor(m => m.SourceofPayment, new[]{
                                                 new SelectListItem(){ Text = "CCMS", Value = "CCMS",Selected=true},
                                                 }, null, new { @class = "form-control" ,disabled="true"})
 
@@ -152,6 +153,8 @@
                                 </div>
 
                             </div>
+                            <div class="clearfix"></div>
+                            <div id="errMsg" class="mt-3 text-center alert alert-danger" style="display:none;"></div>
                             <div id="show_details" style="display:none;">
                                 <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Verify One Time Password</p>
                                 <div class="d-flex align-items-center flex-wrap py-3">
@@ -160,7 +163,7 @@
                                             <label class="font-weight-normal col-md-5 col-12">OTP<sup class="text-danger">*</sup></label>
                                             <div class="col-md-7 col-12">
                                                 <div class="custom_select">
-                                                    @Html.TextBoxFor(m => m.Data[0].OneTP, new { @class = "form-control"})
+                                                    @Html.TextBoxFor(m => m.OTP, new { @class = "form-control"})
 
                                                     <span class="error" id="otp_error"></span>
                                                 </div>
@@ -184,6 +187,8 @@
                                     </div>
 
                                 </div>
+                                 <div class="clearfix"></div>
+                                <div id="otperrMsg" class="mt-3 text-center alert alert-danger" style="display:none;"></div>
                             </div>
                         </div>
                     </div>
@@ -197,40 +202,283 @@
 </div>
 <script type="text/javascript">
      $("#btnSubmit").on("click",(function(e){
+         $("#errMsg").attr("style","display:none");
          var customerId = $("#CustomerID").val();
          var merchantId=$("#MerchantID").val();
-          var fromdate = $("#FromDate").val();
-          var todate = $("#ToDate").val();
-         var flag = "Y";
-          if (fromdate == "") {
-              $("#fromDate_error").attr("style", "display:block");
-              $("#fromDate_error").html("Select From Date");
-              flag = "N";
+          var amount=$("#Amount").val().trim();
+          var sourceofPayment=$("#SourceofPayment").val();
+          var outstanding = $("#Outstanding").val();
+         var limitBalance = $("#LimitBalance").val();
+          var flag="Y";
+          if(amount=="")
+          {
+               $("#amount_error").html("Please enter Amount");
+               $("#amount_error").attr("style","display:block");
+               flag = "N";
+              
           }
-
-          if (todate == "") {
-              $("#toDate_error").attr("style", "display:block");
-              $("#toDate_error").html("Select To Date");
-              flag = "N";
+          else if(amount=="0"){
+               $("#amount_error").html("Invalid Amount(max 10 digit including decimal)");
+               $("#amount_error").attr("style","display:block");
+               flag = "N";
           }
-          if (fromdate != "" && todate != "") {
-              flag = checkDates("fromDate_error");
+          else{
+              if(amount.trim() != ''){
+                if(amount.length>10){
+                    $("#amount_error").html("Invalid Amount(max 10 digit including decimal)");
+                    $("#amount_error").attr("style","display:block");
+                    flag = "N";
+                }
+                else if(parseFloat(amount)<1){
+                    $("#amount_error").html("Amount should valid numeric value grater than or equal to 1.");
+                    $("#amount_error").attr("style","display:block");
+                    flag = "N";
+                }
+                else if(parseFloat(amount)>parseFloat(outstanding)){
+                    $("#amount_error").html("Amount can't be greater than outstanding amount.");
+                    $("#amount_error").attr("style","display:block");
+                    flag="N";
+                }
+                else if(parseFloat(amount)>parseFloat(limitBalance)){
+                    $("#amount_error").html("Amount can't be greater than limit amount.");
+                    $("#amount_error").attr("style","display:block");
+                    flag="N";
+                }
+              }
           }
           if(flag=="Y"){
+              if(confirm("Do you want to process payment of Rs. "+amount+" for Customer ID "+customerId)){
+                  var reqModel= { CustomerID: customerId, MerchantID: merchantId, Amount: amount, SourceofPayment: sourceofPayment};
+                  $.ajax({
+                    type: 'POST',  // http method
+                    url: '@Url.Action("GenerateOTPCreditClosePayment", "Dealer")',
+                    data: JSON.stringify(reqModel),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "JSON",
+                    success: function (res) {
+                        var data = res.data[0];
+                        if(data.status=="1"){
+                            $("#show_details").attr("style","display:block");
+                            console.log(data.otp);
+                        }
+                        else{
+                            $("#errMsg").html(data.reason);
+                            $("#errMsg").attr("style","display:block");
+                        
+                        }
+                        
+                    },
+                    error: function (jqXhr, textStatus, errorMessage) {
+                        debugger;
+                        alert("Error" + errorMessage);
+                    }
+                });
+            }
+        }
+        else{
+            e.preventDefault();
+        }
+     }));
+
+      $("#Amount").on("blur", function () {
+         var amount = $("#Amount").val();
+         var outstanding = $("#Outstanding").val();
+         var limitBalance = $("#LimitBalance").val();
+         
+         if(amount=="")
+          {
+               $("#amount_error").html("Please enter Amount");
+               $("#amount_error").attr("style","display:block");
+              
+          }
+          else if(amount=="0"){
+               $("#amount_error").html("Invalid Amount(max 10 digit including decimal)");
+               $("#amount_error").attr("style","display:block");
+          }
+          else{
+              if(amount.trim() != ''){
+                if(amount.length>10){
+                    $("#amount_error").html("Invalid Amount(max 10 digit including decimal)");
+                    $("#amount_error").attr("style","display:block");
+                }
+                else if(parseFloat(amount)<1){
+                    $("#amount_error").html("Amount should valid numeric value grater than or equal to 1.");
+                    $("#amount_error").attr("style","display:block");
+                    flag = "N";
+                }
+                else if(parseFloat(amount)>parseFloat(outstanding)){
+                    $("#amount_error").html("Amount can't be greater than outstanding amount.");
+                    $("#amount_error").attr("style","display:block");
+                }
+                else if(parseFloat(amount)>parseFloat(limitBalance)){
+                    $("#amount_error").html("Amount can't be greater than limit amount.");
+                    $("#amount_error").attr("style","display:block");
+                }
+                else{
+                    $("#amount_error").html("");
+                    $("#amount_error").attr("style","display:none");
+                }
+              }
+          }
+          $("#errMsg").attr("style","display:none");
+     });
+     
+    $("#Amount").on('keydown', function (event) {
+        if (event.shiftKey == true) {
+            event.preventDefault();
+        }
+        if ((event.keyCode >= 48 && event.keyCode <= 57) || (event.keyCode >= 96 && event.keyCode <= 105) || event.keyCode == 8 || event.keyCode == 9 || event.keyCode == 37 || event.keyCode == 39 || event.keyCode == 46 || event.keyCode == 190|| event.keyCode == 110) {
+
+        } else {
+            event.preventDefault();
+        }
+        if($(this).val().indexOf('.') !== -1 && (event.keyCode == 190|| event.keyCode == 110))
+            event.preventDefault();
+    });
+    $("#MerchantID").on("blur", function ()
+    {
+        if (document.getElementById("MerchantID").value.trim() == "")
+        {
+            $("#MerchantID_error").attr("style", "display:block");
+            $("#MerchantID_error").html("Merchant ID is required");
+            return false;
+        }
+        else if (!$("#MerchantID").val().match(mappedMerchantID))
+        {
+            $("#MerchantID_error").attr("style", "display:block");
+            $("#MerchantID_error").html("Invalid Merchant ID");
+            return false;
+        }
+        else
+        {
+            $("#MerchantID_error").attr("style", "display:none");
+            $("#MerchantID_error").html("");
+        }
+
+    });
+    $("#CustomerId").on("blur", function ()
+    {
+        if (document.getElementById("CustomerId").value.trim() == "")
+        {
+            $("#CustomerID_error").attr("style", "display:block");
+            $("#CustomerID_error").html("Customer ID is required");
+            return false;
+        }
+        else if (!$("#CustomerId").val().match(mappedCustomerId))
+        {
+            $("#CustomerID_error").attr("style", "display:block");
+            $("#CustomerID_error").html("Invalid Customer ID");
+            return false;
+        }
+        else
+        {
+            $("#CustomerID_error").attr("style", "display:none");
+            $("#CustomerID_error").html("");
+        }
+
+    });
+      $("#OTP").on("blur", function ()
+    {
+        if (document.getElementById("OTP").value.trim() == "")
+        {
+            $("#otp_error").attr("style", "display:block");
+            $("#otp_error").html("Please enter OTP");
+            return false;
+        }
+      
+        else
+        {
+            $("#otp_error").attr("style", "display:none");
+            $("#otp_error").html("");
+        }
+
+    });
+     $("#btnProcess").on("click",(function(e){
+         $("#errMsg").attr("style","display:none");
+         var customerId = $("#CustomerID").val();
+         var merchantId=$("#MerchantID").val();
+          var amount=$("#Amount").val().trim();
+          var sourceofPayment=$("#SourceofPayment").val();
+          var otp=$("#OTP").val().trim();
+          var outstanding = $("#Outstanding").val();
+         var limitBalance = $("#LimitBalance").val();
+          var flag="Y";
+          if(amount=="")
+          {
+               $("#amount_error").html("Please enter Amount");
+               $("#amount_error").attr("style","display:block");
+               flag = "N";
+              
+          }
+          else if(amount=="0"){
+               $("#amount_error").html("Invalid Amount(max 10 digit including decimal)");
+               $("#amount_error").attr("style","display:block");
+               flag = "N";
+          }
+          else{
+              if(amount.trim() != ''){
+                if(amount.length>10){
+                    $("#amount_error").html("Invalid Amount(max 10 digit including decimal)");
+                    $("#amount_error").attr("style","display:block");
+                    flag = "N";
+                }
+                else if(parseFloat(amount)<1){
+                    $("#amount_error").html("Amount should valid numeric value grater than or equal to 1.");
+                    $("#amount_error").attr("style","display:block");
+                    flag = "N";
+                }
+                else if(parseFloat(amount)>parseFloat(outstanding)){
+                    $("#amount_error").html("Amount can't be greater than outstanding amount.");
+                    $("#amount_error").attr("style","display:block");
+                    flag="N";
+                }
+                else if(parseFloat(amount)>parseFloat(limitBalance)){
+                    $("#amount_error").html("Amount can't be greater than limit amount.");
+                    $("#amount_error").attr("style","display:block");
+                    flag="N";
+                }
+              }
+          }
+          if(otp=="")
+          {
+               $("#otp_error").html("Please enter OTP");
+               $("#otp_error").attr("style","display:block");
+               flag = "N";
+              
+          }
+       
+          if(flag=="Y"){
+              var reqModel= { CustomerID: customerId, MerchantID: merchantId, Amount: amount, SourceofPayment: sourceofPayment,OTP:otp};
               $.ajax({
                 type: 'POST',  // http method
-                url: '@Url.Action("GenerateOTPCreditClosePayment", "Dealer")',
-                data: { CustomerID: customerId, MerchantID: merchantId, FromDate: fromdate, ToDate: todate},
+                url: '@Url.Action("ValidateotpCreditClosePayment", "Dealer")',
+                data: JSON.stringify(reqModel),
                 contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (data,status,xhr) {
-                    var v = data;
-                        $("#show_details").attr("style","display:block");
+                dataType: "JSON",
+                success: function (res) {
+                    var data = res.data[0];
+                    if(data.status=="1"){
+                       $("#reason").html(data.reason);
+                       $("#reason").addClass("alert-success");
+                        $("#reason").attr("style","display:block");
+                        $(".toBeHiddenOnSuccess").attr("style","display:none");
+                        
+                    }
+                    else{
+                        $("#otperrMsg").html(data.reason);
+                        $("#otperrMsg").attr("style","display:block");
+                        
+                    }
+                        
                 },
                 error: function (jqXhr, textStatus, errorMessage) {
+                    debugger;
                     alert("Error" + errorMessage);
                 }
             });
+        }
+        else{
+            e.preventDefault();
         }
      }));
 </script>

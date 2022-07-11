@@ -773,16 +773,23 @@
                         <div class="modal-body">
                             <div class="col-lg-12 col-12">
                                 <div class="d-flex align-items-center justify-content-center flex-wrap mb-0">
-                                    <p class="mb-0">Entered PAN is already existing in DT Plus system. Still you want to proceed?</p>
+                                    <p class="mb-0" style="font-size: 14px; font-weight:bold;color:#073b76;">Entered PAN is already existing in DT Plus system, find the Customer Details below:</p>
                                 </div>
                             </div>
-                            <div class="d-flex align-items-center justify-content-center mt-3">
-                                <div class="px-2">
-                                    <button class="btn btn_primary" type="button" onclick="GetClientConfirmation(this)">YES</button>
-                                </div>
-                                <div class="px-2">
-                                    <button class="btn btn_primary" type="button" onclick="GetClientConfirmation(this)">NO</button>
-                                </div>
+                        </div>
+                        <div class="col-12 col-sm-12" style="max-height:300px;overflow-y:scroll;">
+                             <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 toBeHiddenOnSuccess" id="ViewCustomerDetailsTbl">
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-center">
+                            <p class="mb-0" style="font-size: 14px; font-weight:bold;color:#073b76;">Still you want to proceed?</p>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-center mt-3 mb-3">
+                            <div class="px-2">
+                                <button class="btn btn_primary" type="button" onclick="GetClientConfirmation(this)">YES</button>
+                            </div>
+                            <div class="px-2">
+                                <button class="btn btn_primary" type="button" onclick="GetClientConfirmation(this)">NO</button>
                             </div>
                         </div>
                     </div>
@@ -934,7 +941,7 @@
         //    }
         //}
 
-        $("#CustomerIncomeTaxPan").focus();
+        //$("#CustomerIncomeTaxPan").focus();
 
         if ($('#AllowPanDuplication').val() == "Y") {
             document.getElementById("lblPanCardRemarks").style.display = "block";
@@ -1834,21 +1841,63 @@ if(externalPANAPIStatus=="Y")
                                 console.log(data);
                                 console.log(status);
                                 var v = data;
-                                if (status == 'success') {
+                                if (status == 'success') 
+                                {
 
                                     console.log('Test');
                                     console.log(data);
                                     console.log(data.status);
                                     console.log(data.reason);
-                                    if (data.status == "0") {
-                                        //document.getElementById("comm_district_error").innerHTML = "Pan Number already exists";
+                                    if (data.customer[0].status == "0") 
+                                    {
                                         localStorage.setItem("DUPLICATEPANUSED", "0");
                                         document.getElementById('IsDuplicatePanNo').value = "0";
-                                        document.getElementById("lblPanCardRemarks").style.display = "block";
-                                        document.getElementById("PanCardRemarks").style.display = "block";
+                                        document.getElementById("AllowPanDuplication").value = "N";
+                                        //document.getElementById("lblPanCardRemarks").style.display = "block";
+                                        //document.getElementById("PanCardRemarks").style.display = "block";
                                         $("#PanCardRemarks").prop('readonly', false);
+
+                                        if (data.customer.length > 0) 
+                                        {
+
+                                                ViewCustomerDetailsTbl.style.display = "block";
+
+                                                $.ajax({
+                                                    type: 'GET',  // http method
+                                                    url: '@Url.Action("GetAllCustomersWithDuplicatePANForCustomerUpdate", "Customer")',
+                                                    contentType: "application/json; charset=utf-8",
+                                                    data: { DistrictId: districtId, IncomeTaxPan: panNumber, FormNumber: formNumber },  // data to submit
+                                                    dataType: "text",
+                                                    success: function (data, status, xhr) {
+                                                            var v = data;
+                                                            //console.log(data);
+                                                            if (status == 'success') 
+                                                            {
+                                                                $("#ViewCustomerDetailsTbl").html(data);
+                                                                //$('html, body').animate({
+                                                                //    scrollTop: $("#ViewCustomerDetailsTbl").offset().top
+                                                                //}, 2000);
+                                                            }
+                                                            else
+                                                            {
+                                                                console.log(v);
+                                                            }
+                                                        },
+                                                    error: function (jqXhr, textStatus, errorMessage) {
+                                                        ViewCustomerDetailsTbl.style.display = "none";
+
+                                                    }
+                                                });
+
+                                            }
+                                            else 
+                                            {
+                                                ViewCustomerDetailsTbl.style.display = "none";
+                                            }
+
                                     }
-                                    else {
+                                    else 
+                                    {
                                         localStorage.setItem("DUPLICATEPANUSED", "1");
                                         document.getElementById('IsDuplicatePanNo').value = "1";
                                         document.getElementById("comm_district_error").innerHTML = "";
@@ -1921,7 +1970,8 @@ else
                 url: '@Url.Action("CheckPanCardDuplicationByDistrictidForCustomerUpdate", "Customer")',
                 data: { DistrictId: districtId, IncomeTaxPan: panNumber, FormNumber: formNumber },  
                 dataType: "json",
-                success: function (data, status, xhr) {
+                success: function (data, status, xhr) 
+                {
                     console.log(data);
                     console.log(status);
                     var v = data;
@@ -1931,14 +1981,53 @@ else
                         console.log(data);
                         console.log(data.status);
                         console.log(data.reason);
-                        if (data.status == "0") 
+                        if (data.customer[0].status == "0")
                         {
-                            //document.getElementById("comm_district_error").innerHTML = "Pan Number already exists";
                             localStorage.setItem("DUPLICATEPANUSED", "0");
                             document.getElementById('IsDuplicatePanNo').value = "0";
-                            document.getElementById("lblPanCardRemarks").style.display = "block";
-                            document.getElementById("PanCardRemarks").style.display = "block";
+                            document.getElementById("AllowPanDuplication").value = "N";
+                            //document.getElementById("lblPanCardRemarks").style.display = "block";
+                            //document.getElementById("PanCardRemarks").style.display = "block";
                             $("#PanCardRemarks").prop('readonly', false);
+
+                            if (data.customer.length > 0) 
+                            {
+
+                                    ViewCustomerDetailsTbl.style.display = "block";
+
+                                    $.ajax({
+                                        type: 'GET',  // http method
+                                        url: '@Url.Action("GetAllCustomersWithDuplicatePANForCustomerUpdate", "Customer")',
+                                        contentType: "application/json; charset=utf-8",
+                                        data: { DistrictId: districtId, IncomeTaxPan: panNumber, FormNumber: formNumber },  // data to submit
+                                        dataType: "text",
+                                        success: function (data, status, xhr) {
+                                                var v = data;
+                                                //console.log(data);
+                                                if (status == 'success') 
+                                                {
+                                                    $("#ViewCustomerDetailsTbl").html(data);
+                                                    //$('html, body').animate({
+                                                    //    scrollTop: $("#ViewCustomerDetailsTbl").offset().top
+                                                    //}, 2000);
+                                                }
+                                                else
+                                                {
+                                                    console.log(v);
+                                                }
+                                            },
+                                        error: function (jqXhr, textStatus, errorMessage) {
+                                            ViewCustomerDetailsTbl.style.display = "none";
+
+                                        }
+                                    });
+
+                                }
+                                else 
+                                {
+                                    ViewCustomerDetailsTbl.style.display = "none";
+                                }
+
                         }
                         else 
                         {
@@ -2157,21 +2246,69 @@ else
                     console.log(data);
                     console.log(status);
                     var v = data;
-                    if (status == 'success') {
+                    if (status == 'success') 
+                    {
 
                         console.log('Test');
                         console.log(data);
                         console.log(data.status);
                         console.log(data.reason);
-                        if (data.status == "0") {
+                        if (data.customer[0].status == "0")
+                        {
                             //document.getElementById("comm_district_error").innerHTML = "Pan Number already exists";
                             localStorage.setItem("DUPLICATEPANUSED", "0");
                             document.getElementById('IsDuplicatePanNo').value = "0";
+
+                            if (data.customer.length > 0) 
+                            {
+
+                                    ViewCustomerDetailsTbl.style.display = "block";
+
+                                    $.ajax({
+                                        type: 'GET',  // http method
+                                        url: '@Url.Action("GetAllCustomersWithDuplicatePANForCustomerUpdate", "Customer")',
+                                        contentType: "application/json; charset=utf-8",
+                                        data: { DistrictId: id, IncomeTaxPan: panno, FormNumber: formNumber },  // data to submit
+                                        dataType: "text",
+                                        success: function (data, status, xhr) {
+                                                var v = data;
+                                                //console.log(data);
+                                                if (status == 'success') 
+                                                {
+                                                    $("#ViewCustomerDetailsTbl").html(data);
+                                                    //$('html, body').animate({
+                                                    //    scrollTop: $("#ViewCustomerDetailsTbl").offset().top
+                                                    //}, 2000);
+                                                }
+                                                else
+                                                {
+                                                    console.log(v);
+                                                }
+                                            },
+                                        error: function (jqXhr, textStatus, errorMessage) {
+                                            ViewCustomerDetailsTbl.style.display = "none";
+
+                                        }
+                                    });
+
+                            }
+                            else 
+                            {
+                                ViewCustomerDetailsTbl.style.display = "none";
+                            }
+
                         }
-                        else {
+                        else 
+                        {
                             localStorage.setItem("DUPLICATEPANUSED", "1");
                             document.getElementById('IsDuplicatePanNo').value = "1";
                             document.getElementById("comm_district_error").innerHTML = "";
+                            document.getElementById("lblPanCardRemarks").style.display = "none";
+                            document.getElementById("PanCardRemarks").style.display = "none";
+                            document.getElementById("PanCardRemarks").value = "";
+                            document.getElementById("PanCardRemarks_error").innerHTML ="";
+                            $("#PanCardRemarks").prop('readonly', true);
+
                         }
                     }
                     else {
@@ -2179,10 +2316,6 @@ else
                     }
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
-                },
-                statusCode: {
-                    1024: function () {
-                    }
                 }
             });
         }

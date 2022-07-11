@@ -1149,10 +1149,8 @@ namespace HPCL.Service.Services
             List<TransactionTypeResponse> SortedtList = jarr.ToObject<List<TransactionTypeResponse>>();
             return SortedtList;
         }
-        public async Task<CommonResponseData> CheckPanCardDuplicationByDistrictidForCustomerUpdate(string DistrictId, string IncomeTaxPan, string FormNumber)
+        public async Task<List<CheckPancardbyDistrictIdResponse>> CheckPanCardDuplicationByDistrictidForCustomerUpdate(string DistrictId, string IncomeTaxPan, string FormNumber)
         {
-            CommonResponseData responseData = new CommonResponseData();
-
             var requestinfo = new CheckPancardbyDistrictIdRequestModel()
             {
                 UserAgent = CommonBase.useragent,
@@ -1169,11 +1167,17 @@ namespace HPCL.Service.Services
 
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
             var jarr = obj["Data"].Value<JArray>();
-            List<CommonResponseData> searchList = jarr.ToObject<List<CommonResponseData>>();
-            responseData = searchList[0];
-            responseData.Internel_Status_Code = Convert.ToInt32(obj["Internel_Status_Code"].ToString());
+            List<CheckPancardbyDistrictIdResponse> searchList = jarr.ToObject<List<CheckPancardbyDistrictIdResponse>>();
+            foreach (CheckPancardbyDistrictIdResponse item in searchList)
+            {
+                item.Internel_Status_Code = Convert.ToInt32(obj["Internel_Status_Code"].ToString());
+                if (string.IsNullOrEmpty(item.CustomerID))
+                {
+                    item.CustomerID = "";
+                }
+            }
 
-            return responseData;
+            return searchList;
         }
 
         public async Task<List<GetCountryRegionResponse>> GetCountryRegion()

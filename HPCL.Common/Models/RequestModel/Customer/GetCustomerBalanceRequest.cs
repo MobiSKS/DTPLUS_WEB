@@ -8,5 +8,7 @@ namespace HPCL.Common.Models.RequestModel.Customer
     public class GetCustomerBalanceRequest: BaseEntity
     {
         public string CustomerID { get; set; }
+        public string ParentCustomerID { get; set; }
+        public string ChildCustomerId { get; set; }
     }
 }
