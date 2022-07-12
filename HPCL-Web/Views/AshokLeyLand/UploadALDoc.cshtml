@@ -53,7 +53,7 @@
                                     <td><strong>Customer Address Proof</strong></td>
                                     <td>
                                         <label class="font-weight-normal" id="lblAddressProof">File does not exits!</label>
-                                        <button class="btn btn_primary regrate_btn mb-3" id="DownloadAddressProof" type="button">Download</button>
+                                        <button class="btn btn_primary regrate_btn mb-3" id="DownloadAddressProof" type="button" onclick="DownloadAttachment(1);">Download</button>
                                     </td>
                                     <td>
                                         <div class="custom_select">
@@ -69,7 +69,7 @@
                                     <td><strong>PAN Card Details</strong></td>
                                     <td>
                                         <label class="font-weight-normal" id="lblPanCardProof">File does not exits!</label>
-                                        <button class="btn btn_primary regrate_btn mb-3" id="DownloadPanCardProof" type="button">Download</button>
+                                        <button class="btn btn_primary regrate_btn mb-3" id="DownloadPanCardProof" type="button" onclick="DownloadAttachment(2);">Download</button>
                                     </td>
                                     <td>
                                         <div class="custom_select">
@@ -84,7 +84,7 @@
                                     <td><strong>ID Proof of Owner/Partner</strong></td>
                                     <td>
                                         <label class="font-weight-normal" id="lblIDProof">File does not exits!</label>
-                                        <button class="btn btn_primary regrate_btn mb-3" id="DownloadIDProof" type="button">Download</button>
+                                        <button class="btn btn_primary regrate_btn mb-3" id="DownloadIDProof" type="button" onclick="DownloadAttachment(3);">Download</button>
                                     </td>
                                     <td>
                                         <div class="custom_select">
@@ -99,7 +99,7 @@
                                     <td><strong>Vehicle Details</strong></td>
                                     <td>
                                         <label class="font-weight-normal" id="lblVehicleDetail">File does not exits!</label>
-                                        <button class="btn btn_primary regrate_btn mb-3" id="DownloadVehicleDetail" type="button">Download</button>
+                                        <button class="btn btn_primary regrate_btn mb-3" id="DownloadVehicleDetail" type="button" onclick="DownloadAttachment(4);">Download</button>
                                     </td>
                                     <td>
                                         <div class="custom_select">
@@ -114,7 +114,7 @@
                                     <td><strong>Signed Customer Form</strong></td>
                                     <td>
                                         <label class="font-weight-normal" id="lblSignedCustomerForm">File does not exits!</label>
-                                        <button class="btn btn_primary regrate_btn mb-3" id="DownloadSignedCustomerForm" type="button">Download</button>
+                                        <button class="btn btn_primary regrate_btn mb-3" id="DownloadSignedCustomerForm" type="button" onclick="DownloadAttachment(5);">Download</button>
                                     </td>
                                     <td>
                                         <div class="custom_select">
@@ -675,7 +675,36 @@ function ViewCustomerDetails()
 
     };
 
-     function OnFailure(data) {
+     function OnFailure(data) 
+     {
          alert('HTTP Status Code: ' + data + '  Error Message: ' + data);
+    }
+    function DownloadAttachment(selectedbutton)
+    {
+        var upath ="";
+        if(selectedbutton==1)
+        {
+            upath = $("#AddressProofFront").val();
+        }
+        else if(selectedbutton==2)
+        {
+            upath = $("#PanCardFront").val();
+        }
+        else if(selectedbutton==3)
+        {
+            upath = $("#IdProofFront").val();
+        }
+        else if(selectedbutton==4)
+        {
+            upath = $("#VehicleDetailsFront").val();
+        }
+        else if(selectedbutton==5)
+        {
+            upath = $("#CustomerFormProofFront").val();
+        }
+        var url = '@Html.Raw(@Url.Action("CreateFileResult","Customer", new { Filepath="zzzzxx"  }))';
+        //url = url.replace("zzzzxx", encodeURIComponent(upath));
+        url = url.replace("zzzzxx", upath);
+        window.location.href = url;
     }
 </script>
