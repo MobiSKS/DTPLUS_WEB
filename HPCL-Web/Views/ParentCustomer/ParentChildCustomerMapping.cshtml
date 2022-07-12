@@ -68,7 +68,7 @@
                             <div class="clearfix"></div>
                             <div class="d-flex align-items-center justify-content-center mt-0">
                                 <div class="px-2">
-                                    <button class="btn btn_primary" type="submit" id="btnSearch">MAP CUSTOMER(S)</button>
+                                    <button class="btn btn_primary" type="button" id="btnSearch">MAP CUSTOMER(S)</button>
                                 </div>
 
                             </div>
@@ -93,12 +93,9 @@
 
           $("#btnSearch").click(function () {
 
-              $("#customerCCMSBalanceTbl").hide();
-              $("#customerCardWiseBalancesTbl").hide();
-
+           
               //debugger;
               var parentCustomerID = document.getElementById("ParentCustomerId").value.trim();
-              var childCustomerId = document.getElementById("ChildCustomerId").value.trim();
               if (parentCustomerID == "") {
                   document.getElementById("parentCustomerId_error").innerHTML = "Parent Customer ID is required";
                   $("#ParentCustomerId").focus;
@@ -115,10 +112,42 @@
                   }
 
               }
+              objRequest = [];
+            $("table tr").each(function () {
+             //debugger;
 
+                 var row = $(this);
+                var i =currentRow.cells[0].innerText;
+                 var customerId =currentRow.cells[1].children[0].value;
+                 if(customerId.trim()==""){
+                    $("#childCustomerId_error_"+i).attr("style", "display:block");
+                    $("#childCustomerId_error_"+i).html("Customer ID is required to map");
+                    return;
+                 }
+                 objRequest.push({ ChildCustomerId: customerId});
 
+            
+         });
+        if (objRequest.length > 0 ) {
+        var reqmodel = { ParentCustomerId: parentCustomerID, ObjParentCustomerDtl: objRequest };
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("MapParenttoChildCustomer", "ParentCustomer")',
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify(reqmodel),
+            success: function (data) {
+                
+
+            },
+            error: function (ex) {
+                alert('Error.' + ex);
+            }
+        });
+    
+}
 
           });
+
 
     $("#ParentCustomerId").on("blur", function ()
       {
@@ -183,7 +212,7 @@
               table.append(rows);
           }
            addSerialNumber();
-      }
+       }
        function deleteRow(o,count){
           debugger;
           var currentRow=o.closest('tr');

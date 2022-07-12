@@ -139,8 +139,11 @@ namespace HPCL_Web.Controllers
 
             ParentCustomerBalanceInfoModel customerBalanceResponse = new ParentCustomerBalanceInfoModel();
             if (requestInfo.ParentCustomerID != null && requestInfo.ParentCustomerID != "")
+            {
                 customerBalanceResponse = await _customerService.GetCustomerBalanceInfo(requestInfo);
-      
+                ViewBag.ParentCustomerID = requestInfo.ParentCustomerID;
+            }
+            
             return View(customerBalanceResponse);
         }
         public async Task<IActionResult> GetCustomerCardWiseBalance(string CustomerID)
@@ -181,10 +184,20 @@ namespace HPCL_Web.Controllers
         {
 
             ParentChildCustomerMappingViewModel parentChildCustomerMapping = new ParentChildCustomerMappingViewModel();
+           
+
+            return View(parentChildCustomerMapping);
+        }
+        [HttpPost]
+        public async Task<IActionResult> MapParenttoChildCustomer(ParentChildCustomerMappingRequest requestInfo)
+        {
+
+            ParentChildCustomerMappingViewModel parentChildCustomerMapping = new ParentChildCustomerMappingViewModel();
             if (requestInfo.ParentCustomerId != null && requestInfo.ParentCustomerId != "")
                 parentChildCustomerMapping = await _customerService.ParentChildCustomerMapping(requestInfo);
 
             return View(parentChildCustomerMapping);
         }
+        
     }
 }
