@@ -31,8 +31,8 @@ namespace HPCL.Service.Services
                 UserId = "demo",
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
-                MobileNo = mobNo,
-                customerId = customerId
+                MobileNo = mobNo ?? "",
+                customerId = customerId ?? ""
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
