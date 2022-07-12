@@ -4,7 +4,7 @@
 <div class="col-lg-12">
     <div class="bg-white p-2 p-md-4">
         <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
-            <li class="breadcrumb-item"><a href="@Url.Action("Index", "VolvoEicher")" class="text_primary">My HP(OTC)Card Profile</a> </li>
+            <li class="breadcrumb-item"><a href="@Url.Action("Index", "VolvoEicher")" class="text_primary">Volvo Eicher</a> </li>
             <li class="breadcrumb-item font-weight-light">View VE Dealer OTC Card Status</li>
         </ul>
         <div id="reason" class="mb-3 text-center" style="background-color: #a0f1d6;"></div>
@@ -22,7 +22,7 @@
                                         <label class="font-weight-normal col-md-4 col-12">Dealer Code</label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.DealerCode, new { @class = "form-control", maxlength = "30"})
+                                                @Html.TextBoxFor(m => m.DealerCode, new { @class = "form-control", maxlength = "25", onkeypress = "return AllowAlphaNumeric(event)"})
                                                 <span style="display:none" class="error" id="DealerCode_error"></span>
                                             </div>
                                         </div>
@@ -63,12 +63,9 @@
     });
 
     $("#btnReset").click(function () {
-        window.location.reload(true);
+        window.location.href = '@Url.Action("ViewVEDealerOTCDCardStatus", "VolvoEicher")';
     });
-
-
-   
-
+    
     function searchCardActivationandAllocation() {
 
         var dealerCode = $("#DealerCode").val();
@@ -122,51 +119,71 @@
    
 
 
-    function tableToCSVDwld() {
+    //function tableToCSVDwld() {
 
-        // Variable to store the final csv data
-        var csv_data = [];
+    //    // Variable to store the final csv data
+    //    var csv_data = [];
 
-        // Get each row data
-        var rows = document.getElementsByTagName('tr');
+    //    // Get each row data
+    //    var rows = document.getElementsByTagName('tr');
 
-        console.log("rows", rows);
+    //    console.log("rows", rows);
 
-        if (rows.length > 0) {
+    //    if (rows.length > 0) 
+    //    {
 
-            for (var i = 0; i < rows.length; i++) {
+    //        for (var i = 0; i < rows.length; i++) 
+    //        {
+    //            if(var i==0)
+    //            {
+    //                var cols = rows[i].querySelectorAll('td,th');
 
-                var cols = rows[i].querySelectorAll('td,th');
+    //                console.log("cols", cols);
 
-                console.log("cols", cols);
+    //                var csvrow = [];
+    //                for (var j = 0; j < cols.length; j++) 
+    //                {
 
-                var csvrow = [];
-                for (var j = 0; j < cols.length; j++) {
+    //                    csvrow.push(cols[j].innerHTML);
+    //                }
+    //                csv_data.push(csvrow.join(","));
+    //            }
+    //        }
 
-                    csvrow.push("'" + cols[j].innerHTML);
-                }
-                csv_data.push(csvrow.join(","));
-            }
+    //        var tableName = $('#OTCCardStatus').DataTable();
+    //        tableName.rows().every(function(){
+    //            //console.log(this.data()[0]);
+    //            var csvrow = [];
 
-            csv_data = csv_data.join('\n');
+    //            csvrow.push(this.data()[0]);
+    //            csvrow.push(this.data()[1]);
+    //            csvrow.push(this.data()[2]);
+    //            csvrow.push(this.data()[3]);
+    //            csvrow.push(this.data()[4]);
+    //            csvrow.push(this.data()[5]);
 
-            downloadCSVFile(csv_data);
-        }
-    }
+    //            csv_data.push(csvrow.join(","));
+    //        });
 
-    function downloadCSVFile(csv_data) {
-        CSVFile = new Blob([csv_data], {
-            type: "text/csv"
-        });
-        var temp_link = document.createElement('a');
-        temp_link.download = "VEDealerOTCCardStatus.csv";
-        var url = window.URL.createObjectURL(CSVFile);
-        temp_link.href = url;
-        temp_link.style.display = "none";
-        document.body.appendChild(temp_link);
-        temp_link.click();
-        document.body.removeChild(temp_link);
-    }
+    //        csv_data = csv_data.join('\n');
+
+    //        downloadCSVFile(csv_data);
+    //    }
+    //}
+
+    //function downloadCSVFile(csv_data) {
+    //    CSVFile = new Blob([csv_data], {
+    //        type: "text/csv"
+    //    });
+    //    var temp_link = document.createElement('a');
+    //    temp_link.download = "VEDealerOTCCardStatus.csv";
+    //    var url = window.URL.createObjectURL(CSVFile);
+    //    temp_link.href = url;
+    //    temp_link.style.display = "none";
+    //    document.body.appendChild(temp_link);
+    //    temp_link.click();
+    //    document.body.removeChild(temp_link);
+    //}
     $("#DealerCode").on("blur", function () {
          var dealerCode = $("#DealerCode").val();
          if (dealerCode != "") {
