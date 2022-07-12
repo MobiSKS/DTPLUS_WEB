@@ -267,7 +267,7 @@
                     <div class="px-2">
                         <button class="btn btn_primary" id="btnPrevious" type="button">Previous</button>
                     </div>
-                    <div class="px-2">
+                    <div class="px-2" style="display:none">
                         <button class="btn btn_primary" id="btnCreate" type="button">Save</button>
                     </div>
                 </div>
@@ -782,45 +782,47 @@
             var userName=$("#UserName").val();
             var newEmail=$("#Email").val();
             var userRoleSelected=roleId;
-                   objUserRole=[];
-                   var rowCount=0;
-                   debugger;
-                   rowCount=$("#LocRoleMappingTbl tbody tr").length;
-                   if(rowCount==1){
-                       if(zoneIdArr.length>0){
-                            for(var i=0;i<zoneIdArr.length;i++){
-                                objUserRole.push({ RO: 0,ZO:zoneIdArr[i] ,StatusFlag:""});
-                            }
-                       }
-                        if(regionIdArr.length>0){
-                            for(var i=0;i<regionIdArr.length;i++){
-                                objUserRole.push({ RO: regionIdArr[i],ZO:0 ,StatusFlag:"" });
-                            }
-                        }
-                   }
-                   var ReqModel={UserName:userName,RoleId:userRoleSelected,TypeManageUsersAddUserRole:objUserRole,UpdateStatus:"Update"};
-                   $.ajax({
-                       type: 'POST',  // http method
-                       url: '@Url.Action("DeleteLocationMapping", "Security")',
-                       contentType: "application/json; charset=utf-8",
-                       dataType: 'JSON',
-                       data: JSON.stringify(ReqModel),
-                       success: function (data, status, xhr) {
-                           var v = data;
-                           if (status == 'success') {
+            objUserRole=[];
+            var rowCount=0;
+            debugger;
+            rowCount=$("#LocRoleMappingTbl tbody tr").length;
+            if(zoneIdsList!=""){
+                if(zoneIdArr.length>0){
+                    for(var i=0;i<zoneIdArr.length;i++){
+                        objUserRole.push({ RO: "0",ZO:zoneIdArr[i] });
+                    }
+                }
+            }
+            if(regionIdsList!=""){
+                if(regionIdArr.length>0){
+                    for(var i=0;i<regionIdArr.length;i++){
+                        objUserRole.push({ RO: regionIdArr[i],ZO:"0" });
+                    }
+                }
+            }
+            var ReqModel={UserName:userName,RoleId:userRoleSelected,TypeManageUsersAddUserRole:objUserRole,UpdateStatus:"Update"};
+            $.ajax({
+                type: 'POST',  // http method
+                url: '@Url.Action("DeleteLocationMapping", "Security")',
+                contentType: "application/json; charset=utf-8",
+                dataType: 'JSON',
+                data: JSON.stringify(ReqModel),
+                success: function (data, status, xhr) {
+                    var v = data;
+                    if (status == 'success') {
 
-                               var url = '@Html.Raw(@Url.Action("UpdateUserandLocations", "Security",new { UserName = "zzXXyyZZZZZZZzz", Email = "QQPPppSSAAQQ", update = "Yes" }))';
-                                url = url.replace("zzXXyyZZZZZZZzz", encodeURIComponent(userName)).replace("QQPPppSSAAQQ", encodeURIComponent(newEmail));
-                                window.location.href=url;
-                           }
-                           else {
-                               console.log(v);
-                           }
-                       },
-                       error: function (jqXhr, textStatus, errorMessage) {
-                           alert("Error"+ errorMessage);
-                       }
-                   });
+                        var url = '@Html.Raw(@Url.Action("UpdateUserandLocations", "Security",new { UserName = "zzXXyyZZZZZZZzz", Email = "QQPPppSSAAQQ", update = "Yes" }))';
+                        url = url.replace("zzXXyyZZZZZZZzz", encodeURIComponent(userName)).replace("QQPPppSSAAQQ", encodeURIComponent(newEmail));
+                        window.location.href=url;
+                    }
+                    else {
+                        console.log(v);
+                    }
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+                    alert("Error"+ errorMessage);
+                }
+            });
          
         });
        

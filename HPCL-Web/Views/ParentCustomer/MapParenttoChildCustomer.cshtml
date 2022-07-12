@@ -94,13 +94,14 @@
 </div>
 <script type="text/javascript">
     
-    function confirmMapping(action) {
+    $("#btnConfirm").on("click",(function(e){
         var parentId=$("#ParentCustomerId").val();
-        $("table tr").each(function () {
+        var objRequest=[];
+        $("table tbody tr").each(function () {
                  debugger;
 
                      var row = $(this);
-                     var customerId =row[0].cells[1].children[0].value;
+                     var customerId =row[0].cells[1].innerText;
                      
                      objRequest.push({ChildCustomerId:customerId});
 
@@ -115,26 +116,35 @@
             data: JSON.stringify(reqModel),
                 success: function (data) {
                     debugger;
-                    $("#reason").removeClass("displayNone");
-                    if(data.length>0){
-                        $("#reason").html("");
-                        for(var i=0;i<data.length;i++){
-                            $("#reason").append("<span>" +data[i].reason + "</span></br>");
+                    if(data.success=="true"){
+                        $("#reason").removeClass("displayNone");
+                        if(data.length>0){
+                            $("#reason").html("");
+                            for(var i=0;i<data.length;i++){
+                                $("#reason").append("<span>" +data[i].reason + "</span></br>");
+                            }
+                            if(data[0].status=="1"){
+                                $("#reason").removeClass("alert-danger");
+                                $("#reason").addClass("alert-success");
+                            }
+                            else{
+                                $("#reason").addClass("alert-danger");
+                                $("#reason").removeClass("alert-success");
+                            }
                         }
-                    }
-                    if(data[0].status=="1"){
-                        $("#reason").removeClass("alert-danger");
-                        $("#reason").addClass("alert-success");
+                    
+                        $(".tobehiddenonSuccess").hide();
                     }
                     else{
+                        $("#reason").append("<span>" +data.message + "</span></br>");
                         $("#reason").addClass("alert-danger");
                         $("#reason").removeClass("alert-success");
                     }
-                    $(".tobehiddenonSuccess").hide();
+                    
                 },
                 error: function (ex) {
                     alert('Error.' + ex);
                 }
          });
-     }
+     }));
  </script>
