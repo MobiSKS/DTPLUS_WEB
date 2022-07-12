@@ -294,13 +294,72 @@
           }
          });
      function checkChanged(o,i){
-        
-        var chkStatus=o.checked;
-        var chkAllStatus= $("#check_"+i)[0].checked;
-        if(!chkStatus && chkAllStatus)
+        var userName=$("#UserName").val();
+        var newEmail=$("#Email").val();
+        var userRoleSelected=selectedRole;
+        if(userRoleSelected==""){
+            $("#msgError").html("Please Select Roles for User");
+            $("#msgError").attr("style","display:block");
+            $("#msgError").focus();
+            var id=o.id;
+            $("#"+id).click(function (e) {
+                e.preventDefault();
+            });   
+        }
+        else{
+            var chkStatus=o.checked;
+            var chkAllStatus= $("#check_"+i)[0].checked;
+            if(!chkStatus && chkAllStatus)
             $("#check_"+i)[0].checked=false;
-    }
+            var zoneId=$("#check_"+i).val();
+            objUserRole=[];
+          
+            if(o.checked){
+                objUserRole.push({ RO: o.value,ZO:zoneId ,StatusFlag:"1"});
+            }
+            else{
+                objUserRole.push({ RO: o.value,ZO:zoneId ,StatusFlag:"0"});
+            }
+            var ReqModel={UserName:userName,Email:newEmail,Password:"",ConfirmPassword:"",SecretQuestion:"0",SecretQuestionAnswer:"",UserRole:userRoleSelected,FirstName:"",LastName:"",StateId:"0",ActionType:"",TypeManageUsersAddUserRoleWithStatusFlag:objUserRole,UpdateStatus:"Update"};
+                $.ajax({
+                    type: 'POST',  // http method
+                    url: '@Url.Action("UpdateUser", "Security")',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: 'JSON',
+                    data: JSON.stringify(ReqModel),
+                    success: function (data, status, xhr) {
+                        var v = data;
+                        if (status == 'success') {
+                            var url = '@Html.Raw(@Url.Action("UpdateUserandLocations", "Security",new { UserName = "zzXXyyZZZZZZZzz", Email = "QQPPppSSAAQQ", update = "Yes" }))';
+                            url = url.replace("zzXXyyZZZZZZZzz", encodeURIComponent(userName)).replace("QQPPppSSAAQQ", encodeURIComponent(newEmail));
+                            window.location.href=url;
+                              
+                        }
+                        else {
+                            console.log(v);
+                        }
+                    },
+                    error: function (jqXhr, textStatus, errorMessage) {
+                        alert("Error"+ errorMessage);
+                    }
+                });
+            }
+
+        }
        function chkAllRegion(o,cnt){
+           var userName=$("#UserName").val();
+             var newEmail=$("#Email").val();
+                var userRoleSelected=selectedRole;
+            if(userRoleSelected==""){
+                $("#msgError").html("Please Select Roles for User");
+                $("#msgError").attr("style","display:block");
+                $("#msgError").focus();
+                var id=o.id;
+                $("#"+id).click(function (e) {
+                    e.preventDefault();
+                });     
+            }
+            else{
            var zoneId=o.value;
            //$('input[type=checkbox][name=regionChk]').prop("checked",false);
            $('input:checkbox.chk_'+cnt).not(this).prop('checked', o.checked);
@@ -313,6 +372,49 @@
            }*@
            $("#message").html("");
            $("#message").attr("style","display:none");
+           objUserRole=[];
+          
+                if(o.checked){
+
+                     objUserRole.push({ RO: "0",ZO:zoneId ,StatusFlag:"1"});
+                     $('input:checkbox.chk_'+cnt).each(function () {
+                         objUserRole.push({ RO: $(this).val(),ZO:zoneId ,StatusFlag:"1"});
+                     });
+               
+                }
+                else{
+
+                     objUserRole.push({ RO: "0",ZO:zoneId ,StatusFlag:"0"});
+                     $('input:checkbox.chk_'+cnt).each(function () {
+                         objUserRole.push({ RO: $(this).val(),ZO:zoneId ,StatusFlag:"0"});
+                     });
+                }
+            
+   
+            var ReqModel={UserName:userName,Email:newEmail,Password:"",ConfirmPassword:"",SecretQuestion:"0",SecretQuestionAnswer:"",UserRole:userRoleSelected,FirstName:"",LastName:"",StateId:"0",ActionType:"",TypeManageUsersAddUserRoleWithStatusFlag:objUserRole,UpdateStatus:"Update"};
+            $.ajax({
+                type: 'POST',  // http method
+                url: '@Url.Action("UpdateUser", "Security")',
+                contentType: "application/json; charset=utf-8",
+                dataType: 'JSON',
+                data: JSON.stringify(ReqModel),
+                success: function (data, status, xhr) {
+                    var v = data;
+                    if (status == 'success') {
+                        var url = '@Html.Raw(@Url.Action("UpdateUserandLocations", "Security",new { UserName = "zzXXyyZZZZZZZzz", Email = "QQPPppSSAAQQ", update = "Yes" }))';
+                        url = url.replace("zzXXyyZZZZZZZzz", encodeURIComponent(userName)).replace("QQPPppSSAAQQ", encodeURIComponent(newEmail));
+                        window.location.href=url;
+                              
+                    }
+                    else {
+                        console.log(v);
+                    }
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+                    alert("Error"+ errorMessage);
+                }
+            });
+            }
        }
 
        function DisableArea(o,cnt){
@@ -564,7 +666,7 @@
                         if(objZoneIds.indexOf(zoId)==-1)
                             objUserRole.push({ RO: $(this).val(),ZO:zoId });
                    });
-                   var ReqModel={UserName:userName,Email:newEmail,Password:"",ConfirmPassword:"",SecretQuestion:"0",SecretQuestionAnswer:"",UserRole:userRoleSelected,FirstName:"",LastName:"",StateId:"0",ActionType:"",TypeManageUsersAddUserRole:objUserRole,UpdateStatus:"Update"};
+                   var ReqModel={UserName:userName,Email:newEmail,Password:"",ConfirmPassword:"",SecretQuestion:"0",SecretQuestionAnswer:"",UserRole:userRoleSelected,FirstName:"",LastName:"",StateId:"0",ActionType:"",TypeManageUsersAddUserRoleWithStatusFlag:objUserRole,UpdateStatus:"Update"};
                    $.ajax({
                        type: 'POST',  // http method
                        url: '@Url.Action("UpdateUser", "Security")',
@@ -668,17 +770,32 @@
                 regionIdArr=regionIdsList.split(',');
             else
                 regionIdArr[0]=regionIdsList;
-            var zoneId = currentRow.find('.zoneId').text();
-              var userName=$("#UserName").val();
-             var newEmail=$("#Email").val();
+            //var zoneId = currentRow.find('.zoneId').text();
+            var zoneIdsList = currentRow.find('.zoneId').text();
+            if(zoneIdsList!=""){
+                    var zoneIdArr=[];
+                    if(zoneIdsList.indexOf(',')!=-1)
+                        zoneIdArr=zoneIdsList.split(',');
+                    else
+                        zoneIdArr[0]=zoneIdsList;
+            }
+            var userName=$("#UserName").val();
+            var newEmail=$("#Email").val();
             var userRoleSelected=roleId;
                    objUserRole=[];
                    var rowCount=0;
                    debugger;
                    rowCount=$("#LocRoleMappingTbl tbody tr").length;
                    if(rowCount==1){
-                        for(var i=0;i<regionIdArr.length;i++){
-                            objUserRole.push({ RO: regionIdArr[i],ZO:zoneId });
+                       if(zoneIdArr.length>0){
+                            for(var i=0;i<zoneIdArr.length;i++){
+                                objUserRole.push({ RO: 0,ZO:zoneIdArr[i] ,StatusFlag:""});
+                            }
+                       }
+                        if(regionIdArr.length>0){
+                            for(var i=0;i<regionIdArr.length;i++){
+                                objUserRole.push({ RO: regionIdArr[i],ZO:0 ,StatusFlag:"" });
+                            }
                         }
                    }
                    var ReqModel={UserName:userName,RoleId:userRoleSelected,TypeManageUsersAddUserRole:objUserRole,UpdateStatus:"Update"};

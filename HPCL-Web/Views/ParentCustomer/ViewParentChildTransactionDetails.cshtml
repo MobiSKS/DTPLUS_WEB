@@ -1,0 +1,143 @@
+﻿@model HPCL.Common.Models.ViewModel.ParentCustomer.ParentCustomerTransactionViewModel
+@using HPCL.Common.Resources
+
+
+<div class="col-lg-12 px-0">
+    <div class="bg-white p-2 p-md-4" style="overflow: hidden;">
+        <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
+            <li class="breadcrumb-item"><a href="@Url.Action("Financial","ParentCustomer")" class="text_primary">Financials</a> </li>
+            <li class="breadcrumb-item font-weight-light">Transaction Details</li>
+        </ul>
+        <form>
+            <div class="w-100">
+                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
+                    <div class="border-1 rounded border-grey pb-3">
+                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Transaction Details</p>
+
+                        <div class="col-lg-12 col-md-12 col-12 py-3">
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">Parent Customer ID </label>
+                                        <div class="col-md-7 col-12 ">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.ParentCustomerID, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off" ,@readonly="readonly"})
+                                                <span class="error" id="parentCustomerId_error"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">Customer ID </label>
+                                        <div class="col-md-4 col-12 ">
+                                            <div class="custom_select">
+
+                                                @Html.DropDownListFor(m => m.ChildCustomerId, new SelectList(Model.ChildCustomerIds, "ChildCustomerID", "ChildCustomerID"), new { @class="form-control ", multiple = "true" })
+
+                                                <span class="error" id="childCustomerId_error"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3 col-12 ">
+                                            <div class="custom_select">
+                                                <input type="checkbox" name="checkAll" id="checkAll" />
+                                                <label class="font-weight-normal ">All Customer</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">From Date<sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.FromDate, new { @class = "form-control fromDate",@placeholder="dd-mm-yyyy", @autocomplete = "off", @onchange = "checkDates('fromDate_error','31');"  })
+                                                <span style="display:none" class="error" id="fromDate_error"></span>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">To Date<sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.ToDate, new { @class = "form-control toDate" ,@placeholder="dd-mm-yyyy", @autocomplete = "off", @onchange = "checkDates('fromDate_error','31');" })
+                                                <span style="display:none" class="error" id="toDate_error"></span>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="clearfix"></div>
+                            <div class="d-flex align-items-center justify-content-center mb-3">
+                                <div class="px-2">
+                                    <button class="btn btn_primary" type="submit" id="btnSearch">@Label.Search</button>
+                                </div>
+                                <div class="px-2">
+                                    <button class="btn btn_primary" type="button" id="btnExporttoExcel">EXPORT TO EXCEL</button>
+                                </div>
+                                <div class="px-2">
+                                    <button class="btn btn_primary" type="button" id="btnExporttoPDF">EXPORT TO PDF</button>
+                                </div>
+                                <div class="px-2">
+                                    <button class="btn btn_primary" type="button" id="btnReset">@Label.Reset</button>
+                                </div>
+                                <div class="px-2">
+                                    <button class="btn btn_primary" type="button" id="btnBack">BACK</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+
+                </div>
+                <div class="clearfix"></div>
+
+            </div>
+        </form>
+
+    </div>
+    <div class="clearfix"></div>
+</div>
+<script type="text/javascript">
+      $(document).ready(function () {
+          debugger;
+          
+    });
+    $('select#ChildCustomerId').on('sumo:initialized', function(sumo) {
+        var selectedChildIds="@ViewBag.SelectedChildCustomerIds";
+          
+          if(selectedChildIds!=""){
+              var ids=[];
+              if(selectedChildIds.indexOf(',')!=-1)
+                        ids=selectedChildIds.split(',');
+                    else
+                        ids[0]=selectedChildIds;
+
+              for(var i=0; i<ids.length;i++){
+                  $('#ChildCustomerId')[0].sumo.selectItem(ids[i]);
+              }
+          }
+    });
+      $("#checkAll").click(function () {
+          debugger;
+        if(this.checked)
+            $('#ChildCustomerId')[0].sumo.selectAll();
+        else{
+            $('#ChildCustomerId')[0].sumo.unSelectAll();
+        }
+    });
+</script>

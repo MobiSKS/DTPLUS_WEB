@@ -314,12 +314,13 @@ namespace HPCL.Service.Services
           
             var responseJarr = obj["Data"].Value<JArray>();
             List<StatementDateModel> statementDateList = responseJarr.ToObject<List<StatementDateModel>>();
+
             return statementDateList;
         }
         public async Task<MerchanDealerSaleStatementModel> GetMerchantDealerCreditSaleStatement(string CustomerID, string MerchantID, string SearchDate)
         {
             MerchanDealerSaleStatementModel merchanDealerSaleStatementModel = new MerchanDealerSaleStatementModel();
-           
+            SearchDate = await _commonActionService.changeDateFormat(SearchDate);
             var searchBody = new DealerRequestModel
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
@@ -327,7 +328,7 @@ namespace HPCL.Service.Services
                 UserIp = CommonBase.userip,
                 CustomerID = CustomerID == null ? "" : CustomerID,
                 MerchantID = MerchantID,
-                SearchDate = SearchDate,
+                StatementDate = SearchDate,
                 
             };
 

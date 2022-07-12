@@ -1072,18 +1072,84 @@ namespace HPCL.Service.Services
                 UserIp = CommonBase.userip,
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 ParentCustomerId = requestInfo.ParentCustomerId,
-               ObjParentCustomerDtl = requestInfo.ObjParentCustomerDtl,
+                ObjChildDtl = requestInfo.ObjChildDtl,
                CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(Request), Encoding.UTF8, "application/json");
 
-            var response = await _requestService.CommonRequestService(content, WebApiUrl.getparenttransactionssummary);
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getchildmappingdetails);
 
             parentChildCustomerMapping = JsonConvert.DeserializeObject<ParentChildCustomerMappingViewModel>(response);
 
             return parentChildCustomerMapping;
         }
-        
+        public async Task<ParentCustomerTransactionViewModel> ViewParentChildTransactionDetails(String ParentCustomerID)
+        {
+            ParentCustomerTransactionViewModel customerTransactionResponse = new ParentCustomerTransactionViewModel();
+
+            var Request = new GetCustomerBalanceRequest()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                ParentCustomerID = ParentCustomerID,
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(Request), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getchildbyparent);
+
+            //customerBalanceResponse = JsonConvert.DeserializeObject<ParentCustomerTransactionViewModel>(response);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+
+
+            var searchRes = obj["Data"].Value<JArray>(); 
+            List<ChildCustomerDetails> searchList = searchRes.ToObject<List<ChildCustomerDetails>>();
+            customerTransactionResponse.ParentCustomerID = ParentCustomerID;
+            customerTransactionResponse.ChildCustomerIds.AddRange(searchList);
+            return customerTransactionResponse;
+        }
+        public async Task<List<SuccessResponse>> ValidateChildCustomerId(string CustomerId)
+        {
+            var validateUserNameForms = new ParentChildCustomerMappingRequest
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                CustomerId = CustomerId,
+            };
+
+            StringContent stringContent = new StringContent(JsonConvert.SerializeObject(validateUserNameForms), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(stringContent, WebApiUrl.parentcustomerchildmappingeligibility);
+
+            JObject jObj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jArr = jObj["Data"].Value<JArray>();
+            List<SuccessResponse> responseList = jArr.ToObject<List<SuccessResponse>>();
+            return responseList;
+        }
+        public async Task<ParentChildCustomerMappingViewModel> ConfirmParentChildCustomerMapping(ParentChildCustomerMappingRequest requestInfo)
+        {
+            ParentChildCustomerMappingViewModel parentChildCustomerMapping = new ParentChildCustomerMappingViewModel();
+
+            var Request = new ParentChildCustomerMappingRequest()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                ParentCustomerId = requestInfo.ParentCustomerId,
+                ObjParentCustomerDtl = requestInfo.ObjParentCustomerDtl,
+                CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(Request), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.parentcustomerchildmapping);
+
+            parentChildCustomerMapping = JsonConvert.DeserializeObject<ParentChildCustomerMappingViewModel>(response);
+
+            return parentChildCustomerMapping;
+        }
     }
 }
