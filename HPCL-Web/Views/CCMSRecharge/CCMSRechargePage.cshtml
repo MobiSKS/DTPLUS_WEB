@@ -49,7 +49,7 @@
                         </div>
                     </div>
 
-                    <table id="mobNoSearchRes" class="table table-bordered" style="display:none;">
+                    <table id="mobNoSearchRes" class="table table-bordered" style="display:none;overflow-y:scroll;overflow-x:scroll;height:200px;">
                         <thead>
                             <tr>
                                 <th>Action</th>
@@ -88,7 +88,7 @@
                     <div class="d-flex align-items-center justify-content-center flex-wrap mb-3">
                         <div class="offset-md-4 col-md-8 col-12">
                             <div class="px-0 float-left mr-3">
-                                <button class="btn btn_primary" type="button" onclick="submitRec()">SUBMIT</button>
+                                <button class="btn btn_primary" id="submitButtonval" type="button" onclick="submitRec()">SUBMIT</button>
                             </div>
                             <div class="px-0 float-left">
                                 <button class="btn btn_primary" onclick="resetClick()">RESET</button>
@@ -374,6 +374,12 @@
 
     $("#mobNoVal").on("blur", function (){
 
+        $('#submitButtonval').prop('disabled', true);
+
+        $('#customerIdValErr').text("");
+        $('#controlCardNoValErr').text("");
+        $('#amountValErr').text("");
+
         var mobNo = $("#mobNoVal").val();
 
         var flag = "Y";
@@ -424,7 +430,7 @@
                                 + "<td><span class='customerIdVal'>" + (res.searchList.data[i].customerID || '') + "</span></td>"
                                 + "<td><span class='customerNameVal'>" + (res.searchList.data[i].customerName || '') + "</span></td>"
                                 + "<td><span class='customerTypeVal'>" + (res.searchList.data[i].customerType || '') + "</span><span style='display:none;' class='conCardNoVal'>"+(res.searchList.data[i].controlCardNo || '')+"</span></td>"
-                                + "</tr ></tbody>";
+                                + "</tr></tbody>";
 
                             $('#mobNoSearchRes').append(rows);
                         }
@@ -450,6 +456,12 @@
     });
 
     $("#customerIdVal").on("blur", function (){
+
+        $('#submitButtonval').prop('disabled', true);
+
+        $('#customerIdValErr').text("");
+        $('#controlCardNoValErr').text("");
+        $('#amountValErr').text("");
 
         var customerId = $("#customerIdVal").val();
 
@@ -503,6 +515,8 @@
                         $("#customerIdVal").attr("readonly", true);
                         $("#controlCardNoVal").attr("readonly", true);
 
+                        $('#submitButtonval').prop('disabled', false);
+
                     }else{
                         $("#cutomerName").removeClass("d-flex");
                         document.getElementById("cutomerName").style.display = "none";
@@ -521,6 +535,8 @@
         var currentRow = $(this).closest("tr");
 
         if ($(this).is(':checked')) {
+
+            $('#submitButtonval').prop('disabled', false);
 
             $("#cutomerName").addClass("d-flex");
             document.getElementById("cutomerName").style.display = "block";

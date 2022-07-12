@@ -3,6 +3,7 @@ using HPCL.Common.Models.ResponseModel.AshokLayland;
 using HPCL.Common.Models.ResponseModel.CustomerManage;
 using HPCL.Common.Models.ResponseModel.VolvoEicher;
 using HPCL.Common.Models.ViewModel.VolvoEicher;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,5 +25,9 @@ namespace HPCL.Service.Interfaces
         Task<InsertResponse> ResetVEDealerPassword(string UserName);
         Task<ViewVEDealerOTCCardDetailsModel> ViewVEDealerUnmappedOTCCardDetails();
         Task<VEOTCCardDealerAllocationResponse> GetViewVEOTCCardDealerAllocation(string DealerCode, string CardNo);
+        Task<VECardCreationModel> CreateMultipleOTCCard();
+        Task<GetSalesExecutiveEmployeeIDResponse> GetVESalesExecutiveEmpId(string dealerCode);
+        Task<VECardCreationModel> GetMultipleOTCCardPartialView([FromBody] List<VECardEntryDetails> arrs);
+        Task<VECardCreationModel> CreateMultipleOTCCard(VECardCreationModel model);
     }
 }

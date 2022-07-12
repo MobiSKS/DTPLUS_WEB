@@ -166,7 +166,7 @@ namespace HPCL_Web.Controllers
             return Json(new { reasonList = reasonList });
         }
 
-        public IActionResult RequestAvailEnroll()
+        public IActionResult RequestToAvail()
         {
             return View();
         }

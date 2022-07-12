@@ -11,6 +11,7 @@ using HPCL.Common.Models.ViewModel.AshokLeyLand;
 using HPCL.Common.Models.ViewModel.VolvoEicher;
 using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -448,6 +449,132 @@ namespace HPCL.Service.Services
             response = JsonConvert.DeserializeObject<VEOTCCardDealerAllocationResponse>(ResponseContent);
 
             return response;
+        }
+        public async Task<VECardCreationModel> CreateMultipleOTCCard()
+        {
+            VECardCreationModel model = new VECardCreationModel();
+            model.Remarks = "";
+            model.ExternalPANAPIStatus = _configuration.GetSection("ExternalAPI:PANAPI").Value.ToString();
+            if (string.IsNullOrEmpty(model.ExternalPANAPIStatus))
+            {
+                model.ExternalPANAPIStatus = "Y";
+            }
+            model.CustomerStateMdl.AddRange(await _commonActionService.GetStateList());
+            model.VehicleTypeMdl.AddRange(await _commonActionService.GetVehicleTypeDropdown());
+            return model;
+        }
+        public async Task<GetSalesExecutiveEmployeeIDResponse> GetVESalesExecutiveEmpId(string dealerCode)
+        {
+            GetSalesExecutiveEmployeeIDResponse customerCardInfo = new GetSalesExecutiveEmployeeIDResponse();
+
+            var requestInfo = new GetAvailityALOTCCardRequest()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                DealerCode = dealerCode
+            };
+
+            StringContent custRefcontent = new StringContent(JsonConvert.SerializeObject(requestInfo), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(custRefcontent, WebApiUrl.getVolvoEicherSalesExeEmpidAddonOtcCardMapping);
+
+            SalesExecutiveEmployeeIDResponse salesExecutiveEmployeeIDResponse = JsonConvert.DeserializeObject<SalesExecutiveEmployeeIDResponse>(response);
+
+
+            if (salesExecutiveEmployeeIDResponse.Internel_Status_Code == 1000)
+            {
+                customerCardInfo.SalesExecutiveEmployeeID = salesExecutiveEmployeeIDResponse.Data[0].SalesExecutiveEmployeeID;
+                customerCardInfo.StatusCode = salesExecutiveEmployeeIDResponse.Internel_Status_Code;
+            }
+            else
+            {
+                if (salesExecutiveEmployeeIDResponse.Data.Count > 0)
+                {
+                    customerCardInfo.Reason = salesExecutiveEmployeeIDResponse.Data[0].Reason;
+                    customerCardInfo.SalesExecutiveEmployeeID = "";
+                }
+                else
+                {
+                    customerCardInfo.Reason = "";
+                    customerCardInfo.SalesExecutiveEmployeeID = "";
+                }
+                customerCardInfo.StatusCode = salesExecutiveEmployeeIDResponse.Internel_Status_Code;
+            }
+            return customerCardInfo;
+        }
+        public async Task<VECardCreationModel> GetMultipleOTCCardPartialView([FromBody] List<VECardEntryDetails> arrs)
+        {
+            VECardCreationModel addAddOnCard = new VECardCreationModel();
+
+            if (!string.IsNullOrEmpty(arrs[0].Message))
+                addAddOnCard.Message = arrs[0].Message;
+            addAddOnCard.NoOfCards = arrs[0].NoOfCards;
+            addAddOnCard.DealerCode = arrs[0].DealerCode;
+
+            if (arrs != null && arrs.Count > 0 && ((!string.IsNullOrEmpty(arrs[0].CardNo))))
+                addAddOnCard.ObjVECardEntryDetail = arrs;
+
+            addAddOnCard.ExternalVehicleAPIStatus = _configuration.GetSection("ExternalAPI:VehicleAPI").Value.ToString();
+
+            if (string.IsNullOrEmpty(addAddOnCard.ExternalVehicleAPIStatus))
+            {
+                addAddOnCard.ExternalVehicleAPIStatus = "Y";
+            }
+
+            return addAddOnCard;
+        }
+        public async Task<VECardCreationModel> CreateMultipleOTCCard(VECardCreationModel model)
+        {
+            model.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
+            model.UserAgent = CommonBase.useragent;
+            model.UserIp = CommonBase.userip;
+            model.CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId");
+            model.CommunicationPhoneNo = (String.IsNullOrEmpty(model.CommunicationDialCode) ? "" : model.CommunicationDialCode) + "-" + (String.IsNullOrEmpty(model.CommunicationPhonePart2) ? "" : model.CommunicationPhonePart2);
+            model.CommunicationFax = (String.IsNullOrEmpty(model.CommunicationFaxCode) ? "" : model.CommunicationFaxCode) + "-" + (String.IsNullOrEmpty(model.CommunicationFaxPart2) ? "" : model.CommunicationFaxPart2);
+            if (!string.IsNullOrEmpty(model.CommunicationEmailid))
+            {
+                model.CommunicationEmailid = model.CommunicationEmailid.ToLower();
+            }
+            foreach (VECardEntryDetails cardDetails in model.ObjVECardEntryDetail)
+            {
+                if (!string.IsNullOrEmpty(cardDetails.VechileNo))
+                    cardDetails.VechileNo = cardDetails.VechileNo.ToUpper();
+            }
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.insertVolvoEicherCustomer);
+
+
+            CustomerResponse customerResponse = JsonConvert.DeserializeObject<CustomerResponse>(response);
+
+            model.Internel_Status_Code = customerResponse.Internel_Status_Code;
+            model.Remarks = customerResponse.Message;
+
+            foreach (VECardEntryDetails cardDetails in model.ObjVECardEntryDetail)
+            {
+                cardDetails.VehicleNoMsg = "";
+                cardDetails.MobileNoMsg = "";
+                cardDetails.CardNoMsg = "";
+                cardDetails.VINNoMsg = "";
+            }
+            if (customerResponse.Internel_Status_Code != 1000)
+            {
+                if (customerResponse != null && customerResponse.Data != null && customerResponse.Data.Count > 0)
+                    model.Remarks = customerResponse.Data[0].Reason;
+                else
+                    model.Remarks = customerResponse.Message;
+                model.CustomerStateMdl.AddRange(await _commonActionService.GetStateList());
+                model.CommunicationDistrictMdl.AddRange(await _commonActionService.GetDistrictDetails(model.CommunicationStateId));
+                model.VehicleTypeMdl.AddRange(await _commonActionService.GetVehicleTypeDropdown());
+            }
+            else
+            {
+                if (customerResponse != null && customerResponse.Data != null && customerResponse.Data.Count > 0)
+                    model.Remarks = customerResponse.Data[0].Reason;
+            }
+
+            return model;
         }
 
     }

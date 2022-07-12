@@ -38,7 +38,7 @@ namespace HPCL.Service.Services
             {
                 searchBody = new CustomerCards
                 {
-                    UserId = UserName,
+                    UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                     UserAgent = CommonBase.useragent,
                     UserIp = CommonBase.userip,
                     CustomerId = entity.CustomerId,
@@ -53,7 +53,7 @@ namespace HPCL.Service.Services
             {
                 searchBody = new CustomerCards
                 {
-                    UserId = UserName,
+                    UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                     UserAgent = CommonBase.useragent,
                     UserIp = CommonBase.userip,
                     CustomerId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
@@ -71,7 +71,7 @@ namespace HPCL.Service.Services
 
                 searchBody = new CustomerCards
                 {
-                    UserId = UserName,
+                    UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                     UserAgent = CommonBase.useragent,
                     UserIp = CommonBase.userip,
                     CustomerId = vGrid.CustomerId,

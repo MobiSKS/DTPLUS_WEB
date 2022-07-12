@@ -150,6 +150,42 @@ namespace HPCL_Web.Controllers
             var modals = await _volvoEicherService.GetViewVEOTCCardDealerAllocation(DealerCode, CardNo);
             return PartialView("~/Views/VolvoEicher/_VEOTCCardsDealerAllocationTable.cshtml", modals);
         }
+        public async Task<IActionResult> CreateMultipleOTCCard()
+        {
+            var modals = await _volvoEicherService.CreateMultipleOTCCard();
+            return View(modals);
+        }
+        [HttpPost]
+        public async Task<JsonResult> GetVESalesExecutiveEmpId(string dealerCode)
+        {
+            var model = await _volvoEicherService.GetVESalesExecutiveEmpId(dealerCode);
+
+            return Json(model);
+        }
+        public async Task<IActionResult> GetMultipleOTCCardPartialView([FromBody] List<VECardEntryDetails> objCardDetails)
+        {
+            var modals = await _volvoEicherService.GetMultipleOTCCardPartialView(objCardDetails);
+            return PartialView("~/Views/VolvoEicher/_MultipleOTCCardVehicleDetailsTbl.cshtml", modals);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateMultipleOTCCard(VECardCreationModel model)
+        {
+
+            model = await _volvoEicherService.CreateMultipleOTCCard(model);
+
+            if (model.Internel_Status_Code == 1000)
+            {
+                return RedirectToAction("SuccessRedirectVECustomer", new { Message = model.Remarks });
+            }
+
+            return View(model);
+        }
+        public async Task<IActionResult> SuccessRedirectVECustomer(string Message)
+        {
+            ViewBag.Message = Message;
+            return View();
+        }
 
     }
 }
