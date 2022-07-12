@@ -29,5 +29,6 @@ namespace HPCL.Service.Interfaces
         Task<GetSalesExecutiveEmployeeIDResponse> GetVESalesExecutiveEmpId(string dealerCode);
         Task<VECardCreationModel> GetMultipleOTCCardPartialView([FromBody] List<VECardEntryDetails> arrs);
         Task<VECardCreationModel> CreateMultipleOTCCard(VECardCreationModel model);
+        Task<List<VEOTCCardResponse>> GetAvailableVEOTCCardForDealer(string DealerCode);
     }
 }

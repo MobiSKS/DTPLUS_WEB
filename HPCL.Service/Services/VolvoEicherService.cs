@@ -576,6 +576,27 @@ namespace HPCL.Service.Services
 
             return model;
         }
+        public async Task<List<VEOTCCardResponse>> GetAvailableVEOTCCardForDealer(string DealerCode)
+        {
+
+            var requestinfo = new GetAvailityALOTCCardRequest()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                DealerCode = DealerCode
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(requestinfo), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getAvailityVolvoEicherOtcCard);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<VEOTCCardResponse> searchList = jarr.ToObject<List<VEOTCCardResponse>>();
+
+            return searchList;
+        }
 
     }
 }
