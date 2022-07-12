@@ -13,5 +13,6 @@ namespace HPCL.Common.Models.ResponseModel.CustomerFinancial
         public string CardNo { get; set; }
         public int Status { get; set; }
         public string Reason { get; set; }
+        public string RecordNumber { get; set; }
     }
 }

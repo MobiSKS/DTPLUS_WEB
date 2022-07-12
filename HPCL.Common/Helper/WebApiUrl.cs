@@ -312,6 +312,8 @@
         public static string updateAlCustomerDetail = "api/dtplus/ashokleyland/update_al_customer_detail";
         public static string getAlPendingKycCustomer = "api/dtplus/ashokleyland/get_al_pending_kyc_customer";
         public static string updateAlCommunicationEmailResetPassword = "api/dtplus/ashokleyland/update_al_communication_email_reset_password";
+        public static string getAlUploadKycDocument = "api/dtplus/ashokleyland/get_al_upload_kyc_document";
+        public static string insertAlCustomerKYC = "api/dtplus/ashokleyland/insert_al_customer_kyc";
         #endregion
 
         #region Customer Financial
@@ -536,6 +538,7 @@
         public static string viewVolvoEicherDealerOtcCardDetail = "api/dtplus/VE/view_volvo_eicher_dealer_otc_card_detail";
         public static string getVolvoEicherSalesExeEmpidAddonOtcCardMapping = "api/dtplus/VE/get_volvo_eicher_sales_exe_empid_addon_otc_card_mapping";
         public static string insertVolvoEicherCustomer = "api/dtplus/VE/insert_volvo_eicher_customer";
+        public static string getAvailityVolvoEicherOtcCard = "api/dtplus/VE/get_availity_volvo_eicher_otc_card";
         #endregion
 
         #region COMCO Manager

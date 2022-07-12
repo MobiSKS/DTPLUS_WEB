@@ -396,9 +396,17 @@
                                     }
                                 }
 
+                                if(CardNo.trim() == "" && MobileNo.trim() == ""){
+                                    $("#ExcelDataError").html('');
+                                    $("#ExcelDataError").append("<span>Invalid Record "+currentIndex+":- Either provide Card Number or Mobile Number</span>");
+                                    $("#excel_file").val('');
+                                    document.getElementById("ExcelDataError").style.display = "block";
+                                    return false;
+                                }
+
                                 if(CardNo.trim() != "" && MobileNo.trim() != ""){
                                     $("#ExcelDataError").html('');
-                                    $("#ExcelDataError").append("<span>Invalid Record "+currentIndex+":- Either provide card Number or Mobile Number</span>");
+                                    $("#ExcelDataError").append("<span>Invalid Record "+currentIndex+":- Either provide Card Number or Mobile Number</span>");
                                     $("#excel_file").val('');
                                     document.getElementById("ExcelDataError").style.display = "block";
                                     return false;
@@ -484,19 +492,10 @@
 
                                         var currentIndex = index + 1;
 
-                                        var Cardno = $(tr).find(':nth-child(1)').text();
-                                        var MobNo = $(tr).find(':nth-child(2)').text();
-
-
                                         for(var i =0;i<res.reasonList.data.length;i++){
                                             if(res.reasonList.data[i].status == 0){
 
-                                                var n = res.reasonList.data[i].reason.split(' ');
-                                                var resMobNo = n[n.length - 1];
-
-                                                console.log(resMobNo);
-
-                                                if(Cardno == res.reasonList.data[i].cardNo || MobNo == resMobNo){
+                                                if(currentIndex == res.reasonList.data[i].recordNumber){
                                                     var bindRes = "<span>Record No "+currentIndex+":- "+(res.reasonList.data[i].reason)+"</span><br>";
 
                                                     $(tr).find(':nth-child(4)').append(bindRes);

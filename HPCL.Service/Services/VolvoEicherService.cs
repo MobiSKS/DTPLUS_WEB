@@ -513,7 +513,7 @@ namespace HPCL.Service.Services
             addAddOnCard.DealerCode = arrs[0].DealerCode;
 
             if (arrs != null && arrs.Count > 0 && ((!string.IsNullOrEmpty(arrs[0].CardNo))))
-                addAddOnCard.ObjVECardEntryDetail = arrs;
+                addAddOnCard.ObjALCardEntryDetail = arrs;
 
             addAddOnCard.ExternalVehicleAPIStatus = _configuration.GetSection("ExternalAPI:VehicleAPI").Value.ToString();
 
@@ -536,7 +536,7 @@ namespace HPCL.Service.Services
             {
                 model.CommunicationEmailid = model.CommunicationEmailid.ToLower();
             }
-            foreach (VECardEntryDetails cardDetails in model.ObjVECardEntryDetail)
+            foreach (VECardEntryDetails cardDetails in model.ObjALCardEntryDetail)
             {
                 if (!string.IsNullOrEmpty(cardDetails.VechileNo))
                     cardDetails.VechileNo = cardDetails.VechileNo.ToUpper();
@@ -551,7 +551,7 @@ namespace HPCL.Service.Services
             model.Internel_Status_Code = customerResponse.Internel_Status_Code;
             model.Remarks = customerResponse.Message;
 
-            foreach (VECardEntryDetails cardDetails in model.ObjVECardEntryDetail)
+            foreach (VECardEntryDetails cardDetails in model.ObjALCardEntryDetail)
             {
                 cardDetails.VehicleNoMsg = "";
                 cardDetails.MobileNoMsg = "";
@@ -575,6 +575,27 @@ namespace HPCL.Service.Services
             }
 
             return model;
+        }
+        public async Task<List<VEOTCCardResponse>> GetAvailableVEOTCCardForDealer(string DealerCode)
+        {
+
+            var requestinfo = new GetAvailityALOTCCardRequest()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                DealerCode = DealerCode
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(requestinfo), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getAvailityVolvoEicherOtcCard);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<VEOTCCardResponse> searchList = jarr.ToObject<List<VEOTCCardResponse>>();
+
+            return searchList;
         }
 
     }

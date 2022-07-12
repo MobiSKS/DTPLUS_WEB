@@ -341,5 +341,10 @@ namespace HPCL_Web.Controllers
             var searchList = await _cardService.GetGenericAttachedVehicle(entity);
             return Json(new { searchList = searchList });
         }
+
+        public IActionResult CardWiseLimitAuditTrail()
+        {
+            return View();
+        }
     }
 }

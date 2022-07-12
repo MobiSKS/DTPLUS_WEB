@@ -2,6 +2,7 @@
 using HPCL.Common.Models.CommonEntity;
 using HPCL.Common.Models.CommonEntity.ResponseEnities;
 using HPCL.Common.Models.ResponseModel.CustomerManage;
+using HPCL.Common.Models.ResponseModel.VolvoEicher;
 using HPCL.Common.Models.ViewModel.VolvoEicher;
 using HPCL.Common.Resources;
 using HPCL.Service.Interfaces;
@@ -185,6 +186,20 @@ namespace HPCL_Web.Controllers
         {
             ViewBag.Message = Message;
             return View();
+        }
+        [HttpPost]
+        public async Task<JsonResult> GetAvailableVEOTCCardForDealer(string DealerCode)
+        {
+            List<VEOTCCardResponse> lstCardDetails = await _volvoEicherService.GetAvailableVEOTCCardForDealer(DealerCode);
+
+            if (lstCardDetails != null)
+            {
+                return Json(new { lstCardDetails = lstCardDetails });
+            }
+            else
+            {
+                return Json("Failed to load Card Details");
+            }
         }
 
     }
