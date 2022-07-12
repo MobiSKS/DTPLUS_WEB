@@ -513,7 +513,7 @@ namespace HPCL.Service.Services
             addAddOnCard.DealerCode = arrs[0].DealerCode;
 
             if (arrs != null && arrs.Count > 0 && ((!string.IsNullOrEmpty(arrs[0].CardNo))))
-                addAddOnCard.ObjVECardEntryDetail = arrs;
+                addAddOnCard.ObjALCardEntryDetail = arrs;
 
             addAddOnCard.ExternalVehicleAPIStatus = _configuration.GetSection("ExternalAPI:VehicleAPI").Value.ToString();
 
@@ -536,7 +536,7 @@ namespace HPCL.Service.Services
             {
                 model.CommunicationEmailid = model.CommunicationEmailid.ToLower();
             }
-            foreach (VECardEntryDetails cardDetails in model.ObjVECardEntryDetail)
+            foreach (VECardEntryDetails cardDetails in model.ObjALCardEntryDetail)
             {
                 if (!string.IsNullOrEmpty(cardDetails.VechileNo))
                     cardDetails.VechileNo = cardDetails.VechileNo.ToUpper();
@@ -551,7 +551,7 @@ namespace HPCL.Service.Services
             model.Internel_Status_Code = customerResponse.Internel_Status_Code;
             model.Remarks = customerResponse.Message;
 
-            foreach (VECardEntryDetails cardDetails in model.ObjVECardEntryDetail)
+            foreach (VECardEntryDetails cardDetails in model.ObjALCardEntryDetail)
             {
                 cardDetails.VehicleNoMsg = "";
                 cardDetails.MobileNoMsg = "";
