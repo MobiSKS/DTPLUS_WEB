@@ -359,6 +359,11 @@ namespace HPCL_Web.Controllers
             var result = await _ashokLeyLandService.ResetAlDealerPassword(UserName);
             return Json(new { result = result });
         }
+        public async Task<IActionResult> SuccessUploadAlRedirect(string Message)
+        {
+            ViewBag.Message = Message;
+            return View();
+        }
 
     }
 }
