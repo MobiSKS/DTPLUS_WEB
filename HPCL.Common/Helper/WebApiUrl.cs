@@ -312,6 +312,8 @@
         public static string updateAlCustomerDetail = "api/dtplus/ashokleyland/update_al_customer_detail";
         public static string getAlPendingKycCustomer = "api/dtplus/ashokleyland/get_al_pending_kyc_customer";
         public static string updateAlCommunicationEmailResetPassword = "api/dtplus/ashokleyland/update_al_communication_email_reset_password";
+        public static string getAlUploadKycDocument = "api/dtplus/ashokleyland/get_al_upload_kyc_document";
+        public static string insertAlCustomerKYC = "api/dtplus/ashokleyland/insert_al_customer_kyc";
         #endregion
 
         #region Customer Financial

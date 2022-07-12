@@ -1,4 +1,9 @@
 ﻿@model HPCL.Common.Models.ViewModel.AshokLeyLand.UploadALDoc
+@using HPCL.Common.Resources;
+@{
+    ViewData["Title"] = "Upload K.Y.C Documents";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
 
 <div class="col-lg-12 p-4 p-md-4">
     <div class="bg-white p-2 p-md-4">
@@ -6,7 +11,7 @@
             <li class="breadcrumb-item"><a href="#" class="text_primary">Request</a> </li>
             <li class="breadcrumb-item font-weight-light">Upload K.Y.C Documents</li>
         </ul>
-        <form>
+        <form id="saveDocs" method="post" data-ajax="true" enctype="multipart/form-data" asp-controller="AshokLeyland" asp-action="SaveUploadDoc" data-ajax-method="POST" data-ajax-success="OnSuccessUploadDocSave" data-ajax-failure="OnFailure">
             <div class="w-100">
                 <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
                     <div class="border-1 rounded border-grey">
@@ -18,16 +23,17 @@
                                         <label class="font-weight-normal col-md-2 col-12">Customer ID<sup class="text-danger">*</sup></label>
                                         <div class="col-sm-3 col-md-3 col-12">
                                             <div class="custom_select">
-                                                <input class="form-control" id="" name="customerid" type="text" value="">
+                                                @Html.TextBoxFor(m => m.CustomerID, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)" })
+                                                @Html.ValidationMessageFor(m => m.CustomerID, "", new { @class = "error", @id = "CustomerIdValErrMsg" })
                                             </div>
                                         </div>
                                         <div class="col-md-7 col-12">
                                             <div class="d-flex align-items-center flex-wrap">
                                                 <div class="px-2">
-                                                    <button class="btn btn_primary regrate_btn" type="button">Search</button>
+                                                    <button class="btn btn_primary" type="button" onclick="ViewCustomerDetails()" id="btnSearch">@Label.Search</button>
                                                 </div>
                                                 <div class="px-2">
-                                                    <button class="btn btn_primary regrate_btn" type="button">Reset</button>
+                                                    <button class="btn btn_primary px-4 py-2" type="button" id="btnReset">@Label.Reset</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -39,72 +45,637 @@
                         <div class="clearfix"></div>
                     </div>
                 </div>
-                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3">
+                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3" id="dvDetails" style="display:none">
                     <div class="border-1 rounded border-grey">
                         <table class="table table-bordered d-md-table d-block mb-0">
                             <tbody>
                                 <tr>
                                     <td><strong>Customer Address Proof</strong></td>
-                                    <td>File does not exits!</td>
+                                    <td>
+                                        <label class="font-weight-normal" id="lblAddressProof">File does not exits!</label>
+                                        <button class="btn btn_primary regrate_btn mb-3" id="DownloadAddressProof" type="button">Download</button>
+                                    </td>
                                     <td>
                                         <div class="custom_select">
-                                            <input class="form-control-file" id="" name="" type="file" value="">
+                                            @*<input class="form-control-file" id="" name="" type="file" value="">*@
+                                            @Html.TextBoxFor(m => m.AddressProof, new { @class = "form-control form-control-file myfilen", Type = "file" })
                                             <p class="mb-0 pt-1">Only pdf,png,jpeg,jpg files are supported. File size should not be greater than 1MB.</p>
+                                            @Html.ValidationMessageFor(m => m.AddressProof, "", new { @id = "AddressProofErr", @class = "text-danger" })
                                         </div>
                                     </td>
-                                    <td><button class="btn btn_primary regrate_btn mb-3" type="button">Upload</button></td>
+                                    @*<td><button class="btn btn_primary regrate_btn mb-3" type="button">Upload</button></td>*@
                                 </tr>
                                 <tr>
                                     <td><strong>PAN Card Details</strong></td>
-                                    <td>File does not exits!</td>
+                                    <td>
+                                        <label class="font-weight-normal" id="lblPanCardProof">File does not exits!</label>
+                                        <button class="btn btn_primary regrate_btn mb-3" id="DownloadPanCardProof" type="button">Download</button>
+                                    </td>
                                     <td>
                                         <div class="custom_select">
-                                            <input class="form-control-file" id="" name="" type="file" value="">
+                                            @Html.TextBoxFor(m => m.PanCardProof, new { @class = "form-control form-control-file myfilen", Type = "file" })
                                             <p class="mb-0 pt-1">Only pdf,png,jpeg,jpg files are supported. File size should not be greater than 1MB.</p>
+                                            @Html.ValidationMessageFor(m => m.PanCardProof, "", new { @id = "PanCardProofErr", @class = "text-danger" })
                                         </div>
                                     </td>
-                                    <td><button class="btn btn_primary regrate_btn mb-3" type="button">Upload</button></td>
+                                    @*<td><button class="btn btn_primary regrate_btn mb-3" type="button">Upload</button></td>*@
                                 </tr>
                                 <tr>
                                     <td><strong>ID Proof of Owner/Partner</strong></td>
-                                    <td>File does not exits!</td>
+                                    <td>
+                                        <label class="font-weight-normal" id="lblIDProof">File does not exits!</label>
+                                        <button class="btn btn_primary regrate_btn mb-3" id="DownloadIDProof" type="button">Download</button>
+                                    </td>
                                     <td>
                                         <div class="custom_select">
-                                            <input class="form-control-file" id="" name="" type="file" value="">
+                                            @Html.TextBoxFor(m => m.IDProof, new { @class = "form-control form-control-file myfilen", Type = "file" })
                                             <p class="mb-0 pt-1">Only pdf,png,jpeg,jpg files are supported. File size should not be greater than 1MB.</p>
+                                            @Html.ValidationMessageFor(m => m.IDProof, "", new { @id = "IDProofErr", @class = "text-danger" })
                                         </div>
                                     </td>
-                                    <td><button class="btn btn_primary regrate_btn mb-3" type="button">Upload</button></td>
+                                    @*<td><button class="btn btn_primary regrate_btn mb-3" type="button">Upload</button></td>*@
                                 </tr>
                                 <tr>
                                     <td><strong>Vehicle Details</strong></td>
-                                    <td>File does not exits!</td>
+                                    <td>
+                                        <label class="font-weight-normal" id="lblVehicleDetail">File does not exits!</label>
+                                        <button class="btn btn_primary regrate_btn mb-3" id="DownloadVehicleDetail" type="button">Download</button>
+                                    </td>
                                     <td>
                                         <div class="custom_select">
-                                            <input class="form-control-file" id="" name="" type="file" value="">
+                                            @Html.TextBoxFor(m => m.VehicleDetail, new { @class = "form-control form-control-file myfilen", Type = "file" })
                                             <p class="mb-0 pt-1">Only pdf,png,jpeg,jpg files are supported. File size should not be greater than 1MB.</p>
+                                            @Html.ValidationMessageFor(m => m.VehicleDetail, "", new { @id = "VehicleDetailErr", @class = "text-danger" })
                                         </div>
                                     </td>
-                                    <td><button class="btn btn_primary regrate_btn mb-3" type="button">Upload</button></td>
+                                    @*<td><button class="btn btn_primary regrate_btn mb-3" type="button">Upload</button></td>*@
                                 </tr>
                                 <tr>
                                     <td><strong>Signed Customer Form</strong></td>
-                                    <td>File does not exits!</td>
+                                    <td>
+                                        <label class="font-weight-normal" id="lblSignedCustomerForm">File does not exits!</label>
+                                        <button class="btn btn_primary regrate_btn mb-3" id="DownloadSignedCustomerForm" type="button">Download</button>
+                                    </td>
                                     <td>
                                         <div class="custom_select">
-                                            <input class="form-control-file" id="" name="" type="file" value="">
+                                            @Html.TextBoxFor(m => m.SignedCustomerForm, new { @class = "form-control form-control-file myfilen", Type = "file" })
                                             <p class="mb-0 pt-1">Only pdf,png,jpeg,jpg files are supported. File size should not be greater than 1MB.</p>
+                                            @Html.ValidationMessageFor(m => m.SignedCustomerForm, "", new { @id = "SignedCustomerFormErr", @class = "text-danger" })
                                         </div>
                                     </td>
-                                    <td><button class="btn btn_primary regrate_btn mb-3" type="button">Upload</button></td>
+                                    @*<td><button class="btn btn_primary regrate_btn mb-3" type="button">Upload</button></td>*@
                                 </tr>
                             </tbody>
                         </table>
                     </div>
+                    <div class="clearfix"></div>
+
+                    <div class="d-flex align-items-center justify-content-center mt-3">
+                        <div class="px-2">
+                            <button class="btn btn_primary" type="submit" id="btnSaveDoc" name="submit">SAVE</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div>
+                    <div style="display:none;" class="alert alert-danger mt-3 text-center ml-3 mr-3" id="noRecord">
+                    </div>
                 </div>
             </div>
+            @Html.HiddenFor(model => Model.AddressProofFront)
+            @Html.HiddenFor(model => Model.IdProofFront)
+            @Html.HiddenFor(model => Model.PanCardFront)
+            @Html.HiddenFor(model => Model.VehicleDetailsFront)
+            @Html.HiddenFor(model => Model.CustomerFormProofFront)
         </form>
         <div class="clearfix"></div>
     </div>
 </div>
 <div class="clearfix"></div>
+<script>
+    $(document).ready(function () {
+
+         if ($("#CustomerID").val() != "") 
+         {
+             $("#btnSearch").click();
+         }
+
+         var addFront;
+         var idFront;
+         var panFront;
+         var vehicleFront;
+         var signedFront; 
+             
+         $("#AddressProof").change(function () {
+             $("#AddressProofErr").text("");
+
+             addFront = $(this).val().replace(/C:\\Fakepath\\/i, '');
+
+             if(addFront == idFront)
+             {
+                $("#AddressProofErr").text("");
+                $('#AddressProof').val('');
+                $("#AddressProofErr").text("File already used");
+                return false;
+             }
+             else if(addFront == panFront)
+             {
+                $("#AddressProofErr").text("");
+                $('#AddressProof').val('');
+                $("#AddressProofErr").text("File already used");
+                return false;
+             }
+             else if(addFront == vehicleFront)
+             {
+                $("#AddressProofErr").text("");
+                $('#AddressProof').val('');
+                $("#AddressProofErr").text("File already used");
+                return false;
+             }
+             else if(addFront == signedFront)
+             {
+                $("#AddressProofErr").text("");
+                $('#AddressProof').val('');
+                $("#AddressProofErr").text("File already used");
+                return false;
+             }
+             console.log("this.files[0].size  :",this.files[0].size);
+
+             var regex = /(.*?)\.(pdf|png|jpeg|JPEG|jpg)$/;
+             if (regex.test($(this).val())) 
+             {
+                 if (typeof (FileReader) != "undefined") 
+                 {
+                     if(this.files[0].size < 1048576)
+                     {
+                         
+                     }
+                     else
+                     {
+                        $("#AddressProofErr").text("");
+                        $('#AddressProof').val('');
+                        $("#AddressProofErr").text("Document File should not exceeded from 1MB");
+                        addFront = "";
+                     } 
+
+                 } 
+                 else 
+                 {
+                     $('#AddressProof').val('');
+                 }
+             } 
+             else 
+             {
+                $("#AddressProofErr").text("");
+                $('#AddressProof').val('');
+                $("#AddressProofErr").text("Invalid File Type");
+                addFront = "";
+             }
+         });
+                  
+
+         $("#PanCardProof").change(function () {
+             $("#PanCardProofErr").text("");
+
+             panFront = $(this).val().replace(/C:\\Fakepath\\/i, '');
+
+             if(panFront == addFront)
+             {
+                $("#PanCardProofErr").text("");
+                $('#PanCardProof').val('');
+                $("#PanCardProofErr").text("File already used");
+                return false;
+             }
+             else if(panFront == idFront)
+             {
+                $("#PanCardProofErr").text("");
+                $('#PanCardProof').val('');
+                $("#PanCardProofErr").text("File already used");
+                return false;
+             }
+             else if(panFront == vehicleFront)
+             {
+                $("#PanCardProofErr").text("");
+                $('#PanCardProof').val('');
+                $("#PanCardProofErr").text("File already used");
+                return false;
+             }
+             else if(panFront == signedFront)
+             {
+                $("#PanCardProofErr").text("");
+                $('#PanCardProof').val('');
+                $("#PanCardProofErr").text("File already used");
+                return false;
+             }
+             console.log("this.files[0].size  :",this.files[0].size);
+
+             var regex = /(.*?)\.(pdf|png|jpeg|JPEG|jpg)$/;
+             if (regex.test($(this).val())) 
+             {
+                 if (typeof (FileReader) != "undefined") 
+                 {
+                     if(this.files[0].size < 1048576)
+                     {
+                         
+                     }
+                     else
+                     {
+                        $("#PanCardProofErr").text("");
+                        $('#PanCardProof').val('');
+                        $("#PanCardProofErr").text("Document File should not exceeded from 1MB");
+                        panFront = "";
+                     } 
+
+                 } 
+                 else 
+                 {
+                     $('#PanCardProof').val('');
+                 }
+             } 
+             else 
+             {
+                $("#PanCardProofErr").text("");
+                $('#PanCardProof').val('');
+                $("#PanCardProofErr").text("Invalid File Type");
+                panFront = "";
+             }
+         });
+                 
+         $("#IDProof").change(function () {
+             $("#IDProofErr").text("");
+
+             idFront = $(this).val().replace(/C:\\Fakepath\\/i, '');
+
+             if(idFront == addFront)
+             {
+                $("#IDProofErr").text("");
+                $('#IDProof').val('');
+                $("#IDProofErr").text("File already used");
+                return false;
+             }
+             else if(idFront == panFront)
+             {
+                $("#IDProofErr").text("");
+                $('#IDProof').val('');
+                $("#IDProofErr").text("File already used");
+                return false;
+             }
+             else if(idFront == vehicleFront)
+             {
+                $("#IDProofErr").text("");
+                $('#IDProof').val('');
+                $("#IDProofErr").text("File already used");
+                return false;
+             }
+             else if(idFront == signedFront)
+             {
+                $("#IDProofErr").text("");
+                $('#IDProof').val('');
+                $("#IDProofErr").text("File already used");
+                return false;
+             }
+             console.log("this.files[0].size  :",this.files[0].size);
+
+             var regex = /(.*?)\.(pdf|png|jpeg|JPEG|jpg)$/;
+             if (regex.test($(this).val())) 
+             {
+                 if (typeof (FileReader) != "undefined") 
+                 {
+                     if(this.files[0].size < 1048576)
+                     {
+                         
+                     }
+                     else
+                     {
+                        $("#IDProofErr").text("");
+                        $('#IDProof').val('');
+                        $("#IDProofErr").text("Document File should not exceeded from 1MB");
+                        idFront = "";
+                     } 
+
+                 } 
+                 else 
+                 {
+                     $('#IDProofErr').val('');
+                 }
+             } 
+             else 
+             {
+                $("#IDProofErr").text("");
+                $('#IDProof').val('');
+                $("#IDProofErr").text("Invalid File Type");
+                idFront = "";
+             }
+         });
+
+         $("#VehicleDetail").change(function () {
+             $("#VehicleDetailErr").text("");
+
+             vehicleFront = $(this).val().replace(/C:\\Fakepath\\/i, '');
+ 
+             if(vehicleFront == addFront)
+             {
+                $("#VehicleDetailErr").text("");
+                $('#VehicleDetail').val('');
+                $("#VehicleDetailErr").text("File already used");
+                return false;
+             }
+             else if(vehicleFront == idFront)
+             {
+                $("#VehicleDetailErr").text("");
+                $('#VehicleDetail').val('');
+                $("#VehicleDetailErr").text("File already used");
+                return false;
+             }
+             else if(vehicleFront == panFront)
+             {
+                $("#VehicleDetailErr").text("");
+                $('#VehicleDetail').val('');
+                $("#VehicleDetailErr").text("File already used");
+                return false;
+             }
+             else if(vehicleFront == signedFront)
+             {
+                $("#VehicleDetailErr").text("");
+                $('#VehicleDetail').val('');
+                $("#VehicleDetailErr").text("File already used");
+                return false;
+             }
+             console.log("this.files[0].size  :",this.files[0].size);
+
+             var regex = /(.*?)\.(pdf|png|jpeg|JPEG|jpg)$/;
+             if (regex.test($(this).val())) 
+             {
+                 if (typeof (FileReader) != "undefined") 
+                 {
+                     if(this.files[0].size < 1048576)
+                     {
+                         
+                     }
+                     else
+                     {
+                        $("#VehicleDetailErr").text("");
+                        $('#VehicleDetail').val('');
+                        $("#VehicleDetailErr").text("Document File should not exceeded from 1MB");
+                        vehicleFront = "";
+                     } 
+
+                 } 
+                 else 
+                 {
+                     $('#VehicleDetailErr').val('');
+                 }
+             } 
+             else 
+             {
+                $("#VehicleDetailErr").text("");
+                $('#VehicleDetail').val('');
+                $("#VehicleDetailErr").text("Invalid File Type");
+                vehicleFront = "";
+             }
+         });
+
+         $("#SignedCustomerForm").change(function () {
+             $("#SignedCustomerFormErr").text("");
+
+             signedFront = $(this).val().replace(/C:\\Fakepath\\/i, '');
+ 
+             if(signedFront == addFront)
+             {
+                $("#SignedCustomerFormErr").text("");
+                $('#SignedCustomerForm').val('');
+                $("#SignedCustomerFormErr").text("File already used");
+                return false;
+             }
+             else if(signedFront == idFront)
+             {
+                $("#SignedCustomerFormErr").text("");
+                $('#SignedCustomerForm').val('');
+                $("#SignedCustomerFormErr").text("File already used");
+                return false;
+             }
+             else if(signedFront == panFront)
+             {
+                $("#SignedCustomerFormErr").text("");
+                $('#SignedCustomerForm').val('');
+                $("#SignedCustomerFormErr").text("File already used");
+                return false;
+             }
+             else if(signedFront == vehicleFront)
+             {
+                $("#SignedCustomerFormErr").text("");
+                $('#SignedCustomerForm').val('');
+                $("#SignedCustomerFormErr").text("File already used");
+                return false;
+             }
+             console.log("this.files[0].size  :",this.files[0].size);
+
+             var regex = /(.*?)\.(pdf|png|jpeg|JPEG|jpg)$/;
+             if (regex.test($(this).val())) 
+             {
+                 if (typeof (FileReader) != "undefined") 
+                 {
+                     if(this.files[0].size < 1048576)
+                     {
+                         
+                     }
+                     else
+                     {
+                        $("#SignedCustomerFormErr").text("");
+                        $('#SignedCustomerForm').val('');
+                        $("#SignedCustomerFormErr").text("Document File should not exceeded from 1MB");
+                        signedFront = "";
+                     } 
+
+                 } 
+                 else 
+                 {
+                     $('#SignedCustomerFormErr').val('');
+                 }
+             } 
+             else 
+             {
+                $("#SignedCustomerFormErr").text("");
+                $('#SignedCustomerForm').val('');
+                $("#SignedCustomerFormErr").text("Invalid File Type");
+                signedFront = "";
+             }
+         });
+
+});
+
+$('#CustomerID').keypress(function (e) {
+    if (e.keyCode == 13) {  // detect the enter key
+        e.preventDefault();
+        $('#btnSearch').click();
+    }
+});
+
+$("#CustomerID").on("blur", function ()
+{
+    if ($("#CustomerID").val().trim() == "")
+    {
+        $('#CustomerIdValErrMsg').html("Please enter Customer ID");
+        return false;
+    }
+    else if (!$("#CustomerID").val().match(mappedCustomerId))
+    {
+        $("#CustomerIdValErrMsg").attr("style", "display:block");
+        $("#CustomerIdValErrMsg").html("Invalid Customer ID");
+        return false;
+    }
+    else
+    {
+        $('#CustomerIdValErrMsg').html("");
+    }
+
+})
+
+$("#btnReset").click(function () {
+    window.location.href = '@Url.Action("UploadALDoc", "AshokLeyland")';
+});
+
+function ViewCustomerDetails()
+{
+            debugger;
+            if ($("#CustomerID").val().trim() == "")
+            {
+                $('#CustomerIdValErrMsg').html("Please enter Customer ID");
+                return false;
+            }
+            else if (!$("#CustomerID").val().match(mappedCustomerId))
+            {
+                $("#CustomerIdValErrMsg").attr("style", "display:block");
+                $("#CustomerIdValErrMsg").html("Invalid Customer ID");
+                return false;
+            }
+            else
+            {
+               $('#CustomerIdValErrMsg').html("");
+            }
+
+
+            $.ajax({
+                url: "@Url.Action("GetAttachmentDetails", "AshokLeyland")",
+                type: "POST",
+                dataType: "JSON",
+                data: { CustomerID: $("#CustomerID").val() },
+                success: function (res)
+                {
+                    console.log("customer", res);
+
+                    if(res.status!="0")
+                    {
+                        document.getElementById("dvDetails").style.display="block";
+                        document.getElementById("noRecord").style.display = "none";
+                        document.getElementById("noRecord").innerHTML="";
+                        $("#CustomerID").prop('readonly', true);
+
+                        if(res.addressProofFront!="")
+                        {
+                            $('#AddressProofFront').val(res.addressProofFront);
+                            document.getElementById("lblAddressProof").style.display="none";
+                            document.getElementById("DownloadAddressProof").style.display="block";
+                        }
+                        else
+                        {
+                            $('#AddressProofFront').val("");
+                            document.getElementById("lblAddressProof").style.display="block";
+                            document.getElementById("DownloadAddressProof").style.display="none";
+                        }
+
+                        if(res.idProofFront!="")
+                        {
+                            $('#IdProofFront').val(res.idProofFront);
+                            document.getElementById("lblIDProof").style.display="none";
+                            document.getElementById("DownloadIDProof").style.display="block";
+                        }
+                        else
+                        {
+                            $('#IdProofFront').val("");
+                            document.getElementById("lblIDProof").style.display="block";
+                            document.getElementById("DownloadIDProof").style.display="none";
+                        }
+
+                        if(res.panCardFront!="")
+                        {
+                            $('#PanCardFront').val(res.panCardFront);
+                            document.getElementById("lblPanCardProof").style.display="none";
+                            document.getElementById("DownloadPanCardProof").style.display="block";
+                        }
+                        else
+                        {
+                            $('#PanCardFront').val("");
+                            document.getElementById("lblPanCardProof").style.display="block";
+                            document.getElementById("DownloadPanCardProof").style.display="none";
+                        }
+
+                        if(res.vehicleDetailsFront!="")
+                        {
+                            $('#VehicleDetailsFront').val(res.vehicleDetailsFront);
+                            document.getElementById("lblVehicleDetail").style.display="none";
+                            document.getElementById("DownloadVehicleDetail").style.display="block";
+                        }
+                        else
+                        {
+                            $('#VehicleDetailsFront').val("");
+                            document.getElementById("lblVehicleDetail").style.display="block";
+                            document.getElementById("DownloadVehicleDetail").style.display="none";
+                        }
+
+                        if(res.customerFormProofFront!="")
+                        {
+                            $('#CustomerFormProofFront').val(res.customerFormProofFront);
+                            document.getElementById("lblSignedCustomerForm").style.display="none";
+                            document.getElementById("DownloadSignedCustomerForm").style.display="block";
+                        }
+                        else
+                        {
+                            $('#CustomerFormProofFront').val("");
+                            document.getElementById("lblSignedCustomerForm").style.display="block";
+                            document.getElementById("DownloadSignedCustomerForm").style.display="none";
+                        }
+                                                                                    
+                    }
+                    else
+                    {
+                        document.getElementById("dvDetails").style.display="none";
+                        document.getElementById("noRecord").style.display = "block";
+                        document.getElementById("noRecord").innerHTML=res.reason;
+                        $("#CustomerID").prop('readonly', true);
+                    }
+
+                 },
+                 error: function (ex)
+                 {
+                    alert('Failed' + ex);
+                    document.getElementById("dvDetails").style.display="none";
+                    document.getElementById("noRecord").style.display = "block";
+                    document.getElementById("noRecord").innerHTML=res.reason;
+                    $("#CustomerID").prop('readonly', true);
+                 }
+
+            });
+
+        };
+               
+    function OnSuccessUploadDocSave(res) {
+        //debugger;
+        const myArray = res.split(",");
+        console.log(myArray[1]);
+        //alert(res);
+        /*alert(myArray[0]);*/
+        //var customerReferenceNo = $('#CustomerReferenceNo').val();
+        //console.log(customerReferenceNo);
+        var imagePath = $('#IdProofFrontSRC').val();
+        if (imagePath != "")
+            window.location.href = '@Url.Action("SuccessUploadDocumentRedirect", "Customer")?FormNumber='+myArray[1];
+        else
+            window.location.href = '@Url.Action("SuccessUploadRedirect", "Customer")?FormNumber='+myArray[1];
+
+    };
+
+     function OnFailure(data) {
+         alert('HTTP Status Code: ' + data + '  Error Message: ' + data);
+    }
+</script>

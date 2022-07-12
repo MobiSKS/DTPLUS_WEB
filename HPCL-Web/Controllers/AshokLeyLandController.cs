@@ -282,47 +282,66 @@ namespace HPCL_Web.Controllers
             ModelState.Clear();
             return Json(sortedtList);
         }
-        public async Task<IActionResult> UploadALDoc(string CustomerID)
+
+        [HttpPost]
+        public async Task<JsonResult> GetAttachmentDetails(string CustomerID)
         {
             UploadALDoc uploadDoc = new UploadALDoc();
-            uploadDoc.FormNumber = "";
-            uploadDoc.IdProofType = 0;
-            uploadDoc.AddressProofType = 0;
-            uploadDoc.IdProofDocumentNo = "";
-            uploadDoc.AddressProofDocumentNo = "";
+            uploadDoc.CustomerID = CustomerID;
+            uploadDoc.AddressProofFront = "";
+            uploadDoc.IdProofFront = "";
+            uploadDoc.PanCardFront = "";
+            uploadDoc.VehicleDetailsFront = "";
+            uploadDoc.CustomerFormProofFront = "";
+            uploadDoc.Reason = "";
+            uploadDoc.Status = 1;
 
             if (!string.IsNullOrEmpty(CustomerID))
             {
                 uploadDoc.CustomerID = CustomerID;
-                uploadDoc.Type = "1";
 
                 var response = await _ashokLeyLandService.UploadALDoc(CustomerID);
 
-                if (response != null)
+                if (response != null && response.Data != null && response.Data.Count > 0)
                 {
-                    uploadDoc.IdProofType = Convert.ToInt32(response.IdProofTypeId);
-                    uploadDoc.IdProofDocumentNo = response.IdProofDocumentNo;
-                    uploadDoc.IdProofFrontSRC = response.IdProofFront;
-
-                    uploadDoc.AddressProofType = Convert.ToInt32(response.AddressProofTypeId);
-                    uploadDoc.AddressProofDocumentNo = response.AddressProofDocumentNo;
-                    uploadDoc.IdProofFrontimg = response.IDProofofOwnerPartner;
-                    uploadDoc.AddProofFrontimg = response.CustomerAddressProof;
-                    uploadDoc.PanFrontimg = response.PANCarddetails;
-                    uploadDoc.VehFrontimg = response.VehicleDetails;
-                    uploadDoc.CustFrontimg = response.SignedCustomerForm;
+                    if (!string.IsNullOrEmpty(response.Data[0].AddressProofFront) && response.Data[0].AddressProofFront.ToUpper() != "FILE DOES NOT EXISTS")
+                        uploadDoc.AddressProofFront = response.Data[0].AddressProofFront;
+                    if (!string.IsNullOrEmpty(response.Data[0].IdProofFront) && response.Data[0].IdProofFront.ToUpper() != "FILE DOES NOT EXISTS")
+                        uploadDoc.IdProofFront = response.Data[0].IdProofFront;
+                    if (!string.IsNullOrEmpty(response.Data[0].PanCardFront) && response.Data[0].PanCardFront.ToUpper() != "FILE DOES NOT EXISTS")
+                        uploadDoc.PanCardFront = response.Data[0].PanCardFront;
+                    if (!string.IsNullOrEmpty(response.Data[0].VehicleDetailsFront) && response.Data[0].VehicleDetailsFront.ToUpper() != "FILE DOES NOT EXISTS")
+                        uploadDoc.VehicleDetailsFront = response.Data[0].VehicleDetailsFront;
+                    if (!string.IsNullOrEmpty(response.Data[0].CustomerFormProofFront) && response.Data[0].CustomerFormProofFront.ToUpper() != "FILE DOES NOT EXISTS")
+                        uploadDoc.CustomerFormProofFront = response.Data[0].CustomerFormProofFront;
+                    if (!string.IsNullOrEmpty(response.Data[0].Reason))
+                        uploadDoc.Reason = response.Data[0].Reason;
+                    uploadDoc.Status = response.Data[0].Status;
                 }
             }
+
+            ModelState.Clear();
+            return Json(uploadDoc);
+        }
+        
+        public async Task<IActionResult> UploadALDoc(string CustomerID)
+        {
+            UploadALDoc uploadDoc = new UploadALDoc();
+            if (!string.IsNullOrEmpty(CustomerID))
+            {
+                uploadDoc.CustomerID = CustomerID;
+            }
+
             return View(uploadDoc);
         }
 
         [HttpPost]
-        public async Task<JsonResult> UploadALDoc(UploadALDoc entity)
+        public async Task<JsonResult> SaveUploadDoc(UploadALDoc entity)
         {
-            var searchCustomer = _ashokLeyLandService.UploadALDoc(entity);
+            var reason = await _ashokLeyLandService.SaveUploadDoc(entity);
 
             ModelState.Clear();
-            return Json(new { searchCustomer = searchCustomer });
+            return Json(reason);
         }
         public async Task<IActionResult> ALPendingKYCCustomerDetail(PendingKYCCustomerDetailsModel model, string reset, string success, string error, string CustomerID)
         {
