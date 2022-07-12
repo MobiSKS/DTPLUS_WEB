@@ -35,7 +35,7 @@ namespace HPCL.Common.Models.ViewModel.AshokLeyLand
 
         public string CustomerFormProofFront { get; set; }
 
-        [Required(ErrorMessage = "Valid Form File is required")]
+        [Required(ErrorMessage = "Valid File is required")]
         public IFormFile SignedCustomerForm { get; set; }
         public string Reason { get; set; }
         public int Status { get; set; }

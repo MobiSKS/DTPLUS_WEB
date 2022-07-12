@@ -30,7 +30,7 @@
                                         <div class="col-md-7 col-12">
                                             <div class="d-flex align-items-center flex-wrap">
                                                 <div class="px-2">
-                                                    <button class="btn btn_primary" type="button" onclick="ViewCustomerDetails()" id="btnSearch">@Label.Search</button>
+                                                    <button class="btn btn_primary" type="button" onclick="ViewDetails()" id="btnSearch">@Label.Search</button>
                                                 </div>
                                                 <div class="px-2">
                                                     <button class="btn btn_primary px-4 py-2" type="button" id="btnReset">@Label.Reset</button>
@@ -158,6 +158,8 @@
          if ($("#CustomerID").val() != "") 
          {
              $("#btnSearch").click();
+             $('#btnSearch').hide();
+             $('#btnReset').hide();
          }
 
          var addFront;
@@ -535,7 +537,7 @@ $("#btnReset").click(function () {
     window.location.href = '@Url.Action("UploadALDoc", "AshokLeyland")';
 });
 
-function ViewCustomerDetails()
+function ViewDetails()
 {
             debugger;
             if ($("#CustomerID").val().trim() == "")
@@ -659,20 +661,10 @@ function ViewCustomerDetails()
 
         };
                
-    function OnSuccessUploadDocSave(res) {
+    function OnSuccessUploadDocSave(res) 
+    {
         //debugger;
-        const myArray = res.split(",");
-        console.log(myArray[1]);
-        //alert(res);
-        /*alert(myArray[0]);*/
-        //var customerReferenceNo = $('#CustomerReferenceNo').val();
-        //console.log(customerReferenceNo);
-        var imagePath = $('#IdProofFrontSRC').val();
-        if (imagePath != "")
-            window.location.href = '@Url.Action("SuccessUploadDocumentRedirect", "Customer")?FormNumber='+myArray[1];
-        else
-            window.location.href = '@Url.Action("SuccessUploadRedirect", "Customer")?FormNumber='+myArray[1];
-
+        window.location.href = '@Url.Action("SuccessUploadAlRedirect", "Customer")?Message='+res;
     };
 
      function OnFailure(data) 
