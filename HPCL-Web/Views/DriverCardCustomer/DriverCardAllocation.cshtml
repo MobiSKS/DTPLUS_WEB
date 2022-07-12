@@ -122,87 +122,86 @@
             </div>
         </form>
         <div class="clearfix"></div>
-        <div class="alert alert-danger mt-3 text-center ml-3 mr-3" id="NoRecord" style="display:none">
+        <div class="alert alert-danger mt-3 text-center mb-0" id="NoRecord" style="display:none">
             Cards not found for selected Region
         </div>
     </div>
-
 </div>
 
 <script type="text/javascript">
 
-            $("#btnUnallocatedCards").click(function () {
-                debugger;
+        $("#btnUnallocatedCards").click(function () {
+            debugger;
 
-                var RegionID = document.getElementById("CustomerRegionID").value;
-                if (RegionID == '' || RegionID=="0") {
-                    document.getElementById("CustomerRegionID_error").innerHTML = "Select Region Name";
-                    return;
-                }
-                else {
-                    document.getElementById("CustomerRegionID_error").innerHTML = "";
-                }
+            var RegionID = document.getElementById("CustomerRegionID").value;
+            if (RegionID == '' || RegionID=="0") {
+                document.getElementById("CustomerRegionID_error").innerHTML = "Select Region Name";
+                return;
+            }
+            else {
+                document.getElementById("CustomerRegionID_error").innerHTML = "";
+            }
 
-                var result = false;
-                document.getElementById("dvCards").innerHTML = "";
+            var result = false;
+            document.getElementById("dvCards").innerHTML = "";
 
-                $.ajax({
-                    type: 'POST',  // http method
-                    url: "GetAllUnAllocatedDriverCards/DriverCardCustomer",
-                    data: { RegionalId: RegionID },  // data to submit
-                    dataType: "json",
-                    success: function (data, status, xhr) {
-                        //debugger;
-                        console.log(data);
-                        //var jsonData = JSON.parse(data);
-                        console.log(data.noOfUnAllocatedCard[0].noOfUnAllocatedCards);
-                        document.getElementById("NoOfUnallocatedCards").value = data.noOfUnAllocatedCard[0].noOfUnAllocatedCards;
-                        if (Number(data.noOfUnAllocatedCard[0].noOfUnAllocatedCards) > 0) {
-                            dvDetails.style.display = 'block';
-                            NoRecord.style.display = 'none';
-                        }
-                        else {
-                            dvDetails.style.display = 'none';
-                            NoRecord.style.display = 'block';
-                        }
-                        //if (status == 'success' && jsonData['statusCode'] == '101') {
-                        //    result = true;
-                        //    document.getElementById("VehicleNo_error").innerHTML = "";
-                        //    console.log(jsonData);
-                        //    console.log(document.getElementById("VehicleNo_error").innerHTML);
-                        //}
-                        //else {
-                        //    document.getElementById("VehicleNo_error").innerHTML = "Invalid Vehicle Registration Number";
-                        //}
-
-                        var table = $('<table></table>');
-                        $(data.unAllocatedCard).each(function (index, item) {
-                            var i = parseInt(index) + 1;
-                            table.append($('<tr></tr>')
-                                .append($('<td class="py-1 d-flex align-items-center"></td>')
-                                    .append($('<input>').attr({
-                                        'id': 'chk' + item.cardNo,
-                                        'type': 'checkbox',
-                                        'name': 'card',
-                                        'value': item.cardNo
-                                    }))
-                                    .append($("<label class='mb-0 ml-1'>").attr(
-                                        {
-                                            'for': 'chk' + item.cardNo
-                                        })
-                                        .text(item.cardNo))
-                                ));
-                        });
-                        $('#dvCards').append(table);
-
-                    },
-                    error: function (jqXhr, textStatus, errorMessage) {
-                        document.getElementById("CustomerRegionID_error").innerHTML = "Error populating card details";
-
+            $.ajax({
+                type: 'POST',  // http method
+                url: "GetAllUnAllocatedDriverCards/DriverCardCustomer",
+                data: { RegionalId: RegionID },  // data to submit
+                dataType: "json",
+                success: function (data, status, xhr) {
+                    //debugger;
+                    console.log(data);
+                    //var jsonData = JSON.parse(data);
+                    console.log(data.noOfUnAllocatedCard[0].noOfUnAllocatedCards);
+                    document.getElementById("NoOfUnallocatedCards").value = data.noOfUnAllocatedCard[0].noOfUnAllocatedCards;
+                    if (Number(data.noOfUnAllocatedCard[0].noOfUnAllocatedCards) > 0) {
+                        dvDetails.style.display = 'block';
+                        NoRecord.style.display = 'none';
                     }
-                });
+                    else {
+                        dvDetails.style.display = 'none';
+                        NoRecord.style.display = 'block';
+                    }
+                    //if (status == 'success' && jsonData['statusCode'] == '101') {
+                    //    result = true;
+                    //    document.getElementById("VehicleNo_error").innerHTML = "";
+                    //    console.log(jsonData);
+                    //    console.log(document.getElementById("VehicleNo_error").innerHTML);
+                    //}
+                    //else {
+                    //    document.getElementById("VehicleNo_error").innerHTML = "Invalid Vehicle Registration Number";
+                    //}
 
+                    var table = $('<table></table>');
+                    $(data.unAllocatedCard).each(function (index, item) {
+                        var i = parseInt(index) + 1;
+                        table.append($('<tr></tr>')
+                            .append($('<td class="py-1 d-flex align-items-center"></td>')
+                                .append($('<input>').attr({
+                                    'id': 'chk' + item.cardNo,
+                                    'type': 'checkbox',
+                                    'name': 'card',
+                                    'value': item.cardNo
+                                }))
+                                .append($("<label class='mb-0 ml-1'>").attr(
+                                    {
+                                        'for': 'chk' + item.cardNo
+                                    })
+                                    .text(item.cardNo))
+                            ));
+                    });
+                    $('#dvCards').append(table);
+
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+                    document.getElementById("CustomerRegionID_error").innerHTML = "Error populating card details";
+
+                }
             });
+
+        });
 
     $("#MerchantID").focus(function(){
        $("#btnSave").attr("disabled", true);
