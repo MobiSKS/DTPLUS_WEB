@@ -276,10 +276,10 @@ namespace HPCL_Web.Controllers
             ModelState.Clear();
             return Json(result);
         }
-        public async Task<IActionResult> DeleteLocationMapping([FromBody] AddNewUserReq entity)
+        public async Task<JsonResult> DeleteLocationMapping([FromBody] AddNewUserReq entity)
         {
             var searchResult = await _securityService.DeleteLocationMapping(entity);
-            return View(searchResult);
+            return Json(searchResult);
         }
 
         public async Task<JsonResult> GetManageUserForEdit(string UserName)
