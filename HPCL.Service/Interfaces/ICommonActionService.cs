@@ -82,5 +82,6 @@ namespace HPCL.Service.Interfaces
         Task<List<CustomerZonalOfficeModel>> GetZonalOfficebySBUType(string SBUTypeId);
         Task<CustomerInserCardResponseData> CheckVINNoUsed(string VinNo);
         Task<List<ZonalOfficeResponseModal>> GetZonalOfficeListbySBUtype(string SBUTypeId);
+        Task<List<GetLimitTypeResponse>> GetAllLimitType();
     }
 }
