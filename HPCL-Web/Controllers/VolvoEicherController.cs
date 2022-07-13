@@ -200,5 +200,12 @@ namespace HPCL_Web.Controllers
             return View(modals);
         }
 
+        [HttpPost]
+        public async Task<JsonResult> UpdateVECostomerProfile(string str)
+        {
+            var result = await _volvoEicherService.UpdateVECostomerProfile(str);
+            return Json(new { result = result });
+        }
+
     }
 }

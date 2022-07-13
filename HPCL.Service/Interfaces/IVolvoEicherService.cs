@@ -33,5 +33,6 @@ namespace HPCL.Service.Interfaces
         Task<VEManageProfile> ManageProfile();
         Task<List<SearchGridResponse>> CardDetailsForSearch(string CustomerId, string CustomerTypeId);
         Task<VEAddonOTCCardMapping> ExistingCustomerCardMap();
+        Task<InsertResponse> UpdateVECostomerProfile(string str);
     }
 }
