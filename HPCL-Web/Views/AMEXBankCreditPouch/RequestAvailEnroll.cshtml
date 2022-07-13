@@ -63,6 +63,8 @@
 </div>
 <div class="clearfix"></div>
 
+@using Microsoft.AspNetCore.Http;
+
 <script>
 
     $('.restrictPaste').on('paste', function (event) {
@@ -80,6 +82,16 @@
 
             return true;
         }
+
+        var loginType = '@Context.Session.GetString("LoginType")';
+
+        var customerIdVal = '@Context.Session.GetString("UserId")';
+
+        if(loginType == "Customer"){
+            $("#CustomerDefaultVal").val(customerIdVal);
+            $("#CustomerDefaultVal").attr("readonly", true);
+        }
+
     });
 
     function resetClick() {
