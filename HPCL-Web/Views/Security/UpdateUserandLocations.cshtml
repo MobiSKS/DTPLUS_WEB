@@ -154,7 +154,7 @@
                     <div id="msgError" tabindex="0" class="mb-3 text-center alert alert-danger" style="display:none"></div>
                 </div>
                 <div class="clearfix"></div>
-                <div class="border-1 rounded border-grey w-100 mt-3">
+                <div class="border-1 rounded border-grey w-100 mt-3" >
                     <div class="d-flex align-items-start flex-wrap">
                         <div class="col-12 col-sm-3 px-0">
                             <div class="UserRoleArea">
@@ -178,7 +178,7 @@
                         </div>
 
                         <div class="col-12 col-sm-9 px-0">
-                            <div class="LocationsArea">
+                            <div class="LocationsArea disable">
                                 <h2>Locations Area</h2>
                                 <div class="panel-group" id="accordion">
                                     <!-- /.panel -->
@@ -203,9 +203,10 @@
                                                     }
                                                     @foreach (var item in Model.getUserRolesandregions.First().Data.Locations.OrderBy(x => x.ZonalOfficeID))
                                                     {
-                                                        i++;
+                                                       
                                                         @if (ZoneId != item.ZonalOfficeID)
                                                         {
+                                                             i++;
                                                             ZoneId = item.ZonalOfficeID;
                                                             <div class="panel panel-default zoneArea class_@item.ZonalOfficeID">
                                                                 <div class="panel-heading">
@@ -227,7 +228,7 @@
                                                                                 j++;
                                                                                 <li>
                                                                                     <div class="form-check form-check-inline">
-                                                                                        <input class="form-check-input chk_@i" type="checkbox" onclick="checkChanged(this,@i)" name="regionChk" id="check_@i-@item.ZonalOfficeID" value="@item1.RegionalOfficeID">
+                                                                                        <input class="form-check-input chk_@i" type="checkbox" onclick="checkChanged(this,@i)" name="regionChk" id="check_@i@j-@item.ZonalOfficeID" value="@item1.RegionalOfficeID">
                                                                                         <label class="form-check-label" for="check_@i@j">@item1.RegionalOfficeName</label>
                                                                                     </div>
                                                                                 </li>
@@ -243,7 +244,7 @@
                                                         }
                                                     }
                                                     <!-- /.panel -->
-
+                                                    <input type="hidden" id="zoneCount" value=@i>
                                                 </div>
                                                 <!-- /.panel-group -->
                                                 <!-- nested -->
@@ -279,20 +280,23 @@
 <div class="clearfix"></div>
 
 <script type="text/javascript">
-    var selectedRole="";
-       var userNameVal="";
-       var emailVal="";
-        $(document).ready(function (){
+     var selectedRole="";
+     var userNameVal="";
+     var emailVal="";
+     $(document).ready(function (){
           var update="@ViewBag.Update";
-       @*   userNameVal="@ViewBag.UserName";
-          emailVal="@ViewBag.Email";*@
           if(update=="Yes"){
               ShowUserRolesData();
           }
           else{
               ShowUserInfoData();
+              
           }
-         });
+          console.log($("#zoneCount").val());
+     });
+     //region checkbox click method to save (on checked) and delete (on uncheck)
+     //userRole should be seleted to map the region 
+
      function checkChanged(o,i){
         var userName=$("#UserName").val();
         var newEmail=$("#Email").val();
@@ -315,10 +319,10 @@
             objUserRole=[];
           
             if(o.checked){
-                objUserRole.push({ RO: o.value,ZO:zoneId ,StatusFlag:"1"});
+                objUserRole.push({ RO: o.value,ZO:zoneId ,StatusFlag:"1"});// StatusFlag will be 1 for save
             }
             else{
-                objUserRole.push({ RO: o.value,ZO:zoneId ,StatusFlag:"0"});
+                objUserRole.push({ RO: o.value,ZO:zoneId ,StatusFlag:"0"});// StatusFlag will be 0 for removing the mapped region
             }
             var ReqModel={UserName:userName,Email:newEmail,Password:"",ConfirmPassword:"",SecretQuestion:"0",SecretQuestionAnswer:"",UserRole:userRoleSelected,FirstName:"",LastName:"",StateId:"0",ActionType:"",TypeManageUsersAddUserRoleWithStatusFlag:objUserRole,UpdateStatus:"Update"};
                 $.ajax({
@@ -346,6 +350,9 @@
             }
 
         }
+        //function to check all the regions inside the zone and save 
+        //user Role should be selected to enable the Locations region
+
        function chkAllRegion(o,cnt){
            var userName=$("#UserName").val();
              var newEmail=$("#Email").val();
@@ -373,12 +380,13 @@
            $("#message").html("");
            $("#message").attr("style","display:none");
            objUserRole=[];
+          // Along with Status Flag =1 RO=0 and ZO=Zone ID will be passed as first row and rest of the region Ids and Zone Id as remaining rows
           
                 if(o.checked){
 
-                     objUserRole.push({ RO: "0",ZO:zoneId ,StatusFlag:"1"});
+                     objUserRole.push({ RO: "0",ZO:zoneId ,StatusFlag:"1"});//First row
                      $('input:checkbox.chk_'+cnt).each(function () {
-                         objUserRole.push({ RO: $(this).val(),ZO:zoneId ,StatusFlag:"1"});
+                         objUserRole.push({ RO: $(this).val(),ZO:zoneId ,StatusFlag:"1"});//remaining  rows with RO=region Id and ZO=Zone ID and Status Flag =1 to map all regions inside the zone
                      });
                
                 }
@@ -417,6 +425,8 @@
             }
        }
 
+       //inorder to disable the regions other than selected-Not used 
+
        function DisableArea(o,cnt){
            var chkROId=o.id;
            var zoneId=chkROId.substring(chkROId.indexOf('-') + 1);
@@ -431,53 +441,131 @@
            @*if(checkedCnt==0)
                $(".zoneArea").removeClass("disable");*@
        }
+
+       //To select all the regions inside a zone
         $("#checkAll").click(function () {
             $('input:checkbox').not(this).prop('checked', this.checked);
             $("#message").html("");
             $("#message").attr("style","display:none");
+            var userName=$("#UserName").val();
+            var newEmail=$("#Email").val();
+            var userRoleSelected=selectedRole;
+            if(userRoleSelected==""){
+                $("#msgError").html("Please Select Roles for User");
+                $("#msgError").attr("style","display:block");
+                $("#msgError").focus();
+                var id=o.id;
+                $("#"+id).click(function (e) {
+                    e.preventDefault();
+                });     
+            }
+            else{
+        
+           $("#message").html("");
+           $("#message").attr("style","display:none");
+           objUserRole=[];
+          var zoneCnt=$("#zoneCount").val();
+
+          for(var cnt=1;cnt<=zoneCnt;cnt++){
+                if(this.checked){
+                     $('input:checkbox#check_'+cnt).each(function () {
+                         var zoneId=$(this).val();
+                         objUserRole.push({ RO: "0",ZO:zoneId ,StatusFlag:"1"});
+                         $('input:checkbox.chk_'+cnt).each(function () {
+                             objUserRole.push({ RO: $(this).val(),ZO:zoneId ,StatusFlag:"1"});
+                         });
+                     });
+               
+                }
+                else{
+                    $('input:checkbox#check_'+cnt).each(function () {
+                        var zoneId=$(this).val();
+                        objUserRole.push({ RO: "0",ZO:zoneId ,StatusFlag:"0"});
+                        $('input:checkbox.chk_'+cnt).each(function () {
+                            objUserRole.push({ RO: $(this).val(),ZO:zoneId ,StatusFlag:"0"});
+                        });
+                    });
+                }
+            }
+            var ReqModel={UserName:userName,Email:newEmail,Password:"",ConfirmPassword:"",SecretQuestion:"0",SecretQuestionAnswer:"",UserRole:userRoleSelected,FirstName:"",LastName:"",StateId:"0",ActionType:"",TypeManageUsersAddUserRoleWithStatusFlag:objUserRole,UpdateStatus:"Update"};
+            $.ajax({
+                type: 'POST',  // http method
+                url: '@Url.Action("UpdateUser", "Security")',
+                contentType: "application/json; charset=utf-8",
+                dataType: 'JSON',
+                data: JSON.stringify(ReqModel),
+                success: function (data, status, xhr) {
+                    var v = data;
+                    if (status == 'success') {
+                        var url = '@Html.Raw(@Url.Action("UpdateUserandLocations", "Security",new { UserName = "zzXXyyZZZZZZZzz", Email = "QQPPppSSAAQQ", update = "Yes" }))';
+                        url = url.replace("zzXXyyZZZZZZZzz", encodeURIComponent(userName)).replace("QQPPppSSAAQQ", encodeURIComponent(newEmail));
+                        window.location.href=url;
+                              
+                    }
+                    else {
+                        console.log(v);
+                    }
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+                    alert("Error"+ errorMessage);
+                }
+            });
+            }
         });
+
+        //User Role List Item selection
         var li =document.getElementById("UserRoleList").getElementsByTagName('li');
 
         for(var i = 0;i<li.length;i++){
             li[i].addEventListener("click", selectItem);
         }
 
+
+        
         function selectItem(e){
             //alert(e.target.innerText);
             //alert(e.target.attributes.id.value);
-            selectedRole=e.target.attributes.id.value;
+            selectedRole=e.target.attributes.id.value;//role selected  will be assigned to global var selectedRole which is used for mapping and unmapping the region to that role
             $("#message").html("Please select location for this Role");
             $("#message").attr("style","display:block");
              $('li').removeClass("usr_active");
             $(e.target).addClass("usr_active");
+            $(".LocationsArea").removeClass("disable");//selecting user role enables the locations Area
 
         }
 
+
+        //function to select the user role and mapped regions ontable row click
        $("#LocRoleMappingTbl").on('click', '.roleSelect', function (e) {
 
 
            debugger;
             var currentRow = $(this).closest("tr");
             var roleId = currentRow.find('.roleId').text();
-            var regionIdsList = currentRow.find('.regionId').text();
-            var zoneIdsList = currentRow.find('.zoneId').text();
+            var regionIdsList = currentRow.find('.regionId').text();//if particular regions are selected then checkbox checked according to the regionIds
+            var zoneIdsList = currentRow.find('.zoneId').text();//if all regions inside the zones are mapped then zoneIdsList is used for selecting the Locations Area
+            var zoneCount=$("#zoneCount").val();
+            
             if(zoneIdsList!=""){
                     var zoneIdArr=[];
                     if(zoneIdsList.indexOf(',')!=-1)
                         zoneIdArr=zoneIdsList.split(',');
                     else
                         zoneIdArr[0]=zoneIdsList;
-
+                    if(zoneIdArr.length==zoneCount){
+                        $("#checkAll")[0].checked=true;
+                    }
                     //var zoneId = currentRow.find('.zoneId').text();
                      $('li').removeClass("usr_active");
 
                     $('li#'+roleId).addClass("usr_active");
+                    $(".LocationsArea").removeClass("disable");
                      selectedRole=roleId;
                     $('input[type=checkbox][name=zoneChk]').prop("checked",false);
                     $(".class_a_ZoneArea").addClass("collapsed");
                     $(".class_a_ZoneArea").attr("aria-expanded",false);
                     $(".regionArea").removeClass("show");
-                    //$(".zoneArea").addClass("disable");
+                    
                     for(var i=0;i<zoneIdArr.length;i++){
                         $('input[type=checkbox][name=zoneChk][value='+zoneIdArr[i]+']').prop("checked",true); 
                        
@@ -500,10 +588,11 @@
                     else
                         regionIdArr[0]=regionIdsList;
 
-                    //var zoneId = currentRow.find('.zoneId').text();
                      $('li').removeClass("usr_active");
 
                     $('li#'+roleId).addClass("usr_active");
+                    
+                    $(".LocationsArea").removeClass("disable");
                      selectedRole=roleId;
                 
                     //$(".zoneArea").addClass("disable");
@@ -705,7 +794,6 @@
                 document.getElementById("userinfo-tab").classList.remove("disable");
                 document.getElementById("userinfo-tab").click();
                 document.getElementById("userrole-tab").classList.add("disable");
-
 
             }
          $("#UserName").on("blur", function() {
