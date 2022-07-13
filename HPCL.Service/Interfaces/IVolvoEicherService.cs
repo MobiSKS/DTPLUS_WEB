@@ -32,5 +32,7 @@ namespace HPCL.Service.Interfaces
         Task<List<VEOTCCardResponse>> GetAvailableVEOTCCardForDealer(string DealerCode);
         Task<VEManageProfile> ManageProfile();
         Task<List<SearchGridResponse>> CardDetailsForSearch(string CustomerId, string CustomerTypeId);
+        Task<VEAddonOTCCardMapping> ExistingCustomerCardMap();
+        Task<InsertResponse> UpdateVECostomerProfile(string str);
     }
 }
