@@ -222,6 +222,23 @@ namespace HPCL_Web.Controllers
             var modals = await _volvoEicherService.GetVEAddonOTCCardAddCardsPartialView(objCardDetails);
             return PartialView("~/Views/VolvoEicher/_VEAddonOTCCardVehicleDetailsTbl.cshtml", modals);
         }
+        [HttpPost]
+        public async Task<IActionResult> ExistingCustomerCardMap(VEAddonOTCCardMapping addAddOnCard)
+        {
+            var Model = await _volvoEicherService.ExistingCustomerCardMap(addAddOnCard);
+
+            if (Model.StatusCode == 1000)
+            {
+                return RedirectToAction("SuccessExistingCustomerCardMap", new { Message = Model.Reason });
+            }
+
+            return View(Model);
+        }
+        public async Task<IActionResult> SuccessExistingCustomerCardMap(string Message)
+        {
+            ViewBag.Message = Message;
+            return View();
+        }
 
     }
 }
