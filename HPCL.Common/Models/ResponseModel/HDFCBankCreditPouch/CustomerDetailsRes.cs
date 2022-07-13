@@ -17,6 +17,11 @@ namespace HPCL.Common.Models.ResponseModel.HDFCBankCreditPouch
         public string RO { get; set; }
         public string ZO { get; set; }
         public string CustomerType { get; set; }
+        public string RequestedBy { get; set; }
+        public string PlanName { get; set; }
+        public string ReqStatus { get; set; }
+        public string EnrolledDate { get; set; }
+        public string Comment { get; set; }
         public int Status { get; set; }
         public string Reason { get; set; }
     }
