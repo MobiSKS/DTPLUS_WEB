@@ -856,6 +856,142 @@ namespace HPCL.Service.Services
 
             return addAddOnCard;
         }
+        public async Task<VEAddonOTCCardMapping> ExistingCustomerCardMap(VEAddonOTCCardMapping addAddOnCard)
+        {
 
+            foreach (VEAddonOTCCardDetails cardDetails in addAddOnCard.ObjCardDetail)
+            {
+                if (!string.IsNullOrEmpty(cardDetails.VechileNo))
+                {
+                    cardDetails.VechileNo = cardDetails.VechileNo.ToUpper();
+                }
+            }
+
+            addAddOnCard.Message = "";
+            addAddOnCard.Reason = "";
+            addAddOnCard.UserAgent = CommonBase.useragent;
+            addAddOnCard.UserIp = CommonBase.userip;
+            addAddOnCard.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
+            addAddOnCard.CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId");
+
+            if (Convert.ToInt32(string.IsNullOrEmpty(addAddOnCard.NoOfCards) ? "0" : addAddOnCard.NoOfCards) > 0)
+            {
+                StringContent content = new StringContent(JsonConvert.SerializeObject(addAddOnCard), Encoding.UTF8, "application/json");
+
+                CustomerInserCardResponse customerInserCardResponse;
+
+                var responseCustomer = await _requestService.CommonRequestService(content, WebApiUrl.volvoEicherAddonOtcCard);
+
+                customerInserCardResponse = JsonConvert.DeserializeObject<CustomerInserCardResponse>(responseCustomer);
+
+                if (customerInserCardResponse.Internel_Status_Code != 1000)
+                {
+                    foreach (VEAddonOTCCardDetails cardDetails in addAddOnCard.ObjCardDetail)
+                    {
+                        cardDetails.VehicleNoMsg = "";
+                        cardDetails.MobileNoMsg = "";
+                        cardDetails.CardNoMsg = "";
+                        cardDetails.VINNoMsg = "";
+                        if (string.IsNullOrEmpty(cardDetails.VechileNo))
+                        {
+                            cardDetails.VechileNo = "";
+                        }
+                        if (string.IsNullOrEmpty(cardDetails.MobileNo))
+                        {
+                            cardDetails.MobileNo = "";
+                        }
+                    }
+
+                    addAddOnCard.Message = customerInserCardResponse.Message;
+                    if (customerInserCardResponse.Message.Contains("No Record Found"))
+                    {
+                        addAddOnCard.Message = customerInserCardResponse.Data[0].Reason;
+                    }
+
+                    if (addAddOnCard.Message.Contains("Card No."))
+                    {
+                        foreach (CustomerInserCardResponseData responseData in customerInserCardResponse.Data)
+                        {
+                            foreach (VEAddonOTCCardDetails cardDetails in addAddOnCard.ObjCardDetail)
+                            {
+                                if (cardDetails.CardNo.ToUpper() == responseData.Reason.ToUpper())
+                                {
+                                    cardDetails.CardNoMsg = "Card No. already allocated";
+                                }
+                            }
+                        }
+                    }
+
+                    if (addAddOnCard.Message.Contains("VIN No."))
+                    {
+                        foreach (CustomerInserCardResponseData responseData in customerInserCardResponse.Data)
+                        {
+                            foreach (VEAddonOTCCardDetails cardDetails in addAddOnCard.ObjCardDetail)
+                            {
+                                if (cardDetails.VINNumber.ToUpper() == responseData.Reason.ToUpper())
+                                {
+                                    cardDetails.VINNoMsg = "VIN No. already exists.";
+                                }
+                            }
+                        }
+                    }
+
+                    if (addAddOnCard.Message.Contains("Vehicle No."))
+                    {
+                        foreach (CustomerInserCardResponseData responseData in customerInserCardResponse.Data)
+                        {
+                            foreach (VEAddonOTCCardDetails cardDetails in addAddOnCard.ObjCardDetail)
+                            {
+                                if (cardDetails.VechileNo.ToUpper() == responseData.Reason.ToUpper())
+                                {
+                                    cardDetails.VehicleNoMsg = "Vehicle No. already exists";
+                                }
+                            }
+                        }
+                    }
+
+                    if (addAddOnCard.Message.Contains("Mobile No."))
+                    {
+                        foreach (CustomerInserCardResponseData responseData in customerInserCardResponse.Data)
+                        {
+                            foreach (VEAddonOTCCardDetails cardDetails in addAddOnCard.ObjCardDetail)
+                            {
+                                if (cardDetails.MobileNo == responseData.Reason)
+                                {
+                                    cardDetails.MobileNoMsg = "Mobile No. already exists";
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if (customerInserCardResponse.Internel_Status_Code == 1000)
+                {
+                    addAddOnCard.Status = customerInserCardResponse.Data[0].Status;
+                    addAddOnCard.StatusCode = customerInserCardResponse.Internel_Status_Code;
+                    addAddOnCard.Message = customerInserCardResponse.Message;
+                    addAddOnCard.Reason = customerInserCardResponse.Data[0].Reason;
+                }
+                else
+                {
+                    addAddOnCard.StatusCode = customerInserCardResponse.Internel_Status_Code;
+
+                    foreach (VEAddonOTCCardDetails cardDetails in addAddOnCard.ObjCardDetail)
+                    {
+                        if (addAddOnCard.VehicleVerifiedManually)
+                        {
+                            cardDetails.Verified = "0";
+                        }
+                        else
+                        {
+                            cardDetails.Verified = "1";
+                        }
+                    }
+
+                }
+            }
+
+            return addAddOnCard;
+        }
     }
 }
