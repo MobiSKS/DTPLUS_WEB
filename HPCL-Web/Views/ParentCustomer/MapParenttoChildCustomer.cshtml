@@ -61,23 +61,19 @@
                                             }
                                         </tbody>
                                     </table>
+                                    <div class="clearfix"></div>
+                                    <div class="d-flex align-items-center justify-content-center mt-0">
+                                        <div class="px-2">
+                                            <button class="btn btn_primary" type="button" id="btnConfirm">CONFIRM</button>
+                                        </div>
 
-
-
-
+                                    </div>
                                 }
                                 else
                                 {
                                     <div class="alert alert-danger text-center">@Model.Message</div>
 
                                 }
-                            </div>
-                            <div class="clearfix"></div>
-                            <div class="d-flex align-items-center justify-content-center mt-0">
-                                <div class="px-2">
-                                    <button class="btn btn_primary" type="button" id="btnConfirm">CONFIRM</button>
-                                </div>
-
                             </div>
                         </div>
                         <div class="clearfix"></div>
@@ -93,19 +89,20 @@
     <div class="clearfix"></div>
 </div>
 <script type="text/javascript">
-    
+
     $("#btnConfirm").on("click",(function(e){
         var parentId=$("#ParentCustomerId").val();
         var objRequest=[];
+        var i=0;
         $("table tbody tr").each(function () {
                  debugger;
-
+                 i++
                      var row = $(this);
-                     var customerId =row[0].cells[1].innerText;
-                     
-                     objRequest.push({ChildCustomerId:customerId});
+                     var customerId =row[0].cells[0].innerText;
 
-            
+                     objRequest.push({Id:i,ChildCustomerId:customerId});
+
+
              });
              var reqModel={ParentCustomerId:parentId,ObjParentCustomerDtl:objRequest}
         $.ajax({
@@ -116,14 +113,11 @@
             data: JSON.stringify(reqModel),
                 success: function (data) {
                     debugger;
-                    if(data.success=="true"){
+                    if(data.success==true){
                         $("#reason").removeClass("displayNone");
-                        if(data.length>0){
-                            $("#reason").html("");
-                            for(var i=0;i<data.length;i++){
-                                $("#reason").append("<span>" +data[i].reason + "</span></br>");
-                            }
-                            if(data[0].status=="1"){
+                        $("#reason").append("<span>" +data.data[0].reason + "</span></br>");
+                            if(data.data[0].status=="1"){
+
                                 $("#reason").removeClass("alert-danger");
                                 $("#reason").addClass("alert-success");
                             }
@@ -131,8 +125,8 @@
                                 $("#reason").addClass("alert-danger");
                                 $("#reason").removeClass("alert-success");
                             }
-                        }
-                    
+                        
+
                         $(".tobehiddenonSuccess").hide();
                     }
                     else{
@@ -140,11 +134,11 @@
                         $("#reason").addClass("alert-danger");
                         $("#reason").removeClass("alert-success");
                     }
-                    
+
                 },
                 error: function (ex) {
                     alert('Error.' + ex);
                 }
          });
      }));
- </script>
+</script>

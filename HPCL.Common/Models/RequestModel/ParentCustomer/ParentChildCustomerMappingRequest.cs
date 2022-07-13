@@ -24,6 +24,7 @@ namespace HPCL.Common.Models.RequestModel.ParentCustomer
     }
     public class ParentChildCustomerDetails
     {
+        public int Id { get; set; }
         public string ChildCustomerId { get; set; }
     }
 }

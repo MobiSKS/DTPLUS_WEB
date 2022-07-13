@@ -193,14 +193,17 @@ namespace HPCL_Web.Controllers
             ParentChildCustomerMappingRequest requestInfo = new ParentChildCustomerMappingRequest();
             requestInfo.ParentCustomerId = ParentCustomerID;
             if (ChildCustomerIds!="")
-            {
+            { 
+                int i = 0;
                 if (ChildCustomerIds.IndexOf(',') != -1)
                 {
                     string[] ids = ChildCustomerIds.Split(',');
                     foreach (string id in ids)
                     {
+                        i++;
                         ParentChildCustomerDetails parentChildCustomerDetails = new ParentChildCustomerDetails();
                         parentChildCustomerDetails.ChildCustomerId = id;
+                        parentChildCustomerDetails.Id = i;
                         requestInfo.ObjChildDtl.Add(parentChildCustomerDetails);
                     }
                     
@@ -209,6 +212,7 @@ namespace HPCL_Web.Controllers
                 {
                     ParentChildCustomerDetails parentChildCustomerDetails = new ParentChildCustomerDetails();
                     parentChildCustomerDetails.ChildCustomerId = ChildCustomerIds;
+                    parentChildCustomerDetails.Id = 1;
                     requestInfo.ObjChildDtl.Add(parentChildCustomerDetails);
                 }
             }
