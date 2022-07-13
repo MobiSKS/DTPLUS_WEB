@@ -206,6 +206,22 @@ namespace HPCL_Web.Controllers
             var result = await _volvoEicherService.UpdateVECostomerProfile(str);
             return Json(new { result = result });
         }
+        [HttpPost]
+        public async Task<JsonResult> GetVEAddonOTCCardMappingCustomerDetails(string customerId)
+        {
+            var searchResult = await _volvoEicherService.GetVEAddonOTCCardMappingCustomerDetails(customerId);
+            return Json(new { searchResult = searchResult });
+        }
+        public async Task<IActionResult> GetVEAddonOTCCardCustomerDetailsPartialView([FromBody] List<VEAddonOTCCardDetails> objCardDetails)
+        {
+            var modals = await _volvoEicherService.GetVEAddonOTCCardCustomerDetailsPartialView(objCardDetails);
+            return PartialView("~/Views/VolvoEicher/_VEAddonOTCCardCustomerDetailsTbl.cshtml", modals);
+        }
+        public async Task<IActionResult> GetVEAddonOTCCardAddCardsPartialView([FromBody] List<VEAddonOTCCardDetails> objCardDetails)
+        {
+            var modals = await _volvoEicherService.GetVEAddonOTCCardAddCardsPartialView(objCardDetails);
+            return PartialView("~/Views/VolvoEicher/_VEAddonOTCCardVehicleDetailsTbl.cshtml", modals);
+        }
 
     }
 }

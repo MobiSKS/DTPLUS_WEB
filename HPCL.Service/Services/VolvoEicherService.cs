@@ -7,6 +7,7 @@ using HPCL.Common.Models.ResponseModel.AshokLayland;
 using HPCL.Common.Models.ResponseModel.Customer;
 using HPCL.Common.Models.ResponseModel.CustomerManage;
 using HPCL.Common.Models.ResponseModel.VolvoEicher;
+using HPCL.Common.Models.ViewModel.ApplicationFormDataEntry;
 using HPCL.Common.Models.ViewModel.AshokLeyLand;
 using HPCL.Common.Models.ViewModel.VolvoEicher;
 using HPCL.Service.Interfaces;
@@ -742,6 +743,118 @@ namespace HPCL.Service.Services
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
             InsertResponse result = obj.ToObject<InsertResponse>();
             return result;
+        }
+        public async Task<GetCustomerDetails> GetVEAddonOTCCardMappingCustomerDetails(string customerId)
+        {
+            var searchBody = new GetCustomerName
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                CustomerId = customerId
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getVolvoEicherAddonOtcCardMappingCustomerDetails);
+
+            GetAlAddonCustomerResponse customerResponse = JsonConvert.DeserializeObject<GetAlAddonCustomerResponse>(response);
+            GetCustomerDetails GetCustomerDetails = new GetCustomerDetails();
+
+            if (customerResponse != null && customerResponse.Data != null)
+            {
+                if (customerResponse.Data.GetCustomerNameAndNameOnCard != null && customerResponse.Data.GetCustomerNameAndNameOnCard.Count > 0)
+                {
+                    GetCustomerDetails = customerResponse.Data.GetCustomerNameAndNameOnCard[0];
+                }
+                if (String.IsNullOrEmpty(GetCustomerDetails.CustomerOrgName))
+                {
+                    GetCustomerDetails.CustomerOrgName = "";
+                    if (String.IsNullOrEmpty(customerResponse.Data.GetStatus[0].Reason))
+                    {
+                        GetCustomerDetails.Reason = "Customer ID Not Found";
+                    }
+                    else
+                    {
+                        GetCustomerDetails.Reason = customerResponse.Data.GetStatus[0].Reason;
+                    }
+                }
+                else if (GetCustomerDetails.CustomerOrgName.Trim() == "")
+                {
+                    GetCustomerDetails.CustomerOrgName = "";
+                    if (String.IsNullOrEmpty(customerResponse.Data.GetStatus[0].Reason))
+                    {
+                        GetCustomerDetails.Reason = "Customer ID Not Found";
+                    }
+                    else
+                    {
+                        GetCustomerDetails.Reason = customerResponse.Data.GetStatus[0].Reason;
+                    }
+                }
+                if (String.IsNullOrEmpty(GetCustomerDetails.NameOnCard))
+                {
+                    GetCustomerDetails.NameOnCard = "";
+                }
+            }
+
+            return GetCustomerDetails;
+        }
+        public async Task<VEAddonOTCCardMapping> GetVEAddonOTCCardCustomerDetailsPartialView([FromBody] List<VEAddonOTCCardDetails> arrs)
+        {
+
+            VEAddonOTCCardMapping addAddOnCard = new VEAddonOTCCardMapping();
+            addAddOnCard.Message = "";
+
+            if (arrs != null && arrs.Count > 0)
+            {
+                if (!string.IsNullOrEmpty(arrs[0].Message))
+                    addAddOnCard.Message = arrs[0].Message;
+                if (!string.IsNullOrEmpty(arrs[0].NoOfCards))
+                    addAddOnCard.NoOfCards = arrs[0].NoOfCards;
+                else
+                    addAddOnCard.NoOfCards = "";
+                if (!string.IsNullOrEmpty(arrs[0].CustomerOrgName))
+                    addAddOnCard.CustomerOrgName = arrs[0].CustomerOrgName;
+                if (!string.IsNullOrEmpty(arrs[0].NameOnCard))
+                    addAddOnCard.NameOnCard = arrs[0].NameOnCard;
+                if (!string.IsNullOrEmpty(arrs[0].DealerCode))
+                    addAddOnCard.DealerCode = arrs[0].DealerCode;
+                if (!string.IsNullOrEmpty(arrs[0].SalesExecutiveEmployeeID))
+                    addAddOnCard.SalesExecutiveEmployeeID = arrs[0].SalesExecutiveEmployeeID;
+                addAddOnCard.VehicleVerifiedManually = Convert.ToBoolean(arrs[0].VehicleVerifiedManually);
+            }
+
+            if (arrs != null && arrs.Count > 0 && ((!string.IsNullOrEmpty(arrs[0].CardNo))))
+                addAddOnCard.ObjCardDetail = arrs;
+
+            addAddOnCard.ExternalVehicleAPIStatus = _configuration.GetSection("ExternalAPI:VehicleAPI").Value.ToString();
+
+            if (string.IsNullOrEmpty(addAddOnCard.ExternalVehicleAPIStatus))
+            {
+                addAddOnCard.ExternalVehicleAPIStatus = "Y";
+            }
+
+            return addAddOnCard;
+        }
+        public async Task<VEAddonOTCCardMapping> GetVEAddonOTCCardAddCardsPartialView([FromBody] List<VEAddonOTCCardDetails> arrs)
+        {
+            VEAddonOTCCardMapping addAddOnCard = new VEAddonOTCCardMapping();
+
+            if (!string.IsNullOrEmpty(arrs[0].Message))
+                addAddOnCard.Message = arrs[0].Message;
+            addAddOnCard.CustomerId = arrs[0].CustomerId;
+            addAddOnCard.NoOfCards = arrs[0].NoOfCards;
+
+            if (arrs != null && arrs.Count > 0 && ((!string.IsNullOrEmpty(arrs[0].CardNo))))
+                addAddOnCard.ObjCardDetail = arrs;
+
+            addAddOnCard.ExternalVehicleAPIStatus = _configuration.GetSection("ExternalAPI:VehicleAPI").Value.ToString();
+
+            if (string.IsNullOrEmpty(addAddOnCard.ExternalVehicleAPIStatus))
+            {
+                addAddOnCard.ExternalVehicleAPIStatus = "Y";
+            }
+
+            return addAddOnCard;
         }
 
     }
