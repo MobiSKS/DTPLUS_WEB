@@ -104,21 +104,24 @@
                                                 string Location = "", ZoneIds = "", regionIds = "";
                                                 @foreach (var item1 in Model.Data.tblMainAndSubLevel.Where(t => t.RoleId == roleId).OrderBy(t=>t.RoleId))
                                                 {
-                                                    Location = Location + item1.RegionalOfficeName + ",";
-                                                    if (item.RegionalOfficeId == null || item.RegionalOfficeId == "0")
+                                                    if (item1.RegionalOfficeId == null || item1.RegionalOfficeId == "0")
                                                     {
-                                                        ZoneIds = @item.ZonalOfficeId;
+                                                        ZoneIds = ZoneIds+item1.ZonalOfficeId+ ",";
+                                                        Location = Location + item1.ZonalOfficeName + ",";
                                                     }
                                                     else
                                                     {
-                                                        ZoneIds = @item.ZonalOfficeId;
+                                                        //ZoneIds = ZoneIds+item1.ZonalOfficeId+ ",";
                                                         regionIds = regionIds + item1.RegionalOfficeId + ",";
+                                                        Location = Location + item1.RegionalOfficeName + ",";
                                                     }
                                                 }
                                                 if(Location.Length>0)
                                                     Location = Location.Remove(Location.Length - 1);
                                                 if(regionIds.Length>0)
                                                     regionIds = regionIds.Remove(regionIds.Length - 1);
+                                                if(ZoneIds.Length>0)
+                                                    ZoneIds = ZoneIds.Remove(ZoneIds.Length - 1);
                                                 <tr>
                                                     <td>
                                                         <a href="#" class="roleSelect">@item.UserRole</a>
@@ -207,7 +210,7 @@
                                                             <div class="panel panel-default zoneArea class_@item.ZonalOfficeID">
                                                                 <div class="panel-heading">
                                                                     <h4 class="panel-title"></h4>
-                                                                    <input class="form-check-input check_box_pos_sty" type="checkbox" name="zoneChk" onclick="chkAllRegion(this,@i)" id="check_@item." value="@item.ZonalOfficeID">
+                                                                    <input class="form-check-input check_box_pos_sty" type="checkbox" name="zoneChk" onclick="chkAllRegion(this,@i)" id="check_@i" value="@item.ZonalOfficeID">
                                                                     <a class="collapsed class_@item.ZonalOfficeID class_a_ZoneArea" data-toggle="collapse" data-parent="#nested" href="#nested_@i" id="id_@item.ZonalOfficeID">
                                                                         <div class="form-check form-check-inline">
                                                                             <label class="form-check-label" for="check_@i">@item.ZonalOfficeName</label>
@@ -224,7 +227,7 @@
                                                                                 j++;
                                                                                 <li>
                                                                                     <div class="form-check form-check-inline">
-                                                                                        <input class="form-check-input chk_@i" type="checkbox" onclick="DisableArea(this,@i)" name="regionChk" id="check_@i@j-@item.ZonalOfficeID" value="@item1.RegionalOfficeID">
+                                                                                        <input class="form-check-input chk_@i" type="checkbox" onclick="checkChanged(this,@i)" name="regionChk" id="check_@i-@item.ZonalOfficeID" value="@item1.RegionalOfficeID">
                                                                                         <label class="form-check-label" for="check_@i@j">@item1.RegionalOfficeName</label>
                                                                                     </div>
                                                                                 </li>
@@ -264,7 +267,7 @@
                     <div class="px-2">
                         <button class="btn btn_primary" id="btnPrevious" type="button">Previous</button>
                     </div>
-                    <div class="px-2">
+                    <div class="px-2" style="display:none">
                         <button class="btn btn_primary" id="btnCreate" type="button">Save</button>
                     </div>
                 </div>
@@ -290,34 +293,143 @@
               ShowUserInfoData();
           }
          });
+     function checkChanged(o,i){
+        var userName=$("#UserName").val();
+        var newEmail=$("#Email").val();
+        var userRoleSelected=selectedRole;
+        if(userRoleSelected==""){
+            $("#msgError").html("Please Select Roles for User");
+            $("#msgError").attr("style","display:block");
+            $("#msgError").focus();
+            var id=o.id;
+            $("#"+id).click(function (e) {
+                e.preventDefault();
+            });   
+        }
+        else{
+            var chkStatus=o.checked;
+            var chkAllStatus= $("#check_"+i)[0].checked;
+            if(!chkStatus && chkAllStatus)
+            $("#check_"+i)[0].checked=false;
+            var zoneId=$("#check_"+i).val();
+            objUserRole=[];
+          
+            if(o.checked){
+                objUserRole.push({ RO: o.value,ZO:zoneId ,StatusFlag:"1"});
+            }
+            else{
+                objUserRole.push({ RO: o.value,ZO:zoneId ,StatusFlag:"0"});
+            }
+            var ReqModel={UserName:userName,Email:newEmail,Password:"",ConfirmPassword:"",SecretQuestion:"0",SecretQuestionAnswer:"",UserRole:userRoleSelected,FirstName:"",LastName:"",StateId:"0",ActionType:"",TypeManageUsersAddUserRoleWithStatusFlag:objUserRole,UpdateStatus:"Update"};
+                $.ajax({
+                    type: 'POST',  // http method
+                    url: '@Url.Action("UpdateUser", "Security")',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: 'JSON',
+                    data: JSON.stringify(ReqModel),
+                    success: function (data, status, xhr) {
+                        var v = data;
+                        if (status == 'success') {
+                            var url = '@Html.Raw(@Url.Action("UpdateUserandLocations", "Security",new { UserName = "zzXXyyZZZZZZZzz", Email = "QQPPppSSAAQQ", update = "Yes" }))';
+                            url = url.replace("zzXXyyZZZZZZZzz", encodeURIComponent(userName)).replace("QQPPppSSAAQQ", encodeURIComponent(newEmail));
+                            window.location.href=url;
+                              
+                        }
+                        else {
+                            console.log(v);
+                        }
+                    },
+                    error: function (jqXhr, textStatus, errorMessage) {
+                        alert("Error"+ errorMessage);
+                    }
+                });
+            }
+
+        }
        function chkAllRegion(o,cnt){
+           var userName=$("#UserName").val();
+             var newEmail=$("#Email").val();
+                var userRoleSelected=selectedRole;
+            if(userRoleSelected==""){
+                $("#msgError").html("Please Select Roles for User");
+                $("#msgError").attr("style","display:block");
+                $("#msgError").focus();
+                var id=o.id;
+                $("#"+id).click(function (e) {
+                    e.preventDefault();
+                });     
+            }
+            else{
            var zoneId=o.value;
-           $('input[type=checkbox][name=regionChk]').prop("checked",false);
+           //$('input[type=checkbox][name=regionChk]').prop("checked",false);
            $('input:checkbox.chk_'+cnt).not(this).prop('checked', o.checked);
-           if(o.checked){
+         @*  if(o.checked){
                $(".zoneArea").addClass("disable");
                $(".class_"+zoneId).removeClass("disable");
            }
            else{
                 $(".zoneArea").removeClass("disable");
-           }
+           }*@
            $("#message").html("");
            $("#message").attr("style","display:none");
+           objUserRole=[];
+          
+                if(o.checked){
+
+                     objUserRole.push({ RO: "0",ZO:zoneId ,StatusFlag:"1"});
+                     $('input:checkbox.chk_'+cnt).each(function () {
+                         objUserRole.push({ RO: $(this).val(),ZO:zoneId ,StatusFlag:"1"});
+                     });
+               
+                }
+                else{
+
+                     objUserRole.push({ RO: "0",ZO:zoneId ,StatusFlag:"0"});
+                     $('input:checkbox.chk_'+cnt).each(function () {
+                         objUserRole.push({ RO: $(this).val(),ZO:zoneId ,StatusFlag:"0"});
+                     });
+                }
+            
+   
+            var ReqModel={UserName:userName,Email:newEmail,Password:"",ConfirmPassword:"",SecretQuestion:"0",SecretQuestionAnswer:"",UserRole:userRoleSelected,FirstName:"",LastName:"",StateId:"0",ActionType:"",TypeManageUsersAddUserRoleWithStatusFlag:objUserRole,UpdateStatus:"Update"};
+            $.ajax({
+                type: 'POST',  // http method
+                url: '@Url.Action("UpdateUser", "Security")',
+                contentType: "application/json; charset=utf-8",
+                dataType: 'JSON',
+                data: JSON.stringify(ReqModel),
+                success: function (data, status, xhr) {
+                    var v = data;
+                    if (status == 'success') {
+                        var url = '@Html.Raw(@Url.Action("UpdateUserandLocations", "Security",new { UserName = "zzXXyyZZZZZZZzz", Email = "QQPPppSSAAQQ", update = "Yes" }))';
+                        url = url.replace("zzXXyyZZZZZZZzz", encodeURIComponent(userName)).replace("QQPPppSSAAQQ", encodeURIComponent(newEmail));
+                        window.location.href=url;
+                              
+                    }
+                    else {
+                        console.log(v);
+                    }
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+                    alert("Error"+ errorMessage);
+                }
+            });
+            }
        }
 
        function DisableArea(o,cnt){
            var chkROId=o.id;
            var zoneId=chkROId.substring(chkROId.indexOf('-') + 1);
-           if(o.checked){
+           @*if(o.checked){
                $(".zoneArea").addClass("disable");
                $(".class_"+zoneId).removeClass("disable");
-           }
+           }*@
            var checkedCnt=0;
            $('input:checkbox.chk_'+cnt+':checked').each(function () {
                checkedCnt=checkedCnt+1;
            });
-           if(checkedCnt==0)
-               $(".zoneArea").removeClass("disable");
+           @*if(checkedCnt==0)
+               $(".zoneArea").removeClass("disable");*@
        }
         $("#checkAll").click(function () {
             $('input:checkbox').not(this).prop('checked', this.checked);
@@ -348,35 +460,69 @@
             var currentRow = $(this).closest("tr");
             var roleId = currentRow.find('.roleId').text();
             var regionIdsList = currentRow.find('.regionId').text();
-            var regionIdArr=[];
-            if(regionIdsList.indexOf(',')!=-1)
-                regionIdArr=regionIdsList.split(',');
-            else
-                regionIdArr[0]=regionIdsList;
+            var zoneIdsList = currentRow.find('.zoneId').text();
+            if(zoneIdsList!=""){
+                    var zoneIdArr=[];
+                    if(zoneIdsList.indexOf(',')!=-1)
+                        zoneIdArr=zoneIdsList.split(',');
+                    else
+                        zoneIdArr[0]=zoneIdsList;
 
-            //var zoneId = currentRow.find('.zoneId').text();
-             $('li').removeClass("usr_active");
+                    //var zoneId = currentRow.find('.zoneId').text();
+                     $('li').removeClass("usr_active");
 
-            $('li#'+roleId).addClass("usr_active");
-             selectedRole=roleId;
-            $('input[type=checkbox][name=regionChk]').prop("checked",false);
-            $(".class_a_ZoneArea").addClass("collapsed");
-            $(".class_a_ZoneArea").attr("aria-expanded",false);
-            $(".regionArea").removeClass("show");
-            $(".zoneArea").addClass("disable");
-            for(var i=0;i<regionIdArr.length;i++){
-                $('input[type=checkbox][name=regionChk][value='+regionIdArr[i]+']').prop("checked",true); 
-                var chkROId=$('input[type=checkbox][name=regionChk][value='+regionIdArr[i]+']').attr("id");
-                var zoneId=chkROId.substring(chkROId.indexOf('-') + 1);
+                    $('li#'+roleId).addClass("usr_active");
+                     selectedRole=roleId;
+                    $('input[type=checkbox][name=zoneChk]').prop("checked",false);
+                    $(".class_a_ZoneArea").addClass("collapsed");
+                    $(".class_a_ZoneArea").attr("aria-expanded",false);
+                    $(".regionArea").removeClass("show");
+                    //$(".zoneArea").addClass("disable");
+                    for(var i=0;i<zoneIdArr.length;i++){
+                        $('input[type=checkbox][name=zoneChk][value='+zoneIdArr[i]+']').prop("checked",true); 
+                       
+                        var chkROId=$('input[type=checkbox][name=zoneChk][value='+zoneIdArr[i]+']').attr("id");
+                        $('input[type=checkbox][name=regionChk][id='+chkROId+'-'+zoneIdArr[i]+']').prop("checked",true); 
+                        $("#id_"+zoneIdArr[i]).removeClass("collapsed");
+                        $("#id_"+zoneIdArr[i]).attr("aria-expanded",true);
+                        var nestedId=$("#id_"+zoneIdArr[i]).attr("href");
+                        $(nestedId).addClass("show");
+                        //$(".class_"+zoneIdArr[i]).removeClass("disable");
+                    }
+                  
+                }
+           
+            //else{
+                 if(regionIdsList!=""){
+                    var regionIdArr=[];
+                    if(regionIdsList.indexOf(',')!=-1)
+                        regionIdArr=regionIdsList.split(',');
+                    else
+                        regionIdArr[0]=regionIdsList;
+
+                    //var zoneId = currentRow.find('.zoneId').text();
+                     $('li').removeClass("usr_active");
+
+                    $('li#'+roleId).addClass("usr_active");
+                     selectedRole=roleId;
+                
+                    //$(".zoneArea").addClass("disable");
+                    for(var i=0;i<regionIdArr.length;i++){
+                        $('input[type=checkbox][name=regionChk][value='+regionIdArr[i]+']').prop("checked",true); 
+                        var chkROId=$('input[type=checkbox][name=regionChk][value='+regionIdArr[i]+']').attr("id");
+                        var zoneId=chkROId.substring(chkROId.indexOf('-') + 1);
             
-                $("#id_"+zoneId).removeClass("collapsed");
-                $("#id_"+zoneId).attr("aria-expanded",true);
-                var nestedId=$("#id_"+zoneId).attr("href");
-                $(nestedId).addClass("show");
-                $(".class_"+zoneId).removeClass("disable");
-            }
-            $("#msgError").html("");
-            $("#msgError").attr("style","display:none");
+                        $("#id_"+zoneId).removeClass("collapsed");
+                        $("#id_"+zoneId).attr("aria-expanded",true);
+                        var nestedId=$("#id_"+zoneId).attr("href");
+                        $(nestedId).addClass("show");
+                        //$(".class_"+zoneId).removeClass("disable");
+                    }
+                    
+                }
+                $("#msgError").html("");
+                    $("#msgError").attr("style","display:none");
+            //}
 
         });
 
@@ -506,13 +652,21 @@
                   e.preventDefault();
                else{
                   
-                   objUserRole=[];
+                    objUserRole=[];
+                    objZoneIds=[];
+                    $("input:checkbox[name=zoneChk]:checked").each(function () {
+                       var zoId=$(this).val();
+
+                        objUserRole.push({ RO: "0",ZO:zoId });
+                        objZoneIds.push(zoId);
+                   });
                    $("input:checkbox[name=regionChk]:checked").each(function () {
                        var chkROId=$(this).attr("id");
                         var zoId=chkROId.substring(chkROId.indexOf('-') + 1);
-                        objUserRole.push({ RO: $(this).val(),ZO:zoId });
+                        if(objZoneIds.indexOf(zoId)==-1)
+                            objUserRole.push({ RO: $(this).val(),ZO:zoId });
                    });
-                   var ReqModel={UserName:userName,Email:newEmail,Password:"",ConfirmPassword:"",SecretQuestion:"0",SecretQuestionAnswer:"",UserRole:userRoleSelected,FirstName:"",LastName:"",StateId:"0",ActionType:"",TypeManageUsersAddUserRole:objUserRole,UpdateStatus:"Update"};
+                   var ReqModel={UserName:userName,Email:newEmail,Password:"",ConfirmPassword:"",SecretQuestion:"0",SecretQuestionAnswer:"",UserRole:userRoleSelected,FirstName:"",LastName:"",StateId:"0",ActionType:"",TypeManageUsersAddUserRoleWithStatusFlag:objUserRole,UpdateStatus:"Update"};
                    $.ajax({
                        type: 'POST',  // http method
                        url: '@Url.Action("UpdateUser", "Security")',
@@ -616,42 +770,59 @@
                 regionIdArr=regionIdsList.split(',');
             else
                 regionIdArr[0]=regionIdsList;
-            var zoneId = currentRow.find('.zoneId').text();
-              var userName=$("#UserName").val();
-             var newEmail=$("#Email").val();
+            //var zoneId = currentRow.find('.zoneId').text();
+            var zoneIdsList = currentRow.find('.zoneId').text();
+            if(zoneIdsList!=""){
+                    var zoneIdArr=[];
+                    if(zoneIdsList.indexOf(',')!=-1)
+                        zoneIdArr=zoneIdsList.split(',');
+                    else
+                        zoneIdArr[0]=zoneIdsList;
+            }
+            var userName=$("#UserName").val();
+            var newEmail=$("#Email").val();
             var userRoleSelected=roleId;
-                   objUserRole=[];
-                   var rowCount=0;
-                   debugger;
-                   rowCount=$("#LocRoleMappingTbl tbody tr").length;
-                   if(rowCount==1){
-                        for(var i=0;i<regionIdArr.length;i++){
-                            objUserRole.push({ RO: regionIdArr[i],ZO:zoneId });
-                        }
-                   }
-                   var ReqModel={UserName:userName,RoleId:userRoleSelected,TypeManageUsersAddUserRole:objUserRole,UpdateStatus:"Update"};
-                   $.ajax({
-                       type: 'POST',  // http method
-                       url: '@Url.Action("DeleteLocationMapping", "Security")',
-                       contentType: "application/json; charset=utf-8",
-                       dataType: 'JSON',
-                       data: JSON.stringify(ReqModel),
-                       success: function (data, status, xhr) {
-                           var v = data;
-                           if (status == 'success') {
+            objUserRole=[];
+            var rowCount=0;
+            debugger;
+            rowCount=$("#LocRoleMappingTbl tbody tr").length;
+            if(zoneIdsList!=""){
+                if(zoneIdArr.length>0){
+                    for(var i=0;i<zoneIdArr.length;i++){
+                        objUserRole.push({ RO: "0",ZO:zoneIdArr[i] });
+                    }
+                }
+            }
+            if(regionIdsList!=""){
+                if(regionIdArr.length>0){
+                    for(var i=0;i<regionIdArr.length;i++){
+                        objUserRole.push({ RO: regionIdArr[i],ZO:"0" });
+                    }
+                }
+            }
+            var ReqModel={UserName:userName,RoleId:userRoleSelected,TypeManageUsersAddUserRole:objUserRole,UpdateStatus:"Update"};
+            $.ajax({
+                type: 'POST',  // http method
+                url: '@Url.Action("DeleteLocationMapping", "Security")',
+                contentType: "application/json; charset=utf-8",
+                dataType: 'JSON',
+                data: JSON.stringify(ReqModel),
+                success: function (data, status, xhr) {
+                    var v = data;
+                    if (status == 'success') {
 
-                               var url = '@Html.Raw(@Url.Action("UpdateUserandLocations", "Security",new { UserName = "zzXXyyZZZZZZZzz", Email = "QQPPppSSAAQQ", update = "Yes" }))';
-                                url = url.replace("zzXXyyZZZZZZZzz", encodeURIComponent(userName)).replace("QQPPppSSAAQQ", encodeURIComponent(newEmail));
-                                window.location.href=url;
-                           }
-                           else {
-                               console.log(v);
-                           }
-                       },
-                       error: function (jqXhr, textStatus, errorMessage) {
-                           alert("Error"+ errorMessage);
-                       }
-                   });
+                        var url = '@Html.Raw(@Url.Action("UpdateUserandLocations", "Security",new { UserName = "zzXXyyZZZZZZZzz", Email = "QQPPppSSAAQQ", update = "Yes" }))';
+                        url = url.replace("zzXXyyZZZZZZZzz", encodeURIComponent(userName)).replace("QQPPppSSAAQQ", encodeURIComponent(newEmail));
+                        window.location.href=url;
+                    }
+                    else {
+                        console.log(v);
+                    }
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+                    alert("Error"+ errorMessage);
+                }
+            });
          
         });
        

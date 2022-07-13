@@ -14,10 +14,12 @@ namespace HPCL_Web.Controllers
     public class CardsController : Controller
     {
         private readonly ICardServices _cardService;
+        private readonly ICommonActionService _commonActionService;
 
-        public CardsController(ICardServices cardServices)
+        public CardsController(ICardServices cardServices, ICommonActionService commonActionService)
         {
             _cardService = cardServices;
+            _commonActionService = commonActionService;
         }
         public IActionResult Index()
         {
@@ -339,6 +341,20 @@ namespace HPCL_Web.Controllers
         public async Task<JsonResult> GetGenericAttachedVehicle(GetGenericAttachedVehicleReq entity)
         {
             var searchList = await _cardService.GetGenericAttachedVehicle(entity);
+            return Json(new { searchList = searchList });
+        }
+
+        public async Task<IActionResult> CardWiseLimitAuditTrail()
+        {
+            GetCardWiseLimit entity = new GetCardWiseLimit();
+            entity.LimitTypeLst.AddRange(await _commonActionService.GetAllLimitType());
+            return View(entity);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> CardWiseLimitAuditTrail(GetCardWiseLimit entity)
+        {
+            var searchList = await _cardService.CardWiseLimit(entity);
             return Json(new { searchList = searchList });
         }
     }

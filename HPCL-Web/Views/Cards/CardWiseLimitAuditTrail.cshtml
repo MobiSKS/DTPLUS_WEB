@@ -1,0 +1,257 @@
+﻿@model HPCL.Common.Models.ViewModel.Cards.GetCardWiseLimit
+
+<div class="col-lg-12">
+    <div class="bg-white p-2 p-md-4">
+        <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
+            <li class="breadcrumb-item"><a href="@Url.Action("Index")" class="text_primary">Cards</a> </li>
+            <li class="breadcrumb-item font-weight-light">Card Wise Limit Audit Trail</li>
+        </ul>
+        <form id="formValid">
+            <div class="w-100">
+                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mb-3">
+                    <div class="border-1 rounded border-grey pb-3">
+                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Card Wise Limit Audit Trail</p>
+                        <div class="col-lg-12 col-md-12 col-12 py-3">
+
+                            <div id="successUpdate" class="mb-3 text-center alert alert-success" style="display:none;"></div>
+
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">Customer ID <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.customerId, new { @id = "CustomerDefaultVal", @class = "form-control restrictPaste", onkeypress = "return isNumberKey(event)" })
+                                                @Html.ValidationMessageFor(m => m.customerId, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal offset-md-1 col-md-4 col-12">Card Number</label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.cardNumber, new { @id = "CustomerDefaultVal", @class = "form-control restrictPaste", onkeypress = "return isNumberKey(event)" })
+                                                @Html.ValidationMessageFor(m => m.cardNumber, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">From Date <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.fromDate, new { @class = "form-control fromDate",@placeholder="dd-mm-yyyy", @autocomplete = "off", @onchange = "checkDates('fromDate_error');" })
+                                            </div>
+                                            @Html.ValidationMessageFor(m => m.fromDate, "", new { @class = "text-danger", @id = "fromDate_error" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal offset-md-1 col-md-4 col-12">To Date <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.toDate, new { @class = "form-control toDate",@placeholder="dd-mm-yyyy", @autocomplete = "off", @onchange = "checkDates('fromDate_error');" })
+                                            </div>
+                                            @Html.ValidationMessageFor(m => m.toDate, "", new { @class = "text-danger", @id = "toDate_error" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">Limit Type</label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                               @Html.DropDownListFor(m => m.limitType, new SelectList(Model.LimitTypeLst, "Id", "LimitType"), new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="d-flex align-items-center justify-content-center mt-3">
+                                <div class="px-md-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2">
+                                    <button class="btn btn_primary" type="button" onclick="searchCard()">Search</button>
+                                </div>
+                                <div class="px-md-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2">
+                                      <button class="btn btn_primary" type="button" onclick="tableToCSV()">Export to Excel</button>
+                                </div>
+                                 <div class="px-md-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2">
+                                    <a class="btn btn_primary" href="#" id="btnCancel" name="cancel" onclick="resetClick()">Reset</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div id="noRecord" class="mt-3 mb-3 text-center alert alert-danger" style="display:none;"></div>
+
+                        <div id="cardwiseLimitListSection" style="display:none;">
+                            <div class="table-responsive mt-3">
+                                <table id="cardwiseLimitList" class="datatable table table-striped d-block table-bordered nowrap table-responsive mt-3" style="width:100%;">
+                                    <thead>
+                                        <tr>
+                                            <th>S.No.</th>
+                                            <th>Customer Name</th>
+                                            <th>Card Number</th>
+                                            <th>Name on Card</th>
+                                            <th>Vehicle No.</th>
+                                            <th>Limit Type</th>
+                                            <th>Old Value</th>
+                                            <th>New Value</th>
+                                            <th>Modified By</th>
+                                            <th>Modified Date</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-center mt-3">
+                                <div class="px-md-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2">
+                                    <button class="btn btn_primary" type="button" onclick="requestApprovalSubmit()">Submit</button>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </form>
+        <div class="clearfix"></div>
+    </div>
+</div>
+
+@using Microsoft.AspNetCore.Http;
+<script src="https://rawgit.com/moment/moment/2.2.1/min/moment.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+
+        function isNumberKey(evt) {
+            var charCode = (evt.which) ? evt.which : event.keyCode;
+            if (charCode != 46 && charCode > 31
+                && (charCode < 48 || charCode > 57))
+                return false;
+
+            return true;
+        }
+
+        $('select').SumoSelect({
+            placeholder: '-Select-',
+            search: true,
+            searchText: 'Enter Text here.'
+        });
+    });
+
+    function searchCard(){
+        var fromdate = $("#fromDate").val();
+        var todate = $("#toDate").val();
+
+        var flag = "Y";
+        if (fromdate == "") {
+            $("#fromDate_error").attr("style", "display:block");
+            $("#fromDate_error").html("Select From Date");
+            flag = "N";
+        }
+        if (todate == "") {
+            $("#toDate_error").attr("style", "display:block");
+            $("#toDate_error").html("Select To Date");
+            flag = "N";
+        }
+        if (fromdate != "" && todate != "") {
+            flag = checkDates("fromDate_error");
+        }
+
+        if (flag == "N")
+            e.preventDefault();
+
+        if (flag == "Y") {
+            if ($("#formValid").valid()) {
+
+                $.ajax({
+                    type: 'POST',  // http method
+                    url: '@Url.Action("CardWiseLimitAuditTrail", "Cards")',
+                    data: $('#formValid').serialize(),  // data to submit
+                    success: function (res, status, xhr) {
+
+                        console.log("res",res);
+
+                        if (res.searchList.success == true) {
+
+                            var girdList = res.searchList.data;
+
+                            document.getElementById("noRecord").style.display = "none";
+
+                            $('#cardwiseLimitList').DataTable().clear().destroy();
+
+                            var tbl = $('#cardwiseLimitList').DataTable({
+                                paging: true,
+                                searching: false,
+                                stateSave: true,
+                                "bDestroy": true,
+                                "lengthMenu": [10, 20, 50, 100, 200, 500, 1000, 2000],
+                                "autoWidth": false,
+                                "oLanguage": {
+                                    "sLengthMenu": "Display _MENU_ Records",
+                                    "info": "Showing _START_ to _END_ of _TOTAL_ Records",
+                                }
+                            });
+
+                            for (var i = 0; i < girdList.length; i++) {
+
+                                var modDate;
+
+                                if(((girdList[i].modifiedDate) == "01-01-0001") || ((girdList[i].modifiedDate) == "01-01-1900") || ((girdList[i].modifiedDate) == null)){
+                                    modDate = "";
+                                }else{
+                                    modDate = moment(girdList[i].requestedDate, 'DD-MM-YYYY').format('DD-MM-YYYY');
+                                }
+
+                                var srNumber = (i + 1);
+                                var customerName = (girdList[i].customerName || '');
+                                var cardNumber = (girdList[i].cardNumber || '');
+                                var nameOnCard = (girdList[i].nameOnCard || '');
+                                var vehicleNo = (girdList[i].vehicleNo || '');
+                                var limitType =  (girdList[i].limitType || '');
+                                var oldValue = "";
+                                var newValue = "";
+                                var modifiedBy = (girdList[i].modifiedBy || '');
+                                var modDate = modDate;
+
+                                tbl.row.add([
+                                   srNumber,
+                                   customerName,
+                                   cardNumber,
+                                   nameOnCard,
+                                   vehicleNo,
+                                   limitType,
+                                   oldValue,
+                                   newValue,
+                                   modifiedBy,
+                                   modDate
+                                ]).draw();
+                            }
+                            document.getElementById('cardwiseLimitListSection').style.display = 'block';
+                        } else {
+                            document.getElementById("cardwiseLimitListSection").style.display = "none";
+                            $("#noRecord").html("");
+                            $("#noRecord").append("<span>" + res.searchList.message + "</span>");
+                            document.getElementById("noRecord").style.display = "block";
+                        }
+
+                    },
+                    error: function (jqXhr, textStatus, errorMessage) {
+                        console.log("Error");
+                    }
+                });
+            } else {
+                return false;
+            }
+        }
+    }
+</script>

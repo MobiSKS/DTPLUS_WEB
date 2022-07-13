@@ -49,7 +49,7 @@
                         </div>
                     </div>
 
-                    <table id="mobNoSearchRes" class="table table-bordered" style="display:none;">
+                    <table id="mobNoSearchRes" class="table table-bordered" style="display:none;overflow-y:scroll;overflow-x:scroll;height:200px;">
                         <thead>
                             <tr>
                                 <th>Action</th>
@@ -80,7 +80,7 @@
                             <div class="custom_select">
                                 <div class="form-check form-check-inline">
                                     <input class="form-check-input" type="checkbox" id="inlineCheckboxTC" value="option1">
-                                    <label class="form-check-label" for="inlineCheckbox1">I Agree to <a data-toggle="modal" data-target="#termsConditions">Terms &amp; Conditions</a> and <a data-toggle="modal" data-target="#App_charges">Applicable Charges</a></label>
+                                    <label class="form-check-label" for="inlineCheckbox1">I Agree to <a data-toggle="modal" data-target="#termsConditions" class="anchorCustom">Terms &amp; Conditions</a> and <a class="anchorCustom" data-toggle="modal" data-target="#App_charges">Applicable Charges</a></label>
                                 </div>
                             </div>
                         </div>
@@ -88,7 +88,7 @@
                     <div class="d-flex align-items-center justify-content-center flex-wrap mb-3">
                         <div class="offset-md-4 col-md-8 col-12">
                             <div class="px-0 float-left mr-3">
-                                <button class="btn btn_primary" type="button" onclick="submitRec()">SUBMIT</button>
+                                <button class="btn btn_primary" id="submitButtonval" type="button" onclick="submitRec()">SUBMIT</button>
                             </div>
                             <div class="px-0 float-left">
                                 <button class="btn btn_primary" onclick="resetClick()">RESET</button>
@@ -173,7 +173,7 @@
                                 @* <input type="hidden" id="storeOtp">
                                 *@
                                 <input type="text" maxlength="6" id="otpVal" class="form-control" onblur="otpValidate(this)" onkeypress="return isNumberKey(event)">
-                                <span><a style="color:#0012ff;outline:none;" onclick="resendOtp()">Resend OTP</a> Maximum three attempt</span>
+                                <span><a style="color:#0012ff;outline:none;" onclick="resendOtp()">Resend OTP</a> Maximum three attempt</span><br>
                                 @Html.ValidationMessage("otpVal", "", new { @id = "otpValErr", @class = "text-danger" })
                             </div>
                         </div>
@@ -374,6 +374,12 @@
 
     $("#mobNoVal").on("blur", function (){
 
+        $('#submitButtonval').prop('disabled', true);
+
+        $('#customerIdValErr').text("");
+        $('#controlCardNoValErr').text("");
+        $('#amountValErr').text("");
+
         var mobNo = $("#mobNoVal").val();
 
         var flag = "Y";
@@ -424,7 +430,7 @@
                                 + "<td><span class='customerIdVal'>" + (res.searchList.data[i].customerID || '') + "</span></td>"
                                 + "<td><span class='customerNameVal'>" + (res.searchList.data[i].customerName || '') + "</span></td>"
                                 + "<td><span class='customerTypeVal'>" + (res.searchList.data[i].customerType || '') + "</span><span style='display:none;' class='conCardNoVal'>"+(res.searchList.data[i].controlCardNo || '')+"</span></td>"
-                                + "</tr ></tbody>";
+                                + "</tr></tbody>";
 
                             $('#mobNoSearchRes').append(rows);
                         }
@@ -440,6 +446,7 @@
                         $("#cutomerName").removeClass("d-flex");
                         document.getElementById("cutomerName").style.display = "none";
                         alert(res.searchList.data[0].reason);
+                        $("#mobNoVal").val('');
                     }
                 },
                 error: function (ex) {
@@ -450,6 +457,12 @@
     });
 
     $("#customerIdVal").on("blur", function (){
+
+        $('#submitButtonval').prop('disabled', true);
+
+        $('#customerIdValErr').text("");
+        $('#controlCardNoValErr').text("");
+        $('#amountValErr').text("");
 
         var customerId = $("#customerIdVal").val();
 
@@ -503,10 +516,13 @@
                         $("#customerIdVal").attr("readonly", true);
                         $("#controlCardNoVal").attr("readonly", true);
 
+                        $('#submitButtonval').prop('disabled', false);
+
                     }else{
                         $("#cutomerName").removeClass("d-flex");
                         document.getElementById("cutomerName").style.display = "none";
                         alert(res.searchList.data[0].reason);
+                        $("#customerIdVal").val('');
                     }
                 },
                 error: function (ex) {
@@ -521,6 +537,8 @@
         var currentRow = $(this).closest("tr");
 
         if ($(this).is(':checked')) {
+
+            $('#submitButtonval').prop('disabled', false);
 
             $("#cutomerName").addClass("d-flex");
             document.getElementById("cutomerName").style.display = "block";
@@ -761,6 +779,7 @@
                     console.log(res,"res");
 
                     if(res.getOtp.success == true){
+                        $("#otpVal").val('');
                         $("#otpMsg").html('');
                         $("#otpMsg").append("<span>OTP has been resent to customer registered Mobile No.</span>");
                     }
@@ -771,3 +790,11 @@
         });
      }
 </script>
+
+<style>
+    .anchorCustom{
+        color: #0037ff;
+        text-decoration: none;
+        border-bottom: 1px solid #2216dd;
+    }
+</style>

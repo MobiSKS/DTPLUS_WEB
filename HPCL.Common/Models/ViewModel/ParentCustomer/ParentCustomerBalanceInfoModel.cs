@@ -11,9 +11,11 @@ namespace HPCL.Common.Models.ViewModel.ParentCustomer
     {
         public ParentCustomerBalanceInfoModel()
         {
-            Data = new List<GetParentCustomerBalanceResponseData>();
+            Data = new GetParentCustomerBalanceResponseData();
         }
         public string CustomerId { get; set; }
+        public string ParentCustomerID { get; set; }
+        public string ChildCustomerId { get; set; }
         public string CustomerStatus { get; set; }
         public string Remarks { get; set; }
 
@@ -112,21 +114,48 @@ namespace HPCL.Common.Models.ViewModel.ParentCustomer
         public string TypeOfCustomerId { get; set; }
         public string TierOfCustomerName { get; set; }
         public string SignedOn { get; set; }
-        public List<GetParentCustomerBalanceResponseData> Data { get; set; }
+        public GetParentCustomerBalanceResponseData Data { get; set; }
 
     }
     public class GetParentCustomerBalanceResponseData
     {
-        public string CustomerID { get; set; }
+        public GetParentCustomerBalanceResponseData()
+        {
+            GetParentCustomerBalanceInfo = new List<GetParentCustomerBalanceInfo>();
+            GetChildCustomerBalanceInfo = new List<GetChildCustomerBalanceInfo>();
+        }
+       public List<GetParentCustomerBalanceInfo> GetParentCustomerBalanceInfo { get; set; }
+       public List<GetChildCustomerBalanceInfo> GetChildCustomerBalanceInfo { get; set; }
+    }
+    public class GetParentCustomerBalanceInfo
+    {
+        public string ParentCustomerId { get; set; }
         public string CardBalance { get; set; }
-        public string CCMSLimitValue { get; set; }
+        public string CCMSBalance { get; set; }
         public string Drivestars { get; set; }
         public string ExpiredDrivestars { get; set; }
         public string ExpiringDrivestars { get; set; }
         public string CashPurseLimit { get; set; }
         public string DailyCashLimitBalance { get; set; }
+        public string DailyCashLimit { get; set; }
         public string IndividualOrgName { get; set; }
         public string RegionalOfficeName { get; set; }
         public string CustomerName { get; set; }
     }
+    public class GetChildCustomerBalanceInfo
+    {
+        public string ChildCustomerId { get; set; }
+        public string CardBalance { get; set; }
+        public string CCMSBalance { get; set; }
+        public string Drivestars { get; set; }
+        public string ExpiredDrivestars { get; set; }
+        public string ExpiringDrivestars { get; set; }
+        public string CashPurseLimit { get; set; }
+        public string DailyCashLimitBalance { get; set; }
+        public string DailyCashLimit { get; set; }
+        public string IndividualOrgName { get; set; }
+        public string RegionalOfficeName { get; set; }
+        public string CustomerName { get; set; }
+    }
+   
 }

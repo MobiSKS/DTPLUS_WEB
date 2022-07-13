@@ -1171,11 +1171,11 @@ namespace HPCL.Service.Services
                     custMdl.TypeOfCustomerID = Convert.ToInt32(string.IsNullOrEmpty(Customer.TypeOfCustomerId) ? "0" : Customer.TypeOfCustomerId);
                     custMdl.PanCardRemarks = Customer.PanCardRemarks;
 
-                    custMdl.IsDuplicatePanNo = "0";
+                    custMdl.IsDuplicatePanNo = "1";
                     custMdl.AllowPanDuplication = "N";
                     if (!string.IsNullOrEmpty(custMdl.PanCardRemarks))
                     {
-                        custMdl.IsDuplicatePanNo = "1";
+                        custMdl.IsDuplicatePanNo = "0";
                         custMdl.AllowPanDuplication = "Y";
                     }
 

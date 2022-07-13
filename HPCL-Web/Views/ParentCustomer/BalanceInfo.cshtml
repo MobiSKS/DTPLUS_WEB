@@ -1,9 +1,6 @@
 ﻿@model HPCL.Common.Models.ViewModel.ParentCustomer.ParentCustomerBalanceInfoModel
 @using HPCL.Common.Resources
-@{
-    ViewData["Title"] = "Customer Balance Info";
-    Layout = "~/Views/Shared/_Layout.cshtml";
-}
+
 
 <div class="col-lg-12 px-0">
     <div class="bg-white p-2 p-md-4" style="overflow: hidden;">
@@ -21,16 +18,26 @@
                             <div class="d-flex align-items-center flex-wrap">
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal col-md-4 col-12">Customer ID <sup class="text-danger">*</sup></label>
+                                        <label class="font-weight-normal col-md-4 col-12">Parent Customer ID <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12 offset-md-1">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.CustomerId, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
-                                                <span class="error" id="CustomerId_error"></span>
+                                                @Html.TextBoxFor(m => m.ParentCustomerID, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                <span class="error" id="parentCustomerId_error"></span>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-
+                                 <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">Customer ID </label>
+                                        <div class="col-md-7 col-12 offset-md-1">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.ChildCustomerId, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                <span class="error" id="childCustomerId_error"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="clearfix"></div>
                             <div class="d-flex align-items-center justify-content-center mt-0">
@@ -50,35 +57,74 @@
 
             </div>
         </form>
-        @if (Model.Data.Count() > 0)
+        @if (Model.Data.GetParentCustomerBalanceInfo.Count() > 0)
         {
-            <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3" id="dvCustomerBalance" style="width:100%;display:none;">
+            <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3" id="dvParentCustomerBalance" style="width:100%;">
+                <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Parent Customer Balance Info</p>
                 <table id="CustomerBalanceTbl" class="table1 table-striped d-md-table d-block table-bordered table-responsive mt-3" style="width:100%;">
                     <thead>
                         <tr>
-                            <th>Customer ID</th>
-                            <th>Customer Name</th>
-                            <th>Regional Office</th>
-                            <th>Card Balance</th>
+                            <th>Parent Customer ID</th>
+                            <th>Cash Balance</th>
                             <th>CCMS Balance</th>
                             <th>Drivestars</th>
                             <th>Expired Drivestars</th>
                             <th>Expiring Drivestars</th>
+                            <th>Daily Cash Limit</th>
+                            <th>Daily Cash Limit Balance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Data.GetParentCustomerBalanceInfo)
+                        {
+                            <tr>
+                                <td><a class='basicInfo' href='#' onclick='ViewBasicInfo(this)' role='tab'><span class='basicInfo'>@item.ParentCustomerId</span></a></td>
+                                <td>@item.CardBalance</td>
+                                <td><a class='CCMSBalance' href='#' onclick='ViewCCMSBalanceDetails(this,@item.ParentCustomerId)' role='tab'><span class='rowCCMSBalance'>@item.CCMSBalance</span></a></td>
+                                <td>@item.Drivestars</td>
+                                <td>@item.ExpiredDrivestars</td>
+                                <td>@item.ExpiringDrivestars</td>
+                                <td>@item.DailyCashLimit</td>
+                                <td>@item.DailyCashLimitBalance</td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        }
+        @if (Model.Data.GetChildCustomerBalanceInfo.Count() > 0)
+        {
+            <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3" id="dvChildCustomerBalance" style="width:100%;">
+                <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Child Customer Balance Info</p>
+                <table id="CustomerBalanceTbl" class="table1 table-striped d-md-table d-block table-bordered table-responsive mt-3" style="width:100%;">
+                    <thead>
+                        <tr>
+                            <th>Child Customer ID</th>
+                            <th>Cash Balance</th>
+                            <th>CCMS Balance</th>
+                            <th>Drivestars</th>
+                            <th>Expired Drivestars</th>
+                            <th>Expiring Drivestars</th>
+                              <th>Daily Cash Limit</th>
+                            <th>Daily Cash Limit Balance</th>
+                            <th>Card-wise Balances</th>
 
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var item in Model.Data)
+                        @foreach (var item in Model.Data.GetChildCustomerBalanceInfo)
                         {
                             <tr>
-                                <td>@item.CustomerID</td>
-                                <td>@item.CustomerName</td>
-                                <td>@item.RegionalOfficeName</td>
-                                <td><a class='CardNumber' href='#' onclick='ViewCardDetails(this)' role='tab'><span class='rowCCMSBalance'>@item.CardBalance</span></a></td>
-                                <td><a class='CCMSBalance' href='#' onclick='ViewCCMSInfo(this)' role='tab'><span class='rowCCMSBalance'>@item.CCMSLimitValue</span></a></td>
+                                <td><a class='basicInfo' href='#' onclick='ViewBasicInfo(this)' role='tab'><span class='basicInfo'>@item.ChildCustomerId</span></a></td>
+                                <td>@item.CardBalance</td>
+                                <td><a class='CCMSBalance' href='#' onclick='ViewCCMSBalanceDetails(this,@item.ChildCustomerId)' role='tab'><span class='rowCCMSBalance'>@item.CCMSBalance</span></a></td>
                                 <td>@item.Drivestars</td>
                                 <td>@item.ExpiredDrivestars</td>
                                 <td>@item.ExpiringDrivestars</td>
+                                <td>@item.DailyCashLimit</td>
+                                <td>@item.DailyCashLimitBalance</td>
+                                <td><a class='CardNumber' href='#' onclick='ViewCardDetails(this,@item.ChildCustomerId)' role='tab'><i class="fa fa-search" aria-hidden="true"></i></a></td>
                             </tr>
                         }
 
@@ -129,7 +175,12 @@
 </div>
 <script type="text/javascript">
         $(document).ready(function () {
-
+            var parentCustomerId="@ViewBag.ParentCustomerID";
+            if(parentCustomerId!="")
+            {
+                $("#ParentCustomerID").attr("disabled",true);
+                $("#ChildCustomerId").attr("disabled",true);
+            }
         });
 
         $("#btnReset").click(function ()
@@ -143,33 +194,45 @@
             $("#customerCardWiseBalancesTbl").hide();
 
             //debugger;
-            var customerId = document.getElementById("CustomerId").value;
-            if (customerId == "") {
-                document.getElementById("CustomerId_error").innerHTML = "Please enter Customer ID";
-                $("#CustomerId").focus;
+            var parentCustomerID = document.getElementById("ParentCustomerID").value.trim();
+            var childCustomerId = document.getElementById("ChildCustomerId").value.trim();
+            if (parentCustomerID == "") {
+                document.getElementById("parentCustomerId_error").innerHTML = "Please enter Parent Customer ID";
+                $("#ParentCustomerID").focus;
                 return (false);
             }
             else {
-                if (!customerId.match(mappedCustomerId)) {
-                    $("#CustomerId_error").attr("style", "display:block");
-                    $("#CustomerId_error").html("Invalid Customer ID");
+                if (!parentCustomerID.match(mappedCustomerId)) {
+                    $("#parentCustomerId_error").attr("style", "display:block");
+                    $("#parentCustomerId_error").html("Invalid Parent Customer ID");
                     return (false);
                 }
                 else {
-                    document.getElementById("CustomerId_error").innerHTML = "";
+                    document.getElementById("parentCustomerId_error").innerHTML = "";
                 }
 
             }
+            
+            if (childCustomerId != "") { 
+                if (!childCustomerId.match(mappedCustomerId)) {
+                    $("#childCustomerId_error").attr("style", "display:block");
+                    $("#childCustomerId_error").html("Invalid Customer ID");
+                    return (false);
+                }
+                else {
+                    document.getElementById("childCustomerId_error").innerHTML = "";
+                }
 
+            }
 
         });
 
 
 
 
-        function ViewCardDetails(o) {
+        function ViewCardDetails(o,customerId) {
 
-            var customerId = $("#CustomerId").val();
+            //var customerId = $("#CustomerId").val();
             if (customerId == "") {
                 return (false);
             }
@@ -208,7 +271,7 @@
 
             var customerId = o.innerText;
             $.ajax({
-                url: "@Url.Action("GetCustomerDetailsByCustomerID", "Customer")",
+                url: "@Url.Action("GetCustomerDetailsByCustomerID", "ParentCustomer")",
                 type: "GET",
                 contentType: "application/json; charset=utf-8",
                 data: { CustomerID: customerId },
@@ -230,9 +293,9 @@
             });
 
         };
-        function ViewCCMSBalanceDetails(o) {
+        function ViewCCMSBalanceDetails(o,customerId) {
 
-            var customerId = $("#CustomerId").val();
+            //var customerId = $("#CustomerId").val();
             if (customerId == "") {
                 return (false);
             }
@@ -268,25 +331,46 @@
 
         }
 
-    $("#CustomerId").on("blur", function ()
+    $("#ParentCustomerID").on("blur", function ()
     {
         //debugger;
-        if (document.getElementById("CustomerId").value.trim() == "")
+        if (document.getElementById("ParentCustomerID").value.trim() == "")
         {
-            $("#CustomerId_error").attr("style", "display:block");
-            $("#CustomerId_error").html("Please enter Customer ID");
+            $("#parentCustomerId_error").attr("style", "display:block");
+            $("#parentCustomerId_error").html("Please enter Parent Customer ID");
             return false;
         }
-        else if (!$("#CustomerId").val().match(mappedCustomerId))
+        else if (!$("#ParentCustomerID").val().match(mappedCustomerId))
         {
-            $("#CustomerId_error").attr("style", "display:block");
-            $("#CustomerId_error").html("Invalid Customer ID");
+            $("#parentCustomerId_error").attr("style", "display:block");
+            $("#parentCustomerId_error").html("Invalid Parent Customer ID");
             return false;
         }
         else
         {
-            $("#CustomerId_error").html("");
+            $("#parentCustomerId_error").html("");
         }
+
+    });
+    $("#ChildCustomerId").on("blur", function ()
+    {
+      
+        if(document.getElementById("ChildCustomerId").value.trim() != ""){
+            if (!$("#ChildCustomerId").val().match(mappedCustomerId))
+            {
+                $("#childCustomerId_error").attr("style", "display:block");
+                $("#childCustomerId_error").html("Invalid Customer ID");
+                return false;
+            }
+            else
+            {
+                $("#childCustomerId_error").html("");
+            }
+        }
+         else
+            {
+                $("#childCustomerId_error").html("");
+            }
 
     });
 </script>

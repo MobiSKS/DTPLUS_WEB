@@ -22,11 +22,13 @@ namespace HPCL.Service.Services
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IRequestService _requestService;
+        private readonly ICommonActionService _commonActionService;
 
-        public CardServices(IHttpContextAccessor httpContextAccessor, IRequestService requestServices)
+        public CardServices(IHttpContextAccessor httpContextAccessor, IRequestService requestServices, ICommonActionService commonActionService)
         {
             _httpContextAccessor = httpContextAccessor;
             _requestService = requestServices;
+            _commonActionService = commonActionService;
         }
 
         public async Task<SearchManageCards> ManageCards(CustomerCards entity, string editFlag)
@@ -38,7 +40,7 @@ namespace HPCL.Service.Services
             {
                 searchBody = new CustomerCards
                 {
-                    UserId = UserName,
+                    UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                     UserAgent = CommonBase.useragent,
                     UserIp = CommonBase.userip,
                     CustomerId = entity.CustomerId,
@@ -53,7 +55,7 @@ namespace HPCL.Service.Services
             {
                 searchBody = new CustomerCards
                 {
-                    UserId = UserName,
+                    UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                     UserAgent = CommonBase.useragent,
                     UserIp = CommonBase.userip,
                     CustomerId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
@@ -71,7 +73,7 @@ namespace HPCL.Service.Services
 
                 searchBody = new CustomerCards
                 {
-                    UserId = UserName,
+                    UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                     UserAgent = CommonBase.useragent,
                     UserIp = CommonBase.userip,
                     CustomerId = vGrid.CustomerId,
@@ -780,6 +782,39 @@ namespace HPCL.Service.Services
             var response = await _requestService.CommonRequestService(content, WebApiUrl.GetGenericAttachedVehicleUrl);
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
             GetGenericAttachedVehicleRes searchList = obj.ToObject<GetGenericAttachedVehicleRes>();
+            return searchList;
+        }
+
+        public async Task<GetCardWiseLimitRes> CardWiseLimit(GetCardWiseLimit entity)
+        {
+            string fromDate = "", toDate = "";
+            if (!string.IsNullOrEmpty(entity.fromDate) && !string.IsNullOrEmpty(entity.fromDate))
+            {
+                fromDate = await _commonActionService.changeDateFormat(entity.fromDate);
+                toDate = await _commonActionService.changeDateFormat(entity.toDate);
+            }
+            else
+            {
+                fromDate = DateTime.Now.ToString("yyyy-MM-dd");
+                toDate = DateTime.Now.ToString("yyyy-MM-dd");
+            }
+
+            var searchBody = new GetCardWiseLimit
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                customerId = entity.customerId,
+                fromDate = fromDate,
+                toDate = toDate,
+                cardNumber = entity.cardNumber ?? "",
+                limitType = entity.limitType ?? ""
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.CardWiseLimitUrl);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            GetCardWiseLimitRes searchList = obj.ToObject<GetCardWiseLimitRes>();
             return searchList;
         }
     }

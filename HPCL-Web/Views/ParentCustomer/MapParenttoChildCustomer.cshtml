@@ -1,0 +1,150 @@
+﻿@model HPCL.Common.Models.ViewModel.ParentCustomer.ParentChildCustomerMappingViewModel
+@using HPCL.Common.Resources
+
+
+<div class="col-lg-12 px-0">
+    <div class="bg-white p-2 p-md-4" style="overflow: hidden;">
+        <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
+            <li class="breadcrumb-item"><a href="@Url.Action("Approval","ParentCustomer")" class="text_primary">Approval</a> </li>
+            <li class="breadcrumb-item font-weight-light">Child Customer To Parent Customer Mapping</li>
+        </ul>
+        <div id="reason" class="alert displayNone text-center"> </div>
+        <form class="tobehiddenonSuccess">
+            <div class="w-100">
+                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
+                    <div class="border-1 rounded border-grey pb-3">
+                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Child Customer To Parent Customer Mapping</p>
+
+                        <div class="col-lg-12 col-md-12 col-12 py-3">
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">Parent Customer ID <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12 ">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.ParentCustomerId, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off",@readonly="readonly" })
+                                                <span class="error" id="parentCustomerId_error"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="show_Table" class="mt-2 tobehiddenonSuccess">
+                                @if (Model.Data.Count() > 0)
+                                {
+
+                                    <table class="datatable table table-striped table-bordered d-md-table d-block table-responsive" style="width:100%;" id="ChildCustomerDetails">
+                                        <thead style="background-color:lightgray;">
+                                            <tr>
+                                                <th>Customer ID</th>
+                                                <th>Name on Card</th>
+                                                <th>Customer Name</th>
+                                                <th>Zonal Office</th>
+                                                <th>Regional Office</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @{
+                                                int i = 0;
+                                            }
+                                            @foreach (var item in Model.Data)
+                                            {
+                                                i = i + 1;
+
+                                                <tr>
+                                                    <td>@item.CustomerId</td>
+                                                    <td>@item.NameonCard</td>
+                                                    <td>@item.CustomerName</td>
+                                                    <td>@item.ZO</td>
+                                                    <td>@item.RO</td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+
+
+
+
+                                }
+                                else
+                                {
+                                    <div class="alert alert-danger text-center">@Model.Message</div>
+
+                                }
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="d-flex align-items-center justify-content-center mt-0">
+                                <div class="px-2">
+                                    <button class="btn btn_primary" type="button" id="btnConfirm">CONFIRM</button>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+
+                </div>
+                <div class="clearfix"></div>
+
+            </div>
+        </form>
+
+    </div>
+    <div class="clearfix"></div>
+</div>
+<script type="text/javascript">
+    
+    $("#btnConfirm").on("click",(function(e){
+        var parentId=$("#ParentCustomerId").val();
+        var objRequest=[];
+        $("table tbody tr").each(function () {
+                 debugger;
+
+                     var row = $(this);
+                     var customerId =row[0].cells[1].innerText;
+                     
+                     objRequest.push({ChildCustomerId:customerId});
+
+            
+             });
+             var reqModel={ParentCustomerId:parentId,ObjParentCustomerDtl:objRequest}
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("ConfirmParentChildCustomerMapping", "ParentCustomer")',
+            contentType: "application/json; charset=utf-8",
+            dataType: 'json',
+            data: JSON.stringify(reqModel),
+                success: function (data) {
+                    debugger;
+                    if(data.success=="true"){
+                        $("#reason").removeClass("displayNone");
+                        if(data.length>0){
+                            $("#reason").html("");
+                            for(var i=0;i<data.length;i++){
+                                $("#reason").append("<span>" +data[i].reason + "</span></br>");
+                            }
+                            if(data[0].status=="1"){
+                                $("#reason").removeClass("alert-danger");
+                                $("#reason").addClass("alert-success");
+                            }
+                            else{
+                                $("#reason").addClass("alert-danger");
+                                $("#reason").removeClass("alert-success");
+                            }
+                        }
+                    
+                        $(".tobehiddenonSuccess").hide();
+                    }
+                    else{
+                        $("#reason").append("<span>" +data.message + "</span></br>");
+                        $("#reason").addClass("alert-danger");
+                        $("#reason").removeClass("alert-success");
+                    }
+                    
+                },
+                error: function (ex) {
+                    alert('Error.' + ex);
+                }
+         });
+     }));
+ </script>

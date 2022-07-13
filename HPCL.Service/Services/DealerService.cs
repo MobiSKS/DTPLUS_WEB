@@ -314,12 +314,13 @@ namespace HPCL.Service.Services
           
             var responseJarr = obj["Data"].Value<JArray>();
             List<StatementDateModel> statementDateList = responseJarr.ToObject<List<StatementDateModel>>();
+
             return statementDateList;
         }
         public async Task<MerchanDealerSaleStatementModel> GetMerchantDealerCreditSaleStatement(string CustomerID, string MerchantID, string SearchDate)
         {
             MerchanDealerSaleStatementModel merchanDealerSaleStatementModel = new MerchanDealerSaleStatementModel();
-           
+            SearchDate = await _commonActionService.changeDateFormat(SearchDate);
             var searchBody = new DealerRequestModel
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
@@ -327,7 +328,7 @@ namespace HPCL.Service.Services
                 UserIp = CommonBase.userip,
                 CustomerID = CustomerID == null ? "" : CustomerID,
                 MerchantID = MerchantID,
-                FromDate = SearchDate,
+                StatementDate = SearchDate,
                 
             };
 
@@ -356,6 +357,103 @@ namespace HPCL.Service.Services
             merchantCreditSaleOutstandingViewModel = obj.ToObject<MerchantCreditSaleOutstandingViewModel>();
             return merchantCreditSaleOutstandingViewModel;
         }
+        public async Task<DealerCreditSaleStatement> GetCreditSaleDetails(string CustomerID, string MerchantID, string FromDate, string ToDate)
+        {
+            if (!string.IsNullOrEmpty(FromDate) && !string.IsNullOrEmpty(FromDate))
+            {
+                FromDate = await _commonActionService.changeDateFormat(FromDate);
+                ToDate = await _commonActionService.changeDateFormat(ToDate);
+            }
+            else
+            {
+                FromDate = DateTime.Now.AddMonths(-1).ToString("yyyy-MM-dd");
+                ToDate = DateTime.Now.ToString("yyyy-MM-dd");
+            }
+            var searchBody = new DealerRequestModel
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                FromDate = FromDate,
+                ToDate = ToDate,
+                CustomerID = CustomerID,
+                MerchantID = MerchantID,
+
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getdealercreditsaledetails);
+
+            DealerCreditSaleStatement searchList = JsonConvert.DeserializeObject<DealerCreditSaleStatement>(response);
+            return searchList;
+        }
+        public async Task<DealerCreditClosePaymenDetails> GetCreditClosePayment(string CustomerID,string MerchantID)
+        {
+            DealerCreditClosePaymentModel dealerCreditClosePaymentModel = new DealerCreditClosePaymentModel();
+
+            var searchBody = new DealerRequestModel
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                MerchantID = MerchantID,
+                CustomerID=CustomerID
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getcreditclosepayment);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            dealerCreditClosePaymentModel = obj.ToObject<DealerCreditClosePaymentModel>();
+            DealerCreditClosePaymenDetails data = new DealerCreditClosePaymenDetails();
+            data = dealerCreditClosePaymentModel.Data[0];
+            return data;
+        }
+        public async Task<GenerateOTPCreditClosePaymentModel> GenerateOTPCreditClosePayment([FromBody]DealerRequestModel dealerRequestModel)
+        {
+            GenerateOTPCreditClosePaymentModel dealerCreditClosePaymentModel = new GenerateOTPCreditClosePaymentModel();
+
+            var searchBody = new DealerRequestModel
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                MerchantID= dealerRequestModel.MerchantID,
+                CustomerID = dealerRequestModel.CustomerID,
+                Amount = dealerRequestModel.Amount,
+                CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                SourceofPayment = dealerRequestModel.SourceofPayment
+
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.generateotpcreditclosepayment);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            dealerCreditClosePaymentModel = obj.ToObject<GenerateOTPCreditClosePaymentModel>();
+            return dealerCreditClosePaymentModel;
+        }
+        public async Task<List<SuccessResponse>> ValidateotpCreditClosePayment([FromBody] DealerRequestModel dealerRequestModel)
+        {
+            var RequestForm = new DealerRequestModel
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                MerchantID = dealerRequestModel.MerchantID,
+                CustomerID = dealerRequestModel.CustomerID,
+                Amount = dealerRequestModel.Amount,
+                CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                SourceofPayment = dealerRequestModel.SourceofPayment,
+                OTP= dealerRequestModel.OTP
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(RequestForm), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.validateotpupdatecreditclosepayment);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var successRes = obj["Data"].Value<JArray>();
+            List<SuccessResponse> resp = successRes.ToObject<List<SuccessResponse>>();
+            return resp;
+        }
+
     }
 
 }

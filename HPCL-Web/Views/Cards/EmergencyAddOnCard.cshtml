@@ -148,7 +148,7 @@
                     {
                         $("#cardsTxtBox").append("<br>");
                     }
-                    $("#cardsTxtBox").append("<div style='margin-top:2%' class='col-6 col-md-3'><input class='form-control cardsBox' maxlength='16' id='cardEntryFieldId"+j+"' onkeypress='return isNumberKey(event)' onchange='cardEntryFieldChange(this," + (j) + ")' name='formnumber' type='text' width='24px'><span style='display:none' class='error' id='cardEntryFieldErr"+j+"'></span></div>");
+                    $("#cardsTxtBox").append("<div style='margin-top:2%' class='col-6 col-md-3'><input class='form-control cardsBox' maxlength='16' id='cardEntryFieldId"+j+"' onkeypress='return isNumberKey(event)' onblur='cardEntryFieldChange(this," + (j) + ")' name='formnumber' type='text' width='24px'><span style='display:none' class='error' id='cardEntryFieldErr"+j+"'></span></div>");
                 }
 
                 $("#CustomerDefaultVal").attr("readonly", true);
@@ -159,7 +159,7 @@
         }else{
             document.getElementById("cardMapSection").style.display = "none";
             $("#noRecord").html("");
-            $("#noRecord").append("<span>" + res.searchList.message + "</span>");
+            $("#noRecord").append("<span>" + res.searchList.data[0].reason + "</span>");
             document.getElementById("noRecord").style.display = "block";
         }
     }
@@ -177,8 +177,8 @@
         }
 
         if(cardNo.trim() != ''){
-            if(!cardNo.match(/^\d{16}$/)){
-               $("#cardEntryFieldErr"+itemSelected).html("Invalid New Card Number ");
+            if(!cardNo.match(/^(?!(0))[0-9]{16}$/)){
+               $("#cardEntryFieldErr"+itemSelected).html("Invalid New Card Number");
                 document.getElementById('cardEntryFieldErr'+itemSelected).style.display = "block";
                 return false;
             }else{
@@ -206,7 +206,7 @@
             }
 
             if(cardNo.trim() != ''){
-                if(!cardNo.match(/^\d{16}$/)){
+                if(!cardNo.match(/^(?!(0))[0-9]{16}$/)){
                    $("#cardEntryFieldErr"+index).html("Invalid New Card Number");
                     document.getElementById('cardEntryFieldErr'+index).style.display = "block";
                     flag = "N";
@@ -277,7 +277,7 @@
             console.log("cardArray",cardArray);
         }
 
-         $(".cardsBox").each(function () {
+        $(".cardsBox").each(function () {
                newCard = $(this).val();
 
                var oldCard;
@@ -291,7 +291,7 @@
                         flag = "N";
                     }
                }
-          });
+        });
 
         if (flag == "N")
             e.preventDefault();

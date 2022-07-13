@@ -83,6 +83,7 @@
         public static string getdetailforcorpmultirechargelimitconfig = "api/dtplus/card/get_detail_for_corp_multi_recharge_limit_config";
         public static string corpmultirechargelimitconfig = "api/dtplus/card/corp_multi_recharge_limit_config";
         public static string GetGenericAttachedVehicleUrl = "api/dtplus/card/Get_Generic_Attached_Vehicle";
+        public static string CardWiseLimitUrl = "api/dtplus/card/get_card_wise_limit_audit_trail";
         #endregion
 
         #region Merchant
@@ -311,6 +312,10 @@
         public static string searchAlManageCard = "api/dtplus/ashokleyland/search_al_manage_card";
         public static string updateAlCustomerDetail = "api/dtplus/ashokleyland/update_al_customer_detail";
         public static string getAlPendingKycCustomer = "api/dtplus/ashokleyland/get_al_pending_kyc_customer";
+        public static string updateAlCommunicationEmailResetPassword = "api/dtplus/ashokleyland/update_al_communication_email_reset_password";
+        public static string GetAllLimitTypeUrl = "api/dtplus/card/get_limit_type";
+        public static string getAlUploadKycDocument = "api/dtplus/ashokleyland/get_al_upload_kyc_document";
+        public static string insertAlCustomerKYC = "api/dtplus/ashokleyland/insert_al_customer_kyc";
         #endregion
 
         #region Customer Financial
@@ -462,7 +467,12 @@
         public static string getstatementdatelist = "api/dtplus/dealercredit/get_statement_date_list";
         public static string getmerchantdealercreditsalestatement = "api/dtplus/dealercredit/get_merchant_dealer_credit_sale_statement";
         public static string getcreditsaleoutstandingdetails = "api/dtplus/dealercredit/get_credit_sale_outstanding_details";
-        
+        public static string getdealercreditsaledetails = "api/dtplus/dealercredit/get_dealer_credit_sale_details";
+        public static string getcreditclosepayment = "api/dtplus/dealercredit/get_credit_close_payment";
+        public static string generateotpcreditclosepayment = "api/dtplus/dealercredit/generate_otp_credit_close_payment";
+        public static string validateotpupdatecreditclosepayment = "api/dtplus/dealercredit/validate_otp_update_credit_close_payment";
+
+
 
 
         #endregion
@@ -481,6 +491,7 @@
         public static string HdfcInitiateCcmsRechargeUrl = "api/dtplus/HDFCCreditPouch/initiate_cp_recharge";
         public static string RequestToAvailCheckUrl = "api/dtplus/HDFCCreditPouch/chk_eligibility";
         public static string RequestToAvailEnrollUrl = "api/dtplus/HDFCCreditPouch/insrt_cp_rqst_by_customer";
+        public static string HdfcInitiateCpRechargeUrl = "api/dtplus/HDFCCreditPouch/initiate_cp_recharge";
         #endregion
 
         #region "CCMS Recharge"
@@ -507,7 +518,13 @@
         public static string getparentcustomercardwisebalance = "api/dtplus/ParentCustomer/get_parent_customer_card_wise_balances";
         public static string getparentccmsbalanceinfoforcustomerId = "api/dtplus/ParentCustomer/get_parent_ccms_balance_info_for_customerId";
         public static string getparentcustomerdetailbycustomerId = "api/dtplus/ParentCustomer/get_parent_customer_detail_by_customerId";
+        public static string getparenttransactionssummary = "api/dtplus/ParentCustomer/get_parent_transactions_summary";
+        public static string getchildbyparent = "api/dtplus/ParentCustomer/get_child_by_parent";
+        public static string parentcustomerchildmappingeligibility = "api/dtplus/ParentCustomer/parent_customer_child_mapping_eligibility";
+        public static string parentcustomerchildmapping = "api/dtplus/ParentCustomer/parent_customer_child_mapping";
+        public static string getchildmappingdetails = "api/dtplus/ParentCustomer/get_child_mapping_details";
         
+
 
         #endregion
 
@@ -517,6 +534,13 @@
         public static string insertVolvoEicherDealerEnrollment = "api/dtplus/VE/insert_volvo_eicher_dealer_enrollment";
         public static string getVolvoEicherDealerDetail = "api/dtplus/VE/get_volvo_eicher_dealer_detail";
         public static string updateVolvoEicherDealerEnrollment = "api/dtplus/VE/update_volvo_eicher_dealer_enrollment";
+        public static string checkvedealercode = "api/dtplus/VE/check_dealer_code";
+        public static string insertDealerWiseVolvoEicherOtcCardRequest = "api/dtplus/VE/insert_dealer_wise_volvo_eicher_otc_card_request";
+        public static string updateVECommunicationEmailResetPassword = "api/dtplus/VE/update_ve_communication_email_reset_password";
+        public static string viewVolvoEicherDealerOtcCardDetail = "api/dtplus/VE/view_volvo_eicher_dealer_otc_card_detail";
+        public static string getVolvoEicherSalesExeEmpidAddonOtcCardMapping = "api/dtplus/VE/get_volvo_eicher_sales_exe_empid_addon_otc_card_mapping";
+        public static string insertVolvoEicherCustomer = "api/dtplus/VE/insert_volvo_eicher_customer";
+        public static string getAvailityVolvoEicherOtcCard = "api/dtplus/VE/get_availity_volvo_eicher_otc_card";
         #endregion
 
         #region COMCO Manager
@@ -556,6 +580,10 @@
         public static string ICICIRequestAuthorizationActionUrl = "api/dtplus/ICICIcreditPouch/auth_action_cp";
         public static string ICICIRequestToAvailCheckUrl = "api/dtplus/ICICICreditPouch/chk_eligibility";
         public static string ICICIRequestToAvailEnrollUrl = "api/dtplus/ICICICreditPouch/insrt_cp_rqst_by_customer";
+        #endregion
+
+        #region "Customer Search"
+        public static string CCPinResetUrl = "api/dtplus/customer/ccn_pin_reset";
         #endregion
     }
 }

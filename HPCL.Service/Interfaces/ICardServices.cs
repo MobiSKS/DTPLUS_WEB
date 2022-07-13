@@ -40,5 +40,6 @@ namespace HPCL.Service.Interfaces
         Task<CorporateMultiRechargeLimitModel> GetCustomerRechargeLimitConfig(string CustomerId);
         Task<List<SuccessResponse>> ConfigureLimits([FromBody] CorporateMultiRechargeLimitRequest reqModel);
         Task<GetGenericAttachedVehicleRes> GetGenericAttachedVehicle(GetGenericAttachedVehicleReq entity);
+        Task<GetCardWiseLimitRes> CardWiseLimit(GetCardWiseLimit entity);
     }
 }

@@ -13,10 +13,12 @@ namespace HPCL_Web.Controllers
     public class ICICIBankCreditPouchController : Controller
     {
         private readonly IICICIBankCreditPouchService _iCICIBankCreditPouchService;
+        private readonly ICommonActionService _commonActionService;
 
-        public ICICIBankCreditPouchController(IICICIBankCreditPouchService iCICIBankCreditPouchService)
+        public ICICIBankCreditPouchController(IICICIBankCreditPouchService iCICIBankCreditPouchService, ICommonActionService commonActionService)
         {
             _iCICIBankCreditPouchService = iCICIBankCreditPouchService;
+            _commonActionService = commonActionService;
         }
         public IActionResult Index()
         {
@@ -63,9 +65,13 @@ namespace HPCL_Web.Controllers
             return Json(new { reasonList = reasonList });
         }
 
-        public IActionResult RequestApproval()
+        public async Task<IActionResult> RequestApproval()
         {
-            return View();
+            SearchRequestApproval searchRequestApproval = new SearchRequestApproval();
+            searchRequestApproval.SBUTypes.AddRange(await _commonActionService.GetSbuTypeList());
+            searchRequestApproval.ZoneMdl.AddRange(await _commonActionService.GetZonalOfficeListbySBUtype("1"));
+
+            return View(searchRequestApproval);
         }
 
         [HttpPost]
@@ -84,9 +90,11 @@ namespace HPCL_Web.Controllers
             return Json(new { reasonList = reasonList });
         }
 
-        public IActionResult EnrollmentStatus()
+        public async Task<IActionResult> EnrollmentStatus()
         {
             SearchEnrollStatus entity = new SearchEnrollStatus();
+            entity.SBUTypes.AddRange(await _commonActionService.GetSbuTypeList());
+            entity.ZoneMdl.AddRange(await _commonActionService.GetZonalOfficeListbySBUtype("1"));
             return View(entity);
         }
 
@@ -158,7 +166,7 @@ namespace HPCL_Web.Controllers
             return Json(new { reasonList = reasonList });
         }
 
-        public IActionResult RequestAvailEnroll()
+        public IActionResult RequestToAvail()
         {
             return View();
         }

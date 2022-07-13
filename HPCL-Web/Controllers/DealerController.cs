@@ -186,16 +186,43 @@ namespace HPCL_Web.Controllers
             var modals = await _dealerService.GetMerchantDealerCreditSaleStatement(CustomerID, MerchantID, SearchDate);
             return PartialView("~/Views/Dealer/_MerchantDealerCreditSaleStatementTbl.cshtml", modals);
         }
-        public async Task<IActionResult> DealerCreditSaleOutstanding(MerchantCreditSaleOutstandingViewModel entity)
+        public async Task<IActionResult> DealerCreditSaleOutstanding(MerchantCreditSaleOutstandingViewModel entity,string reset)
         {
             MerchantCreditSaleOutstandingViewModel response = new MerchantCreditSaleOutstandingViewModel();
-            if (entity.MerchantID != null)
+            if (entity.MerchantID != null && String.IsNullOrEmpty(reset))
             {
                 response = await _dealerService.GetCreditSaleOutstandingDetails(entity.MerchantID);
                 response.MerchantID = entity.MerchantID;
+
             }
-      
+            ViewBag.Reset = String.IsNullOrEmpty(reset) ? "" : reset;
+            ViewBag.MerchantID = String.IsNullOrEmpty(entity.MerchantID) ? "0" : entity.MerchantID;
             return View(response);
         }
+        public async Task<IActionResult> GetCreditSaleDetails(string CustomerID, string MerchantID, string FromDate, string ToDate)
+        {
+            var searchList = await _dealerService.GetCreditSaleDetails(CustomerID, MerchantID, FromDate, ToDate);
+            return PartialView("~/Views/Dealer/_DealerCreditSaleDetailsTbl.cshtml", searchList);
+        }
+        public async Task<IActionResult> CreditClosePayment(string CustomerID,string MerchantID)
+        {
+            DealerCreditClosePaymenDetails dealerCreditClosePaymentModel = new DealerCreditClosePaymenDetails();
+            dealerCreditClosePaymentModel = await _dealerService.GetCreditClosePayment(CustomerID, MerchantID);
+            return View(dealerCreditClosePaymentModel);
+        }
+        [HttpPost]
+        public async Task<JsonResult> GenerateOTPCreditClosePayment([FromBody] DealerRequestModel dealerRequestModel)
+        {
+            var resp = await _dealerService.GenerateOTPCreditClosePayment(dealerRequestModel);
+            return Json(resp);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> ValidateotpCreditClosePayment([FromBody] DealerRequestModel dealerRequestModel)
+        {
+            var resp = await _dealerService.ValidateotpCreditClosePayment(dealerRequestModel);
+            return Json(resp);
+        }
+
     }
 }

@@ -236,7 +236,8 @@ namespace HPCL.Service.Services
             }
             foreach (ALCardEntryDetails cardDetails in ashokLeylandCardCreationModel.ObjALCardEntryDetail)
             {
-                cardDetails.VechileNo = cardDetails.VechileNo.ToUpper();
+                if (!string.IsNullOrEmpty(cardDetails.VechileNo))
+                    cardDetails.VechileNo = cardDetails.VechileNo.ToUpper();
             }
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(ashokLeylandCardCreationModel), Encoding.UTF8, "application/json");
@@ -397,7 +398,7 @@ namespace HPCL.Service.Services
                 addAddOnCard.VehicleVerifiedManually = Convert.ToBoolean(arrs[0].VehicleVerifiedManually);
             }
             //addAddOnCard.TableStringyfiedData = str;
-            if (arrs != null && arrs.Count > 0 && ((!string.IsNullOrEmpty(arrs[0].VechileNo))))
+            if (arrs != null && arrs.Count > 0 && ((!string.IsNullOrEmpty(arrs[0].CardNo))))
                 addAddOnCard.ObjCardDetail = arrs;
 
             addAddOnCard.ExternalVehicleAPIStatus = _configuration.GetSection("ExternalAPI:VehicleAPI").Value.ToString();
@@ -420,7 +421,7 @@ namespace HPCL.Service.Services
             addAddOnCard.CustomerId = arrs[0].CustomerId;
             addAddOnCard.NoOfCards = arrs[0].NoOfCards;
             //addAddOnCard.TableStringyfiedData = str;
-            if (arrs != null && arrs.Count > 0 && ((!string.IsNullOrEmpty(arrs[0].VechileNo))))
+            if (arrs != null && arrs.Count > 0 && ((!string.IsNullOrEmpty(arrs[0].CardNo))))
                 addAddOnCard.ObjCardDetail = arrs;
 
             addAddOnCard.ExternalVehicleAPIStatus = _configuration.GetSection("ExternalAPI:VehicleAPI").Value.ToString();
@@ -469,6 +470,14 @@ namespace HPCL.Service.Services
                         cardDetails.MobileNoMsg = "";
                         cardDetails.CardNoMsg = "";
                         cardDetails.VINNoMsg = "";
+                        if (string.IsNullOrEmpty(cardDetails.VechileNo))
+                        {
+                            cardDetails.VechileNo = "";
+                        }
+                        if (string.IsNullOrEmpty(cardDetails.MobileNo))
+                        {
+                            cardDetails.MobileNo = "";
+                        }
                     }
 
                     addAddOnCard.Message = customerInserCardResponse.Message;
@@ -590,9 +599,15 @@ namespace HPCL.Service.Services
             else
             {
                 if (salesExecutiveEmployeeIDResponse.Data.Count > 0)
+                {
                     customerCardInfo.Reason = salesExecutiveEmployeeIDResponse.Data[0].Reason;
+                    customerCardInfo.SalesExecutiveEmployeeID = "";
+                }
                 else
-                    customerCardInfo.Reason = "Invalid Dealer Code";
+                {
+                    customerCardInfo.Reason = "";
+                    customerCardInfo.SalesExecutiveEmployeeID = "";
+                }
                 customerCardInfo.StatusCode = salesExecutiveEmployeeIDResponse.Internel_Status_Code;
             }
             return customerCardInfo;
@@ -726,7 +741,7 @@ namespace HPCL.Service.Services
             addAddOnCard.NoOfCards = arrs[0].NoOfCards;
             addAddOnCard.DealerCode = arrs[0].DealerCode;
 
-            if (arrs != null && arrs.Count > 0 && ((!string.IsNullOrEmpty(arrs[0].VechileNo))))
+            if (arrs != null && arrs.Count > 0 && ((!string.IsNullOrEmpty(arrs[0].CardNo))))
                 addAddOnCard.ObjALCardEntryDetail = arrs;
 
             addAddOnCard.ExternalVehicleAPIStatus = _configuration.GetSection("ExternalAPI:VehicleAPI").Value.ToString();
@@ -1148,49 +1163,51 @@ namespace HPCL.Service.Services
             InsertResponse result = obj.ToObject<InsertResponse>();
             return result;
         }
-        public async Task<UploadDocResponseBody> UploadALDoc(string CustomerID)
+        public async Task<GetALUploadKycDocumentResponse> UploadALDoc(string CustomerID)
         {
-            UploadDocResponseBody UploadDocResponseBody = new UploadDocResponseBody();
+            GetALUploadKycDocumentResponse UploadDocResponseBody = new GetALUploadKycDocumentResponse();
 
-            //if (!string.IsNullOrEmpty(FormNumber))
-            //{
-            //    JObject obj = await ViewCustomerDetails(FormNumber);
+            if (!string.IsNullOrEmpty(CustomerID))
+            {
+                var reqBody = new AlGetUploadedDocumentsRequest
+                {
+                    UserAgent = CommonBase.useragent,
+                    UserIp = CommonBase.userip,
+                    UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                    CustomerID = CustomerID
+                };
 
-            //    var searchRes = obj["Data"].Value<JObject>();
-            //    var custResult = searchRes["GetAggregatorCustomerDetails"].Value<JArray>();
+                StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
+                var response = await _requestService.CommonRequestService(content, WebApiUrl.getAlUploadKycDocument);
 
-            //    var customerKYCDetailsResult = searchRes["AggregatorCustomerKYCDetails"].Value<JArray>();
-
-            //    List<CustomerFullDetails> customerList = custResult.ToObject<List<CustomerFullDetails>>();
-
-            //    List<UploadDocResponseBody> UploadDocList = customerKYCDetailsResult.ToObject<List<UploadDocResponseBody>>();
-
-            //    UploadDocResponseBody = UploadDocList.Where(t => t.FormNumber == FormNumber).FirstOrDefault();
-
-            //}
+                JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+                UploadDocResponseBody = obj.ToObject<GetALUploadKycDocumentResponse>();
+            }
 
             return UploadDocResponseBody;
         }
-        public async Task<UploadDocResponse> UploadALDoc(UploadALDoc entity)
+        public async Task<string> SaveUploadDoc(UploadALDoc entity)
         {
-            var searchBody = new UploadDoc
-            {
-                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
-                UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
-                FormNumber = entity.FormNumber,
-                Type = String.IsNullOrEmpty(entity.Type) ? "0" : "1",
-            };
+            MultipartFormDataContent form = new MultipartFormDataContent();
 
-            _httpContextAccessor.HttpContext.Session.SetString("FormNoVal", entity.FormNumber);
+            form.Add(new StringContent(entity.CustomerID.ToString()), "CustomerID");
+            form.Add(new StreamContent(entity.AddressProof.OpenReadStream()), "AddressProof", entity.AddressProof.FileName);
+            form.Add(new StreamContent(entity.IDProof.OpenReadStream()), "IDProof", entity.IDProof.FileName);
+            form.Add(new StreamContent(entity.PanCardProof.OpenReadStream()), "PanCardProof", entity.PanCardProof.FileName);
+            form.Add(new StreamContent(entity.VehicleDetail.OpenReadStream()), "VehicleDetail", entity.VehicleDetail.FileName);
+            form.Add(new StreamContent(entity.SignedCustomerForm.OpenReadStream()), "VehicleDetail", entity.SignedCustomerForm.FileName);
+            form.Add(new StringContent(_httpContextAccessor.HttpContext.Session.GetString("UserId")), "Userid");
+            form.Add(new StringContent(CommonBase.useragent), "Useragent");
+            form.Add(new StringContent(CommonBase.userip), "Userip");
 
-            StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
-
-            var response = await _requestService.CommonRequestService(content, WebApiUrl.getaggregatornameandformnumberbyreferenceno);
+            var response = await _requestService.FormDataRequestService(form, WebApiUrl.insertAlCustomerKYC);
 
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
-            UploadDocResponse searchCustomer = obj.ToObject<UploadDocResponse>();
-            return searchCustomer;
+            var jarr = obj["Data"].Value<JArray>();
+            List<UpdateKycResponse> insertKyc = jarr.ToObject<List<UpdateKycResponse>>();
+
+            return (insertKyc[0].Reason);
+            //return (insertKyc[0].Reason + "," + _httpContextAccessor.HttpContext.Session.GetString("FormNoVal"));
         }
 
         public async Task<PendingKYCCustomerDetailsModel> ALPendingKYCCustomerDetail(PendingKYCCustomerDetailsModel Model)
@@ -1226,6 +1243,23 @@ namespace HPCL.Service.Services
             }
 
             return Model;
+        }
+        public async Task<InsertResponse> ResetAlDealerPassword(string UserName)
+        {
+            var requestBody = new UpdateAlDealePasswordReset
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserName = UserName
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.updateAlCommunicationEmailResetPassword);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            InsertResponse result = obj.ToObject<InsertResponse>();
+            return result;
         }
 
     }
