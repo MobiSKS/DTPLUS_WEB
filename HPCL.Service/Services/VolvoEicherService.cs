@@ -681,5 +681,20 @@ namespace HPCL.Service.Services
             }
         }
 
+        public async Task<VEAddonOTCCardMapping> ExistingCustomerCardMap()
+        {
+            VEAddonOTCCardMapping addAddOnCard = new VEAddonOTCCardMapping();
+            addAddOnCard.Remarks = "";
+            addAddOnCard.Message = "";
+            addAddOnCard.ExternalVehicleAPIStatus = _configuration.GetSection("ExternalAPI:VehicleAPI").Value.ToString();
+
+            if (string.IsNullOrEmpty(addAddOnCard.ExternalVehicleAPIStatus))
+            {
+                addAddOnCard.ExternalVehicleAPIStatus = "Y";
+            }
+
+            return addAddOnCard;
+        }
+
     }
 }
