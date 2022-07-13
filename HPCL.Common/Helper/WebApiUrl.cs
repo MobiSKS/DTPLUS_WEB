@@ -83,6 +83,7 @@
         public static string getdetailforcorpmultirechargelimitconfig = "api/dtplus/card/get_detail_for_corp_multi_recharge_limit_config";
         public static string corpmultirechargelimitconfig = "api/dtplus/card/corp_multi_recharge_limit_config";
         public static string GetGenericAttachedVehicleUrl = "api/dtplus/card/Get_Generic_Attached_Vehicle";
+        public static string CardWiseLimitUrl = "api/dtplus/card/get_card_wise_limit_audit_trail";
         #endregion
 
         #region Merchant
@@ -312,6 +313,7 @@
         public static string updateAlCustomerDetail = "api/dtplus/ashokleyland/update_al_customer_detail";
         public static string getAlPendingKycCustomer = "api/dtplus/ashokleyland/get_al_pending_kyc_customer";
         public static string updateAlCommunicationEmailResetPassword = "api/dtplus/ashokleyland/update_al_communication_email_reset_password";
+        public static string GetAllLimitTypeUrl = "api/dtplus/card/get_limit_type";
         public static string getAlUploadKycDocument = "api/dtplus/ashokleyland/get_al_upload_kyc_document";
         public static string insertAlCustomerKYC = "api/dtplus/ashokleyland/insert_al_customer_kyc";
         #endregion
