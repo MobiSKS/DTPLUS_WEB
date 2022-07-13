@@ -1,0 +1,61 @@
+﻿using HPCL.Common.Models.CommonEntity;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace HPCL.Common.Models.ViewModel.VolvoEicher
+{
+    public class VEAddonOTCCardMapping : BaseEntity
+    {
+        public string CustomerId { get; set; }
+        public string NoOfCards { get; set; }
+        public List<VEAddonOTCCardDetails> ObjCardDetail { get; set; }
+        public virtual List<VehicleTypeModel> VehicleTypeMdl { get; set; }
+        public int Status { get; set; }
+        public int StatusCode { get; set; }
+        public string Message { get; set; }
+        public string Remarks { get; set; }
+        public string Reason { get; set; }
+        public string CustomerOrgName { get; set; }
+        public string NameOnCard { get; set; }
+        public string DealerCode { get; set; }
+        public string SalesExecutiveEmployeeID { get; set; }
+        public string TableStringyfiedData { get; set; }
+        public bool VehicleVerifiedManually { get; set; }
+        public string ExternalVehicleAPIStatus { get; set; }
+        public VEAddonOTCCardMapping()
+        {
+            VehicleTypeMdl = new List<VehicleTypeModel>();
+            ObjCardDetail = new List<VEAddonOTCCardDetails>();
+            VehicleVerifiedManually = false;
+        }
+    }
+
+    public class VEAddonOTCCardDetails
+    {
+        public string CardNo { get; set; }
+        public string VechileNo { get; set; }
+        public string VehicleType { get; set; }
+        public string VINNumber { get; set; }
+        public string MobileNo { get; set; }
+        public string Message { get; set; }
+        public string NoOfCards { get; set; }
+        public string VehicleNoMsg { get; set; }
+        public string MobileNoMsg { get; set; }
+        public string CardNoMsg { get; set; }
+        public string VINNoMsg { get; set; }
+        public string CustomerId { get; set; }
+        public string VehicleVerifiedManually { get; set; }
+        public string CustomerOrgName { get; set; }
+        public string NameOnCard { get; set; }
+        public string DealerCode { get; set; }
+        public string SalesExecutiveEmployeeID { get; set; }
+        public string Verified { get; set; }
+        public VEAddonOTCCardDetails()
+        {
+            VehicleVerifiedManually = "false";
+        }
+    }
+}

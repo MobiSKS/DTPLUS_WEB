@@ -1,0 +1,316 @@
+﻿@model HPCL.Common.Models.ViewModel.VolvoEicher.VEAddonOTCCardMapping
+@using HPCL.Common.Resources;
+@{
+    ViewData["Title"] = "Addon OTC Card Mapping";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="col-lg-12 p-4 p-md-4">
+    <div class="bg-white p-2 p-md-4">
+    <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
+        <li class="breadcrumb-item"><a href="@Url.Action("Index", "VolvoEicher")" class="text_primary">Volvo Eicher</a> </li>
+        <li class="breadcrumb-item font-weight-light">Addon OTC Card Mapping</li>
+    </ul>
+    @using (Html.BeginForm("AddonOTCCardMapping", "AshokLeyLand", FormMethod.Post, new { @enctype = "multipart/form-data" }))
+    {
+        <div class="w-100">
+        <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
+            <div class="border-1 rounded border-grey">
+            <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Addon OTC Card Mapping</p>
+			<div class="alert alert-danger mt-3 text-center" id="dvRemarks" style="@(Model.Message=="" ? "display:none":"display:block")">
+                @Html.DisplayFor(m => m.Message)
+            </div>
+            <div class="col-lg-12 col-md-12 col-12 py-3">
+				<div class="d-flex align-items-center flex-wrap">
+                <div class="col-lg-12 col-12">
+                    <div class="d-flex align-items-center flex-wrap mb-0">
+                    <label class="font-weight-normal col-md-2 col-12">Customer ID  <sup class="text-danger">*</sup></label>
+                    <div class="col-sm-3 col-md-3 col-12">
+                        <div class="custom_select">
+                          @Html.TextBoxFor(m => m.CustomerId, new { @class = "form-control", @id = "CustomerId", maxlength = "10", onkeypress = "return isNumberKey(event)" })
+                          @Html.ValidationMessageFor(m => m.CustomerId, "", new { @class = "error", @id = "CustomerIdValErrMsg" })
+                        </div>
+                    </div>
+					<div class="col-md-7 col-12">
+						<div class="d-flex align-items-center flex-wrap">
+							<div class="px-2">
+								<button class="btn btn_primary" type="button" id="btnSearch" onclick="GetCustomerDetails()">@Label.Search</button>
+							</div>
+							<div class="px-2">
+								<button class="btn btn_primary px-4 py-2" type="button" id="btnHeaderReset">@Label.Reset</button>
+							</div>
+						</div>
+                    </div>
+                    </div>
+                </div>
+				</div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="clearfix"></div>
+            </div>
+        </div>
+			 <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3 toBeHiddenOnSuccess" id="ViewCardDetailsTbl">
+             </div>	
+	   </div>
+
+       <div style="display:none">
+        <table id="OldVehicleDetails">
+            <thead>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.ObjCardDetail)
+                {
+                    <tr>
+                        <td>@item.CardNo</td>
+                        <td>@item.VechileNo</td>
+                        <td>@item.VehicleType</td>
+                        <td>@item.VINNumber</td>
+                        <td>@item.MobileNo</td>
+                        <td>@item.VehicleNoMsg</td>
+                        <td>@item.MobileNoMsg</td>
+                        <td>@item.Verified</td>
+                        <td>@item.CardNoMsg</td>
+                        <td>@item.VINNoMsg</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+      </div>
+      @Html.HiddenFor(model => Model.VehicleVerifiedManually)
+      @Html.HiddenFor(model => Model.CustomerOrgName)
+      @Html.HiddenFor(model => Model.NameOnCard)
+      @Html.HiddenFor(model => Model.DealerCode)
+      @Html.HiddenFor(model => Model.NoOfCards)
+      @Html.HiddenFor(model => Model.SalesExecutiveEmployeeID)
+      @Html.HiddenFor(model => Model.ExternalVehicleAPIStatus)
+    }
+    <div class="clearfix"></div>
+    <div style="display:none;" class="alert alert-danger mt-3 text-center ml-3 mr-3" id="dvNoRecord">
+    </div>
+    <div class="clearfix"></div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function ()
+      {
+         if($("#dvRemarks").html().trim()!="")
+         {
+             debugger;
+             ViewCardDetailsTbl.style.display = "block";
+
+             var vehicles = [];
+             var checked="false";
+
+             checked=$("#VehicleVerifiedManually").val();
+                          
+             $("#OldVehicleDetails TBODY TR").each(function () {
+                 var row = $(this);
+
+                 vehicles.push({
+                     CustomerId: $("#CustomerId").val().trim(),
+                     Message: $("#dvRemarks").html().trim(),
+                     CardNo: row.find("TD").eq(0).html(),
+                     VechileNo: row.find("TD").eq(1).html(),
+                     VehicleType: row.find("TD").eq(2).html(),
+                     VINNumber: row.find("TD").eq(3).html(),
+                     MobileNo: row.find("TD").eq(4).html(),
+                     NoOfCards: $("#NoOfCards").val().trim(),
+                     VehicleVerifiedManually: checked,
+                     CustomerOrgName:$("#CustomerOrgName").val().trim(),
+                     NameOnCard:$("#NameOnCard").val().trim(),
+                     DealerCode:$("#DealerCode").val().trim(),
+                     SalesExecutiveEmployeeID:$("#SalesExecutiveEmployeeID").val().trim(),
+                     Verified: row.find("TD").eq(7).html()
+                 })
+             });
+
+             console.log("Value Check Main View");
+             console.log(vehicles);
+
+                $.ajax({
+                    type: 'POST',  // http method
+                    url: '@Url.Action("GetAlAddonOTCCardCustomerDetailsPartialView", "AshokLeyLand")',
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(vehicles),
+                    dataType: "html",
+                    success: function (data, status, xhr) 
+                    {
+                            var v = data;
+                            //console.log(data);
+                            if (status == 'success') {
+                                $("#ViewCardDetailsTbl").html(data);
+                                $('html, body').animate({
+                                    scrollTop: $("#ViewCardDetailsTbl").offset().top
+                                }, 2000);
+                            }
+                            else {
+                                console.log(v);
+                            }
+                        },
+                    error: function (jqXhr, textStatus, errorMessage) {
+                        ViewCardDetailsTbl.style.display = "none";
+
+                    }
+                });
+
+
+         }
+      });
+
+	function GetCustomerDetails() 
+    {
+
+         if ($("#CustomerId").val().trim() == "") 
+         {
+             $('#CustomerIdValErrMsg').text("Please enter Customer ID");
+             return false;
+         } 
+         else
+         {
+             if (!$("#CustomerId").val().match(mappedCustomerId)) 
+             {
+                 $("#CustomerIdValErrMsg").attr("style", "display:block");
+                 $("#CustomerIdValErrMsg").html("Invalid Customer ID");
+                 return false;
+             }
+         }
+         $('#CustomerIdValErrMsg').text("");
+
+         $.ajax({
+             type: 'POST',  // http method
+             url: '@Url.Action("GetVEAddonOTCCardMappingCustomerDetails", "VolvoEicher")',
+             data: { customerId: $("#CustomerId").val() },  // data to submit
+             dataType: "json",
+             success: function (res) {
+                 console.log(res);
+                 if (res.searchResult.customerOrgName != "")
+                 {
+                     $("#CustomerId").prop('readonly', true);
+                     ViewCardDetailsTbl.style.display = "block";
+                     dvNoRecord.style.display = "none";
+                     $("#dvNoRecord").html('');
+
+                        var vehicles = [];
+                        var checked="false";
+
+                        checked=$("#VehicleVerifiedManually").val();
+                       
+                         vehicles.push({
+                             CustomerId: $("#CustomerId").val().trim(),
+                             Message: $("#dvRemarks").html().trim(),
+                             CardNo: "",
+                             VechileNo: "",
+                             VehicleType: "",
+                             VINNumber: "",
+                             MobileNo: "",
+                             NoOfCards: "",
+                             VehicleVerifiedManually: checked,
+                             CustomerOrgName:"",
+                             NameOnCard:"",
+                             DealerCode:"",
+                             SalesExecutiveEmployeeID:"",
+                             Verified: "0"
+                         });
+
+                     console.log("Value Check");
+                     console.log(vehicles);
+
+                         $.ajax({
+                             type: 'POST',  // http method
+                             url: '@Url.Action("GetVEAddonOTCCardCustomerDetailsPartialView", "VolvoEicher")',
+                             contentType: "application/json; charset=utf-8",
+                             data: JSON.stringify(vehicles),
+                             dataType: "html",
+                             success: function (data, status, xhr) 
+                             {
+                                     var v = data;
+                                     //console.log(data);
+                                     if (status == 'success') 
+                                     {
+                                         $("#ViewCardDetailsTbl").html(data);
+                                         //$('html, body').animate({
+                                         //    scrollTop: $("#ViewCardDetailsTbl").offset().top
+                                         //}, 2000);
+                                     }
+                                     else {
+                                         console.log(v);
+                                     }
+                                 },
+                             error: function (jqXhr, textStatus, errorMessage) {
+                                 ViewCardDetailsTbl.style.display = "none";
+
+                             }
+                         });
+
+                 }
+                 else
+                 {
+                     $("#CustomerId").prop('readonly', false);
+                     ViewCardDetailsTbl.style.display = "none";
+                     dvNoRecord.style.display = "block";
+                     $("#dvNoRecord").html(res.searchResult.reason);
+                 }
+             },
+             error: function (xhr, ajaxOptions, thrownError) {
+                 console.log(xhr);
+             }
+         });
+
+
+     };
+
+
+$('#CustomerId').keypress(function (e) 
+{
+    if (e.keyCode == 13) // detect the enter key
+    {  
+        e.preventDefault();
+        $('#btnSearch').click();
+    }
+});
+
+$("#CustomerId").on("blur", function () 
+{
+    //debugger;
+    if (document.getElementById("CustomerId").value.trim() == "") 
+    {
+        $("#CustomerIdValErrMsg").attr("style", "display:block");
+        $("#CustomerIdValErrMsg").html("Please enter Customer ID");
+        return false;
+    }
+    else if (!$("#CustomerId").val().match(mappedCustomerId)) 
+    {
+        $("#CustomerIdValErrMsg").attr("style", "display:block");
+        $("#CustomerIdValErrMsg").html("Invalid Customer ID");
+        return false;
+    }
+    else
+    {
+        $("#CustomerIdValErrMsg").html("");
+    }
+
+});
+
+   $('#NoOfCards').on("cut copy paste",function(e) {
+      e.preventDefault();
+    });
+
+    $("#btnHeaderReset").click(function ()
+    {
+        window.location.href = '@Url.Action("ExistingCustomerCardMap", "VolvoEicher")';
+    });
+
+</script>

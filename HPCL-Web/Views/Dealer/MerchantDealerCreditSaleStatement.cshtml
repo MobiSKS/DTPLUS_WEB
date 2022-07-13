@@ -79,6 +79,8 @@
 
                                 </div>
                             </div>
+                            <div id="errMessage" class="alert alert-danger mt-3 text-center" style="display:none">
+                            </div>
                         </div>
                         <div class="clearfix"></div>
                     </div>
@@ -149,39 +151,40 @@
               $.ajax({
               type: 'POST',  // http method
               url: '@Url.Action("GetMerchantSaleStatementDate", "Dealer")',
-           
+
               dataType: 'json',
               data: { CustomerID: customerId, MerchantID: merchantId},
               success: function (data, status, xhr) {
                     var v = data;
                     $("#MerchantID").attr("disabled",true);
                     $("#CustomerID").attr("disabled",true);
-                    if (status == 'success') {
-                        $("#show_dateforView").attr("style","display:block");
+                    debugger;
+                    if(data.length>0){
+                        if(data[0].status=="1"){
+                            if (status == 'success') {
+                                $("#show_dateforView").attr("style","display:block");
 
-                        $("#StatementDate").html("");
-                                    $('<option>',
-                                    {
-                                        value: 0,
-                                        text: "--Select--"
-                                    }).html("--Select--").appendTo("#StatementDate");
-                        $.each(data, function (i, data) { // bind the dropdown list using json result
-                                //if (i == 0) {
-                               
-                                //}
-                                //else{
-                                $('<option>',
-                                    {
-                                        value: data.statementDate,
-                                        text: data.statementDate
-                                    }).html(data.statementDate).appendTo("#StatementDate");
-                                //}
-                                
-                        });
-                        $("#StatementDate")[0].sumo.reload();
-                    }
-                    else {
-                        console.log(v);
+                                $("#StatementDate").html("");
+                                            $('<option>',
+                                            {
+                                                value: 0,
+                                                text: "--Select--"
+                                            }).html("--Select--").appendTo("#StatementDate");
+                                $.each(data, function (i, data) { // bind the dropdown list using json result
+                                        $('<option>',
+                                            {
+                                                value: data.statementDate,
+                                                text: data.statementDate
+                                            }).html(data.statementDate).appendTo("#StatementDate");
+
+                                });
+                                $("#StatementDate")[0].sumo.reload();
+                            }
+                        }
+                        else{
+                            $("#errMessage").attr("style","display:block");
+                            $("#errMessage").html(data[0].reason);
+                        }
                     }
                 },
                 error: function (jqXhr, textStatus, errorMessage) {
@@ -237,21 +240,21 @@
           if(statementDate=="" || statementDate=="0"){
              $("#ddlDate_error").attr("style", "display:block");
              $("#ddlDate_error").html("Statement date cannot be left blank");
-             
+
          }
          else{
              $("#ddlDate_error").attr("style", "display:none");
              $("#ddlDate_error").html("");
          }
-         
+
       });
      $("#btnView").on("click", (function (e) {
-        
+
           var merchantId = $("#MerchantID").val();
           var customerId = $("#CustomerID").val();
           var statementDate= $("#StatementDate").val();
           var flag = "Y";
-         
+
             if (merchantId != "") {
              if (!merchantId.match(mappedMerchantID)) {
                  $("#merchantId_error").attr("style", "display:block");
@@ -281,8 +284,8 @@
              $("#ddlDate_error").html("Statement date cannot be left blank");
              flag = "N";
          }
-         
-          
+
+
           if (flag == "Y") {
              $("#ddlDate_error").attr("style", "display:none");
               $("#ddlDate_error").html("");
@@ -294,7 +297,7 @@
           if (flag == "N")
               e.preventDefault();
            else{
-               
+
                $.ajax({
                type: 'GET',  // http method
                url: '@Url.Action("GetMerchantDealerCreditSaleStatement", "Dealer")',
@@ -308,7 +311,7 @@
                        $('html, body').animate({
                            scrollTop: $("#show_Table").offset().top
                        }, 2000);
-                        
+
                    }
                    else {
                        console.log(v);

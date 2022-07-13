@@ -541,6 +541,9 @@
         public static string getVolvoEicherSalesExeEmpidAddonOtcCardMapping = "api/dtplus/VE/get_volvo_eicher_sales_exe_empid_addon_otc_card_mapping";
         public static string insertVolvoEicherCustomer = "api/dtplus/VE/insert_volvo_eicher_customer";
         public static string getAvailityVolvoEicherOtcCard = "api/dtplus/VE/get_availity_volvo_eicher_otc_card";
+        public static string searchVolvoEicherManageCard = "api/dtplus/VE/search_volvo_eicher_manage_card";
+        public static string updateVECustomerDetail = "api/dtplus/VE/update_ve_customer_detail";
+        public static string getVolvoEicherAddonOtcCardMappingCustomerDetails = "api/dtplus/VE/get_volvo_eicher_addon_otc_card_mapping_customer_details";
         #endregion
 
         #region COMCO Manager
