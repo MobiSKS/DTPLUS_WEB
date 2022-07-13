@@ -549,7 +549,7 @@ namespace HPCL.Service.Services
                 UserName = entity.UserName,
                 Email = entity.Email,
                 UserRole = entity.UserRole,
-                TypeManageUsersAddUserRole = entity.TypeManageUsersAddUserRole,
+                TypeManageUsersAddUserRoleWithStatusFlag = entity.TypeManageUsersAddUserRoleWithStatusFlag,
                 CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 StateId = entity.StateId
             };

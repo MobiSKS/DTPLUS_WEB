@@ -13,75 +13,32 @@ namespace HPCL.Common.Models.ViewModel.AshokLeyLand
     public class UploadALDoc : BaseEntity
     {
         public string CustomerID { get; set; }
+        public string IdProofFront { get; set; }
 
-        [Display(Name = "IdProofType")]
-        [Required(ErrorMessage = "ID Proof Type is required")]
-        public int IdProofType { get; set; }
+        [Required(ErrorMessage = "Valid File is required")]
+        public IFormFile IDProof { get; set; }
 
-        [MaxLength(20)]
-        [Required(ErrorMessage = "ID Proof Document Number is required")]
-        [RegularExpression(FieldValidation.ValidDocumentNumber, ErrorMessage = FieldValidation.ValidDocumentNumberErrMsg)]
-        public string IdProofDocumentNo { get; set; }
+        public string AddressProofFront { get; set; }
 
-        [Required(ErrorMessage = "ID Proof Front Photo is required")]
-        public IFormFile IdProofFront { get; set; }
+        [Required(ErrorMessage = "Valid File is required")]
+        public IFormFile AddressProof { get; set; }
 
-        [Required(ErrorMessage = "ID Proof Back Photo is required")]
-        public IFormFile IdProofBack { get; set; }
+        public string PanCardFront { get; set; }
 
-        [Display(Name = "Select Address Proof Type")]
-        [Required(ErrorMessage = "Address Proof Type is required")]
-        public int AddressProofType { get; set; }
+        [Required(ErrorMessage = "Valid File is required")]
+        public IFormFile PanCardProof { get; set; }
 
-        [MaxLength(20)]
-        [Required(ErrorMessage = "Address Proof Document Number is required")]
-        [RegularExpression(FieldValidation.ValidDocumentNumber, ErrorMessage = FieldValidation.ValidDocumentNumberErrMsg)]
-        public string AddressProofDocumentNo { get; set; }
+        public string VehicleDetailsFront { get; set; }
 
-        [Required(ErrorMessage = "Address Proof Front Photo is required")]
-        public IFormFile AddressProofFront { get; set; }
+        [Required(ErrorMessage = "Valid File is required")]
+        public IFormFile VehicleDetail { get; set; }
 
-        [Required(ErrorMessage = "Address Proof Back Photo is required")]
-        public IFormFile AddressProofBack { get; set; }
+        public string CustomerFormProofFront { get; set; }
 
-        [Required(ErrorMessage = "Please enter 10 digits Form Number")]
-        [StringLength(10)]
-        [RegularExpression(FieldValidation.ValidFormNo, ErrorMessage = FieldValidation.ValidFormNoErrMsg)]
-        public string FormNumber { get; set; }
-        public string CustomerName { get; set; }
-        public string IdProofFrontSRC { get; set; }
-        public string CustomerTypeId { get; set; }
-        public string Type { get; set; }
+        [Required(ErrorMessage = "Valid File is required")]
+        public IFormFile SignedCustomerForm { get; set; }
+        public string Reason { get; set; }
+        public int Status { get; set; }
 
-        [Display(Name = "Select PAN Card Type")]
-        [Required(ErrorMessage = "PAN Card Type is required")]
-        public int PanCardType { get; set; }
-
-
-        [Required(ErrorMessage = "PAN Card is required")]
-        public IFormFile PanCard { get; set; }
-        [MaxLength(20)]
-        [Required(ErrorMessage = "Vehicle Details Type is required")]
-        [RegularExpression(FieldValidation.ValidDocumentNumber, ErrorMessage = FieldValidation.ValidDocumentNumberErrMsg)]
-        public string VehicleDetailsType { get; set; }
-
-
-        [Required(ErrorMessage = "Vehicle Details is required")]
-        public IFormFile VehicleDetails { get; set; }
-        [MaxLength(20)]
-        [Required(ErrorMessage = "Customer Form Type is required")]
-        [RegularExpression(FieldValidation.ValidDocumentNumber, ErrorMessage = FieldValidation.ValidDocumentNumberErrMsg)]
-        public string CustomerFormType { get; set; }
-
-
-        [Required(ErrorMessage = "Customer Form is required")]
-        public IFormFile CustomerForm { get; set; }
-        public string IdProofFrontimg { get; set; }
-        public string IdProofBackimg { get; set; }
-        public string AddProofFrontimg { get; set; }
-        public string AddProofBackimg { get; set; }
-        public string PanFrontimg { get; set; }
-        public string VehFrontimg { get; set; }
-        public string CustFrontimg { get; set; }
     }
 }

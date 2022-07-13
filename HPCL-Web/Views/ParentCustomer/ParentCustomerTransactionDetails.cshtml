@@ -60,7 +60,7 @@
         @if (Model.Data.Count() > 0)
         {
             <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3" id="dvParentCustomerBalance" style="width:100%;">
-                <table id="CustomerBalanceTbl" class="table1 table-striped d-md-table d-block table-bordered table-responsive mt-3" style="width:100%;">
+                <table id="CustTransactionTbl" class="datatable table table-striped d-md-table d-block table-bordered table-responsive mt-3" style="width:100%;">
                     <thead>
                         <tr>
                             <th style="width:5%;"><input type="checkbox" id="checkAll" /></th>
@@ -83,12 +83,12 @@
                             i = i + 1;
                             <tr>
                                 <td><input type="checkbox" id="check_@i" onchange="checkChanged(this)" /></td>
-                                <td>@item.ChildCustomerID</td>
+                                <td>@item.ChildId</td>
                                 <td>@item.ChildCustomerName</td>
-                                <td>@item.ControlCardNumber</td>
+                                <td>@item.ControlCardNo</td>
                                 <td>@item.NameonCard</td>
-                                <td>@item.RegionalOffice</td>
-                                <td>@item.Status</td>
+                                <td>@item.RegionalOfficeName</td>
+                                <td>@item.StatusName</td>
                             </tr>
                         }
 
@@ -119,10 +119,10 @@
     <div class="clearfix"></div>
 </div>
 <script type="text/javascript">
-          $(document).ready(function () {
+    $(document).ready(function () {
 
-          });
-          $("#checkAll").click(function () {
+    });
+    $("#checkAll").click(function () {
         $('input:checkbox').not(this).prop('checked', this.checked);
     });
     function checkChanged(o){
@@ -132,52 +132,69 @@
         if(!chkStatus && chkAllStatus)
             $("#checkAll")[0].checked=false;
     }
-          $("#btnReset").click(function ()
-          {
-              window.location.href = '@Url.Action("ParentCustomerTransactionDetails", "ParentCustomer")';
-          });
+    $("#btnReset").click(function ()
+    {
+        window.location.href = '@Url.Action("ParentCustomerTransactionDetails", "ParentCustomer")';
+    });
 
-          $("#btnSearch").click(function () {
+    $("#btnSearch").click(function () {
 
-              $("#customerCCMSBalanceTbl").hide();
-              $("#customerCardWiseBalancesTbl").hide();
+        //debugger;
+        var parentCustomerID = document.getElementById("ParentCustomerID").value.trim();
+        var childCustomerId = document.getElementById("ChildCustomerId").value.trim();
+        if (parentCustomerID == "") {
+            document.getElementById("parentCustomerId_error").innerHTML = "Parent Customer ID is required";
+            $("#ParentCustomerID").focus;
+            return (false);
+        }
+        else {
+            if (!parentCustomerID.match(mappedCustomerId)) {
+                $("#parentCustomerId_error").attr("style", "display:block");
+                $("#parentCustomerId_error").html("Invalid Parent Customer ID");
+                return (false);
+            }
+            else {
+                document.getElementById("parentCustomerId_error").innerHTML = "";
+            }
 
-              //debugger;
-              var parentCustomerID = document.getElementById("ParentCustomerID").value.trim();
-              var childCustomerId = document.getElementById("ChildCustomerId").value.trim();
-              if (parentCustomerID == "") {
-                  document.getElementById("parentCustomerId_error").innerHTML = "Parent Customer ID is required";
-                  $("#ParentCustomerID").focus;
-                  return (false);
-              }
-              else {
-                  if (!parentCustomerID.match(mappedCustomerId)) {
-                      $("#parentCustomerId_error").attr("style", "display:block");
-                      $("#parentCustomerId_error").html("Invalid Parent Customer ID");
-                      return (false);
-                  }
-                  else {
-                      document.getElementById("parentCustomerId_error").innerHTML = "";
-                  }
+        }
 
-              }
+        if (childCustomerId != "") {
+            if (!childCustomerId.match(mappedCustomerId)) {
+                $("#childCustomerId_error").attr("style", "display:block");
+                $("#childCustomerId_error").html("Invalid Customer ID");
+                return (false);
+            }
+            else {
+                document.getElementById("childCustomerId_error").innerHTML = "";
+            }
 
-              if (childCustomerId != "") {
-                  if (!childCustomerId.match(mappedCustomerId)) {
-                      $("#childCustomerId_error").attr("style", "display:block");
-                      $("#childCustomerId_error").html("Invalid Customer ID");
-                      return (false);
-                  }
-                  else {
-                      document.getElementById("childCustomerId_error").innerHTML = "";
-                  }
+        }
 
-              }
+    });
+    $("#btnView").click(function () {
+        var parentCustomerID = document.getElementById("ParentCustomerID").value.trim();
+        objCustomerIds=[];
+         $("#CustTransactionTbl tbody tr").each(function () {
+             //debugger;
 
-          });
+                 var row = $(this);
+                 if (row.find('input[type="checkbox"]').is(":checked")) {
 
+                 var customerId = row[0].cells[1].textContent;
+                 objCustomerIds.push(customerId);
+
+            }
+         });
+         debugger;
+         
+
+        var url = '@Html.Raw(@Url.Action("ViewParentChildTransactionDetails", "ParentCustomer",new { ParentCustomerID = "zzXXyyZZZZZZZzz", ChildCustomerIds="MNO"}))';
+        url = url.replace("zzXXyyZZZZZZZzz", encodeURIComponent(parentCustomerID)).replace("MNO",objCustomerIds);
+        window.location.href=url;
+    });
     $("#ParentCustomerID").on("blur", function ()
-      {
+    {
           //debugger;
           if (document.getElementById("ParentCustomerID").value.trim() == "")
           {
@@ -196,9 +213,9 @@
               $("#parentCustomerId_error").html("");
           }
 
-      });
-      $("#ChildCustomerId").on("blur", function ()
-      {
+    });
+    $("#ChildCustomerId").on("blur", function ()
+    {
 
           if(document.getElementById("ChildCustomerId").value.trim() != ""){
               if (!$("#ChildCustomerId").val().match(mappedCustomerId))
@@ -217,6 +234,6 @@
                   $("#childCustomerId_error").html("");
               }
 
-      });
+    });
 
 </script>

@@ -16,11 +16,18 @@ namespace HPCL.Common.Models.ViewModel.Security
         public string StateId { get; set; }
         public string ActionType { get; set; }
         public string UserRole { get; set; }
-        public virtual List<UserLocations> TypeManageUsersAddUserRole { get; set; }
+        public virtual List<DeleteLocations> TypeManageUsersAddUserRole { get; set; }
+        public virtual List<UserLocations> TypeManageUsersAddUserRoleWithStatusFlag { get; set; }
         public string UpdateStatus { get; set; }
         public string RoleId { get; set; }
     }
     public class UserLocations
+    {
+        public string ZO { get; set; }
+        public string RO { get; set; }
+        public string StatusFlag { get; set; }
+    }
+    public class DeleteLocations
     {
         public string ZO { get; set; }
         public string RO { get; set; }

@@ -5,6 +5,7 @@ using HPCL.Common.Models.ViewModel.ParentCustomer;
 using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace HPCL_Web.Controllers
@@ -36,7 +37,7 @@ namespace HPCL_Web.Controllers
         {
             return View();
         }
-        public async Task<IActionResult> ManageProfile(string CustomerId,string NameOnCard)
+        public async Task<IActionResult> ManageProfile(string CustomerId, string NameOnCard)
         {
             var modals = await _customerService.ManageProfile(CustomerId, NameOnCard);
             return View(modals);
@@ -82,7 +83,7 @@ namespace HPCL_Web.Controllers
             var reason = await _customerService.ActionParentCustomerAuthorize(approveParentCustomer);
             return Json(reason);
         }
-        public async Task<IActionResult> GetCardDetails(string CustomerId,string RequestId)
+        public async Task<IActionResult> GetCardDetails(string CustomerId, string RequestId)
         {
             var modals = await _customerService.GetCardDetails(CustomerId, RequestId);
             return PartialView("~/Views/ParentCustomer/_GetCardandDispatchDetailsTbl.cshtml", modals);
@@ -93,9 +94,9 @@ namespace HPCL_Web.Controllers
             return PartialView("~/Views/ParentCustomer/_GetCardandDispatchDetailsTbl.cshtml", modals);
         }
 
-        public async Task<IActionResult> UpdateParentCustomer(string CustomerId,string RequestId)
+        public async Task<IActionResult> UpdateParentCustomer(string CustomerId, string RequestId)
         {
-            var modals = await _customerService.UpdateParentCustomer(CustomerId,RequestId);
+            var modals = await _customerService.UpdateParentCustomer(CustomerId, RequestId);
             return View(modals);
         }
 
@@ -122,15 +123,15 @@ namespace HPCL_Web.Controllers
             modals.ZonalOffices.AddRange(await _commonActionService.GetZonalOfficebySBUType("1"));
             return View(modals);
         }
-        
-        public async Task<IActionResult> SearchParentCustomerRequestStatus(string ZonalOfficeId, string RegionalOfficeId,string FromDate, string ToDate, string FormNumber,string SBUtypeId)
+
+        public async Task<IActionResult> SearchParentCustomerRequestStatus(string ZonalOfficeId, string RegionalOfficeId, string FromDate, string ToDate, string FormNumber, string SBUtypeId)
         {
             var modals = await _customerService.SearchParentCustomerRequestStatus(ZonalOfficeId, RegionalOfficeId, FromDate, ToDate, FormNumber, SBUtypeId);
             return PartialView("~/Views/ParentCustomer/_ParentCustomerRequestStatusTbl.cshtml", modals);
         }
-        public async Task<IActionResult> SearchParentCustomerRequestStatusReport(string FormNumber,string RequestId)
+        public async Task<IActionResult> SearchParentCustomerRequestStatusReport(string FormNumber, string RequestId)
         {
-            var modals = await _customerService.SearchParentCustomerRequestStatusReport( FormNumber,RequestId);
+            var modals = await _customerService.SearchParentCustomerRequestStatusReport(FormNumber, RequestId);
             return PartialView("~/Views/ParentCustomer/_ParentCustomerStatusReportTbl.cshtml", modals);
         }
 
@@ -143,7 +144,7 @@ namespace HPCL_Web.Controllers
                 customerBalanceResponse = await _customerService.GetCustomerBalanceInfo(requestInfo);
                 ViewBag.ParentCustomerID = requestInfo.ParentCustomerID;
             }
-            
+
             return View(customerBalanceResponse);
         }
         public async Task<IActionResult> GetCustomerCardWiseBalance(string CustomerID)
@@ -163,7 +164,7 @@ namespace HPCL_Web.Controllers
         {
             ParentCustomerBalanceInfoModel result = await _customerService.GetCustomerDetailsByCustomerID(CustomerID);
             return PartialView("~/Views/ParentCustomer/_CustomerSummaryView.cshtml", result);
-         
+
         }
         public async Task<IActionResult> ParentCustomerTransactionDetails(ParentCustomerTransactionViewModel requestInfo)
         {
@@ -179,25 +180,67 @@ namespace HPCL_Web.Controllers
             ParentChildCustomerMappingViewModel parentChildCustomerMapping = new ParentChildCustomerMappingViewModel();
             return View(parentChildCustomerMapping);
         }
-            [HttpPost]
+        [HttpPost]
         public async Task<IActionResult> ParentChildCustomerMapping(ParentChildCustomerMappingRequest requestInfo)
         {
 
             ParentChildCustomerMappingViewModel parentChildCustomerMapping = new ParentChildCustomerMappingViewModel();
-           
-
             return View(parentChildCustomerMapping);
         }
-        [HttpPost]
-        public async Task<IActionResult> MapParenttoChildCustomer(ParentChildCustomerMappingRequest requestInfo)
+        public async Task<ViewResult> MapParenttoChildCustomer(string ParentCustomerID, string ChildCustomerIds)
         {
 
+            ParentChildCustomerMappingRequest requestInfo = new ParentChildCustomerMappingRequest();
+            requestInfo.ParentCustomerId = ParentCustomerID;
+            if (ChildCustomerIds!="")
+            {
+                if (ChildCustomerIds.IndexOf(',') != -1)
+                {
+                    string[] ids = ChildCustomerIds.Split(',');
+                    foreach (string id in ids)
+                    {
+                        ParentChildCustomerDetails parentChildCustomerDetails = new ParentChildCustomerDetails();
+                        parentChildCustomerDetails.ChildCustomerId = id;
+                        requestInfo.ObjChildDtl.Add(parentChildCustomerDetails);
+                    }
+                    
+                }
+                else
+                {
+                    ParentChildCustomerDetails parentChildCustomerDetails = new ParentChildCustomerDetails();
+                    parentChildCustomerDetails.ChildCustomerId = ChildCustomerIds;
+                    requestInfo.ObjChildDtl.Add(parentChildCustomerDetails);
+                }
+            }
             ParentChildCustomerMappingViewModel parentChildCustomerMapping = new ParentChildCustomerMappingViewModel();
             if (requestInfo.ParentCustomerId != null && requestInfo.ParentCustomerId != "")
                 parentChildCustomerMapping = await _customerService.ParentChildCustomerMapping(requestInfo);
-
             return View(parentChildCustomerMapping);
         }
         
+        public async Task<IActionResult> ViewParentChildTransactionDetails(string ParentCustomerID,string ChildCustomerIds)
+        {
+
+            ParentCustomerTransactionViewModel parentCustomerTransactionViewModel = new ParentCustomerTransactionViewModel();
+
+            parentCustomerTransactionViewModel = await _customerService.ViewParentChildTransactionDetails(ParentCustomerID);
+            ViewBag.SelectedChildCustomerIds=ChildCustomerIds;
+   
+            return View(parentCustomerTransactionViewModel);
+           
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> ValidateChildCustomerId(string CustomerId)
+        {
+            var reason = await _customerService.ValidateChildCustomerId(CustomerId);
+            return Json(reason);
+        }
+        [HttpPost]
+        public async Task<JsonResult> ConfirmParentChildCustomerMapping([FromBody]ParentChildCustomerMappingRequest requestInfo)
+        {
+            var reason = await _customerService.ConfirmParentChildCustomerMapping(requestInfo);
+            return Json(reason);
+        }
     }
 }

@@ -314,6 +314,8 @@
         public static string getAlPendingKycCustomer = "api/dtplus/ashokleyland/get_al_pending_kyc_customer";
         public static string updateAlCommunicationEmailResetPassword = "api/dtplus/ashokleyland/update_al_communication_email_reset_password";
         public static string GetAllLimitTypeUrl = "api/dtplus/card/get_limit_type";
+        public static string getAlUploadKycDocument = "api/dtplus/ashokleyland/get_al_upload_kyc_document";
+        public static string insertAlCustomerKYC = "api/dtplus/ashokleyland/insert_al_customer_kyc";
         #endregion
 
         #region Customer Financial
@@ -517,6 +519,11 @@
         public static string getparentccmsbalanceinfoforcustomerId = "api/dtplus/ParentCustomer/get_parent_ccms_balance_info_for_customerId";
         public static string getparentcustomerdetailbycustomerId = "api/dtplus/ParentCustomer/get_parent_customer_detail_by_customerId";
         public static string getparenttransactionssummary = "api/dtplus/ParentCustomer/get_parent_transactions_summary";
+        public static string getchildbyparent = "api/dtplus/ParentCustomer/get_child_by_parent";
+        public static string parentcustomerchildmappingeligibility = "api/dtplus/ParentCustomer/parent_customer_child_mapping_eligibility";
+        public static string parentcustomerchildmapping = "api/dtplus/ParentCustomer/parent_customer_child_mapping";
+        public static string getchildmappingdetails = "api/dtplus/ParentCustomer/get_child_mapping_details";
+        
 
 
         #endregion

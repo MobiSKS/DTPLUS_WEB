@@ -37,12 +37,13 @@
                                                 @{
                                                     int i = 1;
                                                 }
-                                                <table style="width:100%">
+                                                <table id="customerMap">
                                                     <tr>
 
                                                         <td></td>
-                                                        <td>
+                                                        <td class="custId">
                                                             <input type="text" class="form-control" onblur="CustomerIdOnBlur(@i)" id="ChildCustomerId_@i" maxlength="10" ,onkeypress="return isNumberKey(event)" , autocomplete="off" />
+                                                            <span class="error" id="childCustomerId_error_@i"></span>
                                                         </td>
 
 
@@ -54,7 +55,7 @@
                                                         </td>
 
                                                         <td>
-                                                            <span class="error" id="childCustomerId_error_@i"></span>
+                                                            
                                                         </td>
 
 
@@ -86,67 +87,61 @@
     <div class="clearfix"></div>
 </div>
 <script type="text/javascript">
+    var ChildIds=[];
           $(document).ready(function () {
               addSerialNumber();
           });
 
 
-          $("#btnSearch").click(function () {
+    $("#btnSearch").click(function () {
 
+        var flag="Y";
            
               //debugger;
-              var parentCustomerID = document.getElementById("ParentCustomerId").value.trim();
-              if (parentCustomerID == "") {
-                  document.getElementById("parentCustomerId_error").innerHTML = "Parent Customer ID is required";
-                  $("#ParentCustomerId").focus;
-                  return (false);
-              }
-              else {
-                  if (!parentCustomerID.match(mappedCustomerId)) {
-                      $("#parentCustomerId_error").attr("style", "display:block");
-                      $("#parentCustomerId_error").html("Invalid Parent Customer ID");
-                      return (false);
-                  }
-                  else {
-                      document.getElementById("parentCustomerId_error").innerHTML = "";
-                  }
+            var parentCustomerID = document.getElementById("ParentCustomerId").value.trim();
+            if (parentCustomerID == "") {
+                document.getElementById("parentCustomerId_error").innerHTML = "Parent Customer ID is required";
+                $("#ParentCustomerId").focus;
+                flag="N";
+            }
+            else {
+                if (!parentCustomerID.match(mappedCustomerId)) {
+                    $("#parentCustomerId_error").attr("style", "display:block");
+                    $("#parentCustomerId_error").html("Invalid Parent Customer ID");
+                    Flag="N";
+                }
+                else {
+                    document.getElementById("parentCustomerId_error").innerHTML = "";
+                }
 
-              }
+            }
+          if(flag=="Y"){
               objRequest = [];
-            $("table tr").each(function () {
-             //debugger;
+              $("table tr").each(function () {
+                 debugger;
 
-                 var row = $(this);
-                var i =currentRow.cells[0].innerText;
-                 var customerId =currentRow.cells[1].children[0].value;
-                 if(customerId.trim()==""){
-                    $("#childCustomerId_error_"+i).attr("style", "display:block");
-                    $("#childCustomerId_error_"+i).html("Customer ID is required to map");
-                    return;
-                 }
-                 objRequest.push({ ChildCustomerId: customerId});
+                     var row = $(this);
+                    var i =row[0].cells[0].innerText.trim('.');
+                     var customerId =row[0].cells[1].children[0].value;
+                     if(customerId.trim()==""){
+                        $("#childCustomerId_error_"+i).attr("style", "display:block");
+                        $("#childCustomerId_error_"+i).html("Customer ID is required to map");
+                        return;
+                     }
+                     objRequest.push(customerId);
 
             
-         });
-        if (objRequest.length > 0 ) {
-        var reqmodel = { ParentCustomerId: parentCustomerID, ObjParentCustomerDtl: objRequest };
-        $.ajax({
-            type: 'POST',
-            url: '@Url.Action("MapParenttoChildCustomer", "ParentCustomer")',
-            contentType: "application/json; charset=utf-8",
-            data: JSON.stringify(reqmodel),
-            success: function (data) {
-                
-
-            },
-            error: function (ex) {
-                alert('Error.' + ex);
-            }
-        });
-    
-}
-
-          });
+             });
+             if (objRequest.length > 0 ) {
+                 var url = '@Html.Raw(@Url.Action("MapParenttoChildCustomer", "ParentCustomer",new { ParentCustomerID = "zzXXyyZZZZZZZzz", ChildCustomerIds="MNO"}))';
+                url = url.replace("zzXXyyZZZZZZZzz", encodeURIComponent(parentCustomerID)).replace("MNO",objRequest);
+                window.location.href=url;
+              }
+              else{
+                  alert("Customer ID is required to map")
+              }
+          }
+    });
 
 
     $("#ParentCustomerId").on("blur", function ()
@@ -172,6 +167,7 @@
       });
      function CustomerIdOnBlur (i)
       {
+          var flag="Y";
           var customerId=$("#ChildCustomerId_"+i).val().trim();
           if(customerId != ""){
               if (!customerId.match(mappedCustomerId))
@@ -180,38 +176,132 @@
                   $("#childCustomerId_error_"+i).html("Invalid Customer ID");
                   return false;
               }
+            
               else
               {
-                  $("#childCustomerId_error_"+i).html("");
+                  $("table tr").each(function () {
+                            var row = $(this);
+                            var index=row[0].rowIndex+1;
+                            var custId = row[0].cells[1].children[0].value;
+                        if(custId==customerId && index!=i)
+                        {
+                            $("#childCustomerId_error_"+i).html("Already specified customer at row number "+index);
+                            $("#childCustomerId_error_"+i).attr("style","display:block");
+                            flag="N";
+                            return false;
+                             
+                        }
+                  });
+                  if(flag=="Y"){
+                      $.ajax({
+                             type: 'POST',  // http method
+                             url: '@Url.Action("ValidateChildCustomerId", "ParentCustomer")',
+                             data: { CustomerId: customerId },  // data to submit
+                             dataType: "json",
+                             success: function (data, status, xhr) {
+                                 var v = data;
+                                if(data.length>0){
+                                   if(data[0].status=="0"){
+                                        $("#childCustomerId_error_"+i).html(data[0].reason);
+                                        $("#childCustomerId_error_"+i).attr("style","display:block");
+                                        return false;
+                                   }
+                                    else{
+                                        $("#childCustomerId_error_"+i).html("");
+                                        ChildIds.push(customerId);
+                                    }
+                               }
+                               else{
+                                   $("#childCustomerId_error_"+i).html("");
+                                   ChildIds.push(customerId);
+                               }
+                             }
+                      });
+                  }
               }
-          }
-           else
-              {
+           }
+           else{
+                $("#childCustomerId_error_"+i).attr("style", "display:block");
+                $("#childCustomerId_error_"+i).html("Customer ID is required to map");
+                return (false);
 
-                  $("#childCustomerId_error_"+i).attr("style", "display:block");
-                  $("#childCustomerId_error_"+i).html("Customer ID is required to map");
-                  return (false);
-
-              }
+            }
 
       }
       function addRow(o,count){
           debugger;
+          var flag="Y";
           var currentRow=o.closest('tr');
           var customerId=currentRow.cells[1].children[0].value;
           if(customerId.trim()!=""){
-              var i =count+1;
-              var table = $("table");
-              var rows="<tr>";
-              rows += '<td></td>';
-              rows += '<td><input type="text" class="form-control" onblur="CustomerIdOnBlur('+i+')" id="ChildCustomerId_'+i+'" maxlength = "10",onkeypress = "return isNumberKey(event)", autocomplete = "off" /></td>';
-              rows += '<td><a class="d-block add" data-toggle="tooltip" title="" tooltip="ADD NEW" href="#" onclick="addRow(this,'+i+')" role="tab"><i class="fa fa-plus" aria-hidden="true"></i></a></td>';
-              rows += '<td><a class="d-block delete" data-toggle="tooltip" title="" tooltip="DELETE" href="#" onclick="deleteRow(this,'+i+')" role="tab"><i class="fa fa-trash" aria-hidden="true"></i></a></td>';
-              rows +='<td><span class="error" id="childCustomerId_error_'+i+'"></span></td>';
-              rows += "</tr>";
-              table.append(rows);
+              if (!customerId.match(mappedCustomerId))
+              {
+                  $("#childCustomerId_error_"+count).attr("style", "display:block");
+                  $("#childCustomerId_error_"+count).html("Invalid Customer ID");
+                  flag="N";
+              }
+           
+              else
+              {
+                  
+                  $("table tr").each(function () {
+                            var row = $(this);
+                            var index=row[0].rowIndex+1;
+                            var custId = row[0].cells[1].children[0].value;
+                            if(custId==customerId && index!=count)
+                            {
+                                $("#childCustomerId_error_"+count).html("Already specified customer at row number "+index);
+                                $("#childCustomerId_error_"+count).attr("style","display:block");
+                                flag="N";
+                             
+                            }
+                  });
+                  if(flag=="Y"){
+                        $.ajax({
+                                type: 'POST',  // http method
+                                url: '@Url.Action("ValidateChildCustomerId", "ParentCustomer")',
+                                data: { CustomerId: customerId },  // data to submit
+                                dataType: "json",
+                                success: function (data, status, xhr) {
+                                    var v = data;
+                                if(data.length>0){
+                                    if(data[0].status=="0"){
+                                        $("#childCustomerId_error_"+count).html(data[0].reason);
+                                        $("#childCustomerId_error_"+count).attr("style","display:block");
+                                        flag="N";
+                                    }
+                                }
+                                }
+                        });
+                   }
+              }
+              setTimeout(function(){
+                  if(flag=="Y"){
+                      
+                          var i =count+1;
+                          var table = $("table");
+                          var rows="<tr>";
+                          rows += '<td></td>';
+                          rows += '<td><input type="text" class="form-control" onblur="CustomerIdOnBlur('+i+')" id="ChildCustomerId_'+i+'" maxlength = "10",onkeypress = "return isNumberKey(event)", autocomplete = "off" /></td>';
+                          rows += '<td><a class="d-block add" data-toggle="tooltip" title="" tooltip="ADD NEW" href="#" onclick="addRow(this,'+i+')" role="tab"><i class="fa fa-plus" aria-hidden="true"></i></a></td>';
+                          rows += '<td><a class="d-block delete" data-toggle="tooltip" title="" tooltip="DELETE" href="#" onclick="deleteRow(this,'+i+')" role="tab"><i class="fa fa-trash" aria-hidden="true"></i></a></td>';
+                          rows +='<td><span class="error" id="childCustomerId_error_'+i+'"></span></td>';
+                          rows += "</tr>";
+                          table.append(rows);
+                          addSerialNumber();
+                      
+                  }
+                },1000);
           }
-           addSerialNumber();
+            else
+            {
+
+                $("#childCustomerId_error_"+count).attr("style", "display:block");
+                $("#childCustomerId_error_"+count).html("Customer ID is required to map");
+                flag="N";
+
+            }
+           
        }
        function deleteRow(o,count){
           debugger;
