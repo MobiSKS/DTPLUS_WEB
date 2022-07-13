@@ -15,7 +15,7 @@ namespace HPCL.Service.Interfaces
     public interface IVolvoEicherService
     {
         Task<VEDealerOTCCardStatusViewModel> GetVEDealerCardStatus(string DealerCode);
-        Task<List<VECustomerProfileResponse>> BindCustomerDetails(string CustomerId, string NameOnCard);
+        Task<List<VECustomerProfileResponse>> BindCustomerDetailsForSearch(string CustomerId, string NameOnCard);
         Task<InsertResponse> InsertVEDealerEnrollment(string str);
         Task<SearchAlResult> SearchVEDealer(string dealerCode, string dtpCode);
         Task<InsertResponse> VEDealerEnrollmentUpdate(string getAllData);
@@ -30,5 +30,13 @@ namespace HPCL.Service.Interfaces
         Task<VECardCreationModel> GetMultipleOTCCardPartialView([FromBody] List<VECardEntryDetails> arrs);
         Task<VECardCreationModel> CreateMultipleOTCCard(VECardCreationModel model);
         Task<List<VEOTCCardResponse>> GetAvailableVEOTCCardForDealer(string DealerCode);
+        Task<VEManageProfile> ManageProfile();
+        Task<List<SearchGridResponse>> CardDetailsForSearch(string CustomerId, string CustomerTypeId);
+        Task<VEAddonOTCCardMapping> ExistingCustomerCardMap();
+        Task<InsertResponse> UpdateVECostomerProfile(string str);
+        Task<GetCustomerDetails> GetVEAddonOTCCardMappingCustomerDetails(string customerId);
+        Task<VEAddonOTCCardMapping> GetVEAddonOTCCardCustomerDetailsPartialView([FromBody] List<VEAddonOTCCardDetails> arrs);
+        Task<VEAddonOTCCardMapping> GetVEAddonOTCCardAddCardsPartialView([FromBody] List<VEAddonOTCCardDetails> arrs);
+        Task<VEAddonOTCCardMapping> ExistingCustomerCardMap(VEAddonOTCCardMapping addAddOnCard);
     }
 }

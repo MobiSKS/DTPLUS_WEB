@@ -1,4 +1,4 @@
-﻿@model HPCL.Common.Models.ViewModel.AshokLeyLand.AddonOTCCardMapping
+﻿@model HPCL.Common.Models.ViewModel.VolvoEicher.VEAddonOTCCardMapping
 
 <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3">
     <div class="border-1 rounded border-grey pb-0">
@@ -124,7 +124,7 @@
 
            $.ajax({
                 type: 'POST',  // http method
-                url: '@Url.Action("GetAlAddonOTCCardMappingCustomerDetails", "AshokLeyLand")',
+                url: '@Url.Action("GetVEAddonOTCCardMappingCustomerDetails", "VolvoEicher")',
                 data: { customerId: $("#CustomerId").val() },  // data to submit
                 dataType: "json",
                 success: function (res) {
@@ -280,7 +280,7 @@
 
             $.ajax({
                type: 'POST',
-               url: '@Url.Action("GetAlAddonOTCCardAddCardsPartialView", "AshokLeyLand")',
+               url: '@Url.Action("GetVEAddonOTCCardAddCardsPartialView", "VolvoEicher")',
                contentType: "application/json; charset=utf-8",
                data: JSON.stringify(vehicles),
                dataType: "html",
@@ -291,9 +291,9 @@
                        {
                            document.getElementById("ViewNoOfCardsTbl").style.display = "block";
                            $("#ViewNoOfCardsTbl").html(data);
-                           $('html, body').animate({
-                               scrollTop: $("#ViewNoOfCardsTbl").offset().top
-                           }, 2000);
+                           //$('html, body').animate({
+                           //    scrollTop: $("#ViewNoOfCardsTbl").offset().top
+                           //}, 2000);
                            document.getElementById("divSubmit").style.display = "block";
 
                            $('#NoOfCards').attr("readonly", true);
@@ -359,15 +359,10 @@
                document.getElementById("CustomerOrgName_error").innerHTML = "";
            }
 
-           if (document.getElementById("NoOfCards").value.trim() == "")
+           if (document.getElementById("NoOfCards").value == "0" || document.getElementById("NoOfCards").value.trim() == "")
            {
-               document.getElementById("NoOfCardsErrMsg").innerHTML = "Please enter Number of Cards";
+               document.getElementById("NoOfCardsErrMsg").innerHTML = "No. of Cards cannot be left blank";
                ret = false;
-           }
-           else if (Number(document.getElementById("NoOfCards").value) <= 0 || Number(document.getElementById("NoOfCards").value) > 25) 
-           {
-                document.getElementById("NoOfCardsErrMsg").innerHTML = "No. of Cards should be between 1 to 25";
-                ret = false;
            }
            else
            {
@@ -823,7 +818,7 @@
 
         $.ajax({
             type: 'POST',  // http method
-            url: '@Url.Action("CheckDealerCodeIsValid", "Common")',
+            url: '@Url.Action("CheckVEDealerCodeExists", "VolvoEicher")',
             data: { DealerCode: dealerCode },  // data to submit
             dataType: "json",
             success: function (data, status, xhr) {
@@ -840,7 +835,7 @@ debugger;
 
                          $.ajax({
                             type: 'POST',  // http method
-                            url: '@Url.Action("GetAlSalesExeEmpIdAddOnOTCCardMapping", "AshokLeyLand")',
+                            url: '@Url.Action("GetVESalesExecutiveEmpId", "VolvoEicher")',
                             data: { dealerCode: dealerCode },  // data to submit
                             dataType: "json",
                             success: function (data, status, xhr) {
