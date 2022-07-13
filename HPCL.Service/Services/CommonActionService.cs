@@ -1761,5 +1761,22 @@ namespace HPCL.Service.Services
 
             return zonalOfficeLst;
         }
+
+        public async Task<List<GetLimitTypeResponse>> GetAllLimitType()
+        {
+            var requestInfo = new VehicleDuplicationCheckRequestModel()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId")
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(requestInfo), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.GetAllLimitTypeUrl);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<GetLimitTypeResponse> lst = jarr.ToObject<List<GetLimitTypeResponse>>();
+            return lst;
+        }
     }
 }
