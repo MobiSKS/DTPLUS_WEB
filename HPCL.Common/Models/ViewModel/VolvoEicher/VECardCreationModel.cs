@@ -14,7 +14,7 @@ namespace HPCL.Common.Models.ViewModel.VolvoEicher
     {
         public VECardCreationModel()
         {
-            ObjALCardEntryDetail = new List<VECardEntryDetails>();
+            ObjVECardEntryDetail = new List<VECardEntryDetails>();
 
             CustomerStateMdl = new List<StateResponseModal>();
             CustomerStateMdl.Add(new StateResponseModal
@@ -78,7 +78,7 @@ namespace HPCL.Common.Models.ViewModel.VolvoEicher
         public string DealerCode { get; set; }
         public string SalesExecutiveEmployeeID { get; set; }
         public string Remarks { get; set; }
-        public List<VECardEntryDetails> ObjALCardEntryDetail { get; set; }
+        public List<VECardEntryDetails> ObjVECardEntryDetail { get; set; }
 
         public string CommunicationDialCode { get; set; }
         public string CommunicationPhonePart2 { get; set; }
