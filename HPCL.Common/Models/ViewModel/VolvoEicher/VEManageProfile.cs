@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace HPCL.Common.Models.ViewModel.VolvoEicher
 {
-   
+
     public class VEManageProfile : BaseEntity
     {
         public VEManageProfile()
@@ -94,10 +94,11 @@ namespace HPCL.Common.Models.ViewModel.VolvoEicher
                 districtName = "Select District"
             });
 
+            SBUTypes = new List<SbuTypeResponseModal>();
         }
         public string DealerCode { get; set; }
         public string EmployeeID { get; set; }
-        public string NoofCards { get; set; }   
+        public string NoofCards { get; set; }
         public string CustomerDateOfApplication { get; set; }
         public virtual List<OfficerDistrictModel> CommunicationDistrictMdl { get; set; }
         public int CustomerRegionID { get; set; }
@@ -258,6 +259,11 @@ namespace HPCL.Common.Models.ViewModel.VolvoEicher
         public string RelationwithBeneficiary { get; set; }
 
         public string BeneficiaryMobile { get; set; }
+        public virtual List<SbuTypeResponseModal> SBUTypes { get; set; }
+        public int SBUTypeID { get; set; }
+        public string CustomerTypeId { get; set; }
+        public string CustomerSubtypeId { get; set; }
+        public string CustomerIdSelected { get; set; }
     }
 
 

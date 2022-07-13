@@ -7,6 +7,7 @@ using HPCL.Common.Models.ViewModel.VolvoEicher;
 using HPCL.Common.Resources;
 using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -39,32 +40,17 @@ namespace HPCL_Web.Controllers
             return PartialView("~/Views/VolvoEicher/_VEDealerCardStatusTbl.cshtml", modals);
         }
         [HttpPost]
-        public async Task<JsonResult> BindCustomerDetails(string CustomerId, string NameOnCard)
+        public async Task<JsonResult> BindCustomerDetailsForSearch(string CustomerId, string NameOnCard)
         {
-
-            var customerCardInfo = await _volvoEicherService.BindCustomerDetails(CustomerId, NameOnCard);
+            var customerCardInfo = await _volvoEicherService.BindCustomerDetailsForSearch(CustomerId, NameOnCard);
             ModelState.Clear();
             return Json(customerCardInfo);
         }
         public async Task<IActionResult> ManageProfile()
         {
-            VEManageProfile custMdl = new VEManageProfile();
-
-            custMdl.CustomerTypeMdl.AddRange(await _commonActionService.GetCustomerTypeListDropdown());
-
-       
-            custMdl.CustomerZonalOfficeMdl.AddRange(await _commonActionService.GetZonalOfficebySBUType("1"));
-
-            custMdl.CustomerTbentityMdl.AddRange(await _commonActionService.GetCustomerTbentityListDropdown());
-
-            custMdl.CustomerStateMdl.AddRange(await _commonActionService.GetStateList());
-
-            custMdl.CustomerSecretQueMdl.AddRange(await _commonActionService.GetCustomerSecretQuestionListForDropdown());
-
-            custMdl.CustomerTypeOfFleetMdl.AddRange(await _commonActionService.GetCustomerTypeOfFleetDropdown());
+            var custMdl = await _volvoEicherService.ManageProfile();
 
             return View(custMdl);
-
         }
         public IActionResult VEDealerEnrollment()
         {
@@ -200,6 +186,18 @@ namespace HPCL_Web.Controllers
             {
                 return Json("Failed to load Card Details");
             }
+        }
+        [HttpPost]
+        public async Task<JsonResult> CardDetailsForSearch(String CustomerId, String CustomerTypeId)
+        {
+            var customerCardInfo = await _volvoEicherService.CardDetailsForSearch(CustomerId, CustomerTypeId);
+            ModelState.Clear();
+            return Json(customerCardInfo);
+        }
+        public async Task<IActionResult> ExistingCustomerCardMap()
+        {
+            var modals = await _volvoEicherService.ExistingCustomerCardMap();
+            return View(modals);
         }
 
     }
