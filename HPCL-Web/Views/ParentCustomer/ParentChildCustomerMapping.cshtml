@@ -27,29 +27,29 @@
                                     </div>
                                 </div>
                             </div>
-                            @if (Model.Data != null && Model.Data.Count() > 0)
+                            @if (Model.ObjChildDtl != null && Model.ObjChildDtl.Count() > 0)
                             {
 
                                 <div class="d-flex align-items-center flex-wrap">
                                     <div class="col-lg-12 col-12">
                                         <div class="d-flex align-items-center flex-wrap mb-3 pt-1">
-                                            <label class="font-weight-normal col-md-2 col-12">Customer ID </label>
+                                            <label class="font-weight-normal col-md-2 col-12">Child Customer ID <sup class="text-danger">*</sup></label>
                                             <div class="border-1 rounded border-grey" style="width: 395px;padding: 10px 10px 20px 10px;margin-left: 10px;">
                                                 <div class="col-md-12 col-12">
                                                     <div class="custom_select">
                                                         @{
-                                                            int i =0;
+                                                            int i = 0;
                                                         }
                                                         <table id="customerMap">
-                                                            @foreach (var item in Model.Data)
+                                                            @foreach (var item in Model.ObjChildDtl)
                                                             {
                                                                 i++;
                                                                 <tr>
 
                                                                     <td></td>
                                                                     <td class="custId">
-                                                                        
-                                                                        <input type="text" value="@Model.ChildCustomerId" class="form-control" onblur="CustomerIdOnBlur(@i)" id="ChildCustomerId_@i" maxlength="10" onkeypress="return isNumberKey(event)" autocomplete="off" />
+
+                                                                        <input type="text" value="@item.ChildCustomerId" class="form-control" onblur="CustomerIdOnBlur(@i)" id="ChildCustomerId_@i" maxlength="10" onkeypress="return isNumberKey(event)" autocomplete="off" />
                                                                         <span class="error" id="childCustomerId_error"></span>
                                                                     </td>
 
@@ -73,12 +73,12 @@
                                 </div>
 
                             }
-                            @if (Model.Data.Count == 0)
+                            @if (Model.ObjChildDtl.Count == 0)
                             {
                                 <div class="d-flex align-items-center flex-wrap">
                                     <div class="col-lg-12 col-12">
                                         <div class="d-flex align-items-center flex-wrap mb-3 pt-1">
-                                            <label class="font-weight-normal col-md-2 col-12">Customer ID </label>
+                                            <label class="font-weight-normal col-md-2 col-12">Child Customer ID <sup class="text-danger">*</sup></label>
                                             <div class="border-1 rounded border-grey" style="width: 395px;padding: 10px 10px 20px 10px;margin-left: 10px;">
                                                 <div class="col-md-12 col-12">
                                                     <div class="custom_select">
@@ -90,7 +90,7 @@
 
                                                                 <td></td>
                                                                 <td class="custId">
-                                                                    <input type="text" class="form-control" onblur="CustomerIdOnBlur(@i)" id="ChildCustomerId_@i" maxlength="10" ,onkeypress="return isNumberKey(event)" , autocomplete="off" />
+                                                                    <input type="text" class="form-control" onblur="CustomerIdOnBlur(@i)" id="ChildCustomerId_@i" maxlength="10" onkeypress="return isNumberKey(event)"  autocomplete="off" />
                                                                     <span class="error" id="childCustomerId_error"></span>
                                                                 </td>
 
@@ -137,6 +137,7 @@
     var isValid="Yes";
           $(document).ready(function () {
               addSerialNumber();
+              
           });
 
 
@@ -157,11 +158,35 @@
                     $("#parentCustomerId_error").html("Invalid Parent Customer ID");
                     flag="N";
                 }
-                else {
-                    document.getElementById("parentCustomerId_error").innerHTML = "";
-                }
+                else
+                  {
+                      $.ajax({
+                            type: 'POST',  // http method
+                            url: '@Url.Action("ValidateParentCustomerId", "ParentCustomer")',
+                            data: { CustomerId: parentCustomerID },  // data to submit
+                            dataType: "json",
+                            success: function (data, status, xhr) {
+                                var v = data;
+                                if(data.length>0){
+                                    if(data[0].status=="0"){
+                                        $("#parentCustomerId_error").html(data[0].reason);
+                                        $("#parentCustomerId_error").attr("style","display:block");
+                                        isValid=data[0].reason;
+                                        flag="N";
+                                    }
+                                    else{
+                                        $("#parentCustomerId_error").html("");
+                                    }
+                                }
+                                else{
+                                    $("#parentCustomerId_error").html("");
+                                }
+                            }
+                        });
+                  }
 
             }
+           setTimeout(function(){
           if(flag=="Y"){
               objRequest = [];
               $("table tr").each(function () {
@@ -226,7 +251,7 @@
                          }
                      setTimeout(function(){
                      if(flag=="Y" )
-                        objRequest.push(customerId);
+                        objRequest.push({Id:i,ChildCustomerId:customerId});
                          },1000);
                 });
                  setTimeout(function(){
@@ -234,13 +259,15 @@
                         e.preventDefault();
                      else{
                          if (objRequest.length > 0  && flag=="Y") {
-                             var url = '@Html.Raw(@Url.Action("MapParenttoChildCustomer", "ParentCustomer",new { ParentCustomerID = "zzXXyyZZZZZZZzz", ChildCustomerIds="MNO"}))';
-                            url = url.replace("zzXXyyZZZZZZZzz", encodeURIComponent(parentCustomerID)).replace("MNO",objRequest);
+                             var reqModel={ParentCustomerId:parentCustomerID,ObjChildDtl:objRequest};
+                             var url = '@Html.Raw(@Url.Action("MapParenttoChildCustomer", "ParentCustomer",new { ChildCustomerIds="MNO"}))';
+                            url = url.replace("MNO",JSON.stringify(reqModel));
                             window.location.href=url;
                           }
                      }
                  },1500);
           }
+          },200);
     }));
 
 
@@ -261,7 +288,29 @@
           }
           else
           {
-              $("#parentCustomerId_error").html("");
+              $.ajax({
+                    type: 'POST',  // http method
+                    url: '@Url.Action("ValidateParentCustomerId", "ParentCustomer")',
+                    data: { CustomerId: $("#ParentCustomerId").val().trim() },  // data to submit
+                    dataType: "json",
+                    success: function (data, status, xhr) {
+                        var v = data;
+                        if(data.length>0){
+                            if(data[0].status=="0"){
+                                $("#parentCustomerId_error").html(data[0].reason);
+                                $("#parentCustomerId_error").attr("style","display:block");
+                                isValid=data[0].reason;
+                                return false;
+                            }
+                            else{
+                                $("#parentCustomerId_error").html("");
+                            }
+                        }
+                        else{
+                            $("#parentCustomerId_error").html("");
+                        }
+                    }
+                });
           }
 
       });
@@ -336,85 +385,93 @@
       }
       function addRow(o,count){
           debugger;
-          var flag="Y";
-          var parentCustomerID = document.getElementById("ParentCustomerId").value.trim();
-          var currentRow=o.closest('tr');
-          var customerId=currentRow.cells[1].children[0].value;
-          if(customerId.trim()!=""){
-              if (!customerId.match(mappedCustomerId))
-              {
-                  $("#childCustomerId_error").attr("style", "display:block");
-                  $("#childCustomerId_error").html("Invalid Customer ID");
-                  flag="N";
-              }
-              else if(customerId==parentCustomerID){
-                   $("#childCustomerId_error").attr("style", "display:block");
-                  $("#childCustomerId_error").html("Cannot map a Parent Customer as Child Customer");
-                   flag="N";
-              }
-              else
-              {
-
-                  $("table tr").each(function () {
-                            var row = $(this);
-                            var index=row[0].rowIndex+1;
-                            var custId = row[0].cells[1].children[0].value;
-                            if(custId==customerId && index!=count)
-                            {
-                                $("#childCustomerId_error").html("Already specified customer at row number "+index);
-                                $("#childCustomerId_error").attr("style","display:block");
-                                flag="N";
-
-                            }
-                  });
-                  if(flag=="Y"){
-                        $.ajax({
-                                type: 'POST',  // http method
-                                url: '@Url.Action("ValidateChildCustomerId", "ParentCustomer")',
-                                data: { CustomerId: customerId },  // data to submit
-                                dataType: "json",
-                                success: function (data, status, xhr) {
-                                    var v = data;
-                                if(data.length>0){
-                                    if(data[0].status=="0"){
-                                        $("#childCustomerId_error").html(data[0].reason);
-                                        $("#childCustomerId_error").attr("style","display:block");
-                                        flag="N";
-                                    }
-                                }
-                                }
-                        });
-                   }
-              }
-              setTimeout(function(){
-                  if(flag=="Y"){
-
-                          var i =count+1;
-                          var table = $("table");
-                          var rows="<tr>";
-                          rows += '<td></td>';
-                          rows += '<td><input type="text" class="form-control" onblur="CustomerIdOnBlur('+i+')" id="ChildCustomerId_'+i+'" maxlength = "10" onkeypress = "return isNumberKey(event)" autocomplete = "off" /></td>';
-                          rows += '<td><a class="d-block add" data-toggle="tooltip" title="" tooltip="ADD NEW" href="#" onclick="addRow(this,'+i+')" role="tab"><i class="fa fa-plus" aria-hidden="true" style="font-size: 13px;padding: 10px;"></i></a></td>';
-                          rows += '<td><a class="d-block delete" data-toggle="tooltip" title="" tooltip="DELETE" href="#" onclick="deleteRow(this,'+i+')" role="tab"><i class="fa fa-trash" aria-hidden="true" style="font-size: 13px;padding: 10px;"></i></a></td>';
-                          rows +='<td><span class="error" id="childCustomerId_error"></span></td>';
-                          rows += "</tr>";
-                          table.append(rows);
-                          addSerialNumber();
-
+          setTimeout(function(){
+          var rowCount=$("table tr").length;
+          if(count==rowCount){
+              var flag="Y";
+              var parentCustomerID = document.getElementById("ParentCustomerId").value.trim();
+              var currentRow=o.closest('tr');
+              var customerId=currentRow.cells[1].children[0].value;
+              if(customerId.trim()!=""){
+                  if (!customerId.match(mappedCustomerId))
+                  {
+                      $("#childCustomerId_error").attr("style", "display:block");
+                      $("#childCustomerId_error").html("Invalid Customer ID");
+                      flag="N";
                   }
-                },1000);
-          }
-            else
-            {
+                  else if(customerId==parentCustomerID){
+                       $("#childCustomerId_error").attr("style", "display:block");
+                      $("#childCustomerId_error").html("Cannot map a Parent Customer as Child Customer");
+                       flag="N";
+                  }
+                  else
+                  {
 
-                $("#childCustomerId_error").attr("style", "display:block");
-                $("#childCustomerId_error").html("Customer ID is required to map");
-                flag="N";
+                      $("table tr").each(function () {
+                                var row = $(this);
+                                var index=row[0].rowIndex+1;
+                                var custId = row[0].cells[1].children[0].value;
+                                if(custId==customerId && index!=count)
+                                {
+                                    $("#childCustomerId_error").html("Already specified customer at row number "+index);
+                                    $("#childCustomerId_error").attr("style","display:block");
+                                    flag="N";
 
-            }
+                                }
+                      });
+                      if(flag=="Y"){
+                            $.ajax({
+                                    type: 'POST',  // http method
+                                    url: '@Url.Action("ValidateChildCustomerId", "ParentCustomer")',
+                                    data: { CustomerId: customerId },  // data to submit
+                                    dataType: "json",
+                                    success: function (data, status, xhr) {
+                                        var v = data;
+                                    if(data.length>0){
+                                        if(data[0].status=="0"){
+                                            $("#childCustomerId_error").html(data[0].reason);
+                                            $("#childCustomerId_error").attr("style","display:block");
+                                            flag="N";
+                                        }
+                                    }
+                                    }
+                            });
+                       }
+                  }
+                  setTimeout(function(){
+                      if(flag=="Y"){
 
+                              var i =count+1;
+                              var table = $("table");
+                              var rows="<tr>";
+                              rows += '<td></td>';
+                              rows += '<td><input type="text" class="form-control" onblur="CustomerIdOnBlur('+i+')" id="ChildCustomerId_'+i+'" maxlength = "10" onkeypress = "return isNumberKey(event)" autocomplete = "off" /></td>';
+                              rows += '<td><a class="d-block add" data-toggle="tooltip" title="" tooltip="ADD NEW" href="#" onclick="addRow(this,'+i+')" role="tab"><i class="fa fa-plus" aria-hidden="true" style="font-size: 13px;padding: 10px;"></i></a></td>';
+                              rows += '<td><a class="d-block delete" data-toggle="tooltip" title="" tooltip="DELETE" href="#" onclick="deleteRow(this,'+i+')" role="tab"><i class="fa fa-trash" aria-hidden="true" style="font-size: 13px;padding: 10px;"></i></a></td>';
+                              rows +='<td><span class="error" id="childCustomerId_error"></span></td>';
+                              rows += "</tr>";
+                              table.append(rows);
+                              addSerialNumber();
+                              $("#childCustomerId_error").attr("style", "display:none");
+                              $("#childCustomerId_error").html("");
+
+                      }
+                    },1000);
+              }
+                else
+                {
+
+                    $("#childCustomerId_error").attr("style", "display:block");
+                    $("#childCustomerId_error").html("Customer ID is required to map");
+                    flag="N";
+
+                }
+           }
+           },200);
        }
        function deleteRow(o,count){
+           $("#childCustomerId_error").attr("style", "display:none");
+           $("#childCustomerId_error").html("");
           debugger;
           var currentRow=o.closest('tr');
           var customerId=currentRow.cells[1].innerText;
