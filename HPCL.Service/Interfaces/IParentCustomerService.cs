@@ -36,5 +36,6 @@ namespace HPCL.Service.Interfaces
         Task<ParentCustomerTransactionViewModel> ViewParentChildTransactionDetails(String ParentCustomerID);
         Task<List<SuccessResponse>> ValidateChildCustomerId(string CustomerId);
         Task<ParentChildCustomerMappingViewModel> ConfirmParentChildCustomerMapping(ParentChildCustomerMappingRequest requestInfo);
+        Task<CustomerDriveStarsDetailsModel> GetDriveStarsDetails(string CustomerID);
     }
 }

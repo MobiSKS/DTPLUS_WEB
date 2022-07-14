@@ -97,7 +97,7 @@ namespace HPCL.Service.Services
                 CustomerId = entity.CustomerId,
                 ZO = entity.ZO ?? "0",
                 RO = entity.RO ?? "0",
-                sbuTypeId = entity.sbuTypeId,
+                SBUTypeId = entity.SBUTypeId,
                 Status = entity.Status
             };
 
@@ -150,7 +150,7 @@ namespace HPCL.Service.Services
                 CustomerId = entity.CustomerId,
                 ZO = entity.ZO ?? "0",
                 RO = entity.RO ?? "0",
-                sbuTypeId = entity.sbuTypeId,
+                SBUTypeId = entity.SBUTypeId,
                 FromDate = fromDate,
                 ToDate = toDate
             };

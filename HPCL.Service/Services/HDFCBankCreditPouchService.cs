@@ -97,7 +97,7 @@ namespace HPCL.Service.Services
                 CustomerId = entity.CustomerId,
                 ZO = entity.ZO ?? "0",
                 RO = entity.RO ?? "0",
-                sbuTypeId = entity.sbuTypeId,
+                SBUTypeId = entity.SBUTypeId,
                 Status = entity.Status
             };
 
@@ -150,7 +150,7 @@ namespace HPCL.Service.Services
                 CustomerId = entity.CustomerId,
                 ZO = entity.ZO ?? "0",
                 RO = entity.RO ?? "0",
-                sbuTypeId = entity.sbuTypeId,
+                SBUTypeId = entity.SBUTypeId,
                 FromDate = fromDate,
                 ToDate = toDate
             };
@@ -192,7 +192,7 @@ namespace HPCL.Service.Services
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
-            var response = await _requestService.CommonRequestService(content, WebApiUrl.HdfcCcmsRechargeUrl);
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.HdfcInitiateCcmsRechargeUrl);
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
 
             HdfcInitateRecharge checkList = obj.ToObject<HdfcInitateRecharge>();
