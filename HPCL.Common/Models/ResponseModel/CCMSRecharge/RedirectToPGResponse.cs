@@ -1,5 +1,6 @@
 ﻿using HPCL.Common.Models.CommonEntity;
 using HPCL.Common.Models.ResponseModel.CommonResponse;
+using System;
 
 namespace HPCL.Common.Models.ResponseModel.CCMSRecharge
 {
@@ -25,5 +26,6 @@ namespace HPCL.Common.Models.ResponseModel.CCMSRecharge
         public string accessCode { get;set; }
         public string customerId { get; set; }
         public string controlCardNo { get; set; }
+        public Decimal amount { get; set; }
     }
 }
