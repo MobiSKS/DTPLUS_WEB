@@ -134,7 +134,7 @@ namespace HPCL_Web.Controllers
             var modals = await _customerService.SearchParentCustomerRequestStatusReport(FormNumber, RequestId);
             return PartialView("~/Views/ParentCustomer/_ParentCustomerStatusReportTbl.cshtml", modals);
         }
-
+        
         public async Task<IActionResult> BalanceInfo(ParentCustomerBalanceInfoModel requestInfo)
         {
 
@@ -142,6 +142,8 @@ namespace HPCL_Web.Controllers
             if (requestInfo.ParentCustomerID != null && requestInfo.ParentCustomerID != "")
             {
                 customerBalanceResponse = await _customerService.GetCustomerBalanceInfo(requestInfo);
+                customerBalanceResponse.ParentCustomerID=requestInfo.ParentCustomerID;
+                customerBalanceResponse.ChildCustomerId = requestInfo.ChildCustomerId;
                 ViewBag.ParentCustomerID = requestInfo.ParentCustomerID;
             }
 
@@ -246,5 +248,13 @@ namespace HPCL_Web.Controllers
             var reason = await _customerService.ConfirmParentChildCustomerMapping(requestInfo);
             return Json(reason);
         }
+        public async Task<IActionResult> GetDriveStarsDetails(string CustomerID)
+        {
+
+            var modals = await _customerService.GetDriveStarsDetails(CustomerID);
+            ViewBag.CustomerID = CustomerID;
+            return PartialView("~/Views/ParentCustomer/_ParentCustomerDriveStarsDetails.cshtml", modals);
+        }
+        
     }
 }

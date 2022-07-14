@@ -1151,5 +1151,25 @@ namespace HPCL.Service.Services
 
             return parentChildCustomerMapping;
         }
+        public async Task<CustomerDriveStarsDetailsModel> GetDriveStarsDetails(string CustomerID)
+        {
+            CustomerDriveStarsDetailsModel customerDriveStarDetails = new CustomerDriveStarsDetailsModel();
+
+            var Request = new GetCustomerBalanceRequest()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                CustomerID = CustomerID
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(Request), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.pcdrivestarsbalanceinfo);
+
+            customerDriveStarDetails = JsonConvert.DeserializeObject<CustomerDriveStarsDetailsModel>(response);
+
+            return customerDriveStarDetails;
+        }
     }
 }

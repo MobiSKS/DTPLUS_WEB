@@ -119,7 +119,7 @@
                                 <td><a class='basicInfo' href='#' onclick='ViewBasicInfo(this)' role='tab'><span class='basicInfo'>@item.ChildCustomerId</span></a></td>
                                 <td>@item.CardBalance</td>
                                 <td><a class='CCMSBalance' href='#' onclick='ViewCCMSBalanceDetails(this,@item.ChildCustomerId)' role='tab'><span class='rowCCMSBalance'>@item.CCMSBalance</span></a></td>
-                                <td>@item.Drivestars</td>
+                                <td><a class='Drivestars' href='#' onclick='ViewDrivestarsDetails(this,@item.ChildCustomerId)' role='tab'><span class='rowDrivestars'>@item.Drivestars</span></a></td>
                                 <td>@item.ExpiredDrivestars</td>
                                 <td>@item.ExpiringDrivestars</td>
                                 <td>@item.DailyCashLimit</td>
@@ -132,10 +132,11 @@
                 </table>
             </div>
         }
-        else
+         @if (Model.Data.GetParentCustomerBalanceInfo.Count() == 0 && Model.Data.GetChildCustomerBalanceInfo.Count() == 0)
         {
             @if (Model.Message != null)
             {
+                 <div class="clearfix"></div>
                 <div class="mb-3 text-center alert alert-danger">
                     @Model.Message
                 </div>
@@ -170,6 +171,8 @@
         </div>
         <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3 toBeHiddenOnSuccess" id="customerCCMSBalanceTbl">
         </div>
+         <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3 toBeHiddenOnSuccess" id="customerDriveStarsTbl">
+        </div>
     </div>
     <div class="clearfix"></div>
 </div>
@@ -178,8 +181,8 @@
             var parentCustomerId="@ViewBag.ParentCustomerID";
             if(parentCustomerId!="")
             {
-                $("#ParentCustomerID").attr("disabled",true);
-                $("#ChildCustomerId").attr("disabled",true);
+                $("#ParentCustomerID").attr("readonly","readonly");
+                $("#ChildCustomerId").attr("readonly","readonly");
             }
         });
 
@@ -192,6 +195,8 @@
 
             $("#customerCCMSBalanceTbl").hide();
             $("#customerCardWiseBalancesTbl").hide();
+            $("#customerDriveStarsTbl").hide();
+            
 
             //debugger;
             var parentCustomerID = document.getElementById("ParentCustomerID").value.trim();
@@ -238,6 +243,7 @@
             }
             $("#customerCCMSBalanceTbl").hide();
             $("#customerCardWiseBalancesTbl").hide();
+            $("#customerDriveStarsTbl").hide();
          
             $.ajax({
                 type: 'GET',  // http method
@@ -301,6 +307,7 @@
             }
              $("#customerCCMSBalanceTbl").hide();
             $("#customerCardWiseBalancesTbl").hide();
+            $("#customerDriveStarsTbl").hide();
          
             $.ajax({
                 type: 'GET',  // http method
@@ -330,7 +337,43 @@
 
 
         }
+        function ViewDrivestarsDetails(o,customerId) {
 
+            if (customerId == "") {
+                return (false);
+            }
+             $("#customerCCMSBalanceTbl").hide();
+            $("#customerCardWiseBalancesTbl").hide();
+            $("#customerDriveStarsTbl").hide();
+         
+            $.ajax({
+                type: 'GET',  // http method
+                url: '@Url.Action("GetDriveStarsDetails", "ParentCustomer")',
+                data: { CustomerID: customerId },
+                contentType: "application/json; charset=utf-8",
+                dataType: "text",
+                success: function (data,status,xhr) {
+                    var v = data;
+                    if (status == 'success') {
+                        $("#customerDriveStarsTbl").html("");
+                        $("#customerDriveStarsTbl").html(data);
+                        $("#customerDriveStarsTbl").attr("style","display:block");
+                        $('html, body').animate({
+                            scrollTop: $("#customerDriveStarsTbl").offset().top
+                        }, 2000);
+                    }
+                    else {
+                        console.log(v);
+                    }
+
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+                    alert("Error" + errorMessage);
+                }
+            });
+
+
+        }
     $("#ParentCustomerID").on("blur", function ()
     {
         //debugger;
