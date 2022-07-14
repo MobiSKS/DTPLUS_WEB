@@ -135,11 +135,11 @@ namespace HPCL_Web.Controllers
 
         public async Task<IActionResult> IciciRedirectToPaymentGateway(string inputTxtValues)
         {
-            CcmsRechargeHdfcResData arrs = JsonConvert.DeserializeObject<CcmsRechargeHdfcResData>(inputTxtValues);
+            //CcmsRechargeHdfcResData arrs = JsonConvert.DeserializeObject<CcmsRechargeHdfcResData>(inputTxtValues);
 
-            HttpContext.Session.SetString("hdfcpgurl", arrs.response.apiurl);
-            HttpContext.Session.SetString("hdfcreqhash", arrs.response.request_Hash);
-            HttpContext.Session.SetString("hdfcaccesscode", arrs.response.accessCode);
+            //HttpContext.Session.SetString("hdfcpgurl", arrs.response.apiurl);
+            //HttpContext.Session.SetString("hdfcreqhash", arrs.response.request_Hash);
+            //HttpContext.Session.SetString("hdfcaccesscode", arrs.response.accessCode);
 
             return View();
         }
