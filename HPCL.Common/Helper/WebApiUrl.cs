@@ -516,14 +516,16 @@
         public static string getparentcustomerstatusreport = "api/dtplus/ParentCustomer/get_parent_customer_status_report";
         public static string getparentcustomerbalanceinfo = "api/dtplus/ParentCustomer/get_parent_customer_balance_info";
         public static string getparentcustomercardwisebalance = "api/dtplus/ParentCustomer/get_parent_customer_card_wise_balances";
-        public static string getparentccmsbalanceinfoforcustomerId = "api/dtplus/ParentCustomer/get_parent_ccms_balance_info_for_customerId";
+        public static string getparentccmsbalanceinfoforcustomerId = "api/dtplus/ParentCustomer/pc_ccms_balance_info";
         public static string getparentcustomerdetailbycustomerId = "api/dtplus/ParentCustomer/get_parent_customer_detail_by_customerId";
         public static string getparenttransactionssummary = "api/dtplus/ParentCustomer/get_parent_transactions_summary";
         public static string getchildbyparent = "api/dtplus/ParentCustomer/get_child_by_parent";
         public static string parentcustomerchildmappingeligibility = "api/dtplus/ParentCustomer/parent_customer_child_mapping_eligibility";
         public static string parentcustomerchildmapping = "api/dtplus/ParentCustomer/parent_customer_child_mapping";
         public static string getchildmappingdetails = "api/dtplus/ParentCustomer/get_child_mapping_details";
+        public static string pcdrivestarsbalanceinfo = "api/dtplus/ParentCustomer/pc_drivestars_balance_info";
         
+
 
 
         #endregion

@@ -1,0 +1,68 @@
+﻿@model HPCL.Common.Models.ResponseModel.Customer.CustomerDriveStarsDetailsModel
+@using HPCL.Common.Resources
+
+@if (Model.Data.Count() > 0)
+{
+    <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Drivestars Details(@ViewBag.CustomerID)</p>
+    <table id="CCMSBalanceTable" class="datatable table table-striped table-bordered d-md-table d-block text-nowrap display table-responsive" style="width:100%;">
+        <thead>
+            <tr>
+                <th>S.No.</th>
+                <th>Description</th>
+                <th>Transaction Date</th>
+                <th>Opening Balance</th>
+                <th>Posting Method</th>
+                <th>Drivestars</th>
+                <th>Closing Balance</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int Slno = 1;
+            }
+            @foreach (var item in Model.Data)
+            {
+                <tr>
+                    <td>@Slno</td>
+                    <td>@item.Description</td>
+                    <td>@item.TransactionDate</td>
+                    <td>@item.OpeningBalance</td>
+                    <td>@item.PostingMethod</td>
+                    <td>@item.Drivestars</td>
+                    <td>@item.ClosingBalance</td>
+
+                </tr>
+                Slno++;
+            }
+        </tbody>
+    </table>
+
+
+    <div class="clearfix"></div>
+}
+else
+{
+    <div class="alert alert-danger mt-3 text-center">
+        @Model.Message
+    </div>
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        //var table = $('#CCMSBalanceTable').DataTable().clear().destroy();
+
+        $('#CCMSBalanceTable').DataTable({
+            "lengthMenu": [10, 20, 50, 100, 200, 500],
+            paging: true,
+            searching: false,
+            stateSave: true,
+            "bDestroy": true,
+            "autoWidth": false,
+            "oLanguage": {
+                "sLengthMenu": "Display _MENU_ Records",
+                "info": "Showing _START_ to _END_ of _TOTAL_ Records",
+            }
+        });
+    });
+</script>
+

@@ -1195,7 +1195,7 @@ namespace HPCL.Service.Services
             form.Add(new StreamContent(entity.IDProof.OpenReadStream()), "IDProof", entity.IDProof.FileName);
             form.Add(new StreamContent(entity.PanCardProof.OpenReadStream()), "PanCardProof", entity.PanCardProof.FileName);
             form.Add(new StreamContent(entity.VehicleDetail.OpenReadStream()), "VehicleDetail", entity.VehicleDetail.FileName);
-            form.Add(new StreamContent(entity.SignedCustomerForm.OpenReadStream()), "VehicleDetail", entity.SignedCustomerForm.FileName);
+            form.Add(new StreamContent(entity.SignedCustomerForm.OpenReadStream()), "SignedCustomerForm", entity.SignedCustomerForm.FileName);
             form.Add(new StringContent(_httpContextAccessor.HttpContext.Session.GetString("UserId")), "Userid");
             form.Add(new StringContent(CommonBase.useragent), "Useragent");
             form.Add(new StringContent(CommonBase.userip), "Userip");

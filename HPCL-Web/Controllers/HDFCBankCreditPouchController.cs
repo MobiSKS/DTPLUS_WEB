@@ -137,12 +137,7 @@ namespace HPCL_Web.Controllers
         public async Task<IActionResult> HdfcRedirectToPaymentGateway(string inputTxtValues)
         {
             CcmsRechargeHdfcResData arrs = JsonConvert.DeserializeObject<CcmsRechargeHdfcResData>(inputTxtValues);
-
-            HttpContext.Session.SetString("hdfcpgurl", arrs.response.apiurl);
-            HttpContext.Session.SetString("hdfcreqhash", arrs.response.request_Hash);
-            HttpContext.Session.SetString("hdfcaccesscode", arrs.response.accessCode);
-
-            return View();
+            return View(arrs);
         }
 
         public IActionResult RequestAuthorization()
