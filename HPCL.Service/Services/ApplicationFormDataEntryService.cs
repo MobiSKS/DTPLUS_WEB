@@ -207,7 +207,7 @@ namespace HPCL.Service.Services
                 }
             }
 
-            if (addAddOnCard.CustomerTypeId == "902" || addAddOnCard.CustomerTypeId == "917" || addAddOnCard.CustomerTypeId == "901" || addAddOnCard.CustomerTypeId == "906")
+            if (addAddOnCard.CustomerTypeId == "902" || addAddOnCard.CustomerTypeId == "917" || addAddOnCard.CustomerTypeId == "901" || addAddOnCard.CustomerTypeId == "906" || addAddOnCard.CustomerTypeId == "922")
             {
                 addAddOnCard.NoofVechileforAllCards = "0";
             }

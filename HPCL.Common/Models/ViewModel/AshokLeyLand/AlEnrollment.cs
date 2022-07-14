@@ -47,5 +47,6 @@ namespace HPCL.Common.Models.ViewModel.AshokLeyLand
         [Required(ErrorMessage = "SBU Type field cannot be left blank")]
         public int SBUId { get; set; }
         public string UserName { get; set; }
+        public int OfficerType { get; set; }
     }
 }

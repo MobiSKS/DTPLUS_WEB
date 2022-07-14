@@ -524,7 +524,9 @@
         public static string parentcustomerchildmapping = "api/dtplus/ParentCustomer/parent_customer_child_mapping";
         public static string getchildmappingdetails = "api/dtplus/ParentCustomer/get_child_mapping_details";
         public static string pcdrivestarsbalanceinfo = "api/dtplus/ParentCustomer/pc_drivestars_balance_info";
+        public static string customerparentmappingeligibility = "api/dtplus/ParentCustomer/customer_parent_mapping_eligibility";
         
+
 
 
 
@@ -590,6 +592,13 @@
 
         #region "Customer Search"
         public static string CCPinResetUrl = "api/dtplus/customer/ccn_pin_reset";
+        #endregion
+
+        #region "JCB"
+        public static string checkJcbDealerCode = "api/dtplus/JCB/check_jcb_dealer_code";
+        public static string insertJcbDealerEnrollment = "api/dtplus/JCB/insert_jcb_dealer_enrollment";
+        public static string updateJcbDealerEnrollment = "api/dtplus/JCB/update_jcb_dealer_enrollment";
+        public static string getJcbDealerDetail = "api/dtplus/JCB/get_jcb_dealer_detail";
         #endregion
     }
 }

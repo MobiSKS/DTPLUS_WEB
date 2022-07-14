@@ -25,6 +25,7 @@ namespace HPCL.Common.Models.ViewModel.Dealer
     {
         public string MerchantID { get;set;}
         public string OutletNameAndLocation { get; set; }
+        public string RetailOutletName { get; set; }
         public string CustomerId { get; set; }
         public string CustomerName { get; set; }
         public string TransactionType { get; set; }

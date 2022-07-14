@@ -1009,7 +1009,7 @@ namespace HPCL.Service.Services
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
-                CustomerID = CustomerID
+                ChildCustomerId = CustomerID
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(Request), Encoding.UTF8, "application/json");
@@ -1170,6 +1170,25 @@ namespace HPCL.Service.Services
             customerDriveStarDetails = JsonConvert.DeserializeObject<CustomerDriveStarsDetailsModel>(response);
 
             return customerDriveStarDetails;
+        }
+        public async Task<List<SuccessResponse>> ValidateParentCustomerId(string CustomerId)
+        {
+            var validateUserNameForms = new ParentChildCustomerMappingRequest
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                ParentCustomerId = CustomerId,
+            };
+
+            StringContent stringContent = new StringContent(JsonConvert.SerializeObject(validateUserNameForms), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(stringContent, WebApiUrl.customerparentmappingeligibility);
+
+            JObject jObj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jArr = jObj["Data"].Value<JArray>();
+            List<SuccessResponse> responseList = jArr.ToObject<List<SuccessResponse>>();
+            return responseList;
         }
     }
 }
