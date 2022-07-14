@@ -21,5 +21,6 @@ namespace HPCL.Service.Interfaces
         Task<HdfcInitateRecharge> CCMSInitiateRechargeHDFC(string customerId, string amount);
         Task<CheckEligibleRes> CheckEligibility(CheckEligibleReq entity);
         Task<List<SuccessResponse>> ReqAvailEnroll(string customerId, string planTypeId);
+        Task<GetTransactionStatusRes> CustomerTransactionStatus(GetTransactionStatus entity);
     }
 }
