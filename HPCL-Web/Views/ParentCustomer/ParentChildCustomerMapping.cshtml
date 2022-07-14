@@ -38,7 +38,7 @@
                                                 <div class="col-md-12 col-12">
                                                     <div class="custom_select">
                                                         @{
-                                                            int i =0;
+                                                            int i = 0;
                                                         }
                                                         <table id="customerMap">
                                                             @foreach (var item in Model.Data)
@@ -48,7 +48,7 @@
 
                                                                     <td></td>
                                                                     <td class="custId">
-                                                                        
+
                                                                         <input type="text" value="@Model.ChildCustomerId" class="form-control" onblur="CustomerIdOnBlur(@i)" id="ChildCustomerId_@i" maxlength="10" onkeypress="return isNumberKey(event)" autocomplete="off" />
                                                                         <span class="error" id="childCustomerId_error"></span>
                                                                     </td>
@@ -226,7 +226,7 @@
                          }
                      setTimeout(function(){
                      if(flag=="Y" )
-                        objRequest.push(customerId);
+                        objRequest.push({Id:i,ChildCustomerId:customerId});
                          },1000);
                 });
                  setTimeout(function(){
@@ -234,8 +234,9 @@
                         e.preventDefault();
                      else{
                          if (objRequest.length > 0  && flag=="Y") {
-                             var url = '@Html.Raw(@Url.Action("MapParenttoChildCustomer", "ParentCustomer",new { ParentCustomerID = "zzXXyyZZZZZZZzz", ChildCustomerIds="MNO"}))';
-                            url = url.replace("zzXXyyZZZZZZZzz", encodeURIComponent(parentCustomerID)).replace("MNO",objRequest);
+                             var reqModel={ParentCustomerId:parentCustomerID,ObjChildDtl:objRequest};
+                             var url = '@Html.Raw(@Url.Action("MapParenttoChildCustomer", "ParentCustomer",new { ChildCustomerIds="MNO"}))';
+                            url = url.replace("MNO",JSON.stringify(reqModel));
                             window.location.href=url;
                           }
                      }
@@ -400,6 +401,8 @@
                           rows += "</tr>";
                           table.append(rows);
                           addSerialNumber();
+                          $("#childCustomerId_error").attr("style", "display:none");
+                          $("#childCustomerId_error").html("");
 
                   }
                 },1000);
@@ -415,6 +418,8 @@
 
        }
        function deleteRow(o,count){
+           $("#childCustomerId_error").attr("style", "display:none");
+           $("#childCustomerId_error").html("");
           debugger;
           var currentRow=o.closest('tr');
           var customerId=currentRow.cells[1].innerText;

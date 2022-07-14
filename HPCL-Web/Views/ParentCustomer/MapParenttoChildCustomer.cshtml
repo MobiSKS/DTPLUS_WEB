@@ -145,4 +145,25 @@
                  });
             }
      }));
+      $("#btnCancel").on("click",(function(e){
+        var parentId=$("#ParentCustomerId").val();
+        var objRequest=[];
+        var i=0;
+        $("table tbody tr").each(function () {
+                 debugger;
+                 i++
+                     var row = $(this);
+                     var customerId =row[0].cells[0].innerText;
+
+                     objRequest.push({Id:i,ChildCustomerId:customerId});
+
+
+             });
+             if (objRequest.length > 0 ) {
+                var reqModel={ParentCustomerId:parentCustomerID,ObjChildDtl:objRequest};
+                var url = '@Html.Raw(@Url.Action("ParentChildCustomerMapping", "ParentCustomer",new { ChildCustomerIds="MNO"}))';
+                url = url.replace("MNO",JSON.stringify(reqModel));
+                window.location.href=url;
+             }
+     }));
 </script>

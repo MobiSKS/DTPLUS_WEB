@@ -4,6 +4,7 @@ using HPCL.Common.Models.RequestModel.ParentCustomer;
 using HPCL.Common.Models.ViewModel.ParentCustomer;
 using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -177,47 +178,21 @@ namespace HPCL_Web.Controllers
 
             return View(customerBalanceResponse);
         }
-        public async Task<IActionResult> ParentChildCustomerMapping()
+        public async Task<IActionResult> ParentChildCustomerMapping(string ChildCustomerIds)
         {
             ParentChildCustomerMappingViewModel parentChildCustomerMapping = new ParentChildCustomerMappingViewModel();
-            return View(parentChildCustomerMapping);
-        }
-        [HttpPost]
-        public async Task<IActionResult> ParentChildCustomerMapping(ParentChildCustomerMappingRequest requestInfo)
-        {
-
-            ParentChildCustomerMappingViewModel parentChildCustomerMapping = new ParentChildCustomerMappingViewModel();
-            return View(parentChildCustomerMapping);
-        }
-        public async Task<ViewResult> MapParenttoChildCustomer(string ParentCustomerID, string ChildCustomerIds)
-        {
-
-            ParentChildCustomerMappingRequest requestInfo = new ParentChildCustomerMappingRequest();
-            requestInfo.ParentCustomerId = ParentCustomerID;
-            if (ChildCustomerIds!="")
-            { 
-                int i = 0;
-                if (ChildCustomerIds.IndexOf(',') != -1)
-                {
-                    string[] ids = ChildCustomerIds.Split(',');
-                    foreach (string id in ids)
-                    {
-                        i++;
-                        ParentChildCustomerDetails parentChildCustomerDetails = new ParentChildCustomerDetails();
-                        parentChildCustomerDetails.ChildCustomerId = id;
-                        parentChildCustomerDetails.Id = i;
-                        requestInfo.ObjChildDtl.Add(parentChildCustomerDetails);
-                    }
-                    
-                }
-                else
-                {
-                    ParentChildCustomerDetails parentChildCustomerDetails = new ParentChildCustomerDetails();
-                    parentChildCustomerDetails.ChildCustomerId = ChildCustomerIds;
-                    parentChildCustomerDetails.Id = 1;
-                    requestInfo.ObjChildDtl.Add(parentChildCustomerDetails);
-                }
+            if (ChildCustomerIds!=null  && ChildCustomerIds != "")
+            {
+                parentChildCustomerMapping = JsonConvert.DeserializeObject<ParentChildCustomerMappingViewModel>(ChildCustomerIds);
             }
+            return View(parentChildCustomerMapping);
+        }
+       
+        public async Task<ViewResult> MapParenttoChildCustomer(string ChildCustomerIds)
+        {
+
+             
+            ParentChildCustomerMappingRequest requestInfo = JsonConvert.DeserializeObject<ParentChildCustomerMappingRequest>(ChildCustomerIds);
             ParentChildCustomerMappingViewModel parentChildCustomerMapping = new ParentChildCustomerMappingViewModel();
             if (requestInfo.ParentCustomerId != null && requestInfo.ParentCustomerId != "")
                 parentChildCustomerMapping = await _customerService.ParentChildCustomerMapping(requestInfo);
