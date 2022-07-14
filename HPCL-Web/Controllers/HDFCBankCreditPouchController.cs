@@ -142,7 +142,7 @@ namespace HPCL_Web.Controllers
             HttpContext.Session.SetString("hdfcreqhash", arrs.response.request_Hash);
             HttpContext.Session.SetString("hdfcaccesscode", arrs.response.accessCode);
 
-            return View();
+            return View(arrs);
         }
 
         public IActionResult RequestAuthorization()
