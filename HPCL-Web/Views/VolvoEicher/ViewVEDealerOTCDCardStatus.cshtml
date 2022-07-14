@@ -23,7 +23,7 @@
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
                                                 @Html.TextBoxFor(m => m.DealerCode, new { @class = "form-control", maxlength = "25", onkeypress = "return AllowAlphaNumeric(event)"})
-                                                <span style="display:none" class="error" id="DealerCode_error"></span>
+                                                <span class="error" id="DealerCode_error"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -68,24 +68,35 @@
     
     function searchCardActivationandAllocation() {
 
-        var dealerCode = $("#DealerCode").val();
+        var dealerCode = $("#DealerCode").val().trim();
 
         var flag = "Y";
-        if (dealerCode != "") {
-            //if (!customerId.match(mappedCustomerId)) {
-            //    $("#DealerCode_error").attr("style", "display:block");
-            //    $("#DealerCode_error").html("Invalid Customer ID");
-            //    flag = "N";
-            //}
+        if (dealerCode != "") 
+        {
+            if (localStorage.getItem("DEALERFOUND") == 0) 
+            {
+                if(localStorage.getItem("DEALERMSG")=="")
+                {
+                    document.getElementById("DealerCode_error").innerHTML = "Invalid Dealer Code";
+                    flag = "N";
+                }
+                else
+                {
+                    document.getElementById("DealerCode_error").innerHTML = localStorage.getItem("DEALERMSG");
+                    flag = "N";
+                }
+            }
+            else 
+            {
+                document.getElementById("DealerCode_error").innerHTML = "";
+            }
         }
-        if (flag == "N")
-            e.preventDefault();
 
-        if (flag == "Y") {
-            if ($("#formValid").valid()) {
-
-             
-                $("#DealerCode_error").attr("style", "display:none");
+        if (flag == "Y") 
+        {
+            if ($("#formValid").valid()) 
+            {
+                             
                 $("#DealerCode_error").html("");
 
                 $.ajax({
@@ -116,88 +127,59 @@
         }
     }
     
-   
-
-
-    //function tableToCSVDwld() {
-
-    //    // Variable to store the final csv data
-    //    var csv_data = [];
-
-    //    // Get each row data
-    //    var rows = document.getElementsByTagName('tr');
-
-    //    console.log("rows", rows);
-
-    //    if (rows.length > 0) 
-    //    {
-
-    //        for (var i = 0; i < rows.length; i++) 
-    //        {
-    //            if(var i==0)
-    //            {
-    //                var cols = rows[i].querySelectorAll('td,th');
-
-    //                console.log("cols", cols);
-
-    //                var csvrow = [];
-    //                for (var j = 0; j < cols.length; j++) 
-    //                {
-
-    //                    csvrow.push(cols[j].innerHTML);
-    //                }
-    //                csv_data.push(csvrow.join(","));
-    //            }
-    //        }
-
-    //        var tableName = $('#OTCCardStatus').DataTable();
-    //        tableName.rows().every(function(){
-    //            //console.log(this.data()[0]);
-    //            var csvrow = [];
-
-    //            csvrow.push(this.data()[0]);
-    //            csvrow.push(this.data()[1]);
-    //            csvrow.push(this.data()[2]);
-    //            csvrow.push(this.data()[3]);
-    //            csvrow.push(this.data()[4]);
-    //            csvrow.push(this.data()[5]);
-
-    //            csv_data.push(csvrow.join(","));
-    //        });
-
-    //        csv_data = csv_data.join('\n');
-
-    //        downloadCSVFile(csv_data);
-    //    }
-    //}
-
-    //function downloadCSVFile(csv_data) {
-    //    CSVFile = new Blob([csv_data], {
-    //        type: "text/csv"
-    //    });
-    //    var temp_link = document.createElement('a');
-    //    temp_link.download = "VEDealerOTCCardStatus.csv";
-    //    var url = window.URL.createObjectURL(CSVFile);
-    //    temp_link.href = url;
-    //    temp_link.style.display = "none";
-    //    document.body.appendChild(temp_link);
-    //    temp_link.click();
-    //    document.body.removeChild(temp_link);
-    //}
     $("#DealerCode").on("blur", function () {
-         var dealerCode = $("#DealerCode").val();
-         if (dealerCode != "") {
-            //if (!customerId.match(mappedCustomerId)) {
-            //    $("#DealerCode_error").attr("style", "display:block");
-            //    $("#DealerCode_error").html("Invalid Customer ID");
-            //}
-            // else{
-            //    $("#DealerCode_error").attr("style", "display:none");
-            //    $("#DealerCode_error").html("");
-            //}
+        localStorage.setItem("DEALERFOUND", "0");
+        localStorage.setItem("DEALERMSG", "");
+         var dealerCode = $("#DealerCode").val().trim();
+         if (dealerCode != "") 
+         {
+             $.ajax({
+                type: 'POST',  // http method
+                url: '@Url.Action("CheckVEDealerCodeExists", "VolvoEicher")',
+                data: { DealerCode: dealerCode },  // data to submit
+                dataType: "json",
+                success: function (data, status, xhr) {
+                    console.log(data);
+                    console.log(status);
+                    console.log(data.status);
+
+                    if (status == 'success') 
+                    {
+                        if (data.status == 1) 
+                        {
+                            document.getElementById("DealerCode_error").innerHTML = "";
+                            localStorage.setItem("DEALERFOUND", "1");
+                        }
+                        else 
+                        {
+                            document.getElementById("DealerCode_error").innerHTML = data.reason;
+                            localStorage.setItem("DEALERFOUND", "0");
+                            localStorage.setItem("DEALERMSG", data.reason);
+                        }
+
+                        if (data == "Failed to load Dealer Details") 
+                        {
+                            document.getElementById("DealerCode_error").innerHTML = "Invalid Dealer Code";
+                            localStorage.setItem("DEALERFOUND", "0");
+                            localStorage.setItem("DEALERMSG", "Invalid Dealer Code");
+                        }
+                    }
+                    else 
+                    {
+                        document.getElementById("DealerCode_error").innerHTML = "Invalid Dealer Code";
+                        localStorage.setItem("DEALERFOUND", "0");
+                        localStorage.setItem("DEALERMSG", "Invalid Dealer Code");
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    document.getElementById("DealerCode_error").innerHTML = "Invalid Dealer Code";
+                    localStorage.setItem("DEALERFOUND", "0");
+                    localStorage.setItem("DEALERMSG", "Invalid Dealer Code");
+                }
+            });
          }
-         else{
-             $("#DealerCode_error").attr("style", "display:none");
+         else
+         {
              $("#DealerCode_error").html("");
          }
      });
