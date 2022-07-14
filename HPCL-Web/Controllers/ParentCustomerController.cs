@@ -195,7 +195,10 @@ namespace HPCL_Web.Controllers
             ParentChildCustomerMappingRequest requestInfo = JsonConvert.DeserializeObject<ParentChildCustomerMappingRequest>(ChildCustomerIds);
             ParentChildCustomerMappingViewModel parentChildCustomerMapping = new ParentChildCustomerMappingViewModel();
             if (requestInfo.ParentCustomerId != null && requestInfo.ParentCustomerId != "")
+            {
                 parentChildCustomerMapping = await _customerService.ParentChildCustomerMapping(requestInfo);
+                parentChildCustomerMapping.ParentCustomerId = requestInfo.ParentCustomerId;
+            }
             return View(parentChildCustomerMapping);
         }
         
