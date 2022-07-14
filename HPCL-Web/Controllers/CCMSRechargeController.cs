@@ -46,11 +46,6 @@ namespace HPCL_Web.Controllers
         public IActionResult RedirectToPaymentGateway(string inputTxtValues)
         {
             RedirectToPGResponseData arrs = JsonConvert.DeserializeObject<RedirectToPGResponseData>(inputTxtValues);
-
-            HttpContext.Session.SetString("pgurlccmsrec",arrs.response.apiurl);
-            HttpContext.Session.SetString("reqhashccmsrec", arrs.response.request_Hash);
-            HttpContext.Session.SetString("accesscodeccmsrec", arrs.response.accessCode);
-
             return View(arrs);
         }
 
