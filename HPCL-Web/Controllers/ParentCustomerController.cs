@@ -135,7 +135,7 @@ namespace HPCL_Web.Controllers
             var modals = await _customerService.SearchParentCustomerRequestStatusReport(FormNumber, RequestId);
             return PartialView("~/Views/ParentCustomer/_ParentCustomerStatusReportTbl.cshtml", modals);
         }
-        
+
         public async Task<IActionResult> BalanceInfo(ParentCustomerBalanceInfoModel requestInfo)
         {
 
@@ -143,7 +143,7 @@ namespace HPCL_Web.Controllers
             if (requestInfo.ParentCustomerID != null && requestInfo.ParentCustomerID != "")
             {
                 customerBalanceResponse = await _customerService.GetCustomerBalanceInfo(requestInfo);
-                customerBalanceResponse.ParentCustomerID=requestInfo.ParentCustomerID;
+                customerBalanceResponse.ParentCustomerID = requestInfo.ParentCustomerID;
                 customerBalanceResponse.ChildCustomerId = requestInfo.ChildCustomerId;
                 ViewBag.ParentCustomerID = requestInfo.ParentCustomerID;
             }
@@ -181,37 +181,38 @@ namespace HPCL_Web.Controllers
         public async Task<IActionResult> ParentChildCustomerMapping(string ChildCustomerIds)
         {
             ParentChildCustomerMappingViewModel parentChildCustomerMapping = new ParentChildCustomerMappingViewModel();
-            if (ChildCustomerIds!=null  && ChildCustomerIds != "")
+            if (ChildCustomerIds != null && ChildCustomerIds != "")
             {
                 parentChildCustomerMapping = JsonConvert.DeserializeObject<ParentChildCustomerMappingViewModel>(ChildCustomerIds);
             }
             return View(parentChildCustomerMapping);
         }
-       
-        public async Task<ViewResult> MapParenttoChildCustomer(string ChildCustomerIds)
+
+        public async Task<IActionResult> MapParenttoChildCustomer(string ChildCustomerIds)
         {
 
-             
+
             ParentChildCustomerMappingRequest requestInfo = JsonConvert.DeserializeObject<ParentChildCustomerMappingRequest>(ChildCustomerIds);
             ParentChildCustomerMappingViewModel parentChildCustomerMapping = new ParentChildCustomerMappingViewModel();
             if (requestInfo.ParentCustomerId != null && requestInfo.ParentCustomerId != "")
             {
                 parentChildCustomerMapping = await _customerService.ParentChildCustomerMapping(requestInfo);
                 parentChildCustomerMapping.ParentCustomerId = requestInfo.ParentCustomerId;
+               
             }
             return View(parentChildCustomerMapping);
         }
-        
-        public async Task<IActionResult> ViewParentChildTransactionDetails(string ParentCustomerID,string ChildCustomerIds)
+
+        public async Task<IActionResult> ViewParentChildTransactionDetails(string ParentCustomerID, string ChildCustomerIds)
         {
 
             ParentCustomerTransactionViewModel parentCustomerTransactionViewModel = new ParentCustomerTransactionViewModel();
 
             parentCustomerTransactionViewModel = await _customerService.ViewParentChildTransactionDetails(ParentCustomerID);
-            ViewBag.SelectedChildCustomerIds=ChildCustomerIds;
-   
+            ViewBag.SelectedChildCustomerIds = ChildCustomerIds;
+
             return View(parentCustomerTransactionViewModel);
-           
+
         }
 
         [HttpPost]
@@ -221,7 +222,7 @@ namespace HPCL_Web.Controllers
             return Json(reason);
         }
         [HttpPost]
-        public async Task<JsonResult> ConfirmParentChildCustomerMapping([FromBody]ParentChildCustomerMappingRequest requestInfo)
+        public async Task<JsonResult> ConfirmParentChildCustomerMapping([FromBody] ParentChildCustomerMappingRequest requestInfo)
         {
             var reason = await _customerService.ConfirmParentChildCustomerMapping(requestInfo);
             return Json(reason);
@@ -233,6 +234,12 @@ namespace HPCL_Web.Controllers
             ViewBag.CustomerID = CustomerID;
             return PartialView("~/Views/ParentCustomer/_ParentCustomerDriveStarsDetails.cshtml", modals);
         }
-        
+        [HttpPost]
+        public async Task<JsonResult> ValidateParentCustomerId(string CustomerId)
+        {
+            var reason = await _customerService.ValidateParentCustomerId(CustomerId);
+            return Json(reason);
+        }
+
     }
 }

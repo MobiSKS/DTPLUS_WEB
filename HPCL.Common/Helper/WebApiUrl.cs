@@ -523,7 +523,9 @@
         public static string parentcustomerchildmapping = "api/dtplus/ParentCustomer/parent_customer_child_mapping";
         public static string getchildmappingdetails = "api/dtplus/ParentCustomer/get_child_mapping_details";
         public static string pcdrivestarsbalanceinfo = "api/dtplus/ParentCustomer/pc_drivestars_balance_info";
+        public static string customerparentmappingeligibility = "api/dtplus/ParentCustomer/customer_parent_mapping_eligibility";
         
+
 
 
 
