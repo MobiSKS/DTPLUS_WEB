@@ -57,9 +57,9 @@ namespace HPCL_Web.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> SearchJCBDealer(string dealerCode, string dtpCode)
+        public async Task<JsonResult> SearchJCBDealer(string dealerCode, string dtpCode, string OfficerType)
         {
-            var searchList = await _jcbService.SearchJCBDealer(dealerCode, dtpCode);
+            var searchList = await _jcbService.SearchJCBDealer(dealerCode, dtpCode, OfficerType);
             return Json(new { searchList = searchList });
         }
 

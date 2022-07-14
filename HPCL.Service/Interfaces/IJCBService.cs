@@ -13,6 +13,6 @@ namespace HPCL.Service.Interfaces
         Task<CommonResponseData> CheckJCBDealerCodeExists(string DealerCode);
         Task<InsertResponse> InsertJCBDealerEnrollment(string str);
         Task<InsertResponse> JCBDealerEnrollmentUpdate(string getAllData);
-        Task<SearchAlResult> SearchJCBDealer(string dealerCode, string dtpCode);
+        Task<SearchAlResult> SearchJCBDealer(string dealerCode, string dtpCode, string OfficerType);
     }
 }
