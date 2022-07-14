@@ -157,6 +157,7 @@ namespace HPCL.Service.Services
                     item.ROfficeID = item.RegionalOfficeID.ToString();
                     item.SId = item.StateId.ToString();
                     item.DId = item.DistrictId.ToString();
+                    item.OTypeId = item.officerType.ToString();
                 }
             }
 
