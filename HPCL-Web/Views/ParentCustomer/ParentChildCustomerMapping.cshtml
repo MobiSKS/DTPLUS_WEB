@@ -137,6 +137,7 @@
     var isValid="Yes";
           $(document).ready(function () {
               addSerialNumber();
+              
           });
 
 
@@ -157,11 +158,35 @@
                     $("#parentCustomerId_error").html("Invalid Parent Customer ID");
                     flag="N";
                 }
-                else {
-                    document.getElementById("parentCustomerId_error").innerHTML = "";
-                }
+                else
+                  {
+                      $.ajax({
+                            type: 'POST',  // http method
+                            url: '@Url.Action("ValidateParentCustomerId", "ParentCustomer")',
+                            data: { CustomerId: parentCustomerID },  // data to submit
+                            dataType: "json",
+                            success: function (data, status, xhr) {
+                                var v = data;
+                                if(data.length>0){
+                                    if(data[0].status=="0"){
+                                        $("#parentCustomerId_error").html(data[0].reason);
+                                        $("#parentCustomerId_error").attr("style","display:block");
+                                        isValid=data[0].reason;
+                                        flag="N";
+                                    }
+                                    else{
+                                        $("#parentCustomerId_error").html("");
+                                    }
+                                }
+                                else{
+                                    $("#parentCustomerId_error").html("");
+                                }
+                            }
+                        });
+                  }
 
             }
+           setTimeout(function(){
           if(flag=="Y"){
               objRequest = [];
               $("table tr").each(function () {
@@ -242,6 +267,7 @@
                      }
                  },1500);
           }
+          },200);
     }));
 
 
@@ -262,7 +288,29 @@
           }
           else
           {
-              $("#parentCustomerId_error").html("");
+              $.ajax({
+                    type: 'POST',  // http method
+                    url: '@Url.Action("ValidateParentCustomerId", "ParentCustomer")',
+                    data: { CustomerId: $("#ParentCustomerId").val().trim() },  // data to submit
+                    dataType: "json",
+                    success: function (data, status, xhr) {
+                        var v = data;
+                        if(data.length>0){
+                            if(data[0].status=="0"){
+                                $("#parentCustomerId_error").html(data[0].reason);
+                                $("#parentCustomerId_error").attr("style","display:block");
+                                isValid=data[0].reason;
+                                return false;
+                            }
+                            else{
+                                $("#parentCustomerId_error").html("");
+                            }
+                        }
+                        else{
+                            $("#parentCustomerId_error").html("");
+                        }
+                    }
+                });
           }
 
       });
