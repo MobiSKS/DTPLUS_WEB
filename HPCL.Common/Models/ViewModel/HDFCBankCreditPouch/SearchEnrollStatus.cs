@@ -35,7 +35,6 @@ namespace HPCL.Common.Models.ViewModel.HDFCBankCreditPouch
         public string FromDate { get; set; }
         public string ZO { get; set; }
         public string RO { get; set; }
-        public string sbuTypeId { get; set; }
         public virtual List<SbuTypeResponseModal> SBUTypes { get; set; }
         public virtual List<RegionalOfficeResponseModal> RegionMdl { get; set; }
         public virtual List<ZonalOfficeResponseModal> ZoneMdl { get; set; }
