@@ -13,6 +13,7 @@ namespace HPCL.Common.Models.ViewModel.ParentCustomer
         public ParentChildCustomerMappingViewModel()
         {
             Data = new List<ParentChildCustomerMappingDetails>();
+            ObjChildDtl = new List<ParentChildCustomerDetails>();
         }
         public string ParentCustomerId { get; set; }
         public string ChildCustomerId { get; set; }
