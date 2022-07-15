@@ -11,6 +11,9 @@
     </ul>
      
    <div id="successUpdate" class="mb-3 text-center alert alert-success" style="display:none;"></div>
+   
+   <div id="ErrorResponse" class="mt-3 text-center alert alert-danger" style="display:none;"></div>
+
 
     <form id="formVal" method="post" data-ajax="true" data-ajax-controller="CustomerFinancial" data-ajax-action="CardToCardBalanceTransfer" data-ajax-method="POST" data-ajax-success="OnSuccess" data-ajax-failure="OnFailure">
         <div class="w-100">
@@ -113,9 +116,9 @@
 <script type="text/javascript">
 
     function resetClick() {
-        $("#custIdVal").attr("disabled", false);
-        $("#CardNo").attr("disabled", false);
-        $("#MobileNo").attr("disabled", false);
+        $("#custIdVal").attr("readonly", false);
+        $("#CardNo").attr("readonly", false);
+        $("#MobileNo").attr("readonly", false);
         window.location.reload(true);
     }
 
@@ -218,6 +221,7 @@
                         checkBoxValid = "<input type='checkbox' class='checkEnable' name='enableRow'>";
                 }
 
+
                 var srNumber = (i+1);
                 var pressCheck = checkBoxValid;
                 var cardNumber = "<span class='cdn' id='fromCardNoId_"+i+"'>" + (girdList[i].cardNumber || '') + "</span>";
@@ -225,7 +229,7 @@
                 var mobileno = (girdList[i].mobileno || '');
                 var issueDate = isDts;
                 var status = (girdList[i].status || '');
-                var cardBalance = "<span>"+(girdList[i].cardBalance.toFixed(2))+"</span><input disabled='disabled' style='display:none;' class='balanceAmt' id='balanceId_"+i+"' value='"+(girdList[i].cardBalance.toFixed(2))+"'>";
+                var cardBalance = "<span class='balanceAmt' id='balanceId_"+i+"'>"+(girdList[i].cardBalance.toFixed(2))+"</span>";
                 var ToCardNumber = "<div style='width:160px;display:flex;'><input onkeypress='return isNumberKey(event)' maxlength='16' onblur='toCardNoChange(this," + (i) + ")' class='form-control newCardNo cgl' id='toCardNoId_"+i+"' name='ToCardNumber' type='text' value='' readonly='readonly'><i style='display:none;margin-top:2px;' class='fa fa-exclamation-triangle errs' id='toCardNo_error_"+i+"' aria-hidden='true'></i></div>";
                 var transAmt = "<div style='width:160px;display:flex;'><input maxlength='10' onblur='amtToTransChange(this," + (i) + ")' class='form-control txnAmt cgl' id='amtTotransId_"+i+"' name='AmountToTransfer' type='text' readonly='readonly'><i style='display:none;margin-top:2px;' class='fa fa-exclamation-triangle errss' id='amtToTrans_error_"+i+"' aria-hidden='true'></i></div>";
 
@@ -245,9 +249,9 @@
                 fromCardNoArr.push({fromCardNo:girdList[i].cardNumber});
             }
 
-            $("#custIdVal").attr("disabled", true);
-            $("#CardNo").attr("disabled", true);
-            $("#MobileNo").attr("disabled", true);
+            $("#custIdVal").attr("readonly", true);
+            $("#CardNo").attr("readonly", true);
+            $("#MobileNo").attr("readonly", true);
 
             document.getElementById('searchResult').style.display = 'block';
 
@@ -394,14 +398,23 @@
                     traditional: true,
                     data: { customerId: customerId, cardToCardTransfer: JSON.stringify(updateArray) },
                     success: function (res) {
+
                         console.log("res",res);
                         $("#formVal").hide();
                         for(var i = 0; i < res.reasonList.data.length; i++){
-                             var bindRes = "<span>"+(res.reasonList.data[i].reason)+"</span><br>";
 
-                             $("#successUpdate").append(bindRes);
+                            if(res.reasonList.data[i].status == 1){
+                                 var bindRes = "<span>"+(res.reasonList.data[i].reason)+"</span><br>";
+
+                                 $("#successUpdate").append(bindRes);
+                                 document.getElementById('successUpdate').style.display = "block";
+                            }else{
+                                 var bindRes = "<span>"+(res.reasonList.data[i].reason)+"</span><br>";
+
+                                 $("#ErrorResponse").append(bindRes);
+                                 document.getElementById('ErrorResponse').style.display = "block";
+                            }
                         }
-                        document.getElementById('successUpdate').style.display = "block";
                     },
                     error: function (ex) {
                         alert('Failed' + ex);
