@@ -491,6 +491,7 @@
         public static string HdfcInitiateCcmsRechargeUrl = "api/dtplus/HDFCCreditPouch/initiate_cp_recharge";
         public static string RequestToAvailCheckUrl = "api/dtplus/HDFCCreditPouch/chk_eligibility";
         public static string RequestToAvailEnrollUrl = "api/dtplus/HDFCCreditPouch/insrt_cp_rqst_by_customer";
+        public static string CustomerTransactionStatusUrl = "api/dtplus/ParentCustomer/pc_hdfc_transaction_status";
         #endregion
 
         #region "CCMS Recharge"

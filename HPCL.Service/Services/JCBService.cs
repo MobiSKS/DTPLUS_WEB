@@ -81,6 +81,7 @@ namespace HPCL.Service.Services
                 Pin = arrs[0].Pin,
                 MobileNo = arrs[0].MobileNo,
                 EmailId = email,
+                OfficerType = arrs[0].OfficerType,
                 CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
             };
 
@@ -129,7 +130,7 @@ namespace HPCL.Service.Services
             InsertResponse result = obj.ToObject<InsertResponse>();
             return result;
         }
-        public async Task<SearchAlResult> SearchJCBDealer(string dealerCode, string dtpCode)
+        public async Task<SearchAlResult> SearchJCBDealer(string dealerCode, string dtpCode, string OfficerType)
         {
             var searchBody = new SearchDealer
             {
@@ -137,7 +138,8 @@ namespace HPCL.Service.Services
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
                 DealerCode = dealerCode,
-                DTPDealerCode = dtpCode
+                DTPDealerCode = dtpCode,
+                OfficerType = OfficerType
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
@@ -155,6 +157,7 @@ namespace HPCL.Service.Services
                     item.ROfficeID = item.RegionalOfficeID.ToString();
                     item.SId = item.StateId.ToString();
                     item.DId = item.DistrictId.ToString();
+                    item.OTypeId = item.officerType.ToString();
                 }
             }
 
