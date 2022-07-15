@@ -66,14 +66,14 @@ namespace HPCL.Service.Services
             {
 
                 var searchBody = new CustomerProfileModel
-                    {
-                        UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
-                        UserAgent = CommonBase.useragent,
-                        UserIp = CommonBase.userip,
-                        CustomerId = string.IsNullOrEmpty(CustomerId) ? "" : CustomerId,
-                        NameOnCard = string.IsNullOrEmpty(NameOnCard) ? "" : NameOnCard
-                    };
-                
+                {
+                    UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                    UserAgent = CommonBase.useragent,
+                    UserIp = CommonBase.userip,
+                    CustomerId = string.IsNullOrEmpty(CustomerId) ? "" : CustomerId,
+                    NameOnCard = string.IsNullOrEmpty(NameOnCard) ? "" : NameOnCard
+                };
+
 
 
                 StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
@@ -234,6 +234,7 @@ namespace HPCL.Service.Services
                         {
                             response.FormNumber = "";
                         }
+                        response.strSBU = response.SBUId.ToString();
                     }
                 }
 
