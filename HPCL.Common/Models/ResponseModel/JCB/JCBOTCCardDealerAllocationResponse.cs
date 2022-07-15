@@ -5,30 +5,30 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HPCL.Common.Models.ResponseModel.VolvoEicher
+namespace HPCL.Common.Models.ResponseModel.JCB
 {
-    public class VEOTCCardDealerAllocationResponse : CommonResponseBase
+    public class JCBOTCCardDealerAllocationResponse : CommonResponseBase
     {
-        public VEOTCCardResponseData Data { get; set; }
+        public JCBOTCCardResponseData Data { get; set; }
 
-        public VEOTCCardDealerAllocationResponse()
+        public JCBOTCCardDealerAllocationResponse()
         {
-            Data = new VEOTCCardResponseData();
+            Data = new JCBOTCCardResponseData();
         }
     }
 
-    public class VEOTCCardResponseData
+    public class JCBOTCCardResponseData
     {
-        public VEOTCCardResponseData()
+        public JCBOTCCardResponseData()
         {
-            ObjVETotalCardDetail = new List<VEOTCCardDealerTotalCardDetail>();
-            ObjVEViewCardDetail = new List<VEOTCCardDealerViewCardDetail>();
+            ObjJCBTotalCardDetail = new List<JCBOTCCardDealerTotalCardDetail>();
+            ObjJCBViewCardDetail = new List<JCBOTCCardDealerViewCardDetail>();
         }
-        public List<VEOTCCardDealerTotalCardDetail> ObjVETotalCardDetail { get; set; }
-        public List<VEOTCCardDealerViewCardDetail> ObjVEViewCardDetail { get; set; }
+        public List<JCBOTCCardDealerTotalCardDetail> ObjJCBTotalCardDetail { get; set; }
+        public List<JCBOTCCardDealerViewCardDetail> ObjJCBViewCardDetail { get; set; }
     }
 
-    public class VEOTCCardDealerViewCardDetail
+    public class JCBOTCCardDealerViewCardDetail
     {
         public string ZonalOfficeName { get; set; }
         public string RegionalOfficeName { get; set; }
@@ -42,7 +42,7 @@ namespace HPCL.Common.Models.ResponseModel.VolvoEicher
         public string RetailOutletName { get; set; }
         public string DealerCode { get; set; }
     }
-    public class VEOTCCardDealerTotalCardDetail
+    public class JCBOTCCardDealerTotalCardDetail
     {
         public string TotalAllocatedCards { get; set; }
         public string TotalMappedCards { get; set; }

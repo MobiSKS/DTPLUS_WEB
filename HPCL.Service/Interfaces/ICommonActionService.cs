@@ -76,7 +76,7 @@ namespace HPCL.Service.Interfaces
         Task<List<GetHotlistReasonRes>> GetHotlistReason();
         Task<List<StatusResponseModal>> GetNormalFleetCustomerStatus();
         Task<List<StatusResponseModal>> GetNormalFleetCustomerStatusForApprove();
-        Task<List<StatusResponseModal>> GetCreditPouchStatus();
+        Task<List<StatusResponseModal>> GetCreditPouchStatus(string pagename);
         Task<List<StatusModal>> GetComcoLimitSetModeList();
         Task<List<StatusModal>> GetComcoLimitInvoiceIntervalList();
         Task<List<CustomerZonalOfficeModel>> GetZonalOfficebySBUType(string SBUTypeId);

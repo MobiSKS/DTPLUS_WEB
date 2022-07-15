@@ -1,4 +1,5 @@
 ﻿using HPCL.Common.Helper;
+using HPCL.Common.Models.ViewModel.JCB;
 using HPCL.Common.Resources;
 using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -61,6 +62,58 @@ namespace HPCL_Web.Controllers
         {
             var searchList = await _jcbService.SearchJCBDealer(dealerCode, dtpCode, OfficerType);
             return Json(new { searchList = searchList });
+        }
+        public async Task<IActionResult> JCBDealerOTCCardRequest()
+        {
+            var modals = await _jcbService.JCBDealerOTCCardRequest();
+            return View(modals);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> CheckJCBDealerBalanceQty(string DealerCode)
+        {
+            var responseData = await _jcbService.CheckJCBDealerBalanceQty(DealerCode);
+
+            ModelState.Clear();
+
+            if (responseData.Internel_Status_Code.ToString() == Constants.SuccessInternelStatusCode)
+            {
+                return Json(responseData);
+            }
+            else
+            {
+                return Json("Failed to load Dealer Details");
+            }
+        }
+        [HttpPost]
+        public async Task<IActionResult> JCBDealerOTCCardRequest(JCBOTCCardRequestModel model)
+        {
+            model = await _jcbService.JCBDealerOTCCardRequest(model);
+
+            if (model.Internel_Status_Code == 1000)
+            {
+                return RedirectToAction("SuccessRedirectJCBOTCCardRequest", new { Message = model.Remarks });
+            }
+
+            return View(model);
+        }
+
+        public async Task<IActionResult> SuccessRedirectJCBOTCCardRequest(string Message)
+        {
+            ViewBag.Message = Message;
+            return View();
+        }
+        public async Task<IActionResult> ViewJCBUnmappedOTCCards()
+        {
+            ViewJCBUnmappedOTCCardsModel Model = new ViewJCBUnmappedOTCCardsModel();
+            Model = await _jcbService.ViewJCBUnmappedOTCCards();
+
+            return View(Model);
+        }
+        public async Task<IActionResult> GetViewJCBOTCCardDealerAllocation(string DealerCode, string CardNo)
+        {
+            var modals = await _jcbService.GetViewJCBOTCCardDealerAllocation(DealerCode, CardNo);
+            return PartialView("~/Views/JCB/_JCBOTCCardsDealerAllocationTable.cshtml", modals);
         }
 
     }
