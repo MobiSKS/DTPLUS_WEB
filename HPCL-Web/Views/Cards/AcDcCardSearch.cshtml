@@ -54,26 +54,25 @@
                                 <a class="btn btn_primary" href="#" id="btnCancel" name="cancel" onclick="resetFields()">@Label.Reset</a>
                             </div>
                         </div>
-
                         <div class="clearfix"></div>
                     </div>
-                    <div class="table-responsive" id="CardSearch" style="display:none;padding:1%">
-                        <table class="datatable table table-striped d-block table-bordered table-responsive mt-3" style="width:100%;">
+                    <div class="table-responsive" id="CardSearch" style="display:none; padding:0px 1%;">
+                        <table class="datatable table table-striped d-block d-md-table table-bordered table-responsive mt-3" style="width:100%;">
                             <thead>
                                 <tr>
-                                    <th style="width: 5%;">
+                                    <th style="width:5%;">
                                         S.No.
                                     </th>
-                                    <th style="width: 27%;">
+                                    <th style="width:28.3%;">
                                         @Label.CardNumber
                                     </th>
-                                    <th style="width: 27%;">
+                                    <th style="width:28.3%;">
                                         @Label.VehicleNumber
                                     </th>
-                                    <th style="width: 27%;">
+                                    <th style="width:28.3%;">
                                         @Label.MobileNumber
                                     </th>
-                                    <th style="width: 10%;">
+                                    <th style="width:10%;">
                                         @Label.Action
                                     </th>
                                     <th style="display: none;">
@@ -207,25 +206,33 @@
             $('#CardSearch table').DataTable().clear().destroy();
 
             var tbl = $('#CardSearch table').DataTable({
-                paging: true,
-                searching: false,
-                stateSave: true,
-                "bDestroy": true,
-                "lengthMenu": [10, 20, 50, 100, 200, 500, 1000, 2000],
-                "autoWidth": false,
-                "oLanguage": {
-                    "sLengthMenu": "Display _MENU_ Records",
-                    "info": "Showing _START_ to _END_ of _TOTAL_ Records",
-                }
+                'columns' : [
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    { className: "hide_column" },
+                    { className: "hide_column" }
+                ]
             });
 
             for (var i = 0; i < girdList.length; i++) {
+
+                var actionName;
+
+                if (girdList[i].status == "Active") {
+                    actionName = "<div class='changeTxt d-flex align-items-center justify-content-start'><a class='btn btn_primary updateStatus bg-success' type='submit'>Reactivate</a></div>";
+                }
+                if (girdList[i].status == "InActive") {
+                    actionName = "<div class='changeTxt d-flex align-items-center justify-content-start'><a class='btn btn_primary updateStatus bg-danger' type='submit'>Deactivate</a></div>";
+                }
 
                 var srNumber = (girdList[i].srNumber || '');
                 var cardNumber = "<span class='crdNo'>" + (girdList[i].cardNumber || '') + "</span>";
                 var vechileNo = (girdList[i].vechileNo || '');
                 var mobileNumber = (girdList[i].mobileNumber || '');
-                var action = "<div class='changeTxt d-flex align-items-center justify-content-start'></div>";
+                var action = actionName;
                 var cardStatus = "<span class='statusId' style='display:none'>" + (girdList[i].cardStatus || '') + "</span>";
                 var status = "<span class='checkStatus' style='display:none'>" + (girdList[i].status || '') + "</span>";
 
@@ -239,14 +246,6 @@
                     status
                 ]).draw();
            
-                $('td:nth-child(6), th:nth-child(6), td:nth-child(7), th:nth-child(7)').hide();
-
-                if (girdList[i].status == "Active") {
-                    $(".changeTxt").replaceWith("<a class='btn btn_primary updateStatus bg-success' type='submit'>Reactivate</a>");
-                }
-                if (girdList[i].status == "InActive") {
-                    $(".changeTxt").replaceWith("<a class='btn btn_primary updateStatus bg-danger' type='submit'>Deactivate</a>");
-                }
             }
             document.getElementById('CardSearch').style.display = 'block';
         } else {
@@ -307,3 +306,9 @@
     });
 
 </script>
+
+<style>
+  .hide_column{
+      display:none;
+  }
+</style>
