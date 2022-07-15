@@ -19,5 +19,7 @@ namespace HPCL.Service.Interfaces
         Task<JCBOTCCardRequestModel> JCBDealerOTCCardRequest();
         Task<GetJCBBalanceOTCCardResponse> CheckJCBDealerBalanceQty(string DealerCode);
         Task<JCBOTCCardRequestModel> JCBDealerOTCCardRequest(JCBOTCCardRequestModel model);
+        Task<ViewJCBUnmappedOTCCardsModel> ViewJCBUnmappedOTCCards();
+        Task<JCBOTCCardDealerAllocationResponse> GetViewJCBOTCCardDealerAllocation(string DealerCode, string CardNo);
     }
 }
