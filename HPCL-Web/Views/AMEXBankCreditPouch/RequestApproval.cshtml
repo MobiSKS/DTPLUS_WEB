@@ -162,6 +162,7 @@
             $.ajax({
                 type: 'POST',  // http method
                 url: '@Url.Action("GetCreditPouchStatus", "Common")',
+                data: {pagename : "BankApproval"},
                 dataType: "json",
                 success: function (data, status, xhr) {
 
@@ -340,7 +341,7 @@
                 var requestedDate = isDts;
                 var status = (res.searchList.data[i].actionStatus);
                 var remarks = "<div style='width:160px;'><textarea onchange='remarksChange(this," + (i) + ")' readonly='readonly' class='form-control remarksVal' maxlength = '250'></textarea><i style='display:none;margin-top:10px;' class='fa fa-exclamation-triangle errs' id='remarks_error_"+i+"' aria-hidden='true'></i></div>";
-                var action = "<select readonly='readonly' disabled='disabled' class='form-control actionVal'><option value='3'>Submit for final Approval</option><option value='4'>Submit for final Rejection</option></select><span style='display:none;' class='reqId'>"+(res.searchList.data[i].requestNo)+"</span>";
+                var action = "<select readonly='readonly' disabled='disabled' class='form-control actionVal'></select><span style='display:none;' class='reqId'>"+(res.searchList.data[i].requestNo)+"</span>";
 
                 tbl.row.add([
                     srNumber,
@@ -358,6 +359,25 @@
                     action
                 ]).order( [ 1, 'asc' ] ).draw();
             }
+
+            $.ajax({
+                type: 'POST',  // http method
+                url: '@Url.Action("GetCreditPouchStatus", "Common")',
+                data: {pagename : "BankApprovalAction"},
+                dataType: "json",
+                success: function (data, status, xhr) {
+
+                    console.log(data);
+                    $.each(data.getStatus, function (i, option) {
+                        $("<option/>").val(option.statusId).text(option.statusName).appendTo(".actionVal");
+                    });
+                    $(".statusVal")[0].sumo.reload();
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+                    alert("Error Populating Status Type");
+                }
+            });
+
             document.getElementById("approvalRejectSection").style.display = "grid";
         } else {
             document.getElementById("approvalRejectSection").style.display = "none";

@@ -1586,14 +1586,14 @@ namespace HPCL.Service.Services
         }
 
 
-        public async Task<List<StatusResponseModal>> GetCreditPouchStatus()
+        public async Task<List<StatusResponseModal>> GetCreditPouchStatus(string pagename)
         {
             var statusType = new GetCreditPouchStatus
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
-                PageName = "BankAuthorization"
+                PageName = pagename
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(statusType), Encoding.UTF8, "application/json");
