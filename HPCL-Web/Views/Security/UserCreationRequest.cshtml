@@ -1,0 +1,670 @@
+﻿@model HPCL.Common.Models.ViewModel.Security.UserCreationRequestModel
+@using Microsoft.AspNetCore.Http;
+<div class="col-lg-12 p-4 p-md-4">
+    <div class="bg-white p-2 p-md-4">
+        <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
+            <li class="breadcrumb-item"><a href="@Url.Action("Index")" class="text_primary">Security</a> </li>
+            <li class="breadcrumb-item font-weight-light">User Creation Request</li>
+        </ul>
+        <div id="SuccessMsg" class="alert alert-success text-center" style="display:none"></div>
+        <div id="ErrorMsg" class="alert alert-danger text-center" style="display:none"></div>
+        @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "form1", name = "form1", @class = "toBeHiddenOnSuccess" }))
+        {
+            <div class="w-100">
+                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mb-3">
+                    <div class="border-1 rounded border-grey w-100 mt-3">
+                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">User Creation Request</p>
+                        <div class="col-lg-12 col-md-12 col-12 py-3">
+                            <div class="d-flex align-items-center justify-content-between flex-wrap row">
+                                <div class="col-lg-12 col-md-12 col-12">
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-2 col-12">Name <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-10 col-12">
+
+                                            <div class="row">
+                                                <div class="col-3">
+                                                    @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control",@placeholder="First Name" })
+                                                    <span class="error" id="first_name_error"></span>
+                                                </div>
+                                                <div class="col-3">
+                                                    @Html.TextBoxFor(m => m.MiddleName, new { @class = "form-control",@placeholder="Middle Name"})
+                                                    <span class="error" id="middle_name_error"></span>
+                                                </div>
+                                                <div class="col-3">
+                                                    @Html.TextBoxFor(m => m.LastName, new { @class = "form-control",@placeholder="Last Name" })
+                                                    <span class="error" id="last_name_error"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="d-flex align-items-center justify-content-between flex-wrap row">
+
+                                <div class="col-lg-6 col-md-12 col-12">
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-4 col-12">Email <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-8 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.Email, new { @class = "form-control", maxlength = "50"})
+                                                <span class="error" style="display:none" id="email_error"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-between flex-wrap row">
+                                <div class="col-lg-6 col-md-12 col-12">
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-4 col-12">Comments <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-8 col-12">
+                                            <div class="custom_select">
+
+                                                @Html.TextAreaFor(m => m.Comments, new { @class = "form-control", maxlength = "1000",autocomplete = "off"})
+                                                <span class="error" style="display:none" id="comments_error"></span>
+                                                <p id="charRemining"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <div class="clearfix"></div>
+                    <div id="msgError" tabindex="0" class="mb-3 text-center alert alert-danger" style="display:none"></div>
+
+                    <div class="border-1 rounded border-grey w-100 mt-3">
+                        <div class="d-flex align-items-start flex-wrap">
+                            <div class="col-12 col-sm-3 px-0">
+                                <div class="UserRoleArea">
+                                    <h2>User Role</h2>
+                                    @if (Model.getUserRolesandregions.Count() > 0)
+                                    {
+                                        if (Model.getUserRolesandregions.First().Data.UserRoles.Count() > 0)
+                                        {
+                                            <ul id="UserRoleList" style="max-height:400px; overflow-y:scroll;">
+                                                @foreach (var item in Model.getUserRolesandregions.First().Data.UserRoles)
+                                                {
+                                                    <li id="@item.ID">@item.UserRole</li>
+
+                                                }
+
+                                            </ul>
+                                        }
+                                    }
+
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-sm-9 px-0">
+                                <div class="LocationsArea">
+                                    <h2>Locations Area</h2>
+                                    <div class="panel-group" id="accordion">
+                                        <!-- /.panel -->
+                                    <div class="panel panel-default">
+                                            <div class="panel-heading">
+                                                <h4 class="panel-title"></h4>
+                                                <input class="form-check-input check_box_pos_sty" type="checkbox" id="checkAll" value="option1">
+                                                <a class="" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" contenteditable="false">
+                                                    <div class="form-check form-check-inline">
+                                                        <label class="form-check-label" for="inlineCheckbox1">All</label>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                            <!--/.panel-heading -->
+                                        <div id="collapseTwo" class="panel-collapse collapse show">
+                                                <div class="panel-body">
+                                                    <!-- nested -->
+                                                <div class="panel-group" id="nested">
+                                                        @{
+                                                            int i = 0, j = 0;
+                                                            string ZoneId = "0";
+                                                        }
+                                                        @foreach (var item in Model.getUserRolesandregions.First().Data.Locations.OrderBy(x => x.ZonalOfficeID))
+                                                        {
+
+                                                            @if (ZoneId != item.ZonalOfficeID)
+                                                            {
+                                                                i++;
+                                                                ZoneId = item.ZonalOfficeID;
+                                                                <div class="panel panel-default zoneArea class_@item.ZonalOfficeID">
+                                                                    <div class="panel-heading">
+                                                                        <h4 class="panel-title"></h4>
+                                                                        <input class="form-check-input check_box_pos_sty" type="checkbox" name="zoneChk" onclick="chkAllRegion(this,@i)" id="check_@i" value="@item.ZonalOfficeID">
+                                                                        <a class="collapsed class_@item.ZonalOfficeID class_a_ZoneArea" data-toggle="collapse" data-parent="#nested" href="#nested_@i" id="id_@item.ZonalOfficeID">
+                                                                            <div class="form-check form-check-inline">
+                                                                                <label class="form-check-label" for="check_@i">@item.ZonalOfficeName</label>
+                                                                            </div>
+                                                                        </a>
+
+                                                                    </div>
+                                                                    <!--/.panel-heading -->
+                                                        <div id="nested_@i" class="panel-collapse regionArea collapse in">
+                                                                        <div class="panel-body">
+                                                                            <ul style="padding-left: 25px;">
+                                                                                @foreach (var item1 in Model.getUserRolesandregions.First().Data.Locations.Where(x => x.ZonalOfficeID == item.ZonalOfficeID).OrderBy(x => x.ZonalOfficeID))
+                                                                                {
+                                                                                    j++;
+                                                                                    <li>
+                                                                                        <div class="form-check form-check-inline">
+                                                                                            <input class="form-check-input chk_@i" type="checkbox" onclick="checkChanged(this,@i)" name="regionChk" id="check_@i@j-@item.ZonalOfficeID" value="@item1.RegionalOfficeID">
+                                                                                            <label class="form-check-label" for="check_@i@j-@item.ZonalOfficeID">@item1.RegionalOfficeName</label>
+                                                                                        </div>
+                                                                                    </li>
+                                                                                }
+                                                                            </ul>
+
+                                                                        </div>
+                                                                        <!--/.panel-body -->
+                                                        </div>
+
+                                                                    <!--/.panel-collapse -->
+                                                    </div>
+                                                            }
+                                                        }
+                                                        <!-- /.panel -->
+                                                    <input type="hidden" id="zoneCount" value=@i>
+                                                    </div>
+                                                    <!-- /.panel-group -->
+                                                    <!-- nested -->
+                                            </div>
+                                                <!--/.panel-body -->
+
+                                        </div>
+
+                                            <!--/.panel-collapse -->
+                                    </div>
+                                        <!-- /.panel -->
+                                </div>
+                                    <!-- /.panel-group -->
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="d-flex align-items-center justify-content-center mt-0">
+                        <div class="px-0">
+                            <button class="btn btn_primary" id="btnShow" type="button">SUBMIT</button>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="clearfix"></div>
+                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mb-3 toBeHiddenOnSuccess" style="display:none" id="UserReqDetails">
+                    <table id="LocRoleMappingTbl" class="table table-striped d-block d-md-table table-bordered table-responsive mt-3" style="width:100%;">
+                        <thead>
+                            <tr>
+                                <th>Role</th>
+                                <th>Location</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+
+                    </table>
+                    <div class="clearfix"></div>
+                    <div class="d-flex align-items-center justify-content-center mt-0">
+                        <div class="px-0">
+                            <button class="btn btn_primary" id="btnSave" type="button">SUBMIT</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+</div>
+<div class="clearfix"></div>
+
+<script type="text/javascript">
+     var selectedRole="";
+     var selectedRoleName="";
+
+      $(document).ready(function (){
+           var text_max = 1000;
+        $('#charRemining').html('(<i>' + text_max +' characters remaining</i>)');
+
+        $('#Comments').keyup(function ()
+        {
+            var text_length = $('#Comments').val().length;
+            var text_remaining = text_max - text_length;
+
+            $('#charRemining').html('(<i>' + text_remaining + ' characters remaining</i>)');
+        });
+       });
+
+    function checkChanged(o,i){
+
+            var chkStatus=o.checked;
+            var chkAllStatus= $("#check_"+i)[0].checked;
+            if(!chkStatus && chkAllStatus)
+                $("#check_"+i)[0].checked=false;
+            $("#msgError").html("");
+            $("#msgError").attr("style","display:none");
+     }
+
+       function chkAllRegion(o,cnt){
+
+           var zoneId=o.value;
+           $('input:checkbox.chk_'+cnt).not(this).prop('checked', o.checked);
+
+           $("#msgError").html("");
+            $("#msgError").attr("style","display:none");
+       }
+
+
+        $("#checkAll").click(function () {
+            $('input:checkbox').not(this).prop('checked', this.checked);
+            $("#msgError").html("");
+            $("#msgError").attr("style","display:none");
+
+        });
+        var li =document.getElementById("UserRoleList").getElementsByTagName('li');
+
+        for(var i = 0;i<li.length;i++){
+            li[i].addEventListener("click", selectItem);
+        }
+
+        function selectItem(e){
+            selectedRole=e.target.attributes.id.value;
+            selectedRoleName=e.target.innerText;
+             $('li').removeClass("usr_active");
+            $(e.target).addClass("usr_active");
+            $("#msgError").html("");
+            $("#msgError").attr("style","display:none");
+        }
+
+
+
+
+       $("#btnShow").on("click", (function (e) {
+          var firstName=$("#FirstName").val();
+          var middleName=$("#MiddleName").val();
+          var lastName=$("#LastName").val();
+          var comments=$("#Comments").val();
+          var newEmail=$("#Email").val();
+          var flag="Y";
+          var userRoleSelected=selectedRole;
+          var roleName=selectedRoleName;
+          if(firstName.trim()==""){
+             $("#first_name_error").html("Please enter First Name");
+             $("#first_name_error").attr("style","display:block");
+
+             flag = "N";
+          }
+          else{
+             if(!(firstName.match(nameCheck))){
+                  $("#first_name_error").html("Please enter valid First Name");
+                  $("#first_name_error").attr("style","display:block");
+
+                  flag = "N";
+             }
+
+
+          }
+          if(middleName.trim()!=""){
+             if(!(middleName.match(nameCheck))){
+                  $("#middle_name_error").html("Please enter valid Middle Name");
+                  $("#middle_name_error").attr("style","display:block");
+
+                  flag = "N";
+             }
+
+
+          }
+          if(lastName.trim()!=""){
+             if(!(lastName.match(nameCheck))){
+                  $("#last_name_error").html("Please enter valid Last Name");
+                  $("#last_name_error").attr("style","display:block");
+
+                  flag = "N";
+             }
+
+
+          }
+          if(newEmail.trim()==""){
+             $("#email_error").html("Please enter Email");
+             $("#email_error").attr("style","display:block");
+
+                  flag = "N";
+          }
+          else{
+             if(!(newEmail.match(userReqEmail))){
+                  $("#email_error").html("Please enter valid Email");
+                  $("#email_error").attr("style","display:block");
+
+                  flag = "N";
+             }
+          }
+          if(comments.trim()==""){
+            $("#comments_error").html("Please enter Comments");
+            $("#comments_error").attr("style","display:block");
+
+            flag = "N";
+
+           }
+
+          if(userRoleSelected==""){
+                $("#msgError").html("Please Select Roles for User");
+                $("#msgError").attr("style","display:block");
+                $("#msgError").focus();
+                flag="N";
+          }
+          if(flag=="N")
+                e.preventDefault();
+          else{
+                objUserRole=[];
+                objZoneIds=[];
+                Locations=[];
+                var zoneCnt=$("#zoneCount").val();
+                var checkedAll=$("#checkAll")[0].checked;
+                debugger;
+                if(checkedAll==true){
+                    for(var cnt=1;cnt<=zoneCnt;cnt++){
+                        $('input:checkbox#check_'+cnt).each(function () {
+                            var zoneId=$(this).val();
+                            var zoneName=$(this)[0].labels[0].innerText;
+                            Locations.push(zoneName);
+                            $('input:checkbox.chk_'+cnt).each(function () {
+                                var regionName=$(this)[0].labels[0].innerText;
+                                Locations.push(regionName);
+                            });
+                        });
+
+
+                    }
+                }
+                else{
+                     $("input:checkbox[name=zoneChk]:checked").each(function () {
+                       var zoId=$(this).val();
+                       var zoneName=$(this)[0].labels[0].innerText;
+                       Locations.push(zoneName);
+                    });
+                    $("input:checkbox[name=regionChk]:checked").each(function () {
+                       var chkROId=$(this).attr("id");
+                       var zoId=chkROId.substring(chkROId.indexOf('-') + 1);
+
+                       var zoneName=$("input:checkbox[name=zoneChk][value="+zoId+"]")[0].labels[0].innerText;
+                       var regionName=$(this)[0].labels[0].innerText;
+                       Locations.push(regionName);
+                    });
+                }
+                if(Locations.length>0){
+                    $("#LocRoleMappingTbl tbody tr").remove();
+                    var rows = "<tbody><tr>";
+                    rows += '<td>'+roleName+'</td>';
+                    rows += '<td>'+Locations+'</td>'
+                    rows += '<td><a class="delete" data-toggle="tooltip" title="" tooltip="Delete"><i class="fa fa-trash-o delete" aria-hidden="true"></i></a></td>'
+                    rows += "</tr></tbody>";
+                    $("#LocRoleMappingTbl").append(rows);
+                    $("#UserReqDetails").attr("style","display:block");
+                    $(".UserRoleArea").addClass("disable");
+                    $(".LocationsArea").addClass("disable");
+                }
+                else{
+                    $("#msgError").html("Please Select Location for User");
+                    $("#msgError").attr("style","display:block");
+                    $("#msgError").focus();
+                    flag="N";
+                }
+            }
+       }));
+
+
+
+      $("#Email").on("blur", function() {
+         var newEmail=$("#Email").val();
+          if(newEmail.trim()==""){
+             $("#email_error").html("Please enter Email");
+             $("#email_error").attr("style","display:block");
+
+         }
+         else{
+             if(!(newEmail.match(userReqEmail))){
+                  $("#email_error").html("Please enter valid Email");
+                  $("#email_error").attr("style","display:block");
+
+             }
+             else{
+                  $("#email_error").html("");
+                  $("#email_error").attr("style","display:none");
+             }
+
+         }
+     });
+     $("#FirstName").on("blur", function() {
+          var firstName=$("#FirstName").val();
+          if(firstName.trim()==""){
+             $("#first_name_error").html("Please enter First Name");
+             $("#first_name_error").attr("style","display:block");
+
+
+         }
+         else{
+             if(!(firstName.match(nameCheck))){
+                  $("#first_name_error").html("Please enter valid First Name");
+                  $("#first_name_error").attr("style","display:block");
+
+             }
+             else{
+                  $("#first_name_error").html("");
+                  $("#first_name_error").attr("style","display:none");
+             }
+
+         }
+     });
+     $("#MiddleName").on("blur", function() {
+          var middleName=$("#MiddleName").val();
+          if(middleName.trim()!=""){
+             if(!(middleName.match(nameCheck))){
+                  $("#middle_name_error").html("Please enter valid Middle Name");
+                  $("#middle_name_error").attr("style","display:block");
+
+             }
+             else{
+                  $("#middle_name_error").html("");
+                  $("#middle_name_error").attr("style","display:none");
+             }
+
+         }
+         else{
+            $("#middle_name_error").html("");
+            $("#middle_name_error").attr("style","display:none");
+        }
+     });
+     $("#LastName").on("blur", function() {
+          var lastName=$("#LastName").val();
+          if(lastName.trim()!=""){
+             if(!(lastName.match(nameCheck))){
+                  $("#last_name_error").html("Please enter valid Last Name");
+                  $("#last_name_error").attr("style","display:block");
+
+             }
+             else{
+                  $("#last_name_error").html("");
+                  $("#last_name_error").attr("style","display:none");
+             }
+
+         }
+         else{
+            $("#last_name_error").html("");
+            $("#last_name_error").attr("style","display:none");
+        }
+     });
+
+    $("#Comments").on("blur", function() {
+        var comments=$("#Comments").val();
+        if(comments.trim()==""){
+            $("#comments_error").html("Please enter Comments");
+            $("#comments_error").attr("style","display:block");
+
+        }
+        else{
+            $("#comments_error").html("");
+            $("#comments_error").attr("style","display:none");
+        }
+    });
+     $("#LocRoleMappingTbl").on('click', '.delete', function () {
+         if(confirm("Are you sure you want to delete the Role")){
+            currentRow = $(this).closest("tr");
+            currentRow.remove();
+            $("#UserReqDetails").attr("style","display:none");
+            $(".UserRoleArea").removeClass("disable");
+            $(".LocationsArea").removeClass("disable");
+         }
+    });
+    $("#btnSave").on("click", (function (e) {
+          var firstName=$("#FirstName").val();
+          var middleName=$("#MiddleName").val();
+          var lastName=$("#LastName").val();
+          var comments=$("#Comments").val();
+          var newEmail=$("#Email").val();
+          var flag="Y";
+          var userRoleSelected=selectedRole;
+          if(firstName.trim()==""){
+             $("#first_name_error").html("Please enter First Name");
+             $("#first_name_error").attr("style","display:block");
+
+             flag = "N";
+          }
+          else{
+             if(!(firstName.match(nameCheck))){
+                  $("#first_name_error").html("Please enter valid First Name");
+                  $("#first_name_error").attr("style","display:block");
+
+                  flag = "N";
+             }
+
+
+          }
+          if(middleName.trim()!=""){
+             if(!(middleName.match(nameCheck))){
+                  $("#middle_name_error").html("Please enter valid Middle Name");
+                  $("#middle_name_error").attr("style","display:block");
+
+                  flag = "N";
+             }
+
+
+          }
+          if(lastName.trim()!=""){
+             if(!(lastName.match(nameCheck))){
+                  $("#last_name_error").html("Please enter valid Last Name");
+                  $("#last_name_error").attr("style","display:block");
+
+                  flag = "N";
+             }
+
+
+          }
+          if(newEmail.trim()==""){
+             $("#email_error").html("Please enter Email");
+             $("#email_error").attr("style","display:block");
+
+                  flag = "N";
+          }
+          else{
+             if(!(newEmail.match(userReqEmail))){
+                  $("#email_error").html("Please enter valid Email");
+                  $("#email_error").attr("style","display:block");
+
+                  flag = "N";
+             }
+          }
+          if(comments.trim()==""){
+            $("#comments_error").html("Please enter Comments");
+            $("#comments_error").attr("style","display:block");
+
+            flag = "N";
+
+           }
+
+          if(userRoleSelected==""){
+                $("#msgError").html("Please Select Roles for User");
+                $("#msgError").attr("style","display:block");
+                $("#msgError").focus();
+                flag="N";
+          }
+          if(flag=="N")
+                e.preventDefault();
+          else{
+                objUserRole=[];
+                objZoneIds=[];
+                var zoneCnt=$("#zoneCount").val();
+                var checkedAll=$("#checkAll")[0].checked;
+                debugger;
+                if(checkedAll==true){
+                    for(var cnt=1;cnt<=zoneCnt;cnt++){
+                        $('input:checkbox#check_'+cnt).each(function () {
+                            var zoneId=$(this).val();
+                            objUserRole.push({ RO: "0",ZO:zoneId });
+                            $('input:checkbox.chk_'+cnt).each(function () {
+                                objUserRole.push({ RO: $(this).val(),ZO:zoneId});
+                            });
+                        });
+                    }
+                }
+                else{
+                     $("input:checkbox[name=zoneChk]:checked").each(function () {
+                       var zoId=$(this).val();
+
+                        objUserRole.push({ RO: "0",ZO:zoId });
+                        //objZoneIds.push(zoId);
+                    });
+                    $("input:checkbox[name=regionChk]:checked").each(function () {
+                       var chkROId=$(this).attr("id");
+                        var zoId=chkROId.substring(chkROId.indexOf('-') + 1);
+                        //if(objZoneIds.indexOf(zoId)==-1)
+                            objUserRole.push({ RO: $(this).val(),ZO:zoId });
+                    });
+                }
+                if(objUserRole.length>0){
+                    if(confirm("Are you sure You want to place request for creating User and Role?")){
+                        var ReqModel={FirstName:firstName,MiddleName:middleName,LastName:lastName,Email:newEmail,UserRole:userRoleSelected,TypeUserCreationDetails:objUserRole,Comments:comments};
+                        $.ajax({
+                            type: 'POST',  // http method
+                            url: '@Url.Action("UserCreationRequest", "Security")',
+                            contentType: "application/json; charset=utf-8",
+                            dataType: 'JSON',
+                            data: JSON.stringify(ReqModel),
+                            success: function (data, status, xhr) {
+                                var v = data;
+                                if (status == 'success') {
+                                    if(data.length>0){
+                                       if(data[0].status=="1"){
+                                           $("#SuccessMsg").html(data[0].reason);
+                                           $("#SuccessMsg").attr("style","display:block");
+                                       }
+                                       else{
+                                           $("#ErrorMsg").html(data[0].reason);
+                                           $("#ErrorMsg").attr("style","display:block");
+                                       }
+                                       //$("#form1").hide();
+                                       $(".toBeHiddenOnSuccess").hide();
+
+                                    }
+                                }
+                                else {
+                                    console.log(v);
+                                }
+                            },
+                            error: function (jqXhr, textStatus, errorMessage) {
+                                alert("Error"+ errorMessage);
+                            }
+                        });
+                    }
+
+                }
+                else{
+                    $("#msgError").html("Please Select Location for User");
+                    $("#msgError").attr("style","display:block");
+                    $("#msgError").focus();
+                    flag="N";
+                }
+            }
+       }));
+</script>

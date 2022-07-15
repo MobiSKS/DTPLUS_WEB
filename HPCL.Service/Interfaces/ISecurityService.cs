@@ -34,5 +34,6 @@ namespace HPCL.Service.Interfaces
         Task<List<SuccessResponse>> UpdateUser([FromBody] AddNewUserReq entity);
         Task<ManageNewUserViewModel> GetManageUserForEdit(string UserName);
         Task<List<SuccessResponse>> DeleteLocationMapping([FromBody] AddNewUserReq entity);
+        Task<List<SuccessResponse>> UserCreationRequest([FromBody] UserCreationReqModel reqEntity);
     }
 }

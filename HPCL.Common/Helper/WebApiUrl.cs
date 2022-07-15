@@ -237,7 +237,8 @@
         public static string manageeditusers = "api/dtplus/UserManage/manage_edit_user";
         public static string updateuserrolelocation = "api/dtplus/UserManage/update_user_role_location";
         public static string manageusersrolelocationdelete = "api/dtplus/UserManage/manage_users_role_location_delete";
-        
+        public static string usercreationrequest = "api/dtplus/UserManage/user_creation_request";
+
 
         #endregion
 
