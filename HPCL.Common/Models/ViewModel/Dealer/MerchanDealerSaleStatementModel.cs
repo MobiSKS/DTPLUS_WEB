@@ -22,9 +22,11 @@ namespace HPCL.Common.Models.ViewModel.Dealer
         {
             ViewStatementDetails = new List<SaleStatementDetails>();
             TransactionDetails = new List<SaleStatementSummary>();
+            ViewCustomerMerchantDetails = new List<CustomerMerchantDetails>();
         }
         public List<SaleStatementSummary> TransactionDetails  { get; set; }
         public List<SaleStatementDetails> ViewStatementDetails { get; set; }
+        public List<CustomerMerchantDetails> ViewCustomerMerchantDetails { get; set; }
     }
     public class SaleStatementSummary
     {
@@ -50,5 +52,19 @@ namespace HPCL.Common.Models.ViewModel.Dealer
         public string Balance { get; set; }
    
 
+    }
+
+    public class CustomerMerchantDetails
+    {
+        public string IndividualOrgName { get; set; }
+        public string RetailOutletName { get; set; }
+        public string CustomerID { get; set; }
+        public string MerchantID { get; set; }
+        public string CustomerAddress { get; set; }
+        public string MerchantAddress { get; set; }
+        public string StatementDate { get; set; }
+        public string StatementPeriod { get; set; }
+        public string ReferenceNumber { get; set; }
+       
     }
 }
