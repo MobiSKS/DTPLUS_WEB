@@ -471,7 +471,8 @@
         public static string getcreditclosepayment = "api/dtplus/dealercredit/get_credit_close_payment";
         public static string generateotpcreditclosepayment = "api/dtplus/dealercredit/generate_otp_credit_close_payment";
         public static string validateotpupdatecreditclosepayment = "api/dtplus/dealercredit/validate_otp_update_credit_close_payment";
-
+        public static string getdownloadmerchantdealercreditsalestatement = "api/dtplus/dealercredit/get_download_merchant_dealer_credit_sale_statement";
+        
 
 
 
