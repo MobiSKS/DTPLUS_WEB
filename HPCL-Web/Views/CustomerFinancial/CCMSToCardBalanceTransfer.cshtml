@@ -119,6 +119,10 @@
 <script type="text/javascript">
 
     function resetClick() {
+        $("#custIdVal").attr("disabled", false);
+        $("#CardNo").attr("disabled", false);
+        $("#MobileNo").attr("disabled", false);
+
         window.location.reload(true);
     }
 
@@ -186,7 +190,7 @@
 
             document.getElementById("noRecord").style.display = "none";
              
-            RestBal = res.searchList.data.availableCcmsBalanceModelOutput[0].availableCcmsBalance;
+            RestBal = res.searchList.data.availableCcmsBalanceModelOutput[0].availableCcmsBalance.toFixed(2);
 
             $("#avalLimit").html("");
             $("#avalLimit").append("<p class='mb-0 text-center'>Available CCMS Balance : " + RestBal + "</p>");
@@ -232,9 +236,9 @@
                 var mobileno = "<span class='mobN'>" + (girdList[i].mobileno || '') + "</span>";
                 var issueDate = isDts;
                 var status = (girdList[i].status || '');
-                var balance = "<span class='balanceAmt' id='balanceId_"+i+"'>"+(girdList[i].balance)+"</span>";
-                var cashPurseLimit = "<span class='cashPurseLimit' id='cashPurseLimitId_"+i+"'>"+(girdList[i].cashPurseLimit)+"</span>";
-                var ccmsLimit = (girdList[i].ccmsLimitValue);
+                var balance = "<span class='balanceAmt' id='balanceId_"+i+"'>"+(girdList[i].balance.toFixed(2))+"</span>";
+                var cashPurseLimit = "<span class='cashPurseLimit' id='cashPurseLimitId_"+i+"'>"+(girdList[i].cashPurseLimit.toFixed(2))+"</span>";
+                var ccmsLimit = (girdList[i].ccmsLimitValue.toFixed(2));
                 var transAmt = "<div style='width:160px;display:flex;'><input maxlength='10' onblur='amtToTransChange(this," + (i) + ")' class='form-control txnAmt cgl' id='amtTotransId_"+i+"' name='AmountToTransfer' type='text' readonly='readonly'><i style='display:none;margin-top:10px;' class='fa fa-exclamation-triangle errss' id='amtToTrans_error_"+i+"' aria-hidden='true'></i></div>";
 
                 tbl.row.add([
@@ -251,7 +255,12 @@
                     transAmt
                 ]).draw();
                 
-                 document.getElementById('searchResSection').style.display = 'block';
+                 
+                $("#custIdVal").attr("disabled", true);
+                $("#CardNo").attr("disabled", true);
+                $("#MobileNo").attr("disabled", true);
+
+                document.getElementById('searchResSection').style.display = 'block';
             }
         } else {
             document.getElementById("searchResSection").style.display = "none";
