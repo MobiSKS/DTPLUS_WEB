@@ -25,7 +25,7 @@ namespace HPCL.Common.Models.ViewModel.AMEXBankCreditPouch
             });
             SBUTypes = new List<SbuTypeResponseModal>();
 
-            FromDate = DateTime.Now.AddMonths(-1).ToString("dd-MM-yyyy");
+            FromDate = DateTime.Now.ToString("dd-MM-yyyy");
             ToDate = DateTime.Now.ToString("dd-MM-yyyy");
         }
 
