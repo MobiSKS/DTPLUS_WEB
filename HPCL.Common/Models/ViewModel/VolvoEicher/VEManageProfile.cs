@@ -429,6 +429,7 @@ namespace HPCL.Common.Models.ViewModel.VolvoEicher
         public string CustomerName { get; set; }
         public string SignedOn { get; set; }
         public int SBUId { get; set; }
+        public string strSBU { get; set; }
     }
     public class VESearchGridResponse
     {
