@@ -10,6 +10,8 @@
         </ul>        
         <div id="successUpdate" class="mb-3 text-center alert alert-success" style="display:none;"></div>
 
+        <div id="ErrorResponse" class="mt-3 text-center alert alert-danger" style="display:none;"></div>
+
         <form id="formVal" method="post" data-ajax="true" data-ajax-controller="CustomerFinancial" data-ajax-action="CCMSToCardBalanceTransfer" data-ajax-method="POST" data-ajax-success="OnSuccess" data-ajax-failure="OnFailure">
             <div class="w-100">
                 <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
@@ -378,9 +380,17 @@
                         console.log("res",res);
                         $("#formVal").hide();
                         for(var i = 0; i < res.reasonList.data.length; i++){
-                             var bindRes = "<span>"+(res.reasonList.data[i].reason)+"</span><br>";
+                             if(res.reasonList.data[i].status == 1){
+                                 var bindRes = "<span>"+(res.reasonList.data[i].reason)+"</span><br>";
 
-                             $("#successUpdate").append(bindRes);
+                                 $("#successUpdate").append(bindRes);
+                                 document.getElementById('successUpdate').style.display = "block";
+                            }else{
+                                 var bindRes = "<span>"+(res.reasonList.data[i].reason)+"</span><br>";
+
+                                 $("#ErrorResponse").append(bindRes);
+                                 document.getElementById('ErrorResponse').style.display = "block";
+                            }
                         }
                         document.getElementById('successUpdate').style.display = "block";
                     },

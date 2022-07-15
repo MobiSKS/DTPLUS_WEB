@@ -11,6 +11,9 @@
     </ul>
      
    <div id="successUpdate" class="mb-3 text-center alert alert-success" style="display:none;"></div>
+   
+   <div id="ErrorResponse" class="mt-3 text-center alert alert-danger" style="display:none;"></div>
+
 
     <form id="formVal" method="post" data-ajax="true" data-ajax-controller="CustomerFinancial" data-ajax-action="CardToCardBalanceTransfer" data-ajax-method="POST" data-ajax-success="OnSuccess" data-ajax-failure="OnFailure">
         <div class="w-100">
@@ -218,6 +221,7 @@
                         checkBoxValid = "<input type='checkbox' class='checkEnable' name='enableRow'>";
                 }
 
+
                 var srNumber = (i+1);
                 var pressCheck = checkBoxValid;
                 var cardNumber = "<span class='cdn' id='fromCardNoId_"+i+"'>" + (girdList[i].cardNumber || '') + "</span>";
@@ -394,14 +398,23 @@
                     traditional: true,
                     data: { customerId: customerId, cardToCardTransfer: JSON.stringify(updateArray) },
                     success: function (res) {
+
                         console.log("res",res);
                         $("#formVal").hide();
                         for(var i = 0; i < res.reasonList.data.length; i++){
-                             var bindRes = "<span>"+(res.reasonList.data[i].reason)+"</span><br>";
 
-                             $("#successUpdate").append(bindRes);
+                            if(res.reasonList.data[i].status == 1){
+                                 var bindRes = "<span>"+(res.reasonList.data[i].reason)+"</span><br>";
+
+                                 $("#successUpdate").append(bindRes);
+                                 document.getElementById('successUpdate').style.display = "block";
+                            }else{
+                                 var bindRes = "<span>"+(res.reasonList.data[i].reason)+"</span><br>";
+
+                                 $("#ErrorResponse").append(bindRes);
+                                 document.getElementById('ErrorResponse').style.display = "block";
+                            }
                         }
-                        document.getElementById('successUpdate').style.display = "block";
                     },
                     error: function (ex) {
                         alert('Failed' + ex);
@@ -457,7 +470,7 @@
         
         if (chkEnable.checked) {
             var amountVal = o.value;
-            var balance = $('#balanceId_'+rowSelected).val();
+            var balance = $('#balanceId_'+rowSelected).text();
             var toCardNo = $('#toCardNoId_'+rowSelected).val();
 
             if(toCardNo.trim() == ''){
