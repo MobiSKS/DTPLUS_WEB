@@ -426,20 +426,21 @@
             e.preventDefault();
 
         if (flag == "Y") {
-         $("#approvalAmexList input[type=checkbox]:checked").each(function () {
-                var selectedRow = $(this).closest("tr")[0];
-                console.log("index",selectedRow.rowIndex);
-                var indexS = (selectedRow.rowIndex) - 1;
-                document.getElementById('remarks_error_'+indexS).style.display = "none";
-                $(this).closest("tr").find(".checkRow").prop('checked',false);
-                $(this).closest("tr").find('.remarksVal').val('');
-                $(this).closest("tr").find('.remarksVal').attr("readonly", true);
-                $(this).closest("tr").find('.actionVal').attr("readonly", true);
-                $(this).closest("tr").find('.actionVal').attr("disabled", true);
-            });
-
+            
             if (confirm('Are you sure! You want to process the selected record(s)?')) {
                 console.log('ok');
+
+                $("#approvalAmexList input[type=checkbox]:checked").each(function () {
+                    var selectedRow = $(this).closest("tr")[0];
+                    console.log("index",selectedRow.rowIndex);
+                    var indexS = (selectedRow.rowIndex) - 1;
+                    document.getElementById('remarks_error_'+indexS).style.display = "none";
+                    $(this).closest("tr").find(".checkRow").prop('checked',false);
+                    $(this).closest("tr").find('.remarksVal').val('');
+                    $(this).closest("tr").find('.remarksVal').attr("readonly", true);
+                    $(this).closest("tr").find('.actionVal').attr("readonly", true);
+                    $(this).closest("tr").find('.actionVal').attr("disabled", true);
+                });
 
                 $.ajax({
                     url: "@Url.Action("SubmitRequestApproval", "AMEXBankCreditPouch")",

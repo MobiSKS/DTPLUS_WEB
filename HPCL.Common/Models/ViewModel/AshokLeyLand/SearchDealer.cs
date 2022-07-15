@@ -6,5 +6,6 @@ namespace HPCL.Common.Models.ViewModel.AshokLeyLand
     {
         public string DealerCode { get; set; }
         public string DTPDealerCode { get; set; }
+        public string OfficerType { get; set; }
     }
 }

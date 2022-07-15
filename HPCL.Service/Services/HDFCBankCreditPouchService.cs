@@ -309,5 +309,36 @@ namespace HPCL.Service.Services
             List<SuccessResponse> reasonList = jarr.ToObject<List<SuccessResponse>>();
             return reasonList;
         }
+
+        public async Task<GetTransactionStatusRes> CustomerTransactionStatus(GetTransactionStatus entity)
+        {
+            string fromDate = "", toDate = "";
+            if (!string.IsNullOrEmpty(entity.FromDate) && !string.IsNullOrEmpty(entity.FromDate))
+            {
+                fromDate = await _commonActionService.changeDateFormat(entity.FromDate);
+                toDate = await _commonActionService.changeDateFormat(entity.ToDate);
+            }
+            else
+            {
+                fromDate = DateTime.Now.ToString("yyyy-MM-dd");
+                toDate = DateTime.Now.ToString("yyyy-MM-dd");
+            }
+
+            var searchBody = new GetTransactionStatus
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                CustomerId = entity.CustomerId,
+                FromDate = fromDate,
+                ToDate = toDate
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.CustomerTransactionStatusUrl);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            GetTransactionStatusRes searchList = obj.ToObject<GetTransactionStatusRes>();
+            return searchList;
+        }
     }
 }

@@ -48,6 +48,7 @@ namespace HPCL.Service
             services.AddTransient<IAMEXBankCreditPouchService, AMEXBankCreditPouchService>();
             services.AddTransient<IICICIBankCreditPouchService, ICICIBankCreditPouchService>();
             services.AddTransient<ICustomerSearchService, CustomerSearchService>();
+            services.AddTransient<IJCBService, JCBService>();
             return services;
         }
     }

@@ -26,7 +26,7 @@ namespace HPCL.Common.Models.ViewModel.ICICIBankCreditPouch
             SBUTypes = new List<SbuTypeResponseModal>();
 
 
-            FromDate = DateTime.Now.AddMonths(-1).ToString("dd-MM-yyyy");
+            FromDate = DateTime.Now.ToString("dd-MM-yyyy");
             ToDate = DateTime.Now.ToString("dd-MM-yyyy");
         }
         //[Required(ErrorMessage = FieldValidation.CustomerNotEmpty)]

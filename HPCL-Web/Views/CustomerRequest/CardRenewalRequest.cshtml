@@ -32,7 +32,7 @@
                                         <div class="form-group d-flex align-items-center flex-wrap">
                                             <label class="font-weight-normal col-md-4 col-12 mb-0 offset-md-1">Card Number</label>
                                             <div class="col-md-7 col-12">
-                                                @Html.TextBoxFor(m => m.CardNo, new { @class = "form-control restrictPaste", onkeypress = "return isNumberKey(event)" })
+                                                @Html.TextBoxFor(m => m.CardNo, new {@id="cardNoVal", @class = "form-control restrictPaste", onkeypress = "return isNumberKey(event)" })
                                                 @Html.ValidationMessageFor(m => m.CardNo, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
@@ -57,7 +57,7 @@
                                         <thead>
                                             <tr>
                                                 <th>S.No.</th>
-                                                <th></th>
+                                                <th><input type="checkbox" name="allListCheck" class="checkAll" /></th>
                                                 <th>Customer ID</th>
                                                 <th>Customer Name</th>
                                                 <th style="width:1%">Card Numer</th>
@@ -133,6 +133,8 @@
     });
 
     function resetClick() {
+        $("#CustomerDefaultVal").attr("readonly", false);
+        $("#cardNoVal").attr("readonly", false);
         window.location.reload(true);
     }
 
@@ -187,6 +189,9 @@
                 ]).draw();
             }
 
+            $("#CustomerDefaultVal").attr("readonly", true);
+            $("#cardNoVal").attr("readonly", true);
+
             document.getElementById("UpdateGrid").style.display = "grid";
         } else {
             document.getElementById("UpdateGrid").style.display = "none";
@@ -197,6 +202,13 @@
         }
     }
 
+    $(".checkAll").click(function () {
+        if (this.checked) {
+            $(".checkEnable").prop("checked", true);
+        } else {
+            $(".checkEnable").prop("checked", false);
+        }
+    });
 
     function updateCards(){
 
@@ -246,8 +258,8 @@
                         if(res.reasonList[0].status == 1){
                             document.getElementById("noRecord").style.display = "none";
                             document.getElementById("UpdateGrid").style.display = "none";
-                            $("#CustomerDefaultVal").val('');
-                            $("#CardNo").val('');
+                            //$("#CustomerDefaultVal").val('');
+                            //$("#CardNo").val('');
                             $("#successUpdate").html("");
                             $("#successUpdate").append("<span>" + res.reasonList[0].reason + "</span>");
                             document.getElementById("successUpdate").style.display = "block";

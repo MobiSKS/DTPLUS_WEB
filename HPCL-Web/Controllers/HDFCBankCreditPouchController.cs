@@ -185,7 +185,16 @@ namespace HPCL_Web.Controllers
 
         public IActionResult CustomerTransactionStatus()
         {
-            return View();
+            GetTransactionStatus entity = new GetTransactionStatus();
+            return View(entity);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> CustomerTransactionStatus(GetTransactionStatus entity)
+        {
+            var searchList = await _hDFCBankCreditPouchService.CustomerTransactionStatus(entity);
+            ModelState.Clear();
+            return Json(new { searchList = searchList });
         }
     }
 }
