@@ -103,6 +103,18 @@ namespace HPCL_Web.Controllers
             ViewBag.Message = Message;
             return View();
         }
+        public async Task<IActionResult> ViewJCBUnmappedOTCCards()
+        {
+            ViewJCBUnmappedOTCCardsModel Model = new ViewJCBUnmappedOTCCardsModel();
+            Model = await _jcbService.ViewJCBUnmappedOTCCards();
+
+            return View(Model);
+        }
+        public async Task<IActionResult> GetViewJCBOTCCardDealerAllocation(string DealerCode, string CardNo)
+        {
+            var modals = await _jcbService.GetViewJCBOTCCardDealerAllocation(DealerCode, CardNo);
+            return PartialView("~/Views/JCB/_JCBOTCCardsDealerAllocationTable.cshtml", modals);
+        }
 
     }
 }

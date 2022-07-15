@@ -1,5 +1,6 @@
 ﻿using HPCL.Common.Helper;
 using HPCL.Common.Models;
+using HPCL.Common.Models.RequestModel.JCB;
 using HPCL.Common.Models.RequestModel.Merchant;
 using HPCL.Common.Models.ResponseModel.AshokLayland;
 using HPCL.Common.Models.ResponseModel.Customer;
@@ -240,6 +241,34 @@ namespace HPCL.Service.Services
             }
 
             return model;
+        }
+        public async Task<ViewJCBUnmappedOTCCardsModel> ViewJCBUnmappedOTCCards()
+        {
+            ViewJCBUnmappedOTCCardsModel model = new ViewJCBUnmappedOTCCardsModel();
+            model.Remarks = "";
+            return model;
+        }
+
+        public async Task<JCBOTCCardDealerAllocationResponse> GetViewJCBOTCCardDealerAllocation(string DealerCode, string CardNo)
+        {
+            var searchBody = new GetJCBOTCCardDealerAllocationRequestModel()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                DealerCode = DealerCode,
+                CardNo = string.IsNullOrEmpty(CardNo) ? "" : CardNo
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+
+            var ResponseContent = await _requestService.CommonRequestService(content, WebApiUrl.viewJcbDealerOtcCardDetail);
+
+            JCBOTCCardDealerAllocationResponse response = new JCBOTCCardDealerAllocationResponse();
+
+            response = JsonConvert.DeserializeObject<JCBOTCCardDealerAllocationResponse>(ResponseContent);
+
+            return response;
         }
 
     }

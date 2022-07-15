@@ -602,6 +602,7 @@
         public static string getJcbDealerDetail = "api/dtplus/JCB/get_jcb_dealer_detail";
         public static string getJcbBalanceOtcCard = "api/dtplus/JCB/get_jcb_balance_otc_card";
         public static string insertDealerWiseJcbOtcCardRequest = "api/dtplus/JCB/insert_dealer_wise_jcb_otc_card_request";
+        public static string viewJcbDealerOtcCardDetail = "api/dtplus/JCB/view_jcb_dealer_otc_card_detail";
         #endregion
     }
 }
