@@ -223,6 +223,10 @@ namespace HPCL_Web.Controllers
             var resp = await _dealerService.ValidateotpCreditClosePayment(dealerRequestModel);
             return Json(resp);
         }
-
+        //public async Task<IActionResult> GetCreditSaleStatementforDownload(string CustomerID, string MerchantID, string SearchDate)
+        //{
+        //    var modals = await _dealerService.GetCreditSaleStatementforDownload(CustomerID, MerchantID, SearchDate);
+        //    return PartialView("~/Views/Dealer/_MerchantDealerCreditSaleStatementTbl.cshtml", modals);
+        //}
     }
 }

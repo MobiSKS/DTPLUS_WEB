@@ -237,7 +237,8 @@
         public static string manageeditusers = "api/dtplus/UserManage/manage_edit_user";
         public static string updateuserrolelocation = "api/dtplus/UserManage/update_user_role_location";
         public static string manageusersrolelocationdelete = "api/dtplus/UserManage/manage_users_role_location_delete";
-        
+        public static string usercreationrequest = "api/dtplus/UserManage/user_creation_request";
+
 
         #endregion
 
@@ -471,7 +472,8 @@
         public static string getcreditclosepayment = "api/dtplus/dealercredit/get_credit_close_payment";
         public static string generateotpcreditclosepayment = "api/dtplus/dealercredit/generate_otp_credit_close_payment";
         public static string validateotpupdatecreditclosepayment = "api/dtplus/dealercredit/validate_otp_update_credit_close_payment";
-
+        public static string getdownloadmerchantdealercreditsalestatement = "api/dtplus/dealercredit/get_download_merchant_dealer_credit_sale_statement";
+        
 
 
 
@@ -525,10 +527,9 @@
         public static string getchildmappingdetails = "api/dtplus/ParentCustomer/get_child_mapping_details";
         public static string pcdrivestarsbalanceinfo = "api/dtplus/ParentCustomer/pc_drivestars_balance_info";
         public static string customerparentmappingeligibility = "api/dtplus/ParentCustomer/customer_parent_mapping_eligibility";
+        public static string getparentcustomercontrolcardsearch = "api/dtplus/ParentCustomer/get_parent_customer_control_card_search";
+        public static string parentcustomercontrolcardpinreset = "api/dtplus/ParentCustomer/parent_customer_control_card_pin_reset";
         
-
-
-
 
         #endregion
 
@@ -599,6 +600,9 @@
         public static string insertJcbDealerEnrollment = "api/dtplus/JCB/insert_jcb_dealer_enrollment";
         public static string updateJcbDealerEnrollment = "api/dtplus/JCB/update_jcb_dealer_enrollment";
         public static string getJcbDealerDetail = "api/dtplus/JCB/get_jcb_dealer_detail";
+        public static string getJcbBalanceOtcCard = "api/dtplus/JCB/get_jcb_balance_otc_card";
+        public static string insertDealerWiseJcbOtcCardRequest = "api/dtplus/JCB/insert_dealer_wise_jcb_otc_card_request";
+        public static string viewJcbDealerOtcCardDetail = "api/dtplus/JCB/view_jcb_dealer_otc_card_detail";
         #endregion
 
         #region "Customer Dashboard"

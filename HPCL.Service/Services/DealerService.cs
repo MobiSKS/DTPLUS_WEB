@@ -453,7 +453,27 @@ namespace HPCL.Service.Services
             List<SuccessResponse> resp = successRes.ToObject<List<SuccessResponse>>();
             return resp;
         }
+        public async Task<MerchanDealerSaleStatementModel> GetCreditSaleStatementforDownload(string CustomerID, string MerchantID, string SearchDate)
+        {
+            MerchanDealerSaleStatementModel merchanDealerSaleStatementModel = new MerchanDealerSaleStatementModel();
+            SearchDate = await _commonActionService.changeDateFormat(SearchDate);
+            var searchBody = new DealerRequestModel
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                CustomerID = CustomerID == null ? "" : CustomerID,
+                MerchantID = MerchantID,
+                StatementDate = SearchDate,
 
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getdownloadmerchantdealercreditsalestatement);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            merchanDealerSaleStatementModel = obj.ToObject<MerchanDealerSaleStatementModel>();
+            return merchanDealerSaleStatementModel;
+        }
     }
 
 }

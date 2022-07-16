@@ -241,17 +241,17 @@ namespace HPCL_Web.Controllers
         public async Task<JsonResult> AddUser([FromBody] AddNewUserReq entity)
         {
             var result = await _securityService.AddUser(entity);
-            
+
             return Json(result);
         }
 
-        public async Task<IActionResult> UpdateUserandLocations(string UserName,string Email, string update)
+        public async Task<IActionResult> UpdateUserandLocations(string UserName, string Email, string update)
         {
 
             var modals = await _securityService.GetManageUserForEdit(UserName);
             modals.getUserRolesandregions.Add(await _securityService.GetUserRolesAndRegions());
-            modals.UserName=UserName;
-            modals.Email=Email;
+            modals.UserName = UserName;
+            modals.Email = Email;
             ViewBag.Update = String.IsNullOrEmpty(update) ? "No" : update;
             return View(modals);
         }
@@ -275,5 +275,22 @@ namespace HPCL_Web.Controllers
             modals.getUserRolesandregions.Add(await _securityService.GetUserRolesAndRegions());
             return Json(modals);
         }
+        public async Task<IActionResult> UserCreationRequest()
+        {
+
+            var modals = new UserCreationRequestModel();
+            modals.getUserRolesandregions.Add(await _securityService.GetUserRolesAndRegions());
+
+            return View(modals);
+        }
+        [HttpPost]
+        public async Task<JsonResult> UserCreationRequest([FromBody]UserCreationReqModel reqEntity)
+        {
+
+            var modals=await _securityService.UserCreationRequest(reqEntity);
+
+            return Json(modals);
+        }
+      
     }
 }

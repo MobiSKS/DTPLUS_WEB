@@ -251,9 +251,9 @@ namespace HPCL_Web.Controllers
             return Json(new { hotlistReasonList = hotlistReasonList });
         }
 
-        public async Task<JsonResult> GetCreditPouchStatus()
+        public async Task<JsonResult> GetCreditPouchStatus(string pagename)
         {
-            var getStatus = await _commonActionService.GetCreditPouchStatus();
+            var getStatus = await _commonActionService.GetCreditPouchStatus(pagename);
             return Json(new { getStatus = getStatus });
         }
         [HttpPost]

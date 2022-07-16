@@ -10,6 +10,11 @@ namespace HPCL.Common.Models.ResponseModel.VolvoEicher
     public class VEOTCCardDealerAllocationResponse : CommonResponseBase
     {
         public VEOTCCardResponseData Data { get; set; }
+
+        public VEOTCCardDealerAllocationResponse()
+        {
+            Data = new VEOTCCardResponseData();
+        }
     }
 
     public class VEOTCCardResponseData
