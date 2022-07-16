@@ -148,7 +148,19 @@ namespace HPCL_Web.Controllers
                             HttpContext.Session.SetString("UserId", loginRes[0].UserId);
                             //HttpContext.Session.SetString("Today", DateTime.Now.ToString("yyyy-MM-dd"));
 
-                            return RedirectToAction("Profile");
+                            if (loginRes[0].LoginType == "Customer")
+                            {
+                                return RedirectToAction("Dashboard", "CustomerDashboard");
+                            }
+                            else if (loginRes[0].LoginType == "Merchant")
+                            {
+                                return RedirectToAction("Dashboard", "MerchantDashboard");
+                            }
+                            else
+                            {
+                                return RedirectToAction("Profile");
+                            }
+
                         }
                         else
                         {

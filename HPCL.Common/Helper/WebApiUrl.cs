@@ -600,5 +600,15 @@
         public static string updateJcbDealerEnrollment = "api/dtplus/JCB/update_jcb_dealer_enrollment";
         public static string getJcbDealerDetail = "api/dtplus/JCB/get_jcb_dealer_detail";
         #endregion
+
+        #region "Customer Dashboard"
+        public static string customerDashboardVerifyYourDetails = "api/dtplus/customerdashboard/customer_dashboard_verify_your_details";
+        public static string customerDashboardAccountSummary = "api/dtplus/customerdashboard/customer_dashboard_account_summary";
+        public static string customerDashboardLastTransactions = "api/dtplus/customerdashboard/customer_dashboard_last_transactions";
+        public static string customerDashboardKeyEvent = "api/dtplus/customerdashboard/customer_dashboard_key_event";
+        public static string customerDashboardLatestDrivestarsTransactions = "api/dtplus/customerdashboard/customer_dashboard_latest_drivestars_transactions";
+        public static string customerDashboardReminder = "api/dtplus/customerdashboard/customer_dashboard_reminder";
+        public static string customerDashboardUpdateVerifyYourDetails = "api/dtplus/customerdashboard/customer_dashboard_update_verify_your_details";
+        #endregion
     }
 }

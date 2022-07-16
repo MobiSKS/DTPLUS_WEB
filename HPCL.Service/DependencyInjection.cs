@@ -49,6 +49,8 @@ namespace HPCL.Service
             services.AddTransient<IICICIBankCreditPouchService, ICICIBankCreditPouchService>();
             services.AddTransient<ICustomerSearchService, CustomerSearchService>();
             services.AddTransient<IJCBService, JCBService>();
+            services.AddTransient<ICustomerDashBoardServices, CustomerDashBoardService>();
+
             return services;
         }
     }
