@@ -254,5 +254,15 @@ namespace HPCL_Web.Controllers
             var modals = await _customerService.GetCustomerControlCard(CustomerID );
             return PartialView("~/Views/ParentCustomer/_ControlCardDetailsTbl.cshtml", modals);
         }
+        public async Task<IActionResult> ControlCardPinReset()
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<JsonResult> SubmitRestPinforParentCustomer([FromBody] ParentCustomerSearchRequestModel reqModel)
+        {
+            var modals = await _customerService.SubmitRestPinforParentCustomer(reqModel);
+            return Json(modals);
+        }
     }
 }

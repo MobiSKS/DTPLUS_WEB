@@ -1210,5 +1210,26 @@ namespace HPCL.Service.Services
 
             return controlCardDetails;
         }
+        public async Task<List<SuccessResponse>> SubmitRestPinforParentCustomer([FromBody] ParentCustomerSearchRequestModel reqModel)
+        {
+            var reqBody = new ParentCustomerSearchRequestModel
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                CustomerID = reqModel.CustomerID,
+                ControlCardNo = reqModel.ControlCardNo, 
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.parentcustomercontrolcardpinreset);
+
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<SuccessResponse> res = jarr.ToObject<List<SuccessResponse>>();
+            return res;
+        }
     }
 }
