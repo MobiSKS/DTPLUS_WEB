@@ -1,6 +1,6 @@
 ﻿@model HPCL.Common.Models.ViewModel.Security.UserCreationRequestModel
 @using Microsoft.AspNetCore.Http;
-<div class="col-lg-12 p-4 p-md-4">
+<div class="col-lg-12">
     <div class="bg-white p-2 p-md-4">
         <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
             <li class="breadcrumb-item"><a href="@Url.Action("Index")" class="text_primary">Security</a> </li>
@@ -11,8 +11,8 @@
         @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "form1", name = "form1", @class = "toBeHiddenOnSuccess" }))
         {
             <div class="w-100">
-                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mb-3">
-                    <div class="border-1 rounded border-grey w-100 mt-3">
+                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mb-0">
+                    <div class="border-1 rounded border-grey w-100 mt-0">
                         <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">User Creation Request</p>
                         <div class="col-lg-12 col-md-12 col-12 py-3">
                             <div class="d-flex align-items-center justify-content-between flex-wrap row">
@@ -20,17 +20,16 @@
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                         <label class="font-weight-normal col-md-2 col-12">Name <sup class="text-danger">*</sup></label>
                                         <div class="col-md-10 col-12">
-
                                             <div class="row">
-                                                <div class="col-3">
+                                                <div class="col-lg-4 col-12">
                                                     @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control",@placeholder="First Name" })
                                                     <span class="error" id="first_name_error"></span>
                                                 </div>
-                                                <div class="col-3">
+                                                <div class="col-lg-4 col-12">
                                                     @Html.TextBoxFor(m => m.MiddleName, new { @class = "form-control",@placeholder="Middle Name"})
                                                     <span class="error" id="middle_name_error"></span>
                                                 </div>
-                                                <div class="col-3">
+                                                <div class="col-lg-4 col-12">
                                                     @Html.TextBoxFor(m => m.LastName, new { @class = "form-control",@placeholder="Last Name" })
                                                     <span class="error" id="last_name_error"></span>
                                                 </div>
@@ -38,7 +37,6 @@
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
                             <div class="d-flex align-items-center justify-content-between flex-wrap row">
 
@@ -53,26 +51,22 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="d-flex align-items-center justify-content-between flex-wrap row">
                                 <div class="col-lg-6 col-md-12 col-12">
                                     <div class="form-group d-flex align-items-center flex-wrap">
-                                        <label class="font-weight-normal col-md-4 col-12">Comments <sup class="text-danger">*</sup></label>
+                                        <label class="font-weight-normal col-md-4 col-12 mb-4">Comments <sup class="text-danger">*</sup></label>
                                         <div class="col-md-8 col-12">
                                             <div class="custom_select">
 
                                                 @Html.TextAreaFor(m => m.Comments, new { @class = "form-control", maxlength = "1000",autocomplete = "off",@row = "5", @style = "resize: none;"})
                                                 <span class="error" style="display:none" id="comments_error"></span>
-                                                <p id="charRemining"></p>
+                                                <p class="mb-0" id="charRemining"></p>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
-
                         </div>
-
+                    <div class="clearfix"></div>
                     </div>
                     <div class="clearfix"></div>
                     <div id="msgError" tabindex="0" class="mb-3 text-center alert alert-danger" style="display:none"></div>
@@ -89,7 +83,7 @@
                                             <ul id="UserRoleList" style="max-height:400px; overflow-y:scroll;">
                                                 @foreach (var item in Model.getUserRolesandregions.First().Data.UserRoles)
                                                 {
-                                                    <li id="@item.ID">@item.UserRole</li>
+                                                    <li class="userRolelist" id="@item.ID">@item.UserRole</li>
 
                                                 }
 
@@ -185,40 +179,44 @@
                             </div>
                         </div>
                     </div>
-                    <div class="clearfix"></div>
-                    <div class="d-flex align-items-center justify-content-center mt-0">
+                    <div class="d-flex align-items-center justify-content-center mt-3">
                         <div class="px-0">
                             <button class="btn btn_primary" id="btnShow" type="button">SUBMIT</button>
                         </div>
                     </div>
-                    <div class="clearfix"></div>
                 </div>
-
+            </div>
+            <div class="clearfix"></div>
+        }
+        <div id="show_Table" class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3">
+            <div class="border-1 rounded border-grey w-100 mt-3 toBeHiddenOnSuccess" id="UserReqDetails" style="display:none">
                 <div class="clearfix"></div>
-                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mb-3 toBeHiddenOnSuccess" style="display:none" id="UserReqDetails">
-                    <table id="LocRoleMappingTbl" class="table table-striped d-block d-md-table table-bordered table-responsive mt-3" style="width:100%;">
-                        <thead>
-                            <tr>
-                                <th>Role</th>
-                                <th>Location</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
+                <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">User Roles</p>
+                <div class="p-md-3">
+                <table id="LocRoleMappingTbl" class="table table-striped d-block d-md-table table-bordered table-responsive" style="width:100%;">
+                    <thead>
+                        <tr>
+                            <th style="width:30%">Role</th>
+                            <th style="width:60%">Location</th>
+                            <th style="width:10%">Action</th>
+                        </tr>
+                    </thead>
 
-                    </table>
-                    <div class="clearfix"></div>
-                    <div class="d-flex align-items-center justify-content-center mt-0">
-                        <div class="px-0">
-                            <button class="btn btn_primary" id="btnSave" type="button">SUBMIT</button>
-                        </div>
+                </table>
+                </div>
+                <div class="clearfix"></div>
+                <div class="d-flex align-items-center justify-content-center mb-3">
+                    <div class="px-0">
+                        <button class="btn btn_primary" id="btnSave" type="button">SUBMIT</button>
                     </div>
                 </div>
             </div>
-        }
+        </div>
+        <div class="clearfix"></div>
     </div>
 
 </div>
-<div class="clearfix"></div>
+
 
 <script type="text/javascript">
      var selectedRole="";
@@ -402,7 +400,7 @@
                     rows += "</tr></tbody>";
                     $("#LocRoleMappingTbl").append(rows);
                     $("#UserReqDetails").attr("style","display:block");
-                    $("li").addClass("disable");
+                    $("li.userRolelist").addClass("disable");
                      $('input:checkbox').addClass("disable");
                       $('.panel').addClass("disable");
                 }
@@ -514,10 +512,10 @@
             currentRow = $(this).closest("tr");
             currentRow.remove();
             $("#UserReqDetails").attr("style","display:none");
-            $("li").removeClass("disable");
+            $("li.userRolelist").removeClass("disable");
             $('input:checkbox').removeClass("disable");
             $('.panel').removeClass("disable");
-            $('li').removeClass("usr_active");
+            $('li.userRolelist').removeClass("usr_active");
             $('input:checkbox').prop('checked', false);
          }
     });

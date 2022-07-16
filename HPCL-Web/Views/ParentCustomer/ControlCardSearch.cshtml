@@ -1,0 +1,130 @@
+﻿@model HPCL.Common.Models.ViewModel.ParentCustomer.ControlCardSearchModel
+@using HPCL.Common.Resources
+
+
+<div class="col-lg-12 px-0">
+    <div class="bg-white p-2 p-md-4" style="overflow: hidden;">
+        <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
+            <li class="breadcrumb-item"><a href="@Url.Action("Search","ParentCustomer")" class="text_primary">Search</a> </li>
+            <li class="breadcrumb-item font-weight-light">Control Card Search</li>
+        </ul>
+        <form>
+            <div class="w-100">
+                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
+                    <div class="border-1 rounded border-grey pb-3">
+                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Control Card Search</p>
+
+                        <div class="col-lg-12 col-md-12 col-12 py-3">
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">Customer ID <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12 offset-md-1">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.CustomerID, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                <span class="error" id="CustomerID_error"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="d-flex align-items-center justify-content-center mt-0">
+                                <div class="px-2">
+                                    <button class="btn btn_primary" type="button" id="btnSearch">@Label.Search</button>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+
+                </div>
+                <div class="clearfix"></div>
+
+            </div>
+        </form>
+
+        <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3 toBeHiddenOnSuccess" id="customerCardDetailsTbl">
+        </div>
+
+    </div>
+    <div class="clearfix"></div>
+</div>
+<script type="text/javascript">
+        $(document).ready(function () {
+         
+        });
+
+
+        $("#btnSearch").click(function () {
+            var flag="Y";
+            var customerID = document.getElementById("CustomerID").value.trim();
+            if (customerID == "") {
+                document.getElementById("CustomerID_error").innerHTML = "Enter Customer ID";
+                $("#CustomerID").focus;
+                flag="N";
+                return (false);
+            }
+            else {
+                if (!customerID.match(mappedCustomerId)) {
+                    $("#CustomerID_error").attr("style", "display:block");
+                    $("#CustomerID_error").html("Customer ID is a 10 digit number starting with 2 or 4");
+                    flag="N";
+                    return (false);
+                }
+                else {
+                    document.getElementById("CustomerID_error").innerHTML = "";
+                }
+
+            }
+            if(flag=="Y"){
+                 $.ajax({
+                    type: 'GET',  // http method
+                    url: '@Url.Action("GetCustomerControlCard", "ParentCustomer")',
+                    data: { CustomerID: customerID },
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "text",
+                    success: function (data,status,xhr) {
+                        var v = data;
+                        debugger;
+                        
+                            $("#customerCardDetailsTbl").html("");
+                            $("#customerCardDetailsTbl").html(data);
+                            $("#customerCardDetailsTbl").attr("style","display:block");
+                            $('html, body').animate({
+                                scrollTop: $("#customerCardDetailsTbl").offset().top
+                            }, 2000);
+                       
+
+                    },
+                    error: function (jqXhr, textStatus, errorMessage) {
+                        alert("Error" + errorMessage);
+                    }
+                });
+            }
+        });
+    $("#CustomerID").on("blur", function ()
+    {
+        //debugger;
+        if (document.getElementById("CustomerID").value.trim() == "")
+        {
+            $("#CustomerID_error").attr("style", "display:block");
+            $("#CustomerID_error").html("Enter Customer ID");
+            return false;
+        }
+        else if (!$("#CustomerID").val().match(mappedCustomerId))
+        {
+            $("#CustomerID_error").attr("style", "display:block");
+            $("#CustomerID_error").html("Customer ID is a 10 digit number starting with 2 or 4");
+            return false;
+        }
+        else
+        {
+            $("#CustomerID_error").html("");
+        }
+
+    });
+
+</script>
