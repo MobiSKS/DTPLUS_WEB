@@ -528,7 +528,9 @@
         public static string pcdrivestarsbalanceinfo = "api/dtplus/ParentCustomer/pc_drivestars_balance_info";
         public static string customerparentmappingeligibility = "api/dtplus/ParentCustomer/customer_parent_mapping_eligibility";
         public static string getparentcustomercontrolcardsearch = "api/dtplus/ParentCustomer/get_parent_customer_control_card_search";
+        public static string parentcustomercontrolcardpinreset = "api/dtplus/ParentCustomer/parent_customer_control_card_pin_reset";
         
+
         #endregion
 
         #region Volvo Eicher
