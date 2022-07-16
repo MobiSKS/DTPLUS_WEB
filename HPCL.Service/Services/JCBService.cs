@@ -366,6 +366,110 @@ namespace HPCL.Service.Services
 
             return searchList;
         }
+        public async Task<JCBCustomerEnrollmentModel> JCBCustomerEnrollment(JCBCustomerEnrollmentModel customerModel)
+        {
+            customerModel.UserAgent = CommonBase.useragent;
+            customerModel.UserIp = CommonBase.userip;
+            customerModel.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
+            customerModel.CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId");
+            customerModel.CommunicationPhoneNo = (string.IsNullOrEmpty(customerModel.CommunicationDialCode) ? "" : customerModel.CommunicationDialCode) + "-" + (string.IsNullOrEmpty(customerModel.CommunicationPhonePart2) ? "" : customerModel.CommunicationPhonePart2);
+            if (!string.IsNullOrEmpty(customerModel.CommunicationEmailid))
+            {
+                customerModel.CommunicationEmailid = customerModel.CommunicationEmailid.ToLower();
+            }
+            foreach (JCBCardEntryDetails cardDetails in customerModel.ObjJCBCardEntryDetail)
+            {
+                if (!string.IsNullOrEmpty(cardDetails.VechileNo))
+                {
+                    cardDetails.VechileNo = cardDetails.VechileNo.ToUpper();
+                }
+                else
+                {
+                    cardDetails.VechileNo = "";
+                }
+                if (string.IsNullOrEmpty(cardDetails.MobileNo))
+                {
+                    cardDetails.MobileNo = "";
+                }
+            }
+
+            MultipartFormDataContent form = new MultipartFormDataContent();
+
+            form.Add(new StringContent(customerModel.CreatedBy), "CreatedBy");
+            form.Add(new StringContent(customerModel.IndividualOrgName), "IndividualOrgName");
+            form.Add(new StringContent(customerModel.IndividualOrgNameTitle), "IndividualOrgNameTitle");
+            form.Add(new StringContent(customerModel.NameOnCard), "NameOnCard");
+            form.Add(new StringContent(customerModel.CommunicationAddress1), "CommunicationAddress1");
+            form.Add(new StringContent(customerModel.CommunicationAddress2), "CommunicationAddress2");
+            form.Add(new StringContent(customerModel.CommunicationCityName), "CommunicationCityName");
+            form.Add(new StringContent(customerModel.CommunicationPincode), "CommunicationPincode");
+            form.Add(new StringContent(customerModel.CommunicationStateId.ToString()), "CommunicationStateId");
+            form.Add(new StringContent(customerModel.CommunicationDistrictId.ToString()), "CommunicationDistrictId");
+            form.Add(new StringContent(string.IsNullOrEmpty(customerModel.CommunicationPhoneNo) ? "" : customerModel.CommunicationPhoneNo), "CommunicationPhoneNo");
+            form.Add(new StringContent(string.IsNullOrEmpty(customerModel.CommunicationPhoneNo) ? "" : customerModel.CommunicationPhoneNo), "CommunicationFax");
+            form.Add(new StringContent(customerModel.CommunicationMobileNo), "CommunicationMobileNo");
+            form.Add(new StringContent(customerModel.CommunicationEmailid), "CommunicationEmailid");
+            form.Add(new StringContent("Y"), "CopyofDriverLicense");
+            form.Add(new StringContent("Y"), "CopyofVehicleRegistrationCertificate");
+            form.Add(new StringContent(customerModel.DealerCode), "DealerCode");
+            form.Add(new StringContent(string.IsNullOrEmpty(customerModel.SalesExecutiveEmployeeID) ? "" : customerModel.SalesExecutiveEmployeeID), "SalesExecutiveEmployeeID");
+            form.Add(new StreamContent(customerModel.AddressProof.OpenReadStream()), "AddressProof", customerModel.AddressProof.FileName);
+            form.Add(new StreamContent(customerModel.IDProof.OpenReadStream()), "IDProof", customerModel.IDProof.FileName);
+            form.Add(new StreamContent(customerModel.PanCardProof.OpenReadStream()), "PanCardProof", customerModel.PanCardProof.FileName);
+            form.Add(new StringContent(string.IsNullOrEmpty(customerModel.PanCardNumber) ? "" : customerModel.PanCardNumber), "PanCardNumber");
+
+            foreach (JCBCardEntryDetails item in customerModel.ObjJCBCardEntryDetail)
+            {
+                form.Add(new StringContent(item.VechileNo.ToUpper().ToString()), "VechileNo");
+                form.Add(new StringContent(item.CardNo.ToUpper().ToString()), "CardNo");
+                form.Add(new StringContent(item.MobileNo.ToString()), "MobileNo");
+                form.Add(new StringContent(item.VehicleType.ToString()), "VehicleType");
+                form.Add(new StringContent(item.VINNumber.ToString()), "VINNumber");
+                form.Add(new StreamContent(item.RCProof.OpenReadStream()), "RcCopyProof", item.RCProof.FileName);
+            }
+
+            form.Add(new StringContent(customerModel.UserId), "Userid");
+            form.Add(new StringContent(customerModel.UserAgent), "Useragent");
+            form.Add(new StringContent(customerModel.UserIp), "Userip");
+
+            var response = await _requestService.FormDataRequestService(form, WebApiUrl.insertJcbCustomer);
+
+            var settings = new JsonSerializerSettings
+            {
+                NullValueHandling = NullValueHandling.Ignore,
+                MissingMemberHandling = MissingMemberHandling.Ignore
+            };
+
+            CustomerResponse customerResponse = JsonConvert.DeserializeObject<CustomerResponse>(response);
+
+            customerModel.Internel_Status_Code = customerResponse.Internel_Status_Code;
+            customerModel.Remarks = customerResponse.Message;
+
+            foreach (JCBCardEntryDetails cardDetails in customerModel.ObjJCBCardEntryDetail)
+            {
+                cardDetails.VehicleNoMsg = "";
+                cardDetails.MobileNoMsg = "";
+                cardDetails.CardNoMsg = "";
+                cardDetails.VINNoMsg = "";
+            }
+            if (customerResponse.Internel_Status_Code != 1000)
+            {
+                if (customerResponse != null && customerResponse.Data != null && customerResponse.Data.Count > 0)
+                    customerModel.Remarks = customerResponse.Data[0].Reason;
+                else
+                    customerModel.Remarks = customerResponse.Message;
+                customerModel.CustomerStateMdl.AddRange(await _commonActionService.GetStateList());
+                customerModel.CommunicationDistrictMdl.AddRange(await _commonActionService.GetDistrictDetails(customerModel.CommunicationStateId));
+                customerModel.VehicleTypeMdl.AddRange(await _commonActionService.GetVehicleTypeDropdown());
+            }
+            else
+            {
+                if (customerResponse != null && customerResponse.Data != null && customerResponse.Data.Count > 0)
+                    customerModel.Remarks = customerResponse.Data[0].Reason;
+            }
+
+            return customerModel;
+        }
 
     }
 }
