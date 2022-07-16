@@ -38,6 +38,10 @@ namespace HPCL_Web.Controllers
         {
             return View();
         }
+        public IActionResult Search()
+        {
+            return View();
+        }
         public async Task<IActionResult> ManageProfile(string CustomerId, string NameOnCard)
         {
             var modals = await _customerService.ManageProfile(CustomerId, NameOnCard);
@@ -240,6 +244,15 @@ namespace HPCL_Web.Controllers
             var reason = await _customerService.ValidateParentCustomerId(CustomerId);
             return Json(reason);
         }
+        public async Task<IActionResult> ControlCardSearch()
+        {
+            return View();
+        }
 
+        public async Task<IActionResult> GetCustomerControlCard(string CustomerID)
+        { 
+            var modals = await _customerService.GetCustomerControlCard(CustomerID );
+            return PartialView("~/Views/ParentCustomer/_ControlCardDetailsTbl.cshtml", modals);
+        }
     }
 }

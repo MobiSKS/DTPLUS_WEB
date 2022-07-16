@@ -1190,5 +1190,25 @@ namespace HPCL.Service.Services
             List<SuccessResponse> responseList = jArr.ToObject<List<SuccessResponse>>();
             return responseList;
         }
+        public async Task<ControlCardSearchModel> GetCustomerControlCard(string CustomerID)
+        {
+            ControlCardSearchModel controlCardDetails = new ControlCardSearchModel();
+
+            var Request = new GetCustomerBalanceRequest()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                CustomerID = CustomerID
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(Request), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getparentcustomercontrolcardsearch);
+
+            controlCardDetails = JsonConvert.DeserializeObject<ControlCardSearchModel>(response);
+
+            return controlCardDetails;
+        }
     }
 }
