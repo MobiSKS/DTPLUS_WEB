@@ -5,10 +5,12 @@ using HPCL.Common.Models.RequestModel.Merchant;
 using HPCL.Common.Models.ResponseModel.AshokLayland;
 using HPCL.Common.Models.ResponseModel.Customer;
 using HPCL.Common.Models.ResponseModel.JCB;
+using HPCL.Common.Models.ResponseModel.VolvoEicher;
 using HPCL.Common.Models.ViewModel.AshokLeyLand;
 using HPCL.Common.Models.ViewModel.JCB;
 using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -282,6 +284,87 @@ namespace HPCL.Service.Services
             model.CustomerStateMdl.AddRange(await _commonActionService.GetStateList());
             model.VehicleTypeMdl.AddRange(await _commonActionService.GetVehicleTypeDropdown());
             return model;
+        }
+        public async Task<GetSalesExecutiveEmployeeIDResponse> GetJCBSalesExeEmpId(string dealerCode)
+        {
+            GetSalesExecutiveEmployeeIDResponse customerCardInfo = new GetSalesExecutiveEmployeeIDResponse();
+
+            var requestInfo = new VerifyDealerRequestModel()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                DealerCode = dealerCode
+            };
+
+            StringContent custRefcontent = new StringContent(JsonConvert.SerializeObject(requestInfo), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(custRefcontent, WebApiUrl.getAlSalesExeEmpidAddonOtcCardMapping);
+
+            SalesExecutiveEmployeeIDResponse salesExecutiveEmployeeIDResponse = JsonConvert.DeserializeObject<SalesExecutiveEmployeeIDResponse>(response);
+
+
+            if (salesExecutiveEmployeeIDResponse.Internel_Status_Code == 1000)
+            {
+                customerCardInfo.SalesExecutiveEmployeeID = salesExecutiveEmployeeIDResponse.Data[0].SalesExecutiveEmployeeID;
+                customerCardInfo.StatusCode = salesExecutiveEmployeeIDResponse.Internel_Status_Code;
+            }
+            else
+            {
+                if (salesExecutiveEmployeeIDResponse.Data.Count > 0)
+                {
+                    customerCardInfo.Reason = salesExecutiveEmployeeIDResponse.Data[0].Reason;
+                    customerCardInfo.SalesExecutiveEmployeeID = "";
+                }
+                else
+                {
+                    customerCardInfo.Reason = "";
+                    customerCardInfo.SalesExecutiveEmployeeID = "";
+                }
+                customerCardInfo.StatusCode = salesExecutiveEmployeeIDResponse.Internel_Status_Code;
+            }
+            return customerCardInfo;
+        }
+        public async Task<JCBCustomerEnrollmentModel> GetJCBCustomerOTCCardPartialView([FromBody] List<JCBCardEntryDetails> arrs)
+        {
+            JCBCustomerEnrollmentModel addAddOnCard = new JCBCustomerEnrollmentModel();
+
+            if (!string.IsNullOrEmpty(arrs[0].Message))
+                addAddOnCard.Message = arrs[0].Message;
+            addAddOnCard.NoOfCards = arrs[0].NoOfCards;
+            addAddOnCard.DealerCode = arrs[0].DealerCode;
+
+            if (arrs != null && arrs.Count > 0 && ((!string.IsNullOrEmpty(arrs[0].CardNo))))
+                addAddOnCard.ObjJCBCardEntryDetail = arrs;
+
+            addAddOnCard.ExternalVehicleAPIStatus = _configuration.GetSection("ExternalAPI:VehicleAPI").Value.ToString();
+
+            if (string.IsNullOrEmpty(addAddOnCard.ExternalVehicleAPIStatus))
+            {
+                addAddOnCard.ExternalVehicleAPIStatus = "Y";
+            }
+
+            return addAddOnCard;
+        }
+        public async Task<List<JCBOTCCardDetails>> GetAvailableJCBOTCCardForDealer(string DealerCode)
+        {
+            var requestinfo = new VerifyDealerRequestModel()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                DealerCode = DealerCode
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(requestinfo), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getAvailityJCBOtcCard);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<JCBOTCCardDetails> searchList = jarr.ToObject<List<JCBOTCCardDetails>>();
+
+            return searchList;
         }
 
     }
