@@ -1,6 +1,7 @@
 ﻿using HPCL.Common.Models;
 using HPCL.Common.Models.ResponseModel.AshokLayland;
 using HPCL.Common.Models.ResponseModel.JCB;
+using HPCL.Common.Models.ResponseModel.VolvoEicher;
 using HPCL.Common.Models.ViewModel.JCB;
 using System;
 using System.Collections.Generic;
@@ -22,5 +23,6 @@ namespace HPCL.Service.Interfaces
         Task<ViewJCBUnmappedOTCCardsModel> ViewJCBUnmappedOTCCards();
         Task<JCBOTCCardDealerAllocationResponse> GetViewJCBOTCCardDealerAllocation(string DealerCode, string CardNo);
         Task<JCBCustomerEnrollmentModel> JCBCustomerEnrollment();
+        Task<GetSalesExecutiveEmployeeIDResponse> GetJCBSalesExeEmpId(string dealerCode);
     }
 }

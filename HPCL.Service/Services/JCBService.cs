@@ -5,6 +5,7 @@ using HPCL.Common.Models.RequestModel.Merchant;
 using HPCL.Common.Models.ResponseModel.AshokLayland;
 using HPCL.Common.Models.ResponseModel.Customer;
 using HPCL.Common.Models.ResponseModel.JCB;
+using HPCL.Common.Models.ResponseModel.VolvoEicher;
 using HPCL.Common.Models.ViewModel.AshokLeyLand;
 using HPCL.Common.Models.ViewModel.JCB;
 using HPCL.Service.Interfaces;
@@ -282,6 +283,46 @@ namespace HPCL.Service.Services
             model.CustomerStateMdl.AddRange(await _commonActionService.GetStateList());
             model.VehicleTypeMdl.AddRange(await _commonActionService.GetVehicleTypeDropdown());
             return model;
+        }
+        public async Task<GetSalesExecutiveEmployeeIDResponse> GetJCBSalesExeEmpId(string dealerCode)
+        {
+            GetSalesExecutiveEmployeeIDResponse customerCardInfo = new GetSalesExecutiveEmployeeIDResponse();
+
+            var requestInfo = new VerifyDealerRequestModel()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                DealerCode = dealerCode
+            };
+
+            StringContent custRefcontent = new StringContent(JsonConvert.SerializeObject(requestInfo), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(custRefcontent, WebApiUrl.getAlSalesExeEmpidAddonOtcCardMapping);
+
+            SalesExecutiveEmployeeIDResponse salesExecutiveEmployeeIDResponse = JsonConvert.DeserializeObject<SalesExecutiveEmployeeIDResponse>(response);
+
+
+            if (salesExecutiveEmployeeIDResponse.Internel_Status_Code == 1000)
+            {
+                customerCardInfo.SalesExecutiveEmployeeID = salesExecutiveEmployeeIDResponse.Data[0].SalesExecutiveEmployeeID;
+                customerCardInfo.StatusCode = salesExecutiveEmployeeIDResponse.Internel_Status_Code;
+            }
+            else
+            {
+                if (salesExecutiveEmployeeIDResponse.Data.Count > 0)
+                {
+                    customerCardInfo.Reason = salesExecutiveEmployeeIDResponse.Data[0].Reason;
+                    customerCardInfo.SalesExecutiveEmployeeID = "";
+                }
+                else
+                {
+                    customerCardInfo.Reason = "";
+                    customerCardInfo.SalesExecutiveEmployeeID = "";
+                }
+                customerCardInfo.StatusCode = salesExecutiveEmployeeIDResponse.Internel_Status_Code;
+            }
+            return customerCardInfo;
         }
 
     }

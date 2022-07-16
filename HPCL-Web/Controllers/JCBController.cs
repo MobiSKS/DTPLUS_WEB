@@ -121,5 +121,13 @@ namespace HPCL_Web.Controllers
             return View(modals);
         }
 
+        [HttpPost]
+        public async Task<JsonResult> GetJCBSalesExeEmpId(string dealerCode)
+        {
+            var addonOTCCardMapping = await _jcbService.GetJCBSalesExeEmpId(dealerCode);
+
+            return Json(addonOTCCardMapping);
+        }
+
     }
 }
