@@ -6,7 +6,7 @@
             <li class="breadcrumb-item"><a href="@Url.Action("Index","JCB")" class="text_primary">JCB Dashboard</a> </li>
             <li class="breadcrumb-item font-weight-light">JCB Customer Enrollment</li>
         </ul>
-        <form>
+        <form name="JCBCardCreationForm" method="post" asp-action="JCBCustomerEnrollment" class="w-100" autocomplete="off" enctype="multipart/form-data">
             <div class="w-100">
                 <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
                     <div class="border-1 rounded border-grey pb-0">
@@ -19,17 +19,20 @@
                                         <label class="font-weight-normal col-md-4 col-12">Customer/Org. Name <sup class="text-danger">*</sup></label>
                                         <div class="col-md-2 col-12">
                                             <div class="custom_select">
-                                                <select name="zonalOffice" id="" class="form-control px-0">
-                                                    <option value="">Mr</option>
-                                                    <option value="">Ms</option>
-                                                    <option value="">M/s</option>
-                                                </select>
+                                                @Html.DropDownListFor(x => x.IndividualOrgNameTitle, new[]{
+                                                new SelectListItem(){ Text = "Title", Value = "0" },
+                                                new SelectListItem(){ Text = "Mr", Value = "Mr"},
+                                                new SelectListItem(){ Text = "Ms", Value = "Ms"},
+                                                new SelectListItem(){ Text = "M/s", Value = "M/s"},
+                                                }, null, new { @class = "form-control px-0" })
                                             </div>
+                                            <span class="error" id="salutaion_error"></span>
                                         </div>
                                         <div class="col-md-5 col-12 ">
                                             <div class="custom_select">
-                                                <input class="form-control" id="" name="customerid" type="text" value="">
+                                                @Html.TextBoxFor(m => m.IndividualOrgName, new { @class = "form-control", autocomplete = "off", maxlength = "50" })
                                             </div>
+                                            <span class="error" id="IndividualOrgName_error"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -38,7 +41,8 @@
                                         <label class="font-weight-normal offset-md-1 col-md-4 col-12">Name on Card <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                <input class="form-control" id="" name="cardnum" type="text" value="">
+                                                @Html.TextBoxFor(m => m.NameOnCard, new { @class = "form-control", autocomplete = "off", maxlength = "22" })
+                                                <span class="error" id="nameOnCard_error"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -59,7 +63,8 @@
                                         <label class="font-weight-normal col-md-4 col-12">City <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12 ">
                                             <div class="custom_select">
-                                                <input class="form-control" id="" name="customerid" type="text" value="">
+                                                @Html.TextBoxFor(m => m.CommunicationCityName, new { @class = "form-control", autocomplete = "off", maxlength = "20" })
+                                                <span class="error" id="communicationCityName_error"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -69,7 +74,8 @@
                                         <label class="font-weight-normal offset-md-1 col-md-4 col-12">PIN Code <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                <input class="form-control" id="" name="cardnum" type="text" value="">
+                                                @Html.TextBoxFor(m => m.CommunicationPincode, new { @class = "form-control", maxlength = "6", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                <span class="error" id="communicationPincode_error"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -81,12 +87,8 @@
                                         <label class="font-weight-normal col-md-4 col-12">State <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12 ">
                                             <div class="custom_select">
-                                                <select name="zonalOffice" id="" class="form-control">
-                                                    <option selected="selected" value="-1">--Select--</option>
-                                                    <option value="">Uttar Pradesh</option>
-                                                    <option value="">Delhi</option>
-                                                    <option value="">Haryana</option>
-                                                </select>
+                                                @Html.DropDownListFor(m => m.CommunicationStateId, new SelectList(Model.CustomerStateMdl, "StateID", "StateName"), new { @class = "form-control" })
+                                                <span class="error" id="comm_states_error"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -96,41 +98,43 @@
                                         <label class="font-weight-normal offset-md-1 col-md-4 col-12">District <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                <input class="form-control" id="" name="cardnum" type="text" value="">
+                                                @Html.DropDownListFor(m => m.CommunicationDistrictId, new SelectList(Model.CommunicationDistrictMdl, "districtID", "districtName"), new { @class = "form-control" })
+                                                <span class="error" id="comm_district_error"></span>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="d-flex align-items-center flex-wrap">
+                            @* <div class="d-flex align-items-center flex-wrap">
                                 <div class="col-lg-6 col-12">
-                                    <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal col-md-4 col-12">Ph (Off) <sup class="text-danger">*</sup></label>
-                                        <div class="col-md-7 col-12 ">
-                                            <div class="custom_select">
-                                                <input class="form-control" id="" name="cardnum" type="text" value="">
-                                            </div>
-                                        </div>
-                                    </div>
+                                <div class="d-flex align-items-center flex-wrap mb-3">
+                                <label class="font-weight-normal col-md-4 col-12">Ph (Off) <sup class="text-danger">*</sup></label>
+                                <div class="col-md-7 col-12 ">
+                                <div class="custom_select">
+                                <input class="form-control" id="" name="cardnum" type="text" value="">
+                                </div>
+                                </div>
+                                </div>
                                 </div>
                                 <div class="col-lg-6 col-12">
-                                    <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal offset-md-1 col-md-4 col-12">Fax <sup class="text-danger">*</sup></label>
-                                        <div class="col-md-7 col-12">
-                                            <div class="custom_select">
-                                                <input class="form-control" id="" name="cardnum" type="text" value="">
-                                            </div>
-                                        </div>
-                                    </div>
+                                <div class="d-flex align-items-center flex-wrap mb-3">
+                                <label class="font-weight-normal offset-md-1 col-md-4 col-12">Fax <sup class="text-danger">*</sup></label>
+                                <div class="col-md-7 col-12">
+                                <div class="custom_select">
+                                <input class="form-control" id="" name="cardnum" type="text" value="">
                                 </div>
-                            </div>
+                                </div>
+                                </div>
+                                </div>
+                                </div>*@
                             <div class="d-flex align-items-center flex-wrap">
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
                                         <label class="font-weight-normal col-md-4 col-12">Mobile <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12 ">
                                             <div class="custom_select">
-                                                <input class="form-control" id="" name="cardnum" type="text" value="">
+                                                @Html.TextBoxFor(m => m.CommunicationMobileNo, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                <span class="error" id="comm_mobileNumber_error"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -140,7 +144,8 @@
                                         <label class="font-weight-normal offset-md-1 col-md-4 col-12">Email <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                <input class="form-control" id="" name="cardnum" type="email" value="">
+                                                @Html.TextBoxFor(m => m.CommunicationEmailid, new { @class = "form-control", autocomplete = "off", maxlength = "50" })
+                                                <span class="error" id="comm_email_error"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -152,7 +157,8 @@
                                         <label class="font-weight-normal col-md-4 col-12">Address1 <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12 ">
                                             <div class="custom_select">
-                                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="2"></textarea>
+                                                @Html.TextAreaFor(m=>m.CommunicationAddress1, new { @rows = 2, @class = "form-control", maxlength = "50", @style = "resize: none;" })
+                                                @Html.ValidationMessageFor(m => m.CommunicationAddress1, "", new { @id = "comm_address1_error", @class = "error" })
                                             </div>
                                         </div>
                                     </div>
@@ -162,7 +168,8 @@
                                         <label class="font-weight-normal offset-md-1 col-md-4 col-12">Address2 <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="2"></textarea>
+                                                @Html.TextAreaFor(m=>m.CommunicationAddress2, new { @rows = 2, @class = "form-control", maxlength = "50", @style = "resize: none;" })
+                                                @Html.ValidationMessageFor(m => m.CommunicationAddress2, "", new { @id = "comm_address2_error", @class = "error" })
                                             </div>
                                         </div>
                                     </div>
@@ -183,17 +190,19 @@
                                         <label class="font-weight-normal col-md-4 col-12">Dealer Code <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12 ">
                                             <div class="custom_select">
-                                                <input class="form-control" id="" name="customerid" type="text" value="">
+                                                @Html.TextBoxFor(m => m.DealerCode, new { @class = "form-control", maxlength = "25", autocomplete = "off", onkeypress = "return AllowAlphaNumeric(event)" })
+                                                <span class="error" id="DealerCode_error"></span>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal col-md-5 col-12">Sales Executive Employee ID <sup class="text-danger">*</sup></label>
+                                        <label class="font-weight-normal col-md-5 col-12">Sales Executive Employee ID </label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                <input class="form-control" id="" name="cardnum" type="text" value="">
+                                                @Html.TextBoxFor(m => m.SalesExecutiveEmployeeID, new { @class = "form-control", maxlength = "25", autocomplete = "off", @readonly = "readonly" })
+                                                <span class="error" id="SalesExecutiveEmployeeID_error"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -214,16 +223,17 @@
                                         <label class="font-weight-normal col-md-2 col-12">No of cards <sup class="text-danger">*</sup></label>
                                         <div class="col-md-3 col-12 ">
                                             <div class="custom_select">
-                                                <input class="form-control" id="" name="customerid" type="text" value="">
+                                                @Html.TextBoxFor(m => m.NoOfCards, new { @id = "NoOfCards", @class = "form-control", maxlength = "2", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                <span class="error" id="NoOfCards_error"></span>
                                             </div>
                                         </div>
                                         <div class="col-md-7 col-12">
                                             <div class="d-flex align-items-center flex-wrap">
                                                 <div class="px-2">
-                                                    <button class="btn btn_primary regrate_btn" type="button">Add</button>
+                                                    <button class="btn btn_primary" onclick="LoadCardDeatils()" type="button" id="btnAdd">Add</button>
                                                 </div>
                                                 <div class="px-2">
-                                                    <button class="btn btn_primary regrate_btn" type="button">Reset</button>
+                                                    <button class="btn btn_primary" type="button" onclick="ClearCardDeatils()" style="display:none">Reset</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -245,7 +255,9 @@
                                         <label class="font-weight-normal col-md-4 col-12">Address Proof <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12 ">
                                             <div class="custom_select">
-                                                <input class="form-control-file" id="" name="customerid" type="file" value="">
+                                                @Html.TextBoxFor(m => m.AddressProof, new { @id = "AddressProof", @class = "form-control form-control-file myfilen", Type = "file" })
+                                                <p class="mb-0">Only pdf,gif,png,jpeg,jpg,bmp,doc,docx file supported.<br />File size should not be greater than 1 MB.</p>
+                                                @Html.ValidationMessageFor(m => m.AddressProof, "", new { @id = "AddressProofErr", @class = "text-danger" })
                                             </div>
                                         </div>
                                     </div>
@@ -255,7 +267,9 @@
                                         <label class="font-weight-normal col-md-5 col-12">ID Proof of Owner / Partner <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12 ">
                                             <div class="custom_select">
-                                                <input class="form-control-file" id="" name="customerid" type="file" value="">
+                                                @Html.TextBoxFor(m => m.IDProof, new { @id = "IDProof", @class = "form-control form-control-file myfilen", Type = "file" })
+                                                <p class="mb-0">Only pdf,gif,png,jpeg,jpg,bmp,doc,docx file supported.<br />File size should not be greater than 1 MB.</p>
+                                                @Html.ValidationMessageFor(m => m.IDProof, "", new { @id = "IDProofErr", @class = "text-danger" })
                                             </div>
                                         </div>
                                     </div>
@@ -267,17 +281,25 @@
                                         <label class="font-weight-normal col-md-4 col-12">PAN Card <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12 ">
                                             <div class="custom_select">
-                                                <input class="form-control-file" id="" name="customerid" type="file" value="">
+                                                @Html.TextBoxFor(m => m.PanCardProof, new { @id = "PanCardProof", @class = "form-control form-control-file myfilen", Type = "file" })
+                                                <p class="mb-0">Only pdf,gif,png,jpeg,jpg,bmp,doc,docx file supported.<br />File size should not be greater than 1 MB.</p>
+                                                @Html.ValidationMessageFor(m => m.PanCardProof, "", new { @id = "PanCardProofErr", @class = "text-danger" })
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal col-md-5 col-12">Income Tax PAN <sup class="text-danger">*</sup></label>
-                                        <div class="col-md-7 col-12 ">
+                                        <label class="font-weight-normal col-md-5 col-12">Income Tax PAN </label>
+                                        <div class="col-md-5 col-12">
                                             <div class="custom_select">
-                                                <input class="form-control" id="" name="customerid" type="text" value="">
+                                                @Html.TextBoxFor(m => m.PanCardNumber, new { @class = "form-control", @style = "text-transform:uppercase", autocomplete = "off", maxlength = "10" })
+                                                <span class="error" id="PanCardNumber_error"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2 col-12 pl-0">
+                                            <div class="custom_select">
+                                                <button class="btn btn_primary" type="button" id="btnVerify" onclick="ValidatePAN()">Verify</button>
                                             </div>
                                         </div>
                                     </div>
@@ -292,7 +314,7 @@
             <div class="clearfix"></div>
             <div class="d-flex align-items-center justify-content-center mt-0">
                 <div class="px-2 mt-3">
-                    <button class="btn btn_primary" type="button">Save</button>
+                    <button class="btn btn_primary" type="submit" onclick="return ValidateMandatoryFields()">Save</button>
                 </div>
             </div>
         </form>
@@ -300,3 +322,1652 @@
     </div>
 </div>
 <div class="clearfix"></div>
+
+<script type="text/javascript">
+$(document).ready(function () 
+{
+    if($("#dvRemarks").html().trim()!="")
+    {
+       LoadCardDeatils();
+    }
+ });
+
+     $('select').SumoSelect({
+        placeholder: '--Select--',
+        search: true,
+        searchText: 'Enter Text here.'
+    }); 
+
+    $("#CommunicationStateId").change(function () {
+        var id = this.value;
+
+        if (id != 0) {
+            $("#comm_states_error").html("");
+        }
+
+        $.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("GetDistrictDetails", "Customer")',
+            data: { Stateid: id },  // data to submit
+            dataType: "json",
+            success: function (data, status, xhr) {
+                var v = data;
+                if (status == 'success') {
+                    $("#CommunicationDistrictId").html("");
+                    $.each(data, function (i, data) { // bind the dropdown list using json result
+                        $('<option>',
+                            {
+                                value: data.districtID,
+                                text: data.districtName
+                            }).html(data.districtName).appendTo("#CommunicationDistrictId");
+                            $("#CommunicationDistrictId")[0].sumo.reload(); 
+                    });
+                }
+                else {
+                    console.log(v);
+                }
+            },
+            error: function (jqXhr, textStatus, errorMessage) {
+                alert("Error Populating District Data");
+            }
+        });
+    });
+
+    function LoadCardDeatils() 
+    {
+        debugger;
+        var ret=true;
+               
+        var noOfCards = document.getElementById("NoOfCards").value.trim();
+        var dealerCode = document.getElementById("DealerCode").value;
+        if (noOfCards == "")
+        {
+            $('#NoOfCards_error').text("Please enter Number of Cards");
+            $("#NoOfCards_error").attr("style", "display:block");
+            ret=false;
+        }
+        else if (Number(noOfCards) <=0 || Number(noOfCards) >25)
+        {
+            $('#NoOfCards_error').text("No. of Cards should be between 1 to 25");
+            $("#NoOfCards_error").attr("style", "display:block");
+            ret=false;
+        }
+        else
+        {
+            $('#NoOfCards_error').text("");
+        }
+
+        if (document.getElementById("DealerCode").value.trim() == "") 
+        {
+            document.getElementById("DealerCode_error").innerHTML = "Dealer Code is required";
+            ret=false;
+        }
+        else if (localStorage.getItem("DEALERFOUND") == 0) 
+        {
+            if(localStorage.getItem("DEALERMSG")!="")
+            {
+                document.getElementById("DealerCode_error").innerHTML = localStorage.getItem("DEALERMSG");
+                ret = false;
+            }
+            else
+            {
+                document.getElementById("DealerCode_error").innerHTML = "Invalid Dealer Code";
+                ret = false;
+            }
+        }
+        else 
+        {
+            document.getElementById("DealerCode_error").innerHTML = "";
+        }        
+
+           if(ret==false)
+           {
+              return ret;
+           }
+ 
+           var vehicles = [];
+           var checked="false";
+
+
+           if($("#dvRemarks").html().trim()!="")
+           {
+                   $("#OldVehicleDetails TBODY TR").each(function () {
+                       var row = $(this);
+                       vehicles.push({
+                           Message: $("#Message").val(),
+                           CardNo: row.find("TD").eq(0).html(),
+                           VechileNo: row.find("TD").eq(1).html(),
+                           VehicleType: row.find("TD").eq(2).html(),
+                           VINNumber: row.find("TD").eq(3).html(),
+                           MobileNo: row.find("TD").eq(4).html(),
+                           NoOfCards: noOfCards,
+                           VehicleNoMsg: row.find("TD").eq(5).html(),
+                           MobileNoMsg: row.find("TD").eq(6).html(),
+                           Verified: row.find("TD").eq(7).html(),
+                           CardNoMsg: row.find("TD").eq(8).html(),
+                           VINNoMsg: row.find("TD").eq(9).html(),
+                           DealerCode: dealerCode
+                       })
+                   });
+              }
+              else
+              {
+                   vehicles.push({
+                               Message: $("#Message").val(),
+                               CardNo: "",
+                               VechileNo: "",
+                               VehicleType: "",
+                               VINNumber: "",
+                               MobileNo: "",
+                               NoOfCards: noOfCards,
+                               VehicleNoMsg: "",
+                               MobileNoMsg: "",
+                               Verified: "0",
+                               CardNoMsg: "",
+                               VINNoMsg: "",
+                               DealerCode: dealerCode
+                           });
+              }
+
+             console.log(vehicles);
+
+
+            $.ajax({
+               type: 'POST',
+               url: '@Url.Action("GetMultipleOTCCardPartialView", "AshokLeyLand")',
+               contentType: "application/json; charset=utf-8",
+               data: JSON.stringify(vehicles),
+               dataType: "html",
+               success: function (data, status, xhr) 
+               {
+                       var v = data;
+                       if (status == 'success') 
+                       {
+                           document.getElementById("ViewNoOfCardsTbl").style.display = "block";
+                           document.getElementById("dvViewNoOfCardsTbl").style.display = "block";
+                           $("#ViewNoOfCardsTbl").html(data);
+                           $('html, body').animate({
+                               scrollTop: $("#ViewNoOfCardsTbl").offset().top
+                           }, 2000);
+                           //document.getElementById("divSubmit").style.display = "block";
+
+                           $('#NoOfCards').attr("readonly", true);
+                           $("#btnAdd").attr("disabled", true);
+                           $('#DealerCode').attr("readonly", true);
+                       }
+                   },
+               error: function (jqXhr, textStatus, errorMessage) 
+               {
+                   $("#ViewNoOfCardsTbl").html("");
+                   document.getElementById("dvViewNoOfCardsTbl").style.display = "none";
+                   $("#btnAdd").attr("disabled", false);
+                   $('#DealerCode').attr("readonly", false);
+               }
+           });
+        
+    }
+
+    function ValidateMandatoryFields() 
+    {
+        debugger;
+
+        var ret = true;
+
+           var i=0;
+           var j=0;
+           var cnt = 0;
+
+
+
+        if (document.getElementById("IndividualOrgNameTitle").value == "0") 
+        {
+            document.getElementById("salutaion_error").innerHTML = "Select Title";
+            ret = false;
+        }
+        else 
+        {
+            document.getElementById("salutaion_error").innerHTML = "";
+        }
+
+        if (document.getElementById("IndividualOrgName").value.trim() == "") 
+        {
+            document.getElementById("IndividualOrgName_error").innerHTML = "Customer/Org.Name is required";
+            ret = false;
+        }
+        else if (!isNaN(document.getElementById("IndividualOrgName").value.trim())) 
+        {
+            document.getElementById("IndividualOrgName_error").innerHTML = "Invalid Customer/Org.Name";
+            ret = false;
+        }
+        else if (!document.getElementById("IndividualOrgName").value.match(nameWithSpaceCheck)) 
+        {
+            document.getElementById("IndividualOrgName_error").innerHTML = "Invalid Customer/Org.Name";
+            ret = false;
+        }
+        else 
+        {
+            document.getElementById("IndividualOrgName_error").innerHTML = "";
+        }
+
+        if (document.getElementById("NameOnCard").value.trim() == "") 
+        {
+            document.getElementById("nameOnCard_error").innerHTML = "Name on Card field cannot be left blank";
+            ret = false;
+        }
+        else if (!isNaN(document.getElementById("NameOnCard").value.trim())) 
+        {
+            document.getElementById("nameOnCard_error").innerHTML = "Invalid Name on Card";
+            ret = false;
+        }
+        else if (!document.getElementById("NameOnCard").value.match(nameWithSpaceCheck)) 
+        {
+            document.getElementById("nameOnCard_error").innerHTML = "Invalid Name on Card";
+            ret = false;
+        }
+        else 
+        {
+            document.getElementById("nameOnCard_error").innerHTML = "";
+        }
+
+        //if (document.getElementById("PanCardNumber").value.trim() == "") 
+        //{
+        //    document.getElementById("PanCardNumber_error").innerHTML = "Income Tax PAN field is required";
+        //    document.getElementById("PanCardNumber_error").className = "error";
+        //    ret = false;
+        //}
+        //else
+        if (document.getElementById("PanCardNumber").value.trim() != "") 
+        {
+            
+            document.getElementById("PanCardNumber").value = document.getElementById("PanCardNumber").value.trim().toUpperCase();
+
+            var panNumber = document.getElementById("PanCardNumber").value.trim();
+            let forthdigitPan = panNumber.substr(3, 1);
+            console.log(forthdigitPan);
+            if (forthdigitPan != 'P') 
+            {
+                document.getElementById("PanCardNumber_error").innerHTML = "Invalid Income Tax PAN Number";
+                document.getElementById("PanCardNumber_error").className = "error";
+                ret = false;
+            }
+            else
+            {
+                if (!$('#PanCardNumber').val().match(pancard)) 
+                {
+                    document.getElementById("PanCardNumber_error").innerHTML = "Invalid Income Tax PAN Number";
+                    document.getElementById("PanCardNumber_error").className = "error";
+                    ret = false;
+                }
+                else
+                {
+                    if (localStorage.getItem("PANNOALREADYUSED") == 0) 
+                    {
+                        document.getElementById("PanCardNumber_error").innerHTML = "PAN Number already exists";
+                        document.getElementById("PanCardNumber_error").className = "error";
+                        ret = false;
+                    }
+                    else if (localStorage.getItem("INVALIDPAN") == 0) 
+                    {
+                        document.getElementById("PanCardNumber_error").innerHTML = "Invalid Income Tax PAN Number";
+                        document.getElementById("PanCardNumber_error").className = "error";
+                        ret = false;
+                    }
+                    else if (localStorage.getItem("PANNOANDNAMEMATCHING") == 0) 
+                    {
+                        document.getElementById("PanCardNumber_error").innerHTML = "Customer Name not match with pan name";
+                        document.getElementById("PanCardNumber_error").className = "error";
+                        ret = false;
+                    }
+                    else 
+                    {
+                        document.getElementById("PanCardNumber_error").innerHTML = "Income Tax PAN Number is valid";
+                        document.getElementById("PanCardNumber_error").className = "error text-success";
+                    }
+                }
+            }
+            
+        }
+
+        if (document.getElementById("CommunicationCityName").value.trim() == "") 
+        {
+            document.getElementById("communicationCityName_error").innerHTML = "City field cannot be left blank";
+            ret = false;
+        }
+        else if (!document.getElementById("CommunicationCityName").value.match(atLeastOneAlphabet)) 
+        {
+            document.getElementById("communicationCityName_error").innerHTML = "Invalid City Name";
+            ret = false;
+        }
+        else 
+        {
+            document.getElementById("communicationCityName_error").innerHTML = "";
+        }
+
+        if (document.getElementById("CommunicationPincode").value.trim() == "") 
+        {
+            document.getElementById("communicationPincode_error").innerHTML = "PIN Code is required";
+            ret = false;
+        }
+        else
+        {
+            var pin = document.getElementById("CommunicationPincode").value.trim();
+            if (pin.substring(0, 1) == "0") 
+            {
+                document.getElementById("communicationPincode_error").innerHTML = "Invalid PIN Code. Min-Max 6 digits";
+                ret = false;
+            }
+            else if (pin.length < 6) 
+            {
+                document.getElementById("communicationPincode_error").innerHTML = "Invalid PIN Code. Min-Max 6 digits";
+                ret = false;
+            }
+            else if (!pin.match(pincode)) 
+            {
+                document.getElementById("communicationPincode_error").innerHTML = "Invalid PIN Code. Min-Max 6 digits";
+                ret = false;
+            }
+            else 
+            {
+                document.getElementById("communicationPincode_error").innerHTML = "";
+            }
+        }
+
+
+        if (document.getElementById("CommunicationStateId").value == "0") {
+            document.getElementById("comm_states_error").innerHTML = "State is required";
+            ret = false;
+        }
+        else {
+            document.getElementById("comm_states_error").innerHTML = "";
+        }
+
+        if (document.getElementById("CommunicationDistrictId").value == "0") {
+            document.getElementById("comm_district_error").innerHTML = "District is required";
+            ret = false;
+        }
+        else {
+            document.getElementById("comm_district_error").innerHTML = "";
+        }
+
+        //var stdCode = document.getElementById("CommunicationDialCode").value.trim();
+        //if (stdCode != "") 
+        //{
+
+        //    if (stdCode.length < 2 || stdCode.length > 4) 
+        //    {
+        //        document.getElementById("CommunicationDialCode_error").innerHTML = "Invalid Code";
+        //        ret = false;
+        //    }
+        //    else if (!stdCode.match(number))
+        //    {
+        //        document.getElementById("CommunicationDialCode_error").innerHTML = "Invalid Code";
+        //        ret = false;
+        //    }
+        //    else 
+        //    {
+        //        document.getElementById("CommunicationDialCode_error").innerHTML = "";
+        //    }
+        //}
+        //else 
+        //{
+        //    document.getElementById("CommunicationDialCode_error").innerHTML = "";
+        //}
+
+        //var phno = document.getElementById("CommunicationPhonePart2").value.trim();
+        //if (phno != "") 
+        //{
+        //    if (phno.charAt(0) == "0") 
+        //    {
+        //        document.getElementById("CommunicationPhonePart2_error").innerHTML = "Invalid Phone Number";
+        //        ret = false;
+        //    }
+        //    else if (phno.length < 6 || phno.length > 8) 
+        //    {
+        //        document.getElementById("CommunicationPhonePart2_error").innerHTML = "Invalid Phone Number";
+        //        ret = false;
+        //    }
+        //    else if (!phno.match(number))
+        //    {
+        //        document.getElementById("CommunicationPhonePart2_error").innerHTML = "Invalid Phone Number";
+        //        ret = false;
+        //    }
+        //    else 
+        //    {
+        //        document.getElementById("CommunicationPhonePart2_error").innerHTML = "";
+        //    }
+        //}
+        //else 
+        //{
+        //    document.getElementById("CommunicationPhonePart2_error").innerHTML = "";
+        //}
+
+
+        //var faxCode = document.getElementById("CommunicationFaxCode").value.trim();
+        //if (faxCode != "") 
+        //{
+
+        //    if (faxCode.length < 2 || faxCode.length > 4) 
+        //    {
+        //        document.getElementById("CommunicationFaxCode_error").innerHTML = "Invalid Code";
+        //        ret = false;
+        //    }
+        //    else if(!faxCode.match(number))
+        //    {
+        //        document.getElementById("CommunicationFaxCode_error").innerHTML = "Invalid Code";
+        //        ret = false;
+        //    }
+        //    else 
+        //    {
+        //        document.getElementById("CommunicationFaxCode_error").innerHTML = "";
+        //    }
+        //}
+        //else 
+        //{
+        //    document.getElementById("CommunicationFaxCode_error").innerHTML = "";
+        //}
+
+        //var faxphno = document.getElementById("CommunicationFaxPart2").value.trim();
+        //if (faxphno != "") 
+        //{
+        //    if (phno.charAt(0) == "0") 
+        //    {
+        //        document.getElementById("CommunicationFaxPart2_error").innerHTML = "Invalid Fax Number";
+        //        ret = false;
+        //    }
+        //    else if (faxphno.length < 6 || faxphno.length > 8) 
+        //    {
+        //        document.getElementById("CommunicationFaxPart2_error").innerHTML = "Invalid Fax Number";
+        //        ret = false;
+        //    }
+        //    else if (!faxphno.match(number))
+        //    {
+        //        document.getElementById("CommunicationFaxPart2_error").innerHTML = "Invalid Fax Number";
+        //        ret = false;
+        //    }
+        //    else 
+        //    {
+        //        document.getElementById("CommunicationFaxPart2_error").innerHTML = "";
+        //    }
+        //}
+        //else 
+        //{
+        //    document.getElementById("CommunicationFaxPart2_error").innerHTML = "";
+        //}
+
+
+        if (document.getElementById("CommunicationMobileNo").value.trim() == "") 
+        {
+            document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile Number cannot be left blank";
+            ret = false;
+        }
+        else if (document.getElementById("CommunicationMobileNo").value.substring(0, 1) == "0") 
+        {
+            document.getElementById("comm_mobileNumber_error").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
+            ret = false;
+        }
+        else if (document.getElementById("CommunicationMobileNo").value.length < 10) 
+        {
+            document.getElementById("comm_mobileNumber_error").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
+            ret = false;
+        }
+        else if(!document.getElementById("CommunicationMobileNo").value.match(phoneno)) 
+        {
+            document.getElementById("comm_mobileNumber_error").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
+            ret = false;
+        }
+        else 
+        {
+            document.getElementById("comm_mobileNumber_error").innerHTML = "";
+        }
+
+        if (document.getElementById("CommunicationEmailid").value.trim() == "") 
+        {
+            document.getElementById("comm_email_error").innerHTML = "Email cannot be left blank";
+            ret = false;
+        }
+        else if (!document.getElementById("CommunicationEmailid").value.trim().match(email)) 
+        {
+            document.getElementById("comm_email_error").innerHTML = "Invalid email id (e.g.: abc@gmail.com)";
+            ret = false;
+        }
+        else 
+        {
+            document.getElementById("comm_email_error").innerHTML = "";
+        }
+
+        
+        if (document.getElementById("CommunicationAddress1").value.trim() == "") 
+        {
+            document.getElementById("comm_address1_error").innerHTML = "Address field cannot be left blank";
+            ret = false;
+        }
+        else if (!document.getElementById("CommunicationAddress1").value.match(atLeastOneAlphabet)) 
+        {
+            document.getElementById("comm_address1_error").innerHTML = "Invalid Address";
+            ret = false;
+        }
+        else 
+        {
+            document.getElementById("comm_address1_error").innerHTML = "";
+        }
+
+        if (document.getElementById("CommunicationAddress2").value.trim() == "") 
+        {
+            document.getElementById("comm_address2_error").innerHTML = "Address field cannot be left blank";
+            ret = false;
+        }
+        else if (!document.getElementById("CommunicationAddress2").value.match(atLeastOneAlphabet)) 
+        {
+            document.getElementById("comm_address2_error").innerHTML = "Invalid Address";
+            ret = false;
+        }
+        else 
+        {
+            document.getElementById("comm_address2_error").innerHTML = "";
+        }
+
+        if (document.getElementById('DealerCode').value.trim() == "") 
+        {
+            document.getElementById("DealerCode_error").innerHTML = "Dealer Code is required";
+            ret = false;
+        }
+        else 
+        {
+            if (localStorage.getItem("DEALERFOUND") == 0) 
+            {
+               if(localStorage.getItem("DEALERMSG")!="")
+               {
+                   document.getElementById("DealerCode_error").innerHTML = localStorage.getItem("DEALERMSG");
+                   ret = false;
+               }
+               else
+               {
+                   document.getElementById("DealerCode_error").innerHTML = "Invalid Dealer Code";
+                   ret = false;
+               }
+            }
+            else 
+            {
+                document.getElementById("DealerCode_error").innerHTML = "";
+            }
+        }
+        
+        //if (document.getElementById('SalesExecutiveEmployeeID').value.trim() == "") 
+        //{
+        //    document.getElementById("SalesExecutiveEmployeeID_error").innerHTML = "Sales Executive Employee ID is required";
+        //    ret = false;
+        //}
+        //else 
+        //{
+        //    document.getElementById("SalesExecutiveEmployeeID_error").innerHTML = "";
+        //}
+
+        var noOfCards = document.getElementById("NoOfCards").value.trim();
+        if (noOfCards == "")
+        {
+            $('#NoOfCards_error').text("Please enter Number of Cards");
+            $("#NoOfCards_error").attr("style", "display:block");
+            ret = false;
+        }
+        else if (Number(noOfCards) <=0 || Number(noOfCards) >25)
+        {
+            $('#NoOfCards_error').text("No. of Cards should be between 1 to 25");
+            $("#NoOfCards_error").attr("style", "display:block");
+            ret = false;
+        }
+        else
+        {
+            $('#NoOfCards_error').text("");
+        }
+
+        if (document.getElementById("AddressProof").value.trim() == "") 
+        {
+            document.getElementById("AddressProofErr").innerHTML = "Please select valid file";
+            ret = false;
+        }
+        else 
+        {
+            document.getElementById("AddressProofErr").innerHTML = "";
+        }
+
+        if (document.getElementById("IDProof").value.trim() == "") 
+        {
+            document.getElementById("IDProofErr").innerHTML = "Please select valid file";
+            ret = false;
+        }
+        else 
+        {
+            document.getElementById("IDProofErr").innerHTML = "";
+        }
+
+        if (document.getElementById("PanCardProof").value.trim() == "") 
+        {
+            document.getElementById("PanCardProofErr").innerHTML = "Please select valid file";
+            ret = false;
+        }
+        else 
+        {
+            document.getElementById("PanCardProofErr").innerHTML = "";
+        }
+
+        var count = $('#NoOfCardsTbl tr').length;
+
+        //alert(count);
+
+        if (count <= 1) 
+        {
+            alert("Map at least one card with this Customer!");
+            ret = false;
+            return false;
+        }
+        document.getElementById("NoOfCards_error").innerHTML = "";
+
+
+              cnt=0;
+              $("#NoOfCardsTbl tbody tr").each(function ()
+               {
+                   var row = $(this);
+
+                   var CardNo = row.find("td:eq(1) input[type='text']").val();
+                   var vhno = row.find("td:eq(3) input[type='text']").val();
+                   var vehicleType =row.find('td').eq(5).find('select').val();
+                   var VINNumber = row.find("td:eq(6) input[type='text']").val();
+                   var MobileNo = row.find("td:eq(7) input[type='text']").val();
+
+                   if(CardNo.trim()=='')
+                   {
+                       document.getElementById('CardNo_error_'+cnt).innerHTML="Select Card Number";
+                       ret=false;
+                   }
+                   else
+                   {
+                       if(CardNo.trim()!='')
+                       {
+                           if(CardNo.length<16 || CardNo.length>16)
+                           {
+                             document.getElementById('CardNo_error_'+cnt).innerHTML ="Invalid Card Number";
+                             ret=false;
+                           }
+                           else if(!CardNo.match(number))
+                           {
+                             document.getElementById('CardNo_error_'+cnt).innerHTML ="Invalid Card Number";
+                             ret=false;
+                           }
+                           else
+                           {
+                               document.getElementById('CardNo_error_'+cnt).innerHTML="";
+                           }
+                       }
+                   }
+
+                   if(vhno!= undefined && vhno.trim()!='')
+                   {
+                       if(vhno!= undefined && vhno.trim()=='')
+                       {
+                           document.getElementById('VechileNo_error_'+cnt).innerHTML="Enter Vehicle No.";
+                           ret=false;
+                       }
+                       else
+                       {
+                           document.getElementById('VechileNo_error_'+cnt).innerHTML="";
+                       }
+
+                       if(vhno!= undefined && vhno.trim()!='')
+                       {
+                           if (!(vhno.match(forVehicleNo)))
+                           {
+                               document.getElementById('VechileNo_error_'+cnt).innerHTML ="Invalid Vehicle No.";
+                               ret=false;
+                           }
+                           else if(vhno.length<6 || vhno.length>10)
+                           {
+                             document.getElementById('VechileNo_error_'+cnt).innerHTML ="Invalid Vehicle No.";
+                             ret=false;
+                           }
+                           else
+                           {
+                               document.getElementById('VechileNo_error_'+cnt).innerHTML ="";
+                           }
+                       }
+                   }
+
+                   if (vehicleType == "--Select--")
+                   {
+                       document.getElementById('ddlVehicleType_error_'+cnt).innerHTML="Select Vehicle Type";
+                       ret=false;
+                   }
+                   else
+                   {
+                       document.getElementById('ddlVehicleType_error_'+cnt).innerHTML="";
+                   }
+
+                   if(VINNumber.trim()=='')
+                   {
+                       document.getElementById('VINNumber_error_'+cnt).innerHTML="Enter VIN Number";
+                       ret=false;
+                   }
+                   else if (!(VINNumber.match(forVehicleNo)))
+                   {
+                       document.getElementById('VINNumber_error_'+cnt).innerHTML="Invalid VIN Number";
+                       ret=false;
+                   }
+                   else if (!(VINNumber.match(atLeastOneAlphabet)))
+                   {
+                       document.getElementById('VINNumber_error_'+cnt).innerHTML="Invalid VIN Number";
+                       ret=false;
+                   }
+                   else if(VINNumber.length<17 || VINNumber.length>17)
+                   {
+                       document.getElementById('VINNumber_error_'+cnt).innerHTML ="Invalid VIN Number";
+                       ret=false;
+                   }
+                   else
+                   {
+                       document.getElementById('VINNumber_error_'+cnt).innerHTML="";
+                   }
+
+                   if(MobileNo!= undefined && MobileNo.trim()!='')
+                   {
+                       if(MobileNo.trim()=='')
+                       {
+                           document.getElementById('MobileNo_error_'+cnt).innerHTML="Enter Mobile Number";
+                           ret=false;
+                       }
+                       else
+                       {
+                           if (MobileNo.charAt(0) == "0")
+                           {
+                               document.getElementById('MobileNo_error_'+cnt).innerHTML="Invalid Mobile Number";
+                               ret=false;
+                           }
+                           else if (MobileNo.length < 10)
+                           {
+                               document.getElementById('MobileNo_error_'+cnt).innerHTML="Invalid Mobile Number";
+                               ret=false;
+                           }
+                           else if(!MobileNo.match(phoneno))
+                           {
+                               document.getElementById('MobileNo_error_'+cnt).innerHTML="Invalid Mobile Number";
+                               ret=false;
+                           }
+                           else
+                           {
+                               document.getElementById('MobileNo_error_'+cnt).innerHTML="";
+                           }
+                       }
+                   }
+
+                   cnt=cnt+1;
+
+               });
+
+
+               j=0;i=0;
+               cnt=0;
+               console.log('Before Checking For Duplicate Card Number');
+               $("#NoOfCardsTbl tbody tr").each(function ()
+               {
+                   var row = $(this);
+                   j=0;
+                   i=i+1;
+                   cnt = 0;
+                   $("#NoOfCardsTbl tbody tr").each(function ()
+                   {
+                       var row1 = $(this);
+
+                       j=j+1;
+                       if(i>0 && j>1 && j>i)
+                       {
+                           var PrevIdent = row.find("td:eq(1) input[type='text']").val();
+                           var CurIdent =  row1.find("td:eq(1) input[type='text']").val();
+
+                           if(PrevIdent!="" && CurIdent!="")
+                           {
+                               if(PrevIdent.trim().toUpperCase()==CurIdent.trim().toUpperCase())
+                               {
+
+                                   if(CurIdent.length<16 || CurIdent.length>16)
+                                   {
+                                     document.getElementById('CardNo_error_'+cnt).innerHTML ="Invalid Card Number";
+                                     ret=false;
+                                   }
+                                   else if(!CurIdent.match(number))
+                                   {
+                                     document.getElementById('CardNo_error_'+cnt).innerHTML ="Invalid Card Number";
+                                     ret=false;
+                                   }
+                                   else
+                                   {
+                                       document.getElementById('CardNo_error_'+cnt).innerHTML="Duplicate Card Number";
+                                       ret=false;
+                                   }
+
+                               }
+                           }
+                       }
+
+                       cnt=cnt+1;
+                   });
+
+               });
+
+
+               j=0;i=0;
+               cnt=0;
+               console.log('Before Checking For Duplicate VehicleNo');
+               $("#NoOfCardsTbl tbody tr").each(function ()
+               {
+                   var row = $(this);
+                   j=0;
+                   i=i+1;
+                   cnt = 0;
+                   $("#NoOfCardsTbl tbody tr").each(function ()
+                   {
+                       var row1 = $(this);
+
+                       j=j+1;
+                       if(i>0 && j>1 && j>i)
+                       {
+                           var PrevRVno = row.find("td:eq(3) input[type='text']").val();
+                           var CurRVno =  row1.find("td:eq(3) input[type='text']").val();
+
+                           if(PrevRVno!="" && CurRVno!="")
+                           {
+                               if(PrevRVno.trim().toUpperCase()==CurRVno.trim().toUpperCase())
+                               {
+                                   document.getElementById('VechileNo_error_'+cnt).innerHTML="Duplicate Vehicle No.";
+                                   ret=false;
+                               }
+                           }
+                       }
+
+                       cnt=cnt+1;
+                   });
+
+               });
+
+
+               j=0;i=0;
+               cnt=0;
+               console.log('Before Checking For Duplicate VIN Number');
+               $("#NoOfCardsTbl tbody tr").each(function ()
+               {
+                   var row = $(this);
+                   j=0;
+                   i=i+1;
+                   cnt = 0;
+                   $("#NoOfCardsTbl tbody tr").each(function ()
+                   {
+                       var row1 = $(this);
+
+                       j=j+1;
+                       if(i>0 && j>1 && j>i)
+                       {
+                           var PrevIdent = row.find("td:eq(6) input[type='text']").val();
+                           var CurIdent =  row1.find("td:eq(6) input[type='text']").val();
+
+                           if(PrevIdent!="" && CurIdent!="")
+                           {
+                               if(PrevIdent.trim().toUpperCase()==CurIdent.trim().toUpperCase())
+                               {
+
+                                   if(!CurIdent.match(forVehicleNo))
+                                   {
+                                     document.getElementById('VINNumber_error_'+cnt).innerHTML ="Invalid VIN Number";
+                                     ret=false;
+                                   }
+                                   else if(!CurIdent.match(atLeastOneAlphabet))
+                                   {
+                                     document.getElementById('VINNumber_error_'+cnt).innerHTML ="Invalid VIN Number";
+                                     ret=false;
+                                   }
+                                   else if(CurIdent.length<17 || CurIdent.length>17)
+                                   {
+                                     document.getElementById('VINNumber_error_'+cnt).innerHTML ="Invalid VIN Number";
+                                     ret=false;
+                                   }
+                                   else
+                                   {
+                                       document.getElementById('VINNumber_error_'+cnt).innerHTML="Duplicate VIN Number";
+                                       ret=false;
+                                   }
+
+                               }
+                           }
+                       }
+
+                       cnt=cnt+1;
+                   });
+
+               });
+
+
+               j=0;i=0;
+               cnt=0;
+               console.log('Before Checking For Duplicate MobileNo');
+               $("#NoOfCardsTbl tbody tr").each(function ()
+               {
+                   var row = $(this);
+                   j=0;
+                   i=i+1;
+                   cnt = 0;
+                   $("#NoOfCardsTbl tbody tr").each(function ()
+                   {
+                       var row1 = $(this);
+
+                       j=j+1;
+                       if(i>0 && j>1 && j>i)
+                       {
+                           var PrevMbno = row.find("td:eq(7) input[type='text']").val();
+                           var CurMbno =  row1.find("td:eq(7) input[type='text']").val();
+
+                           if(PrevMbno!="" && CurMbno!="")
+                           {
+                               if(PrevMbno.trim()==CurMbno.trim())
+                               {
+                                   document.getElementById('MobileNo_error_'+cnt).innerHTML="Duplicate Mobile Number";
+                                   ret=false;
+                               }
+                           }
+                       }
+
+                       cnt=cnt+1;
+                   });
+               });
+
+
+               console.log('Before Checking Existing Vehicle No.');
+               var table = document.getElementById("NoOfCardsTbl");
+               cnt=-1;
+               for (let row of table.rows)
+               {
+                   //alert(row.cells[9].innerHTML);
+                   if(row.cells[9].innerHTML.trim()=="1")
+                   {
+                       var Vhno = $(row).find("td:eq(3) input[type='text']").val();
+
+                       if(Vhno!= undefined && Vhno!="")
+                       {
+                           document.getElementById('VechileNo_error_'+cnt).innerHTML="Vehicle No. already exists";
+                           ret=false;
+                       }
+                   }
+                   cnt=cnt+1;
+               }
+
+               var table = document.getElementById("NoOfCardsTbl");
+               //if (!$(VehicleVerifiedManually).prop("checked"))
+               //{
+                   console.log('Before Checking Vehicle No. Verified');
+                   cnt=-1;
+                   for (let row of table.rows)
+                   {
+                       //alert(row.cells[10].innerHTML);
+                       if(row.cells[10].innerHTML.trim()=="0")
+                       {
+                           var Vhno = $(row).find("td:eq(3) input[type='text']").val();
+
+                           if(Vhno!= undefined && Vhno!="")
+                           {
+                               if (!(Vhno.match(forVehicleNo)))
+                               {
+                                   document.getElementById('VechileNo_error_'+cnt).innerHTML ="Invalid Vehicle No.";
+                                   ret=false;
+                               }
+                               else if(Vhno.length<6 || Vhno.length>10)
+                               {
+                                   document.getElementById('VechileNo_error_'+cnt).innerHTML ="Invalid Vehicle No.";
+                                   ret=false;
+                               }
+                               else
+                               {
+                                   document.getElementById('VechileNo_error_'+cnt).innerHTML="Vehicle No. not verified";
+                                   ret=false;
+                               }
+                           }
+                       }
+
+                       cnt=cnt+1;
+
+                   }
+               //}
+
+               console.log('Before Checking Existing Mobile No.');
+                var table = document.getElementById("NoOfCardsTbl");
+                cnt=-1;
+                for (let row of table.rows)
+                {
+                    if(row.cells[11].innerHTML.trim()=="1")
+                    {
+                        document.getElementById('MobileNo_error_'+cnt).innerHTML="Mobile Number already exists";
+                        ret=false;
+                    }
+   
+                    cnt=cnt+1;
+                }
+
+                console.log('Before Checking Existing VIN No.');
+                var table = document.getElementById("NoOfCardsTbl");
+                cnt=-1;
+                for (let row of table.rows)
+                {
+                    if(row.cells[12].innerHTML.trim()=="1")
+                    {
+                        document.getElementById('VINNumber_error_'+cnt).innerHTML="VIN Number already exists";
+                        ret=false;
+                    }
+   
+                    cnt=cnt+1;
+                }
+
+        
+        return ret;
+    }
+    
+    $("#CommunicationMobileNo").on("blur", function () {
+        //debugger;
+        var communicationMobile = document.getElementById("CommunicationMobileNo").value;
+        if (communicationMobile == "") 
+        {
+            document.getElementById("comm_mobileNumber_error").innerHTML = "Mobile Number cannot be left blank";
+            return (false);
+        }
+        else if (document.getElementById("CommunicationMobileNo").value.substring(0, 1) == "0") 
+        {
+            document.getElementById("comm_mobileNumber_error").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
+            return false;
+        }
+        else if (document.getElementById("CommunicationMobileNo").value.length < 10) 
+        {
+            document.getElementById("comm_mobileNumber_error").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
+            return false;
+        }
+        else if(!document.getElementById("CommunicationMobileNo").value.match(phoneno)) 
+        {
+            document.getElementById("comm_mobileNumber_error").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
+            return false;
+        }
+        else 
+        {
+            document.getElementById("comm_mobileNumber_error").innerHTML = "";
+        }
+
+        var mobileNoUsed = false;
+        localStorage.setItem("MOBILENUMBERREADYUSED", "1");
+
+
+    });
+
+    $("#CommunicationEmailid").on("blur", function () {
+        //debugger;
+        var communicationEmail = document.getElementById("CommunicationEmailid").value;
+        if (communicationEmail == "") {
+            document.getElementById("comm_email_error").innerHTML = "Email cannot be left blank";
+            return (false);
+        }
+        else {
+            document.getElementById("comm_email_error").innerHTML = "";
+        }
+
+        if (communicationEmail.match(email)) {
+            document.getElementById("comm_email_error").innerHTML = "";
+        }
+        else {
+            document.getElementById("comm_email_error").innerHTML = "Invalid email id (e.g.: abc@gmail.com)";
+            return (false);
+        }
+
+        var emailUsed = false;
+        localStorage.setItem("EMAILIDALREADYUSED", "1");
+
+    });
+
+    function RemoveSpecialChar(txtName) {
+        if (txtName.value != '' && txtName.value.match(/^[\w ]+$/) == null) {
+            txtName.value = txtName.value.replace(/[\W]/g, '');
+        }
+    }
+    
+    $("#DealerCode").on("blur", function () 
+    {
+        debugger;
+        localStorage.setItem("DEALERFOUND", "0");
+        localStorage.setItem("DEALERMSG", "");
+
+        var dealerCode = document.getElementById("DealerCode").value;
+        if (dealerCode == "") 
+        {
+            document.getElementById("DealerCode_error").innerHTML = "Dealer Code is required";
+            document.getElementById("SalesExecutiveEmployeeID").value="";
+            document.getElementById("SalesExecutiveEmployeeID_error").innerHTML = ""
+            return (false);
+        }
+        else 
+        {
+            document.getElementById("DealerCode_error").innerHTML = "";
+        }
+
+        document.getElementById("SalesExecutiveEmployeeID_error").innerHTML = ""
+
+        $.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("CheckDealerCodeIsValid", "Common")',
+            data: { DealerCode: dealerCode },  // data to submit
+            dataType: "json",
+            success: function (data, status, xhr) {
+                console.log(data);
+                console.log(status);
+                console.log(data.status);
+debugger;
+                if (status == 'success') 
+                {
+                    if (data.status == 1) 
+                    {
+                        document.getElementById("DealerCode_error").innerHTML = "";
+                        localStorage.setItem("DEALERFOUND", "1");
+
+                         $.ajax({
+                            type: 'POST',  // http method
+                            url: '@Url.Action("GetAlSalesExeEmpIdAddOnOTCCardMapping", "AshokLeyLand")',
+                            data: { dealerCode: dealerCode },  // data to submit
+                            dataType: "json",
+                            success: function (data, status, xhr) {
+                                console.log(data);
+                                console.log(status);
+                                if (status == 'success') 
+                                {
+                                    document.getElementById("SalesExecutiveEmployeeID").value = data.salesExecutiveEmployeeID;
+  
+                                    if(data.statusCode==1000)
+                                    {
+                                        document.getElementById("SalesExecutiveEmployeeID").value = data.salesExecutiveEmployeeID;
+                                        document.getElementById("DealerCode_error").innerHTML ="";
+                                    }
+                                    else
+                                    {
+                                        document.getElementById("DealerCode_error").innerHTML = "";
+                                        document.getElementById("SalesExecutiveEmployeeID").value = data.salesExecutiveEmployeeID;
+                                    }
+
+                                    if (data == "Failed to load Customer Details")
+                                        document.getElementById("SalesExecutiveEmployeeID").value = "";
+                                }
+                                else 
+                                {
+                                    $("#DealerCode_error").html("");
+                                    document.getElementById("SalesExecutiveEmployeeID").value = "";
+                                }
+                            },
+                            error: function (xhr, ajaxOptions, thrownError) 
+                            {
+                                document.getElementById("SalesExecutiveEmployeeID").value = "";
+                            }
+                        });
+
+                    }
+                    else 
+                    {
+                        document.getElementById("DealerCode_error").innerHTML = data.reason;
+                        localStorage.setItem("DEALERFOUND", "0");
+                        document.getElementById("SalesExecutiveEmployeeID").value = "";
+                        localStorage.setItem("DEALERMSG", data.reason);
+                    }
+
+                    if (data == "Failed to load Dealer Details") 
+                    {
+                        document.getElementById("DealerCode_error").innerHTML = "Invalid Dealer Code";
+                        localStorage.setItem("DEALERFOUND", "0");
+                        document.getElementById("SalesExecutiveEmployeeID").value = "";
+                    }
+                }
+                else 
+                {
+                    document.getElementById("DealerCode_error").innerHTML = "Invalid Dealer Code";
+                    localStorage.setItem("DEALERFOUND", "0");
+                     document.getElementById("SalesExecutiveEmployeeID").value = "";
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                document.getElementById("DealerCode_error").innerHTML = "Invalid Dealer Code";
+                localStorage.setItem("DEALERFOUND", "0");
+            }
+        });
+
+
+    });
+
+    $("#CommunicationPincode").on("blur", function () 
+    {
+        debugger;
+        var pinCode = document.getElementById("CommunicationPincode").value.trim();
+        if (pinCode == "") {
+            document.getElementById("communicationPincode_error").innerHTML = "PIN Code is required";
+            return (false);
+        }
+        else if (document.getElementById("CommunicationPincode").value.substring(0, 1) == "0") 
+        {
+            document.getElementById("communicationPincode_error").innerHTML = "Invalid PIN Code. Min-Max 6 digits";
+            return false;
+        }
+        else if (document.getElementById("CommunicationPincode").value.length < 6) 
+        {
+            document.getElementById("communicationPincode_error").innerHTML = "Invalid PIN Code. Min-Max 6 digits";
+            return false;
+        }
+        else if (!document.getElementById("CommunicationPincode").value.match(pincode)) 
+        {
+            document.getElementById("communicationPincode_error").innerHTML = "Invalid Pin Code. Min-Max 6 digits";
+            return false;
+        }
+        else 
+        {
+            document.getElementById("communicationPincode_error").innerHTML = "";
+        }
+    });
+    
+    function ClearCardDeatils() 
+    {
+
+        $('#NoOfCardsTbl > tr').remove();
+        document.getElementById('NoOfCardsTbl').style.display = 'none';
+
+        $('#NoOfCards').attr("readonly", false);
+    }
+
+    $("#IndividualOrgName").on("blur", function () {
+        //debugger;
+        var individualOrgName = document.getElementById("IndividualOrgName").value.trim();
+        if (individualOrgName == "") {
+            document.getElementById("IndividualOrgName_error").innerHTML = "Customer/Org.Name is required";
+            return (false);
+        }
+        else {
+             document.getElementById("IndividualOrgName_error").innerHTML = "";
+        }
+
+         if (!isNaN(individualOrgName)) {
+                document.getElementById("IndividualOrgName_error").innerHTML = "Invalid Customer/Org.Name";
+                return false;
+             }
+            else {
+                document.getElementById("IndividualOrgName_error").innerHTML = "";
+            }
+
+        if (!individualOrgName.match(nameWithSpaceCheck)) {
+            document.getElementById("IndividualOrgName_error").innerHTML = "Invalid Customer/Org.Name";
+            return false;
+        }
+        else {
+            document.getElementById("IndividualOrgName_error").innerHTML = "";
+        }
+    });
+
+    $("#NameOnCard").on("blur", function () {
+        //debugger;
+        var nameOnCard = document.getElementById("NameOnCard").value.trim();
+        if (nameOnCard == "") {
+            document.getElementById("nameOnCard_error").innerHTML = "Name on Card field cannot be left blank";
+            return (false);
+        }
+        else {
+            document.getElementById("nameOnCard_error").innerHTML = "";
+        }
+
+        if (!isNaN(document.getElementById("NameOnCard").value.trim())) {
+            document.getElementById("nameOnCard_error").innerHTML = "Invalid Name on Card";
+            return false;
+        }
+        else {
+            document.getElementById("nameOnCard_error").innerHTML = "";
+        }
+
+        if (!document.getElementById("NameOnCard").value.match(nameWithSpaceCheck)) {
+            document.getElementById("nameOnCard_error").innerHTML = "Invalid Name on Card";
+            return false;
+        }
+        else {
+            document.getElementById("nameOnCard_error").innerHTML = "";
+        }
+    });
+
+     $("#CommunicationCityName").on("blur", function () {
+        //debugger;
+        var cityName = document.getElementById("CommunicationCityName").value.trim();
+        if (cityName == "") {
+            document.getElementById("communicationCityName_error").innerHTML = "City field cannot be left blank";
+            return (false);
+        }
+        else {
+            document.getElementById("communicationCityName_error").innerHTML = "";
+        }
+
+        if (!isNaN(document.getElementById("CommunicationCityName").value.trim())) {
+            document.getElementById("communicationCityName_error").innerHTML = "Invalid City Name";
+            return false;
+        }
+        else {
+            document.getElementById("communicationCityName_error").innerHTML = "";
+        }
+
+        if (!document.getElementById("CommunicationCityName").value.match(nameWithSpaceCheck)) {
+            document.getElementById("communicationCityName_error").innerHTML = "Invalid City Name";
+            return false;
+        }
+        else {
+            document.getElementById("communicationCityName_error").innerHTML = "";
+        }
+
+    });
+
+    $("#CommunicationAddress1").on("blur", function () {
+        //debugger;
+        var address = document.getElementById("CommunicationAddress1").value.trim();
+        if (address == "") {
+            document.getElementById("comm_address1_error").innerHTML = "Address field cannot be left blank";
+            return (false);
+        }
+        else {
+            if (!isNaN(document.getElementById("CommunicationAddress1").value.trim())) {
+                document.getElementById("comm_address1_error").innerHTML = "Invalid Address";
+                return false;
+            }
+            else {
+                document.getElementById("comm_address1_error").innerHTML = "";
+            }
+
+            if (address.match(atLeastOneAlphabet)) {
+                document.getElementById("comm_address1_error").innerHTML = "";
+            }
+            else {
+                document.getElementById("comm_address1_error").innerHTML = "Invalid Address";
+                return (false);
+            }
+        }     
+
+    });
+
+    $("#CommunicationAddress2").on("blur", function () {
+        //debugger;
+        var address = document.getElementById("CommunicationAddress2").value.trim();
+        if (address == "") {
+            document.getElementById("comm_address2_error").innerHTML = "Address field cannot be left blank";
+            return (false);
+        }
+        else {
+            if (!isNaN(document.getElementById("CommunicationAddress2").value.trim())) {
+                document.getElementById("comm_address2_error").innerHTML = "Invalid Address";
+                return false;
+            }
+            else {
+                document.getElementById("comm_address2_error").innerHTML = "";
+            }
+
+            if (address.match(atLeastOneAlphabet)) {
+                document.getElementById("comm_address2_error").innerHTML = "";
+            }
+            else {
+                document.getElementById("comm_address2_error").innerHTML = "Invalid Address";
+                return (false);
+            }
+        }       
+
+    });
+
+    $("#CommunicationDistrictId").change(function () {
+        var id = this.value;
+
+        if (id != 0) {
+            $("#comm_district_error").html("");
+        }
+    });
+
+    $("#IndividualOrgNameTitle").change(function () {
+        var id = this.value;
+
+        if (id != 0) {
+            $("#salutaion_error").html("");
+        }
+    });
+
+     $('#NoOfCards').on("cut copy paste",function(e) {
+          e.preventDefault();
+        });
+
+      $("#NoOfCards").on("blur", function ()
+      {
+
+        var noOfCards = document.getElementById("NoOfCards").value.trim();
+        if (noOfCards == "")
+        {
+            $('#NoOfCards_error').text("Please enter Number of Cards");
+            $("#NoOfCards_error").attr("style", "display:block");
+            return (false);
+        }
+        else if (Number(noOfCards) <=0 || Number(noOfCards) >25)
+        {
+            $('#NoOfCards_error').text("No. of Cards should be between 1 to 25");
+            $("#NoOfCards_error").attr("style", "display:block");
+            return (false);
+        }
+        else
+        {
+            $('#NoOfCards_error').text("");
+        }
+
+     });
+
+    $("#PanCardNumber").on("blur", function () 
+    {
+        //debugger;
+        var panNumber = document.getElementById("PanCardNumber").value.trim();
+        localStorage.setItem("PANNOALREADYUSED", "1");
+        localStorage.setItem("PANNOANDNAMEMATCHING", "1");
+        localStorage.setItem("INVALIDPAN", "1");
+
+        if (panNumber == "") 
+        {
+            document.getElementById("PanCardNumber_error").innerHTML = "Income Tax PAN field is required";
+            document.getElementById("PanCardNumber_error").className = "error";
+            return (false);
+        }
+        else 
+        {
+            document.getElementById("PanCardNumber_error").innerHTML = "";
+        }
+
+        var panNumberUsed = false;
+
+        document.getElementById("PanCardNumber").value = document.getElementById("PanCardNumber").value.trim().toUpperCase();
+        panNumber = document.getElementById("PanCardNumber").value.trim();
+
+        let forthdigitPan = panNumber.substr(3, 1);
+        console.log(forthdigitPan);
+        if (forthdigitPan != 'P') 
+        {
+            document.getElementById("PanCardNumber_error").innerHTML = "Invalid Income Tax PAN Number";
+            document.getElementById("PanCardNumber_error").className = "error";
+            return (false);
+        }
+        else 
+        {
+            if ($('#PanCardNumber').val().match(pancard)) 
+            {
+                document.getElementById("PanCardNumber_error").innerHTML = "Income Tax PAN Number is valid";
+                document.getElementById("PanCardNumber_error").className = "error text-success";
+            }
+            else 
+            {
+                document.getElementById("PanCardNumber_error").innerHTML = "Invalid Income Tax PAN Number";
+                document.getElementById("PanCardNumber_error").className = "error";
+                return (false);
+            }
+        }
+
+        var panno = $('#PanCardNumber').val();
+        var OrgName = $('#IndividualOrgName').val();
+        var correctPANName = '';
+
+        var externalPANAPIStatus="Y";
+
+        externalPANAPIStatus = document.getElementById("ExternalPANAPIStatus").value.trim();
+
+        console.log(externalPANAPIStatus);
+
+        if(externalPANAPIStatus=="Y")
+        {
+
+            $.ajax({
+                type: 'POST',
+                url: "PANValidation/MyHpOTCCardCustomer",
+                data: { PANNumber: document.getElementById("PanCardNumber").value },
+                dataType: "json",
+                success: function (data, status, xhr) 
+                {
+                    //debugger;
+                    var jsonData = JSON.parse(data);
+                     console.log(jsonData);
+                    if (status == 'success' && jsonData['status-code'] == '101') 
+                    {
+                        //document.applicationForm.IndividualOrgName.value = jsonData["result"]["name"];
+                        correctPANName = jsonData["result"]["name"];
+                        if (OrgName.toUpperCase() == correctPANName.toUpperCase()) 
+                        {
+                            localStorage.setItem("PANNOANDNAMEMATCHING", "1");
+                        }
+                        else 
+                        {
+                            document.getElementById("PanCardNumber_error").innerHTML = "Customer Name not match with pan name";
+                            document.getElementById("PanCardNumber_error").className = "error";
+                            localStorage.setItem("PANNOANDNAMEMATCHING", "0");
+                        }
+                        console.log(OrgName);
+                        console.log(correctPANName);
+                        console.log(localStorage.getItem("PANNOANDNAMEMATCHING"));
+                    }
+                    else 
+                    {
+                        document.getElementById("PanCardNumber_error").innerHTML = "Invalid Income Tax PAN Number";
+                        document.getElementById("PanCardNumber_error").className = "error";
+                        localStorage.setItem("INVALIDPAN", "0");
+                    }
+                },
+                error: function (jqXhr, textStatus, errorMessage) 
+                {
+                    document.getElementById("PanCardNumber_error").innerHTML = "Invalid Income Tax PAN Number";
+                    document.getElementById("PanCardNumber_error").className = "error";
+                    localStorage.setItem("INVALIDPAN", "0");
+                }
+            });
+
+        }
+        else
+        {
+            localStorage.setItem("INVALIDPAN", "1");
+            localStorage.setItem("PANNOANDNAMEMATCHING", "1");
+        }
+
+    });
+
+function ValidatePAN()
+{
+    debugger;
+    var panno = $('#PanCardNumber').val().trim();
+    var OrgName = $('#IndividualOrgName').val().trim();
+    var correctPANName = '';
+
+    if (panno == '')
+    {
+        document.getElementById("PanCardNumber_error").innerHTML = "Income Tax PAN field is required";
+        document.getElementById("PanCardNumber_error").className = "error";
+        return (false);
+    }
+
+    if (OrgName == '')
+    {
+        document.getElementById("IndividualOrgName_error").innerHTML = "Customer/Org.Name is required";
+        return (false);
+    }
+
+    if ($('#PanCardNumber').val().match(pancard))
+    {
+        document.getElementById("PanCardNumber_error").innerHTML = "Income Tax PAN Number is valid";
+        document.getElementById("PanCardNumber_error").className = "error text-success";
+    }
+    else
+    {
+        document.getElementById("PanCardNumber_error").innerHTML = "Invalid Income Tax PAN Number";
+        document.getElementById("PanCardNumber_error").className = "error";
+        return (false);
+    }
+
+    //solo Propritorship 4th Char Pan should be 'P'
+    let forthdigitPan = panno.substr(3, 1);
+    console.log(forthdigitPan);
+    if (forthdigitPan != 'P')
+    {
+        document.getElementById("PanCardNumber_error").innerHTML = "Invalid Income Tax PAN Number";
+        document.getElementById("PanCardNumber_error").className = "error";
+        //alert('Please Enter Valid Income Tax PAN');
+        return (false);
+    }
+    else
+    {
+        document.getElementById("PanCardNumber_error").innerHTML = "Income Tax PAN Number is valid";
+        document.getElementById("PanCardNumber_error").className = "error text-success";
+    }
+
+
+    var externalPANAPIStatus = "Y";
+
+    externalPANAPIStatus = document.getElementById("ExternalPANAPIStatus").value.trim();
+
+    console.log(externalPANAPIStatus);
+
+    if (externalPANAPIStatus == "Y")
+    {
+
+        $.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("PANValidation", "Customer")',
+            data: { PANNumber: panno },  // data to submit
+            dataType: "json",
+            success: function (data, status, xhr) {
+                //debugger;
+                var jsonData = JSON.parse(data);
+                if (status == 'success' && jsonData['status-code'] == '101') {
+
+                    console.log(jsonData);
+                    //document.applicationForm.IndividualOrgName.value = jsonData["result"]["name"];
+                    correctPANName = jsonData["result"]["name"];
+
+                    document.getElementById("PanCardNumber_error").innerHTML = "";
+                    document.getElementById("PanCardNumber_error").className = "error text-success";
+
+                    console.log(correctPANName);
+                    console.log(OrgName);
+                    if (correctPANName.toUpperCase() != OrgName.toUpperCase()) {
+                        document.getElementById("PanCardNumber_error").innerHTML = "Customer Name not match with pan name";
+                        document.getElementById("PanCardNumber_error").className = "error";
+                    }
+                    else {
+                        document.getElementById("PanCardNumber_error").innerHTML = "";
+                        document.getElementById("PanCardNumber_error").className = "error text-success";
+                    }
+
+                }
+                else {
+                    document.getElementById("PanCardNumber_error").innerHTML = "Invalid Income Tax PAN Number";
+                    document.getElementById("PanCardNumber_error").className = "error";
+                    console.log(jsonData['status-code']);
+                }
+            },
+            error: function (jqXhr, textStatus, errorMessage) {
+                document.getElementById("PanCardNumber_error").innerHTML = "Invalid Income Tax PAN Number";
+                console.log(jsonData['status-code']);
+                document.getElementById("PanCardNumber_error").className = "error";
+            }
+        });
+    }
+    
+}
+</script>
