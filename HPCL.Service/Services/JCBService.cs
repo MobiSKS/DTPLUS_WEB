@@ -270,6 +270,19 @@ namespace HPCL.Service.Services
 
             return response;
         }
+        public async Task<JCBCustomerEnrollmentModel> JCBCustomerEnrollment()
+        {
+            JCBCustomerEnrollmentModel model = new JCBCustomerEnrollmentModel();
+            model.Remarks = "";
+            model.ExternalPANAPIStatus = _configuration.GetSection("ExternalAPI:PANAPI").Value.ToString();
+            if (string.IsNullOrEmpty(model.ExternalPANAPIStatus))
+            {
+                model.ExternalPANAPIStatus = "Y";
+            }
+            model.CustomerStateMdl.AddRange(await _commonActionService.GetStateList());
+            model.VehicleTypeMdl.AddRange(await _commonActionService.GetVehicleTypeDropdown());
+            return model;
+        }
 
     }
 }

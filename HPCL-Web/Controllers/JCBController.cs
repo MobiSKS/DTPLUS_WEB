@@ -115,6 +115,11 @@ namespace HPCL_Web.Controllers
             var modals = await _jcbService.GetViewJCBOTCCardDealerAllocation(DealerCode, CardNo);
             return PartialView("~/Views/JCB/_JCBOTCCardsDealerAllocationTable.cshtml", modals);
         }
+        public async Task<IActionResult> JCBCustomerEnrollment()
+        {
+            var modals = await _jcbService.JCBCustomerEnrollment();
+            return View(modals);
+        }
 
     }
 }
