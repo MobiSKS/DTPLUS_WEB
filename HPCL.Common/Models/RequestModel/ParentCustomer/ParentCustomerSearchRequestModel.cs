@@ -11,5 +11,12 @@ namespace HPCL.Common.Models.RequestModel.ParentCustomer
     {
         public string ControlCardNo { get; set; }   
         public string CustomerID { get; set; }
+        public List<ConfigureSMSAlert> TypePCConfigureSMSAlerts { get; set; }
+    }
+    public class ConfigureSMSAlert
+    {
+        public string CustomerID { get; set; }
+        public  string TransactionID { get; set; }
+        public string statusId { get; set; }
     }
 }
