@@ -529,7 +529,9 @@
         public static string customerparentmappingeligibility = "api/dtplus/ParentCustomer/customer_parent_mapping_eligibility";
         public static string getparentcustomercontrolcardsearch = "api/dtplus/ParentCustomer/get_parent_customer_control_card_search";
         public static string parentcustomercontrolcardpinreset = "api/dtplus/ParentCustomer/parent_customer_control_card_pin_reset";
-        
+        public static string pcupdateconfiguresmsalerts = "api/dtplus/ParentCustomer/pc_update_configure_sms_alerts";
+        public static string pcconfiguresmsalerts = "api/dtplus/ParentCustomer/pc_configure_sms_alerts";
+
 
         #endregion
 
@@ -603,6 +605,8 @@
         public static string getJcbBalanceOtcCard = "api/dtplus/JCB/get_jcb_balance_otc_card";
         public static string insertDealerWiseJcbOtcCardRequest = "api/dtplus/JCB/insert_dealer_wise_jcb_otc_card_request";
         public static string viewJcbDealerOtcCardDetail = "api/dtplus/JCB/view_jcb_dealer_otc_card_detail";
+        public static string getAvailityJCBOtcCard = "api/dtplus/JCB/get_availity_JCB_otc_card";
+        public static string insertJcbCustomer = "api/dtplus/JCB/insert_jcb_customer";
         #endregion
 
         #region "Customer Dashboard"

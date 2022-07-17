@@ -1,8 +1,10 @@
 ﻿using HPCL.Common.Helper;
+using HPCL.Common.Models.ResponseModel.JCB;
 using HPCL.Common.Models.ViewModel.JCB;
 using HPCL.Common.Resources;
 using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace HPCL_Web.Controllers
@@ -119,6 +121,52 @@ namespace HPCL_Web.Controllers
         {
             var modals = await _jcbService.JCBCustomerEnrollment();
             return View(modals);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> GetJCBSalesExeEmpId(string dealerCode)
+        {
+            var addonOTCCardMapping = await _jcbService.GetJCBSalesExeEmpId(dealerCode);
+
+            return Json(addonOTCCardMapping);
+        }
+        public async Task<IActionResult> GetJCBCustomerOTCCardPartialView([FromBody] List<JCBCardEntryDetails> objCardDetails)
+        {
+            var modals = await _jcbService.GetJCBCustomerOTCCardPartialView(objCardDetails);
+            return PartialView("~/Views/JCB/_JCBCustomerOTCCardVehicleDetailsTbl.cshtml", modals);
+        }
+        [HttpPost]
+        public async Task<JsonResult> GetAvailableJCBOTCCardForDealer(string DealerCode)
+        {
+            List<JCBOTCCardDetails> lstCardDetails = await _jcbService.GetAvailableJCBOTCCardForDealer(DealerCode);
+
+            if (lstCardDetails != null)
+            {
+                return Json(new { lstCardDetails = lstCardDetails });
+            }
+            else
+            {
+                return Json("Failed to load Card Details");
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> JCBCustomerEnrollment(JCBCustomerEnrollmentModel customerModel)
+        {
+
+            customerModel = await _jcbService.JCBCustomerEnrollment(customerModel);
+
+            if (customerModel.Internel_Status_Code == 1000)
+            {
+                return RedirectToAction("SuccessRedirectJCBCustomerEnrollment", new { Message = customerModel.Remarks });
+            }
+
+            return View(customerModel);
+        }
+        public async Task<IActionResult> SuccessRedirectJCBCustomerEnrollment(string Message)
+        {
+            ViewBag.Message = Message;
+            return View();
         }
 
     }
