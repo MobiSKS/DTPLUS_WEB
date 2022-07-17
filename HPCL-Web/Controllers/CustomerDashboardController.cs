@@ -21,15 +21,15 @@ namespace HPCL_Web.Controllers
         }
         public async Task<IActionResult> Dashboard(string CustomerId)
         {
-            var dashboardLst = await _customerDashboardService.AccountSummary(CustomerId);
-            var verifyDetailsLst = await _customerDashboardService.VerifyYourDetails(CustomerId);
-            var reminderLst = await _customerDashboardService.Reminder(CustomerId);
+            //var dashboardLst = await _customerDashboardService.AccountSummary(CustomerId);
+            //var verifyDetailsLst = await _customerDashboardService.VerifyYourDetails(CustomerId);
+            //var reminderLst = await _customerDashboardService.Reminder(CustomerId);
 
             CustomerDashboardModel customerDashbord = new CustomerDashboardModel();
 
-            customerDashbord.accountSummaryResponseModels = dashboardLst;
-            customerDashbord.verifyYourDetailsResponseModels = verifyDetailsLst;
-            customerDashbord.reminderResponseModels = reminderLst;
+            //customerDashbord.accountSummaryResponseModels = dashboardLst;
+            //customerDashbord.verifyYourDetailsResponseModels = verifyDetailsLst;
+            //customerDashbord.reminderResponseModels = reminderLst;
 
             return View(customerDashbord);
         }
