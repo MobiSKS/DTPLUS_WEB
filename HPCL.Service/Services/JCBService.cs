@@ -420,8 +420,8 @@ namespace HPCL.Service.Services
 
             foreach (JCBCardEntryDetails item in customerModel.ObjJCBCardEntryDetail)
             {
-                form.Add(new StringContent(item.VechileNo.ToUpper().ToString()), "VechileNo");
-                form.Add(new StringContent(item.CardNo.ToUpper().ToString()), "CardNo");
+                form.Add(new StringContent(item.VechileNo.ToString()), "VechileNo");
+                form.Add(new StringContent(item.CardNo.ToString()), "CardNo");
                 form.Add(new StringContent(item.MobileNo.ToString()), "MobileNo");
                 form.Add(new StringContent(item.VehicleType.ToString()), "VehicleType");
                 form.Add(new StringContent(item.VINNumber.ToString()), "VINNumber");
