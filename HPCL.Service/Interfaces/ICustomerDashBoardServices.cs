@@ -10,9 +10,9 @@ namespace HPCL.Service.Interfaces
 {
     public interface ICustomerDashBoardServices
     {
-        Task<AccountSummaryResponseModel> AccountSummary(CustomerDashboardRequestModel customerDashboardRequestModel);
-        Task<VerifyYourDetailsResponseModel> VerifyYourDetails(CustomerDashboardRequestModel customerDashboardRequestModel);
-        Task<ReminderResponseModel> Reminder(CustomerDashboardRequestModel customerDashboardRequestModel);
+        Task<List<AccountSummaryResponseModel>> AccountSummary(string CustomerId);
+        Task<List<VerifyYourDetailsResponseModel>> VerifyYourDetails(string CustomerId);
+        Task<List<ReminderResponseModel>> Reminder(string CustomerId);
         Task<KeyEventsResponseModel> KeyEvents(CustomerDashboardRequestModel customerDashboardRequestModel);
         Task<LastFiveTransactionsResponseModel> LastFiveTransactions(CustomerDashboardRequestModel customerDashboardRequestModel);
     }
