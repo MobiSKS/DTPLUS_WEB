@@ -1,4 +1,5 @@
 ﻿using HPCL.Common.Helper;
+using HPCL.Common.Resources;
 using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -24,5 +25,40 @@ namespace HPCL_Web.Controllers
             var modals = await _dicvService.DICVDealerEnrollment();
             return View(modals);
         }
+        [HttpPost]
+        public async Task<JsonResult> DICVDealerEnrollment(string str)
+        {
+            var result = await _dicvService.InsertDICVDealerEnrollment(str);
+            return Json(new { result = result });
+        }
+        [HttpPost]
+        public async Task<JsonResult> SearchDICVDealer(string dealerCode, string dtpCode, string OfficerType)
+        {
+            var searchList = await _dicvService.SearchDICVDealer(dealerCode, dtpCode, OfficerType);
+            return Json(new { searchList = searchList });
+        }
+        [HttpPost]
+        public async Task<JsonResult> DICVDealerEnrollmentUpdate(string getAllData)
+        {
+            var result = await _dicvService.DICVDealerEnrollmentUpdate(getAllData);
+            return Json(new { result = result });
+        }
+        [HttpPost]
+        public async Task<JsonResult> CheckDICVDealerCodeExists(string DealerCode)
+        {
+            var responseData = await _dicvService.CheckDICVDealerCodeExists(DealerCode);
+
+            ModelState.Clear();
+
+            if (responseData.Internel_Status_Code.ToString() == Constants.SuccessInternelStatusCode)
+            {
+                return Json(responseData);
+            }
+            else
+            {
+                return Json("Failed to load Dealer Details");
+            }
+        }
+
     }
 }

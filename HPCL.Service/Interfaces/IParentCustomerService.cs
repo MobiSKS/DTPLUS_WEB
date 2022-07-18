@@ -43,5 +43,8 @@ namespace HPCL.Service.Interfaces
         Task<List<SuccessResponse>> ConfigureSMSAlerts([FromBody] ParentCustomerSearchRequestModel reqModel);
         Task<PCConfigureSMSAlertModel> GetPCAvailableSMSAlerts(string CustomerID);
         Task<List<SuccessResponse>> UpdateDndSmsAlertsConfigure(string CustomerId);
+        Task<AccountStatementRequestViewModel> GetAccountStatementRequest(string CustomerID);
+        Task<List<SuccessResponse>> UpdateAccountStatementRequest([FromBody] AccountStatementRequestModel reqEntity);
+        Task<List<SuccessResponse>> InsertAccountStatementRequest([FromBody] AccountStatementRequestModel reqEntity);
     }
 }

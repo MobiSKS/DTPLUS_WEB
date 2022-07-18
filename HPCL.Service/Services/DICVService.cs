@@ -1,6 +1,10 @@
 ﻿using HPCL.Common.Helper;
+using HPCL.Common.Models;
 using HPCL.Common.Models.CommonEntity;
 using HPCL.Common.Models.CommonEntity.ResponseEnities;
+using HPCL.Common.Models.RequestModel.DICV;
+using HPCL.Common.Models.RequestModel.Merchant;
+using HPCL.Common.Models.ResponseModel.AshokLayland;
 using HPCL.Common.Models.ViewModel.DICV;
 using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Http;
@@ -63,6 +67,136 @@ namespace HPCL.Service.Services
             model.OfficerTypes.AddRange(officerTypeLst);
 
             return model;
+        }
+        public async Task<InsertResponse> InsertDICVDealerEnrollment(string str)
+        {
+            JArray objs = JArray.Parse(JsonConvert.DeserializeObject(str).ToString());
+            List<DICVDealerEnrollmentModel> arrs = objs.ToObject<List<DICVDealerEnrollmentModel>>();
+            var email = "";
+
+            email = arrs[0].EmailId.ToLower();
+
+            var insertServiceBody = new DICVDealerEnrollmentModel
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                DealerCode = arrs[0].DealerCode,
+                DealerName = arrs[0].DealerName,
+                ZonalOfficeId = arrs[0].ZonalOfficeId,
+                RegionalOfficeId = arrs[0].RegionalOfficeId,
+                Address1 = arrs[0].Address1,
+                Address2 = arrs[0].Address2,
+                Address3 = arrs[0].Address3,
+                StateId = arrs[0].StateId,
+                CityName = arrs[0].CityName,
+                DistrictId = arrs[0].DistrictId,
+                Pin = arrs[0].Pin,
+                MobileNo = arrs[0].MobileNo,
+                EmailId = email,
+                OfficerType = arrs[0].OfficerType,
+                CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(insertServiceBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.insertDicvDealerEnrollment);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            InsertResponse result = obj.ToObject<InsertResponse>();
+            return result;
+        }
+        public async Task<SearchAlResult> SearchDICVDealer(string dealerCode, string dtpCode, string OfficerType)
+        {
+            var searchBody = new SearchDealerRequest
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                DealerCode = dealerCode,
+                DTPDealerCode = dtpCode,
+                OfficerType = OfficerType
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getDicvDealerDetail);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+
+            SearchAlResult searchList = obj.ToObject<SearchAlResult>();
+
+            if (searchList != null && searchList.data != null && searchList.data.Count > 0)
+            {
+                foreach (ALList item in searchList.data)
+                {
+                    item.ZOfficeID = item.ZonalOfficeID.ToString();
+                    item.ROfficeID = item.RegionalOfficeID.ToString();
+                    item.SId = item.StateId.ToString();
+                    item.DId = item.DistrictId.ToString();
+                    item.OTypeId = item.officerType.ToString();
+                }
+            }
+
+            return searchList;
+        }
+        public async Task<InsertResponse> DICVDealerEnrollmentUpdate(string getAllData)
+        {
+            JArray objs = JArray.Parse(JsonConvert.DeserializeObject(getAllData).ToString());
+            List<DICVDealerEnrollmentModel> arrs = objs.ToObject<List<DICVDealerEnrollmentModel>>();
+
+            var email = "";
+
+            email = arrs[0].EmailId.ToLower();
+
+            var insertServiceBody = new DICVDealerEnrollmentModel
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                DealerCode = arrs[0].DealerCode,
+                ZonalOfficeId = arrs[0].ZonalOfficeId,
+                RegionalOfficeId = arrs[0].RegionalOfficeId,
+                Address1 = arrs[0].Address1,
+                Address2 = arrs[0].Address2,
+                Address3 = arrs[0].Address3,
+                StateId = arrs[0].StateId,
+                CityName = arrs[0].CityName,
+                DistrictId = arrs[0].DistrictId,
+                Pin = arrs[0].Pin,
+                MobileNo = arrs[0].MobileNo,
+                EmailId = email,
+                ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(insertServiceBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.updateDicvDealerEnrollment);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            InsertResponse result = obj.ToObject<InsertResponse>();
+            return result;
+        }
+        public async Task<CommonResponseData> CheckDICVDealerCodeExists(string DealerCode)
+        {
+            CommonResponseData responseData = new CommonResponseData();
+
+            VerifyDealerRequestModel requestinfo = new VerifyDealerRequestModel()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                DealerCode = DealerCode
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(requestinfo), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.checkDicvDealerCode);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<CommonResponseData> searchList = jarr.ToObject<List<CommonResponseData>>();
+            responseData = searchList[0];
+            responseData.Internel_Status_Code = Convert.ToInt32(obj["Internel_Status_Code"].ToString());
+
+            return responseData;
         }
 
     }
