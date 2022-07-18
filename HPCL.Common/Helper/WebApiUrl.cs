@@ -532,6 +532,10 @@
         public static string pcupdateconfiguresmsalerts = "api/dtplus/ParentCustomer/pc_update_configure_sms_alerts";
         public static string pcconfiguresmsalerts = "api/dtplus/ParentCustomer/pc_configure_sms_alerts";
 
+        public static string getaccountstatmentrequestdetails = " api/dtplus/AccountStatement/get_account_statment_request_details";
+        public static string actiongetaccountstatmentrequesttype = " api/dtplus/AccountStatement/action_get_account_statment_request_type";
+        public static string insertaccountstatmentrequest = " api/dtplus/AccountStatement/insert_account_statment_request";
+
 
         #endregion
 
