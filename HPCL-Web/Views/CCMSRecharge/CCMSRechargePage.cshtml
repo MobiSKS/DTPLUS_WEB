@@ -29,19 +29,19 @@
                     <div class="form-group d-flex align-items-center flex-wrap">
                         <label class="font-weight-normal col-md-4 col-12">Control Card Number <sup class="text-danger">*</sup></label>
                         <div class="col-md-8 col-12">
-                            <input type="text" id="controlCardNoVal" class="form-control" onkeypress="return isNumberKey(event)">
+                            <input type="text" id="controlCardNoVal" class="form-control" maxlength="10" onkeypress="return isNumberKey(event)">
                             @Html.ValidationMessage("controlCardNoVal", "", new { @id = "controlCardNoValErr", @class = "text-danger" })
                         </div>
                     </div>
 
-                    <div class="form-group align-items-center flex-wrap" style="display:none;" id="cutomerName">
+                    <div class="form-group align-items-center" style="display:none;" id="cutomerName">
                         <label class="font-weight-normal col-md-4 col-12">Customer Name <sup class="text-danger">*</sup></label>
                         <div class="col-md-8 col-12">
                             <input type="text" id="customerNameVal" class="form-control">
                         </div>
                     </div>
 
-                    <div class="form-group d-flex align-items-center flex-wrap">
+                    <div class="form-group d-flex align-items-center">
                         <label class="font-weight-normal col-md-4 col-12">Amount <sup class="text-danger">*</sup></label>
                         <div class="col-md-8 col-12">
                             <input type="text" id="amountVal" onblur="AmountBlur(this)" class="form-control" maxlength="10">
@@ -79,8 +79,8 @@
                         <div class="col-md-8 col-12">
                             <div class="custom_select">
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="checkbox" id="inlineCheckboxTC" value="option1">
-                                    <label class="form-check-label" for="inlineCheckbox1">I Agree to <a data-toggle="modal" data-target="#termsConditions" class="anchorCustom">Terms &amp; Conditions</a> and <a class="anchorCustom" data-toggle="modal" data-target="#App_charges">Applicable Charges</a></label>
+                                    <input class="form-check-input" type="checkbox" id="inlineCheckbox">
+                                    <label class="form-check-label" for="inlineCheckbox">I Agree to <a data-toggle="modal" data-target="#termsConditions" class="anchorCustom">Terms &amp; Conditions</a> and <a class="anchorCustom" data-toggle="modal" data-target="#App_charges">Applicable Charges</a></label>
                                 </div>
                             </div>
                         </div>
@@ -370,6 +370,7 @@
         $("#mobNoVal").attr("readonly", false);
         $("#customerIdVal").attr("readonly", false);
         $("#controlCardNoVal").attr("readonly", false);
+        $("#customerNameVal").attr("readonly", false);
     }
 
     $("#mobNoVal").on("blur", function (){
@@ -515,7 +516,7 @@
                         $("#mobNoVal").attr("readonly", true);
                         $("#customerIdVal").attr("readonly", true);
                         $("#controlCardNoVal").attr("readonly", true);
-
+                        $("#customerNameVal").attr("readonly", true);
                         $('#submitButtonval').prop('disabled', false);
 
                     }else{
@@ -546,6 +547,8 @@
             $("#customerIdVal").val(currentRow.find('.customerIdVal').text());
             $("#customerNameVal").val(currentRow.find('.customerNameVal').text());
             $("#controlCardNoVal").val(currentRow.find('.conCardNoVal').text());
+            
+            $("#customerNameVal").attr("readonly", true);
 
             if($("#customerIdVal").val().trim() != ''){
                 $("#customerIdValErr").attr("style", "display:none");
@@ -566,7 +569,7 @@
        var controlCardNo = $("#controlCardNoVal").val();
        var amount = $("#amountVal").val();
 
-        if(mobNo.trim() != ''){
+        if(mobNo.trim() != ""){
             if(!mobNo.trim().match(/^[6789]\d{9}$/)){
                 $('#mobNoError').text("Invalid Mobile Number");
                 flag = "N";
@@ -577,7 +580,7 @@
             $('#customerIdValErr').text("Please enter Customer ID");
             flag = "N";
         }
-        if(customerId.trim() != ''){
+        if(customerId.trim() != ""){
             if(!customerId.trim().match(/^[24]\d{9}$/)){
                 $('#customerIdValErr').text("Invalid Customer ID");
                 flag = "N";
@@ -594,8 +597,8 @@
             flag = "N";
         }
 
-        if(customerId != '' || controlCardNo != '' || amount != ''){
-            if($("#inlineCheckboxTC").prop('checked') == false){
+        if(customerId != "" || controlCardNo != "" || amount != ""){
+            if($("#inlineCheckbox").prop('checked') == false){
                 alert("Please accept the terms and conditions.");
                 flag = "N";
             }
@@ -732,6 +735,7 @@
 
                     }else{
                         alert(res.verifyOtp[0].reason);
+                        $("#otpVal").val('');
                     }
 
 
