@@ -531,10 +531,14 @@
         public static string parentcustomercontrolcardpinreset = "api/dtplus/ParentCustomer/parent_customer_control_card_pin_reset";
         public static string pcupdateconfiguresmsalerts = "api/dtplus/ParentCustomer/pc_update_configure_sms_alerts";
         public static string pcconfiguresmsalerts = "api/dtplus/ParentCustomer/pc_configure_sms_alerts";
+        public static string pcdndconfiguresmsalerts = "api/dtplus/ParentCustomer/pc_dnd_configure_sms_alerts";
+        
 
         public static string getaccountstatmentrequestdetails = " api/dtplus/AccountStatement/get_account_statment_request_details";
         public static string actiongetaccountstatmentrequesttype = " api/dtplus/AccountStatement/action_get_account_statment_request_type";
         public static string insertaccountstatmentrequest = " api/dtplus/AccountStatement/insert_account_statment_request";
+        public static string updateaccountstatmentrequeststatus = " api/dtplus/AccountStatement/update_account_statment_request_status";
+        
 
 
         #endregion
@@ -621,6 +625,13 @@
         public static string customerDashboardLatestDrivestarsTransactions = "api/dtplus/customerdashboard/customer_dashboard_latest_drivestars_transactions";
         public static string customerDashboardReminder = "api/dtplus/customerdashboard/customer_dashboard_reminder";
         public static string customerDashboardUpdateVerifyYourDetails = "api/dtplus/customerdashboard/customer_dashboard_update_verify_your_details";
+        #endregion
+
+        #region DICV
+        public static string getDicvOfficerType = "api/dtplus/DICV/get_dicv_officer_type";
+        public static string insertDicvDealerEnrollment = "api/dtplus/DICV/insert_dicv_dealer_enrollment";
+        public static string getDicvDealerDetail = "api/dtplus/DICV/get_dicv_dealer_detail";
+        public static string updateDicvDealerEnrollment = "api/dtplus/DICV/update_dicv_dealer_enrollment";
         #endregion
     }
 }

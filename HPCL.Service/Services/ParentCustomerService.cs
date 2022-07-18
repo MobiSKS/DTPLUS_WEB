@@ -1285,12 +1285,70 @@ namespace HPCL.Service.Services
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
-            var response = await _requestService.CommonRequestService(content, WebApiUrl.UpdateDndSmsAlertsConfigureUrl);
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.pcdndconfiguresmsalerts);
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
             var jarr = obj["Data"].Value<JArray>();
             List<SuccessResponse> reasonList = jarr.ToObject<List<SuccessResponse>>();
             return reasonList;
         }
+        public async Task<AccountStatementRequestViewModel> GetAccountStatementRequest(string CustomerID)
+        {
+            AccountStatementRequestViewModel accountStatementResponse = new AccountStatementRequestViewModel();
 
+            var Request = new UpdateDndSmsAlertsConfigureReq()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                CustomerId = CustomerID
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(Request), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getaccountstatmentrequestdetails);
+
+            accountStatementResponse = JsonConvert.DeserializeObject<AccountStatementRequestViewModel>(response);
+
+            return accountStatementResponse;
+        }
+        public async Task<List<SuccessResponse>> InsertAccountStatementRequest([FromBody] AccountStatementRequestModel reqEntity)
+        {
+            var reqBody = new AccountStatementRequestModel
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                CustomerId = reqEntity.RequestId,
+                CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                StatementType=reqEntity.StatementType,
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.insertaccountstatmentrequest);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<SuccessResponse> reasonList = jarr.ToObject<List<SuccessResponse>>();
+            return reasonList;
+        }
+        public async Task<List<SuccessResponse>> UpdateAccountStatementRequest([FromBody] AccountStatementRequestModel reqEntity)
+        {
+            var reqBody = new AccountStatementRequestModel
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                CustomerId = reqEntity.RequestId,
+                RequestId = reqEntity.RequestId,
+                IsActivate = "0",
+                StatementType = reqEntity.StatementType,
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.updateaccountstatmentrequeststatus);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<SuccessResponse> reasonList = jarr.ToObject<List<SuccessResponse>>();
+            return reasonList;
+        }
     }
 }

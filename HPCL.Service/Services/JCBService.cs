@@ -200,11 +200,12 @@ namespace HPCL.Service.Services
             if (responseData != null && responseData.Status == 1)
             {
                 Int32 totalCard = Convert.ToInt32(string.IsNullOrEmpty(responseData.TotalCard) ? "0" : responseData.TotalCard);
-                Int32 balanceCard = Convert.ToInt32(string.IsNullOrEmpty(responseData.BalanceCard) ? "0" : responseData.BalanceCard);
-                if ((totalCard - balanceCard) >= 0)
-                    responseData.BalanceRequestCard = (totalCard - balanceCard).ToString();
-                else
-                    responseData.BalanceRequestCard = "0";
+                //Int32 balanceCard = Convert.ToInt32(string.IsNullOrEmpty(responseData.BalanceCard) ? "0" : responseData.BalanceCard);
+                //if ((totalCard - balanceCard) >= 0)
+                //    responseData.BalanceRequestCard = (totalCard - balanceCard).ToString();
+                //else
+                //    responseData.BalanceRequestCard = "0";
+                responseData.BalanceRequestCard = responseData.BalanceCard;
             }
             else
             {

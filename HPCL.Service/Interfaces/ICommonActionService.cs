@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using HPCL.Common.Models.ResponseModel.MyHpOTCCardCustomer;
 using HPCL.Common.Models;
 using HPCL.Common.Models.CommonEntity.RequestEnities;
+using HPCL.Common.Models.ResponseModel.ParentCustomer;
 
 namespace HPCL.Service.Interfaces
 {
@@ -83,5 +84,6 @@ namespace HPCL.Service.Interfaces
         Task<CustomerInserCardResponseData> CheckVINNoUsed(string VinNo);
         Task<List<ZonalOfficeResponseModal>> GetZonalOfficeListbySBUtype(string SBUTypeId);
         Task<List<GetLimitTypeResponse>> GetAllLimitType();
+        Task<List<GetAccountStatementType>> GetAccountStatementRequestType();
     }
 }

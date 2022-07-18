@@ -9,6 +9,7 @@ using HPCL.Common.Models.RequestModel.Merchant;
 using HPCL.Common.Models.RequestModel.MyHpOTCCardCustomer;
 using HPCL.Common.Models.ResponseModel.Customer;
 using HPCL.Common.Models.ResponseModel.MyHpOTCCardCustomer;
+using HPCL.Common.Models.ResponseModel.ParentCustomer;
 using HPCL.Common.Models.ViewModel.Locations;
 using HPCL.Common.Models.ViewModel.Officers;
 using HPCL.Service.Interfaces;
@@ -1776,6 +1777,22 @@ namespace HPCL.Service.Services
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
             var jarr = obj["Data"].Value<JArray>();
             List<GetLimitTypeResponse> lst = jarr.ToObject<List<GetLimitTypeResponse>>();
+            return lst;
+        }
+        public async Task<List<GetAccountStatementType>> GetAccountStatementRequestType()
+        {
+            var requestInfo = new VehicleDuplicationCheckRequestModel()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId")
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(requestInfo), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.actiongetaccountstatmentrequesttype);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<GetAccountStatementType> lst = jarr.ToObject<List<GetAccountStatementType>>();
             return lst;
         }
     }
