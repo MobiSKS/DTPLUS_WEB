@@ -1,0 +1,354 @@
+﻿@model HPCL.Common.Models.ViewModel.ParentCustomer.AccountStatementRequestViewModel
+@using HPCL.Common.Resources
+
+
+<div class="col-lg-12 px-0">
+    <div class="bg-white p-2 p-md-4" style="overflow: hidden;">
+        <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
+            <li class="breadcrumb-item"><a href="@Url.Action("Financial","ParentCustomer")" class="text_primary">Financial</a> </li>
+            <li class="breadcrumb-item font-weight-light">Account Statement Request</li>
+        </ul>
+        <div id="response" class="mb-3 text-center alert" style="display:none"></div>
+        <form>
+            <div class="w-100">
+                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
+                    <div class="border-1 rounded border-grey pb-3">
+                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Account Statement Request</p>
+
+                        <div class="col-lg-12 col-md-12 col-12 py-3">
+
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">Customer ID <sup class="text-danger">*</sup></label>
+
+                                        <div class="col-md-8 col-12 ">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.CustomerId, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+
+                                            </div>
+
+                                            <span class="error" id="CustomerID_error"></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="d-flex align-items-center justify-content-center mt-0">
+                                <div class="px-2">
+                                    <button class="btn btn_primary" type="Submit" id="btnSearch">@Label.Search</button>
+                                </div>
+                                <div class="px-2">
+                                    <button class="btn btn_primary" type="button" id="btnReset">@Label.Reset</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+
+                </div>
+                <div class="clearfix"></div>
+
+            </div>
+        </form>
+        @if (ViewBag.Reset == "")
+        {
+            <div id="show_Table" class="mt-2 tobehiddenonSuccess">
+                @if (Model.Data != null)
+                {
+                    @if (Model.Data.CustomerDetails.Count() > 0)
+                    {
+                        <div>
+                            <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Customer Info</p>
+                            <table class="datatable table table-striped table-bordered table-responsive" style="width:100%;" id="CustomerDetails">
+                                <thead style="background-color:lightgray;">
+                                    <tr>
+
+
+                                        <th style="width:10%;">ZO</th>
+                                        <th style="width:10%;">RO</th>
+                                        <th style="width:10%;">Customer Name</th>
+                                        <th style="width:10%;">Name on Card</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="searchMerchantTableBody">
+
+                                    @foreach (var item in Model.Data.CustomerDetails)
+                                    {
+                                        <tr>
+                                            <td>@item.ZO</td>
+                                            <td>@item.RO</td>
+                                            <td>@item.CustomerName</td>
+                                            <td>@item.NameonCard</td>
+
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    @if (Model.Data.StatementDetails.Count() > 0)
+                    {
+                        <div>
+                            <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Active Service</p>
+                            <table class="datatable table table-striped table-bordered table-responsive" style="width:100%;" id="StatementDetails">
+                                <thead style="background-color:lightgray;">
+                                    <tr>
+
+
+                                        <th style="width:10%;">Statement Name</th>
+                                        <th style="width:10%;">Opting Date</th>
+                                        <th style="width:10%;">Action</th>
+                                        <th style="width:10%;">StatementID</th>
+                                        <th style="width:10%;">RequestId</th>s
+                                    </tr>
+                                </thead>
+                                <tbody id="searchMerchantTableBody">
+
+                                    @foreach (var item in Model.Data.StatementDetails)
+                                    {
+                                        <tr>
+                                            <td>@item.StatementName</td>
+                                            <td>@item.OptingDate</td>
+                                            <td>
+                                                <a  class="d-block" onclick="DeactivateStatementRequest(this);" title="">Deactivate</a>
+                                            </td>
+                                            <td>@item.StatementId</td>
+                                            <td>@item.RequestId</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                          <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Activate Service Alert</p>
+                        <div class="col-lg-12 col-md-12 col-12 py-3">
+
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">Statement Type <sup class="text-danger">*</sup></label>
+
+                                        <div class="col-md-8 col-12 ">
+                                            <div class="custom_select">
+                                                @Html.DropDownListFor(m => m.StatementTypeId, new SelectList(Model.StatementTypes, "TypeId", "TypeName"), new { @class = "form-control" })
+                                                <span class="error" id="statementType_error"></span>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="d-flex align-items-center justify-content-center mt-0">
+                                <div class="px-2">
+                                    <button class="btn btn_primary" type="button" id="btnActivate">ACTIVATE</button>
+                                </div>
+
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        }
+
+    </div>
+    <div class="clearfix"></div>
+</div>
+<script type="text/javascript">
+        $(document).ready(function () {
+
+        });
+
+        
+        $("#btnActivate").on("click",(function (e) {
+            var flag="Y";
+            var customerID = document.getElementById("CustomerId").value.trim();
+            var statementTypeId= $("#StatementTypeId").val();
+            
+            if (customerID == "") {
+                document.getElementById("CustomerID_error").innerHTML = "Please enter Customer ID";
+                $("#CustomerId").focus;
+                flag="N";
+                return (false);
+            }
+            else {
+                if (!customerID.match(mappedCustomerId)) {
+                    $("#CustomerID_error").attr("style", "display:block");
+                    $("#CustomerID_error").html("Invalid Customer ID");
+                    flag="N";
+                    return (false);
+                }
+                else {
+                    document.getElementById("CustomerID_error").innerHTML = "";
+                }
+
+            }
+            if(statementTypeId=="" || statementTypeId=="0" }){
+                $("#statementType_error").attr("style", "display:block");
+                $("#statementType_error").html("Please select Statement Type");
+                flag="N";
+                return (false);
+            }
+            else{
+                $("#statementType_error").attr("style", "display:none");
+                $("#statementType_error").html("");
+            }
+            if(flag=="N"){
+               e.preventDefault();
+            }
+            else{
+                var reqmodel = {CustomerId: customerID, StatementType: statementTypeId };
+                 $.ajax({
+                     type: 'POST',
+                     url: '@Url.Action("InsertAccountStatementRequest", "ParentCustomer")',
+                     contentType: "application/json; charset=utf-8",
+                     dataType: 'json',
+                     data: JSON.stringify(reqmodel),
+                     success: function (data) {
+                        if(data.length>0){
+                               if(data[0].status=="0"){
+                                  $("#response").addClass("alert-danger");
+                                  if($("#response").hasClass("alert-success"))
+                                     $("#response").removeClass("alert-success");
+                               }
+                               else{
+                                   $("#response").addClass("alert-success");
+                                   if($("#response").hasClass("alert-danger"))
+                                     $("#response").removeClass("alert-danger");
+                               }
+                               $("#response").html(data[0].reason);
+                               $("#response").attr("style","display:block");
+                               //$(".toBeHiddenOnSuccess").hide();
+                           }
+
+                     },
+                     error: function (ex) {
+                         alert('Error.' + ex);
+                     }
+                 });
+
+            }
+        }));
+        function DeactivateStatementRequest(o) {
+            var flag="Y";
+            var customerID = document.getElementById("CustomerId").value.trim();
+            var row=o.closest("tr");
+            var statementTypeId= row[0].Cells[3].innerText;
+            var requestId= row[0].Cells[4].innerText;
+            
+            if (customerID == "") {
+                document.getElementById("CustomerID_error").innerHTML = "Please enter Customer ID";
+                $("#CustomerId").focus;
+                flag="N";
+                return (false);
+            }
+            else {
+                if (!customerID.match(mappedCustomerId)) {
+                    $("#CustomerID_error").attr("style", "display:block");
+                    $("#CustomerID_error").html("Invalid Customer ID");
+                    flag="N";
+                    return (false);
+                }
+                else {
+                    document.getElementById("CustomerID_error").innerHTML = "";
+                }
+
+            }
+            
+            if(flag=="Y"){
+                if(confirm('Do you want to deactivate the Account statement request?')){
+                    var reqmodel = {CustomerId: customerID, StatementType: statementTypeId ,RequestId:requestId};
+                    $.ajax({
+                         type: 'POST',
+                         url: '@Url.Action("UpdateAccountStatementRequest", "ParentCustomer")',
+                         contentType: "application/json; charset=utf-8",
+                         dataType: 'json',
+                         data: JSON.stringify(reqmodel),
+                         success: function (data) {
+                            if(data.length>0){
+                                   if(data[0].status=="0"){
+                                      $("#response").addClass("alert-danger");
+                                      if($("#response").hasClass("alert-success"))
+                                         $("#response").removeClass("alert-success");
+                                   }
+                                   else{
+                                       $("#response").addClass("alert-success");
+                                       if($("#response").hasClass("alert-danger"))
+                                         $("#response").removeClass("alert-danger");
+                                   }
+                                   $("#response").html(data[0].reason);
+                                   $("#response").attr("style","display:block");
+                                   //$(".toBeHiddenOnSuccess").hide();
+                               }
+
+                         },
+                         error: function (ex) {
+                             alert('Error.' + ex);
+                         }
+                     });
+                 }
+            }
+        }));
+        $("#btnSearch").on("click",(function (e) {
+            var flag="Y";
+            var customerID = document.getElementById("CustomerId").value.trim();
+            if (customerID == "") {
+                document.getElementById("CustomerID_error").innerHTML = "Please enter Customer ID";
+                $("#CustomerId").focus;
+                flag="N";
+                return (false);
+            }
+            else {
+                if (!customerID.match(mappedCustomerId)) {
+                    $("#CustomerID_error").attr("style", "display:block");
+                    $("#CustomerID_error").html("Invalid Customer ID");
+                    flag="N";
+                    return (false);
+                }
+                else {
+                    document.getElementById("CustomerID_error").innerHTML = "";
+                }
+
+            }
+            if(flag=="N"){
+               e.preventDefault();
+            }
+        }));
+    $("#CustomerId").on("blur", function ()
+    {
+        //debugger;
+        if (document.getElementById("CustomerId").value.trim() == "")
+        {
+            $("#CustomerID_error").attr("style", "display:block");
+            $("#CustomerID_error").html("Please enter Customer ID");
+            return false;
+        }
+        else if (!$("#CustomerId").val().match(mappedCustomerId))
+        {
+            $("#CustomerID_error").attr("style", "display:block");
+            $("#CustomerID_error").html("Invalid Customer ID");
+            return false;
+        }
+        else
+        {
+            $("#CustomerID_error").html("");
+        }
+
+    });
+    $("#StatementTypeId").change(function () {
+       var statementTypeId= $("#StatementTypeId").val();
+       if(statementTypeId=="" || statementTypeId=="0" }){
+           $("#statementType_error").attr("style", "display:block");
+            $("#statementType_error").html("Please select Statement Type");
+       }
+       else{
+           $("#statementType_error").attr("style", "display:none");
+            $("#statementType_error").html("");
+       }
+    });
+</script>
