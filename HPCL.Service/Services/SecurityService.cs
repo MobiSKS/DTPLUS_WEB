@@ -602,5 +602,30 @@ namespace HPCL.Service.Services
             List<SuccessResponse> res = jarr.ToObject<List<SuccessResponse>>();
             return res;
         }
+        public async Task<List<SuccessResponse>> UserCreationRequest([FromBody] UserCreationReqModel reqEntity)
+        {
+
+            var forms = new UserCreationReqModel
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                FirstName = reqEntity.FirstName,
+                MiddleName = reqEntity.MiddleName,
+                LastName  = reqEntity.LastName,
+                Email = reqEntity.Email,
+                Comments   = reqEntity.Comments,
+                UserRole = reqEntity.UserRole,
+                TypeUserCreationDetails  = reqEntity.TypeUserCreationDetails,
+                CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.usercreationrequest);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<SuccessResponse> res = jarr.ToObject<List<SuccessResponse>>();
+            return res;
+        }
     }
 }

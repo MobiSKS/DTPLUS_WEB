@@ -38,5 +38,10 @@ namespace HPCL.Service.Interfaces
         Task<ParentChildCustomerMappingViewModel> ConfirmParentChildCustomerMapping(ParentChildCustomerMappingRequest requestInfo);
         Task<CustomerDriveStarsDetailsModel> GetDriveStarsDetails(string CustomerID);
         Task<List<SuccessResponse>> ValidateParentCustomerId(string CustomerId);
+        Task<ControlCardSearchModel> GetCustomerControlCard(string CustomerID);
+        Task<List<SuccessResponse>> SubmitRestPinforParentCustomer([FromBody] ParentCustomerSearchRequestModel reqModel);
+        Task<List<SuccessResponse>> ConfigureSMSAlerts([FromBody] ParentCustomerSearchRequestModel reqModel);
+        Task<PCConfigureSMSAlertModel> GetPCAvailableSMSAlerts(string CustomerID);
+        Task<List<SuccessResponse>> UpdateDndSmsAlertsConfigure(string CustomerId);
     }
 }

@@ -387,10 +387,12 @@
           debugger;
           setTimeout(function(){
           var rowCount=$("table tr").length;
-          if(count==rowCount){
+          var currentRow=o.closest('tr');
+          var cnt=currentRow.cells[0].innerText.replace('.','').trim();
+          if(cnt==rowCount){
               var flag="Y";
               var parentCustomerID = document.getElementById("ParentCustomerId").value.trim();
-              var currentRow=o.closest('tr');
+             
               var customerId=currentRow.cells[1].children[0].value;
               if(customerId.trim()!=""){
                   if (!customerId.match(mappedCustomerId))
@@ -411,7 +413,7 @@
                                 var row = $(this);
                                 var index=row[0].rowIndex+1;
                                 var custId = row[0].cells[1].children[0].value;
-                                if(custId==customerId && index!=count)
+                                if(custId==customerId && index!=cnt)
                                 {
                                     $("#childCustomerId_error").html("Already specified customer at row number "+index);
                                     $("#childCustomerId_error").attr("style","display:block");
@@ -441,7 +443,7 @@
                   setTimeout(function(){
                       if(flag=="Y"){
 
-                              var i =count+1;
+                              var i =parseInt(cnt)+1;
                               var table = $("table");
                               var rows="<tr>";
                               rows += '<td></td>';

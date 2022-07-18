@@ -72,6 +72,8 @@ namespace HPCL_Web.Controllers
                     return View(user);
                 }
             }
+            //Setting User IP from Front End
+            CommonBase.userip = user.Userip;
 
             var access_token = _api.GetToken();
 
@@ -135,20 +137,25 @@ namespace HPCL_Web.Controllers
                                 };
 
                                 SessionMenuModel.sessionList.AddRange(sessionData);
-                            //}
                             HttpContext.Session.SetString("RegionalOfcId", loginRes[0].RegionalOfficeID);
                             HttpContext.Session.SetString("LocalStorage", num.ToString());
                             HttpContext.Session.SetString("UserName", loginRes[0].UserName);
-                            //HttpContext.Session.SetString("LoginType", loginRes[0].LoginType);
-                            //HttpContext.Session.SetString("RegionalId", string.IsNullOrEmpty(loginRes[0].RegionalOfficeID) ? "" : loginRes[0].RegionalOfficeID);
-                            //if (loginRes[0].LoginType == "Merchant")
-                            //{
-                            //    HttpContext.Session.SetString("MerchantID", loginRes[0].UserId);
-                            //}
-                            HttpContext.Session.SetString("UserId", loginRes[0].UserId);
-                            //HttpContext.Session.SetString("Today", DateTime.Now.ToString("yyyy-MM-dd"));
 
-                            return RedirectToAction("Profile");
+                            HttpContext.Session.SetString("UserId", loginRes[0].UserId);
+
+                            if (loginRes[0].LoginType == "Customer")
+                            {
+                                return RedirectToAction("Dashboard", "CustomerDashboard", new { CustomerId = HttpContext.Session.GetString("UserId").ToString() });
+                            }
+                            else if (loginRes[0].LoginType == "Merchant")
+                            {
+                                return RedirectToAction("Dashboard", "MerchantDashboard");
+                            }
+                            else
+                            {
+                                return RedirectToAction("Profile");
+                            }
+
                         }
                         else
                         {
@@ -167,97 +174,18 @@ namespace HPCL_Web.Controllers
                         HttpContext.Session.Remove("Token_" + user.UserId);
                         ViewBag.Message = "Details not found for this User!";
                         return View(user);
-                        //ModelState.Clear();
-                        //ModelState.AddModelError(string.Empty, "Error Loading Location Details");
-                        //return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
                     }
                 }
             }
         }
 
-        //[HttpPost]
-        //public async Task<IActionResult> Index(UserInfoModel user)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        // Validate Captcha Code
-        //        if (!Captcha.ValidateCaptchaCode(user.CaptchaCode, HttpContext))
-        //        {
-        //            ViewBag.CaptchaCodeStatus = "Error";
-        //            return View(user);
-        //        }
-        //    }
-
-        //    var access_token = _api.GetToken();
-
-        //    if (access_token.Result != null)
-        //    {
-        //        HttpContext.Session.SetString("Token", access_token.Result);
-        //    }
-
-        //    var loginBody = new UserInfoModel
-        //    {
-        //        UserId = user.UserId,
-        //        Useragent = CommonBase.useragent,
-        //        Userip = CommonBase.userip,
-        //        Password = user.Password
-        //    };
-
-        //    using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
-        //    {
-        //        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
-
-        //        StringContent content = new StringContent(JsonConvert.SerializeObject(loginBody), Encoding.UTF8, "application/json");
-
-        //        using (var Response = await client.PostAsync(WebApiUrl.getLoginUrl, content))
-        //        {
-        //            if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-        //            {
-        //                var ResponseContent = Response.Content.ReadAsStringAsync().Result;
-
-        //                JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-        //                var jarr = obj["Data"].Value<JArray>();
-        //                List<LoginResponse> loginRes = jarr.ToObject<List<LoginResponse>>();
-
-        //                if (loginRes[0].Status == 0)
-        //                {
-        //                    HttpContext.Session.Remove("Token");
-        //                    ViewBag.Message = loginRes[0].Reason;
-        //                    return View(user);
-        //                }
-        //                else if (loginRes[0].Status == 1)
-        //                {
-        //                    Random rnd = new Random();
-        //                    int num = rnd.Next();
-        //                    HttpContext.Session.SetString("LocalStorage", num.ToString());
-        //                    HttpContext.Session.SetString("UserName", loginRes[0].UserName);
-        //                    HttpContext.Session.SetString("LoginType", loginRes[0].LoginType);
-        //                    HttpContext.Session.SetString("RegionalId", string.IsNullOrEmpty(loginRes[0].RegionalOfficeID) ? "": loginRes[0].RegionalOfficeID);
-        //                    if (loginRes[0].LoginType == "Merchant")
-        //                    {
-        //                        HttpContext.Session.SetString("MerchantID", loginRes[0].UserId);
-        //                    }
-        //                    HttpContext.Session.SetString("UserId", loginRes[0].UserId);
-        //                    HttpContext.Session.SetString("Today", DateTime.Now.ToString("yyyy-MM-dd"));
-        //                    return RedirectToAction("Profile");
-        //                }
-
-        //                ModelState.Clear();
-        //                return Json(new { loginRes = loginRes });
-        //            }
-        //            else
-        //            {
-        //                ModelState.Clear();
-        //                ModelState.AddModelError(string.Empty, "Error Loading Location Details");
-        //                return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
-        //            }
-        //        }
-        //    }
-        //}
-
         [HttpPost]
         public async Task<ActionResult> TopMenu([FromBody] string userId)
         {
+            string[] values = userId.Split(',');
+            userId = values[0];
+            string ipAddress = values[1];
+
             if (SessionMenuModel.sessionList.Count == 1)
             {
                 HttpContext.Session.SetString("Token", SessionMenuModel.sessionList[0].Token);
@@ -274,6 +202,8 @@ namespace HPCL_Web.Controllers
                 HttpContext.Session.SetString("BreadCrumbsAction", SessionMenuModel.sessionList[0].BreadCrumbsAction == null ? "" : SessionMenuModel.sessionList[0].BreadCrumbsAction);
                 HttpContext.Session.SetString("CurrentAction", SessionMenuModel.sessionList[0].CurrentAction == null ? "" : SessionMenuModel.sessionList[0].CurrentAction);
                 HttpContext.Session.SetString("BreadCrumbsPerviousMenuName", SessionMenuModel.sessionList[0].BreadCrumbsPerviousMenuName == null ? "" : SessionMenuModel.sessionList[0].BreadCrumbsPerviousMenuName);
+                HttpContext.Session.SetString("IpAddress", ipAddress);
+                CommonBase.userip = ipAddress;
             }
             else
             {
@@ -293,6 +223,8 @@ namespace HPCL_Web.Controllers
                     HttpContext.Session.SetString("BreadCrumbsAction", item.BreadCrumbsAction == null ? "" : item.BreadCrumbsAction);
                     HttpContext.Session.SetString("CurrentAction", item.CurrentAction == null ? "" : item.CurrentAction);
                     HttpContext.Session.SetString("BreadCrumbsPerviousMenuName", item.BreadCrumbsPerviousMenuName == null ? "" : item.BreadCrumbsPerviousMenuName);
+                    HttpContext.Session.SetString("IpAddress", ipAddress);
+                    CommonBase.userip = ipAddress;
                 }
             }
 
@@ -340,6 +272,10 @@ namespace HPCL_Web.Controllers
         [HttpPost]
         public async Task<JsonResult> SetSessionItems([FromBody] string userId)
         {
+            string[] values = userId.Split(',');
+            userId = values[0];
+            string ipAddress = values[1];
+
             if (SessionMenuModel.sessionList.Count == 1)
             {
                 HttpContext.Session.SetString("Token", SessionMenuModel.sessionList[0].Token);
@@ -356,6 +292,8 @@ namespace HPCL_Web.Controllers
                 HttpContext.Session.SetString("BreadCrumbsAction", SessionMenuModel.sessionList[0].BreadCrumbsAction == null ? "" : SessionMenuModel.sessionList[0].BreadCrumbsAction);
                 HttpContext.Session.SetString("CurrentAction", SessionMenuModel.sessionList[0].CurrentAction == null ? "" : SessionMenuModel.sessionList[0].CurrentAction);
                 HttpContext.Session.SetString("BreadCrumbsPerviousMenuName", SessionMenuModel.sessionList[0].BreadCrumbsPerviousMenuName == null ? "" : SessionMenuModel.sessionList[0].BreadCrumbsPerviousMenuName);
+                HttpContext.Session.SetString("IpAddress", ipAddress);
+                CommonBase.userip = ipAddress;
 
                 return Json("Success");
             }
@@ -377,6 +315,8 @@ namespace HPCL_Web.Controllers
                     HttpContext.Session.SetString("BreadCrumbsAction", item.BreadCrumbsAction == null ? "" : item.BreadCrumbsAction);
                     HttpContext.Session.SetString("CurrentAction", item.CurrentAction == null ? "" : item.CurrentAction);
                     HttpContext.Session.SetString("BreadCrumbsPerviousMenuName", item.BreadCrumbsPerviousMenuName == null ? "" : item.BreadCrumbsPerviousMenuName);
+                    HttpContext.Session.SetString("IpAddress", ipAddress);
+                    CommonBase.userip = ipAddress;
                 }
                 return Json("Success");
             }

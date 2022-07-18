@@ -38,6 +38,14 @@ namespace HPCL_Web.Controllers
         {
             return View();
         }
+        public IActionResult Search()
+        {
+            return View();
+        }
+        public IActionResult Requests()
+        {
+            return View();
+        }
         public async Task<IActionResult> ManageProfile(string CustomerId, string NameOnCard)
         {
             var modals = await _customerService.ManageProfile(CustomerId, NameOnCard);
@@ -198,7 +206,7 @@ namespace HPCL_Web.Controllers
             {
                 parentChildCustomerMapping = await _customerService.ParentChildCustomerMapping(requestInfo);
                 parentChildCustomerMapping.ParentCustomerId = requestInfo.ParentCustomerId;
-               
+
             }
             return View(parentChildCustomerMapping);
         }
@@ -240,6 +248,46 @@ namespace HPCL_Web.Controllers
             var reason = await _customerService.ValidateParentCustomerId(CustomerId);
             return Json(reason);
         }
+        public async Task<IActionResult> ControlCardSearch()
+        {
+            return View();
+        }
 
+        public async Task<IActionResult> GetCustomerControlCard(string CustomerID)
+        {
+            var modals = await _customerService.GetCustomerControlCard(CustomerID);
+            return PartialView("~/Views/ParentCustomer/_ControlCardDetailsTbl.cshtml", modals);
+        }
+        public async Task<IActionResult> ControlCardPinReset()
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<JsonResult> SubmitRestPinforParentCustomer([FromBody] ParentCustomerSearchRequestModel reqModel)
+        {
+            var modals = await _customerService.SubmitRestPinforParentCustomer(reqModel);
+            return Json(modals);
+        }
+        public async Task<IActionResult> PCConfigureSMSAlerts(PCConfigureSMSAlertModel reqEntity)
+        {
+            PCConfigureSMSAlertModel modals = new PCConfigureSMSAlertModel();
+            if (reqEntity.CustomerID != null && reqEntity.CustomerID != "")
+            {
+                modals = await _customerService.GetPCAvailableSMSAlerts(reqEntity.CustomerID);
+            }
+            return View(modals);
+        }
+        [HttpPost]
+        public async Task<JsonResult> ConfigureSMSAlerts([FromBody] ParentCustomerSearchRequestModel reqModel)
+        {
+            var modals = await _customerService.ConfigureSMSAlerts(reqModel);
+            return Json(modals);
+        }
+        [HttpPost]
+        public async Task<JsonResult> UpdateDndSmsAlertsConfigure(string CustomerId)
+        {
+            var reasonList = await _customerService.UpdateDndSmsAlertsConfigure(CustomerId);
+            return Json(new { reasonList = reasonList });
+        }
     }
 }

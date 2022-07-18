@@ -237,7 +237,8 @@
         public static string manageeditusers = "api/dtplus/UserManage/manage_edit_user";
         public static string updateuserrolelocation = "api/dtplus/UserManage/update_user_role_location";
         public static string manageusersrolelocationdelete = "api/dtplus/UserManage/manage_users_role_location_delete";
-        
+        public static string usercreationrequest = "api/dtplus/UserManage/user_creation_request";
+
 
         #endregion
 
@@ -526,9 +527,14 @@
         public static string getchildmappingdetails = "api/dtplus/ParentCustomer/get_child_mapping_details";
         public static string pcdrivestarsbalanceinfo = "api/dtplus/ParentCustomer/pc_drivestars_balance_info";
         public static string customerparentmappingeligibility = "api/dtplus/ParentCustomer/customer_parent_mapping_eligibility";
-        
+        public static string getparentcustomercontrolcardsearch = "api/dtplus/ParentCustomer/get_parent_customer_control_card_search";
+        public static string parentcustomercontrolcardpinreset = "api/dtplus/ParentCustomer/parent_customer_control_card_pin_reset";
+        public static string pcupdateconfiguresmsalerts = "api/dtplus/ParentCustomer/pc_update_configure_sms_alerts";
+        public static string pcconfiguresmsalerts = "api/dtplus/ParentCustomer/pc_configure_sms_alerts";
 
-
+        public static string getaccountstatmentrequestdetails = " api/dtplus/AccountStatement/get_account_statment_request_details";
+        public static string actiongetaccountstatmentrequesttype = " api/dtplus/AccountStatement/action_get_account_statment_request_type";
+        public static string insertaccountstatmentrequest = " api/dtplus/AccountStatement/insert_account_statment_request";
 
 
         #endregion
@@ -603,6 +609,18 @@
         public static string getJcbBalanceOtcCard = "api/dtplus/JCB/get_jcb_balance_otc_card";
         public static string insertDealerWiseJcbOtcCardRequest = "api/dtplus/JCB/insert_dealer_wise_jcb_otc_card_request";
         public static string viewJcbDealerOtcCardDetail = "api/dtplus/JCB/view_jcb_dealer_otc_card_detail";
+        public static string getAvailityJCBOtcCard = "api/dtplus/JCB/get_availity_JCB_otc_card";
+        public static string insertJcbCustomer = "api/dtplus/JCB/insert_jcb_customer";
+        #endregion
+
+        #region "Customer Dashboard"
+        public static string customerDashboardVerifyYourDetails = "api/dtplus/customerdashboard/customer_dashboard_verify_your_details";
+        public static string customerDashboardAccountSummary = "api/dtplus/customerdashboard/customer_dashboard_account_summary";
+        public static string customerDashboardLastTransactions = "api/dtplus/customerdashboard/customer_dashboard_last_transactions";
+        public static string customerDashboardKeyEvent = "api/dtplus/customerdashboard/customer_dashboard_key_event";
+        public static string customerDashboardLatestDrivestarsTransactions = "api/dtplus/customerdashboard/customer_dashboard_latest_drivestars_transactions";
+        public static string customerDashboardReminder = "api/dtplus/customerdashboard/customer_dashboard_reminder";
+        public static string customerDashboardUpdateVerifyYourDetails = "api/dtplus/customerdashboard/customer_dashboard_update_verify_your_details";
         #endregion
     }
 }
