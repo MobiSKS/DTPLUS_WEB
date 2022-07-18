@@ -24,5 +24,24 @@ namespace HPCL_Web.Controllers
             var modals = await _dicvService.DICVDealerEnrollment();
             return View(modals);
         }
+        [HttpPost]
+        public async Task<JsonResult> DICVDealerEnrollment(string str)
+        {
+            var result = await _dicvService.InsertDICVDealerEnrollment(str);
+            return Json(new { result = result });
+        }
+        [HttpPost]
+        public async Task<JsonResult> SearchDICVDealer(string dealerCode, string dtpCode, string OfficerType)
+        {
+            var searchList = await _dicvService.SearchDICVDealer(dealerCode, dtpCode, OfficerType);
+            return Json(new { searchList = searchList });
+        }
+        [HttpPost]
+        public async Task<JsonResult> DICVDealerEnrollmentUpdate(string getAllData)
+        {
+            var result = await _dicvService.DICVDealerEnrollmentUpdate(getAllData);
+            return Json(new { result = result });
+        }
+
     }
 }
