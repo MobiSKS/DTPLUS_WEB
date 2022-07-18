@@ -610,6 +610,17 @@
         public static string insertDealerWiseJcbOtcCardRequest = "api/dtplus/JCB/insert_dealer_wise_jcb_otc_card_request";
         public static string viewJcbDealerOtcCardDetail = "api/dtplus/JCB/view_jcb_dealer_otc_card_detail";
         public static string getAvailityJCBOtcCard = "api/dtplus/JCB/get_availity_JCB_otc_card";
+        public static string insertJcbCustomer = "api/dtplus/JCB/insert_jcb_customer";
+        #endregion
+
+        #region "Customer Dashboard"
+        public static string customerDashboardVerifyYourDetails = "api/dtplus/customerdashboard/customer_dashboard_verify_your_details";
+        public static string customerDashboardAccountSummary = "api/dtplus/customerdashboard/customer_dashboard_account_summary";
+        public static string customerDashboardLastTransactions = "api/dtplus/customerdashboard/customer_dashboard_last_transactions";
+        public static string customerDashboardKeyEvent = "api/dtplus/customerdashboard/customer_dashboard_key_event";
+        public static string customerDashboardLatestDrivestarsTransactions = "api/dtplus/customerdashboard/customer_dashboard_latest_drivestars_transactions";
+        public static string customerDashboardReminder = "api/dtplus/customerdashboard/customer_dashboard_reminder";
+        public static string customerDashboardUpdateVerifyYourDetails = "api/dtplus/customerdashboard/customer_dashboard_update_verify_your_details";
         #endregion
     }
 }

@@ -362,32 +362,35 @@
         {
             sessionStorage.setItem("CurrentLoggedInUser", '@Context.Session.GetString("UserId")');
         }
-        debugger;
-        console.log("Session",sessionStorage.getItem("CurrentLoggedInUser"));
-        $.ajax({
-            type: 'POST',  // http method
-            url: '@Url.Action("TopMenu", "Home")',
-            contentType: "application/json; charset=utf-8",
-            data: JSON.stringify(sessionStorage.getItem("CurrentLoggedInUser")),
-            dataType: "html",
-            success: function (data, status, xhr) {
-                        var v = data;
-                        if (status == 'success') {
-                            $("#topMenuList").html(data);
-                            //$(".breadcrumb").html("");
-                            //var breadCrumbHtml = "<li class='breadcrumb-item'><a href='@Url.Action(@Context.Session.GetString("BreadCrumbsAction"), @Context.Session.GetString("BreadCrumbsController"))' class='text_primary'>@Context.Session.GetString("BreadCrumbsPerviousMenuName")</a> </li><li class='breadcrumb-item font-weight-light'>@Context.Session.GetString("CurrentAction")</li>";
-                            //$(".breadcrumb").html(breadCrumbHtml);
-                        }
-                        else {
-                            console.log(v);
-                        }
-                    },
-                error: function (jqXhr, textStatus, errorMessage) {
-                    console.log("jqXhr",jqXhr);
-                    console.log("textStatus",textStatus);
-                    console.log("errorMessage",errorMessage);
-                }
-        });
+        
+        
+        $.getJSON("https://api.ipify.org?format=json", function(data) {
+            $.ajax({
+                type: 'POST',  // http method
+                url: '@Url.Action("TopMenu", "Home")',
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(sessionStorage.getItem("CurrentLoggedInUser") + "," + data.ip),
+                dataType: "html",
+                success: function (data, status, xhr) {
+                            var v = data;
+                            if (status == 'success') {
+                                $("#topMenuList").html(data);
+                                //$(".breadcrumb").html("");
+                                //var breadCrumbHtml = "<li class='breadcrumb-item'><a href='@Url.Action(@Context.Session.GetString("BreadCrumbsAction"), @Context.Session.GetString("BreadCrumbsController"))' class='text_primary'>@Context.Session.GetString("BreadCrumbsPerviousMenuName")</a> </li><li class='breadcrumb-item font-weight-light'>@Context.Session.GetString("CurrentAction")</li>";
+                                //$(".breadcrumb").html(breadCrumbHtml);
+                            }
+                            else {
+                                console.log(v);
+                            }
+                        },
+                    error: function (jqXhr, textStatus, errorMessage) {
+                        console.log("jqXhr",jqXhr);
+                        console.log("textStatus",textStatus);
+                        console.log("errorMessage",errorMessage);
+                    }
+            });
+        })
+
 
         $('button').each(function() {
             debugger;
@@ -546,26 +549,27 @@
     });
 
     $(window).focus(function() {
-        var userid = sessionStorage.getItem("CurrentLoggedInUser");
-
-        $.ajax({
-            type: 'POST',  // http method
-            url: '@Url.Action("SetSessionItems", "Home")',
-            contentType: "application/json; charset=utf-8",
-            data: JSON.stringify(userid),
-            dataType: "json",
-            success: function (data, status, xhr) {
-                        if (status == 'success') {
-                            console.log("User sessions has been restored");
-                        }
-                        else {
-                            console.log("output",data);
-                        }
-                    },
-                error: function (jqXhr, textStatus, errorMessage) {
-                    //document.getElementById("CustomerRegionID_error").innerHTML = "Error populating card details";
-                }
-        });
+        $.getJSON("https://api.ipify.org?format=json", function(data) {
+            var userid = sessionStorage.getItem("CurrentLoggedInUser");
+            $.ajax({
+                type: 'POST',  // http method
+                url: '@Url.Action("SetSessionItems", "Home")',
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(userid + "," + data.ip),
+                dataType: "json",
+                success: function (data, status, xhr) {
+                            if (status == 'success') {
+                                console.log("User sessions has been restored");
+                            }
+                            else {
+                                console.log("output",data);
+                            }
+                        },
+                    error: function (jqXhr, textStatus, errorMessage) {
+                        //document.getElementById("CustomerRegionID_error").innerHTML = "Error populating card details";
+                    }
+            });    
+        })
     });
 
     function preventBack() { window.history.forward(); }  

@@ -20,7 +20,7 @@
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
                                         <label class="font-weight-normal col-md-4 col-12">Customer/Org. Name <sup class="text-danger">*</sup></label>
-                                        <div class="col-md-2 col-12">
+                                        <div class="col-md-2 col-12 pr-0">
                                             <div class="custom_select">
                                                 @Html.DropDownListFor(x => x.IndividualOrgNameTitle, new[]{
                                                 new SelectListItem(){ Text = "Title", Value = "0" },
@@ -233,10 +233,10 @@
                                         <div class="col-md-7 col-12">
                                             <div class="d-flex align-items-center flex-wrap">
                                                 <div class="px-2">
-                                                    <button class="btn btn_primary" onclick="LoadCardDeatils()" type="button" id="btnAdd">Add</button>
+                                                    <button class="btn btn_primary" onclick="LoadCardDeatils()" type="button" id="btnAdd">ADD</button>
                                                 </div>
                                                 <div class="px-2">
-                                                    <button class="btn btn_primary" type="button" onclick="ClearCardDeatils()" style="display:none">Reset</button>
+                                                    <button class="btn btn_primary" type="button" onclick="ClearCardDeatils()" id="btnReset" disabled>RESET</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -543,7 +543,8 @@ $(document).ready(function ()
                            }, 2000);
 
                            $('#NoOfCards').attr("readonly", true);
-                           //$("#btnAdd").attr("disabled", true);
+                           $("#btnAdd").attr("disabled", true);
+                           $("#btnReset").attr("disabled", false);
                            $('#DealerCode').attr("readonly", true);
                        }
                    },
@@ -552,6 +553,7 @@ $(document).ready(function ()
                    $("#ViewNoOfCardsTbl").html("");
                    document.getElementById("dvViewNoOfCardsTbl").style.display = "none";
                    $("#btnAdd").attr("disabled", false);
+                   $("#btnReset").attr("disabled", true);
                    $('#DealerCode').attr("readonly", false);
                }
            });
@@ -1024,6 +1026,7 @@ $(document).ready(function ()
                    var vehicleType =row.find('td').eq(5).find('select').val();
                    var VINNumber = row.find("td:eq(6) input[type='text']").val();
                    var MobileNo = row.find("td:eq(7) input[type='text']").val();
+                   var selectedFile = row.find("td:eq(8) input[type='file']").val();
 
                    if(CardNo.trim()=='')
                    {
@@ -1148,6 +1151,16 @@ $(document).ready(function ()
                        }
                    }
 
+                   if (selectedFile.trim() == "")
+                   {
+                       document.getElementById('RC_error_'+cnt).innerHTML="Please upload valid file";
+                       ret=false;
+                   }
+                   else
+                   {
+                       document.getElementById('RC_error_'+cnt).innerHTML="";
+                   }
+                   
                    cnt=cnt+1;
 
                });
@@ -1618,11 +1631,19 @@ debugger;
     
     function ClearCardDeatils() 
     {
-
+        debugger;
         $('#NoOfCardsTbl > tr').remove();
+        $('#OldVehicleDetails > tr').remove();
         document.getElementById('NoOfCardsTbl').style.display = 'none';
+        document.getElementById("ViewNoOfCardsTbl").style.display = "none";
+        document.getElementById("dvViewNoOfCardsTbl").style.display = "none";
 
         $('#NoOfCards').attr("readonly", false);
+        $("#ViewNoOfCardsTbl").html("");
+        $("#NoOfCards").val("");
+        $("#btnAdd").attr("disabled", false);
+        $("#btnReset").attr("disabled", true);
+        $('#DealerCode').attr("readonly", false);
     }
 
     $("#IndividualOrgName").on("blur", function () {
@@ -2021,4 +2042,151 @@ function ValidatePAN()
     }
     
 }
+
+$("#AddressProof").on("blur", function () {
+        //debugger;
+        var addressProof = document.getElementById("AddressProof").value.trim();
+        if (addressProof == "") {
+            document.getElementById("AddressProofErr").innerHTML = "Please select valid file";
+            return (false);
+        }
+        else {
+            document.getElementById("AddressProofErr").innerHTML = "";
+        }
+
+ });
+
+ $("#IDProof").on("blur", function () {
+        //debugger;
+        var addressProof = document.getElementById("IDProof").value.trim();
+        if (addressProof == "") {
+            document.getElementById("IDProofErr").innerHTML = "Please select valid file";
+            return (false);
+        }
+        else {
+            document.getElementById("IDProofErr").innerHTML = "";
+        }
+
+ });
+
+ $("#PanCardProof").on("blur", function () {
+        //debugger;
+        var addressProof = document.getElementById("PanCardProof").value.trim();
+        if (addressProof == "") {
+            document.getElementById("PanCardProofErr").innerHTML = "Please select valid file";
+            return (false);
+        }
+        else {
+            document.getElementById("PanCardProofErr").innerHTML = "";
+        }
+
+ });
+
+$("#AddressProof").change(function () 
+{
+    $("#AddressProofErr").html("");
+
+    //idFront = $(this).val().replace(/C:\\Fakepath\\/i, '');
+
+    var regex = /(.*?)\.(pdf|gif|png|jpeg|jpg|JPEG|bmp|doc|docx)$/;
+    if (regex.test($(this).val()))
+    {
+        if (typeof (FileReader) != "undefined") 
+        {
+            if(this.files[0].size < 1048576)
+            {
+                var valueSize = (this.files[0].size) / 1024;
+            }
+            else
+            {
+                $("#AddressProofErr").text("");
+                $('#AddressProof').val('');
+                $("#AddressProofErr").text("File size should not exceed 1MB");
+            } 
+
+        } 
+        else 
+        {
+            $('#AddressProof').val('');
+        }
+    }
+    else 
+    {
+        $("#AddressProofErr").text("");
+        $('#AddressProof').val('');
+        $("#AddressProofErr").text("Invalid File Type");
+    }
+});
+
+$("#IDProof").change(function () 
+{
+    $("#IDProofErr").html("");
+
+    //idFront = $(this).val().replace(/C:\\Fakepath\\/i, '');
+
+    var regex = /(.*?)\.(pdf|gif|png|jpeg|jpg|JPEG|bmp|doc|docx)$/;
+    if (regex.test($(this).val()))
+    {
+        if (typeof (FileReader) != "undefined") 
+        {
+            if(this.files[0].size < 1048576)
+            {
+                var valueSize = (this.files[0].size) / 1024;
+            }
+            else
+            {
+                $("#IDProofErr").text("");
+                $('#IDProof').val('');
+                $("#IDProofErr").text("File size should not exceed 1MB");
+            } 
+
+        } 
+        else 
+        {
+            $('#IDProof').val('');
+        }
+    }
+    else 
+    {
+        $("#IDProofErr").text("");
+        $('#IDProof').val('');
+        $("#IDProofErr").text("Invalid File Type");
+    }
+});
+
+$("#PanCardProof").change(function () 
+{
+    $("#PanCardProofErr").html("");
+
+    //idFront = $(this).val().replace(/C:\\Fakepath\\/i, '');
+
+    var regex = /(.*?)\.(pdf|gif|png|jpeg|jpg|JPEG|bmp|doc|docx)$/;
+    if (regex.test($(this).val()))
+    {
+        if (typeof (FileReader) != "undefined") 
+        {
+            if(this.files[0].size < 1048576)
+            {
+                var valueSize = (this.files[0].size) / 1024;
+            }
+            else
+            {
+                $("#PanCardProofErr").text("");
+                $('#PanCardProof').val('');
+                $("#PanCardProofErr").text("File size should not exceed 1MB");
+            } 
+
+        } 
+        else 
+        {
+            $('#PanCardProof').val('');
+        }
+    }
+    else 
+    {
+        $("#PanCardProofErr").text("");
+        $('#PanCardProof').val('');
+        $("#PanCardProofErr").text("Invalid File Type");
+    }
+});
 </script>

@@ -150,5 +150,24 @@ namespace HPCL_Web.Controllers
             }
         }
 
+        [HttpPost]
+        public async Task<IActionResult> JCBCustomerEnrollment(JCBCustomerEnrollmentModel customerModel)
+        {
+
+            customerModel = await _jcbService.JCBCustomerEnrollment(customerModel);
+
+            if (customerModel.Internel_Status_Code == 1000)
+            {
+                return RedirectToAction("SuccessRedirectJCBCustomerEnrollment", new { Message = customerModel.Remarks });
+            }
+
+            return View(customerModel);
+        }
+        public async Task<IActionResult> SuccessRedirectJCBCustomerEnrollment(string Message)
+        {
+            ViewBag.Message = Message;
+            return View();
+        }
+
     }
 }
