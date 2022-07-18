@@ -1571,7 +1571,7 @@ namespace HPCL.Service.Services
             var jarr = obj["Data"].Value<JArray>();
             List<UpdateCustomerAddress> lst = jarr.ToObject<List<UpdateCustomerAddress>>();
 
-            if (lst != null && lst.Count > 0)
+            if (lst != null && lst.Count > 0 && lst[0].Status == 1)
             {
                 custMdl = lst[0];
 
@@ -1583,7 +1583,7 @@ namespace HPCL.Service.Services
 
                 custMdl.CustomerStateMdl.AddRange(await _commonActionService.GetStateList());
                 custMdl.CASID = custMdl.CommunicationStateId.ToString();
-                custMdl.CADID= custMdl.CommunicationDistrictId.ToString();
+                custMdl.CADID = custMdl.CommunicationDistrictId.ToString();
                 custMdl.PASID = custMdl.PermanentStateId.ToString();
                 custMdl.PADID = custMdl.PermanentDistrictId.ToString();
 
@@ -1651,6 +1651,17 @@ namespace HPCL.Service.Services
             {
                 custMdl.Message = obj["Message"].ToString();
                 custMdl.CommunicationAddress1 = "";
+                custMdl.Status = 0;
+                custMdl.Reason = "";
+                if (lst != null && lst.Count > 0 && lst[0].Status == 0)
+                {
+                    custMdl.Status = lst[0].Status;
+                    custMdl.Reason = lst[0].Reason;
+                }
+                if (lst != null && lst.Count == 0)
+                {
+                    custMdl.Reason = obj["Message"].ToString();
+                }
             }
 
             return custMdl;

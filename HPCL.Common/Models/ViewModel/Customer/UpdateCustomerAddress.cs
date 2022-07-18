@@ -128,5 +128,7 @@ namespace HPCL.Common.Models.ViewModel.Customer
         public int TBEntityId { get; set; }
         public string TBEntityName { get; set; }
         public string FormNumber { get; set; }
+        public int Status { get; set; }
+        public string Reason { get; set; }
     }
 }
