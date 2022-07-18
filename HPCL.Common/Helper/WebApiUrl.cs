@@ -622,5 +622,9 @@
         public static string customerDashboardReminder = "api/dtplus/customerdashboard/customer_dashboard_reminder";
         public static string customerDashboardUpdateVerifyYourDetails = "api/dtplus/customerdashboard/customer_dashboard_update_verify_your_details";
         #endregion
+
+        #region DICV
+        public static string getDicvOfficerType = "api/dtplus/DICV/get_dicv_officer_type";
+        #endregion
     }
 }
