@@ -12,7 +12,7 @@
         @*<form id="formValid" method="POST" class="toBeHiddenOnSuccess" data-ajax="true" data-ajax-controller="TerminalManagement" data-ajax-action="TerminalInstallationRequest" data-ajax-method="POST" data-ajax-success="OnSuccess" data-ajax-failure="OnFailure">*@
         <form id="formValid" class="toBeHiddenOnSuccess">
             <div class="w-100">
-                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mb-3"> 
+                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mb-3">
                     <div class="border-1 rounded border-grey pb-0">
                         <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Terminal Installation Request</p>
                         <div class="col-lg-12 col-md-12 col-12 py-3">
@@ -22,7 +22,7 @@
                                         <label class="font-weight-normal col-md-4 col-12">SBU Type <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                
+
                                                 @Html.DropDownListFor(m => m.SBUTypeId, Enumerable.Empty<SelectListItem>(),null, new { @class = "form-control sbuType" })
                                                 <span class="error" id="sbuType_error"></span>
                                             </div>
@@ -39,10 +39,10 @@
                                         </div>
                                     </div>
                                 </div>
-                              
+
                             </div>
                             <div class="d-flex align-items-center flex-wrap">
-                                  <div class="col-lg-6 col-12">
+                                <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
                                         <label class="font-weight-normal  col-md-4 col-12">Regional Office <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
@@ -63,11 +63,14 @@
                                         </div>
                                     </div>
                                 </div>
-                               
+
                             </div>
                             <div class="d-flex align-items-center justify-content-center mt-0">
                                 <div class="px-2">
                                     <button class="btn btn_primary" type="button" id="btnSearch" name="submit">Search</button>
+                                </div>
+                                <div class="px-2">
+                                    <button class="btn btn_primary" type="submit" id="btnSave" name="submit" onclick="resetPress()">RESET</button>
                                 </div>
                             </div>
                             <div class="clearfix"></div>
@@ -76,7 +79,7 @@
                     </div>
                 </div>
 
-                <div id="labelMerchantDetails" class="col-lg-12 col-md-12 col-12 pr-0 pl-0 pb-3" style="display:none;"> 
+                <div id="labelMerchantDetails" class="col-lg-12 col-md-12 col-12 pr-0 pl-0 pb-3" style="display:none;">
                     <div class="border-1 rounded border-grey h-100">
                         <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold" id="label">Merchant Details</p>
                         <div class="col-lg-12 col-md-12 col-12 py-3">
@@ -125,7 +128,7 @@
                                         @*<input type="text"  class="col-12" id="DistrictName" style="border:none" disabled/>*@
                                         <label class="font-weight-normal  col-12" id="DistrictName"></label>
                                     </div>
-                                </div> 
+                                </div>
                             </div>
                         </div>
                         <div class="clearfix"></div>
@@ -209,7 +212,7 @@
                                 <div class="col-sm-10 col-12">
                                     <label class="font-weight-normal col-md-5 col-12 mb-0">Justification<sup class="text-danger">*</sup></label>
                                     <div class="d-flex align-items-center justify-content-start flex-wrap mb-3">
-                                        <textarea rows="4" cols="50" id="justificationId" class="form-control" maxlength = "250"></textarea>
+                                        <textarea rows="4" cols="50" id="justificationId" class="form-control" maxlength="250"></textarea>
                                         <span class="text-danger" id="justification_error"></span>
                                     </div>
                                 </div>
@@ -217,9 +220,7 @@
                                     <div class="px-2">
                                         <button class="btn btn_primary" type="button" id="btnAdd" name="submit">ADD</button>
                                     </div>
-                                    <div class="px-2">
-                                        <button class="btn btn_primary" type="submit" id="btnSave" name="submit" onclick="resetPress()">RESET</button>
-                                    </div>
+
                                 </div>
                             </div>
                         </div>
@@ -241,7 +242,11 @@
          $("#myTable").attr("style", "display:none");
          $("#Just").attr("style", "display:none");
          $("#justificationId").val("");
-         
+         $("#MerchantId").attr("disabled",false);
+         $("#ZonalOfficeId").attr("disabled",false);
+         $("#RegionalOfficeId").attr("disabled",false);
+         $("#SBUTypeId").attr("disabled",false);
+
      }
 
        $(document).ready(function () {
@@ -262,7 +267,7 @@
                   $.each(data.sbuTypeResponseList, function (i, option) {
                       $("<option/>").val(option.sbuId).text(option.sbuName).appendTo(".sbuType");
                   });
-                  
+
                   $(".sbuType")[0].sumo.reload();
                   $(".sbuType").trigger("change");
               },
@@ -270,7 +275,7 @@
                   alert("Error Populating SBU Type");
               }
           });
-       
+
      });
        $("#SBUTypeId").change(function () {
             var id = this.value;
@@ -290,7 +295,7 @@
                                     }).html("All").appendTo("#ZonalOfficeId");
 
                         $.each(data, function (i, data) { // bind the dropdown list using json result
-                                
+
                                 $('<option>',
                                     {
                                         value: data.zonalOfficeID,
@@ -385,6 +390,10 @@
          var objMerchantLst = data.searchList.data.objMerchantDetail;
          var objTerminalLst = data.searchList.data.objTerminalDetail;
          var objStatusDetail = data.searchList.data.objStatusDetail;
+         $("#MerchantId").attr("disabled",true);
+         $("#ZonalOfficeId").attr("disabled",true);
+         $("#RegionalOfficeId").attr("disabled",true);
+         $("#SBUTypeId").attr("disabled",true);
          debugger;
           if (objStatusDetail.length>0)  {
 
@@ -397,8 +406,8 @@
                  document.getElementById("noRecord").style.display = "block";
              }
              else{
+                
                  if (objMerchantLst.length>0 ) {
-                     debugger;
                      document.getElementById("noRecord").style.display = "none";
 
                      $('#RetailOutletName').text(objMerchantLst[0].retailOutletName)
@@ -432,6 +441,7 @@
                      $("#myTable").show();
                      $("#labelMerchantDetails").show();
                      $("#Just").show();
+
                  }
                  if (objMerchantLst.length>0  &&objTerminalLst.length==0)  {
                      $("#labelMerchantDetails").show();
