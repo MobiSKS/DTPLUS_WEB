@@ -286,8 +286,8 @@ namespace HPCL_Web.Controllers
         [HttpPost]
         public async Task<JsonResult> UpdateDndSmsAlertsConfigure(string CustomerId)
         {
-            var reasonList = await _customerService.UpdateDndSmsAlertsConfigure(CustomerId);
-            return Json(new { reasonList = reasonList });
+            var modals = await _customerService.UpdateDndSmsAlertsConfigure(CustomerId);
+            return Json(modals);
         }
     }
 }
