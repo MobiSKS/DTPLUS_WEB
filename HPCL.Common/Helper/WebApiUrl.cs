@@ -629,6 +629,9 @@
 
         #region DICV
         public static string getDicvOfficerType = "api/dtplus/DICV/get_dicv_officer_type";
+        public static string insertDicvDealerEnrollment = "api/dtplus/DICV/insert_dicv_dealer_enrollment";
+        public static string getDicvDealerDetail = "api/dtplus/DICV/get_dicv_dealer_detail";
+        public static string updateDicvDealerEnrollment = "api/dtplus/DICV/update_dicv_dealer_enrollment";
         #endregion
     }
 }
