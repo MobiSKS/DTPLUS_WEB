@@ -1,4 +1,5 @@
-﻿using HPCL.Common.Models.CommonEntity.ResponseEnities;
+﻿using HPCL.Common.Models;
+using HPCL.Common.Models.CommonEntity.ResponseEnities;
 using HPCL.Common.Models.ResponseModel.AshokLayland;
 using HPCL.Common.Models.ViewModel.DICV;
 using System;
@@ -16,5 +17,6 @@ namespace HPCL.Service.Interfaces
         Task<InsertResponse> InsertDICVDealerEnrollment(string str);
         Task<SearchAlResult> SearchDICVDealer(string dealerCode, string dtpCode, string OfficerType);
         Task<InsertResponse> DICVDealerEnrollmentUpdate(string getAllData);
+        Task<CommonResponseData> CheckDICVDealerCodeExists(string DealerCode);
     }
 }
