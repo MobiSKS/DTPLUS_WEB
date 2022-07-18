@@ -28,17 +28,17 @@ namespace HPCL_Web.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> CCMSRechargePage(string mobNo, string customerId)
+        public async Task<JsonResult> CCMSRechargePage(string mobNo, string customerId, string useriprecharge)
         {
-            var searchList = await _cCMSRechargeService.GetDetailsByMObNoCust(mobNo, customerId);
+            var searchList = await _cCMSRechargeService.GetDetailsByMObNoCust(mobNo, customerId, useriprecharge);
 
             return Json(new { searchList = searchList });
         }
 
         [HttpPost]
-        public async Task<JsonResult> RedirectToPG(string customerId, string mobNo, string controlCardNo, string amount)
+        public async Task<JsonResult> RedirectToPG(string customerId, string mobNo, string controlCardNo, string amount, string useriprecharge)
         {
-            var redirectDetails = await _cCMSRechargeService.RedirectToPG(customerId, mobNo, controlCardNo, amount);
+            var redirectDetails = await _cCMSRechargeService.RedirectToPG(customerId, mobNo, controlCardNo, amount, useriprecharge);
 
             return Json(new { redirectDetails = redirectDetails });
         }
@@ -50,17 +50,17 @@ namespace HPCL_Web.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> CCCMSRecGenerateOtp(string mobNo, string customerId)
+        public async Task<JsonResult> CCCMSRecGenerateOtp(string mobNo, string customerId, string useriprecharge)
         {
-            var getOtp = await _cCMSRechargeService.CCCMSRecGenerateOtp(mobNo, customerId);
+            var getOtp = await _cCMSRechargeService.CCCMSRecGenerateOtp(mobNo, customerId, useriprecharge);
 
             return Json(new { getOtp = getOtp });
         }
 
         [HttpPost]
-        public async Task<JsonResult> CCCMSRecVerifyOtp(string mobNo, string otp, string customerId)
+        public async Task<JsonResult> CCCMSRecVerifyOtp(string mobNo, string otp, string customerId, string useriprecharge)
         {
-            var verifyOtp = await _cCMSRechargeService.CCCMSRecVerifyOtp(mobNo, otp, customerId);
+            var verifyOtp = await _cCMSRechargeService.CCCMSRecVerifyOtp(mobNo, otp, customerId, useriprecharge);
 
             return Json(new { verifyOtp = verifyOtp });
         }
