@@ -14,6 +14,7 @@ namespace HPCL.Common.Helper
         public static string zonalid = "";
         public static string regionalid = "";
 
+        public static string useriprecharge = GetLocalIPAddress();
         public static string GetLocalIPAddress()
         {
             var host = Dns.GetHostEntry(Dns.GetHostName());

@@ -7,6 +7,7 @@ using System;
 using HPCL.Common.Helper;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace HPCL.Service
 {
@@ -132,9 +133,9 @@ namespace HPCL.Service
         }
 
 
-        public async Task<string> RechargeRequestService(StringContent content, string requestUrl)
+        public async Task<string> RechargeRequestService(StringContent content, string requestUrl, string useriprecharge)
         {
-            var access_token = _api.GetToken();
+            var access_token = GetTokenRec(useriprecharge);
         Start:
             using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
             {
@@ -150,7 +151,7 @@ namespace HPCL.Service
 
                         if (respMessage != "Success")
                         {
-                            var access_tokenNew = _api.GetToken();
+                            var access_tokenNew = GetTokenRec(useriprecharge);
                             if (access_tokenNew.Result != null)
                             {
                                 HttpContextAccessor.HttpContext.Session.SetString("Token", access_tokenNew.Result);
@@ -168,6 +169,35 @@ namespace HPCL.Service
                     }
                 }
             }
+        }
+
+        Token _token = new Token();
+        public async Task<string> GetTokenRec(string useriprecharge)
+        {
+            using (HttpClient _customclient = new HelperAPI().GetApiBaseUrlString())
+            {
+                var forms = new Dictionary<string, string>
+               {
+                   {"useragent", CommonBase.useragent},
+                   {"userip", useriprecharge},
+                   {"userid", "demo"},
+               };
+
+                //_customclient.DefaultRequestHeaders.Add("Secret_Key", Common.Secret_Key);
+                //_customclient.DefaultRequestHeaders.Add("API_Key", Common.Api_Key);
+
+                StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
+
+                using (var tokenResponse = await _customclient.PostAsync(WebApiUrl.generatetoken, content))
+                {
+                    if (tokenResponse.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        var JsonContent = tokenResponse.Content.ReadAsStringAsync().Result;
+                        _token = JsonConvert.DeserializeObject<Token>(JsonContent);
+                    }
+                }
+            }
+            return _token.token;
         }
     }
 }
