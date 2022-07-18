@@ -50,6 +50,7 @@ namespace HPCL.Service
             services.AddTransient<ICustomerSearchService, CustomerSearchService>();
             services.AddTransient<IJCBService, JCBService>();
             services.AddTransient<ICustomerDashBoardServices, CustomerDashBoardService>();
+            services.AddTransient<IDICVService, DICVService>();
 
             return services;
         }
