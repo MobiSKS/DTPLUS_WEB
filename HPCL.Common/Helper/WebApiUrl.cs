@@ -538,7 +538,7 @@
         public static string actiongetaccountstatmentrequesttype = " api/dtplus/AccountStatement/action_get_account_statment_request_type";
         public static string insertaccountstatmentrequest = " api/dtplus/AccountStatement/insert_account_statment_request";
         public static string updateaccountstatmentrequeststatus = " api/dtplus/AccountStatement/update_account_statment_request_status";
-        
+        public static string getparenttransactionssummarydetails = "api/dtplus/ParentCustomer/get_parent_transactions_summary_details";
 
 
         #endregion

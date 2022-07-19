@@ -1085,9 +1085,9 @@ namespace HPCL.Service.Services
 
             return parentChildCustomerMapping;
         }
-        public async Task<ParentCustomerTransactionViewModel> ViewParentChildTransactionDetails(String ParentCustomerID)
+        public async Task<ViewParentChildTransactionDetailsModel> ViewParentChildTransactionDetails(String ParentCustomerID)
         {
-            ParentCustomerTransactionViewModel customerTransactionResponse = new ParentCustomerTransactionViewModel();
+            ViewParentChildTransactionDetailsModel customerTransactionResponse = new ViewParentChildTransactionDetailsModel();
 
             var Request = new GetCustomerBalanceRequest()
             {
@@ -1349,6 +1349,38 @@ namespace HPCL.Service.Services
             var jarr = obj["Data"].Value<JArray>();
             List<SuccessResponse> reasonList = jarr.ToObject<List<SuccessResponse>>();
             return reasonList;
+        }
+        public async Task<ViewParentChildTransactionDetailsModel> GetParentChildTransactionDetails(ParentChildransactionRequestModel requestInfo)
+        {
+            ViewParentChildTransactionDetailsModel transactionResponse = new ViewParentChildTransactionDetailsModel();
+            if (!string.IsNullOrEmpty(requestInfo.FromDate) && !string.IsNullOrEmpty(requestInfo.FromDate))
+            {
+                requestInfo.FromDate = await _commonActionService.changeDateFormat(requestInfo.FromDate);
+                requestInfo.ToDate = await _commonActionService.changeDateFormat(requestInfo.ToDate);
+            }
+            else
+            {
+                requestInfo.FromDate = DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd");
+                requestInfo.ToDate = DateTime.Now.ToString("yyyy-MM-dd");
+            }
+            var Request = new ParentChildransactionRequestModel()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                ParentCustomerID = requestInfo.ParentCustomerID,
+                FromDate = requestInfo.FromDate,
+                ToDate=requestInfo.ToDate,
+                ObjChildCustomerIdDtl=requestInfo.ObjChildCustomerIdDtl
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(Request), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getparenttransactionssummarydetails);
+
+            transactionResponse = JsonConvert.DeserializeObject<ViewParentChildTransactionDetailsModel>(response);
+
+            return transactionResponse;
         }
     }
 }

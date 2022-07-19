@@ -33,7 +33,7 @@ namespace HPCL.Service.Interfaces
         Task<GetCustomerCardWiseBalanceResponse> GetCustomerCardWiseBalance(string CustomerID);
         Task<ParentCustomerTransactionViewModel> ParentCustomerTransactionDetails(ParentCustomerTransactionViewModel requestInfo);
         Task<ParentChildCustomerMappingViewModel> ParentChildCustomerMapping(ParentChildCustomerMappingRequest requestInfo);
-        Task<ParentCustomerTransactionViewModel> ViewParentChildTransactionDetails(String ParentCustomerID);
+        Task<ViewParentChildTransactionDetailsModel> ViewParentChildTransactionDetails(String ParentCustomerID);
         Task<List<SuccessResponse>> ValidateChildCustomerId(string CustomerId);
         Task<ParentChildCustomerMappingViewModel> ConfirmParentChildCustomerMapping(ParentChildCustomerMappingRequest requestInfo);
         Task<CustomerDriveStarsDetailsModel> GetDriveStarsDetails(string CustomerID);
@@ -46,5 +46,6 @@ namespace HPCL.Service.Interfaces
         Task<AccountStatementRequestViewModel> GetAccountStatementRequest(string CustomerID);
         Task<List<SuccessResponse>> UpdateAccountStatementRequest([FromBody] AccountStatementRequestModel reqEntity);
         Task<List<SuccessResponse>> InsertAccountStatementRequest([FromBody] AccountStatementRequestModel reqEntity);
+        Task<ViewParentChildTransactionDetailsModel> GetParentChildTransactionDetails(ParentChildransactionRequestModel requestInfo);
     }
 }
