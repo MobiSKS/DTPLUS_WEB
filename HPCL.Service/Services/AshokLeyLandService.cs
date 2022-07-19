@@ -1186,7 +1186,7 @@ namespace HPCL.Service.Services
 
             return UploadDocResponseBody;
         }
-        public async Task<string> SaveUploadDoc(UploadALDoc entity)
+        public async Task<UploadALDoc> SaveUploadDoc(UploadALDoc entity)
         {
             MultipartFormDataContent form = new MultipartFormDataContent();
 
@@ -1206,8 +1206,13 @@ namespace HPCL.Service.Services
             var jarr = obj["Data"].Value<JArray>();
             List<UpdateKycResponse> insertKyc = jarr.ToObject<List<UpdateKycResponse>>();
 
-            return (insertKyc[0].Reason);
-            //return (insertKyc[0].Reason + "," + _httpContextAccessor.HttpContext.Session.GetString("FormNoVal"));
+            entity.Internel_Status_Code = Convert.ToInt32(obj["Internel_Status_Code"].ToString());
+            if (insertKyc != null && insertKyc.Count > 0)
+            {
+                entity.Reason = insertKyc[0].Reason;
+            }
+
+            return entity;
         }
 
         public async Task<PendingKYCCustomerDetailsModel> ALPendingKYCCustomerDetail(PendingKYCCustomerDetailsModel Model)

@@ -39,6 +39,7 @@ namespace HPCL.Common.Models.ViewModel.AshokLeyLand
         public IFormFile SignedCustomerForm { get; set; }
         public string Reason { get; set; }
         public int Status { get; set; }
+        public int Internel_Status_Code { get; set; }
 
     }
 }

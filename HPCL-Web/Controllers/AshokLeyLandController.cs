@@ -334,14 +334,18 @@ namespace HPCL_Web.Controllers
 
             return View(uploadDoc);
         }
-
+       
         [HttpPost]
-        public async Task<JsonResult> SaveUploadDoc(UploadALDoc entity)
+        public async Task<IActionResult> UploadALDoc(UploadALDoc entity)
         {
-            var reason = await _ashokLeyLandService.SaveUploadDoc(entity);
+            var modals = await _ashokLeyLandService.SaveUploadDoc(entity);
 
-            ModelState.Clear();
-            return Json(reason);
+            if (modals.Internel_Status_Code == 1000)
+            {
+                return RedirectToAction("SuccessUploadAlRedirect", new { Message = modals.Reason });
+            }
+
+            return View(modals);
         }
         public async Task<IActionResult> ALPendingKYCCustomerDetail(PendingKYCCustomerDetailsModel model, string reset, string success, string error, string CustomerID)
         {

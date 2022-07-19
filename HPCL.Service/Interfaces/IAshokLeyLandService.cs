@@ -41,7 +41,7 @@ namespace HPCL.Service.Interfaces
         Task<List<SearchGridResponse>> CardDetailsForSearch(string CustomerId, string CustomerTypeId);
         Task<InsertResponse> UpdateAlCostomerProfile(string str);
         Task<GetALUploadKycDocumentResponse> UploadALDoc(string CustomerID);
-        Task<string> SaveUploadDoc(UploadALDoc entity);
+        Task<UploadALDoc> SaveUploadDoc(UploadALDoc entity);
         Task<PendingKYCCustomerDetailsModel> ALPendingKYCCustomerDetail(PendingKYCCustomerDetailsModel Model);
         Task<InsertResponse> ResetAlDealerPassword(string UserName);
         
