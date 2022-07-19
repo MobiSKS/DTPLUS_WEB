@@ -1318,7 +1318,7 @@ namespace HPCL.Service.Services
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
-                CustomerId = reqEntity.RequestId,
+                CustomerId = reqEntity.CustomerId,
                 CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 StatementType=reqEntity.StatementType,
             };
@@ -1337,7 +1337,7 @@ namespace HPCL.Service.Services
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
                 UserIp = CommonBase.userip,
-                CustomerId = reqEntity.RequestId,
+                CustomerId = reqEntity.CustomerId,
                 RequestId = reqEntity.RequestId,
                 IsActivate = "0",
                 StatementType = reqEntity.StatementType,

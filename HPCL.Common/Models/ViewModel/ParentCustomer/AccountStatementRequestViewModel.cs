@@ -12,7 +12,7 @@ namespace HPCL.Common.Models.ViewModel.ParentCustomer
     {
         public AccountStatementRequestViewModel()
         {
-            Data = new AccountStatementDetails();
+            
             StatementTypes = new List<GetAccountStatementType>();
             StatementTypes.Add(new GetAccountStatementType
             {
@@ -27,15 +27,21 @@ namespace HPCL.Common.Models.ViewModel.ParentCustomer
     }
     public class AccountStatementDetails
     {
-        public List<GetCustomerDetails> CustomerDetails { get; set; }
-        public List<GetStatementDetails> StatementDetails { get; set; }
+        public AccountStatementDetails()
+        {
+            GetAccountStatmentRequest = new List<GetCustomerDetails>();
+            GetAccountStatmentRequestDetails = new List<GetStatementDetails>();
+        }
+            public List<GetCustomerDetails> GetAccountStatmentRequest { get; set; }
+        public List<GetStatementDetails> GetAccountStatmentRequestDetails { get; set; }
     }
     public class GetStatementDetails
     {
         public string StatementName { get; set; }
-        public string OptingDate { get; set; }
-      public string StatementId { get; set; }
-        public string RequestId { get; set; }
+        public string optedDate { get; set; }
+      public string statementType { get; set; }
+        public string reqestId { get; set; }
+        public string actionName { get; set; }
 
     }
     public class GetCustomerDetails
@@ -44,7 +50,7 @@ namespace HPCL.Common.Models.ViewModel.ParentCustomer
         public string CustomerName { get; set; }
         public string ZO { get; set; }
         public string RO { get; set; }
-        public string NameonCard { get; set; }
+        public string NameOnCard { get; set; }
 
     }
 }
