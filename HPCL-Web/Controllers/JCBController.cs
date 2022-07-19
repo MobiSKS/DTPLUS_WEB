@@ -168,6 +168,26 @@ namespace HPCL_Web.Controllers
             ViewBag.Message = Message;
             return View();
         }
+        public async Task<IActionResult> JCBManageProfile()
+        {
+            var custMdl = await _jcbService.JCBManageProfile();
+
+            return View(custMdl);
+        }
+        [HttpPost]
+        public async Task<JsonResult> BindCustomerDetailsForSearch(string CustomerId, string NameOnCard)
+        {
+            var customerCardInfo = await _jcbService.BindCustomerDetailsForSearch(CustomerId, NameOnCard);
+            ModelState.Clear();
+            return Json(customerCardInfo);
+        }
+        [HttpPost]
+        public async Task<JsonResult> CardDetailsForSearch(string CustomerId, string CustomerTypeId)
+        {
+            var customerCardInfo = await _jcbService.CardDetailsForSearch(CustomerId, CustomerTypeId);
+            ModelState.Clear();
+            return Json(customerCardInfo);
+        }
 
     }
 }

@@ -1,5 +1,6 @@
 ﻿using HPCL.Common.Models;
 using HPCL.Common.Models.ResponseModel.AshokLayland;
+using HPCL.Common.Models.ResponseModel.CustomerManage;
 using HPCL.Common.Models.ResponseModel.JCB;
 using HPCL.Common.Models.ResponseModel.VolvoEicher;
 using HPCL.Common.Models.ViewModel.JCB;
@@ -28,5 +29,8 @@ namespace HPCL.Service.Interfaces
         Task<JCBCustomerEnrollmentModel> GetJCBCustomerOTCCardPartialView([FromBody] List<JCBCardEntryDetails> arrs);
         Task<List<JCBOTCCardDetails>> GetAvailableJCBOTCCardForDealer(string DealerCode);
         Task<JCBCustomerEnrollmentModel> JCBCustomerEnrollment(JCBCustomerEnrollmentModel customerModel);
+        Task<JCBManageProfile> JCBManageProfile();
+        Task<List<JCBCustomerProfileResponse>> BindCustomerDetailsForSearch(string CustomerId, string NameOnCard);
+        Task<List<SearchGridResponse>> CardDetailsForSearch(string CustomerId, string CustomerTypeId);
     }
 }
