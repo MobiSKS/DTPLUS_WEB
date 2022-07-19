@@ -8,7 +8,7 @@
             <li class="breadcrumb-item"><a href="@Url.Action("Financial","ParentCustomer")" class="text_primary">Financial</a> </li>
             <li class="breadcrumb-item font-weight-light">Account Statement Request</li>
         </ul>
-        <div id="response" class="mb-3 text-center alert" style="display:none"></div>
+
         <form>
             <div class="w-100">
                 <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
@@ -40,7 +40,7 @@
                                     <button class="btn btn_primary" type="Submit" id="btnSearch">@Label.Search</button>
                                 </div>
                                 <div class="px-2">
-                                    <button class="btn btn_primary" type="button" id="btnReset">@Label.Reset</button>
+                                    <button class="btn btn_primary" type="button" id="btnReset" onclick="location.href='@Url.Action("AccountStatementRequest", "ParentCustomer", new { reset="Y" })'">@Label.Reset</button>
                                 </div>
                             </div>
                         </div>
@@ -52,35 +52,35 @@
 
             </div>
         </form>
-        @if (ViewBag.Reset == "")
+        @if (ViewBag.Reset == "N")
         {
-            <div id="show_Table" class="mt-2 tobehiddenonSuccess">
+            <div id="show_Table" class="mt-2">
                 @if (Model.Data != null)
                 {
-                    @if (Model.Data.CustomerDetails.Count() > 0)
+                    @if (Model.Data.GetAccountStatmentRequest.Count() > 0)
                     {
                         <div>
                             <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Customer Info</p>
-                            <table class="datatable table table-striped table-bordered table-responsive" style="width:100%;" id="CustomerDetails">
+                            <table class="table table-striped table-bordered table-responsive d-md-table d-block " style="width:100%;" id="CustomerDetails">
                                 <thead style="background-color:lightgray;">
                                     <tr>
 
 
-                                        <th style="width:10%;">ZO</th>
-                                        <th style="width:10%;">RO</th>
-                                        <th style="width:10%;">Customer Name</th>
-                                        <th style="width:10%;">Name on Card</th>
+                                        <th>ZO</th>
+                                        <th>RO</th>
+                                        <th>Customer Name</th>
+                                        <th>Name on Card</th>
                                     </tr>
                                 </thead>
                                 <tbody id="searchMerchantTableBody">
 
-                                    @foreach (var item in Model.Data.CustomerDetails)
+                                    @foreach (var item in Model.Data.GetAccountStatmentRequest)
                                     {
                                         <tr>
                                             <td>@item.ZO</td>
                                             <td>@item.RO</td>
                                             <td>@item.CustomerName</td>
-                                            <td>@item.NameonCard</td>
+                                            <td>@item.NameOnCard</td>
 
                                         </tr>
                                     }
@@ -88,88 +88,104 @@
                             </table>
                         </div>
                     }
-                    @if (Model.Data.StatementDetails.Count() > 0)
-                    {
-                        <div>
-                            <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Active Service</p>
-                            <table class="datatable table table-striped table-bordered table-responsive" style="width:100%;" id="StatementDetails">
-                                <thead style="background-color:lightgray;">
-                                    <tr>
-
-
-                                        <th style="width:10%;">Statement Name</th>
-                                        <th style="width:10%;">Opting Date</th>
-                                        <th style="width:10%;">Action</th>
-                                        <th style="width:10%;">StatementID</th>
-                                        <th style="width:10%;">RequestId</th>s
-                                    </tr>
-                                </thead>
-                                <tbody id="searchMerchantTableBody">
-
-                                    @foreach (var item in Model.Data.StatementDetails)
-                                    {
+                    <div class="toBeHiddenOnSuccess">
+                        @if (Model.Data.GetAccountStatmentRequestDetails.Count() > 0)
+                        {
+                            <div>
+                                <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Active Service</p>
+                                <table class="table table-striped table-bordered table-responsive d-md-table d-block " style="width:100%;" id="StatementDetails">
+                                    <thead style="background-color:lightgray;">
                                         <tr>
-                                            <td>@item.StatementName</td>
-                                            <td>@item.OptingDate</td>
-                                            <td>
-                                                <a  class="d-block" onclick="DeactivateStatementRequest(this);" title="">Deactivate</a>
-                                            </td>
-                                            <td>@item.StatementId</td>
-                                            <td>@item.RequestId</td>
+
+
+                                            <th>Statement Name</th>
+                                            <th>Opting Date</th>
+                                            <th>Action</th>
+                                            <th style="display:none">StatementID</th>
+                                            <th style="display:none">RequestId</th>
                                         </tr>
-                                    }
-                                </tbody>
-                            </table>
-                        </div>
-                    }
-                    else
-                    {
-                          <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Activate Service Alert</p>
-                        <div class="col-lg-12 col-md-12 col-12 py-3">
+                                    </thead>
+                                    <tbody id="searchMerchantTableBody">
 
-                            <div class="d-flex align-items-center flex-wrap">
-                                <div class="col-lg-6 col-12">
-                                    <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal col-md-4 col-12">Statement Type <sup class="text-danger">*</sup></label>
+                                        @foreach (var item in Model.Data.GetAccountStatmentRequestDetails)
+                                        {
+                                            <tr>
+                                                <td>@item.actionName</td>
+                                                <td>@item.optedDate</td>
+                                                <td>
+                                                     <a class="d-block" data-toggle="tooltip" onclick="DeactivateStatementRequest(this);"  title="" tooltip="Deactivate"><i class="fa fa-ban" aria-hidden="true"></i></a>
+                                                </td>
+                                                <td style="display:none">@item.statementType</td>
+                                                <td style="display:none">@item.reqestId</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
+                        else
+                        {
+                            @if (Model.Message == null || Model.Message == "" || Model.Data.GetAccountStatmentRequest.Count() >0)
+                            {
+                                <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Activate Service Alert</p>
+                                <div class="col-lg-12 col-md-12 col-12 py-3">
 
-                                        <div class="col-md-8 col-12 ">
-                                            <div class="custom_select">
-                                                @Html.DropDownListFor(m => m.StatementTypeId, new SelectList(Model.StatementTypes, "TypeId", "TypeName"), new { @class = "form-control" })
-                                                <span class="error" id="statementType_error"></span>
+                                    <div class="d-flex align-items-center flex-wrap">
+                                        <div class="col-lg-6 col-12">
+                                            <div class="d-flex align-items-center flex-wrap mb-3">
+                                                <label class="font-weight-normal col-md-4 col-12">Statement Type <sup class="text-danger">*</sup></label>
+
+                                                <div class="col-md-8 col-12 ">
+                                                    <div class="custom_select">
+                                                        @Html.DropDownListFor(m => m.StatementTypeId, new SelectList(Model.StatementTypes, "TypeId", "TypeName"), new { @class = "form-control" })
+                                                        <span class="error" id="statementType_error"></span>
+                                                    </div>
+
+                                                </div>
                                             </div>
-
                                         </div>
+
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <div class="d-flex align-items-center justify-content-center mt-0">
+                                        <div class="px-2">
+                                            <button class="btn btn_primary" type="button" id="btnActivate">ACTIVATE</button>
+                                        </div>
+
                                     </div>
                                 </div>
-
-                            </div>
-                            <div class="clearfix"></div>
-                            <div class="d-flex align-items-center justify-content-center mt-0">
-                                <div class="px-2">
-                                    <button class="btn btn_primary" type="button" id="btnActivate">ACTIVATE</button>
+                            }
+                            else
+                            {
+                                <div class="clearfix"></div>
+                                <div class="mb-3 text-center alert alert-danger">
+                                    @Model.Message
                                 </div>
+                            }
+                        }
+                    </div>
 
-                            </div>
-                        </div>
-                    }
                 }
             </div>
         }
-
+        <div class="clearfix"></div>
+        <div id="response" class="mb-3 text-center alert" style="display:none"></div>
     </div>
     <div class="clearfix"></div>
 </div>
 <script type="text/javascript">
         $(document).ready(function () {
-
+            var customerId="@Model.CustomerId";
+            if(customerId!="")
+                 $("#CustomerId").attr("readonly","readonly");
         });
 
-        
+
         $("#btnActivate").on("click",(function (e) {
             var flag="Y";
             var customerID = document.getElementById("CustomerId").value.trim();
             var statementTypeId= $("#StatementTypeId").val();
-            
+
             if (customerID == "") {
                 document.getElementById("CustomerID_error").innerHTML = "Please enter Customer ID";
                 $("#CustomerId").focus;
@@ -188,7 +204,7 @@
                 }
 
             }
-            if(statementTypeId=="" || statementTypeId=="0" }){
+            if(statementTypeId=="" || statementTypeId=="0" ){
                 $("#statementType_error").attr("style", "display:block");
                 $("#statementType_error").html("Please select Statement Type");
                 flag="N";
@@ -202,35 +218,37 @@
                e.preventDefault();
             }
             else{
-                var reqmodel = {CustomerId: customerID, StatementType: statementTypeId };
-                 $.ajax({
-                     type: 'POST',
-                     url: '@Url.Action("InsertAccountStatementRequest", "ParentCustomer")',
-                     contentType: "application/json; charset=utf-8",
-                     dataType: 'json',
-                     data: JSON.stringify(reqmodel),
-                     success: function (data) {
-                        if(data.length>0){
-                               if(data[0].status=="0"){
-                                  $("#response").addClass("alert-danger");
-                                  if($("#response").hasClass("alert-success"))
-                                     $("#response").removeClass("alert-success");
+                if(confirm("Do you want to activate the Account statement request?")){
+                     var reqmodel = {CustomerId: customerID, StatementType: statementTypeId };
+                     $.ajax({
+                         type: 'POST',
+                         url: '@Url.Action("InsertAccountStatementRequest", "ParentCustomer")',
+                         contentType: "application/json; charset=utf-8",
+                         dataType: 'json',
+                         data: JSON.stringify(reqmodel),
+                         success: function (data) {
+                            if(data.length>0){
+                                   if(data[0].status=="0"){
+                                      $("#response").addClass("alert-danger");
+                                      if($("#response").hasClass("alert-success"))
+                                         $("#response").removeClass("alert-success");
+                                   }
+                                   else{
+                                       $("#response").addClass("alert-success");
+                                       if($("#response").hasClass("alert-danger"))
+                                         $("#response").removeClass("alert-danger");
+                                   }
+                                   $("#response").html(data[0].reason);
+                                   $("#response").attr("style","display:block");
+                                   $(".toBeHiddenOnSuccess").hide();
                                }
-                               else{
-                                   $("#response").addClass("alert-success");
-                                   if($("#response").hasClass("alert-danger"))
-                                     $("#response").removeClass("alert-danger");
-                               }
-                               $("#response").html(data[0].reason);
-                               $("#response").attr("style","display:block");
-                               //$(".toBeHiddenOnSuccess").hide();
-                           }
 
-                     },
-                     error: function (ex) {
-                         alert('Error.' + ex);
-                     }
-                 });
+                         },
+                         error: function (ex) {
+                             alert('Error.' + ex);
+                         }
+                     });
+                 }
 
             }
         }));
@@ -238,9 +256,9 @@
             var flag="Y";
             var customerID = document.getElementById("CustomerId").value.trim();
             var row=o.closest("tr");
-            var statementTypeId= row[0].Cells[3].innerText;
-            var requestId= row[0].Cells[4].innerText;
-            
+            var statementTypeId= row.cells[3].innerText;
+            var requestId= row.cells[4].innerText;
+
             if (customerID == "") {
                 document.getElementById("CustomerID_error").innerHTML = "Please enter Customer ID";
                 $("#CustomerId").focus;
@@ -259,7 +277,7 @@
                 }
 
             }
-            
+
             if(flag=="Y"){
                 if(confirm('Do you want to deactivate the Account statement request?')){
                     var reqmodel = {CustomerId: customerID, StatementType: statementTypeId ,RequestId:requestId};
@@ -283,7 +301,7 @@
                                    }
                                    $("#response").html(data[0].reason);
                                    $("#response").attr("style","display:block");
-                                   //$(".toBeHiddenOnSuccess").hide();
+                                   $(".toBeHiddenOnSuccess").hide();
                                }
 
                          },
@@ -293,7 +311,7 @@
                      });
                  }
             }
-        }));
+        }
         $("#btnSearch").on("click",(function (e) {
             var flag="Y";
             var customerID = document.getElementById("CustomerId").value.trim();
@@ -342,7 +360,7 @@
     });
     $("#StatementTypeId").change(function () {
        var statementTypeId= $("#StatementTypeId").val();
-       if(statementTypeId=="" || statementTypeId=="0" }){
+       if(statementTypeId=="" || statementTypeId=="0" ){
            $("#statementType_error").attr("style", "display:block");
             $("#statementType_error").html("Please select Statement Type");
        }
@@ -352,3 +370,16 @@
        }
     });
 </script>
+<style>
+   .linkButton {
+  background: none!important;
+  border: none;
+  padding: 0!important;
+  /*optional*/
+  font-family: arial, sans-serif;
+  /*input has OS specific font-family*/
+  color: #069;
+  text-decoration: underline;
+  cursor: pointer;
+}
+</style>
