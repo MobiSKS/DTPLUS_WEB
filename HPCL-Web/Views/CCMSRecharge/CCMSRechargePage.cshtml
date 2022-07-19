@@ -29,12 +29,12 @@
                     <div class="form-group d-flex align-items-center flex-wrap">
                         <label class="font-weight-normal col-md-4 col-12">Control Card Number <sup class="text-danger">*</sup></label>
                         <div class="col-md-8 col-12">
-                            <input type="text" id="controlCardNoVal" class="form-control" onkeypress="return isNumberKey(event)">
+                            <input type="text" id="controlCardNoVal" class="form-control" maxlength="10" onkeypress="return isNumberKey(event)">
                             @Html.ValidationMessage("controlCardNoVal", "", new { @id = "controlCardNoValErr", @class = "text-danger" })
                         </div>
                     </div>
 
-                    <div class="form-group align-items-center flex-wrap" style="display:none;" id="cutomerName">
+                    <div class="form-group align-items-center" style="display:none;" id="cutomerName">
                         <label class="font-weight-normal col-md-4 col-12">Customer Name <sup class="text-danger">*</sup></label>
                         <div class="col-md-8 col-12">
                             <input type="text" id="customerNameVal" class="form-control">
@@ -60,15 +60,14 @@
                         </thead>
                     </table>
 
-
                     <div class="form-group d-flex align-items-center flex-wrap">
                         <label class="font-weight-normal col-md-4 col-12">Payment Gateway </label>
                         <div class="col-md-8 col-12">
                             <div class="custom_select">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" checked>
-                                    <label class="form-check-label" for="exampleRadios1">
-                                        <strong>HDFC PG </strong>
+                                    <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios" checked>
+                                    <label class="form-check-label" for="exampleRadios">
+                                        <strong>HDFC PG</strong>
                                     </label>
                                 </div>
                             </div>
@@ -79,8 +78,8 @@
                         <div class="col-md-8 col-12">
                             <div class="custom_select">
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="checkbox" id="inlineCheckboxTC" value="option1">
-                                    <label class="form-check-label" for="inlineCheckbox1">I Agree to <a data-toggle="modal" data-target="#termsConditions" class="anchorCustom">Terms &amp; Conditions</a> and <a class="anchorCustom" data-toggle="modal" data-target="#App_charges">Applicable Charges</a></label>
+                                    <input class="form-check-input" type="checkbox" name="inlineCheckbox" id="inlineCheckbox">
+                                    <label class="form-check-label" for="inlineCheckbox">I Agree to <a data-toggle="modal" data-target="#termsConditions" class="anchorCustom">Terms &amp; Conditions</a> and <a class="anchorCustom" data-toggle="modal" data-target="#App_charges">Applicable Charges</a></label>
                                 </div>
                             </div>
                         </div>
@@ -196,6 +195,7 @@
         </div>
     </div>
 </div>
+
 
 <!-- Terms & Conditions Modal -->
 <div class="termsConditionsarea">
@@ -329,6 +329,8 @@
 
 <script>
 
+    var recip;
+
     $(document).ready(function () {
 
         function isNumberKey(evt) {
@@ -339,9 +341,18 @@
 
             return true;
         }
+        
+        if(recip == "" || recip == null){
+            $.getJSON("https://api.ipify.org?format=json", function(data) {
+                recip = data.ip;
+                sessionStorage.setItem("rechargeuserip", data.ip);
+            });
+        }
 
+        //recip = sessionStorage.getItem("rechargeuserip");
+
+        //alert(recip);
     });
-
 
     $("#amountVal").on('keydown', function (event) {
         if (event.shiftKey == true) {
@@ -370,6 +381,7 @@
         $("#mobNoVal").attr("readonly", false);
         $("#customerIdVal").attr("readonly", false);
         $("#controlCardNoVal").attr("readonly", false);
+        $("#customerNameVal").attr("readonly", false);
     }
 
     $("#mobNoVal").on("blur", function (){
@@ -414,7 +426,7 @@
                 url: "@Url.Action("CCMSRechargePage","CCMSRecharge")",
                 type: "POST",
                 dataType: "JSON",
-                data: { mobNo: mobNo, customerId: null },
+                data: { mobNo: mobNo, customerId: null, useriprecharge: recip },
                 success: function (res) {
 
                     console.log(res,"res");
@@ -497,7 +509,7 @@
                 url: "@Url.Action("CCMSRechargePage","CCMSRecharge")",
                 type: "POST",
                 dataType: "JSON",
-                data: { mobNo: null, customerId: customerId },
+                data: { mobNo: null, customerId: customerId, useriprecharge:recip },
                 success: function (res) {
 
                     console.log(res,"res");
@@ -515,7 +527,7 @@
                         $("#mobNoVal").attr("readonly", true);
                         $("#customerIdVal").attr("readonly", true);
                         $("#controlCardNoVal").attr("readonly", true);
-
+                        $("#customerNameVal").attr("readonly", true);
                         $('#submitButtonval').prop('disabled', false);
 
                     }else{
@@ -546,6 +558,8 @@
             $("#customerIdVal").val(currentRow.find('.customerIdVal').text());
             $("#customerNameVal").val(currentRow.find('.customerNameVal').text());
             $("#controlCardNoVal").val(currentRow.find('.conCardNoVal').text());
+            
+            $("#customerNameVal").attr("readonly", true);
 
             if($("#customerIdVal").val().trim() != ''){
                 $("#customerIdValErr").attr("style", "display:none");
@@ -566,36 +580,36 @@
        var controlCardNo = $("#controlCardNoVal").val();
        var amount = $("#amountVal").val();
 
-        if(mobNo.trim() != ''){
+        if(mobNo.trim() != ""){
             if(!mobNo.trim().match(/^[6789]\d{9}$/)){
                 $('#mobNoError').text("Invalid Mobile Number");
                 flag = "N";
             }
         }
 
-        if(customerId == ""){
+        if(customerId.trim() == ""){
             $('#customerIdValErr').text("Please enter Customer ID");
             flag = "N";
         }
-        if(customerId.trim() != ''){
+        if(customerId.trim() != ""){
             if(!customerId.trim().match(/^[24]\d{9}$/)){
                 $('#customerIdValErr').text("Invalid Customer ID");
                 flag = "N";
             }
         }
 
-        if(controlCardNo == ""){
+        if(controlCardNo.trim() == ""){
             $('#controlCardNoValErr').text("Please enter ControlCard Number");
             flag = "N";
         }
 
-        if(amount == ""){
+        if(amount.trim() == ""){
             $('#amountValErr').text("Please enter Amount");
             flag = "N";
         }
 
-        if(customerId != '' || controlCardNo != '' || amount != ''){
-            if($("#inlineCheckboxTC").prop('checked') == false){
+        if(customerId.trim() != '' && controlCardNo.trim() != '' && amount.trim() != ''){
+            if($("#inlineCheckbox").prop('checked') == false){
                 alert("Please accept the terms and conditions.");
                 flag = "N";
             }
@@ -633,7 +647,7 @@
                 url: "@Url.Action("CCCMSRecGenerateOtp","CCMSRecharge")",
                 type: "POST",
                 dataType: "JSON",
-                data: { mobNo: mobNo, customerId: customerId },
+                data: { mobNo: mobNo, customerId: customerId, useriprecharge:recip },
                 success: function (res) {
 
                     console.log(res,"res");
@@ -684,7 +698,7 @@
                 url: "@Url.Action("CCCMSRecVerifyOtp","CCMSRecharge")",
                 type: "POST",
                 dataType: "JSON",
-                data: { mobNo: mobNo, otp: otpVal, customerId:customerId },
+                data: { mobNo: mobNo, otp: otpVal, customerId:customerId, useriprecharge:recip },
                 success: function (res) {
 
                     console.log(res,"res");
@@ -713,6 +727,8 @@
 
                                     if(res.redirectDetails.success == true){
 
+                                        sessionStorage.removeItem('rechargeuserip'); 
+
                                         var url = '@Html.Raw(@Url.Action("RedirectToPaymentGateway", new { inputTxtValues = "dd" }))';
 
                                         url = url.replace("dd", encodeURIComponent(ress));
@@ -732,6 +748,7 @@
 
                     }else{
                         alert(res.verifyOtp[0].reason);
+                        $("#otpVal").val('');
                     }
 
 
@@ -773,7 +790,7 @@
                 url: "@Url.Action("CCCMSRecGenerateOtp","CCMSRecharge")",
                 type: "POST",
                 dataType: "JSON",
-                data: { mobNo: mobNo, customerId: customerId },
+                data: { mobNo: mobNo, customerId: customerId, useriprecharge:recip },
                 success: function (res) {
 
                     console.log(res,"res");

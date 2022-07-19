@@ -165,6 +165,11 @@ namespace HPCL.Service.Services
             string customerDateOfApplication = "";
             string signedOn = "";
 
+            if (!string.IsNullOrEmpty(customerModel.CommunicationEmailid))
+            {
+                customerModel.CommunicationEmailid = customerModel.CommunicationEmailid.ToLower();
+            }
+
             //string[] custDateOfApplication = customerModel.DateOfApplication.Split("-");
 
             //customerDateOfApplication = custDateOfApplication[2] + "-" + custDateOfApplication[1] + "-" + custDateOfApplication[0];

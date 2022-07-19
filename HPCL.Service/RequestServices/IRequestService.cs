@@ -9,6 +9,6 @@ namespace HPCL.Service
         Task<string> PANValidationService(StringContent content, string requestUrl);
         Task<string> VehicleRegistrationValidCheckService(StringContent content, string requestUrl);
         Task<string> FormDataRequestService(MultipartFormDataContent content, string requestUrl);
-        Task<string> RechargeRequestService(StringContent content, string requestUrl);
+        Task<string> RechargeRequestService(StringContent content, string requestUrl, string reqIp);
     }
 }
