@@ -1,9 +1,11 @@
 ﻿using HPCL.Common.Helper;
 using HPCL.Common.Models;
+using HPCL.Common.Models.RequestModel.AshokLeyLand;
 using HPCL.Common.Models.RequestModel.JCB;
 using HPCL.Common.Models.RequestModel.Merchant;
 using HPCL.Common.Models.ResponseModel.AshokLayland;
 using HPCL.Common.Models.ResponseModel.Customer;
+using HPCL.Common.Models.ResponseModel.CustomerManage;
 using HPCL.Common.Models.ResponseModel.JCB;
 using HPCL.Common.Models.ResponseModel.VolvoEicher;
 using HPCL.Common.Models.ViewModel.AshokLeyLand;
@@ -470,6 +472,279 @@ namespace HPCL.Service.Services
             }
 
             return customerModel;
+        }
+
+        public async Task<JCBManageProfile> JCBManageProfile()
+        {
+            JCBManageProfile custMdl = new JCBManageProfile();
+
+            custMdl.SBUTypes.AddRange(await _commonActionService.GetSbuTypeList());
+            custMdl.SBUTypeID = 1;
+
+            custMdl.CustomerZonalOfficeMdl.AddRange(await _commonActionService.GetZonalOfficebySBUType(custMdl.SBUTypeID.ToString()));
+            custMdl.CustomerTbentityMdl.AddRange(await _commonActionService.GetCustomerTbentityListDropdown());
+            custMdl.CustomerStateMdl.AddRange(await _commonActionService.GetStateList());
+
+            custMdl.ExternalPANAPIStatus = _configuration.GetSection("ExternalAPI:PANAPI").Value.ToString();
+            if (string.IsNullOrEmpty(custMdl.ExternalPANAPIStatus))
+            {
+                custMdl.ExternalPANAPIStatus = "Y";
+            }
+
+            return custMdl;
+        }
+        public async Task<List<JCBCustomerProfileResponse>> BindCustomerDetailsForSearch(string CustomerId, string NameOnCard)
+        {
+            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
+            {
+
+                var searchBody = new CustomerProfileModel
+                {
+                    UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                    UserAgent = CommonBase.useragent,
+                    UserIp = CommonBase.userip,
+                    CustomerId = string.IsNullOrEmpty(CustomerId) ? "" : CustomerId,
+                    NameOnCard = string.IsNullOrEmpty(NameOnCard) ? "" : NameOnCard
+                };
+
+
+
+                StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+
+                var contentString = await _requestService.CommonRequestService(content, WebApiUrl.getJcbCustomerDetail);
+
+                JObject customerResponse = JObject.Parse(JsonConvert.DeserializeObject(contentString).ToString());
+
+                var jarr = customerResponse["Data"].Value<JObject>();
+
+                var customerResult = jarr["GetCustomerDetails"].Value<JArray>();
+                List<JCBCustomerProfileResponse> customerProfileResponse = customerResult.ToObject<List<JCBCustomerProfileResponse>>();
+
+                if (customerProfileResponse != null && customerProfileResponse.Count > 0)
+                {
+                    foreach (JCBCustomerProfileResponse response in customerProfileResponse)
+                    {
+                        //if (string.IsNullOrEmpty(response.AreaOfOperation))
+                        //{
+                        //    response.AreaOfOperation = "";
+                        //}
+                        //if (!string.IsNullOrEmpty(response.CommunicationPhoneNo))
+                        //{
+                        //    string[] subs = response.CommunicationPhoneNo.Split("-");
+
+                        //    if (subs.Count() > 1)
+                        //    {
+                        //        response.CommunicationDialCode = subs[0].ToString();
+                        //        response.CommunicationPhoneNo = subs[1].ToString();
+                        //    }
+                        //    else
+                        //    {
+                        //        response.CommunicationDialCode = "";
+                        //        response.CommunicationPhoneNo = "";
+                        //    }
+                        //}
+
+                        //if (!string.IsNullOrEmpty(response.CommunicationFax))
+                        //{
+                        //    string[] subs = response.CommunicationFax.Split("-");
+
+                        //    if (subs.Count() > 1)
+                        //    {
+                        //        response.CommunicationFaxCode = subs[0].ToString();
+                        //        response.CommunicationFax = subs[1].ToString();
+                        //    }
+                        //    else
+                        //    {
+                        //        response.CommunicationFaxCode = "";
+                        //        response.CommunicationFax = "";
+                        //    }
+                        //}
+
+                        //if (!string.IsNullOrEmpty(response.PermanentPhoneNo))
+                        //{
+                        //    string[] subs = response.PermanentPhoneNo.Split("-");
+
+                        //    if (subs.Count() > 1)
+                        //    {
+                        //        response.PerOrRegAddressDialCode = subs[0].ToString();
+                        //        response.PermanentPhoneNo = subs[1].ToString();
+                        //    }
+                        //    else
+                        //    {
+                        //        response.PerOrRegAddressDialCode = "";
+                        //        response.PermanentPhoneNo = "";
+                        //    }
+                        //}
+
+                        //if (!string.IsNullOrEmpty(response.PermanentFax))
+                        //{
+                        //    string[] subs = response.PermanentFax.Split("-");
+
+                        //    if (subs.Count() > 1)
+                        //    {
+                        //        response.PermanentFaxCode = subs[0].ToString();
+                        //        response.PermanentFax = subs[1].ToString();
+                        //    }
+                        //    else
+                        //    {
+                        //        response.PermanentFaxCode = "";
+                        //        response.PermanentFax = "";
+                        //    }
+                        //}
+
+                        //if (!string.IsNullOrEmpty(response.KeyOfficialFax))
+                        //{
+                        //    string[] subs = response.KeyOfficialFax.Split("-");
+
+                        //    if (subs.Count() > 1)
+                        //    {
+                        //        response.KeyOffFaxCode = subs[0].ToString();
+                        //        response.KeyOffFax = subs[1].ToString();
+                        //    }
+                        //    else
+                        //    {
+                        //        response.KeyOffFaxCode = "";
+                        //        response.KeyOffFax = "";
+                        //    }
+                        //}
+
+                        //if (!string.IsNullOrEmpty(response.KeyOfficialPhoneNo))
+                        //{
+                        //    string[] subs = response.KeyOfficialPhoneNo.Split("-");
+
+                        //    if (subs.Count() > 1)
+                        //    {
+                        //        response.KeyOffDialCode = subs[0].ToString();
+                        //        response.KeyOfficialPhoneNo = subs[1].ToString();
+                        //    }
+                        //    else
+                        //    {
+                        //        response.KeyOffDialCode = "";
+                        //        response.KeyOfficialPhoneNo = "";
+                        //    }
+                        //}
+
+                        if (response.FleetSizeNoOfVechileOwnedHCV == "0")
+                            response.FleetSizeNoOfVechileOwnedHCV = "";
+                        response.FleetSizeNoOfVechileOwnedLCV = (string.IsNullOrEmpty(response.FleetSizeNoOfVechileOwnedLCV) ? "" : response.FleetSizeNoOfVechileOwnedLCV);
+                        if (response.FleetSizeNoOfVechileOwnedLCV == "0")
+                            response.FleetSizeNoOfVechileOwnedLCV = "";
+                        response.FleetSizeNoOfVechileOwnedMUVSUV = (string.IsNullOrEmpty(response.FleetSizeNoOfVechileOwnedMUVSUV) ? "" : response.FleetSizeNoOfVechileOwnedMUVSUV);
+                        if (response.FleetSizeNoOfVechileOwnedMUVSUV == "0")
+                            response.FleetSizeNoOfVechileOwnedMUVSUV = "";
+                        response.FleetSizeNoOfVechileOwnedCarJeep = (string.IsNullOrEmpty(response.FleetSizeNoOfVechileOwnedCarJeep) ? "" : response.FleetSizeNoOfVechileOwnedCarJeep);
+                        if (response.FleetSizeNoOfVechileOwnedCarJeep == "0")
+                            response.FleetSizeNoOfVechileOwnedCarJeep = "";
+
+                        if (!string.IsNullOrEmpty(response.KeyOfficialDOA))
+                        {
+                            if (response.KeyOfficialDOA.Contains("1900"))
+                            {
+                                response.KeyOfficialDOA = "";
+                            }
+                            if (response.KeyOfficialDOA.Contains("0001"))
+                            {
+                                response.KeyOfficialDOA = "";
+                            }
+                        }
+
+                        if (!string.IsNullOrEmpty(response.KeyOfficialDOB))
+                        {
+                            if (response.KeyOfficialDOB.Contains("1900"))
+                            {
+                                response.KeyOfficialDOB = "";
+                            }
+                            if (response.KeyOfficialDOB.Contains("0001"))
+                            {
+                                response.KeyOfficialDOB = "";
+                            }
+                        }
+                        if (string.IsNullOrEmpty(response.NameOnCard))
+                        {
+                            response.NameOnCard = "";
+                        }
+                        if (!string.IsNullOrEmpty(response.DateOfApplication))
+                        {
+                            response.CustomerApplicationDate = response.DateOfApplication;
+                        }
+                        if (string.IsNullOrEmpty(response.RegionalOfficeName))
+                        {
+                            response.RegionalOfficeName = "";
+                        }
+                        if (response.FormNumber == "0")
+                        {
+                            response.FormNumber = "";
+                        }
+                        response.strSBU = response.SBUId.ToString();
+                    }
+                }
+
+                return customerProfileResponse;
+            }
+        }
+        public async Task<List<SearchGridResponse>> CardDetailsForSearch(string CustomerId, string CustomerTypeId)
+        {
+            var searchBody = new GetCardDetailsRequest()
+            {
+                UserId = CommonBase.userid,
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                CustomerId = CustomerId,
+                CardNo = "",
+                MobileNumber = "",
+                VehicleNumber = "",
+                StatusFlag = "-1"
+            };
+
+            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
+            {
+                StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+                var contentString = await _requestService.CommonRequestService(content, WebApiUrl.searchJcbManageCard);
+
+                JObject obj = JObject.Parse(JsonConvert.DeserializeObject(contentString).ToString());
+                var jarr = obj["Data"].Value<JArray>();
+                List<SearchGridResponse> searchList = jarr.ToObject<List<SearchGridResponse>>();
+
+                if (searchList != null && searchList.Count > 0)
+                {
+                    foreach (SearchGridResponse item in searchList)
+                    {
+                        if (string.IsNullOrEmpty(item.ExpiryDate))
+                            item.ExpiryDate = "";
+                        if (string.IsNullOrEmpty(item.IssueDate))
+                            item.IssueDate = "";
+                        if (string.IsNullOrEmpty(item.VechileNo))
+                            item.VechileNo = "";
+                    }
+                }
+
+                if (CustomerTypeId == "927")//DriverCard
+                {
+                    if (searchList != null && searchList.Count > 0)
+                    {
+                        foreach (SearchGridResponse item in searchList)
+                        {
+                            item.VechileNo = "DRIVER CARD";
+                        }
+                    }
+                }
+
+                if (CustomerTypeId == "918")//OTC
+                {
+                    if (searchList != null && searchList.Count > 0)
+                    {
+                        foreach (SearchGridResponse item in searchList)
+                        {
+                            if (string.IsNullOrEmpty(item.VechileNo))
+                            {
+                                item.VechileNo = "";
+                            }
+                        }
+                    }
+                }
+
+                return searchList;
+            }
         }
 
     }
