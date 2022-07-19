@@ -746,6 +746,52 @@ namespace HPCL.Service.Services
                 return searchList;
             }
         }
+        public async Task<GetJCBCommunicationEmailResetPasswordResponse> GetJCBCommunicationEmailResetPassword(string CustomerId)
+        {
+            var responseData = new GetJCBCommunicationEmailResetPasswordResponse();
+
+            var requestinfo = new GetJCBCommunicationEmailResetPasswordRequest()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                CustomerId = CustomerId
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(requestinfo), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getJCBCommunicationEmailResetPassword);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<GetJCBCommunicationEmailResetPasswordResponse> searchList = jarr.ToObject<List<GetJCBCommunicationEmailResetPasswordResponse>>();
+            responseData = searchList[0];
+            responseData.Internel_Status_Code = Convert.ToInt32(obj["Internel_Status_Code"].ToString());
+
+            return responseData;
+        }
+        public async Task<InsertResponse> UpdateJCBCommunicationEmailResetPassword(string CustomerId, string AlternateEmailId)
+        {
+            var email = "";
+
+            email = AlternateEmailId.ToLower();
+
+            var request = new JCBCustomerResetPassword
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = CommonBase.userip,
+                CustomerId = CustomerId,
+                AlternateEmailId = AlternateEmailId
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.updateJcbCommunicationEmailResetPassword);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            InsertResponse result = obj.ToObject<InsertResponse>();
+            return result;
+        }
 
     }
 }

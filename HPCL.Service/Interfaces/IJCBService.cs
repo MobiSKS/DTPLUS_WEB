@@ -32,5 +32,7 @@ namespace HPCL.Service.Interfaces
         Task<JCBManageProfile> JCBManageProfile();
         Task<List<JCBCustomerProfileResponse>> BindCustomerDetailsForSearch(string CustomerId, string NameOnCard);
         Task<List<SearchGridResponse>> CardDetailsForSearch(string CustomerId, string CustomerTypeId);
+        Task<GetJCBCommunicationEmailResetPasswordResponse> GetJCBCommunicationEmailResetPassword(string CustomerId);
+        Task<InsertResponse> UpdateJCBCommunicationEmailResetPassword(string CustomerId, string AlternateEmailId);
     }
 }
