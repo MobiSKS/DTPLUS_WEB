@@ -615,6 +615,8 @@
         public static string viewJcbDealerOtcCardDetail = "api/dtplus/JCB/view_jcb_dealer_otc_card_detail";
         public static string getAvailityJCBOtcCard = "api/dtplus/JCB/get_availity_JCB_otc_card";
         public static string insertJcbCustomer = "api/dtplus/JCB/insert_jcb_customer";
+        public static string getJcbCustomerDetail = "api/dtplus/JCB/get_jcb_customer_detail";
+        public static string searchJcbManageCard = "api/dtplus/JCB/search_jcb_manage_card";
         #endregion
 
         #region "Customer Dashboard"
