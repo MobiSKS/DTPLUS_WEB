@@ -289,14 +289,17 @@ namespace HPCL_Web.Controllers
             var modals = await _customerService.UpdateDndSmsAlertsConfigure(CustomerId);
             return Json(modals);
         }
-        public async Task<IActionResult> AccountStatementRequest(AccountStatementRequestViewModel reqEntity)
+        public async Task<IActionResult> AccountStatementRequest(AccountStatementRequestViewModel reqEntity,string reset)
         {
             AccountStatementRequestViewModel modals = new AccountStatementRequestViewModel();
             if (reqEntity.CustomerId != null && reqEntity.CustomerId != "")
             {
                 modals = await _customerService.GetAccountStatementRequest(reqEntity.CustomerId);
+                modals.CustomerId = reqEntity.CustomerId;
             }
             modals.StatementTypes.AddRange(await _commonActionService.GetAccountStatementRequestType());
+            
+            ViewBag.Reset = String.IsNullOrEmpty(reset) ? "N" : reset;
             return View(modals);
         }
 
@@ -306,6 +309,7 @@ namespace HPCL_Web.Controllers
             var modals = await _customerService.InsertAccountStatementRequest(reqEntity);
             return Json(modals);
         }
+        [HttpPost]
         public async Task<JsonResult> UpdateAccountStatementRequest([FromBody] AccountStatementRequestModel reqEntity)
         {
             var modals = await _customerService.UpdateAccountStatementRequest(reqEntity);
