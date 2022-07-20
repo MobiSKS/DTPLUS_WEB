@@ -87,7 +87,7 @@
                                     <button class="btn btn_primary" type="button" id="btnSearch">@Label.Search</button>
                                 </div>
                                 <div class="px-2">
-                                    <button class="btn btn_primary" type="button" id="btnExporttoExcel">EXPORT TO EXCEL</button>
+                                    <button class="btn btn_primary" type="button" onclick="tableToCSV()" id="btnExporttoExcel">EXPORT TO EXCEL</button>
                                 </div>
                                 <div class="px-2">
                                     <button class="btn btn_primary" type="button" id="btnExporttoPDF">EXPORT TO PDF</button>
@@ -457,4 +457,138 @@
               });
           }
     }));
+     function tableToCSV() {
+         debugger;
+            // Variable to store the final csv data
+            var csv_data = [];
+            var csvrow = [];
+            
+            var fromdate = $("#FromDate").val();
+            var todate = $("#ToDate").val();
+            var parentId=$("#ParentCustomerID").val();
+
+            var csvrowId = [];
+            csvrowId.push("Parent Customer ID : "+ parentId);
+            csv_data.push(csvrowId.join(","));
+            csv_data.join('\n');
+            var csvrowdate= [];
+            csvrowdate.push("Period:"+fromdate +" To "+ todate);
+            csv_data.push(csvrowdate.join(","));
+            csv_data.join('\n');
+            var csvrowBrk= [];
+            csvrowBrk.push("");
+            csv_data.push(csvrowBrk.join(","));
+            csv_data.join('\n');
+
+            var csvrowName = [];
+            csvrowName.push("Parent Customer Transaction Details Report");
+            csv_data.push(csvrowName.join(","));
+            csv_data.join('\n');
+
+            csvrow.push("S.No.","Terminal ID", "Merchant", "BatchID/ROC","Account Number","Vehicle Number","Transaction Date","Transaction Type",
+            "Product","Price","Volume(Ltr.)","Currency","Service Charge","Amount(Rs.)","Odometer Reading","Status");
+            csv_data.push(csvrow.join(","));
+
+            var tableName1 = $('#ParentDetails').DataTable();
+            var i=0
+            tableName1.rows().every(function(){
+               i++;
+                            var csvrow = [];
+
+                            csvrow.push(i);
+                            csvrow.push(this.data()[1]);
+                            csvrow.push(this.data()[2]);
+                            csvrow.push(this.data()[3]);
+                            csvrow.push(this.data()[4]);
+                            csvrow.push(this.data()[5]);
+                            csvrow.push(this.data()[6]);
+
+                            csvrow.push(this.data()[7]);
+                            csvrow.push(this.data()[8]);
+                            csvrow.push(this.data()[9]);
+                            csvrow.push(this.data()[10]);
+                            csvrow.push(this.data()[11]);
+                            csvrow.push(this.data()[12]);
+                            
+                            csvrow.push(this.data()[13]);
+                            csvrow.push(this.data()[14]);
+                            csvrow.push(this.data()[15]);
+                            csvrow.push(this.data()[16]);
+                            csv_data.push(csvrow.join(","));
+                        });
+                        // Combine each row data with new line character
+            //csv_data = csv_data.join('\n');
+
+            var csvrowName1 = [];
+            csvrowName1.push("Child Customer Transaction Details Report");
+            csv_data.push(csvrowName1.join(","));
+            csv_data.join('\n');
+
+            var csvrow2 = [];
+            csvrow2.push("S.No.","Terminal ID","Customer ID", "Merchant", "BatchID/ROC","Account Number","Vehicle Number","Transaction Date","Transaction Type","Product","Price","Volume(Ltr.)","Currency","Service Charge","Amount(Rs.)","Odometer Reading","Status");
+            csv_data.push(csvrow2.join(","));
+            // Get each row data
+            //var rows = document.getElementsByTagName('tr');
+            var tableName2 = $('#ChildDetails').DataTable();
+            var j=0
+            tableName2.rows().every(function(){
+               j++;
+                            var csvrow = [];
+
+                            csvrow.push(j);
+                            csvrow.push(this.data()[1]);
+                            csvrow.push(this.data()[2]);
+                            csvrow.push(this.data()[3]);
+                            csvrow.push(this.data()[4]);
+                            csvrow.push(this.data()[5]);
+                            csvrow.push(this.data()[6]);
+                            csvrow.push(this.data()[7]);
+                            csvrow.push(this.data()[8]);
+                            csvrow.push(this.data()[9]);
+                            csvrow.push(this.data()[10]);
+                            csvrow.push(this.data()[11]);
+                            csvrow.push(this.data()[12]);
+                            
+                            csvrow.push(this.data()[13]);
+                            csvrow.push(this.data()[14]);
+                            csvrow.push(this.data()[15]);
+                            csvrow.push(this.data()[16]);
+                        
+                            csvrow.push(this.data()[17]);
+                            csv_data.push(csvrow.join(","));
+                        });
+                        // Combine each row data with new line character
+            csv_data = csv_data.join('\n');
+            
+            // Call this function to download csv file
+            downloadCSVFile(csv_data);
+
+        }
+
+        function downloadCSVFile(csv_data) {
+
+            // Create CSV file object and feed
+            // our csv_data into it
+            CSVFile = new Blob([csv_data], {
+                type: "text/csv"
+            });
+
+            // Create to temporary link to initiate
+            // download process
+            var temp_link = document.createElement('a');
+
+            // Download csv file
+            temp_link.download = "Transaction-Details.csv";
+            var url = window.URL.createObjectURL(CSVFile);
+            temp_link.href = url;
+
+            // This link should not be displayed
+            temp_link.style.display = "none";
+            document.body.appendChild(temp_link);
+
+            // Automatically click the link to
+            // trigger download
+            temp_link.click();
+            document.body.removeChild(temp_link);
+        }
 </script>
