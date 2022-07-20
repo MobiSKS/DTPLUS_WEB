@@ -20,5 +20,7 @@ namespace HPCL.Common.Models.ResponseModel.ApplicationFormDataEntry
         public decimal ReceivedAmount { get; set; }
         public string RBEId { get; set; }
         public string RBEName { get; set; }
+        public int Status { get; set; }
+        public string Reason { get; set; }
     }
 }
