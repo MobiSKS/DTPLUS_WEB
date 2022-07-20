@@ -30,7 +30,7 @@ namespace HPCL.Service.Services
             var forms = new BaseEntity
             {
                 UserAgent=CommonBase.useragent,
-                UserIp=CommonBase.userip,
+                UserIp=_httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId=_httpContextAccessor.HttpContext.Session.GetString("UserId")
             };
 
@@ -51,7 +51,7 @@ namespace HPCL.Service.Services
             var requestBody = new UpdateHeadOfficeDetails
             {
                 UserAgent=CommonBase.useragent,
-                UserIp=CommonBase.userip,
+                UserIp=_httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId=_httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 HQID= entity.data[0].HQID,
                 HQCode= entity.data[0].HQCode,
@@ -75,7 +75,7 @@ namespace HPCL.Service.Services
             var requestData = new DeleteCItyReq()
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 CityID = cityId,
                 ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
@@ -94,7 +94,7 @@ namespace HPCL.Service.Services
             var requestData = new DeleteZonalOfficeReq()
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 ZonalOfficeID = zonalOfficeID,
                 ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
@@ -113,7 +113,7 @@ namespace HPCL.Service.Services
             var requestData = new DeleteRegionalOfficeReq()
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 RegionalOfficeID = regionalOfficeID,
                 ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
@@ -132,7 +132,7 @@ namespace HPCL.Service.Services
             var requestData = new DeleteCountryRegionReq()
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 RegionID = regionID,
                 ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
@@ -151,7 +151,7 @@ namespace HPCL.Service.Services
             var requestData = new DeleteStateReq()
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 StateID = stateID,
                 ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
@@ -170,7 +170,7 @@ namespace HPCL.Service.Services
             var requestData = new DeleteDistrictReq()
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 DistrictID = districtID,
                 ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")

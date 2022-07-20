@@ -30,7 +30,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 FirstName = entity.FirstName,
                 UserName = entity.UserName
             };
@@ -48,7 +48,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 FirstName = entity.FirstName,
                 UserName = entity.UserName
             };
@@ -66,7 +66,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 FirstName = entity.FirstName ?? "",
                 MobileNo = entity.MobileNo ?? ""
             };
@@ -84,7 +84,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 PreRBEUserName = userName,
                 NewRBEUserName = newUserName ?? "",
                 CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
@@ -103,7 +103,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 PreRBEUserName = userName ?? "",
                 NewRBEUserName = newUserName ?? "",
                 OTP = otp,
@@ -124,7 +124,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 MappingStatus = entity.MappingStatus ?? "",
                 FirstName = entity.FirstName ?? "",
                 MobileNo = entity.MobileNo
@@ -143,7 +143,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 PreRBEUserName = userName ?? "",
                 MappingStatus = actionPress ?? ""
             };
@@ -162,7 +162,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 FirstName = entity.FirstName ?? "",
                 MobileNo = entity.MobileNo ?? ""
             };
@@ -180,7 +180,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 NewMobileNo = newMobileNo ?? "",
                 CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
             };
@@ -198,7 +198,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 ExistingMobileNo = existMobNo ?? "",
                 NewMobileNo = newMobileNo ?? "",
                 OTP = otp ?? "",
@@ -219,7 +219,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 ApprovalStatus = entity.ApprovalStatus ?? "",
                 FirstName = entity.FirstName ?? "",
                 RBEId = entity.RBEId ?? ""
@@ -238,7 +238,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 ExistingMobile = existMobNo ?? "",
                 MappingStatus = mappingStatus ?? ""
             };
@@ -257,7 +257,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 FirstName = entity.FirstName ?? "",
                 MobileNo = entity.MobileNo ?? ""
             };
@@ -275,7 +275,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 MobileNo = mobNo ?? "",
                 CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
             };
@@ -293,7 +293,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 MobileNo = MobileNo ?? "",
                 OTP = otp ?? "",
                 CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
@@ -313,7 +313,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 ApprovalStatus = entity.ApprovalStatus ?? "",
                 FirstName = entity.FirstName ?? "",
                 RBEId = entity.RBEId ?? ""
@@ -332,7 +332,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 MobileNo = mobNo ?? "",
                 MappingStatus = mappingStatus ?? ""
             };

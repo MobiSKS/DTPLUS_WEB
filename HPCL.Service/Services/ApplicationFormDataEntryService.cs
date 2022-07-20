@@ -38,7 +38,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 CustomerId = customerId
             };
 
@@ -74,7 +74,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 FormNumber = formNumber
             };
 
@@ -214,7 +214,7 @@ namespace HPCL.Service.Services
 
 
             addAddOnCard.UserAgent = CommonBase.useragent;
-            addAddOnCard.UserIp = CommonBase.userip;
+            addAddOnCard.UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress");
             addAddOnCard.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
             addAddOnCard.CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId");
             addAddOnCard.VehicleNoVerifiedManually = (addAddOnCard.VehicleVerifiedManually ? "1" : "0");
@@ -327,7 +327,7 @@ namespace HPCL.Service.Services
             var requestInfo = new CheckCardIdentifierDuplicationRequest()
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 CardIdentifier = cardIdentifier,
                 CustomerID = customerID

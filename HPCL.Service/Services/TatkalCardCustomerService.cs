@@ -48,7 +48,7 @@ namespace HPCL.Service.Services
         public async Task<TatkalCustomerCardRequestInfo> RequestForTatkalCard(TatkalCustomerCardRequestInfo tatkalCustomerCardRequestInfo)
         {
             tatkalCustomerCardRequestInfo.UserAgent = CommonBase.useragent;
-            tatkalCustomerCardRequestInfo.UserIp = CommonBase.userip;
+            tatkalCustomerCardRequestInfo.UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress");
             tatkalCustomerCardRequestInfo.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
             tatkalCustomerCardRequestInfo.CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId");
 
@@ -107,7 +107,7 @@ namespace HPCL.Service.Services
                 {
                     UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                     UserAgent = CommonBase.useragent,
-                    UserIp = CommonBase.userip,
+                    UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                     RegionalId = entity.RegionalId,
                     StatusFlag = entity.StatusFlag
 
@@ -119,7 +119,7 @@ namespace HPCL.Service.Services
                 {
                     UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                     UserAgent = CommonBase.useragent,
-                    UserIp = CommonBase.userip,
+                    UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                     RegionalId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                     StatusFlag = -1
                 };
@@ -156,7 +156,7 @@ namespace HPCL.Service.Services
         {
             customerModel.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
             customerModel.UserAgent = CommonBase.useragent;
-            customerModel.UserIp = CommonBase.userip;
+            customerModel.UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress");
             customerModel.CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId");
             customerModel.CommunicationPhoneNo = (string.IsNullOrEmpty(customerModel.CommunicationDialCode) ? "" : customerModel.CommunicationDialCode) + "-" + (string.IsNullOrEmpty(customerModel.CommunicationPhonePart2) ? "" : customerModel.CommunicationPhonePart2);
             customerModel.KeyOfficialSecretQuestion = "0";
@@ -244,7 +244,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 RegionalId = RegionalId.ToString(),
             };
 
@@ -262,7 +262,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 RegionalId = _httpContextAccessor.HttpContext.Session.GetString("LoginType") == "Admin" ? "": _httpContextAccessor.HttpContext.Session.GetString("RegionalId"),
                 CustomerId=customerId
             };
@@ -300,7 +300,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 CustomerId = UpdateDetails.CustomerId,
                 ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 ObjCardMap = UpdateDetails.ObjCardMap
@@ -333,7 +333,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 ZonalOfficeID = entity.ZonalOfficeID == "0" ? "" : entity.ZonalOfficeID,
                 RegionalOfficeID = entity.RegionalOfficeID == "0" ? "" : entity.RegionalOfficeID,
                 FromDate = entity.FromDate,

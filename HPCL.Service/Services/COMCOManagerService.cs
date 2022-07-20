@@ -40,7 +40,7 @@ namespace HPCL.Service.Services
                 var reqBody = new GetCOMCOMapCustomerDetailsRequest
                 {
                     UserAgent = CommonBase.useragent,
-                    UserIp = CommonBase.userip,
+                    UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                     UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                     CustomerID = string.IsNullOrEmpty(Model.CustomerID) ? "" : Model.CustomerID,
                     MerchantID = string.IsNullOrEmpty(Model.MerchantID) ? "" : Model.MerchantID
@@ -87,7 +87,7 @@ namespace HPCL.Service.Services
 
             model.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
             model.UserAgent = CommonBase.useragent;
-            model.UserIp = CommonBase.userip;
+            model.UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress");
             model.CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId");
 
             StringContent requestContent = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
@@ -151,7 +151,7 @@ namespace HPCL.Service.Services
                 var reqBody = new GetCOMCOViewMappedCustomerRequest
                 {
                     UserAgent = CommonBase.useragent,
-                    UserIp = CommonBase.userip,
+                    UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                     UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                     CustomerID = string.IsNullOrEmpty(model.CustomerID) ? "" : model.CustomerID,
                     MerchantID = string.IsNullOrEmpty(model.MerchantID) ? "" : model.MerchantID,
@@ -210,7 +210,7 @@ namespace HPCL.Service.Services
         public async Task<RequestToSetCreditLimitModel> RequestToSetCreditLimit(RequestToSetCreditLimitModel model)
         {
             model.UserAgent = CommonBase.useragent;
-            model.UserIp = CommonBase.userip;
+            model.UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress");
             model.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
             model.CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId");
 

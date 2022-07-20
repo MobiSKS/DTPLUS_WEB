@@ -53,7 +53,7 @@ namespace HPCL.Service.Services
             var driversRequestData = new DealerWiseDriverCardRequestModel()
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 RegionalId = requestForDriverCardModel.CustomerRegionID.ToString(),
                 NoofCards = requestForDriverCardModel.NoofCards.ToString(),
@@ -137,7 +137,7 @@ namespace HPCL.Service.Services
             GetAllUnAllocatedOTCCardsRequestModel requestinfo = new GetAllUnAllocatedOTCCardsRequestModel()
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 RegionalOfficeId = RegionalId
             };
@@ -165,7 +165,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 NoOfCardsAllocated = linkCardsToMerchantModel.NoOfCardsAllocated,
                 MerchantId = linkCardsToMerchantModel.MerchantId,
                 ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
@@ -200,7 +200,7 @@ namespace HPCL.Service.Services
             GetAvailableOTCCardByRegionalIdRequestModel requestinfo = new GetAvailableOTCCardByRegionalIdRequestModel()
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 RegionalOfficeId = RegionalId,
                 MerchantId = MerchantID
@@ -226,7 +226,7 @@ namespace HPCL.Service.Services
         public async Task<DriverCardCustomerModel> CreateDriverCardCustomer(DriverCardCustomerModel customerModel)
         {
             customerModel.UserAgent = CommonBase.useragent;
-            customerModel.UserIp = CommonBase.userip;
+            customerModel.UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress");
             customerModel.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
             customerModel.CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId");
             customerModel.CommunicationPhoneNo = (string.IsNullOrEmpty(customerModel.CommunicationDialCode) ? "" : customerModel.CommunicationDialCode) + "-" + (string.IsNullOrEmpty(customerModel.CommunicationPhonePart2) ? "" : customerModel.CommunicationPhonePart2);
@@ -313,7 +313,7 @@ namespace HPCL.Service.Services
             var customerReqinfo = new GetCustomerNameModel()
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 CustomerID = CustomerID
             };
@@ -348,7 +348,7 @@ namespace HPCL.Service.Services
                 {
                     UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                     UserAgent = CommonBase.useragent,
-                    UserIp = CommonBase.userip,
+                    UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                     RegionalId = entity.RegionalId,
 
                 };
@@ -359,7 +359,7 @@ namespace HPCL.Service.Services
                 {
                     UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                     UserAgent = CommonBase.useragent,
-                    UserIp = CommonBase.userip,
+                    UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                     RegionalId = _httpContextAccessor.HttpContext.Session.GetString("UserId")
                 };
             }
@@ -392,7 +392,7 @@ namespace HPCL.Service.Services
             var searchBody = new GetOTCCardMerchantAllocationRequestModel()
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 MerchantId = MerchantId,
                 CardNo = string.IsNullOrEmpty(CardNo) ? "" : CardNo
@@ -430,7 +430,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 FromDate = fromDate,
                 ToDate = toDate,
                 ZonalOfficeId = string.IsNullOrEmpty(zonalOfficeID) || zonalOfficeID == "0" ? "" : zonalOfficeID,
@@ -467,7 +467,7 @@ namespace HPCL.Service.Services
         }
         public async Task<DealerWiseDriverCardRequestModel> DealerDriverCardRequests(DealerWiseDriverCardRequestModel dealerWiseDriverCardRequestModel)
         {
-            dealerWiseDriverCardRequestModel.UserIp = CommonBase.userip;
+            dealerWiseDriverCardRequestModel.UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress");
             dealerWiseDriverCardRequestModel.UserId = CommonBase.userid;
             dealerWiseDriverCardRequestModel.UserAgent = CommonBase.useragent;
             dealerWiseDriverCardRequestModel.CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId");

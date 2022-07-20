@@ -73,26 +73,26 @@ namespace HPCL_Web.Controllers
                 }
             }
             //Setting User IP from Front End
-            CommonBase.userip = user.Userip;
+            //_httpContextAccessor.HttpContext.Session.GetString("IpAddress") = user.Userip;
 
-            var access_token = _api.GetToken();
+            //var access_token = _api.GetToken();
 
-            if (access_token.Result != null)
-            {
-                HttpContext.Session.SetString("Token_" + user.UserId, access_token.Result);
-            }
+            //if (access_token.Result != null)
+            //{
+            //    HttpContext.Session.SetString("Token_" + user.UserId, access_token.Result);
+            //}
 
             var loginBody = new UserInfoModel
             {
                 UserId = user.UserId,
                 Useragent = CommonBase.useragent,
-                Userip = CommonBase.userip,
+                Userip = user.Userip,
                 Password = user.Password
             };
 
             using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
             {
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token_" + user.UserId));
+                //client.DefaultRequestHeaders.Add("Secret_Key", "PVmMSclp834KBIUa9O-XxpBsDJhsi1dsds74CiGaoo5");
 
                 StringContent content = new StringContent(JsonConvert.SerializeObject(loginBody), Encoding.UTF8, "application/json");
 
@@ -109,7 +109,7 @@ namespace HPCL_Web.Controllers
                         if (loginRes[0].Status == 0)
                         {
                             ModelState.Clear();
-                            HttpContext.Session.Remove("Token_" + user.UserId);
+                            //HttpContext.Session.Remove("Token_" + user.UserId);
                             ViewBag.Message = loginRes[0].Reason;
                             return View(user);
                         }
@@ -131,7 +131,7 @@ namespace HPCL_Web.Controllers
                                         MerchantID = loginRes[0].LoginType == "Merchant" ? loginRes[0].UserId : "",
                                         UserId = loginRes[0].UserId,
                                         Today = DateTime.Now.ToString("yyyy-MM-dd"),
-                                        Token = access_token.Result,
+                                        Token = loginRes[0].Token,
                                         UserRole = loginRes[0].UserRole
                                     }
                                 };
@@ -160,7 +160,7 @@ namespace HPCL_Web.Controllers
                         else
                         {
                             ModelState.Clear();
-                            HttpContext.Session.Remove("Token_" + user.UserId);
+                            //HttpContext.Session.Remove("Token_" + user.UserId);
                             ViewBag.Message = "Details not found for this User!";
                             return View(user);
                         }
@@ -171,7 +171,7 @@ namespace HPCL_Web.Controllers
                     else
                     {
                         ModelState.Clear();
-                        HttpContext.Session.Remove("Token_" + user.UserId);
+                        //HttpContext.Session.Remove("Token_" + user.UserId);
                         ViewBag.Message = "Details not found for this User!";
                         return View(user);
                     }
@@ -203,7 +203,6 @@ namespace HPCL_Web.Controllers
                 HttpContext.Session.SetString("CurrentAction", SessionMenuModel.sessionList[0].CurrentAction == null ? "" : SessionMenuModel.sessionList[0].CurrentAction);
                 HttpContext.Session.SetString("BreadCrumbsPerviousMenuName", SessionMenuModel.sessionList[0].BreadCrumbsPerviousMenuName == null ? "" : SessionMenuModel.sessionList[0].BreadCrumbsPerviousMenuName);
                 HttpContext.Session.SetString("IpAddress", ipAddress);
-                CommonBase.userip = ipAddress;
             }
             else
             {
@@ -224,7 +223,6 @@ namespace HPCL_Web.Controllers
                     HttpContext.Session.SetString("CurrentAction", item.CurrentAction == null ? "" : item.CurrentAction);
                     HttpContext.Session.SetString("BreadCrumbsPerviousMenuName", item.BreadCrumbsPerviousMenuName == null ? "" : item.BreadCrumbsPerviousMenuName);
                     HttpContext.Session.SetString("IpAddress", ipAddress);
-                    CommonBase.userip = ipAddress;
                 }
             }
 
@@ -234,7 +232,7 @@ namespace HPCL_Web.Controllers
                 {
                     UserId = userId,
                     UserAgent = CommonBase.useragent,
-                    UserIp = CommonBase.userip,
+                    UserIp = ipAddress,
                     UserType = HttpContext.Session.GetString("UserRole")
                 };
 
@@ -293,7 +291,6 @@ namespace HPCL_Web.Controllers
                 HttpContext.Session.SetString("CurrentAction", SessionMenuModel.sessionList[0].CurrentAction == null ? "" : SessionMenuModel.sessionList[0].CurrentAction);
                 HttpContext.Session.SetString("BreadCrumbsPerviousMenuName", SessionMenuModel.sessionList[0].BreadCrumbsPerviousMenuName == null ? "" : SessionMenuModel.sessionList[0].BreadCrumbsPerviousMenuName);
                 HttpContext.Session.SetString("IpAddress", ipAddress);
-                CommonBase.userip = ipAddress;
 
                 return Json("Success");
             }
@@ -316,7 +313,6 @@ namespace HPCL_Web.Controllers
                     HttpContext.Session.SetString("CurrentAction", item.CurrentAction == null ? "" : item.CurrentAction);
                     HttpContext.Session.SetString("BreadCrumbsPerviousMenuName", item.BreadCrumbsPerviousMenuName == null ? "" : item.BreadCrumbsPerviousMenuName);
                     HttpContext.Session.SetString("IpAddress", ipAddress);
-                    CommonBase.userip = ipAddress;
                 }
                 return Json("Success");
             }

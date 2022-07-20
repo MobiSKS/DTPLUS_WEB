@@ -42,7 +42,7 @@ namespace HPCL.Service.Services
                 var reqBody = new GetSMSAlertstoIndividualCardUsersRequest
                 {
                     UserAgent = CommonBase.useragent,
-                    UserIp = CommonBase.userip,
+                    UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                     UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                     CustomerID = Model.CustomerID,
                     CardNo = string.IsNullOrEmpty(Model.CardNo) ? "" : Model.CardNo
@@ -97,7 +97,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 CustomerID= customerID,
                 CardNo= cardNo,
                 MobileNo= mobileNo
@@ -118,7 +118,7 @@ namespace HPCL.Service.Services
         {
             model.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
             model.UserAgent = CommonBase.useragent;
-            model.UserIp = CommonBase.userip;
+            model.UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress");
             model.ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId");
             
             StringContent requestContent = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");

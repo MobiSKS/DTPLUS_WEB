@@ -21,7 +21,7 @@ namespace HPCL.Service
         }
         public async Task<string> CommonRequestService(StringContent content, string requestUrl)
         {
-            Start:
+            //Start:
             using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
             {
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContextAccessor.HttpContext.Session.GetString("Token"));
@@ -36,15 +36,16 @@ namespace HPCL.Service
 
                         if (respMessage != "Success")
                         {
-                            var access_token = _api.GetToken();
-                            if (access_token.Result != null)
-                            {
-                                HttpContextAccessor.HttpContext.Session.SetString("Token", access_token.Result);
-                            }
-                            else
-                            {
-                                goto Start;
-                            }
+                            ResponseContent = null;
+                            //var access_token = _api.GetToken();
+                            //if (access_token.Result != null)
+                            //{
+                            //    HttpContextAccessor.HttpContext.Session.SetString("Token", access_token.Result);
+                            //}
+                            //else
+                            //{
+                            //    goto Start;
+                            //}
                         }
                         return ResponseContent;
                     }
@@ -98,7 +99,7 @@ namespace HPCL.Service
 
         public async Task<string> FormDataRequestService(MultipartFormDataContent content, string requestUrl)
         {
-        Start:
+        //Start:
             using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
             {
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContextAccessor.HttpContext.Session.GetString("Token"));
@@ -112,15 +113,16 @@ namespace HPCL.Service
                         string respMessage = respObj["Message"].ToString();
                         if (respMessage != "Success")
                         {
-                            var access_token = _api.GetToken();
-                            if (access_token.Result != null)
-                            {
-                                HttpContextAccessor.HttpContext.Session.SetString("Token", access_token.Result);
-                            }
-                            else
-                            {
-                                goto Start;
-                            }
+                            ResponseContent = null;
+                            //var access_token = _api.GetToken();
+                            //if (access_token.Result != null)
+                            //{
+                            //    HttpContextAccessor.HttpContext.Session.SetString("Token", access_token.Result);
+                            //}
+                            //else
+                            //{
+                            //    goto Start;
+                            //}
                         }
                         return ResponseContent;
                     }

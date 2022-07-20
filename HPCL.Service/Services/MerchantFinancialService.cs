@@ -46,7 +46,7 @@ namespace HPCL.Service.Services
                 {
                     UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                     UserAgent = CommonBase.useragent,
-                    UserIp = CommonBase.userip,
+                    UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                     MerchantId = entity.MerchantId ?? "",
                     MerchantStatus = entity.MerchantStatus ?? "",
                     FromDate = entity.FromDate,
@@ -61,7 +61,7 @@ namespace HPCL.Service.Services
                 {
                     UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                     UserAgent = CommonBase.useragent,
-                    UserIp = CommonBase.userip,
+                    UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                     MerchantId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                     MerchantStatus = entity.MerchantStatus,
                     FromDate = entity.FromDate,
@@ -98,7 +98,7 @@ namespace HPCL.Service.Services
                 {
                     UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                     UserAgent = CommonBase.useragent,
-                    UserIp = CommonBase.userip,
+                    UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                     MerchantId = entity.MerchantId,
                     TerminalId = entity.TerminalId,
                     FromDate = FromDate,
@@ -111,7 +111,7 @@ namespace HPCL.Service.Services
                 {
                     UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                     UserAgent = CommonBase.useragent,
-                    UserIp = CommonBase.userip,
+                    UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                     MerchantId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                     TerminalId = entity.TerminalId,
                     FromDate = FromDate,
@@ -134,7 +134,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 TerminalId = terminalId,
                 BatchId = batchId
             };
@@ -157,7 +157,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 TerminalId = terminalId
             };
 
@@ -194,7 +194,7 @@ namespace HPCL.Service.Services
                 {
                     UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                     UserAgent = CommonBase.useragent,
-                    UserIp = CommonBase.userip,
+                    UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                     MerchantId = entity.MerchantId,
                     TerminalId = entity.TerminalId,
                     TransactionType = (entity.TransType != null) ? string.Join(",", entity.TransType) : "",
@@ -208,7 +208,7 @@ namespace HPCL.Service.Services
                 {
                     UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                     UserAgent = CommonBase.useragent,
-                    UserIp = CommonBase.userip,
+                    UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                     MerchantId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                     TerminalId = entity.TerminalId,
                     TransactionType = (entity.TransType != null) ? string.Join(",", entity.TransType) : "",
@@ -238,7 +238,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 TerminalId = TerminalId,
                 MerchantId = MerchantId,
                 FromDate=fromDate,
@@ -283,7 +283,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 FromDate = fromDate,
                 ToDate = toDate,
                 MerchantId = Model.TerminalOrMerchant == "Merchant" ? Model.MerchantId : "",
@@ -326,7 +326,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 FromDate = fromDate,
                 ToDate = toDate,
                 MerchantId = Model.TerminalOrMerchant == "Merchant" ? Model.MerchantId : "",

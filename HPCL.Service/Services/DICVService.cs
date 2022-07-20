@@ -40,7 +40,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress")
             };
 
             StringContent officerTypeContent = new StringContent(JsonConvert.SerializeObject(officerTypeForms), Encoding.UTF8, "application/json");
@@ -80,7 +80,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 DealerCode = arrs[0].DealerCode,
                 DealerName = arrs[0].DealerName,
                 ZonalOfficeId = arrs[0].ZonalOfficeId,
@@ -111,7 +111,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 DealerCode = dealerCode,
                 DTPDealerCode = dtpCode,
                 OfficerType = OfficerType
@@ -151,7 +151,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 DealerCode = arrs[0].DealerCode,
                 ZonalOfficeId = arrs[0].ZonalOfficeId,
                 RegionalOfficeId = arrs[0].RegionalOfficeId,
@@ -181,7 +181,7 @@ namespace HPCL.Service.Services
             VerifyDealerRequestModel requestinfo = new VerifyDealerRequestModel()
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 DealerCode = DealerCode
             };

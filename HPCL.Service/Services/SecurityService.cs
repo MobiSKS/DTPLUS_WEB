@@ -38,7 +38,7 @@ namespace HPCL.Service.Services
                 {
                     UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                     UserAgent = CommonBase.useragent,
-                    UserIp = CommonBase.userip,
+                    UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                     FirstName = entity.FirstName,
                     UserName=entity.UserName,
                     StatusId=entity.StatusId
@@ -50,7 +50,7 @@ namespace HPCL.Service.Services
                 {
                     UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                     UserAgent = CommonBase.useragent,
-                    UserIp = CommonBase.userip,
+                    UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                     FirstName = "",
                     UserName="",
                     StatusId=""
@@ -72,7 +72,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserName = userName
             };
 
@@ -91,7 +91,7 @@ namespace HPCL.Service.Services
             var forms = new ApproveRejectRbeUser
             {
                 UserAgent = CommonBase.useragent,
-                UserIp= CommonBase.userip,
+                UserIp= _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId= _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserName = userName,
                 Approvalstatus = 4,
@@ -115,7 +115,7 @@ namespace HPCL.Service.Services
             var forms = new ApproveRejectRbeUser
             {
                 UserAgent = CommonBase.useragent,
-                UserIp= CommonBase.userip,
+                UserIp= _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId= _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserName = userName,
                 Approvalstatus = 13,
@@ -158,7 +158,7 @@ namespace HPCL.Service.Services
             var reqBody = new UserCreationViewRequest
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserName = string.IsNullOrEmpty(model.UserName) ? "" : model.UserName,
                 FromDate = strFromDate,
@@ -191,7 +191,7 @@ namespace HPCL.Service.Services
             var forms = new GetManageUser
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserName = entity.UserName,
                 Email = entity.Email,
@@ -214,7 +214,7 @@ namespace HPCL.Service.Services
             var forms = new GetUserResetPassword
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserName = userName,
                 ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
@@ -236,7 +236,7 @@ namespace HPCL.Service.Services
             var forms = new UpdateManageUserRequest
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserName = userName,
                 Actions = action
@@ -259,7 +259,7 @@ namespace HPCL.Service.Services
             var forms = new DeleteManageUserRequest
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 TypeDeleteUserManage = arrs
             };
@@ -279,7 +279,7 @@ namespace HPCL.Service.Services
             var forms = new AddNewUserReq
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserName = entity.UserName,
                 Email = entity.Email,
@@ -312,7 +312,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserName = UserName
             };
 
@@ -333,7 +333,7 @@ namespace HPCL.Service.Services
             var reqBody = new UserCreationViewRequest
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 FirstName = String.IsNullOrEmpty(model.FirstName) ? "" : model.FirstName,
                 UserName = String.IsNullOrEmpty(model.UserName) ? "" : model.UserName
@@ -362,7 +362,7 @@ namespace HPCL.Service.Services
         {
             model.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
             model.UserAgent = CommonBase.useragent;
-            model.UserIp = CommonBase.userip;
+            model.UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress");
             model.ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId");
 
             StringContent requestContent = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
@@ -387,7 +387,7 @@ namespace HPCL.Service.Services
             var forms = new ManageRolesRequestModel
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 RoleId=RoleId
             };
@@ -405,7 +405,7 @@ namespace HPCL.Service.Services
             var forms = new ManageRolesRequestModel
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 RoleName = manageRolesRequestModel.RoleName
             };
@@ -423,7 +423,7 @@ namespace HPCL.Service.Services
             var forms = new ManageRolesRequestModel
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
             };
 
@@ -442,7 +442,7 @@ namespace HPCL.Service.Services
             var forms = new ManageRolesRequestModel
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 TypeRoleNameAndRoleDescriptionMapping = manageRolesRequestModel.TypeRoleNameAndRoleDescriptionMapping
@@ -463,7 +463,7 @@ namespace HPCL.Service.Services
             var forms = new ManageRolesRequestModel
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 RoleName= manageRolesRequestModel.RoleName,
                 RoleDescription= manageRolesRequestModel.RoleDescription,
@@ -486,7 +486,7 @@ namespace HPCL.Service.Services
             var forms = new ManageRolesRequestModel
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 RoleName = manageRolesRequestModel.RoleName,
                 RoleDescription = manageRolesRequestModel.RoleDescription,
@@ -507,7 +507,7 @@ namespace HPCL.Service.Services
             var forms = new ManageRolesRequestModel
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
             };
 
@@ -525,7 +525,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserName = UserName,
             };
 
@@ -544,7 +544,7 @@ namespace HPCL.Service.Services
             var forms = new AddNewUserReq
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserName = entity.UserName,
                 Email = entity.Email,
@@ -568,7 +568,7 @@ namespace HPCL.Service.Services
             var forms = new AddNewUserReq
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserName = UserName
             };
@@ -587,7 +587,7 @@ namespace HPCL.Service.Services
             var forms = new AddNewUserReq
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserName = entity.UserName,
                 RoleId = entity.RoleId,
@@ -608,7 +608,7 @@ namespace HPCL.Service.Services
             var forms = new UserCreationReqModel
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 FirstName = reqEntity.FirstName,
                 MiddleName = reqEntity.MiddleName,

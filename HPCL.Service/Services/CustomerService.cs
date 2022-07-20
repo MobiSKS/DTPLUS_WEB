@@ -43,7 +43,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 FormNumber = entity.FormNumber,
                 Type = String.IsNullOrEmpty(entity.Type)?"0":"1",
             };
@@ -75,7 +75,7 @@ namespace HPCL.Service.Services
             form.Add(new StringContent(_httpContextAccessor.HttpContext.Session.GetString("UserId")), "CreatedBy");
             form.Add(new StringContent(_httpContextAccessor.HttpContext.Session.GetString("UserId")), "Userid");
             form.Add(new StringContent(CommonBase.useragent), "Useragent");
-            form.Add(new StringContent(CommonBase.userip), "Userip");
+            form.Add(new StringContent(_httpContextAccessor.HttpContext.Session.GetString("IpAddress")), "Userip");
 
             var response = await _requestService.FormDataRequestService(form, WebApiUrl.UploadKycUrl);
 
@@ -171,7 +171,7 @@ namespace HPCL.Service.Services
             var CustomerTypeForms = new Dictionary<string, string>
                 {
                     {"Useragent", CommonBase.useragent},
-                    {"Userip", CommonBase.userip},
+                    {"Userip", _httpContextAccessor.HttpContext.Session.GetString("IpAddress")},
                     {"UserId", _httpContextAccessor.HttpContext.Session.GetString("UserId")},
                     {"CustomerType", cust.CustomerTypeID.ToString()},
                     {"CustomerSubtype", cust.CustomerSubTypeID.ToString()},
@@ -292,7 +292,7 @@ namespace HPCL.Service.Services
             var CustType = new BaseEntity()
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId")
             };
 
@@ -335,7 +335,7 @@ namespace HPCL.Service.Services
                 var requestData = new CheckPancardbyDistrictIdRequestModel()
                 {
                     UserAgent = CommonBase.useragent,
-                    UserIp = CommonBase.userip,
+                    UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                     UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                     FormNumber = FormNumber,
                     Type = "0"
@@ -389,7 +389,7 @@ namespace HPCL.Service.Services
             var CustomerRefinfo = new CustomerModel()
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 CustomerReferenceNo = customerReferenceNo
             };
@@ -457,7 +457,7 @@ namespace HPCL.Service.Services
             var requestInfo = new GetCustomerRBENameRquest()
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 RBEId = RBEId
             };
@@ -525,7 +525,7 @@ namespace HPCL.Service.Services
             insertInfo.CardPreference = customerCardInfo.CardPreference;
             insertInfo.RBEName = customerCardInfo.RBEName;
             insertInfo.Useragent = CommonBase.useragent;
-            insertInfo.Userip = CommonBase.userip;
+            insertInfo.Userip = _httpContextAccessor.HttpContext.Session.GetString("IpAddress");
             insertInfo.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
             insertInfo.Createdby = _httpContextAccessor.HttpContext.Session.GetString("UserId");
             insertInfo.ObjCardDetail = customerCardInfo.ObjCardDetail;
@@ -659,7 +659,7 @@ namespace HPCL.Service.Services
             var request = new GetValidateNewCustomerRequestModel()
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 RegionalOfficeId = entity.CustomerRegionID > 0 ? entity.CustomerRegionID.ToString() : null,
                 FromDate = fromDateOfApplication,
@@ -709,7 +709,7 @@ namespace HPCL.Service.Services
             var searchBody = new GetValidateNewCustomerRequestModel()
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 RegionalOfficeId = vGrid.CustomerRegionID > 0 ? vGrid.CustomerRegionID.ToString() : null,
                 FromDate = fromDateOfApplication,
@@ -737,7 +737,7 @@ namespace HPCL.Service.Services
             var customerBody = new CheckformNumberDuplicationRequest()
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 FormNumber = FormNumber
             };
@@ -754,7 +754,7 @@ namespace HPCL.Service.Services
             var approvalBody = new AproveCustomerRequest()
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 FormNumber = FormNumber,
                 Comments = Comments,
@@ -782,7 +782,7 @@ namespace HPCL.Service.Services
             var requestInfo = new SalesAreaRequestModal()
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 RegionID = RegionID.ToString()
             };
@@ -816,7 +816,7 @@ namespace HPCL.Service.Services
             var Request = new GetCustomerBalanceRequest()
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 CustomerID = CustomerID
             };
@@ -836,7 +836,7 @@ namespace HPCL.Service.Services
             var Request = new GetCustomerBalanceRequest()
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 CustomerID = CustomerID
             };
@@ -854,7 +854,7 @@ namespace HPCL.Service.Services
             var request = new GetCustomerByCustomerIdRequest()
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 CustomerID = CustomerID
             };
@@ -872,7 +872,7 @@ namespace HPCL.Service.Services
             var Request = new GetCustomerBalanceRequest()
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 CustomerID = CustomerID
             };
@@ -890,7 +890,7 @@ namespace HPCL.Service.Services
             var request = new BaseEntity()
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId")
             };
 
@@ -1275,7 +1275,7 @@ namespace HPCL.Service.Services
                 {
                     {"UserId", _httpContextAccessor.HttpContext.Session.GetString("UserId")},
                     {"Useragent", CommonBase.useragent},
-                    {"Userip", CommonBase.userip},
+                    {"Userip", _httpContextAccessor.HttpContext.Session.GetString("IpAddress")},
                     {"CustomerReferenceNo", cust.CustomerReferenceNo},
                     {"ZonalOffice", cust.CustomerZonalOfficeID.ToString()},
                     {"RegionalOffice", cust.CustomerRegionID.ToString()},
@@ -1415,7 +1415,7 @@ namespace HPCL.Service.Services
             var CustomerRefinfo = new CustomerModel()
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 FormNumber = customerReferenceNo,
                 Type = "0"
@@ -1560,7 +1560,7 @@ namespace HPCL.Service.Services
             var request = new EnrollToTransportManagementSystemModel()
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 CustomerId = CustomerId
             };
@@ -1686,7 +1686,7 @@ namespace HPCL.Service.Services
         public async Task<UpdateCustomerAddress> UpdateCustomerAddress(UpdateCustomerAddress model)
         {
             model.UserAgent = CommonBase.useragent;
-            model.UserIp = CommonBase.userip;
+            model.UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress");
             model.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
             model.ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId");
             model.CommunicationPhoneNo = (string.IsNullOrEmpty(model.CommunicationDialCode) ? "" : model.CommunicationDialCode) + "-" + (string.IsNullOrEmpty(model.CommunicationPhonePart2) ? "" : model.CommunicationPhonePart2);
@@ -1748,7 +1748,7 @@ namespace HPCL.Service.Services
             var request = new EnrollToTransportManagementSystemModel()
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 CustomerId = CustomerId
             };
@@ -1820,7 +1820,7 @@ namespace HPCL.Service.Services
         public async Task<UpdateContactPersonDetailsModel> UpdateContactPersonDetails(UpdateContactPersonDetailsModel model)
         {
             model.UserAgent = CommonBase.useragent;
-            model.UserIp = CommonBase.userip;
+            model.UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress");
             model.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
             model.ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId");
             model.KeyOfficialPhoneNo = (string.IsNullOrEmpty(model.KeyOffPhoneCode) ? "" : model.KeyOffPhoneCode) + "-" + (string.IsNullOrEmpty(model.KeyOffPhonePart2) ? "" : model.KeyOffPhonePart2);
@@ -1903,7 +1903,7 @@ namespace HPCL.Service.Services
             var Request = new GetCustomerBalanceRequest()
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 CustomerID = CustomerID
             };
@@ -1951,7 +1951,7 @@ namespace HPCL.Service.Services
             var approvalBody = new UpdateCCMSBalAlertConfigurationRequest()
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 CustomerID = CustomerID,
                 Amount = Amount,
@@ -1993,7 +1993,7 @@ namespace HPCL.Service.Services
             var reqBody = new GetCustomerDetailForEnrollmentApprovalRequest
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 FromDate = strFromDate,
                 ToDate = strToDate
@@ -2024,7 +2024,7 @@ namespace HPCL.Service.Services
 
             model.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
             model.UserAgent = CommonBase.useragent;
-            model.UserIp = CommonBase.userip;
+            model.UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress");
 
             StringContent requestContent = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
             var response = await _requestService.CommonRequestService(requestContent, WebApiUrl.approvalApproveCustomerAddressRequests);
@@ -2085,7 +2085,7 @@ namespace HPCL.Service.Services
             var reqBody = new GetCustomerDetailForEnrollmentApprovalRequest
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 FromDate = strFromDate,
                 ToDate = strToDate
@@ -2116,7 +2116,7 @@ namespace HPCL.Service.Services
 
             model.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
             model.UserAgent = CommonBase.useragent;
-            model.UserIp = CommonBase.userip;
+            model.UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress");
 
             StringContent requestContent = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
             var response = await _requestService.CommonRequestService(requestContent, WebApiUrl.approveCustomerContactPersonDetails);
@@ -2160,7 +2160,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 CustomerId = CustomerId
             };
 
@@ -2205,7 +2205,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 CustomerId = CustomerId
             };
 
@@ -2257,7 +2257,7 @@ namespace HPCL.Service.Services
             var reqBody = new CustomerResetPasswordRequest
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 CustomerId = CustomerId
             };
@@ -2275,7 +2275,7 @@ namespace HPCL.Service.Services
             var reqBody = new CustomerResetPasswordRequest
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 CustomerId = reqModel.CustomerId,
