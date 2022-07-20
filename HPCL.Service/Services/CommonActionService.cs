@@ -1299,7 +1299,8 @@ namespace HPCL.Service.Services
             {
                 UserAgent = CommonBase.useragent,
                 UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
-                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName")
+                //UserId = _httpContextAccessor.HttpContext.Session.GetString("UserName")
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId")
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
