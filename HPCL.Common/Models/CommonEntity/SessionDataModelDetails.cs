@@ -23,5 +23,6 @@ namespace HPCL.Common.Models.CommonEntity
         public string BreadCrumbsAction { get; set; }
         public string BreadCrumbsPerviousMenuName { get; set; }
         public string CurrentAction { get; set; }
+        public string IpAddress { get; set; }
     }
 }
