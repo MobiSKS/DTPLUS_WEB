@@ -59,7 +59,6 @@ namespace HPCL_Web.Controllers
             Stream s = new MemoryStream(result.CaptchaByteData);
             return new FileStreamResult(s, "image/png");
         }
-
         [HttpPost]
         public async Task<IActionResult> Index(UserInfoModel user)
         {
@@ -128,8 +127,8 @@ namespace HPCL_Web.Controllers
                                     UserName = loginRes[0].UserName, LoginType = loginRes[0].LoginType,
                                     RegionalId = string.IsNullOrEmpty(loginRes[0].RegionalOfficeID) ? "" : loginRes[0].RegionalOfficeID,
                                     ZonalId = string.IsNullOrEmpty(loginRes[0].ZonalOfficeID) ? "" : loginRes[0].ZonalOfficeID,
-                                    MerchantID = loginRes[0].LoginType == "Merchant" ? loginRes[0].UserId : "",
-                                    UserId = loginRes[0].UserId,
+                                    MerchantID = loginRes[0].LoginType == "Merchant" ? loginRes[0].UserId.ToLower() : "",
+                                    UserId = loginRes[0].UserId.ToLower(),
                                     Today = DateTime.Now.ToString("yyyy-MM-dd"),
                                     Token = loginRes[0].Token,
                                     UserRole = loginRes[0].UserRole,
