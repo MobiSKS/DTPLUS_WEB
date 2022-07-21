@@ -493,7 +493,7 @@
         public static string HdfcInitiateCcmsRechargeUrl = "api/dtplus/HDFCCreditPouch/initiate_cp_recharge";
         public static string RequestToAvailCheckUrl = "api/dtplus/HDFCCreditPouch/chk_eligibility";
         public static string RequestToAvailEnrollUrl = "api/dtplus/HDFCCreditPouch/insrt_cp_rqst_by_customer";
-        public static string CustomerTransactionStatusUrl = "api/dtplus/ParentCustomer/pc_hdfc_transaction_status";
+        public static string CustomerTransactionStatusUrl = "api/dtplus/ParentCustomer/hdfc_transaction_status";
         #endregion
 
         #region "CCMS Recharge"
@@ -539,6 +539,9 @@
         public static string insertaccountstatmentrequest = " api/dtplus/AccountStatement/insert_account_statment_request";
         public static string updateaccountstatmentrequeststatus = " api/dtplus/AccountStatement/update_account_statment_request_status";
         public static string getparenttransactionssummarydetails = "api/dtplus/ParentCustomer/get_parent_transactions_summary_details";
+
+        public static string getparentcustomerbasicsearch = "api/dtplus/ParentCustomer/get_parent_customer_basic_search";
+        public static string getparenttransactionlocationdetails = "api/dtplus/ParentCustomer/transaction_details";
 
 
         #endregion
@@ -619,6 +622,7 @@
         public static string searchJcbManageCard = "api/dtplus/JCB/search_jcb_manage_card";
         public static string getJCBCommunicationEmailResetPassword = "api/dtplus/JCB/get_JCB_communication_email_reset_password";
         public static string updateJcbCommunicationEmailResetPassword = "api/dtplus/JCB/update_jcb_communication_email_reset_password";
+        public static string jcbGetCardLimitFeatures = "api/dtplus/JCB/jcb_get_card_limit_features";
         #endregion
 
         #region "Customer Dashboard"
@@ -637,6 +641,23 @@
         public static string getDicvDealerDetail = "api/dtplus/DICV/get_dicv_dealer_detail";
         public static string updateDicvDealerEnrollment = "api/dtplus/DICV/update_dicv_dealer_enrollment";
         public static string checkDicvDealerCode = "api/dtplus/DICV/check_dealer_code";
+        #endregion
+
+        #region "Parent Customer HDFC Bank Credit Pouch"
+        public static string PC_GetCustomerDetailsUrl = "api/dtplus/PCHDFCCreditPouch/get_dtail_mo_for_pc";
+        public static string PC_GetPlanUrl = "api/dtplus/PCHDFCCreditPouch/get_plan";
+        public static string PC_EnrollExceptionReqUrl = "api/dtplus/PCHDFCCreditPouch/insrt_cp_rqst_for_pc";
+        public static string PC_GetExApproval = "api/dtplus/PCHDFCCreditPouch/get_cp_by_bank_for_pc";
+        public static string PC_SubmitExApprovalUrl = "api/dtplus/PCHDFCCreditPouch/action_cp_for_pc";
+        public static string PC_GetEnrollStatusUrl = "api/dtplus/PCHDFCCreditPouch/get_cp_status_for_pc";
+        public static string PC_GetEnrollStatusReportUrl = "api/dtplus/PCHDFCCreditPouch/get_cp_status_Report_for_pc";
+        public static string PC_GetRequestAuthorizationDetailsUrl = "api/dtplus/PCHDFCCreditPouch/get_cp_by_bank_auth_for_pc";
+        public static string PC_RequestAuthorizationActionUrl = "api/dtplus/PCHDFCCreditPouch/auth_action_cp_for_pc";
+        public static string PC_HdfcCcmsRechargeUrl = "api/dtplus/PCHDFCCreditPouch/insert_cp_pg_log_for_pc";
+        public static string PC_HdfcInitiateCcmsRechargeUrl = "api/dtplus/PCHDFCCreditPouch/initiate_cp_recharge_for_pc";
+        public static string PC_RequestToAvailCheckUrl = "api/dtplus/PCHDFCCreditPouch/chk_eligibility_for_pc";
+        public static string PC_RequestToAvailEnrollUrl = "api/dtplus/PCHDFCCreditPouch/insrt_cp_rqst_by_customer_for_pc";
+        public static string PC_CustomerTransactionStatusUrl = "api/dtplus/ParentCustomer/pc_hdfc_transaction_status";
         #endregion
     }
 }
