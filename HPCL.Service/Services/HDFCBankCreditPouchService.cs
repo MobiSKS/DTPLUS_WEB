@@ -33,7 +33,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 CustomerId = entity.CustomerId,
                 RequestedBy = entity.CustomerId
             };
@@ -52,7 +52,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 Amount = Convert.ToDecimal(amount)
             };
 
@@ -69,7 +69,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 CustomerId = entity.CustomerId,
                 FuleConsumptionCapacity = entity.FuleConsumptionCapacity,
                 PlanTypeId = entity.PlanTypeId,
@@ -93,7 +93,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 CustomerId = entity.CustomerId,
                 ZO = entity.ZO ?? "0",
                 RO = entity.RO ?? "0",
@@ -116,7 +116,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 ObjBankEntryDetail = arrs
             };
 
@@ -146,7 +146,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 CustomerId = entity.CustomerId,
                 ZO = entity.ZO ?? "0",
                 RO = entity.RO ?? "0",
@@ -168,7 +168,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 CustomerId = customerId,
                 RequestId = requestId
             };
@@ -186,7 +186,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 CustomerId = customerId,
                 Amount = Convert.ToDecimal(amount)
             };
@@ -205,7 +205,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 CustomerId = customerId,
                 Amount = Convert.ToDecimal(amount)
             };
@@ -236,7 +236,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 CustomerId = entity.CustomerId,
                 FromDate = fromDate,
                 ToDate = toDate
@@ -257,7 +257,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 ObjBankAuthEntryDetail = arrs
             };
 
@@ -275,7 +275,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 CustomerId = entity.CustomerId
             };
 
@@ -292,7 +292,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 CustomerId = customerId,
                 FuleConsumptionCapacity = 0,
                 PlanTypeId = Convert.ToInt32(planTypeId),
@@ -328,7 +328,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 CustomerId = entity.CustomerId,
                 FromDate = fromDate,
                 ToDate = toDate

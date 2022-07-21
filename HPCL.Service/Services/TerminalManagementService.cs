@@ -43,7 +43,7 @@ namespace HPCL.Service.Services
                 {
                     UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                     UserAgent = CommonBase.useragent,
-                    UserIp = CommonBase.userip,
+                    UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                     ZonalOfficeId = entity.ZonalOfficeId=="0"?null:entity.ZonalOfficeId,
                     RegionalOfficeId = entity.RegionalOfficeId,
                     MerchantId = entity.MerchantId,
@@ -56,7 +56,7 @@ namespace HPCL.Service.Services
                 {
                     UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                     UserAgent = CommonBase.useragent,
-                    UserIp = CommonBase.userip,
+                    UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                     ZonalOfficeId = entity.ZonalOfficeId == "0" ? null : entity.ZonalOfficeId,
                     RegionalOfficeId = entity.RegionalOfficeId,
                     MerchantId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
@@ -90,7 +90,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 MerchantId = arrs[0].MerchantId,
                 TerminalIssuanceType = arrs[0].TerminalIssuanceType,
                 TerminalTypeRequested = arrs[0].TerminalTypeRequested,
@@ -129,7 +129,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 FromDate = terminalReq.FromDate,
                 ToDate = terminalReq.ToDate,
                 MerchantId = MerchantId,
@@ -157,7 +157,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 ReasonId = terminalManagementRequestModel.ReasonId,
                 ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 ObjMerchantTerminalInstallationRequestCloseDetail = terminalManagementRequestModel.ObjMerchantTerminalInstallationRequestCloseDetail
@@ -193,7 +193,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 FromDate = terminalReq.FromDate,
                 ToDate = terminalReq.ToDate,
                 MerchantId = MerchantId,
@@ -224,7 +224,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 MerchantId = terminalReq.MerchantId != null ? terminalReq.MerchantId : "",
                 TerminalId = terminalReq.TerminalId != null ? terminalReq.TerminalId : "",
                 ZonalOfficeId = terminalReq.ZonalOfficeId != "0" ? terminalReq.ZonalOfficeId : "",
@@ -258,7 +258,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 Comments = deInstallationRequest.Comments,
                 DeinstallationType = deInstallationRequest.DeinstallationType,
                 MerchantId = deInstallationRequest.MerchantId,
@@ -298,7 +298,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 FromDate = terminalReq.FromDate,
                 ToDate = terminalReq.ToDate,
                 MerchantId = MerchantId,
@@ -328,7 +328,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 Status = TerminalDeinstallationClose.Status,
                 ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 Comments = TerminalDeinstallationClose.Comments,
@@ -367,7 +367,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 FromDate = terminalReq.FromDate,
                 ToDate = terminalReq.ToDate,
                 MerchantId = MerchantId,
@@ -408,7 +408,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 FromDate = fromDate,
                 ToDate = toDate,
                 Category = entity.Category,
@@ -436,7 +436,7 @@ namespace HPCL.Service.Services
             var forms = new TerminalApprovalReject
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 Remark = remark,
                 Action = "Approve",
@@ -464,7 +464,7 @@ namespace HPCL.Service.Services
             var forms = new TerminalApprovalReject
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 Remark = remark,
                 Action = "Reject",
@@ -502,7 +502,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 FromDate = terminalReq.FromDate,
                 ToDate = terminalReq.ToDate,
                 MerchantId = MerchantId,
@@ -531,7 +531,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 Remark = deInstall.Remark,
                 ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 ObjTerminalProblematicDeinstalledToDeinstalled = deInstall.ObjTerminalProblematicDeinstalledToDeinstalled
@@ -563,7 +563,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 MerchantId = string.IsNullOrEmpty(merchantId) ? "" : merchantId,
                 TerminalId = string.IsNullOrEmpty(terminalId) ? "" : terminalId,
                 TerminalType = string.IsNullOrEmpty(terminalType) || terminalType == "0" ? "" : terminalType,
@@ -587,7 +587,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 //StatusFlag = entity.StatusFlag,
                 TerminalId = TerminalId,
                 MerchantId = MerchantId,
@@ -620,7 +620,7 @@ namespace HPCL.Service.Services
             var MerchantFormDetails = new Dictionary<string, string>
                     {
                         {"Useragent", CommonBase.useragent},
-                        { "Userip", CommonBase.userip},
+                        { "Userip", _httpContextAccessor.HttpContext.Session.GetString("IpAddress")},
                         {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserId")},
                         { "ErpCode", ERPCode}
                     };

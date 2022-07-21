@@ -54,7 +54,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 FromDate = custMdl.FromDate,
                 ToDate = custMdl.ToDate
 
@@ -138,7 +138,7 @@ namespace HPCL.Service.Services
             var CustomerTypeForms = new Dictionary<string, string>
                 {
                     {"Useragent", CommonBase.useragent},
-                    {"Userip", CommonBase.userip},
+                    {"Userip", _httpContextAccessor.HttpContext.Session.GetString("IpAddress")},
                     {"UserId", _httpContextAccessor.HttpContext.Session.GetString("UserId")},
                     {"CustomerType", CustomerTypeID.ToString()},
                     {"CustomerSubtype",cust.CustomerSubTypeID.ToString()},
@@ -258,7 +258,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 FormNumber = entity.FormNumber,
                 Type = String.IsNullOrEmpty(entity.Type) ? "0" : "1",
             };
@@ -298,7 +298,7 @@ namespace HPCL.Service.Services
             form.Add(new StringContent(_httpContextAccessor.HttpContext.Session.GetString("UserId")), "CreatedBy");
             form.Add(new StringContent(_httpContextAccessor.HttpContext.Session.GetString("UserId")), "Userid");
             form.Add(new StringContent(CommonBase.useragent), "Useragent");
-            form.Add(new StringContent(CommonBase.userip), "Userip");
+            form.Add(new StringContent(_httpContextAccessor.HttpContext.Session.GetString("IpAddress")), "Userip");
 
             var response = await _requestService.FormDataRequestService(form, WebApiUrl.uploadaggregatornormalfleetcustomerkyc);
 
@@ -338,7 +338,7 @@ namespace HPCL.Service.Services
             var customerBody = new CheckformNumberDuplicationRequest()
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 FormNumber = FormNumber
             };
@@ -371,7 +371,7 @@ namespace HPCL.Service.Services
             form.Add(new StringContent(_httpContextAccessor.HttpContext.Session.GetString("UserId")), "CreatedBy");
             form.Add(new StringContent(_httpContextAccessor.HttpContext.Session.GetString("UserId")), "Userid");
             form.Add(new StringContent(CommonBase.useragent), "Useragent");
-            form.Add(new StringContent(CommonBase.userip), "Userip");
+            form.Add(new StringContent(_httpContextAccessor.HttpContext.Session.GetString("IpAddress")), "Userip");
 
             var response = await _requestService.FormDataRequestService(form, WebApiUrl.aggregatornormalfleetcustomeraddcard);
             //StringContent content = new StringContent(JsonConvert.SerializeObject(insertInfo), Encoding.UTF8, "application/json");
@@ -478,7 +478,7 @@ namespace HPCL.Service.Services
                 var requestData = new CheckPancardbyDistrictIdRequestModel()
                 {
                     UserAgent = CommonBase.useragent,
-                    UserIp = CommonBase.userip,
+                    UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                     UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                     FormNumber = formNumber,
                     Type="0"
@@ -531,7 +531,7 @@ namespace HPCL.Service.Services
             var CustomerRefinfo = new CustomerModel()
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 //CustomerReferenceNo = customerReferenceNo,
                 FormNumber = customerReferenceNo,
@@ -626,7 +626,7 @@ namespace HPCL.Service.Services
             var request = new GetValidateNewCustomerRequestModel()
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 FormNumber = String.IsNullOrEmpty(entity.FormNumber) ? "" : entity.FormNumber,
@@ -1011,7 +1011,7 @@ namespace HPCL.Service.Services
                 {
                     {"UserId", _httpContextAccessor.HttpContext.Session.GetString("UserId")},
                     {"Useragent", CommonBase.useragent},
-                    {"Userip", CommonBase.userip},
+                    {"Userip", _httpContextAccessor.HttpContext.Session.GetString("IpAddress")},
                     {"CustomerReferenceNo", cust.CustomerReferenceNo},
                     {"ZonalOffice", cust.CustomerZonalOfficeID.ToString()},
                     {"RegionalOffice", cust.CustomerRegionID.ToString()},
@@ -1127,7 +1127,7 @@ namespace HPCL.Service.Services
             var reqBody = new GetValidateNewCustomerRequestModel
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 CustomerId = CustomerId,
                 VerifyBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
@@ -1152,7 +1152,7 @@ namespace HPCL.Service.Services
             var request = new GetValidateNewCustomerRequestModel()
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 FormNumber = String.IsNullOrEmpty(entity.FormNumber) ? "" : entity.FormNumber,
@@ -1181,7 +1181,7 @@ namespace HPCL.Service.Services
             var reqBody = new GetValidateNewCustomerRequestModel
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 CustomerId = CustomerId,
                 Approvedby = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
@@ -1204,7 +1204,7 @@ namespace HPCL.Service.Services
             var customerBody = new CheckformNumberDuplicationRequest()
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 FormNumber = FormNumber
             };

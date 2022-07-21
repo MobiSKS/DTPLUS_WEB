@@ -38,7 +38,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 CustomerID = CustomerID
             };
 
@@ -68,7 +68,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 CustomerID = dealerForCreditSaleViewModel.CustomerID,
                 ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 TypeMapDealerForCreditSale = dealerForCreditSaleViewModel.TypeMapDealerForCreditSale
@@ -95,7 +95,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 CustomerID = customerID,
                 MerchantID=merchantID,
                 Action=action
@@ -131,7 +131,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 CustomerID = DealerRequestModel.CustomerID,
                 ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 TypeUpdateDealerCreditMapping = DealerRequestModel.TypeUpdateDealerCreditMapping
@@ -173,7 +173,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 FromDate = FromDate,
                 ToDate = ToDate,
                 CustomerID = CustomerID,
@@ -194,7 +194,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 CustomerID = DealerRequestModel.CustomerID,
                 ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 TypeUpdateDealerCreditPaymentInBulk = DealerRequestModel.TypeUpdateDealerCreditPaymentInBulk
@@ -227,7 +227,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 CustomerID= CustomerId
             };
 
@@ -254,7 +254,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 CustomerID= CustomerID,
                 MerchantID = MerchantID==null?"":MerchantID,
                 FromDate = FromDate,
@@ -284,7 +284,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 CustomerID = CustomerID == null ? "" : CustomerID,
                 MerchantID = MerchantID ,
                 FromDate = FromDate,
@@ -303,7 +303,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                CustomerID=CustomerID,
                MerchantID=MerchantID,
             };
@@ -325,7 +325,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 CustomerID = CustomerID == null ? "" : CustomerID,
                 MerchantID = MerchantID,
                 StatementDate = SearchDate,
@@ -346,7 +346,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 MerchantID = MerchantID,
 
             };
@@ -373,7 +373,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 FromDate = FromDate,
                 ToDate = ToDate,
                 CustomerID = CustomerID,
@@ -395,7 +395,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 MerchantID = MerchantID,
                 CustomerID=CustomerID
             };
@@ -416,7 +416,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 MerchantID= dealerRequestModel.MerchantID,
                 CustomerID = dealerRequestModel.CustomerID,
                 Amount = dealerRequestModel.Amount,
@@ -437,7 +437,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 MerchantID = dealerRequestModel.MerchantID,
                 CustomerID = dealerRequestModel.CustomerID,
                 Amount = dealerRequestModel.Amount,
@@ -461,7 +461,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 CustomerID = CustomerID == null ? "" : CustomerID,
                 MerchantID = MerchantID,
                 StatementDate = SearchDate,

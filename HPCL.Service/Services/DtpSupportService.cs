@@ -35,7 +35,7 @@ namespace HPCL.Service.Services
             var reqBody = new GetBlockUnblockCustomerCcmsAccountByCustomerid
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 CustomerId = customerId
             };
@@ -53,7 +53,7 @@ namespace HPCL.Service.Services
             var reqBody = new BlockUnblockCustomerCcmsAccount
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 CustomerID = entity.CustomerID,
                 CCMSBalanceStatus = entity.CCMSBalanceStatus,
@@ -74,7 +74,7 @@ namespace HPCL.Service.Services
             var reqBody = new CardBalanceTransferViewModel
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 CardNo = CardNo,
                 CardStatus= string.IsNullOrEmpty(CardStatus)?1: Convert.ToInt32(CardStatus)
@@ -121,7 +121,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 EntityTypeId = EntityTypeId,
                 EntityFieldId = EntityFieldId,
                 CustomerIdOrCardOrMerchantId= CustomerIdOrCardOrMerchantId
@@ -139,7 +139,7 @@ namespace HPCL.Service.Services
         public async Task<GeneralUpdatesModel> GeneralUpdates(GeneralUpdatesModel model)
         {
             model.UserAgent = CommonBase.useragent;
-            model.UserIp = CommonBase.userip;
+            model.UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress");
             model.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
             model.CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId");
             model.ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId");
@@ -199,7 +199,7 @@ namespace HPCL.Service.Services
             var reqBody = new TeamMappingSearchRequest
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 ZBMID = teamMappingViewModel.ZBMID,
                 ZBMName = teamMappingViewModel.ZBMName,
@@ -222,7 +222,7 @@ namespace HPCL.Service.Services
             var reqBody = new TeamMappingSearchRequest
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 ZBMID = teamMappingViewModel.ZBMID,
                 ZBMName = teamMappingViewModel.ZBMName,
@@ -247,7 +247,7 @@ namespace HPCL.Service.Services
             var reqBody = new TeamMappingSearchRequest
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 TeamMappingId=teamMappingId,
                 ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
@@ -265,7 +265,7 @@ namespace HPCL.Service.Services
             var reqBody = new TeamMappingSearchRequest
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 ZBMID = teamMappingViewModel.ZBMID,
                 ZBMName = teamMappingViewModel.ZBMName,
@@ -301,7 +301,7 @@ namespace HPCL.Service.Services
                 {
                     UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                     UserAgent = CommonBase.useragent,
-                    UserIp = CommonBase.userip,
+                    UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                     CustomerId = CustomerId,
                     UserName = UserName
                 };
@@ -312,7 +312,7 @@ namespace HPCL.Service.Services
                 {
                     UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                     UserAgent = CommonBase.useragent,
-                    UserIp = CommonBase.userip,
+                    UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                     CustomerId = string.IsNullOrEmpty(id) ? "" : id,
                     UserName = ""
                 };
@@ -330,7 +330,7 @@ namespace HPCL.Service.Services
         public async Task<UnblockUserModel> UnblockUser(UnblockUserModel model)
         {
             model.UserAgent = CommonBase.useragent;
-            model.UserIp = CommonBase.userip;
+            model.UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress");
             model.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
             model.CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId");
             model.ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId");

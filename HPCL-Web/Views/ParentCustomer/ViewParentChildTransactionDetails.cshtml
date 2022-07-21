@@ -1,4 +1,4 @@
-﻿@model HPCL.Common.Models.ViewModel.ParentCustomer.ParentCustomerTransactionViewModel
+﻿@model HPCL.Common.Models.ViewModel.ParentCustomer.ViewParentChildTransactionDetailsModel
 @using HPCL.Common.Resources
 
 
@@ -6,13 +6,13 @@
     <div class="bg-white p-2 p-md-4" style="overflow: hidden;">
         <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
             <li class="breadcrumb-item"><a href="@Url.Action("Financial","ParentCustomer")" class="text_primary">Financials</a> </li>
-            <li class="breadcrumb-item font-weight-light">Transaction Details</li>
+            <li class="breadcrumb-item font-weight-light">View Parent Child Transaction Details</li>
         </ul>
-        <form>
+        <form id="formSubmit">
             <div class="w-100">
                 <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
                     <div class="border-1 rounded border-grey pb-3">
-                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Transaction Details</p>
+                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">View Parent Child Transaction Details</p>
 
                         <div class="col-lg-12 col-md-12 col-12 py-3">
                             <div class="d-flex align-items-center flex-wrap">
@@ -31,7 +31,7 @@
                             <div class="d-flex align-items-center flex-wrap">
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal col-md-4 col-12">Customer ID </label>
+                                        <label class="font-weight-normal col-md-4 col-12">Child Customer ID(s) </label>
                                         <div class="col-md-4 col-12 ">
                                             <div class="custom_select">
 
@@ -84,10 +84,10 @@
                             <div class="clearfix"></div>
                             <div class="d-flex align-items-center justify-content-center mb-3">
                                 <div class="px-2">
-                                    <button class="btn btn_primary" type="submit" id="btnSearch">@Label.Search</button>
+                                    <button class="btn btn_primary" type="button" id="btnSearch">@Label.Search</button>
                                 </div>
                                 <div class="px-2">
-                                    <button class="btn btn_primary" type="button" id="btnExporttoExcel">EXPORT TO EXCEL</button>
+                                    <button class="btn btn_primary" type="button" onclick="tableToCSV()" id="btnExporttoExcel">EXPORT TO EXCEL</button>
                                 </div>
                                 <div class="px-2">
                                     <button class="btn btn_primary" type="button" id="btnExporttoPDF">EXPORT TO PDF</button>
@@ -96,7 +96,7 @@
                                     <button class="btn btn_primary" type="button" id="btnReset">@Label.Reset</button>
                                 </div>
                                 <div class="px-2">
-                                    <button class="btn btn_primary" type="button" id="btnBack">BACK</button>
+                                    <button class="btn btn_primary" type="button" onclick="location.href='@Url.Action("ParentCustomerTransactionDetails", "ParentCustomer")'" id="btnBack">BACK</button>
                                 </div>
                             </div>
                         </div>
@@ -108,18 +108,106 @@
 
             </div>
         </form>
+        <div class="clearfix"></div>
+        <div id="reason" class="mb-3 text-center alert alert-danger" style="display:none">
+        </div>
+        <div id="show_table" style="display:none">
+            <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3" style="width:100%;">
+                <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Summary of Transactions Details</p>
+                <table id="TransactionSummary" class="table table-striped d-md-table table-bordered table-responsive mt-3" style="width:100%;">
+                    <thead>
+                        <tr>
+                            <th>Account Number</th>
+                            <th>Customer Name</th>
+                            <th>Sale</th>
+                            <th>Reload(CCMS & CASH)</th>
+                            <th>CCMS Rescharge</th>
 
+                        </tr>
+                    </thead>
+
+                </table>
+                <div id="summaryReason" class="mb-3 text-center alert alert-danger" style="display:none">
+                </div>
+            </div>
+            <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3" style="width:100%;">
+                <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Parent Customer Transaction Details</p>
+                <div id="divParentDetails">
+                    <table id="ParentDetails" class="datatable table table-striped d-block table-bordered nowrap table-responsive mt-3" style="width:100%;">
+                        <thead>
+                            <tr>
+                                <th>S.No.</th>
+                                <th>Terminal ID</th>
+                                <th>Merchant</th>
+                                <th>Batch ID /ROC</th>
+                                <th>Account Number</th>
+                                <th>Vehicle No./User Name</th>
+                                <th>Txn Date</th>
+                                <th>Txn Type</th>
+                                <th>Product</th>
+                                <th>Price</th>
+                                <th>Volume(Ltr.)</th>
+                                <th>Currency</th>
+                                <th>Service Charge</th>
+                                <th>Amount</th>
+                                <th>Odometer Reading</th>
+                                <th>Status</th>
+
+
+                            </tr>
+                        </thead>
+
+                    </table>
+                </div>
+                <div id="parentReason" class="mb-3 text-center alert alert-danger" style="display:none">
+                </div>
+            </div>
+            <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3" style="width:100%;">
+                <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Child Customer Transaction Details</p>
+                <div id="divChildDetails">
+                    <table id="ChildDetails" class="datatable table table-striped d-block table-bordered nowrap table-responsive mt-3" style="width:100%;">
+                        <thead>
+                            <tr>
+                                <th>S.No.</th>
+                                <th>Terminal ID</th>
+                                <th>Customer ID</th>
+                                <th>Merchant</th>
+                                <th>Batch ID /ROC</th>
+                                <th>Account Number</th>
+                                <th>Vehicle No./User Name</th>
+                                <th>Txn Date</th>
+                                <th>Txn Type</th>
+                                <th>Product</th>
+                                <th>Price</th>
+                                <th>Volume(Ltr.)</th>
+                                <th>Currency</th>
+                                <th>Service Charge</th>
+                                <th>Amount</th>
+                                <th>Odometer Reading</th>
+                                <th>Status</th>
+
+                            </tr>
+                        </thead>
+
+                    </table>
+                </div>
+                <div id="childReason" class="mb-3 text-center alert alert-danger" style="display:none">
+                </div>
+            </div>
+            <p class="px-3 py-2 m-0">** Service tax included in service charge.</p>
+
+        </div>
     </div>
     <div class="clearfix"></div>
 </div>
 <script type="text/javascript">
       $(document).ready(function () {
           debugger;
-          
+
     });
     $('select#ChildCustomerId').on('sumo:initialized', function(sumo) {
         var selectedChildIds="@ViewBag.SelectedChildCustomerIds";
-          
+
           if(selectedChildIds!=""){
               var ids=[];
               if(selectedChildIds.indexOf(',')!=-1)
@@ -140,4 +228,367 @@
             $('#ChildCustomerId')[0].sumo.unSelectAll();
         }
     });
+    $("#btnReset").on("click",(function(e){
+        var parentId=$("#ParentCustomerID").val();
+        var url = '@Html.Raw(@Url.Action("ViewParentChildTransactionDetails", "ParentCustomer",new { ParentCustomerID="MNO"}))';
+        url = url.replace("MNO",parentId);
+        window.location.href=url;
+    }));
+     $("#btnSearch").on("click",(function(e){
+        var parentId=$("#ParentCustomerID").val();
+        var fromdate = $("#FromDate").val();
+          var todate = $("#ToDate").val();
+          var flag="N"
+           if (fromdate == "") {
+              $("#fromDate_error").attr("style", "display:block");
+              $("#fromDate_error").html("Select From Date");
+              flag = "N";
+          }
+          if (todate == "") {
+              $("#toDate_error").attr("style", "display:block");
+              $("#toDate_error").html("Select To Date");
+              flag = "N";
+         }
+          if (fromdate != "" && todate != "") {
+              flag = checkDates("fromDate_error","31");
+          }
+          if (flag == "N")
+              e.preventDefault();
+          objChildIds=[];
+          var childIds= $('#ChildCustomerId')[0];
+          var i=0;
+          $("#ChildCustomerId option:selected").each(function(){
+              i++;
+              var selectedText=$(this).val();
+              objChildIds.push({Id:i,ChildCustomerID:selectedText});
+          });
+          if (flag == "Y") {
+              var reqModel={ParentCustomerID:parentId,FromDate:fromdate,ToDate:todate,ObjChildCustomerIdDtl:objChildIds};
+              console.log(JSON.stringify(reqModel));
+              $.ajax({
+                  type: 'POST',  // http method
+                  url: '@Url.Action("GetParentChildTransactionDetails", "ParentCustomer")',
+                  contentType: "application/json; charset=utf-8",
+                  data: JSON.stringify(reqModel),
+                  dataType: "JSON",
+                  success: function (res, status, xhr) {
+                      console.log(res);
+                      if (status == 'success') {
+                           $("#TransactionSummary td").parent().remove();
+                           $("#ParentDetails td").parent().remove();
+                           $("#ChildDetails td").parent().remove();
+
+                           var dataSummary=res.data.getParentTransactionsSaleDetails;
+                           var parentDetails=res.data.getParentTransactionsDetailSummary;
+                           var childDetails=res.data.getChildTransactionsDetailSummary;
+
+                           if(dataSummary.length>0){
+
+
+                                for (var i = 0; i < dataSummary.length; i++) {
+                                    var rows = "<tbody><tr>"
+                                    + "<td>" + (dataSummary[i].accountNumber || '') + "</td>"
+                                    + "<td>" + (dataSummary[i].customerName || '') + "</td>"
+                                    + "<td>" + (dataSummary[i].sale || '') + "</td>"
+                                    + "<td>" + (dataSummary[i].reloadCcmsCash || '') + "</td>"
+                                    + "<td>" + (dataSummary[i].ccmsRecharge || '') + "</td>"
+                                    + "</tr ></tbody>";
+                                    $('#TransactionSummary').append(rows);
+                                }
+
+                                $("#summaryReason").attr("style","display:none");
+                                $("#summaryReason").html("");
+                                $("#TransactionSummary").attr("style","display:block");
+                            }
+                            else{
+                                $("#summaryReason").attr("style","display:block");
+                                $("#summaryReason").html("No Transaction Found");
+                                $("#TransactionSummary thead").attr("style","display:none");
+
+                            }
+                            if(parentDetails.length>0){
+                                 $('#ParentDetails').DataTable().clear().destroy();
+
+                                var tbl = $('#ParentDetails').DataTable({
+                                    paging: true,
+                                    searching: false,
+                                    stateSave: true,
+                                    "bDestroy": true,
+                                    "lengthMenu": [10, 20, 50, 100, 200, 500, 1000, 2000],
+                                    "autoWidth": false,
+                                    "oLanguage": {
+                                        "sLengthMenu": "Display _MENU_ Records",
+                                        "info": "Showing _START_ to _END_ of _TOTAL_ Records",
+                                    }
+                                });
+
+                                for (var i = 0; i < parentDetails.length; i++) {
+                                    var srNumber = (i + 1);
+                                    var terminalId = (parentDetails[i].terminalId|| '');
+                                    var merchant =  (parentDetails[i].retailOutletName || '');
+                                     var batchIdandROC =  "";
+                                    if(parentDetails[i].batchIdandROC !="0")
+                                        batchIdandROC=parentDetails[i].batchIdandROC;
+                                    var accountNumber =  (parentDetails[i].accountNumber || '');
+                                    var vechileNo =  (parentDetails[i].vechileNo || '');
+
+                                    var txnDate =  (parentDetails[i].txnDate || '');
+                                    var txnType =  (parentDetails[i].txnType || '');
+                                    var productName =  (parentDetails[i].productName || '');
+                                    var price =  (parentDetails[i].price || '');
+                                    var volume =  (parentDetails[i].volume || '');
+                                    var currency =  (parentDetails[i].currency || '');
+                                    var serviceCharge =  (parentDetails[i].serviceCharge || '');
+                                    var amount =  (parentDetails[i].amount || '');
+                                    var odometerReading =  (parentDetails[i].odometerReading || '');
+                                    var trStatus =  (parentDetails[i].trStatus || '');
+                                    tbl.row.add([
+                                        srNumber,
+                                        terminalId,
+                                        merchant,
+                                        batchIdandROC,
+                                        accountNumber,
+                                        vechileNo,
+                                        txnDate,
+                                        txnType,
+                                        productName,
+                                        price,
+                                        volume,
+                                        currency,
+                                        serviceCharge,
+                                        amount,
+                                        odometerReading,
+                                        trStatus
+                                    ]).order( [ 1, 'asc' ] ).draw();
+
+                                }
+
+                                $("#parentReason").attr("style","display:none");
+                                $("#parentReason").html("");
+                                $("#divParentDetails").attr("style","display:block");
+                            }
+                            else{
+                                $("#parentReason").attr("style","display:block");
+                                $("#parentReason").html("No Transaction Found");
+                                 $("#divParentDetails").attr("style","display:none");
+
+                            }
+                            if(childDetails.length>0){
+                                 $('#ChildDetails').DataTable().clear().destroy();
+
+                                var tbl = $('#ChildDetails').DataTable({
+                                    paging: true,
+                                    searching: false,
+                                    stateSave: true,
+                                    "bDestroy": true,
+                                    "lengthMenu": [10, 20, 50, 100, 200, 500, 1000, 2000],
+                                    "autoWidth": false,
+                                    "oLanguage": {
+                                        "sLengthMenu": "Display _MENU_ Records",
+                                        "info": "Showing _START_ to _END_ of _TOTAL_ Records",
+                                    }
+                                });
+
+                                for (var i = 0; i < childDetails.length; i++) {
+                                    var srNumber = (i + 1);
+                                    var terminalId = (childDetails[i].terminalId|| '');
+                                    var customerID = (childDetails[i].customerID || '');
+                                    var merchant =  (childDetails[i].retailOutletName || '');
+                                    var batchIdandROC =  "";
+                                    if(childDetails[i].batchIdandROC !="0")
+                                        batchIdandROC=childDetails[i].batchIdandROC;
+                                    var accountNumber =  (childDetails[i].accountNumber || '');
+                                    var vechileNo =  (childDetails[i].vechileNo || '');
+
+                                    var txnDate =  (childDetails[i].txnDate || '');
+                                    var txnType =  (childDetails[i].txnType || '');
+                                    var productName =  (childDetails[i].productName || '');
+                                    var price =  (childDetails[i].price || '');
+                                    var volume =  (childDetails[i].volume || '');
+                                    var currency =  (childDetails[i].currency || '');
+                                    var serviceCharge =  (childDetails[i].serviceCharge || '');
+                                    var amount =  (childDetails[i].amount || '');
+                                    var odometerReading =  (childDetails[i].odometerReading || '');
+                                    var trStatus =  (childDetails[i].trStatus || '');
+                                    tbl.row.add([
+                                        srNumber,
+                                        terminalId,
+                                        customerID,
+                                        merchant,
+                                        batchIdandROC,
+                                        accountNumber,
+                                        vechileNo,
+                                        txnDate,
+                                        txnType,
+                                        productName,
+                                        price,
+                                        volume,
+                                        currency,
+                                        serviceCharge,
+                                        amount,
+                                        odometerReading,
+                                        trStatus
+                                    ]).order( [ 1, 'asc' ] ).draw();
+
+                                }
+
+                                $("#childReason").attr("style","display:none");
+                                $("#childReason").html("");
+                                $("#divChildDetails").attr("style","display:block");
+                            }
+                            else{
+                                $("#childReason").attr("style","display:block");
+                                $("#childReason").html("No Transaction Found");
+                                $("#divChildDetails").attr("style","display:none");
+                            }
+                            if(dataSummary.length==0){
+                                $("#show_table").attr("style","display:none");
+
+                                $("#reason").attr("style","display:block");
+                                $("#reason").html(res.data.message);
+                            }
+                            else{
+                                $("#show_table").attr("style","display:block");
+                                $("#reason").attr("style","display:none");
+                                $("#reason").html("");
+                            }
+                        }
+                  },
+              });
+          }
+    }));
+     function tableToCSV() {
+         debugger;
+            // Variable to store the final csv data
+            var csv_data = [];
+            var csvrow = [];
+            
+            var fromdate = $("#FromDate").val();
+            var todate = $("#ToDate").val();
+            var parentId=$("#ParentCustomerID").val();
+
+            var csvrowId = [];
+            csvrowId.push("Parent Customer ID : "+ parentId);
+            csv_data.push(csvrowId.join(","));
+            csv_data.join('\n');
+            var csvrowdate= [];
+            csvrowdate.push("Period:"+fromdate +" To "+ todate);
+            csv_data.push(csvrowdate.join(","));
+            csv_data.join('\n');
+            var csvrowBrk= [];
+            csvrowBrk.push("");
+            csv_data.push(csvrowBrk.join(","));
+            csv_data.join('\n');
+
+            var csvrowName = [];
+            csvrowName.push("Parent Customer Transaction Details Report");
+            csv_data.push(csvrowName.join(","));
+            csv_data.join('\n');
+
+            csvrow.push("S.No.","Terminal ID", "Merchant", "BatchID/ROC","Account Number","Vehicle Number","Transaction Date","Transaction Type",
+            "Product","Price","Volume(Ltr.)","Currency","Service Charge","Amount(Rs.)","Odometer Reading","Status");
+            csv_data.push(csvrow.join(","));
+
+            var tableName1 = $('#ParentDetails').DataTable();
+            var i=0
+            tableName1.rows().every(function(){
+               i++;
+                            var csvrow = [];
+
+                            csvrow.push(i);
+                            csvrow.push(this.data()[1]);
+                            csvrow.push(this.data()[2]);
+                            csvrow.push(this.data()[3]);
+                            csvrow.push(this.data()[4]);
+                            csvrow.push(this.data()[5]);
+                            csvrow.push(this.data()[6]);
+
+                            csvrow.push(this.data()[7]);
+                            csvrow.push(this.data()[8]);
+                            csvrow.push(this.data()[9]);
+                            csvrow.push(this.data()[10]);
+                            csvrow.push(this.data()[11]);
+                            csvrow.push(this.data()[12]);
+                            
+                            csvrow.push(this.data()[13]);
+                            csvrow.push(this.data()[14]);
+                            csvrow.push(this.data()[15]);
+                            csvrow.push(this.data()[16]);
+                            csv_data.push(csvrow.join(","));
+                        });
+                        // Combine each row data with new line character
+            //csv_data = csv_data.join('\n');
+
+            var csvrowName1 = [];
+            csvrowName1.push("Child Customer Transaction Details Report");
+            csv_data.push(csvrowName1.join(","));
+            csv_data.join('\n');
+
+            var csvrow2 = [];
+            csvrow2.push("S.No.","Terminal ID","Customer ID", "Merchant", "BatchID/ROC","Account Number","Vehicle Number","Transaction Date","Transaction Type","Product","Price","Volume(Ltr.)","Currency","Service Charge","Amount(Rs.)","Odometer Reading","Status");
+            csv_data.push(csvrow2.join(","));
+            // Get each row data
+            //var rows = document.getElementsByTagName('tr');
+            var tableName2 = $('#ChildDetails').DataTable();
+            var j=0
+            tableName2.rows().every(function(){
+               j++;
+                            var csvrow = [];
+
+                            csvrow.push(j);
+                            csvrow.push(this.data()[1]);
+                            csvrow.push(this.data()[2]);
+                            csvrow.push(this.data()[3]);
+                            csvrow.push(this.data()[4]);
+                            csvrow.push(this.data()[5]);
+                            csvrow.push(this.data()[6]);
+                            csvrow.push(this.data()[7]);
+                            csvrow.push(this.data()[8]);
+                            csvrow.push(this.data()[9]);
+                            csvrow.push(this.data()[10]);
+                            csvrow.push(this.data()[11]);
+                            csvrow.push(this.data()[12]);
+                            
+                            csvrow.push(this.data()[13]);
+                            csvrow.push(this.data()[14]);
+                            csvrow.push(this.data()[15]);
+                            csvrow.push(this.data()[16]);
+                        
+                            csvrow.push(this.data()[17]);
+                            csv_data.push(csvrow.join(","));
+                        });
+                        // Combine each row data with new line character
+            csv_data = csv_data.join('\n');
+            
+            // Call this function to download csv file
+            downloadCSVFile(csv_data);
+
+        }
+
+        function downloadCSVFile(csv_data) {
+
+            // Create CSV file object and feed
+            // our csv_data into it
+            CSVFile = new Blob([csv_data], {
+                type: "text/csv"
+            });
+
+            // Create to temporary link to initiate
+            // download process
+            var temp_link = document.createElement('a');
+
+            // Download csv file
+            temp_link.download = "Transaction-Details.csv";
+            var url = window.URL.createObjectURL(CSVFile);
+            temp_link.href = url;
+
+            // This link should not be displayed
+            temp_link.style.display = "none";
+            document.body.appendChild(temp_link);
+
+            // Automatically click the link to
+            // trigger download
+            temp_link.click();
+            document.body.removeChild(temp_link);
+        }
 </script>

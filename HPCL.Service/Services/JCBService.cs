@@ -46,7 +46,7 @@ namespace HPCL.Service.Services
             VerifyDealerRequestModel requestinfo = new VerifyDealerRequestModel()
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 DealerCode = DealerCode
             };
@@ -75,7 +75,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 DealerCode = arrs[0].DealerCode,
                 DealerName = arrs[0].DealerName,
                 ZonalOfficeId = arrs[0].ZonalOfficeId,
@@ -115,7 +115,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 DealerCode = arrs[0].DealerCode,
                 ZonalOfficeId = arrs[0].ZonalOfficeId,
                 RegionalOfficeId = arrs[0].RegionalOfficeId,
@@ -144,7 +144,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 DealerCode = dealerCode,
                 DTPDealerCode = dtpCode,
                 OfficerType = OfficerType
@@ -184,7 +184,7 @@ namespace HPCL.Service.Services
             VerifyDealerRequestModel requestinfo = new VerifyDealerRequestModel()
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 DealerCode = DealerCode
             };
@@ -219,7 +219,7 @@ namespace HPCL.Service.Services
         public async Task<JCBOTCCardRequestModel> JCBDealerOTCCardRequest(JCBOTCCardRequestModel model)
         {
             model.UserAgent = CommonBase.useragent;
-            model.UserIp = CommonBase.userip;
+            model.UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress");
             model.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
             model.CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId");
 
@@ -259,7 +259,7 @@ namespace HPCL.Service.Services
             var searchBody = new GetJCBOTCCardDealerAllocationRequestModel()
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 DealerCode = DealerCode,
                 CardNo = string.IsNullOrEmpty(CardNo) ? "" : CardNo
@@ -295,7 +295,7 @@ namespace HPCL.Service.Services
             var requestInfo = new VerifyDealerRequestModel()
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 DealerCode = dealerCode
             };
@@ -354,7 +354,7 @@ namespace HPCL.Service.Services
             var requestinfo = new VerifyDealerRequestModel()
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 DealerCode = DealerCode
             };
@@ -372,7 +372,7 @@ namespace HPCL.Service.Services
         public async Task<JCBCustomerEnrollmentModel> JCBCustomerEnrollment(JCBCustomerEnrollmentModel customerModel)
         {
             customerModel.UserAgent = CommonBase.useragent;
-            customerModel.UserIp = CommonBase.userip;
+            customerModel.UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress");
             customerModel.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
             customerModel.CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId");
             customerModel.CommunicationPhoneNo = (string.IsNullOrEmpty(customerModel.CommunicationDialCode) ? "" : customerModel.CommunicationDialCode) + "-" + (string.IsNullOrEmpty(customerModel.CommunicationPhonePart2) ? "" : customerModel.CommunicationPhonePart2);
@@ -502,7 +502,7 @@ namespace HPCL.Service.Services
                 {
                     UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                     UserAgent = CommonBase.useragent,
-                    UserIp = CommonBase.userip,
+                    UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                     CustomerId = string.IsNullOrEmpty(CustomerId) ? "" : CustomerId,
                     NameOnCard = string.IsNullOrEmpty(NameOnCard) ? "" : NameOnCard
                 };
@@ -688,7 +688,7 @@ namespace HPCL.Service.Services
             {
                 UserId = CommonBase.userid,
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 CustomerId = CustomerId,
                 CardNo = "",
                 MobileNumber = "",
@@ -745,6 +745,52 @@ namespace HPCL.Service.Services
 
                 return searchList;
             }
+        }
+        public async Task<GetJCBCommunicationEmailResetPasswordResponse> GetJCBCommunicationEmailResetPassword(string CustomerId)
+        {
+            var responseData = new GetJCBCommunicationEmailResetPasswordResponse();
+
+            var requestinfo = new GetJCBCommunicationEmailResetPasswordRequest()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                CustomerId = CustomerId
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(requestinfo), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getJCBCommunicationEmailResetPassword);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<GetJCBCommunicationEmailResetPasswordResponse> searchList = jarr.ToObject<List<GetJCBCommunicationEmailResetPasswordResponse>>();
+            responseData = searchList[0];
+            responseData.Internel_Status_Code = Convert.ToInt32(obj["Internel_Status_Code"].ToString());
+
+            return responseData;
+        }
+        public async Task<InsertResponse> UpdateJCBCommunicationEmailResetPassword(string CustomerId, string AlternateEmailId)
+        {
+            var email = "";
+
+            email = AlternateEmailId.ToLower();
+
+            var request = new JCBCustomerResetPassword
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                CustomerId = CustomerId,
+                AlternateEmailId = AlternateEmailId
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.updateJcbCommunicationEmailResetPassword);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            InsertResponse result = obj.ToObject<InsertResponse>();
+            return result;
         }
 
     }

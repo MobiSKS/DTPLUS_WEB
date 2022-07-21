@@ -31,7 +31,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 FormNumber = string.IsNullOrEmpty(entity.FormNumber) ? "" : entity.FormNumber
             };
 
@@ -59,7 +59,7 @@ namespace HPCL.Service.Services
             var forms = new BindApprovePendingCustomer
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 formNumber = BigInteger.Parse(formNumber)
             };
@@ -79,7 +79,7 @@ namespace HPCL.Service.Services
             var forms = new ApproveRejectWaiver
             {
                 UserAgent = CommonBase.useragent,
-                UserIp= CommonBase.userip,
+                UserIp= _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId= _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 FormNumber = formNumber,
                 Approvalstatus = 4,
@@ -102,7 +102,7 @@ namespace HPCL.Service.Services
             var forms = new ApproveRejectWaiver
             {
                 UserAgent = CommonBase.useragent,
-                UserIp= CommonBase.userip,
+                UserIp= _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId= _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 FormNumber = formNumber,
                 Approvalstatus = 13,
@@ -130,7 +130,7 @@ namespace HPCL.Service.Services
             var customerBody = new BindPendingCustomer
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 FormNumber = BigInteger.Parse(formNumber)
             };

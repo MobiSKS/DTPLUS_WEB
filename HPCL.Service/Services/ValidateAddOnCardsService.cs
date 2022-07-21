@@ -36,7 +36,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 CustomerReferenceNo = approveRejectModel.CustomerReferenceNo,
                 Comments = approveRejectModel.Comments,
                 Approvalstatus = approveRejectModel.Approvalstatus,
@@ -88,7 +88,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 StateId = validateNewCardsMdl.StateId == "0" ? null : validateNewCardsMdl.StateId,
                 FormNumber = string.IsNullOrEmpty(validateNewCardsMdl.FormNumber) ? "" : validateNewCardsMdl.FormNumber,
                 CustomerName = string.IsNullOrEmpty(validateNewCardsMdl.CustomerName) ? "" : validateNewCardsMdl.CustomerName,
@@ -113,7 +113,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 FormNumber = FormNumber
             };
 

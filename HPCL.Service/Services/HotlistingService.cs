@@ -34,7 +34,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 EntityTypeId = hotlistorReactivateViewModel.EntityTypeId != "" ? Convert.ToInt32(hotlistorReactivateViewModel.EntityTypeId) : 0,
                 EntityIdVal = hotlistorReactivateViewModel.EntityIdVal,
                 ActionId = hotlistorReactivateViewModel.ActionId != "" ? Convert.ToInt32(hotlistorReactivateViewModel.ActionId) : 0,
@@ -68,7 +68,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 EntityTypeId = EntityTypeId != "" ? Convert.ToInt32(EntityTypeId) : 0,
                 EntityIdVal = EntityId,
             };
@@ -91,7 +91,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 EntityTypeId = Convert.ToInt32(EntityTypeId),
                 ActionId = Convert.ToInt32(ActionId),
                 FromDate = fromDate,
@@ -121,7 +121,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 EntityTypeId = Convert.ToInt32(hotlistApprovalRequest.EntityTypeId),
                 ActionId = Convert.ToInt32(hotlistApprovalRequest.ActionId),
                 ObjUpdateHotlistApprovalEntityCode = hotlistApprovalRequest.ObjUpdateHotlistApprovalEntityCode,
@@ -145,7 +145,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 EntityIdVal = EntityId,
                 EntityTypeId = EntityTypeId != "" ? Convert.ToInt32(EntityTypeId) : 0,
             };

@@ -44,7 +44,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 FirstName = ofcrMdl.FirstName,
                 LastName = ofcrMdl.LastName,
                 UserName = ofcrMdl.UserName,
@@ -105,7 +105,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 OfficerID = officerID,
                 ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
             };
@@ -134,7 +134,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserName = userName,
                 ZO = zonalID,
                 RO = regionalID,
@@ -167,7 +167,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 ZonalId = CommonBase.zonalid,
                 RegionalId = CommonBase.regionalid,
                 OfficerType = String.IsNullOrEmpty(officerType) || officerType == "All" ? "0" : officerType,
@@ -200,7 +200,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 OfficerId = ofcrLocationMdl.OfficerID,
                 UserName = ofcrLocationMdl.UserName,
                 ZO = ofcrLocationMdl.ZoneOfcID,
@@ -238,7 +238,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 ZonalId = CommonBase.zonalid,
                 RegionalId = CommonBase.regionalid,
                 OfficerID = officerID
@@ -269,7 +269,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 ZonalId = CommonBase.zonalid,
                 RegionalId = CommonBase.regionalid,
                 FirstName = ofcrEditUpdateMdl.FirstName,
@@ -315,7 +315,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 ZonalId = CommonBase.zonalid,
                 RegionalId = CommonBase.regionalid,
                 ZO = zonalOfcID == "0" ? "" : zonalOfcID,

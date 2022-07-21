@@ -43,8 +43,8 @@ namespace HPCL_Web.Controllers
 
         public async Task<IActionResult> Logout()
         {
-            SessionMenuModel.menuList.RemoveAll(x => x.UserID == HttpContext.Session.GetString("UserId"));
-            SessionMenuModel.sessionList.RemoveAll(x => x.UserID == HttpContext.Session.GetString("UserId"));
+            SessionMenuModel.menuList.RemoveAll(x => x.UserID.ToLower() == HttpContext.Session.GetString("UserId"));
+            SessionMenuModel.sessionList.RemoveAll(x => x.UserID.ToLower() == HttpContext.Session.GetString("UserId"));
             return RedirectToAction("Index");
         }
 
@@ -59,7 +59,6 @@ namespace HPCL_Web.Controllers
             Stream s = new MemoryStream(result.CaptchaByteData);
             return new FileStreamResult(s, "image/png");
         }
-
         [HttpPost]
         public async Task<IActionResult> Index(UserInfoModel user)
         {
@@ -73,26 +72,26 @@ namespace HPCL_Web.Controllers
                 }
             }
             //Setting User IP from Front End
-            CommonBase.userip = user.Userip;
+            //_httpContextAccessor.HttpContext.Session.GetString("IpAddress") = user.Userip;
 
-            var access_token = _api.GetToken();
+            //var access_token = _api.GetToken();
 
-            if (access_token.Result != null)
-            {
-                HttpContext.Session.SetString("Token_" + user.UserId, access_token.Result);
-            }
+            //if (access_token.Result != null)
+            //{
+            //    HttpContext.Session.SetString("Token_" + user.UserId, access_token.Result);
+            //}
 
             var loginBody = new UserInfoModel
             {
-                UserId = user.UserId,
+                UserId = user.UserId.ToLower(),
                 Useragent = CommonBase.useragent,
-                Userip = CommonBase.userip,
+                Userip = user.Userip,
                 Password = user.Password
             };
 
             using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
             {
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token_" + user.UserId));
+                //client.DefaultRequestHeaders.Add("Secret_Key", "PVmMSclp834KBIUa9O-XxpBsDJhsi1dsds74CiGaoo5");
 
                 StringContent content = new StringContent(JsonConvert.SerializeObject(loginBody), Encoding.UTF8, "application/json");
 
@@ -109,7 +108,7 @@ namespace HPCL_Web.Controllers
                         if (loginRes[0].Status == 0)
                         {
                             ModelState.Clear();
-                            HttpContext.Session.Remove("Token_" + user.UserId);
+                            //HttpContext.Session.Remove("Token_" + user.UserId);
                             ViewBag.Message = loginRes[0].Reason;
                             return View(user);
                         }
@@ -120,28 +119,29 @@ namespace HPCL_Web.Controllers
 
                             //if (!SessionMenuModel.sessionList.Any(a => a.UserID == user.UserId))
                             //{
-                                SessionMenuModel.sessionList.RemoveAll(x => x.UserID.ToLower() == user.UserId.ToLower());
+                            SessionMenuModel.sessionList.RemoveAll(x => x.UserID.ToLower() == user.UserId.ToLower());
 
-                                List<SessionDataModelDetails> sessionData = new List<SessionDataModelDetails>
-                                {
-                                    new SessionDataModelDetails { UserID = user.UserId, LocalStorage = num.ToString(),
-                                        UserName = loginRes[0].UserName, LoginType = loginRes[0].LoginType,
-                                        RegionalId = string.IsNullOrEmpty(loginRes[0].RegionalOfficeID) ? "" : loginRes[0].RegionalOfficeID,
-                                        ZonalId = string.IsNullOrEmpty(loginRes[0].ZonalOfficeID) ? "" : loginRes[0].ZonalOfficeID,
-                                        MerchantID = loginRes[0].LoginType == "Merchant" ? loginRes[0].UserId : "",
-                                        UserId = loginRes[0].UserId,
-                                        Today = DateTime.Now.ToString("yyyy-MM-dd"),
-                                        Token = access_token.Result,
-                                        UserRole = loginRes[0].UserRole
-                                    }
-                                };
+                            List<SessionDataModelDetails> sessionData = new List<SessionDataModelDetails>
+                            {
+                                new SessionDataModelDetails { UserID = user.UserId.ToLower(), LocalStorage = num.ToString(),
+                                    UserName = loginRes[0].UserName, LoginType = loginRes[0].LoginType,
+                                    RegionalId = string.IsNullOrEmpty(loginRes[0].RegionalOfficeID) ? "" : loginRes[0].RegionalOfficeID,
+                                    ZonalId = string.IsNullOrEmpty(loginRes[0].ZonalOfficeID) ? "" : loginRes[0].ZonalOfficeID,
+                                    MerchantID = loginRes[0].LoginType == "Merchant" ? loginRes[0].UserId.ToLower() : "",
+                                    UserId = loginRes[0].UserId.ToLower(),
+                                    Today = DateTime.Now.ToString("yyyy-MM-dd"),
+                                    Token = loginRes[0].Token,
+                                    UserRole = loginRes[0].UserRole,
+                                    IpAddress = user.Userip
+                                }
+                            };
 
-                                SessionMenuModel.sessionList.AddRange(sessionData);
+                            SessionMenuModel.sessionList.AddRange(sessionData);
                             HttpContext.Session.SetString("RegionalOfcId", loginRes[0].RegionalOfficeID);
                             HttpContext.Session.SetString("LocalStorage", num.ToString());
                             HttpContext.Session.SetString("UserName", loginRes[0].UserName);
 
-                            HttpContext.Session.SetString("UserId", loginRes[0].UserId);
+                            HttpContext.Session.SetString("UserId", loginRes[0].UserId.ToLower());
 
                             if (loginRes[0].LoginType == "Customer")
                             {
@@ -160,7 +160,7 @@ namespace HPCL_Web.Controllers
                         else
                         {
                             ModelState.Clear();
-                            HttpContext.Session.Remove("Token_" + user.UserId);
+                            //HttpContext.Session.Remove("Token_" + user.UserId);
                             ViewBag.Message = "Details not found for this User!";
                             return View(user);
                         }
@@ -171,7 +171,7 @@ namespace HPCL_Web.Controllers
                     else
                     {
                         ModelState.Clear();
-                        HttpContext.Session.Remove("Token_" + user.UserId);
+                        //HttpContext.Session.Remove("Token_" + user.UserId);
                         ViewBag.Message = "Details not found for this User!";
                         return View(user);
                     }
@@ -182,10 +182,6 @@ namespace HPCL_Web.Controllers
         [HttpPost]
         public async Task<ActionResult> TopMenu([FromBody] string userId)
         {
-            string[] values = userId.Split(',');
-            userId = values[0];
-            string ipAddress = values[1];
-
             if (SessionMenuModel.sessionList.Count == 1)
             {
                 HttpContext.Session.SetString("Token", SessionMenuModel.sessionList[0].Token);
@@ -195,19 +191,18 @@ namespace HPCL_Web.Controllers
                 HttpContext.Session.SetString("RegionalId", SessionMenuModel.sessionList[0].RegionalId);
                 HttpContext.Session.SetString("ZonalId", SessionMenuModel.sessionList[0].ZonalId);
                 HttpContext.Session.SetString("MerchantID", SessionMenuModel.sessionList[0].MerchantID);
-                HttpContext.Session.SetString("UserId", SessionMenuModel.sessionList[0].UserId);
+                HttpContext.Session.SetString("UserId", SessionMenuModel.sessionList[0].UserId.ToLower());
                 HttpContext.Session.SetString("Today", SessionMenuModel.sessionList[0].Today);
                 HttpContext.Session.SetString("UserRole", SessionMenuModel.sessionList[0].UserRole);
                 HttpContext.Session.SetString("BreadCrumbsController", SessionMenuModel.sessionList[0].BreadCrumbsController == null ? "" : SessionMenuModel.sessionList[0].BreadCrumbsController);
                 HttpContext.Session.SetString("BreadCrumbsAction", SessionMenuModel.sessionList[0].BreadCrumbsAction == null ? "" : SessionMenuModel.sessionList[0].BreadCrumbsAction);
                 HttpContext.Session.SetString("CurrentAction", SessionMenuModel.sessionList[0].CurrentAction == null ? "" : SessionMenuModel.sessionList[0].CurrentAction);
                 HttpContext.Session.SetString("BreadCrumbsPerviousMenuName", SessionMenuModel.sessionList[0].BreadCrumbsPerviousMenuName == null ? "" : SessionMenuModel.sessionList[0].BreadCrumbsPerviousMenuName);
-                HttpContext.Session.SetString("IpAddress", ipAddress);
-                CommonBase.userip = ipAddress;
+                HttpContext.Session.SetString("IpAddress", SessionMenuModel.sessionList[0].IpAddress);
             }
             else
             {
-                foreach (var item in SessionMenuModel.sessionList.Where(x => x.UserId == userId))
+                foreach (var item in SessionMenuModel.sessionList.Where(x => x.UserId.ToLower() == userId.ToLower()))
                 {
                     HttpContext.Session.SetString("Token", item.Token);
                     HttpContext.Session.SetString("LocalStorage", item.LocalStorage);
@@ -216,25 +211,24 @@ namespace HPCL_Web.Controllers
                     HttpContext.Session.SetString("RegionalId", item.RegionalId);
                     HttpContext.Session.SetString("ZonalId", item.ZonalId);
                     HttpContext.Session.SetString("MerchantID", item.MerchantID);
-                    HttpContext.Session.SetString("UserId", item.UserId);
+                    HttpContext.Session.SetString("UserId", item.UserId.ToLower());
                     HttpContext.Session.SetString("Today", item.Today);
                     HttpContext.Session.SetString("UserRole", item.UserRole);
                     HttpContext.Session.SetString("BreadCrumbsController", item.BreadCrumbsController == null ? "" : item.BreadCrumbsController);
                     HttpContext.Session.SetString("BreadCrumbsAction", item.BreadCrumbsAction == null ? "" : item.BreadCrumbsAction);
                     HttpContext.Session.SetString("CurrentAction", item.CurrentAction == null ? "" : item.CurrentAction);
                     HttpContext.Session.SetString("BreadCrumbsPerviousMenuName", item.BreadCrumbsPerviousMenuName == null ? "" : item.BreadCrumbsPerviousMenuName);
-                    HttpContext.Session.SetString("IpAddress", ipAddress);
-                    CommonBase.userip = ipAddress;
+                    HttpContext.Session.SetString("IpAddress", item.IpAddress);
                 }
             }
 
-            if (SessionMenuModel.menuList.Count == 0 || !SessionMenuModel.menuList.Any(a => a.UserID == userId))
+            if (SessionMenuModel.menuList.Count == 0 || !SessionMenuModel.menuList.Any(a => a.UserID.ToLower() == userId.ToLower()))
             {
                 var menuDetails = new MenuRequestModel
                 {
-                    UserId = userId,
+                    UserId = userId.ToLower(),
                     UserAgent = CommonBase.useragent,
-                    UserIp = CommonBase.userip,
+                    UserIp = HttpContext.Session.GetString("IpAddress"),
                     UserType = HttpContext.Session.GetString("UserRole")
                 };
 
@@ -272,9 +266,6 @@ namespace HPCL_Web.Controllers
         [HttpPost]
         public async Task<JsonResult> SetSessionItems([FromBody] string userId)
         {
-            string[] values = userId.Split(',');
-            userId = values[0];
-            string ipAddress = values[1];
 
             if (SessionMenuModel.sessionList.Count == 1)
             {
@@ -285,21 +276,20 @@ namespace HPCL_Web.Controllers
                 HttpContext.Session.SetString("RegionalId", SessionMenuModel.sessionList[0].RegionalId);
                 HttpContext.Session.SetString("ZonalId", SessionMenuModel.sessionList[0].ZonalId);
                 HttpContext.Session.SetString("MerchantID", SessionMenuModel.sessionList[0].MerchantID);
-                HttpContext.Session.SetString("UserId", SessionMenuModel.sessionList[0].UserId);
+                HttpContext.Session.SetString("UserId", SessionMenuModel.sessionList[0].UserId.ToLower());
                 HttpContext.Session.SetString("Today", SessionMenuModel.sessionList[0].Today);
                 HttpContext.Session.SetString("UserRole", SessionMenuModel.sessionList[0].UserRole);
                 HttpContext.Session.SetString("BreadCrumbsController", SessionMenuModel.sessionList[0].BreadCrumbsController == null ? "" : SessionMenuModel.sessionList[0].BreadCrumbsController);
                 HttpContext.Session.SetString("BreadCrumbsAction", SessionMenuModel.sessionList[0].BreadCrumbsAction == null ? "" : SessionMenuModel.sessionList[0].BreadCrumbsAction);
                 HttpContext.Session.SetString("CurrentAction", SessionMenuModel.sessionList[0].CurrentAction == null ? "" : SessionMenuModel.sessionList[0].CurrentAction);
                 HttpContext.Session.SetString("BreadCrumbsPerviousMenuName", SessionMenuModel.sessionList[0].BreadCrumbsPerviousMenuName == null ? "" : SessionMenuModel.sessionList[0].BreadCrumbsPerviousMenuName);
-                HttpContext.Session.SetString("IpAddress", ipAddress);
-                CommonBase.userip = ipAddress;
+                HttpContext.Session.SetString("IpAddress", SessionMenuModel.sessionList[0].IpAddress);
 
                 return Json("Success");
             }
             else
             {
-                foreach (var item in SessionMenuModel.sessionList.Where(x => x.UserId == userId))
+                foreach (var item in SessionMenuModel.sessionList.Where(x => x.UserId.ToLower() == userId.ToLower()))
                 {
                     HttpContext.Session.SetString("Token", item.Token);
                     HttpContext.Session.SetString("LocalStorage", item.LocalStorage);
@@ -308,15 +298,14 @@ namespace HPCL_Web.Controllers
                     HttpContext.Session.SetString("RegionalId", item.RegionalId);
                     HttpContext.Session.SetString("ZonalId", item.ZonalId);
                     HttpContext.Session.SetString("MerchantID", item.MerchantID);
-                    HttpContext.Session.SetString("UserId", item.UserId);
+                    HttpContext.Session.SetString("UserId", item.UserId.ToLower());
                     HttpContext.Session.SetString("Today", item.Today);
                     HttpContext.Session.SetString("UserRole", item.UserRole);
                     HttpContext.Session.SetString("BreadCrumbsController", item.BreadCrumbsController == null ? "" : item.BreadCrumbsController);
                     HttpContext.Session.SetString("BreadCrumbsAction", item.BreadCrumbsAction == null ? "" : item.BreadCrumbsAction);
                     HttpContext.Session.SetString("CurrentAction", item.CurrentAction == null ? "" : item.CurrentAction);
                     HttpContext.Session.SetString("BreadCrumbsPerviousMenuName", item.BreadCrumbsPerviousMenuName == null ? "" : item.BreadCrumbsPerviousMenuName);
-                    HttpContext.Session.SetString("IpAddress", ipAddress);
-                    CommonBase.userip = ipAddress;
+                    HttpContext.Session.SetString("IpAddress", item.IpAddress);
                 }
                 return Json("Success");
             }

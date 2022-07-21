@@ -50,7 +50,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 Customerid = CustomerId,
              };
                       
@@ -65,7 +65,7 @@ namespace HPCL.Service.Services
         {
             EnrollToTransportManagementSystemModel model = new EnrollToTransportManagementSystemModel();
             model.UserAgent = CommonBase.useragent;
-            model.UserIp = CommonBase.userip;
+            model.UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress");
             model.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
             model.CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId");
             model.CustomerId = CustomerId;
@@ -109,7 +109,7 @@ namespace HPCL.Service.Services
             var request = new GetEnrollVehicleManagementDetailRequest()
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 CustomerID = customerId,
                 EnrollmentStatus = enrollmentStatus,
@@ -169,7 +169,7 @@ namespace HPCL.Service.Services
         public async Task<CommonResponseData> SubmitVehicleEnrollment([FromBody] EnrollVehicleViewModel enrollVehicleViewModel)
         {
             enrollVehicleViewModel.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
-            enrollVehicleViewModel.UserIp = CommonBase.userip;
+            enrollVehicleViewModel.UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress");
             enrollVehicleViewModel.UserAgent = CommonBase.useragent;
 
             foreach (EnrollVehicleDetailsModel vehicleDetailsModel in enrollVehicleViewModel.vehicleEnrollmentStatusList)
@@ -212,7 +212,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 Customerid = CustomerId
             };
 
@@ -239,7 +239,7 @@ namespace HPCL.Service.Services
         public async Task<CommonResponseData> UpdateTMSEnrollmentStatus([FromBody] ManageEnrollmentsModel manageEnrollmentsModel)
         {
             manageEnrollmentsModel.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
-            manageEnrollmentsModel.UserIp = CommonBase.userip;
+            manageEnrollmentsModel.UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress");
             manageEnrollmentsModel.UserAgent = CommonBase.useragent;
 
             foreach (UpdateEnrollmentCustomer enrollmentCustomer in manageEnrollmentsModel.tmsUpdateEnrollmentCustomerList)
@@ -294,7 +294,7 @@ namespace HPCL.Service.Services
             else
             {
                 model.UserAgent = CommonBase.useragent;
-                model.UserIp = CommonBase.userip;
+                model.UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress");
                 model.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
                 model.CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId");
 
@@ -369,7 +369,7 @@ namespace HPCL.Service.Services
             var reqBody = new GetCustomerDetailForEnrollmentApprovalRequest
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 CustomerID = string.IsNullOrEmpty(model.CustomerID) ? "" : model.CustomerID,
                 TMSUserId = string.IsNullOrEmpty(model.TMSUserId) ? "" : model.TMSUserId,
@@ -402,7 +402,7 @@ namespace HPCL.Service.Services
         {
             model.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
             model.UserAgent = CommonBase.useragent;
-            model.UserIp = CommonBase.userip;
+            model.UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress");
             model.ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId");
 
             StringContent requestContent = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
@@ -426,7 +426,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress")
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(statusType), Encoding.UTF8, "application/json");

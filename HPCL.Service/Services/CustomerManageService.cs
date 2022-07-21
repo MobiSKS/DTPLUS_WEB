@@ -35,7 +35,7 @@ namespace HPCL.Service.Services
             var CustType = new Dictionary<string, string>
                 {
                     {"Useragent", CommonBase.useragent},
-                    {"Userip", CommonBase.userip},
+                    {"Userip", _httpContextAccessor.HttpContext.Session.GetString("IpAddress")},
                     {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserId")},
                     {"CTFlag",  "1" }
                 };
@@ -58,7 +58,7 @@ namespace HPCL.Service.Services
             var ZonalOfficeForms = new Dictionary<string, string>
                 {
                     {"Useragent", CommonBase.useragent},
-                    {"Userip", CommonBase.userip},
+                    {"Userip", _httpContextAccessor.HttpContext.Session.GetString("IpAddress")},
                     {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserId")}
                 };
 
@@ -107,7 +107,7 @@ namespace HPCL.Service.Services
             var TBEntityForms = new Dictionary<string, string>
                 {
                     {"Useragent", CommonBase.useragent},
-                    {"Userip", CommonBase.userip},
+                    {"Userip", _httpContextAccessor.HttpContext.Session.GetString("IpAddress")},
                     {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserId")}
                 };
 
@@ -130,7 +130,7 @@ namespace HPCL.Service.Services
             var CustomerSecretQueForms = new Dictionary<string, string>
                 {
                     {"Useragent", CommonBase.useragent},
-                    {"Userip", CommonBase.userip},
+                    {"Userip", _httpContextAccessor.HttpContext.Session.GetString("IpAddress")},
                     {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserId")}
                 };
 
@@ -153,7 +153,7 @@ namespace HPCL.Service.Services
             var CustomerTypeOfFleetForms = new Dictionary<string, string>
                 {
                     {"Useragent", CommonBase.useragent},
-                    {"Userip", CommonBase.userip},
+                    {"Userip", _httpContextAccessor.HttpContext.Session.GetString("IpAddress")},
                     {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserId")}
                 };
 
@@ -181,7 +181,7 @@ namespace HPCL.Service.Services
                     {
                         UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                         UserAgent = CommonBase.useragent,
-                        UserIp = CommonBase.userip,
+                        UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                         CustomerId = _httpContextAccessor.HttpContext.Session.GetString("UserId")
                     };
                 }
@@ -191,7 +191,7 @@ namespace HPCL.Service.Services
                     {
                         UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                         UserAgent = CommonBase.useragent,
-                        UserIp = CommonBase.userip,
+                        UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                         CustomerId = string.IsNullOrEmpty(CustomerId) ? "" : CustomerId,
                         NameOnCard = string.IsNullOrEmpty(NameOnCard) ? "" : NameOnCard
                     };
@@ -376,7 +376,7 @@ namespace HPCL.Service.Services
             {
                 { "UserId",CommonBase.userid },
                 { "UserAgent", CommonBase.useragent},
-                { "UserIp",CommonBase.userip},
+                { "UserIp",_httpContextAccessor.HttpContext.Session.GetString("IpAddress")},
                 { "CustomerId",CustomerId},
                {  "CardNo","" },
                {  "MobileNumber","" },
@@ -450,7 +450,7 @@ namespace HPCL.Service.Services
         public async Task<AddOnCustomerModel> AddOnCustomer(AddOnCustomerModel model)
         {
             model.UserAgent = CommonBase.useragent;
-            model.UserIp = CommonBase.userip;
+            model.UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress");
             model.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
             model.CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId");
 

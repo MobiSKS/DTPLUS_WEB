@@ -36,7 +36,7 @@ namespace HPCL.Service.Services
                 {
                     UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                     UserAgent = CommonBase.useragent,
-                    UserIp = CommonBase.userip,
+                    UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                     CustomerID = entity.CustomerID,
                     CardNo = entity.CardNo,
                     MobileNo = entity.MobileNo
@@ -48,7 +48,7 @@ namespace HPCL.Service.Services
                 {
                     UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                     UserAgent = CommonBase.useragent,
-                    UserIp = CommonBase.userip,
+                    UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                     CustomerID = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                     CardNo = entity.CardNo,
                     MobileNo = entity.MobileNo
@@ -72,7 +72,7 @@ namespace HPCL.Service.Services
                 {
                     UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                     UserAgent = CommonBase.useragent,
-                    UserIp = CommonBase.userip,
+                    UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                     CustomerID = entity.CustomerID,
                     CardNo = entity.CardNo,
                     MobileNo = entity.MobileNo
@@ -84,7 +84,7 @@ namespace HPCL.Service.Services
                 {
                     UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                     UserAgent = CommonBase.useragent,
-                    UserIp = CommonBase.userip,
+                    UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                     CustomerID = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                     CardNo = entity.CardNo,
                     MobileNo = entity.MobileNo
@@ -108,7 +108,7 @@ namespace HPCL.Service.Services
                 {
                     UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                     UserAgent = CommonBase.useragent,
-                    UserIp = CommonBase.userip,
+                    UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                     CustomerID = entity.CustomerID,
                     CardNo = entity.CardNo,
                     MobileNo = entity.MobileNo
@@ -120,7 +120,7 @@ namespace HPCL.Service.Services
                 {
                     UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                     UserAgent = CommonBase.useragent,
-                    UserIp = CommonBase.userip,
+                    UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                     CustomerID = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                     CardNo = entity.CardNo,
                     MobileNo = entity.MobileNo
@@ -150,7 +150,7 @@ namespace HPCL.Service.Services
             var Request = new CustomerTransactionViewModel()
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 CustomerID = CustomerID,
                 CardNo=CardNo,
@@ -198,7 +198,7 @@ namespace HPCL.Service.Services
                 {
                     UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                     UserAgent = CommonBase.useragent,
-                    UserIp = CommonBase.userip,
+                    UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                     CustomerID = entity.CustomerID,
                     FromDate = entity.FromDate,
                     ToDate = entity.ToDate
@@ -210,7 +210,7 @@ namespace HPCL.Service.Services
                 {
                     UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                     UserAgent = CommonBase.useragent,
-                    UserIp = CommonBase.userip,
+                    UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                     CustomerID = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                     FromDate = entity.FromDate,
                     ToDate = entity.ToDate
@@ -232,7 +232,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 customerId = customerId,
                 ccmsToCardTransfer = arrs
             };
@@ -252,7 +252,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 CustomerId = customerId,
                 cardToCardTransfer = arrs
             };
@@ -272,7 +272,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 CustomerId = customerId,
                 cardToCCMSTransfer = arrs
             };

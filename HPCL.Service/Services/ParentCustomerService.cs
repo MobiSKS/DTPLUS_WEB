@@ -46,7 +46,7 @@ namespace HPCL.Service.Services
                 {
                     UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                     UserAgent = CommonBase.useragent,
-                    UserIp = CommonBase.userip,
+                    UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                     CustomerId = CustomerId,
                     NameOnCard = NameOnCard,
                 };
@@ -130,7 +130,7 @@ namespace HPCL.Service.Services
             var CustomerTypeForms = new CustomerCreationRequestModel
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 CustomerType = CustomerTypeID.ToString(),
                 CustomerSubtype = CustomerSubTypeID.ToString(),
@@ -257,7 +257,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 FromDate = fDate,
                 ToDate = tDate
             };
@@ -277,7 +277,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 ActionType = approveParentCustomer.Action == "Approve" ? 1 : 13,
                 Approvedby = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 ObjParentCustomerDtl = approveParentCustomer.ObjParentCustomerDtl
@@ -323,7 +323,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 FromDate = fDate,
                 ToDate = tDate
             };
@@ -343,7 +343,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 ActionType = approveParentCustomer.Action == "Approve" ? 22 : 21,
                 Approvedby = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 ObjParentCustomerDtl = approveParentCustomer.ObjParentCustomerDtl,
@@ -381,7 +381,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 CustomerId = CustomerId,
                 RequestId = RequestId
             };
@@ -405,7 +405,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 CustomerId = CustomerId,
                 RequestId = RequestId
             };
@@ -452,7 +452,7 @@ namespace HPCL.Service.Services
                 var customerBody = new ManageProfilerequestModel()
                 {
                     UserAgent = CommonBase.useragent,
-                    UserIp = CommonBase.userip,
+                    UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                     UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                     CustomerId = customerId,
                     RequestId = RequestId
@@ -796,7 +796,7 @@ namespace HPCL.Service.Services
                 RequestId = cust.RequestId,
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 CustomerReferenceNo = cust.CustomerReferenceNo,
                 CustomerId = cust.CustomerId,
                 ZonalOffice = cust.CustomerZonalOfficeID.ToString(),
@@ -923,7 +923,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 FormId = FormNumber==null?"0":FormNumber,
                 ZO = ZonalOfficeId==null?"0":ZonalOfficeId,
                 RO = RegionalOfficeId == null ? "0" : RegionalOfficeId,
@@ -946,7 +946,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 FormNumber = FormNumber == null ? "0" : FormNumber,
                 RequestId=RequestId
                 
@@ -966,7 +966,7 @@ namespace HPCL.Service.Services
             var Request = new GetCustomerBalanceRequest()
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 ParentCustomerID = requestInfo.ParentCustomerID,
                 ChildCustomerId=requestInfo.ChildCustomerId
@@ -988,7 +988,7 @@ namespace HPCL.Service.Services
             var Request = new GetCustomerBalanceRequest()
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 CustomerID = CustomerID
             };
@@ -1008,7 +1008,7 @@ namespace HPCL.Service.Services
             var Request = new GetCustomerBalanceRequest()
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 ChildCustomerId = CustomerID
             };
@@ -1026,7 +1026,7 @@ namespace HPCL.Service.Services
             var request = new GetCustomerByCustomerIdRequest()
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 CustomerID = CustomerID
             };
@@ -1049,7 +1049,7 @@ namespace HPCL.Service.Services
             var Request = new GetCustomerBalanceRequest()
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 ParentCustomerID = requestInfo.ParentCustomerID,
                 ChildCustomerId = requestInfo.ChildCustomerId
@@ -1070,7 +1070,7 @@ namespace HPCL.Service.Services
             var Request = new ParentChildCustomerMappingRequest()
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 ParentCustomerId = requestInfo.ParentCustomerId,
                 ObjChildDtl = requestInfo.ObjChildDtl,
@@ -1085,14 +1085,14 @@ namespace HPCL.Service.Services
 
             return parentChildCustomerMapping;
         }
-        public async Task<ParentCustomerTransactionViewModel> ViewParentChildTransactionDetails(String ParentCustomerID)
+        public async Task<ViewParentChildTransactionDetailsModel> ViewParentChildTransactionDetails(String ParentCustomerID)
         {
-            ParentCustomerTransactionViewModel customerTransactionResponse = new ParentCustomerTransactionViewModel();
+            ViewParentChildTransactionDetailsModel customerTransactionResponse = new ViewParentChildTransactionDetailsModel();
 
             var Request = new GetCustomerBalanceRequest()
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 ParentCustomerID = ParentCustomerID,
             };
@@ -1117,7 +1117,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 CustomerId = CustomerId,
             };
 
@@ -1137,7 +1137,7 @@ namespace HPCL.Service.Services
             var Request = new ParentChildCustomerMappingRequest()
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 ParentCustomerId = requestInfo.ParentCustomerId,
                 ObjParentCustomerDtl = requestInfo.ObjParentCustomerDtl,
@@ -1159,7 +1159,7 @@ namespace HPCL.Service.Services
             var Request = new GetCustomerBalanceRequest()
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 CustomerID = CustomerID
             };
@@ -1178,7 +1178,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 CustomerId = CustomerId,
             };
 
@@ -1198,7 +1198,7 @@ namespace HPCL.Service.Services
             var Request = new GetCustomerBalanceRequest()
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 CustomerID = CustomerID
             };
@@ -1216,7 +1216,7 @@ namespace HPCL.Service.Services
             var reqBody = new ParentCustomerSearchRequestModel
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 CustomerID = reqModel.CustomerID,
@@ -1237,7 +1237,7 @@ namespace HPCL.Service.Services
             var reqBody = new ParentCustomerSearchRequestModel
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 CustomerID = reqModel.CustomerID,
@@ -1260,7 +1260,7 @@ namespace HPCL.Service.Services
             var Request = new GetCustomerBalanceRequest()
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 CustomerID = CustomerID
             };
@@ -1279,7 +1279,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 CustomerId = CustomerId,
                 ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
             };
@@ -1298,7 +1298,7 @@ namespace HPCL.Service.Services
             var Request = new UpdateDndSmsAlertsConfigureReq()
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 CustomerId = CustomerID
             };
@@ -1317,7 +1317,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 CustomerId = reqEntity.CustomerId,
                 CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 StatementType=reqEntity.StatementType,
@@ -1336,7 +1336,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 CustomerId = reqEntity.CustomerId,
                 RequestId = reqEntity.RequestId,
                 IsActivate = "0",
@@ -1349,6 +1349,38 @@ namespace HPCL.Service.Services
             var jarr = obj["Data"].Value<JArray>();
             List<SuccessResponse> reasonList = jarr.ToObject<List<SuccessResponse>>();
             return reasonList;
+        }
+        public async Task<ViewParentChildTransactionDetailsModel> GetParentChildTransactionDetails(ParentChildransactionRequestModel requestInfo)
+        {
+            ViewParentChildTransactionDetailsModel transactionResponse = new ViewParentChildTransactionDetailsModel();
+            if (!string.IsNullOrEmpty(requestInfo.FromDate) && !string.IsNullOrEmpty(requestInfo.FromDate))
+            {
+                requestInfo.FromDate = await _commonActionService.changeDateFormat(requestInfo.FromDate);
+                requestInfo.ToDate = await _commonActionService.changeDateFormat(requestInfo.ToDate);
+            }
+            else
+            {
+                requestInfo.FromDate = DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd");
+                requestInfo.ToDate = DateTime.Now.ToString("yyyy-MM-dd");
+            }
+            var Request = new ParentChildransactionRequestModel()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                ParentCustomerID = requestInfo.ParentCustomerID,
+                FromDate = requestInfo.FromDate,
+                ToDate=requestInfo.ToDate,
+                ObjChildCustomerIdDtl=requestInfo.ObjChildCustomerIdDtl
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(Request), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getparenttransactionssummarydetails);
+
+            transactionResponse = JsonConvert.DeserializeObject<ViewParentChildTransactionDetailsModel>(response);
+
+            return transactionResponse;
         }
     }
 }

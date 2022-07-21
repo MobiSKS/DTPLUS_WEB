@@ -45,6 +45,9 @@
                                     <button class="btn btn_primary" type="submit" id="btnSearch">@Label.Search</button>
                                 </div>
                                 <div class="px-2">
+                                    <button class="btn btn_primary" type="button" onclick="tableToCSV()" id="btnExport">EXPORT TO EXCEL</button>
+                                </div>
+                                <div class="px-2">
                                     <button class="btn btn_primary" type="button" id="btnReset">@Label.Reset</button>
                                 </div>
                             </div>
@@ -98,7 +101,7 @@
             <div class="clearfix"></div>
             <div class="d-flex align-items-center justify-content-center mt-0">
                 <div class="px-2">
-                    <button class="btn btn_primary" type="button" id="btnView">VIEW</button>
+                    <button class="btn btn_primary" type="button" id="btnView">VIEW TRANSACTION DETAILS</button>
                 </div>
 
             </div>
@@ -120,7 +123,12 @@
 </div>
 <script type="text/javascript">
     $(document).ready(function () {
-
+        var parentId="@Model.ParentCustomerID";
+        var childId="@Model.ChildCustomerId";
+        if(parentId!=""){
+            $("#ParentCustomerID").attr("readonly",true);
+            $("#ChildCustomerId").attr("readonly",true);
+        }
     });
     $("#checkAll").click(function () {
         $('input:checkbox').not(this).prop('checked', this.checked);
@@ -235,5 +243,66 @@
               }
 
     });
+    function tableToCSV() {
 
+            // Variable to store the final csv data
+            var csv_data = [];
+            var csvrow = [];
+            var csvrow1 = [];
+            csvrow1.push("Child Customer Details Report");
+            csv_data.push(csvrow1.join(","));
+            csv_data.join('\n');
+                csvrow.push("S.No.","Child Customer ID", "Child Customer ID", "Control Card Number","Name on Card","Regional Office","Status");
+                csv_data.push(csvrow.join(","));
+            // Get each row data
+            //var rows = document.getElementsByTagName('tr');
+            var tableName = $('#CustTransactionTbl').DataTable();
+            var i=0
+           tableName.rows().every(function(){
+               i++;
+                            var csvrow = [];
+
+                            csvrow.push(i);
+                            csvrow.push(this.data()[1]);
+                            csvrow.push(this.data()[2]);
+                            csvrow.push(this.data()[3]);
+                            csvrow.push(this.data()[4]);
+                            csvrow.push(this.data()[5]);
+                            csvrow.push(this.data()[6]);
+                            csv_data.push(csvrow.join(","));
+                        });
+                        // Combine each row data with new line character
+                        csv_data = csv_data.join('\n');
+
+            // Call this function to download csv file
+            downloadCSVFile(csv_data);
+
+        }
+
+        function downloadCSVFile(csv_data) {
+
+            // Create CSV file object and feed
+            // our csv_data into it
+            CSVFile = new Blob([csv_data], {
+                type: "text/csv"
+            });
+
+            // Create to temporary link to initiate
+            // download process
+            var temp_link = document.createElement('a');
+
+            // Download csv file
+            temp_link.download = "ChildCustomerDetails.csv";
+            var url = window.URL.createObjectURL(CSVFile);
+            temp_link.href = url;
+
+            // This link should not be displayed
+            temp_link.style.display = "none";
+            document.body.appendChild(temp_link);
+
+            // Automatically click the link to
+            // trigger download
+            temp_link.click();
+            document.body.removeChild(temp_link);
+        }
 </script>

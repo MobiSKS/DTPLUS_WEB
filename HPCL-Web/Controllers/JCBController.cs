@@ -188,6 +188,25 @@ namespace HPCL_Web.Controllers
             ModelState.Clear();
             return Json(customerCardInfo);
         }
+        public async Task<IActionResult> JCBResetPasswordByMo()
+        {
+            var custMdl = new JCBCustomerResetPassword();
+
+            return View(custMdl);
+        }
+        [HttpPost]
+        public async Task<JsonResult> GetJCBCommunicationEmailResetPassword(string CustomerId)
+        {
+            var responseData = await _jcbService.GetJCBCommunicationEmailResetPassword(CustomerId);
+            ModelState.Clear();
+            return Json(responseData);
+        }
+        [HttpPost]
+        public async Task<JsonResult> UpdateJCBCommunicationEmailResetPassword(string CustomerId, string AlternateEmailId)
+        {
+            var result = await _jcbService.UpdateJCBCommunicationEmailResetPassword(CustomerId, AlternateEmailId);
+            return Json(new { result = result });
+        }
 
     }
 }

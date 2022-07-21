@@ -46,7 +46,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 DealerCode = string.IsNullOrEmpty(DealerCode) ? "" : DealerCode,
             };
 
@@ -69,7 +69,7 @@ namespace HPCL.Service.Services
                 {
                     UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                     UserAgent = CommonBase.useragent,
-                    UserIp = CommonBase.userip,
+                    UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                     CustomerId = string.IsNullOrEmpty(CustomerId) ? "" : CustomerId,
                     NameOnCard = string.IsNullOrEmpty(NameOnCard) ? "" : NameOnCard
                 };
@@ -254,7 +254,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 DealerCode = arrs[0].DealerCode,
                 DealerName = arrs[0].DealerName,
                 ZonalOfficeId = arrs[0].ZonalOfficeId,
@@ -284,7 +284,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 DealerCode = dealerCode,
                 DTPDealerCode = dtpCode
             };
@@ -323,7 +323,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 DealerCode = arrs[0].DealerCode,
                 ZonalOfficeId = arrs[0].ZonalOfficeId,
                 RegionalOfficeId = arrs[0].RegionalOfficeId,
@@ -354,7 +354,7 @@ namespace HPCL.Service.Services
             VerifyDealerRequestModel requestinfo = new VerifyDealerRequestModel()
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 DealerCode = DealerCode
             };
@@ -380,7 +380,7 @@ namespace HPCL.Service.Services
         public async Task<VEOTCCardRequestModel> VEDealerOTCCardRequest(VEOTCCardRequestModel model)
         {
             model.UserAgent = CommonBase.useragent;
-            model.UserIp = CommonBase.userip;
+            model.UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress");
             model.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
             model.CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId");
 
@@ -414,7 +414,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserName = UserName
             };
 
@@ -436,7 +436,7 @@ namespace HPCL.Service.Services
             var searchBody = new GetALOTCCardDealerAllocationRequestModel()
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 DealerCode = DealerCode,
                 CardNo = string.IsNullOrEmpty(CardNo) ? "" : CardNo
@@ -472,7 +472,7 @@ namespace HPCL.Service.Services
             var requestInfo = new GetAvailityALOTCCardRequest()
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 DealerCode = dealerCode
             };
@@ -530,7 +530,7 @@ namespace HPCL.Service.Services
         {
             model.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
             model.UserAgent = CommonBase.useragent;
-            model.UserIp = CommonBase.userip;
+            model.UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress");
             model.CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId");
             model.CommunicationPhoneNo = (String.IsNullOrEmpty(model.CommunicationDialCode) ? "" : model.CommunicationDialCode) + "-" + (String.IsNullOrEmpty(model.CommunicationPhonePart2) ? "" : model.CommunicationPhonePart2);
             model.CommunicationFax = (String.IsNullOrEmpty(model.CommunicationFaxCode) ? "" : model.CommunicationFaxCode) + "-" + (String.IsNullOrEmpty(model.CommunicationFaxPart2) ? "" : model.CommunicationFaxPart2);
@@ -584,7 +584,7 @@ namespace HPCL.Service.Services
             var requestinfo = new GetAvailityALOTCCardRequest()
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 DealerCode = DealerCode
             };
@@ -624,7 +624,7 @@ namespace HPCL.Service.Services
             {
                 UserId = CommonBase.userid,
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 CustomerId = CustomerId,
                 CardNo = "",
                 MobileNumber = "",
@@ -709,7 +709,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 CustomerID = arrs[0].CustomerID,
                 ZonalOffice = arrs[0].ZonalOffice,
                 RegionalOffice = arrs[0].RegionalOffice,
@@ -751,7 +751,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 CustomerId = customerId
             };
 
@@ -871,7 +871,7 @@ namespace HPCL.Service.Services
             addAddOnCard.Message = "";
             addAddOnCard.Reason = "";
             addAddOnCard.UserAgent = CommonBase.useragent;
-            addAddOnCard.UserIp = CommonBase.userip;
+            addAddOnCard.UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress");
             addAddOnCard.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
             addAddOnCard.CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId");
 

@@ -41,10 +41,8 @@ namespace HPCL.Common.Models.ViewModel.ParentCustomer
         public string StatusName { get; set; }
 
     }
-    public class Transactiondetails
-    {
-        public string TransactionID { get; set; }
-    }
+   
+   
     public class ChildCustomerDetails
     {
         public string ChildCustomerID { get; set; }

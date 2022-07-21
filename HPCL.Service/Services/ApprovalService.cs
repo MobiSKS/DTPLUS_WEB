@@ -54,7 +54,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 FromDate = fromDate,
                 ToDate = toDate,
                 ZonalOfficeId = string.IsNullOrEmpty(zonalOfcID) || zonalOfcID == "0" ? "" : zonalOfcID,
@@ -82,7 +82,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 Action = approvalRejectionMdl.Action,
                 Remark = approvalRejectionMdl.Remark,
                 ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
@@ -130,7 +130,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 FromDate = fromDate,
                 ToDate = toDate,
                 ZonalOfficeId = string.IsNullOrEmpty(zonalOfcID) || zonalOfcID == "0" ? "" : zonalOfcID,
@@ -157,7 +157,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 Action = approvalRejectionMdl.Action,
                 Remark = approvalRejectionMdl.Remark,
                 ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),

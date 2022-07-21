@@ -51,7 +51,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 FromDate = custMdl.FromDate,
                 ToDate = custMdl.ToDate
 
@@ -134,7 +134,7 @@ namespace HPCL.Service.Services
             var CustomerTypeForms = new Dictionary<string, string>
                 {
                     {"Useragent", CommonBase.useragent},
-                    {"Userip", CommonBase.userip},
+                    {"Userip", _httpContextAccessor.HttpContext.Session.GetString("IpAddress")},
                     {"UserId", _httpContextAccessor.HttpContext.Session.GetString("UserId")},
                     {"CustomerType", CustomerTypeID.ToString()},
                     {"CustomerSubtype", CustomerSubTypeID.ToString()},
@@ -270,7 +270,7 @@ namespace HPCL.Service.Services
             var request = new GetValidateNewCustomerRequestModel()
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 RegionalOfficeId = entity.CustomerRegionID > 0 ? entity.CustomerRegionID.ToString() : null,
                 FromDate = fromDateOfApplication,
@@ -302,7 +302,7 @@ namespace HPCL.Service.Services
             var customerBody = new CheckformNumberDuplicationRequest()
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 FormNumber = FormNumber
             };
@@ -319,7 +319,7 @@ namespace HPCL.Service.Services
             var approvalBody = new AproveCustomerRequest()
             {
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 CustomerReferenceNo = CustomerReferenceNo,
                 Comments = Comments,
@@ -698,7 +698,7 @@ namespace HPCL.Service.Services
                 {
                     {"UserId", _httpContextAccessor.HttpContext.Session.GetString("UserId")},
                     {"Useragent", CommonBase.useragent},
-                    {"Userip", CommonBase.userip},
+                    {"Userip", _httpContextAccessor.HttpContext.Session.GetString("IpAddress")},
                     {"CustomerReferenceNo", cust.CustomerReferenceNo},
                     {"ZonalOffice", cust.CustomerZonalOfficeID.ToString()},
                     {"RegionalOffice", cust.CustomerRegionID.ToString()},
@@ -813,7 +813,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 FormNumber = entity.FormNumber,
                 Type = String.IsNullOrEmpty(entity.Type) ? "0" : "1",
             };
@@ -845,7 +845,7 @@ namespace HPCL.Service.Services
             form.Add(new StringContent(_httpContextAccessor.HttpContext.Session.GetString("UserId")), "CreatedBy");
             form.Add(new StringContent(_httpContextAccessor.HttpContext.Session.GetString("UserId")), "Userid");
             form.Add(new StringContent(CommonBase.useragent), "Useragent");
-            form.Add(new StringContent(CommonBase.userip), "Userip");
+            form.Add(new StringContent(_httpContextAccessor.HttpContext.Session.GetString("IpAddress")), "Userip");
 
             var response = await _requestService.FormDataRequestService(form, WebApiUrl.uploadaggregatorcustomerkyc);
 

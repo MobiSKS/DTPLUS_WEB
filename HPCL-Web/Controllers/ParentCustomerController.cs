@@ -182,7 +182,11 @@ namespace HPCL_Web.Controllers
 
             ParentCustomerTransactionViewModel customerBalanceResponse = new ParentCustomerTransactionViewModel();
             if (requestInfo.ParentCustomerID != null && requestInfo.ParentCustomerID != "")
+            {
                 customerBalanceResponse = await _customerService.ParentCustomerTransactionDetails(requestInfo);
+                customerBalanceResponse.ParentCustomerID = requestInfo.ParentCustomerID;
+                customerBalanceResponse.ChildCustomerId = requestInfo.ChildCustomerId;
+            }
 
             return View(customerBalanceResponse);
         }
@@ -214,12 +218,12 @@ namespace HPCL_Web.Controllers
         public async Task<IActionResult> ViewParentChildTransactionDetails(string ParentCustomerID, string ChildCustomerIds)
         {
 
-            ParentCustomerTransactionViewModel parentCustomerTransactionViewModel = new ParentCustomerTransactionViewModel();
+            ViewParentChildTransactionDetailsModel viewParentChildTransactionDetails = new ViewParentChildTransactionDetailsModel();
 
-            parentCustomerTransactionViewModel = await _customerService.ViewParentChildTransactionDetails(ParentCustomerID);
+            viewParentChildTransactionDetails = await _customerService.ViewParentChildTransactionDetails(ParentCustomerID);
             ViewBag.SelectedChildCustomerIds = ChildCustomerIds;
 
-            return View(parentCustomerTransactionViewModel);
+            return View(viewParentChildTransactionDetails);
 
         }
 
@@ -314,6 +318,17 @@ namespace HPCL_Web.Controllers
         {
             var modals = await _customerService.UpdateAccountStatementRequest(reqEntity);
             return Json(modals);
+        }
+        [HttpPost]
+        public async Task<JsonResult> GetParentChildTransactionDetails([FromBody] ParentChildransactionRequestModel reqEntity)
+        {
+
+            ViewParentChildTransactionDetailsModel viewParentChildTransactionDetails = new ViewParentChildTransactionDetailsModel();
+
+            viewParentChildTransactionDetails = await _customerService.GetParentChildTransactionDetails(reqEntity);
+
+            return Json(viewParentChildTransactionDetails);
+
         }
     }
 }

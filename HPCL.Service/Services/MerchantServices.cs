@@ -43,7 +43,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 StatusId = approvalRejectionMdl.StatusId == "Approve" ? "4" : "13",
                 ApprovedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 ObjApprovalRejectDetail = approvalRejectionMdl.ObjApprovalRejectDetail
@@ -82,7 +82,7 @@ namespace HPCL.Service.Services
                 {
                     UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                     UserAgent = CommonBase.useragent,
-                    UserIp = CommonBase.userip,
+                    UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                     MerchantId = merchantIdValue
                 };
 
@@ -112,7 +112,7 @@ namespace HPCL.Service.Services
                 {
                     UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                     UserAgent = CommonBase.useragent,
-                    UserIp = CommonBase.userip,
+                    UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                     ERPCode = ERPCode
                 };
 
@@ -165,7 +165,7 @@ namespace HPCL.Service.Services
                 {
                     UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                     UserAgent = CommonBase.useragent,
-                    UserIp = CommonBase.userip,
+                    UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                     ErpCode = merchantMdl.ErpCode,
                     RetailOutletName = merchantMdl.RetailOutletName,
                     MerchantTypeId = string.IsNullOrEmpty(merchantMdl.MerchantTypeIdVal) ? merchantMdl.MerchantTypeId : merchantMdl.MerchantTypeIdVal,
@@ -221,7 +221,7 @@ namespace HPCL.Service.Services
                 {
                     UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                     UserAgent = CommonBase.useragent,
-                    UserIp = CommonBase.userip,
+                    UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                     ErpCode = merchantMdl.ErpCode,
                     RetailOutletName = merchantMdl.RetailOutletName,
                     MerchantTypeId = string.IsNullOrEmpty(merchantMdl.MerchantTypeIdVal) ? merchantMdl.MerchantTypeId : merchantMdl.MerchantTypeIdVal,
@@ -307,7 +307,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 Category = string.IsNullOrEmpty(merchaApprovalMdl.CategoryID) ? "1": merchaApprovalMdl.CategoryID,
                 FromDate = fDate,
                 ToDate = tDate
@@ -344,7 +344,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 FromDate = merchantRejectedMdl.FromDate,
                 ToDate = merchantRejectedMdl.ToDate
             };
@@ -373,7 +373,7 @@ namespace HPCL.Service.Services
             var MerchantFormDetails = new Dictionary<string, string>
                     {
                         {"Useragent", CommonBase.useragent},
-                        { "Userip", CommonBase.userip},
+                        { "Userip", _httpContextAccessor.HttpContext.Session.GetString("IpAddress")},
                         {"Userid", _httpContextAccessor.HttpContext.Session.GetString("UserId")},
                         { "ErpCode", ERPCode}
                     };
@@ -478,7 +478,7 @@ namespace HPCL.Service.Services
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
-                UserIp = CommonBase.userip,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 MerchantId = string.IsNullOrEmpty(merchantId) ? "" : merchantId,
                 ErpCode = string.IsNullOrEmpty(erpCode) ? "" : erpCode,
                 RetailOutletName = string.IsNullOrEmpty(retailOutletName) ? "" : retailOutletName,
