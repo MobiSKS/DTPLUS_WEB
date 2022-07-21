@@ -137,7 +137,7 @@ namespace HPCL.Service
 
         public async Task<string> RechargeRequestService(StringContent content, string requestUrl, string useriprecharge)
         {
-            //var access_token = GetTokenRec(useriprecharge);
+            var access_token = GetTokenRec(useriprecharge);
         //Start:
             using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
             {
@@ -173,33 +173,33 @@ namespace HPCL.Service
             }
         }
 
-        //Token _token = new Token();
-        //public async Task<string> GetTokenRec(string useriprecharge)
-        //{
-        //    using (HttpClient _customclient = new HelperAPI().GetApiBaseUrlString())
-        //    {
-        //        var forms = new Dictionary<string, string>
-        //       {
-        //           {"useragent", CommonBase.useragent},
-        //           {"userip", useriprecharge},
-        //           {"userid", "demo"},
-        //       };
+        Token _token = new Token();
+        public async Task<string> GetTokenRec(string useriprecharge)
+        {
+            using (HttpClient _customclient = new HelperAPI().GetApiBaseUrlString())
+            {
+                var forms = new Dictionary<string, string>
+               {
+                   {"useragent", CommonBase.useragent},
+                   {"userip", useriprecharge},
+                   {"userid", "demo"},
+               };
 
-        //        //_customclient.DefaultRequestHeaders.Add("Secret_Key", Common.Secret_Key);
-        //        //_customclient.DefaultRequestHeaders.Add("API_Key", Common.Api_Key);
+                //_customclient.DefaultRequestHeaders.Add("Secret_Key", Common.Secret_Key);
+                //_customclient.DefaultRequestHeaders.Add("API_Key", Common.Api_Key);
 
-        //        StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
+                StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
 
-        //        using (var tokenResponse = await _customclient.PostAsync(WebApiUrl.generatetoken, content))
-        //        {
-        //            if (tokenResponse.StatusCode == System.Net.HttpStatusCode.OK)
-        //            {
-        //                var JsonContent = tokenResponse.Content.ReadAsStringAsync().Result;
-        //                _token = JsonConvert.DeserializeObject<Token>(JsonContent);
-        //            }
-        //        }
-        //    }
-        //    return _token.token;
-        //}
+                using (var tokenResponse = await _customclient.PostAsync(WebApiUrl.generatetoken, content))
+                {
+                    if (tokenResponse.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        var JsonContent = tokenResponse.Content.ReadAsStringAsync().Result;
+                        _token = JsonConvert.DeserializeObject<Token>(JsonContent);
+                    }
+                }
+            }
+            return _token.token;
+        }
     }
 }
