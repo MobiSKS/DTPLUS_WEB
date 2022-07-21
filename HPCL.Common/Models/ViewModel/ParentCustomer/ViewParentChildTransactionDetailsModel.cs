@@ -16,6 +16,7 @@ namespace HPCL.Common.Models.ViewModel.ParentCustomer
             ToDate = DateTime.Now.ToString("dd-MM-yyyy");
             ChildCustomerIds = new List<ChildCustomerDetails>();
             SelectedChildCustomerIds = new List<ChildCustomerDetails>();
+            TransactionLocationDetails = new List<TransactionLocationDetails>();
             Data = new TransactionData();
         }
         public string ParentCustomerID { get; set; }
@@ -25,6 +26,7 @@ namespace HPCL.Common.Models.ViewModel.ParentCustomer
         public string ToDate { get; set; }
         public virtual List<ChildCustomerDetails> ChildCustomerIds { get; set; }
         public virtual List<ChildCustomerDetails> SelectedChildCustomerIds { get; set; }
+        public List<TransactionLocationDetails> TransactionLocationDetails { get; set; }
         public TransactionData Data { get; set; }
 
     }
@@ -39,10 +41,11 @@ namespace HPCL.Common.Models.ViewModel.ParentCustomer
         public List<TransactionDetailsSummary> GetParentTransactionsSaleDetails { get; set; }
         public List<TransactionDetails> GetParentTransactionsDetailSummary { get; set; }
         public List<TransactionDetails> GetChildTransactionsDetailSummary { get; set; }
+        
     }
     public class TransactionDetails
     {
-        public string TransactionID { get; set; }
+        public string TransactionId { get; set; }
         public string CustomerID { get; set; }
         public string BatchIdandROC { get; set; }
         public string RetailOutletName { get; set; }
@@ -73,5 +76,17 @@ namespace HPCL.Common.Models.ViewModel.ParentCustomer
         public string ReloadCcmsCash { get; set; }
         public string CcmsRecharge { get; set; }
     }
-   
+   public class TransactionLocationDetails
+    {
+        public string TransactionId { get; set; }
+        public string Name { get; set; }
+        public string Location { get; set; }
+        public string City { get; set; }
+        public string District { get; set; }
+        public string NH { get; set; }
+        public string State { get; set; }
+        public string Status { get; set; }
+        public string Reason { get; set; }
+
+    }
 }

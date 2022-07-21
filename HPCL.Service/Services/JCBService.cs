@@ -1,5 +1,6 @@
 ﻿using HPCL.Common.Helper;
 using HPCL.Common.Models;
+using HPCL.Common.Models.CommonEntity;
 using HPCL.Common.Models.RequestModel.AshokLeyLand;
 using HPCL.Common.Models.RequestModel.JCB;
 using HPCL.Common.Models.RequestModel.Merchant;
@@ -792,7 +793,7 @@ namespace HPCL.Service.Services
             InsertResponse result = obj.ToObject<InsertResponse>();
             return result;
         }
-        public async Task<JCBSearchManageCards> ManageCards(JCBCustomerCards entity, string editFlag)
+        public async Task<JCBSearchManageCards> JCBManageCards(JCBCustomerCards entity, string editFlag)
         {
             var searchBody = new JCBCustomerCards();
 
@@ -877,6 +878,38 @@ namespace HPCL.Service.Services
             _httpContextAccessor.HttpContext.Session.SetString("CustomerIdSession", cusId);
 
             return searchRes;
+        }
+        public async Task<JCBUpdateMobileModal> JCBCardlessMapping(string cardNumber, string mobileNumber, string LimitTypeName, string CCMSReloadSaleLimitValue)
+        {
+            JCBUpdateMobileModal editMobBody = new JCBUpdateMobileModal();
+            editMobBody.CardNumber = cardNumber;
+            editMobBody.MobileNumber = mobileNumber;
+            editMobBody.LimitTypeName = LimitTypeName;
+            editMobBody.CCMSReloadSaleLimitValue = CCMSReloadSaleLimitValue;
+
+            _httpContextAccessor.HttpContext.Session.SetString("lmtType", editMobBody.LimitTypeName);
+            return editMobBody;
+        }
+
+        public async Task<List<SuccessResponse>> JCBCardlessMappingUpdate(string mobNoNew, string crdNo)
+        {
+            var cardDetailsBody = new JCBUpdateMobile
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                CardNo = crdNo,
+                MobileNo = mobNoNew,
+                ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
+            };
+            StringContent content = new StringContent(JsonConvert.SerializeObject(cardDetailsBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.UpdateMobileUrl);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+
+            var updateRes = obj["Data"].Value<JArray>();
+            List<SuccessResponse> updateResponse = updateRes.ToObject<List<SuccessResponse>>();
+            return updateResponse;
         }
 
     }

@@ -185,10 +185,24 @@
           var fromdate = $("#FromDate").val();
           var todate = $("#ToDate").val();
           var customerId = "", cardNo = "", mobileNo = "";
-
+          var flag="Y";
+          if (fromdate == "") {
+              $("#fromDate_error").attr("style", "display:block");
+              $("#fromDate_error").html("Select From Date");
+              flag = "N";
+          }
+          if (todate == "") {
+              $("#toDate_error").attr("style", "display:block");
+              $("#toDate_error").html("Select To Date");
+              flag = "N";
+          }
+          if (fromdate != "" && todate != "") {
+              flag = checkDates("fromDate_error","31");
+          }
+        
           if ($("#rbCardNo").is(":checked")) {
               cardNo = $("#CardNo").val();
-              if(cardNo.val().trim()=""){
+              if(cardNo.trim()==""){
                   $("#customerId_error").attr("style", "display:block");
                   $("#customerId_error").html("Please enter Card Number");
                   flag = "N";
@@ -207,7 +221,7 @@
           }
           else if ($("#rbMobileNo").is(":checked")) {
               mobileNo = $("#MobileNo").val();
-              if(mobileNo.val().trim()=""){
+              if(mobileNo.trim()==""){
                   $("#customerId_error").attr("style", "display:block");
                   $("#customerId_error").html("Please enter Mobile Number");
                   flag = "N";
@@ -227,7 +241,7 @@
           }
           else {
               customerId = $("#CustomerID").val();
-               if(customerId.val().trim()=""){
+               if(customerId.trim()==""){
                   $("#customerId_error").attr("style", "display:block");
                   $("#customerId_error").html("Please enter Customer ID");
                   flag = "N";
@@ -244,21 +258,7 @@
                     }
               }
           }
-          var flag = "Y";
-          if (fromdate == "") {
-              $("#fromDate_error").attr("style", "display:block");
-              $("#fromDate_error").html("Select From Date");
-              flag = "N";
-          }
-          if (todate == "") {
-              $("#toDate_error").attr("style", "display:block");
-              $("#toDate_error").html("Select To Date");
-              flag = "N";
-          }
-          if (fromdate != "" && todate != "") {
-              flag = checkDates("fromDate_error","31");
-          }
-        
+          
 
 
           if (flag == "N")
@@ -278,7 +278,12 @@
                             $('html, body').animate({
                                 scrollTop: $("#divtable").offset().top
                             }, 2000);
-                      
+                            $("#CardNo").attr("readonly",true);
+                            $("#CustomerID").attr("readonly",true);
+                            $("#MobileNo").attr("readonly",true);
+                            $("#FromDate").attr("disabled",true);
+                            $("#ToDate").attr("disabled",true);
+                            $(".rbTransactionType").attr("disabled",true);
                       }
 
                   },

@@ -14,6 +14,8 @@ namespace HPCL.Common.Models.RequestModel.ParentCustomer
 
         public string FromDate { get; set; }
         public string ToDate { get; set; }
+        public string CustomerId { get; set; }
+        public string TransactionId { get; set; }
         public List<ChildCustomerRequestDetails> ObjChildCustomerIdDtl { get; set; }
     }
     public class ChildCustomerRequestDetails

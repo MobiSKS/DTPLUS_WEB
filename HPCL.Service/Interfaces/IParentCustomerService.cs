@@ -47,5 +47,7 @@ namespace HPCL.Service.Interfaces
         Task<List<SuccessResponse>> UpdateAccountStatementRequest([FromBody] AccountStatementRequestModel reqEntity);
         Task<List<SuccessResponse>> InsertAccountStatementRequest([FromBody] AccountStatementRequestModel reqEntity);
         Task<ViewParentChildTransactionDetailsModel> GetParentChildTransactionDetails(ParentChildransactionRequestModel requestInfo);
+        Task<BasicSearchViewModel> CustomerBasicSearch(BasicSearchViewModel reqEntity);
+        Task<ViewParentChildTransactionDetailsModel> GetTransactionLocationDetails(PCTransactionLocationrequest requestInfo);
     }
 }

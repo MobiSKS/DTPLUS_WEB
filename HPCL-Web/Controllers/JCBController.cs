@@ -215,7 +215,7 @@ namespace HPCL_Web.Controllers
         [HttpPost]
         public async Task<JsonResult> JCBManageCards(JCBCustomerCards entity, string editFlag)
         {
-            var searchList = await _jcbService.ManageCards(entity, editFlag);
+            var searchList = await _jcbService.JCBManageCards(entity, editFlag);
             ModelState.Clear();
             return Json(new { searchList = searchList });
         }
@@ -230,6 +230,20 @@ namespace HPCL_Web.Controllers
             {
                 searchList = searchList
             });
+        }
+        public async Task<IActionResult> JCBCardlessMapping(string cardNumber, string mobileNumber, string LimitTypeName, string CCMSReloadSaleLimitValue)
+        {
+            var editMobBody = await _jcbService.JCBCardlessMapping(cardNumber, mobileNumber, LimitTypeName, CCMSReloadSaleLimitValue);
+            return View(editMobBody);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> JCBCardlessMappingUpdate(string mobNoNew, string crdNo)
+        {
+            var updateResponse = await _jcbService.JCBCardlessMappingUpdate(mobNoNew, crdNo);
+            ModelState.Clear();
+
+            return Json(new { updateResponse = updateResponse });
         }
 
     }
