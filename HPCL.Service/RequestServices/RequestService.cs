@@ -138,10 +138,10 @@ namespace HPCL.Service
         public async Task<string> RechargeRequestService(StringContent content, string requestUrl, string useriprecharge)
         {
             var access_token = GetTokenRec(useriprecharge);
-        //Start:
+
             using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
             {
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContextAccessor.HttpContext.Session.GetString("Token"));
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", access_token.Result);
 
                 using (var Response = await client.PostAsync(requestUrl, content))
                 {
@@ -151,18 +151,6 @@ namespace HPCL.Service
                         JObject respObj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
                         string respMessage = respObj["Message"].ToString();
 
-                        //if (respMessage != "Success")
-                        //{
-                        //    var access_tokenNew = GetTokenRec(useriprecharge);
-                        //    if (access_tokenNew.Result != null)
-                        //    {
-                        //        HttpContextAccessor.HttpContext.Session.SetString("Token", access_tokenNew.Result);
-                        //    }
-                        //    else
-                        //    {
-                        //        goto Start;
-                        //    }
-                        //}
                         return ResponseContent;
                     }
                     else
@@ -179,14 +167,11 @@ namespace HPCL.Service
             using (HttpClient _customclient = new HelperAPI().GetApiBaseUrlString())
             {
                 var forms = new Dictionary<string, string>
-               {
+                {
                    {"useragent", CommonBase.useragent},
                    {"userip", useriprecharge},
                    {"userid", "demo"},
-               };
-
-                //_customclient.DefaultRequestHeaders.Add("Secret_Key", Common.Secret_Key);
-                //_customclient.DefaultRequestHeaders.Add("API_Key", Common.Api_Key);
+                };
 
                 StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
 
