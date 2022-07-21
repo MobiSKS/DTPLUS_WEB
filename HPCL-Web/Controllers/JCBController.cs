@@ -215,7 +215,7 @@ namespace HPCL_Web.Controllers
         [HttpPost]
         public async Task<JsonResult> JCBManageCards(JCBCustomerCards entity, string editFlag)
         {
-            var searchList = await _jcbService.ManageCards(entity, editFlag);
+            var searchList = await _jcbService.JCBManageCards(entity, editFlag);
             ModelState.Clear();
             return Json(new { searchList = searchList });
         }

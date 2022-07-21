@@ -792,7 +792,7 @@ namespace HPCL.Service.Services
             InsertResponse result = obj.ToObject<InsertResponse>();
             return result;
         }
-        public async Task<JCBSearchManageCards> ManageCards(JCBCustomerCards entity, string editFlag)
+        public async Task<JCBSearchManageCards> JCBManageCards(JCBCustomerCards entity, string editFlag)
         {
             var searchBody = new JCBCustomerCards();
 
