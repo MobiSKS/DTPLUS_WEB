@@ -59,7 +59,7 @@ namespace HPCL.Common.Helper
         //       {
         //           {"useragent", CommonBase.useragent},
         //           {"userip", _httpContextAccessor.HttpContext.Session.GetString("IpAddress")},
-        //           {"userid", CommonBase.userid},
+        //           {"userid", _httpContextAccessor.HttpContext.Session.GetString("UserId")},
         //       };
 
         //        //_customclient.DefaultRequestHeaders.Add("Secret_Key", Common.Secret_Key);
