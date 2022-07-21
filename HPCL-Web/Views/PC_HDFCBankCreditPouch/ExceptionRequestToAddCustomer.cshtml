@@ -13,7 +13,7 @@
             <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
                 <div class="border-1 rounded border-grey">
                     <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Exception Request to Add Customer for HDFC Bank Credit Pouch</p>
-                    <form id="formVal" method="post" data-ajax="true" asp-controller="HDFCBankCreditPouch" asp-action="ExceptionRequestToAddCustomer" data-ajax-method="POST" data-ajax-success="OnSuccess" data-ajax-failure="OnFailure">
+                    <form id="formVal" method="post" data-ajax="true" asp-controller="PC_HDFCBankCreditPouch" asp-action="ExceptionRequestToAddCustomer" data-ajax-method="POST" data-ajax-success="OnSuccess" data-ajax-failure="OnFailure">
                         <div class="col-lg-12 col-md-12 col-12 py-3">
                             <div id="EnrollSuccess" class="mb-3 text-center alert alert-success" style="display:none;"></div>
 
@@ -342,7 +342,12 @@
 
             if(res.searchList.data[0].status == 1){
                 document.getElementById("customerDetailsSection").style.display = "block";
-                document.getElementById("custEnrollUpdateSection").style.display = "block";
+
+                if(res.searchList.data[0].customerType == "Eligible"){
+                    document.getElementById("custEnrollUpdateSection").style.display = "none";
+                }else{
+                    document.getElementById("custEnrollUpdateSection").style.display = "block";
+                }
             }
 
             else if(res.searchList.data[0].status == 2){
@@ -405,7 +410,7 @@
         //$('select.disableSumo')[1].sumo.unload();
 
         $.ajax({
-            url: "@Url.Action("CheckPlan", "HDFCBankCreditPouch")",
+            url: "@Url.Action("CheckPlan", "PC_HDFCBankCreditPouch")",
             data: { amount: amountVal},
             type: "POST",
             dataType: "JSON",
@@ -506,7 +511,7 @@
             PlanTypeId:PlanTypeId,
             ReferenceNo:ReferenceNo,
             MoComment:MoComment,
-            RequestedBy:'@Context.Session.GetString("UserName")'
+            RequestedBy:'@Context.Session.GetString("UserId")'
         });
 
         if (flag == "N")
@@ -517,7 +522,7 @@
                 console.log('ok');
 
                   $.ajax({
-                    url: "@Url.Action("EnrollExceptionRequest", "HDFCBankCreditPouch")",
+                    url: "@Url.Action("EnrollExceptionRequest", "PC_HDFCBankCreditPouch")",
                     data: { enrollList: JSON.stringify(enrollArray)},
                     type: "POST",
                     dataType: "JSON",
