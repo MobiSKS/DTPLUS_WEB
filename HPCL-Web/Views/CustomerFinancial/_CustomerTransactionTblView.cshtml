@@ -107,6 +107,35 @@
             }
         });
     });
+     //function tableToCSV() {
+
+     //       // Variable to store the final csv data
+     //       var csv_data = [];
+     //       var csvrow = [];
+     //           csvrow.push("Transaction Type","Transaction Date", "Account Number", "Token Number","Transaction Amount","Balance");
+     //           csv_data.push(csvrow.join(","));
+     //       // Get each row data
+     //       //var rows = document.getElementsByTagName('tr');
+     //       var tableName = $('#creditSaleDetailsTbl').DataTable();
+     //      tableName.rows().every(function(){
+     //                       var csvrow = [];
+
+     //                       csvrow.push(this.data()[0]);
+     //                       csvrow.push(this.data()[1]);
+     //                       csvrow.push(this.data()[2]);
+     //                       csvrow.push(this.data()[3]);
+     //                       csvrow.push(this.data()[4]);
+     //                       csvrow.push(this.data()[5]);
+
+     //                       csv_data.push(csvrow.join(","));
+     //                   });
+     //                   // Combine each row data with new line character
+     //                   csv_data = csv_data.join('\n');
+
+     //       // Call this function to download csv file
+     //       downloadCSVFile(csv_data);
+
+     //   }
     function tableToCSV() {
 
         // Variable to store the final csv data
@@ -140,29 +169,23 @@
                 csv_data.push(csvrow.join(","));
             //}
         });
-          $("#CustTransactionDetails tr").each(function () {
-            var row = $(this);
-            //debugger;
-            //for (var i = 0; i < rows.length; i++) {
-
-                // Get each column data
-                var cols = row[0].querySelectorAll('td,th');
-
-                // Stores each csv row data
+        csv_data.join('\n');
+        var csvrow = [];
+        csvrow.push("S.No.","Terminal ID","Merchant ID", "Retail Outlet Name", "Account Number","Vehicle No./Card Identifier","Txn Date","Txn Type","Product","Price","Volume(Ltr.)"
+        ,"Service Charge","Amount","Discount","Odometer Reading","Status");
+        var cols=csvrow.length;
+        csv_data.push(csvrow.join(","));
+        var tableName = $('#CustTransactionDetails').DataTable();
+            tableName.rows().every(function(){
                 var csvrow = [];
-                for (var j = 0; j < cols.length; j++) {
+                debugger;
+                 for (var j = 0; j < cols; j++) {
+                    if(j==1 ||j==2 ||j==4 ||j==6)
+                        csvrow.push("'"+this.data()[j]);
+                    else
+                        csvrow.push(this.data()[j]);
+                 }
 
-                    // Get the text data of each cell
-                    // of a row and push it to csvrow
-                    
-                        if(j==1 ||j==2 ||j==4 ||j==6)
-                            csvrow.push("'"+cols[j].innerHTML.toString());
-                        else
-                            csvrow.push(cols[j].innerHTML.toString());
-                    
-                }
-
-                // Combine each column value with comma
                 csv_data.push(csvrow.join(","));
             //}
         });

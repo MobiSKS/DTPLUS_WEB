@@ -334,5 +334,7 @@ namespace HPCL.Common.Models.ViewModel.ParentCustomer
         public string FormReceiptDate { get; set; }
         public string StatusName { get; set; }
         public string Id { get; set; }
+        public string RO { get; set; }
+        public string CustomerType { get; set; }
     }
 }

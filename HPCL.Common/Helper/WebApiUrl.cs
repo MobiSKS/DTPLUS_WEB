@@ -540,6 +540,9 @@
         public static string updateaccountstatmentrequeststatus = " api/dtplus/AccountStatement/update_account_statment_request_status";
         public static string getparenttransactionssummarydetails = "api/dtplus/ParentCustomer/get_parent_transactions_summary_details";
 
+        public static string getparentcustomerbasicsearch = "api/dtplus/ParentCustomer/get_parent_customer_basic_search";
+        public static string getparenttransactionlocationdetails = "api/dtplus/ParentCustomer/transaction_details";
+
 
         #endregion
 

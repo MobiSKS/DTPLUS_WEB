@@ -1,0 +1,245 @@
+﻿@model HPCL.Common.Models.ViewModel.ParentCustomer.ConvertParenttoAggregatorViewModel
+
+
+<div class="col-lg-12">
+    <div class="bg-white p-2 p-md-4">
+        <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
+            <li class="breadcrumb-item"><a href="@Url.Action("Profile","ParentCustomer")" class="text_primary">Profile</a> </li>
+            <li class="breadcrumb-item font-weight-light">Convert Parent Customer to Aggregator</li>
+        </ul>
+
+
+        <form name="applicationForm" method="post"  class="w-100">
+
+
+                    <div class="w-100">
+
+                        <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 py-2">
+                            <div class="border-1 rounded border-grey">
+                                <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Convert Parent Customer to Aggregator</p>
+                                <div class="col-lg-12 col-md-12 col-12 pt-3">
+                                    <div class="d-flex align-items-center flex-wrap">
+                                        <div class="col-lg-6 col-12">
+                                            <div class="form-group d-flex align-items-center flex-wrap">
+                                                <label class="font-weight-normal col-md-4 col-12 mb-0">Customer ID</label>
+                                                <div class="col-md-7 col-12">
+                                                    @Html.TextBoxFor(m => m.CustomerId, new { @id = "CustomerId", @class = "form-control", maxlength = "10" , onkeypress = "return isNumberKey(event)"})
+                                                    @Html.ValidationMessageFor(m => m.CustomerId, "", new {@id="custErrMsg", @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 col-12">
+                                            <div class="form-group d-flex align-items-center flex-wrap">
+                                                <label class="font-weight-normal col-md-4 col-12 mb-0">Name on Card</label>
+                                                <div class="col-md-7 col-12">
+                                                    @Html.TextBoxFor(m => m.NameOnCard, new {@id="nameOnCard", @class = "form-control", maxlength = "30" })
+                                                    @Html.ValidationMessageFor(m => m.NameOnCard, "", new {@id="NameOnCardErrMsg", @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                                <div class="clearfix"></div>
+                                <div class="d-flex align-items-center justify-content-center mb-3">
+                                    <div class="px-2">
+                                        <button class="btn btn_primary" type="button" id="btnSearch">SEARCH</button>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    @if (Model.Data.Count() > 0)
+                    {
+                        <div id="CustomerSearch">
+                            <table class="datatable table table-striped table-bordered d-md-table table-responsive" style="width:100%;word-wrap:break-word;">
+                                <thead>
+                                    <tr>
+                                        <th>S.No.</th>
+                                        <th>
+                                            @Html.DisplayName("Customer ID")
+                                        </th>
+                                        <th>
+                                            @Html.DisplayName("Name on Card")
+                                        </th>
+                                        <th>
+                                            @Html.DisplayName("Customer Name")
+                                        </th>
+                                        <th>
+                                            @Html.DisplayName("Form Number")
+                                        </th>
+                                        <th>
+                                            @Html.DisplayName("Form Receipt Date")
+                                        </th>
+                                        <th>
+                                            @Html.DisplayName("Status")
+                                        </th>
+                                        <th>
+                                            @Html.DisplayName("Card Details")
+                                        </th>
+                                        <th>
+                                            @Html.DisplayName("Dispatch Details")
+                                        </th>
+                                        <th>
+                                            @Html.DisplayName("Actions")
+                                        </th>
+                                        <th style="display:none">
+
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody id="searchTableBody">
+                                    @{
+                                        int i = 0;
+                                    }
+                                    @foreach (var item in Model.Data)
+                                    {
+                                        i = i + 1;
+                                        if (item.FormReceiptDate != null)
+                                        {
+                                            if (item.FormReceiptDate.IndexOf('/') != -1)
+                                            {
+                                                string[] subs = item.FormReceiptDate.Split(' ');
+                                                string[] date = subs[0].Split('/');
+                                                item.FormReceiptDate = date[1] + "-" + date[0] + "-" + date[2];
+                                            }
+                                        }
+                                        <tr>
+                                            <td>@i</td>
+                                            <td>
+                                                <a asp-action="UpdateParentCustomer" class="d-block" asp-route-CustomerId="@item.CustomerId" asp-route-RequestId=@item.Id
+                                           title=""><span>@item.CustomerId</span></a>
+                                            </td>
+
+                                            <td>@item.NameOnCard</td>
+                                            <td>@item.CustomerName</td>
+                                            <td>@item.FormNumber</td>
+                                            <td>@item.FormReceiptDate</td>
+                                            <td>@item.StatusName</td>
+                                            <td><a href='#show_TableCard' data-toggle='tooltip' tooltip="View Card Details" class='viewCardDetails' onclick='GetCardSearch(this," @item.CustomerId "," @item.Id")'><i class='fa fa-eye'></i></a></td>
+                                            <td><a href='#show_TableDispatch' data-toggle='tooltip' tooltip="View Dispatch Details" class='viewDispatchDetails' onclick='GetDispatchSearch(this," @item.CustomerId "," @item.Id")'><i class='fa fa-eye'></i></a></td>
+                                            <td>
+                                                <a asp-action="UpdateParentCustomer" class="d-block" asp-route-CustomerId="@item.CustomerId" asp-route-RequestId=@item.Id
+                                           data-toggle="tooltip" title="" tooltip="View/Edit Customer Details"><i class="fa fa-search view" aria-hidden="true"></i></a>
+                                            </td>
+                                            <td style="display:none">@item.Id</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        @if (Model.Message != null && Model.Message != "")
+                        {
+                            <div>
+                                <div class="alert alert-danger mt-3 text-center" id="noRecord">
+                                    @Model.Message
+                                </div>
+                            </div>
+                        }
+                    }
+                    <div class="clearfix"></div>
+
+
+
+
+        </form>
+
+
+    </div>
+</div>
+<script type="text/javascript">
+
+      $("#btnSearch").on("click",(function(e){
+            var custtId = $("#CustomerId").val();
+            var nameOnCard = $("#nameOnCard").val();
+            document.getElementById("show_TableCard").style.display = "none";
+            document.getElementById("show_TableDispatch").style.display = "none";
+            var flag = "Y";
+            if(custtId == "" && nameOnCard == "")
+            {
+                $("#NameOnCardErrMsg").attr("style", "display:block");
+                $("#NameOnCardErrMsg").html("Please enter either Customer ID or Name on card");
+                flag = "N";
+            }
+            if(custtId != "")
+            {
+                if (!custtId.match(mappedCustomerId))
+                {
+                    $("#custErrMsg").attr("style", "display:block");
+                    $("#custErrMsg").html("Invalid Customer ID");
+                    flag = "N";
+                }
+            }
+            if(nameOnCard!=""){
+                if (!nameOnCard.match(nameWithSpaceCheck))
+                {
+                    $("#NameOnCardErrMsg").html("Invalid Name on Card");
+                    flag = "N";
+                }
+            }
+
+
+            if (flag == "N")
+                e.preventDefault();
+            else{
+
+                $("#custErrMsg").html("");
+                $("#NameOnCardErrMsg").html("");
+                var url = '@Html.Raw(@Url.Action("ManageProfile", "ParentCustomer",new { CustomerId = "aa", NameOnCard = "mmzzzYz" }))';
+                url = url.replace("aa", encodeURIComponent(custtId)).replace("mmzzzYz", encodeURIComponent(nameOnCard));
+                window.location.href=url;
+            }
+
+       }));
+
+
+
+    $("#CustomerId").on("blur", function ()
+    {
+    //debugger;
+    if (document.getElementById("CustomerId").value.trim() != "")
+    {
+        if (!document.getElementById("CustomerId").value.match(mappedCustomerId))
+        {
+            document.getElementById("custErrMsg").innerHTML = "Invalid Customer ID";
+            return false;
+        }
+        else
+        {
+            document.getElementById("custErrMsg").innerHTML = "";
+        }
+    }
+        else
+        {
+            document.getElementById("custErrMsg").innerHTML = "";
+        }
+
+    });
+    $("#nameOnCard").on("blur", function ()
+    {
+    //debugger;
+    if (document.getElementById("nameOnCard").value.trim() != "")
+    {
+        if (!document.getElementById("nameOnCard").value.match(nameWithSpaceCheck))
+        {
+            document.getElementById("NameOnCardErrMsg").innerHTML = "Invalid Name on Card";
+            return false;
+        }
+        else
+        {
+            document.getElementById("NameOnCardErrMsg").innerHTML = "";
+        }
+    }
+        else
+        {
+            document.getElementById("NameOnCardErrMsg").innerHTML = "";
+        }
+
+    });
+</script>

@@ -1,0 +1,383 @@
+﻿@model HPCL.Common.Models.ViewModel.ParentCustomer.BasicSearchViewModel
+@using Microsoft.AspNetCore.Http;
+
+<div class="col-lg-12">
+    <div class="bg-white p-2 p-md-4">
+        <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
+            <li class="breadcrumb-item"><a href="@Url.Action("Search", "ParentCustomer")" class="text_primary">Search</a> </li>
+            <li class="breadcrumb-item font-weight-light">Basic Search</li>
+        </ul>
+        @*<div id="reason" class="mb-3 text-center displayNone alert"> </div>*@
+        <div id="reason" class="alert displayNone text-center"> </div>
+        @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "form1", @class = "tobehiddenonSuccess" }))
+        {
+            <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="basicInfo" role="tabpanel" aria-labelledby="basicInfo-tab">
+                    <div class="w-100">
+                        <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 py-2">
+                            <div class="border-1 rounded border-grey">
+                                <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Basic Search</p>
+                                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-md-2 pr-0 py-3">
+                                    <div class="d-flex align-items-center justify-content-start flex-wrap">
+                                        <div class="col-lg-6 col-12">
+                                            <div class="d-flex align-items-center flex-wrap">
+                                                <label class="col-md-4 col-12">&nbsp;</label>
+                                                <div class="col-md-7 col-12">
+                                                    <div class="custom_select">
+                                                        <input type="radio" id="rbCustomerID" name="Status" value="Customer ID" class="rbSearchType" checked>
+                                                        <span style="margin:0 10px">Customer ID</span>
+                                                        <input type="radio" id="rbMobileNo" name="Status" value="Mobile Number" class="rbSearchType">
+                                                        <span style="margin:0 10px">Mobile Number</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-center justify-content-start flex-wrap">
+                                        <div class="col-lg-6 col-12 ">
+                                            <div class="d-flex align-items-center flex-wrap mb-3">
+                                                <label class="font-weight-normal col-md-4 col-12">Customer ID</label>
+                                                <div class="col-md-7 col-12">
+                                                    @Html.TextBoxFor(m => m.CustomerId, new { @class = "form-control", maxlength = "10" , onkeypress = "return isNumberKey(event)"})
+                                                    
+                                                </div>
+                                                <span class="error" id="CustomerID_error"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 col-12 divmobile" style="display:none">
+                                            <div class="d-flex align-items-center flex-wrap mb-3">
+                                                <label class="font-weight-normal col-md-4 col-12">Mobile Number</label>
+                                                <div class="col-md-7 col-12">
+                                                    @Html.TextBoxFor(m => m.MobileNumber, new { @class = "form-control", maxlength = "10" , onkeypress = "return isNumberKey(event)"})
+                                                    <span class="error" id="mobile_error"></span>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 col-12">
+                                            <div class="d-flex align-items-center flex-wrap mb-3">
+                                                <label class="font-weight-normal col-md-4 col-12">Form Number</label>
+                                                <div class="col-md-7 col-12">
+                                                    @Html.TextBoxFor(m => m.FormNumber, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)" })
+                                                    <span class="error" id="formNumber_error"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 col-12">
+                                            <div class="d-flex align-items-center flex-wrap mb-3">
+                                                <label class="font-weight-normal col-md-4 col-12">Name on Card</label>
+                                                <div class="col-md-7 col-12">
+                                                    @Html.TextBoxFor(m => m.NameOnCard, new { @class = "form-control", maxlength = "30" })
+                                                    <span class="error" id="nameonCard_error"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 col-12">
+                                            <div class="d-flex align-items-center flex-wrap mb-3">
+                                                <label class="font-weight-normal col-md-4 col-12">Customer Name</label>
+                                                <div class="col-md-7 col-12">
+                                                    @Html.TextBoxFor(m => m.CustomerName, new { @class = "form-control", maxlength = "30" })
+                                                    <span class="error" id="customerName_error"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 col-12">
+                                            <div class="d-flex align-items-center flex-wrap mb-3">
+                                                <label class="font-weight-normal col-md-4 col-12">State</label>
+                                                <div class="col-md-7 col-12">
+                                                    @Html.DropDownListFor(m => m.StateId, new SelectList(Model.SearchStateMdl, "StateID", "StateName"), new { @class = "form-control" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 col-12">
+                                            <div class="d-flex align-items-center flex-wrap mb-3">
+                                                <label class="font-weight-normal col-md-4 col-12">City</label>
+                                                <div class="col-md-7 col-12">
+                                                    @Html.TextBoxFor(m => m.City, new { @class = "form-control", maxlength = "30" })
+                                                    <span class="error" id="CityName_error"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 col-12">
+                                            <div class="d-flex align-items-center flex-wrap mb-3">
+                                                <label class="font-weight-normal col-md-4 col-12">Sort Results By</label>
+                                                <div class="col-md-7 col-12">
+                                                    @Html.DropDownListFor(x => x.SortResult, new[]{
+                                                new SelectListItem(){ Text = "Customer ID", Value = "CustomerID",Selected=true},
+                                                new SelectListItem(){ Text = "Name on Card", Value = "NameonCard"},
+                                                new SelectListItem(){ Text = "Status", Value = "Status"},
+                                                }, null, new { @class = "form-control" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12 d-flex align-items-center justify-content-center">
+                                        <div class="px-2">
+                                            <button class="btn btn_primary" type="submit" id="btnSearch">Search</button>
+                                        </div>
+                                        <div class="px-2">
+                                            <button class="btn btn_primary" type="button" onclick="location.href='@Url.Action("CustomerBasicSearch", "ParentCustomer", new { reset="Y" })'">Reset</button>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    @if (ViewBag.reset != "Y")
+                    {
+                        @if (Model.Data.Count() > 0)
+                        {
+                            <div id="CustomerSearch">
+                                <table class="datatable table table-striped table-bordered d-md-table table-responsive" style="width:100%;word-wrap:break-word;">
+                                    <thead>
+                                        <tr>
+                                            <th>S.No.</th>
+                                            <th>
+                                                @Html.DisplayName("Customer ID")
+                                            </th>
+                                            <th>
+                                                @Html.DisplayName("Name on Card")
+                                            </th>
+                                            <th>
+                                                @Html.DisplayName("Customer Name")
+                                            </th>
+                                            <th>
+                                                @Html.DisplayName("Regional Office")
+                                            </th>
+                                            <th>
+                                                @Html.DisplayName("Form Number")
+                                            </th>
+                                            <th>
+                                                @Html.DisplayName("Form Receipt Date")
+                                            </th>
+                                            <th>
+                                                @Html.DisplayName("Status")
+                                            </th>
+                                            <th>
+                                                @Html.DisplayName("Customer Type")
+                                            </th>
+                                            <th>
+                                                @Html.DisplayName("Dispatch Details")
+                                            </th>
+                                            <th>
+                                                @Html.DisplayName("Actions")
+                                            </th>
+                                            <th style="display:none">
+
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="searchTableBody">
+                                        @{
+                                            int i = 0;
+                                        }
+                                        @foreach (var item in Model.Data.OrderBy(m => m.CustomerId))
+                                        {
+                                            i = i + 1;
+                                            if (item.FormReceiptDate != null)
+                                            {
+                                                if (item.FormReceiptDate.IndexOf('/') != -1)
+                                                {
+                                                    string[] subs = item.FormReceiptDate.Split(' ');
+                                                    string[] date = subs[0].Split('/');
+                                                    item.FormReceiptDate = date[1] + "-" + date[0] + "-" + date[2];
+                                                }
+                                            }
+                                            <tr>
+                                                <td>@i</td>
+                                                <td>
+                                                    @item.CustomerId
+                                                </td>
+
+                                                <td>@item.NameOnCard</td>
+                                                <td>@item.CustomerName</td>
+                                                <td>@item.RO</td>
+                                                <td>@item.FormNumber</td>
+                                                <td>@item.FormReceiptDate</td>
+                                                <td>@item.StatusName</td>
+                                                <td>@item.CustomerType</td>
+                                                <td><a href='#show_TableDispatch' data-toggle='tooltip' tooltip="View Dispatch Details" class='viewDispatchDetails' onclick='GetDispatchSearch(this," @item.CustomerId "," @item.Id")'><i class='fa fa-eye'></i></a></td>
+                                                <td>
+                                                    <div class="d-flex align-items-center justify-content-start">
+                                                        <a asp-action="ViewParentCustomerProfile" class="d-block" asp-route-CustomerId="@item.CustomerId" asp-route-RequestId=@item.Id
+                                           data-toggle="tooltip" title="" tooltip="View Customer Details"><i class="fa fa-search view" aria-hidden="true"></i></a>
+                                                        <a asp-action="UpdateParentCustomer" class="d-block" asp-route-CustomerId="@item.CustomerId" asp-route-RequestId=@item.Id
+                                           data-toggle="tooltip" title="" tooltip="Edit Customer Details"><i class="fa fa-pencil-square-o edit" aria-hidden="true"></i></a>
+                                                        @*<a href="#"
+                                                            data-toggle="tooltip" title="" tooltip="CRM Call Report"><i class="fa fa-search crmsearch" aria-hidden="true"></i></a>*@
+                                                    </div>
+
+
+                                                </td>
+                                                <td style="display:none">@item.Id</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
+                        else
+                        {
+                            @if (Model.Message != null && Model.Message != "")
+                            {
+                                <div>
+                                    <div class="alert alert-danger mt-3 text-center" id="noRecord">
+                                        @Model.Message
+                                    </div>
+                                </div>
+                            }
+                        }
+                    }
+                    <div class="clearfix"></div>
+                    <div id="show_TableDispatch" class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3 toBeHiddenOnSuccess">
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        }
+
+    </div>
+</div>
+<script type="text/javascript">
+      $(".rbSearchType").change(function () {
+
+         if ($("#rbCustomerID").is(":checked")) {
+             $(".divmobile").attr("style", "display:none");
+             $("#MobileNumber").val("");
+
+         }
+         if ($("#rbMobileNo").is(":checked")) {
+
+             $(".divmobile").attr("style", "display:block");
+
+         }
+         $("#CustomerID_error").attr("style", "display:none");
+         $("#CustomerID_error").html("");
+
+     });
+    $("#btnSearch").on("click",(function(e){
+        var custtId = $("#CustomerId").val().trim();
+        var formNumber = $("#FormNumber").val().trim();
+        var customerName = $("#CustomerName").val().trim();
+        var stateId = $("#StateId").val();
+        var cityName = $("#City").val().trim();
+        var nameOnCard = $("#NameOnCard").val().trim();
+        var mobileNo = $("#MobileNumber").val().trim();
+        document.getElementById("show_TableDispatch").style.display = "none";
+        var flag = "Y";
+        if ($("#rbMobileNo").is(":checked")) {
+            if(custtId == "" && formNumber=="" &&customerName=="" && nameOnCard == "" && mobileNo=="")
+            {
+                $("#CustomerID_error").attr("style", "display:block");
+                $("#CustomerID_error").html("Please enter either Customer ID, Form Number,Name on Card,Customer Name or Mobile No.");
+                flag = "N";
+            }
+        }
+        else{
+            if(custtId == "" && formNumber=="" &&customerName=="" && nameOnCard == "" )
+            {
+                $("#CustomerID_error").attr("style", "display:block");
+                $("#CustomerID_error").html("Please enter either Customer ID, Form Number,Name on Card or Customer Name");
+                flag = "N";
+            }
+        }
+        if(custtId != "")
+        {
+            if (!custtId.match(mappedCustomerId))
+            {
+                $("#v").attr("style", "display:block");
+                $("#CustomerID_error").html("Invalid Customer ID");
+                flag = "N";
+            }
+        }
+
+        if(formNumber!="") {
+
+            if (formNumber.substring(0, 1) == "0") {
+                document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Min-Max 10 digits";
+                flag = "N";
+            }
+            else
+            {
+                if (formNumber.length < 10)
+                {
+                    document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Min-Max 10 digits";
+                    flag = "N";
+                }
+                else
+                {
+                    if (!(formNumber.match(number))) {
+                        document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Min-Max 10 digits";
+                        flag = "N";
+                    }
+
+                }
+            }
+        }
+        if(customerName!=""){
+            if (!customerName.match(nameWithSpaceCheck))
+            {
+                $("#customerName_error").html("Invalid Customer Name");
+                flag = "N";
+            }
+        }
+        if(nameOnCard!=""){
+            if (!nameOnCard.match(nameWithSpaceCheck))
+            {
+                $("#nameonCard_error").html("Invalid Name on Card");
+                flag = "N";
+            }
+        }
+        if(mobileNo!=""){
+            if (!mobileNo.match(phone))
+            {
+                $("#mobile_error").html("Invalid Mobile No.");
+                flag = "N";
+            }
+        }
+        if (flag == "N")
+            e.preventDefault();
+        //else{
+
+        //    $("#custErrMsg").html("");
+        //    $("#NameOnCardErrMsg").html("");
+        //    var url = '@Html.Raw(@Url.Action("ManageProfile", "ParentCustomer",new { CustomerId = "aa", NameOnCard = "mmzzzYz" }))';
+        //    url = url.replace("aa", encodeURIComponent(custtId)).replace("mmzzzYz", encodeURIComponent(nameOnCard));
+        //    window.location.href=url;
+        //}
+
+    }));
+    function GetDispatchSearch(o,customerId,Id)
+    {
+        $("#show_TableCard").html("");
+        $("#show_TableDispatch").html("");
+            $.ajax({
+            type: 'GET',  // http method
+            url: '@Url.Action("GetDispatchDetails", "ParentCustomer")',
+            contentType: "application/json; charset=utf-8",
+            dataType: 'text',
+            data: { CustomerId: customerId,RequestId:Id},
+            success: function (data, status, xhr) {
+                var v = data;
+                if (status == 'success') {
+                    $("#show_TableDispatch").html(data);
+                    $('html, body').animate({
+                        scrollTop: $("#show_TableDispatch").offset().top
+                    }, 2000);
+                }
+                else {
+                    console.log(v);
+                }
+            },
+            error: function (jqXhr, textStatus, errorMessage) {
+                alert("Error"+ errorMessage);
+            }
+        });
+
+    }
+</script>
