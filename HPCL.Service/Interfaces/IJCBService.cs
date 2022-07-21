@@ -39,5 +39,6 @@ namespace HPCL.Service.Interfaces
         Task<JCBSearchDetailsByCardId> JCBViewCardDetails(string CardId);
         Task<JCBUpdateMobileModal> JCBCardlessMapping(string cardNumber, string mobileNumber, string LimitTypeName, string CCMSReloadSaleLimitValue);
         Task<List<SuccessResponse>> JCBCardlessMappingUpdate(string mobNoNew, string crdNo);
+        Task<JCBViewCardSearch> SearchCardMapping(JCBViewCardDetails viewCardDetails);
     }
 }

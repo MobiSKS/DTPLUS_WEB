@@ -911,6 +911,45 @@ namespace HPCL.Service.Services
             List<SuccessResponse> updateResponse = updateRes.ToObject<List<SuccessResponse>>();
             return updateResponse;
         }
+        public async Task<JCBViewCardSearch> SearchCardMapping(JCBViewCardDetails viewCardDetails)
+        {
+            var searchBody = new JCBViewCardDetails();
+            JCBViewCardSearch viewCardSearch = new JCBViewCardSearch();
+            if (viewCardDetails.Customerid != null)
+            {
+                searchBody = new JCBViewCardDetails
+                {
+                    UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                    UserAgent = CommonBase.useragent,
+                    UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                    Customerid = viewCardDetails.Customerid,
+                    Cardno = viewCardDetails.CardNo,
+                    Vehiclenumber = viewCardDetails.VechileNo,
+                    Mobileno = viewCardDetails.MobileNo
+
+                };
+            }
+            else if (_httpContextAccessor.HttpContext.Session.GetString("LoginType") == "Customer")
+            {
+                searchBody = new JCBViewCardDetails
+                {
+                    UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                    UserAgent = CommonBase.useragent,
+                    UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                    Customerid = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                    Cardno = viewCardDetails.CardNo,
+                    Vehiclenumber = viewCardDetails.VechileNo,
+                    Mobileno = viewCardDetails.MobileNo
+                };
+            }
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.SearchCardMappingUrl);
+
+
+            viewCardSearch = JsonConvert.DeserializeObject<JCBViewCardSearch>(response);
+            return viewCardSearch;
+        }
 
     }
 }
