@@ -26,5 +26,6 @@ namespace HPCL.Common.Models.ViewModel.JCB
         public string Mobileno { get; set; }
         public string Vehiclenumber { get; set; }
         public string VechileNo { get; set; }
+        public bool IsNewMapping { get; set; }
     }
 }
