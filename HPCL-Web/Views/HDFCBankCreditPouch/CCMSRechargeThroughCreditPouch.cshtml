@@ -147,26 +147,32 @@
 
                         if(res.checkList.success == true){
 
-                            $.ajax({
-                                type: 'POST',  // http method
-                                url: '@Url.Action("CCMSRechargeThroughCreditPouch", "HDFCBankCreditPouch")',
-                                data: { customerId: customerId, amount: amount },  // data to submit
-                                success: function (res) {
+                            if(res.checkList.data[0].status == 1){
+                                $.ajax({
+                                    type: 'POST',  // http method
+                                    url: '@Url.Action("CCMSRechargeThroughCreditPouch", "HDFCBankCreditPouch")',
+                                    data: { customerId: customerId, amount: amount },  // data to submit
+                                    success: function (res) {
 
-                                    var ress = JSON.stringify(res.searchList.data);
-                                    var url = '@Html.Raw(@Url.Action("HdfcRedirectToPaymentGateway", new { inputTxtValues = "dd" }))';
-                                    url = url.replace("dd", encodeURIComponent(ress));
-                                    window.location.href = url;
+                                        var ress = JSON.stringify(res.searchList.data);
+                                        var url = '@Html.Raw(@Url.Action("HdfcRedirectToPaymentGateway", new { inputTxtValues = "dd" }))';
+                                        url = url.replace("dd", encodeURIComponent(ress));
+                                        window.location.href = url;
 
-                                },
-                                error: function (jqXhr, textStatus, errorMessage) {
-                                    console.log("Error");
-                                }
-                            });
+                                    },
+                                    error: function (jqXhr, textStatus, errorMessage) {
+                                        console.log("Error");
+                                    }
+                                });
+                            }else{
+                                $("#noRecord").html("");
+                                $("#noRecord").append("<span>" + res.checkList.data[0].reason + "</span>");
+                                document.getElementById("noRecord").style.display = "block";
+                            }
 
                         }else{
                             $("#noRecord").html("");
-                            $("#noRecord").append("<span>" + res.checkList.data[0].reason + "</span>");
+                            $("#noRecord").append("<span>" + res.checkList.message + "</span>");
                             document.getElementById("noRecord").style.display = "block";
                         }
 
