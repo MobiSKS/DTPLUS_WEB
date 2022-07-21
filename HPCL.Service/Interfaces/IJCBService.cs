@@ -34,5 +34,7 @@ namespace HPCL.Service.Interfaces
         Task<List<SearchGridResponse>> CardDetailsForSearch(string CustomerId, string CustomerTypeId);
         Task<GetJCBCommunicationEmailResetPasswordResponse> GetJCBCommunicationEmailResetPassword(string CustomerId);
         Task<InsertResponse> UpdateJCBCommunicationEmailResetPassword(string CustomerId, string AlternateEmailId);
+        Task<JCBSearchManageCards> ManageCards(JCBCustomerCards entity, string editFlag);
+        Task<JCBSearchDetailsByCardId> JCBViewCardDetails(string CardId);
     }
 }
