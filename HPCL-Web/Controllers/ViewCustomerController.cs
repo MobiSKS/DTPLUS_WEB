@@ -14,95 +14,102 @@ namespace HPCL_Web.Controllers
     [TypeFilter(typeof(SessionExpireActionFilter))]
     public class ViewCustomerController : Controller
     {
-        //public async Task<IActionResult> ViewCustomerSearch()
-        //{
-        //    ViewCustomerSearch ObjViewCustomer = new ViewCustomerSearch();
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        //    var searchBody = new ViewCustomerSearch
-        //    {
-        //        UserId = CommonBase.userid,
-        //        UserAgent = CommonBase.useragent,
-        //        UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
-        //        CustomerID = "",
-        //        CustomerReferenceNo = 0,
-        //        FormNumber = 0,
-        //        FromDate = "",
-        //        StatusId = 0,
-        //        ToDate = "",
-        //    };
+        public ViewCustomerController(IHttpContextAccessor httpContextAccessor)
+        {
+            _httpContextAccessor = httpContextAccessor;
+        }
 
-        //    using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
-        //    {
-        //        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+        public async Task<IActionResult> ViewCustomerSearch()
+        {
+            ViewCustomerSearch ObjViewCustomer = new ViewCustomerSearch();
 
-        //        StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+            var searchBody = new ViewCustomerSearch
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                CustomerID = "",
+                CustomerReferenceNo = 0,
+                FormNumber = 0,
+                FromDate = "",
+                StatusId = 0,
+                ToDate = "",
+            };
 
-        //        using (var Response = await client.PostAsync(WebApiUrl.Viewonlineformstatus, content))
-        //        {
-        //            if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-        //            {
-        //                var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
+            {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
 
-        //                JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-        //                var jarr = obj["Data"].Value<JArray>();
-        //                List<CustomerViewModalOutput> searchList = jarr.ToObject<List<CustomerViewModalOutput>>();
-        //                ObjViewCustomer.CustomerViewModalOutputs.AddRange(searchList);
-        //                //return Json(new { searchList = searchList });
-        //            }
-        //            else
-        //            {
-        //                ModelState.Clear();
-        //                ModelState.AddModelError(string.Empty, "Error Loading Location Details");
-        //                //return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
-        //            }
-        //        }
-        //    }
-        //    return View(ObjViewCustomer);
-        //}
-        //[HttpPost]
-        //public async Task<JsonResult> ViewCustomerSearch(ViewCustomerSearch entity)
-        //{
+                StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
 
-        //    var searchBody = new ViewCustomerSearch
-        //    {
-        //        UserId = CommonBase.userid,
-        //        UserAgent = CommonBase.useragent,
-        //        UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
-        //        CustomerID = "",
-        //        CustomerReferenceNo=0,
-        //        FormNumber=0,
-        //        FromDate="",
-        //        StatusId=0,
-        //        ToDate="",
-        //    };
+                using (var Response = await client.PostAsync(WebApiUrl.Viewonlineformstatus, content))
+                {
+                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
 
-        //    using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
-        //    {
-        //        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var jarr = obj["Data"].Value<JArray>();
+                        List<CustomerViewModalOutput> searchList = jarr.ToObject<List<CustomerViewModalOutput>>();
+                        ObjViewCustomer.CustomerViewModalOutputs.AddRange(searchList);
+                        //return Json(new { searchList = searchList });
+                    }
+                    else
+                    {
+                        ModelState.Clear();
+                        ModelState.AddModelError(string.Empty, "Error Loading Location Details");
+                        //return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
+                    }
+                }
+            }
+            return View(ObjViewCustomer);
+        }
+        [HttpPost]
+        public async Task<JsonResult> ViewCustomerSearch(ViewCustomerSearch entity)
+        {
 
-        //        StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+            var searchBody = new ViewCustomerSearch
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                CustomerID = "",
+                CustomerReferenceNo = 0,
+                FormNumber = 0,
+                FromDate = "",
+                StatusId = 0,
+                ToDate = "",
+            };
 
-        //        using (var Response = await client.PostAsync(WebApiUrl.Viewonlineformstatus, content))
-        //        {
-        //            if (Response.StatusCode == System.Net.HttpStatusCode.OK)
-        //            {
-        //                var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
+            {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("Token"));
 
-        //                JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
-        //                var jarr = obj["Data"].Value<JArray>();
-        //                List<CustomerViewModalOutput> searchList = jarr.ToObject<List<CustomerViewModalOutput>>();
-        //                ModelState.Clear();
-        //                return Json(new { searchList = searchList });
-        //            }
-        //            else
-        //            {
-        //                ModelState.Clear();
-        //                ModelState.AddModelError(string.Empty, "Error Loading Location Details");
-        //                return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
-        //            }
-        //        }
-        //    }
-        //}
-        
+                StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+
+                using (var Response = await client.PostAsync(WebApiUrl.Viewonlineformstatus, content))
+                {
+                    if (Response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        var ResponseContent = Response.Content.ReadAsStringAsync().Result;
+
+                        JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+                        var jarr = obj["Data"].Value<JArray>();
+                        List<CustomerViewModalOutput> searchList = jarr.ToObject<List<CustomerViewModalOutput>>();
+                        ModelState.Clear();
+                        return Json(new { searchList = searchList });
+                    }
+                    else
+                    {
+                        ModelState.Clear();
+                        ModelState.AddModelError(string.Empty, "Error Loading Location Details");
+                        return Json("Status Code: " + Response.StatusCode.ToString() + " Message: " + Response.RequestMessage);
+                    }
+                }
+            }
+        }
+
     }
 }

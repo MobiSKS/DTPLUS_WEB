@@ -468,7 +468,7 @@ namespace HPCL.Service.Services
         public async Task<DealerWiseDriverCardRequestModel> DealerDriverCardRequests(DealerWiseDriverCardRequestModel dealerWiseDriverCardRequestModel)
         {
             dealerWiseDriverCardRequestModel.UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress");
-            dealerWiseDriverCardRequestModel.UserId = CommonBase.userid;
+            dealerWiseDriverCardRequestModel.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
             dealerWiseDriverCardRequestModel.UserAgent = CommonBase.useragent;
             dealerWiseDriverCardRequestModel.CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId");
 
