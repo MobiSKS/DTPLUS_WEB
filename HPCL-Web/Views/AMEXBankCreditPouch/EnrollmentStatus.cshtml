@@ -32,8 +32,10 @@
                                     <div class="d-flex align-items-center flex-wrap mb-3">
                                         <label class="font-weight-normal col-md-4 col-12">Zonal Office</label>
                                         <div class="col-md-7 col-12">
-                                            <div class="custom_select">
+                                            <div class="custom_select" id="zonalAll">
                                                 @Html.DropDownListFor(m => m.ZO, new SelectList(Model.ZoneMdl, "ZonalOfficeID", "ZonalOfficeName"), new { @class = "form-control", onchange = "getRegionalOfc()" })
+                                            </div>
+                                            <div class="custom_select" id="zonalcust">
                                             </div>
                                         </div>
                                     </div>
@@ -42,8 +44,10 @@
                                     <div class="d-flex align-items-center flex-wrap mb-3">
                                         <label class="font-weight-normal offset-md-1 col-md-4 col-12">Regional Office</label>
                                         <div class="col-md-7 col-12">
-                                            <div class="custom_select">
+                                            <div class="custom_select" id="regionalAll">
                                                 @Html.DropDownListFor(m => m.RO, new SelectList(Model.RegionMdl, "RegionalOfficeID", "RegionalOfficeName"), new { @class = "form-control" })
+                                            </div>
+                                            <div class="custom_select" id="regionalCust">
                                             </div>
                                         </div>
                                     </div>
@@ -75,7 +79,7 @@
                                 </div>
                             </div>
 
-                              <div class="d-flex align-items-center flex-wrap">
+                            <div class="d-flex align-items-center flex-wrap">
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
                                         <label class="font-weight-normal col-md-4 col-12">Customer ID</label>
@@ -103,29 +107,29 @@
                     </div>
                     <div id="noRecord" class="mb-3 text-center alert alert-danger ml-3 mr-3" style="display:none;"></div>
 
-                        <div id="approvalRejectSection" style="display:none;">
-                            <div class="table-responsive mt-3">
-                                <table id="approvalHdfcList" class="datatable table table-striped d-block table-bordered table-responsive mt-3" style="width:100%;">
-                                    <thead>
-                                        <tr>
-                                            <th>S.No.</th>
-                                            <th>ZO</th>
-                                            <th>RO</th>
-                                            <th>Customer ID</th>
-                                            <th>Customer Name</th>
-                                            <th>Plan Name</th>
-                                            <th>Enrolled Date</th>
-                                            <th>Enrolled By</th>
-                                            <th>Approver Remark</th>
-                                            <th>Authorizer Remark</th>
-                                            <th>Status</th>
-                                            <th>Credit Limit assigned per Month (in Rs)</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                </table>
-                            </div>
+                    <div id="approvalRejectSection" style="display:none;">
+                        <div class="table-responsive mt-3">
+                            <table id="approvalHdfcList" class="datatable table table-striped d-block table-bordered table-responsive mt-3" style="width:100%;">
+                                <thead>
+                                    <tr>
+                                        <th>S.No.</th>
+                                        <th>ZO</th>
+                                        <th>RO</th>
+                                        <th>Customer ID</th>
+                                        <th>Customer Name</th>
+                                        <th>Plan Name</th>
+                                        <th>Enrolled Date</th>
+                                        <th>Enrolled By</th>
+                                        <th>Approver Remark</th>
+                                        <th>Authorizer Remark</th>
+                                        <th>Status</th>
+                                        <th>Credit Limit assigned per Month (in Rs)</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                            </table>
                         </div>
+                    </div>
                 </div>
             </div>
         </form>
@@ -169,312 +173,329 @@
 
 <script type="text/javascript">
 
-        function resetClick() {
-            window.location.reload();
-        }
-
-        $('.restrictPaste').on('paste', function (event) {
-            if (event.originalEvent.clipboardData.getData('Text').match(/[^\d]/)) {
-                event.preventDefault();
-            }
-        });
-
-        $(document).ready(function () {
-
-           var loginType = '@Context.Session.GetString("LoginType")';
-
-           if (loginType == "Customer") {
-                $("#sbutypeSection").removeClass("d-flex");
-                $("#zonalRegionalOfcSection").removeClass("d-flex");
-                $("#sbutypeSection").hide();
-                $("#zonalRegionalOfcSection").hide();
-                $("#CustomerDefaultVal").val('@Context.Session.GetString("UserId")');
-                $("#CustomerDefaultVal").attr("readonly",true);
-           }else{
-                $("#sbutypeSection").addClass("d-flex");
-                $("#zonalRegionalOfcSection").addClass("d-flex");
-                $("#CustomerDefaultVal").attr("readonly",false);
-                $("#sbutypeSection").show();
-                $("#zonalRegionalOfcSection").show();
-           }
-
-           function isNumberKey(evt) {
-                var charCode = (evt.which) ? evt.which : event.keyCode;
-                if (charCode != 46 && charCode > 31
-                    && (charCode < 48 || charCode > 57))
-                    return false;
-
-                return true;
+            function resetClick() {
+                window.location.reload();
             }
 
-            $('select').SumoSelect({
-                placeholder: '-Select-',
-                search: true,
-                searchText: 'Enter Text here.'
-            });
-
-        });
-
-    $("#SBUTypeId").change(function () {
-             var id = this.value;
-
-             $.ajax({
-                 type: 'POST',  // http method
-                 url: '@Url.Action("GetZonalOfficebySBUType", "Common")',
-                 data: { SBUTypeId: id },  // data to submit
-                 dataType: "json",
-                 success: function (data, status, xhr) {
-                     var v = data;
-                     if (status == 'success') {
-
-                         $("#ZO").html("");
-                         $('<option>',{
-                                         value: 0, text: "--All--"
-                                     }).html("--All--").appendTo("#ZO");
-                         $.each(data, function (i, data) { // bind the dropdown list using json result
-                                 
-                                 $('<option>',
-                                     {
-                                         value: data.zonalOfficeID,
-                                         text: data.zonalOfficeName
-                                     }).html(data.zonalOfficeName).appendTo("#ZO");
-
-                         });
-                         $("#ZO")[0].sumo.reload();
-                         $("#ZO").trigger("change");
-                     }
-                     else {
-                         console.log(v);
-                     }
-                 },
-                 error: function (jqXhr, textStatus, errorMessage) {
-                     alert("Error Populating Customer Zone");
-                 }
-             });
-         });
-
-    function getRegionalOfc() {
-        var id = $('#ZO :selected').val();
-        if(id>0){
-            $.ajax({
-                type: 'POST',  // http method
-                url: '@Url.Action("GetRegionalOfcDetails", "Common")',
-                data: { ZonalOfcID: id },  // data to submit
-                dataType: "json",
-                success: function (data, status, xhr) {
-                    var v = data;
-                    if (status == 'success') {
-                        $("#RO").html("");
-                        $.each(data, function (i, data) { // bind the dropdown list using json result
-                            if (i == 0) {
-                                $('<option>',
-                                    {
-                                        value: 0,
-                                        text: "-All-"
-                                    }).html("--All--").appendTo("#RO");
-                                $('<option>',
-                                    {
-                                        value: data.regionalOfficeID,
-                                        text: data.regionalOfficeName
-                                    }).html(data.regionalOfficeName).appendTo("#RO");
-                            }
-                            else {
-                                $('<option>',
-                                    {
-                                        value: data.regionalOfficeID,
-                                        text: data.regionalOfficeName
-                                    }).html(data.regionalOfficeName).appendTo("#RO");
-                            }
-
-                        });
-                        $("#RO")[0].sumo.reload();
-                    }
-                    else {
-                        console.log(v);
-                    }
-                },
-                error: function (jqXhr, textStatus, errorMessage) {
-                    alert("Error");
+            $('.restrictPaste').on('paste', function (event) {
+                if (event.originalEvent.clipboardData.getData('Text').match(/[^\d]/)) {
+                    event.preventDefault();
                 }
             });
-        }
-        else{
-             $("#RO").html('');
-            $("#RO")[0].sumo.reload();
-        }
-    };
 
-    $("#RO").change(function () {
-        var id = this.value;
-        $("#RO").val(id);
-    });
+            $(document).ready(function () {
 
+               var loginType = '@Context.Session.GetString("LoginType")';
 
-    function searchEnroll() {
+                if (loginType == "Customer") {
 
-        var fromdate = $("#FromDate").val();
-        var todate = $("#ToDate").val();
+                    $("#SBUTypeId").attr("disabled",true);
 
-        var flag = "Y";
-        ////if (fromdate == "") {
-        ////    $("#fromDate_error").attr("style", "display:block");
-        ////    $("#fromDate_error").html("Select From Date");
-        ////    flag = "N";
-        ////}
-        ////if (todate == "") {
-        ////    $("#toDate_error").attr("style", "display:block");
-        ////    $("#toDate_error").html("Select To Date");
-        ////    flag = "N";
-        ////}
-        if (fromdate != "" && todate != "") {
-            flag = checkDates("fromdate_error");
-        }
+                    $("#zonalAll").hide();
+                    $("#regionalAll").hide();
 
-        if (flag == "N")
-            e.preventDefault();
+                    $("#zonalcust").html('');
+                    $("#zonalcust").append("<select><option value='@Context.Session.GetString("CustomerZonalOfcId")'>@Context.Session.GetString("CustomerZonalOfcName")</option></select>");
 
-        if (flag == "Y") {
-            if ($("#formValid").valid()) {
+                    $("#regionalCust").html('');
+                    $("#regionalCust").append("<select><option value='@Context.Session.GetString("RegionalOfcId")'>@Context.Session.GetString("CustomerRegionalOfcName")</option></select>");
 
+                    $("#CustomerDefaultVal").val('@Context.Session.GetString("UserId")');
+                    $("#CustomerDefaultVal").attr("readonly",true);
+
+                    $("#ZO").attr("disabled",true);
+                    $("#RO").attr("disabled",true);
+
+                    $("#zonalcust").show();
+                    $("#regionalCust").show();
+                }else{
+                    $("#SBUTypeId").attr("disabled",true);
+                    $("#ZO").attr("disabled",false);
+                    $("#RO").attr("disabled",false);
+                    $("#CustomerDefaultVal").attr("readonly",false);
+                    $("#zonalcust").hide();
+                    $("#regionalCust").hide();
+                    $("#zonalAll").show();
+                    $("#regionalAll").show();
+                }
+
+               function isNumberKey(evt) {
+                    var charCode = (evt.which) ? evt.which : event.keyCode;
+                    if (charCode != 46 && charCode > 31
+                        && (charCode < 48 || charCode > 57))
+                        return false;
+
+                    return true;
+                }
+
+                $('select').SumoSelect({
+                    placeholder: '-Select-',
+                    search: true,
+                    searchText: 'Enter Text here.'
+                });
+
+            });
+
+        $("#SBUTypeId").change(function () {
+                 var id = this.value;
+
+                 $.ajax({
+                     type: 'POST',  // http method
+                     url: '@Url.Action("GetZonalOfficebySBUType", "Common")',
+                     data: { SBUTypeId: id },  // data to submit
+                     dataType: "json",
+                     success: function (data, status, xhr) {
+                         var v = data;
+                         if (status == 'success') {
+
+                             $("#ZO").html("");
+                             $('<option>',{
+                                             value: 0, text: "--All--"
+                                         }).html("--All--").appendTo("#ZO");
+                             $.each(data, function (i, data) { // bind the dropdown list using json result
+
+                                     $('<option>',
+                                         {
+                                             value: data.zonalOfficeID,
+                                             text: data.zonalOfficeName
+                                         }).html(data.zonalOfficeName).appendTo("#ZO");
+
+                             });
+                             $("#ZO")[0].sumo.reload();
+                             $("#ZO").trigger("change");
+                         }
+                         else {
+                             console.log(v);
+                         }
+                     },
+                     error: function (jqXhr, textStatus, errorMessage) {
+                         alert("Error Populating Customer Zone");
+                     }
+                 });
+             });
+
+        function getRegionalOfc() {
+            var id = $('#ZO :selected').val();
+            if(id>0){
                 $.ajax({
                     type: 'POST',  // http method
-                    url: '@Url.Action("EnrollmentStatus", "AMEXBankCreditPouch")',
-                    data: $('#formValid').serialize(),  // data to submit
-                    success: function (res, status, xhr) {
-
-                        console.log("res",res);
-
-                        if (res.searchList.success == true) {
-
-                            var girdList = res.searchList.data;
-
-                            document.getElementById("noRecord").style.display = "none";
-
-                            $('#approvalHdfcList').DataTable().clear().destroy();
-
-                            var tbl = $('#approvalHdfcList').DataTable({
-                                paging: true,
-                                searching: false,
-                                stateSave: true,
-                                "bDestroy": true,
-                                "lengthMenu": [10, 20, 50, 100, 200, 500, 1000, 2000],
-                                "autoWidth": false,
-                                "oLanguage": {
-                                    "sLengthMenu": "Display _MENU_ Records",
-                                    "info": "Showing _START_ to _END_ of _TOTAL_ Records",
+                    url: '@Url.Action("GetRegionalOfcDetails", "Common")',
+                    data: { ZonalOfcID: id },  // data to submit
+                    dataType: "json",
+                    success: function (data, status, xhr) {
+                        var v = data;
+                        if (status == 'success') {
+                            $("#RO").html("");
+                            $.each(data, function (i, data) { // bind the dropdown list using json result
+                                if (i == 0) {
+                                    $('<option>',
+                                        {
+                                            value: 0,
+                                            text: "-All-"
+                                        }).html("--All--").appendTo("#RO");
+                                    $('<option>',
+                                        {
+                                            value: data.regionalOfficeID,
+                                            text: data.regionalOfficeName
+                                        }).html(data.regionalOfficeName).appendTo("#RO");
                                 }
+                                else {
+                                    $('<option>',
+                                        {
+                                            value: data.regionalOfficeID,
+                                            text: data.regionalOfficeName
+                                        }).html(data.regionalOfficeName).appendTo("#RO");
+                                }
+
                             });
+                            $("#RO")[0].sumo.reload();
+                        }
+                        else {
+                            console.log(v);
+                        }
+                    },
+                    error: function (jqXhr, textStatus, errorMessage) {
+                        alert("Error");
+                    }
+                });
+            }
+            else{
+                 $("#RO").html('');
+                $("#RO")[0].sumo.reload();
+            }
+        };
 
-                            for (var i = 0; i < girdList.length; i++) {
+        $("#RO").change(function () {
+            var id = this.value;
+            $("#RO").val(id);
+        });
 
-                                var enDate;
 
-                                if(((girdList[i].enrolledDate) == "01-01-0001") || ((girdList[i].enrolledDate) == "01-01-1900") || ((girdList[i].enrolledDate) == null)){
-                                    enDate = "";
+        function searchEnroll() {
+
+            var fromdate = $("#FromDate").val();
+            var todate = $("#ToDate").val();
+
+            var flag = "Y";
+            ////if (fromdate == "") {
+            ////    $("#fromDate_error").attr("style", "display:block");
+            ////    $("#fromDate_error").html("Select From Date");
+            ////    flag = "N";
+            ////}
+            ////if (todate == "") {
+            ////    $("#toDate_error").attr("style", "display:block");
+            ////    $("#toDate_error").html("Select To Date");
+            ////    flag = "N";
+            ////}
+            if (fromdate != "" && todate != "") {
+                flag = checkDates("fromdate_error");
+            }
+
+            if (flag == "N")
+                e.preventDefault();
+
+            if (flag == "Y") {
+                if ($("#formValid").valid()) {
+
+                    $.ajax({
+                        type: 'POST',  // http method
+                        url: '@Url.Action("EnrollmentStatus", "AMEXBankCreditPouch")',
+                        data: $('#formValid').serialize(),  // data to submit
+                        success: function (res, status, xhr) {
+
+                            console.log("res",res);
+
+                            if (res.searchList.success == true) {
+
+                                var girdList = res.searchList.data;
+
+                                document.getElementById("noRecord").style.display = "none";
+
+                                $('#approvalHdfcList').DataTable().clear().destroy();
+
+                                var tbl = $('#approvalHdfcList').DataTable({
+                                    paging: true,
+                                    searching: false,
+                                    stateSave: true,
+                                    "bDestroy": true,
+                                    "lengthMenu": [10, 20, 50, 100, 200, 500, 1000, 2000],
+                                    "autoWidth": false,
+                                    "oLanguage": {
+                                        "sLengthMenu": "Display _MENU_ Records",
+                                        "info": "Showing _START_ to _END_ of _TOTAL_ Records",
+                                    }
+                                });
+
+                                for (var i = 0; i < girdList.length; i++) {
+
+                                    var enDate;
+
+                                    if(((girdList[i].enrolledDate) == "01-01-0001") || ((girdList[i].enrolledDate) == "01-01-1900") || ((girdList[i].enrolledDate) == null)){
+                                        enDate = "";
+                                    }else{
+                                        enDate = moment(girdList[i].enrolledDate, 'DD-MM-YYYY').format('DD-MM-YYYY');
+                                    }
+
+                                    var srNumber = (i + 1);
+                                    var zo = (girdList[i].zo || '');
+                                    var ro = (girdList[i].ro || '');
+                                    var customerId = "<span class='getCustId'>"+(girdList[i].customerId || '')+"</span>";
+                                    var customerName = (girdList[i].customerName || '');
+                                    var planName = (girdList[i].planName || '');
+                                    var enrolledDate = enDate;
+                                    var enrolledBy = (girdList[i].enrolledBy || '');
+                                    var approverRemark = (girdList[i].approverRemark == "--") ? approverRemark = "" : approverRemark = (girdList[i].approverRemark);
+                                    var authorizerRemark = (girdList[i].authorizerRemark == "--") ? authorizerRemark = "" : authorizerRemark = (girdList[i].authorizerRemark);
+                                    var status = (girdList[i].status || '');
+                                    var creditLimitAssigned = (girdList[i].creditLimitAssigned == 0) ? creditLimitAssigned = "" : creditLimitAssigned = (girdList[i].creditLimitAssigned.toFixed(2));
+                                    var view = "<a href='#' class='viewListReport'>View</a><span class='getReqId' style='display:none;'>"+(girdList[i].requestNo)+"</span>";
+
+                                    tbl.row.add([
+                                        srNumber,
+                                        zo,
+                                        ro,
+                                        customerId,
+                                        customerName,
+                                        planName,
+                                        enrolledDate,
+                                        enrolledBy,
+                                        approverRemark,
+                                        authorizerRemark,
+                                        status,
+                                        creditLimitAssigned,
+                                        view
+                                    ]).draw();
+                                }
+                                document.getElementById('approvalRejectSection').style.display = 'block';
+                            } else {
+                                document.getElementById("approvalRejectSection").style.display = "none";
+                                $("#noRecord").html("");
+                                $("#noRecord").append("<span>" + res.searchList.message + "</span>");
+                                document.getElementById("noRecord").style.display = "block";
+                            }
+
+                        },
+                        error: function (jqXhr, textStatus, errorMessage) {
+                            console.log("Error");
+                        }
+                    });
+                } else {
+                    return false;
+                }
+            }
+        }
+
+    $("#approvalHdfcList").on('click', '.viewListReport', function (e) {
+
+          document.getElementById("noRecord").style.display = "none";
+
+          var currentRow = $(this).closest("tr");
+
+          var customerId = currentRow.find('.getCustId').text();
+          var requestId = currentRow.find('.getReqId').text();
+
+            $.ajax({
+                type: 'POST',  // http method
+                url: '@Url.Action("GetEnrollStatusReport", "AMEXBankCreditPouch")',
+                data: {customerId: customerId, requestId: requestId },  // data to submit
+                success: function (res, status, xhr) {
+
+                        if(res.searchList.success == true){
+
+                            $("#reportList td").parent().remove();
+
+                            for (var i = 0; i < res.searchList.data.length; i++) {
+
+                                var modifiedDate;
+                                if(((res.searchList.data[i].modifiedDate) == "01-01-0001") || ((res.searchList.data[i].modifiedDate) == "01-01-1900") || ((res.searchList.data[i].modifiedDate) == null)){
+                                    modifiedDate = "";
                                 }else{
-                                    enDate = moment(girdList[i].enrolledDate, 'DD-MM-YYYY').format('DD-MM-YYYY');
+                                    modifiedDate = moment(res.searchList.data[i].modifiedDate, 'DD-MM-YYYY').format('DD-MM-YYYY');
                                 }
 
-                                var srNumber = (i + 1);
-                                var zo = (girdList[i].zo || '');
-                                var ro = (girdList[i].ro || '');
-                                var customerId = "<span class='getCustId'>"+(girdList[i].customerId || '')+"</span>";
-                                var customerName = (girdList[i].customerName || '');
-                                var planName = (girdList[i].planName || '');
-                                var enrolledDate = enDate;
-                                var enrolledBy = (girdList[i].enrolledBy || '');
-                                var approverRemark = (girdList[i].approverRemark == "--") ? approverRemark = "" : approverRemark = (girdList[i].approverRemark);
-                                var authorizerRemark = (girdList[i].authorizerRemark == "--") ? authorizerRemark = "" : authorizerRemark = (girdList[i].authorizerRemark);
-                                var status = (girdList[i].status || '');
-                                var creditLimitAssigned = (girdList[i].creditLimitAssigned == 0) ? creditLimitAssigned = "" : creditLimitAssigned = (girdList[i].creditLimitAssigned.toFixed(2));
-                                var view = "<a href='#' class='viewListReport'>View</a><span class='getReqId' style='display:none;'>"+(girdList[i].requestNo)+"</span>";
+                                var rows = "<tbody><tr>"
+                                    + "<td>"+(i+1)+"</td>"
+                                    + "<td>" + (res.searchList.data[i].customerId || '') + "</td>"
+                                    + "<td>" + (res.searchList.data[i].customerName || '') + "</td>"
+                                    + "<td>" + (res.searchList.data[i].planName || '') + "</td>"
+                                    + "<td>" + (modifiedDate) + "</td>"
+                                    + "<td>" + (res.searchList.data[i].modifiedBy || '') + "</td>"
+                                    + "<td>" + (res.searchList.data[i].status || '') + "</td>"
+                                    + "</tr ></tbody>";
 
-                                tbl.row.add([
-                                    srNumber,
-                                    zo,
-                                    ro,
-                                    customerId,
-                                    customerName,
-                                    planName,
-                                    enrolledDate,
-                                    enrolledBy,
-                                    approverRemark,
-                                    authorizerRemark,
-                                    status,
-                                    creditLimitAssigned,
-                                    view
-                                ]).draw();
+                                $('#reportList').append(rows);
                             }
-                            document.getElementById('approvalRejectSection').style.display = 'block';
-                        } else {
-                            document.getElementById("approvalRejectSection").style.display = "none";
+                            $("#viewHdfcEnrollReport").modal('show');
+                        }else{
+                            //document.getElementById("approvalRejectSection").style.display = "none";
                             $("#noRecord").html("");
                             $("#noRecord").append("<span>" + res.searchList.message + "</span>");
                             document.getElementById("noRecord").style.display = "block";
                         }
-
-                    },
-                    error: function (jqXhr, textStatus, errorMessage) {
-                        console.log("Error");
-                    }
-                });
-            } else {
-                return false;
-            }
-        }
-    }
-
-$("#approvalHdfcList").on('click', '.viewListReport', function (e) {
-    
-      document.getElementById("noRecord").style.display = "none";
-
-      var currentRow = $(this).closest("tr");
-
-      var customerId = currentRow.find('.getCustId').text();
-      var requestId = currentRow.find('.getReqId').text();
-
-        $.ajax({
-            type: 'POST',  // http method
-            url: '@Url.Action("GetEnrollStatusReport", "AMEXBankCreditPouch")',
-            data: {customerId: customerId, requestId: requestId },  // data to submit
-            success: function (res, status, xhr) {
-                
-                    if(res.searchList.success == true){
-
-                        $("#reportList td").parent().remove();
-
-                        for (var i = 0; i < res.searchList.data.length; i++) {
-
-                            var modifiedDate;
-                            if(((res.searchList.data[i].modifiedDate) == "01-01-0001") || ((res.searchList.data[i].modifiedDate) == "01-01-1900") || ((res.searchList.data[i].modifiedDate) == null)){
-                                modifiedDate = "";
-                            }else{
-                                modifiedDate = moment(res.searchList.data[i].modifiedDate, 'DD-MM-YYYY').format('DD-MM-YYYY');
-                            }
-
-                            var rows = "<tbody><tr>"
-                                + "<td>"+(i+1)+"</td>"
-                                + "<td>" + (res.searchList.data[i].customerId || '') + "</td>"
-                                + "<td>" + (res.searchList.data[i].customerName || '') + "</td>"
-                                + "<td>" + (res.searchList.data[i].planName || '') + "</td>"
-                                + "<td>" + (modifiedDate) + "</td>"
-                                + "<td>" + (res.searchList.data[i].modifiedBy || '') + "</td>"
-                                + "<td>" + (res.searchList.data[i].status || '') + "</td>"
-                                + "</tr ></tbody>";
-
-                            $('#reportList').append(rows);
-                        }
-                        $("#viewHdfcEnrollReport").modal('show');
-                    }else{
-                        //document.getElementById("approvalRejectSection").style.display = "none";
-                        $("#noRecord").html("");
-                        $("#noRecord").append("<span>" + res.searchList.message + "</span>");
-                        document.getElementById("noRecord").style.display = "block";
-                    }
-            },
-            error: function (jqXhr, textStatus, errorMessage) {
-                console.log("Error");
-            }
-        });
-  });
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+                    console.log("Error");
+                }
+            });
+      });
 </script>
