@@ -207,6 +207,30 @@ namespace HPCL_Web.Controllers
             var result = await _jcbService.UpdateJCBCommunicationEmailResetPassword(CustomerId, AlternateEmailId);
             return Json(new { result = result });
         }
+        public IActionResult JCBManageCards()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> JCBManageCards(JCBCustomerCards entity, string editFlag)
+        {
+            var searchList = await _jcbService.ManageCards(entity, editFlag);
+            ModelState.Clear();
+            return Json(new { searchList = searchList });
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> JCBViewCardDetails(string CardId)
+        {
+            var searchList = await _jcbService.JCBViewCardDetails(CardId);
+
+            ModelState.Clear();
+            return Json(new
+            {
+                searchList = searchList
+            });
+        }
 
     }
 }
