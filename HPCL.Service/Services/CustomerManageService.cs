@@ -374,7 +374,7 @@ namespace HPCL.Service.Services
 
             var searchBody = new Dictionary<string, string>
             {
-                { "UserId",CommonBase.userid },
+                { "UserId",_httpContextAccessor.HttpContext.Session.GetString("UserId") },
                 { "UserAgent", CommonBase.useragent},
                 { "UserIp",_httpContextAccessor.HttpContext.Session.GetString("IpAddress")},
                 { "CustomerId",CustomerId},

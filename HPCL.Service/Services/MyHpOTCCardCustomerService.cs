@@ -432,7 +432,7 @@ namespace HPCL.Service.Services
         public async Task<DealerWiseMyHPOTCCardRequestModel> DealerOTCCardRequests(DealerWiseMyHPOTCCardRequestModel dealerWiseMyHPOTCCardRequestModel)
         {
             dealerWiseMyHPOTCCardRequestModel.UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress");
-            dealerWiseMyHPOTCCardRequestModel.UserId = CommonBase.userid;
+            dealerWiseMyHPOTCCardRequestModel.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
             dealerWiseMyHPOTCCardRequestModel.UserAgent = CommonBase.useragent;
             dealerWiseMyHPOTCCardRequestModel.CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId");
 
