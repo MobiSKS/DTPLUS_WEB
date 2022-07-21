@@ -202,7 +202,7 @@
         public static string updateconfigureemailalert = "api/dtplus/configure/update_configure_email_alert";
         public static string getcommunicationemailresetpassword = "api/dtplus/customer/get_communication_email_reset_password";
         public static string updatecommunicationemailresetpassword = "api/dtplus/customer/update_communication_email_reset_password";
-
+        public static string getCustomerStatus = "api/dtplus/customer/get_customer_status";
 
         #endregion
 

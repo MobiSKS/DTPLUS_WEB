@@ -16,5 +16,6 @@ namespace HPCL.Service.Interfaces
         Task<AddAddOnCard> CustomerAddCardVehicleTbl(List<ObjCardDetail> objCardDetails);
         Task<AddAddOnCard> AddAddOnCards(AddAddOnCard addAddOnCard);
         Task<CustomerInserCardResponseData> CheckCardIdentifierAlreadyUsed(string cardIdentifier, string customerID);
+        Task<CustomerInserCardResponseData> GetCustomerStatus(string customerID);
     }
 }
