@@ -19,6 +19,11 @@ namespace HPCL.Service
         {
             HttpContextAccessor = HttpContextAccessors;
         }
+
+        public RequestService()
+        {
+        }
+
         public async Task<string> CommonRequestService(StringContent content, string requestUrl)
         {
             //Start:
@@ -185,6 +190,11 @@ namespace HPCL.Service
                 }
             }
             return _token.token;
+        }
+
+        public Task CommonRequestService(object regionInformationTableContent, string regionInformation)
+        {
+            throw new NotImplementedException();
         }
     }
 }

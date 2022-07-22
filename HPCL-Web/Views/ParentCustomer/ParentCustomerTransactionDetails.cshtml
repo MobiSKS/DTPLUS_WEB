@@ -183,20 +183,23 @@
     $("#btnView").click(function () {
         var parentCustomerID = document.getElementById("ParentCustomerID").value.trim();
         objCustomerIds=[];
-         $("#CustTransactionTbl tbody tr").each(function () {
-             //debugger;
+        var chkAllStatus= $("#checkAll")[0].checked;
+        if(chkAllStatus){
+            objCustomerIds.push("All");
+        }
+        else{
+             $("#CustTransactionTbl tbody tr").each(function () {
+                 //debugger;
 
-                 var row = $(this);
-                 if (row.find('input[type="checkbox"]').is(":checked")) {
+                     var row = $(this);
+                     if (row.find('input[type="checkbox"]').is(":checked")) {
 
-                 var customerId = row[0].cells[1].textContent;
-                 objCustomerIds.push(customerId);
+                     var customerId = row[0].cells[1].textContent;
+                     objCustomerIds.push(customerId);
 
-            }
-         });
-         debugger;
-         
-
+                }
+             });
+        }
         var url = '@Html.Raw(@Url.Action("ViewParentChildTransactionDetails", "ParentCustomer",new { ParentCustomerID = "zzXXyyZZZZZZZzz", ChildCustomerIds="MNO"}))';
         url = url.replace("zzXXyyZZZZZZZzz", encodeURIComponent(parentCustomerID)).replace("MNO",objCustomerIds);
         window.location.href=url;
