@@ -143,6 +143,13 @@ namespace HPCL_Web.Controllers
                 return Json("Failed to load Card Details");
             }
         }
+        [HttpPost]
+        public async Task<JsonResult> GetDICVSalesExeEmpId(string dealerCode)
+        {
+            var addonOTCCardMapping = await _dicvService.GetDICVSalesExeEmpId(dealerCode);
+
+            return Json(addonOTCCardMapping);
+        }
 
     }
 }
