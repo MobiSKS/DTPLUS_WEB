@@ -24,12 +24,12 @@ namespace HPCL.Common.Models.ViewModel.MyHpOTCCardCustomer
 
         public string NoOfUnallocatedCards { get; set; }
         
-        [Required(ErrorMessage = "Region Name is Required")]
+        //[Required(ErrorMessage = "Region Name is Required")]
         public int CustomerRegionID { get; set; }
         public string Remarks { get; set; }
         public int Internel_Status_Code { get; set; }
 
-        [Required(ErrorMessage = "Merchant ID is Required")]
+        //[Required(ErrorMessage = "Merchant ID is Required")]
         public string MerchantID { get; set; }
     }
 }
