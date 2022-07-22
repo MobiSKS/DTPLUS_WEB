@@ -16,6 +16,7 @@ using System.IO;
 using System;
 using HPCL.Common.Models.CommonEntity;
 using System.Linq;
+using System.Net;
 
 namespace HPCL_Web.Controllers
 {
@@ -318,6 +319,17 @@ namespace HPCL_Web.Controllers
                     HttpContext.Session.SetString("IpAddress", item.IpAddress);
                 }
                 return Json("Success");
+            }
+        }
+        [HttpPost]
+        public async Task<JsonResult> GetIpAddress()
+        {
+            using (WebClient client = new WebClient())
+            {
+                string jsonData = client.DownloadString("https://api.ipify.org/?format=json");
+                IpAddressResponseModel results = JsonConvert.DeserializeObject<IpAddressResponseModel>(jsonData);
+                string externalIp = results.ip;
+                return Json(externalIp);
             }
         }
 
