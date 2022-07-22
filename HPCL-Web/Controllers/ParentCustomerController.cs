@@ -267,7 +267,7 @@ namespace HPCL_Web.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<JsonResult> SubmitRestPinforParentCustomer([FromBody] ParentCustomerSearchRequestModel reqModel)
+        public async Task<JsonResult> SubmitRestPinforParentCustomer([FromBody] ControlCardPinRestRequestModel reqModel)
         {
             var modals = await _customerService.SubmitRestPinforParentCustomer(reqModel);
             return Json(modals);

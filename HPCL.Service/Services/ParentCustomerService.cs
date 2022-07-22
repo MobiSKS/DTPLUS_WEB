@@ -1211,7 +1211,7 @@ namespace HPCL.Service.Services
 
             return controlCardDetails;
         }
-        public async Task<List<SuccessResponse>> SubmitRestPinforParentCustomer([FromBody] ParentCustomerSearchRequestModel reqModel)
+        public async Task<List<SuccessResponse>> SubmitRestPinforParentCustomer([FromBody] ControlCardPinRestRequestModel reqModel)
         {
             var reqBody = new ParentCustomerSearchRequestModel
             {
@@ -1386,7 +1386,7 @@ namespace HPCL.Service.Services
         {
             BasicSearchViewModel searchResponse = new BasicSearchViewModel();
 
-            var Request = new ParentCustomerSearchRequestModel()
+            var Request = new BasicSearchRequestModel()
             {
                 UserAgent = CommonBase.useragent,
                 UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
