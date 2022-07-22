@@ -76,7 +76,7 @@
                     </div>
                      
                 </div>
-                <div id="delMessage" class="mb-3 text-center" style="background-color: #a0f1d6;"></div>
+                <div id="delMessage" class="alert alert-success alert-cust-success mb-3 text-center" style="display:none"></div>
             </div>
 
         </form>
@@ -333,17 +333,47 @@
                  success: function (res) {
                        if(res.data.length>0){
 
-                           $("#CardEdit td").parent().remove();
+                           //$("#CardEdit td").parent().remove();
+                            $('#CardEdit').DataTable().clear().destroy();
+                            //var tbl = $('#CardEdit').DataTable();
+                            var tbl = $('#CardEdit').DataTable({
+                                'columns' : [
+                                    null,
+                                    { className: "cardNo" },
+                                    null,
+                                    { className: "mobileNo" },
+                                    { className: "fastagNo" },
+                                    null
+                                ]
+                        });
+
                          var dataList=res.data;
                          for (var i = 0; i < dataList.length; i++) {
-                             var rows = "<tbody><tr>"
-                             + "<td><input type='checkbox' class='checkEnable' name='enableRow'><span class='field-validation-error text-danger '></span></td>"
-                             + "<td class='cardNo'>" + (dataList[i].cardNumber || '') + "<span class='field-validation-error text-danger '></span></td>"
-                             + "<td>" + (dataList[i].vechileNo || '') + "<span class='field-validation-error text-danger '></span></td>"
-                             + "<td class='mobileNo'><input class='form-control mobileNo' name='" + (dataList[i].mobileNumber || '') + "' type='text' value='" + (dataList[i].mobileNumber || '') + "' readonly='readonly', maxlength = '10', onkeypress = 'return isNumberKey(event)' ><span class='field-validation-error text-danger mobileerror ' id='mobile_error_"+i+"'></span></td>"
-                             + "<td class='fastagNo'><input class='form-control fastagNo' name='" + (dataList[i].fastagNo || '') + "' type='text' value='" + (dataList[i].fastagNo || '') + "' readonly='readonly', maxlength = '16' ><span class='field-validation-error text-danger fastagerror ' id='fasttag_error_"+i+"'></span></td>"
-                             + "<td><a href='#' class='delete'>Delete Mapping</a><span class='field-validation-error text-danger '></span></td></tbody></tr>"
-                              $("#CardEdit").append(rows);
+                             //var rows = "<tbody><tr>"
+                             //+ "<td><input type='checkbox' class='checkEnable' name='enableRow'><span class='field-validation-error text-danger '></span></td>"
+                             //+ "<td class='cardNo'>" + (dataList[i].cardNumber || '') + "<span class='field-validation-error text-danger '></span></td>"
+                             //+ "<td>" + (dataList[i].vechileNo || '') + "<span class='field-validation-error text-danger '></span></td>"
+                             //+ "<td class='mobileNo'><input class='form-control mobileNo' name='" + (dataList[i].mobileNumber || '') + "' type='text' value='" + (dataList[i].mobileNumber || '') + "' readonly='readonly', maxlength = '10', onkeypress = 'return isNumberKey(event)' ><span class='field-validation-error text-danger mobileerror ' id='mobile_error_"+i+"'></span></td>"
+                             //+ "<td class='fastagNo'><input class='form-control fastagNo' name='" + (dataList[i].fastagNo || '') + "' type='text' value='" + (dataList[i].fastagNo || '') + "' readonly='readonly', maxlength = '16' ><span class='field-validation-error text-danger fastagerror ' id='fasttag_error_"+i+"'></span></td>"
+                             //+ "<td><a href='#' class='delete'>Delete Mapping</a><span class='field-validation-error text-danger '></span></td></tbody></tr>"
+                             // $("#CardEdit").append(rows);
+
+                             var chkbox = "<input type='checkbox' class='checkEnable' name='enableRow'><span class='field-validation-error text-danger '></span>";
+                             var cardNo = "<span class='cardNo'>" + (dataList[i].cardNumber || '') + "<span class='field-validation-error text-danger '></span></span>";
+                             var vechileNo = (dataList[i].vechileNo || '') + "<span class='field-validation-error text-danger '></span>";
+                             var mobileNo = "<input class='form-control mobileNo' name='" + (dataList[i].mobileNumber || '') + "' type='text' value='" + (dataList[i].mobileNumber || '') + "' readonly='readonly', maxlength = '10', onkeypress = 'return isNumberKey(event)' ><span class='field-validation-error text-danger mobileerror ' id='mobile_error_"+i+"'></span>";
+                             var fastagNo = "<input class='form-control fastagNo' name='" + (dataList[i].fastagNo || '') + "' type='text' value='" + (dataList[i].fastagNo || '') + "' readonly='readonly', maxlength = '16' ><span class='field-validation-error text-danger fastagerror ' id='fasttag_error_"+i+"'></span>";
+                             var mappingDate ="<a href='#' class='delete'>Delete Mapping</a><span class='field-validation-error text-danger '></span>";
+
+                             tbl.row.add([
+                                 chkbox,
+                                 cardNo,
+                                 vechileNo,
+                                 mobileNo,
+                                 fastagNo,
+                                 mappingDate
+                             ]).draw();
+
                           }
                           $("#CardEditDiv").attr("style","display:block"); 
                           $("#message").attr("style","display:none");
@@ -429,7 +459,7 @@
                      }
                  }
                  else{
-                      $('#mobile_error_'+count).html("Please enter 10 digit Mobile Number");
+                      $('#mobile_error_'+count).html("Please enter Mobile Number");
                       $('#mobile_error_'+count).attr("style","display:block");
                       flag = "N";
 
@@ -552,7 +582,7 @@
                  }
                }
                 else{
-                      $('#mobile_error_'+count).html("Please enter 10 digit Mobile Number");
+                      $('#mobile_error_'+count).html("Please enter Mobile Number");
                      $('#mobile_error_'+count).attr("style","display:block");
 
                  }
@@ -628,7 +658,7 @@
                          $('#btnEdit').trigger('click');
                           setTimeout(function(){
                              $("#delMessage").html(res);
-                             $("#delMessage").attr("style","display:block;background-color: #a0f1d6;");
+                             $("#delMessage").attr("style","display:block;");
                              $("#message").attr("style","display:none");
                           },300);
                      },
