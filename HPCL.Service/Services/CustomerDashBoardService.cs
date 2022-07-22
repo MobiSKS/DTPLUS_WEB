@@ -60,7 +60,7 @@ namespace HPCL.Service.Services
 
             StringContent verifyYourDetailsTableContent = new StringContent(JsonConvert.SerializeObject(verifyYourDetailsForms), Encoding.UTF8, "application/json");
 
-            var verifyYourDetailsResponse = await _requestService.CommonRequestService(verifyYourDetailsTableContent, WebApiUrl.customerDashboardAccountSummary);
+            var verifyYourDetailsResponse = await _requestService.CommonRequestService(verifyYourDetailsTableContent, WebApiUrl.customerDashboardVerifyYourDetails);
 
             JObject verifyYourDetailsTableObj = JObject.Parse(JsonConvert.DeserializeObject(verifyYourDetailsResponse).ToString());
             var verifyYourDetailsTableJarr = verifyYourDetailsTableObj["Data"].Value<JArray>();
@@ -80,7 +80,7 @@ namespace HPCL.Service.Services
 
             StringContent reminderTableContent = new StringContent(JsonConvert.SerializeObject(reminderForms), Encoding.UTF8, "application/json");
 
-            var reminderResponse = await _requestService.CommonRequestService(reminderTableContent, WebApiUrl.customerDashboardAccountSummary);
+            var reminderResponse = await _requestService.CommonRequestService(reminderTableContent, WebApiUrl.customerDashboardReminder);
 
             JObject reminderTableObj = JObject.Parse(JsonConvert.DeserializeObject(reminderResponse).ToString());
             var reminderTableJarr = reminderTableObj["Data"].Value<JArray>();
@@ -89,17 +89,56 @@ namespace HPCL.Service.Services
             return reminderResponseModel;
         }
 
-        public async Task<KeyEventsResponseModel> KeyEvents(CustomerDashboardRequestModel customerDashboardRequestModel)
+        public async Task<List<KeyEventsResponseModel>> KeyEvents(string CustomerId)
         {
-            KeyEventsResponseModel keyEventsResponseModel = null;
-            return keyEventsResponseModel;
+            var KeyEventsForms = new CustomerDashboardRequestModel
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                CustomerID = CustomerId
+            };
+
+            StringContent KeyEventsTableContent = new StringContent(JsonConvert.SerializeObject(KeyEventsForms), Encoding.UTF8, "application/json");
+
+            var KeyEventsResponse = await _requestService.CommonRequestService(KeyEventsTableContent, WebApiUrl.customerDashboardKeyEvent);
+
+            JObject KeyEventsTableObj = JObject.Parse(JsonConvert.DeserializeObject(KeyEventsResponse).ToString());
+            var KeyEventsTableJarr = KeyEventsTableObj["Data"].Value<JArray>();
+            List<KeyEventsResponseModel> KeyEventsResponseModel = KeyEventsTableJarr.ToObject<List<KeyEventsResponseModel>>();
+
+            return KeyEventsResponseModel;
         }
 
-        public async Task<LastFiveTransactionsResponseModel> LastFiveTransactions(CustomerDashboardRequestModel customerDashboardRequestModel)
+        public async Task<List<LastFiveTransactionsResponseModel>> LastFiveTransactions(string CustomerId)
         {
-            LastFiveTransactionsResponseModel lastFiveTransactionsResponseModel = null;
-            return lastFiveTransactionsResponseModel;
+            var LastFiveTransactionsForms = new CustomerDashboardRequestModel
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                CustomerID = CustomerId
+            };
+
+            StringContent LastFiveTransactionsTableContent = new StringContent(JsonConvert.SerializeObject(LastFiveTransactionsForms), Encoding.UTF8, "application/json");
+
+            var LastFiveTransactionsResponse = await _requestService.CommonRequestService(LastFiveTransactionsTableContent, WebApiUrl.customerDashboardLastTransactions);
+
+            JObject LastFiveTransactionsTableObj = JObject.Parse(JsonConvert.DeserializeObject(LastFiveTransactionsResponse).ToString());
+            var LastFiveTransactionsTableJarr = LastFiveTransactionsTableObj["Data"].Value<JArray>();
+            List<LastFiveTransactionsResponseModel> LastFiveTransactionsResponseModel = LastFiveTransactionsTableJarr.ToObject<List<LastFiveTransactionsResponseModel>>();
+
+            return LastFiveTransactionsResponseModel;
         }
 
+        public Task<KeyEventsResponseModel> KeyEvents(CustomerDashboardRequestModel customerDashboardRequestModel)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<LastFiveTransactionsResponseModel> LastFiveTransactions(CustomerDashboardRequestModel customerDashboardRequestModel)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

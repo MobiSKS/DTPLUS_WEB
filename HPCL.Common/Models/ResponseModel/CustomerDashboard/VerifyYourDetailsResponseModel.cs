@@ -8,6 +8,7 @@ namespace HPCL.Common.Models.ResponseModel.CustomerDashboard
 {
     public class VerifyYourDetailsResponseModel
     {
-
+        public string RegisteredEmailAddress { get; set; }
+        public string RegisteredMobileNumber { get; set; }
     }
 }
