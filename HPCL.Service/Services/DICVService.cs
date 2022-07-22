@@ -10,6 +10,7 @@ using HPCL.Common.Models.ResponseModel.DICV;
 using HPCL.Common.Models.ViewModel.DICV;
 using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -275,6 +276,164 @@ namespace HPCL.Service.Services
             }
 
             return model;
+        }
+        public async Task<DICVCustomerEnrollmentModel> DICVCustomerEnrollment()
+        {
+            DICVCustomerEnrollmentModel model = new DICVCustomerEnrollmentModel();
+            model.Remarks = "";
+            model.ExternalPANAPIStatus = _configuration.GetSection("ExternalAPI:PANAPI").Value.ToString();
+            if (string.IsNullOrEmpty(model.ExternalPANAPIStatus))
+            {
+                model.ExternalPANAPIStatus = "Y";
+            }
+            model.CustomerStateMdl.AddRange(await _commonActionService.GetStateList());
+            model.VehicleTypeMdl.AddRange(await _commonActionService.GetVehicleTypeDropdown());
+            return model;
+        }
+        public async Task<DICVCustomerEnrollmentModel> DICVCustomerEnrollment(DICVCustomerEnrollmentModel customerModel)
+        {
+            customerModel.UserAgent = CommonBase.useragent;
+            customerModel.UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress");
+            customerModel.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
+            customerModel.CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId");
+            customerModel.CommunicationPhoneNo = (string.IsNullOrEmpty(customerModel.CommunicationDialCode) ? "" : customerModel.CommunicationDialCode) + "-" + (string.IsNullOrEmpty(customerModel.CommunicationPhonePart2) ? "" : customerModel.CommunicationPhonePart2);
+            if (!string.IsNullOrEmpty(customerModel.CommunicationEmailid))
+            {
+                customerModel.CommunicationEmailid = customerModel.CommunicationEmailid.ToLower();
+            }
+            foreach (DICVCardEntryDetails cardDetails in customerModel.ObjDICVCardEntryDetail)
+            {
+                if (!string.IsNullOrEmpty(cardDetails.VechileNo))
+                {
+                    cardDetails.VechileNo = cardDetails.VechileNo.ToUpper();
+                }
+                else
+                {
+                    cardDetails.VechileNo = "";
+                }
+                if (string.IsNullOrEmpty(cardDetails.MobileNo))
+                {
+                    cardDetails.MobileNo = "";
+                }
+            }
+
+            MultipartFormDataContent form = new MultipartFormDataContent();
+
+            form.Add(new StringContent(customerModel.CreatedBy), "CreatedBy");
+            form.Add(new StringContent(customerModel.IndividualOrgName), "IndividualOrgName");
+            form.Add(new StringContent(customerModel.IndividualOrgNameTitle), "IndividualOrgNameTitle");
+            form.Add(new StringContent(customerModel.NameOnCard), "NameOnCard");
+            form.Add(new StringContent(customerModel.CommunicationAddress1), "CommunicationAddress1");
+            form.Add(new StringContent(customerModel.CommunicationAddress2), "CommunicationAddress2");
+            form.Add(new StringContent(customerModel.CommunicationCityName), "CommunicationCityName");
+            form.Add(new StringContent(customerModel.CommunicationPincode), "CommunicationPincode");
+            form.Add(new StringContent(customerModel.CommunicationStateId.ToString()), "CommunicationStateId");
+            form.Add(new StringContent(customerModel.CommunicationDistrictId.ToString()), "CommunicationDistrictId");
+            form.Add(new StringContent(string.IsNullOrEmpty(customerModel.CommunicationPhoneNo) ? "" : customerModel.CommunicationPhoneNo), "CommunicationPhoneNo");
+            form.Add(new StringContent(string.IsNullOrEmpty(customerModel.CommunicationPhoneNo) ? "" : customerModel.CommunicationPhoneNo), "CommunicationFax");
+            form.Add(new StringContent(customerModel.CommunicationMobileNo), "CommunicationMobileNo");
+            form.Add(new StringContent(customerModel.CommunicationEmailid), "CommunicationEmailid");
+            form.Add(new StringContent("Y"), "CopyofDriverLicense");
+            form.Add(new StringContent("Y"), "CopyofVehicleRegistrationCertificate");
+            form.Add(new StringContent(customerModel.DealerCode), "DealerCode");
+            form.Add(new StringContent(string.IsNullOrEmpty(customerModel.SalesExecutiveEmployeeID) ? "" : customerModel.SalesExecutiveEmployeeID), "SalesExecutiveEmployeeID");
+            form.Add(new StreamContent(customerModel.AddressProof.OpenReadStream()), "AddressProof", customerModel.AddressProof.FileName);
+            form.Add(new StreamContent(customerModel.IDProof.OpenReadStream()), "IDProof", customerModel.IDProof.FileName);
+            form.Add(new StreamContent(customerModel.PanCardProof.OpenReadStream()), "PanCardProof", customerModel.PanCardProof.FileName);
+            form.Add(new StringContent(string.IsNullOrEmpty(customerModel.PanCardNumber) ? "" : customerModel.PanCardNumber), "PanCardNumber");
+
+            foreach (DICVCardEntryDetails item in customerModel.ObjDICVCardEntryDetail)
+            {
+                form.Add(new StringContent(item.VechileNo.ToString()), "VechileNo");
+                form.Add(new StringContent(item.CardNo.ToString()), "CardNo");
+                form.Add(new StringContent(item.MobileNo.ToString()), "MobileNo");
+                form.Add(new StringContent(item.VehicleType.ToString()), "VehicleType");
+                form.Add(new StringContent(item.VINNumber.ToString()), "VINNumber");
+                form.Add(new StreamContent(item.RCProof.OpenReadStream()), "RcCopyProof", item.RCProof.FileName);
+            }
+
+            form.Add(new StringContent(customerModel.UserId), "Userid");
+            form.Add(new StringContent(customerModel.UserAgent), "Useragent");
+            form.Add(new StringContent(customerModel.UserIp), "Userip");
+
+            var response = await _requestService.FormDataRequestService(form, WebApiUrl.insertDicvCustomer);
+
+            var settings = new JsonSerializerSettings
+            {
+                NullValueHandling = NullValueHandling.Ignore,
+                MissingMemberHandling = MissingMemberHandling.Ignore
+            };
+
+            CustomerResponse customerResponse = JsonConvert.DeserializeObject<CustomerResponse>(response);
+
+            customerModel.Internel_Status_Code = customerResponse.Internel_Status_Code;
+            customerModel.Remarks = customerResponse.Message;
+
+            foreach (DICVCardEntryDetails cardDetails in customerModel.ObjDICVCardEntryDetail)
+            {
+                cardDetails.VehicleNoMsg = "";
+                cardDetails.MobileNoMsg = "";
+                cardDetails.CardNoMsg = "";
+                cardDetails.VINNoMsg = "";
+            }
+            if (customerResponse.Internel_Status_Code != 1000)
+            {
+                if (customerResponse != null && customerResponse.Data != null && customerResponse.Data.Count > 0)
+                    customerModel.Remarks = customerResponse.Data[0].Reason;
+                else
+                    customerModel.Remarks = customerResponse.Message;
+                customerModel.CustomerStateMdl.AddRange(await _commonActionService.GetStateList());
+                customerModel.CommunicationDistrictMdl.AddRange(await _commonActionService.GetDistrictDetails(customerModel.CommunicationStateId));
+                customerModel.VehicleTypeMdl.AddRange(await _commonActionService.GetVehicleTypeDropdown());
+            }
+            else
+            {
+                if (customerResponse != null && customerResponse.Data != null && customerResponse.Data.Count > 0)
+                    customerModel.Remarks = customerResponse.Data[0].Reason;
+            }
+
+            return customerModel;
+        }
+        public async Task<DICVCustomerEnrollmentModel> GetDICVCustomerOTCCardPartialView([FromBody] List<DICVCardEntryDetails> arrs)
+        {
+            DICVCustomerEnrollmentModel addAddOnCard = new DICVCustomerEnrollmentModel();
+
+            if (!string.IsNullOrEmpty(arrs[0].Message))
+                addAddOnCard.Message = arrs[0].Message;
+            addAddOnCard.NoOfCards = arrs[0].NoOfCards;
+            addAddOnCard.DealerCode = arrs[0].DealerCode;
+
+            if (arrs != null && arrs.Count > 0 && ((!string.IsNullOrEmpty(arrs[0].CardNo))))
+                addAddOnCard.ObjDICVCardEntryDetail = arrs;
+
+            addAddOnCard.ExternalVehicleAPIStatus = _configuration.GetSection("ExternalAPI:VehicleAPI").Value.ToString();
+
+            if (string.IsNullOrEmpty(addAddOnCard.ExternalVehicleAPIStatus))
+            {
+                addAddOnCard.ExternalVehicleAPIStatus = "Y";
+            }
+
+            return addAddOnCard;
+        }
+        public async Task<List<DICVOTCCardDetails>> GetAvailableDICVOTCCardForDealer(string DealerCode)
+        {
+            var requestinfo = new VerifyDealerRequestModel()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                DealerCode = DealerCode
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(requestinfo), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getAvailityDicvOtcCard);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<DICVOTCCardDetails> searchList = jarr.ToObject<List<DICVOTCCardDetails>>();
+
+            return searchList;
         }
 
     }

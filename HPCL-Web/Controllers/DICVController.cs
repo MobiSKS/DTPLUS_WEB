@@ -1,8 +1,10 @@
 ﻿using HPCL.Common.Helper;
+using HPCL.Common.Models.ResponseModel.DICV;
 using HPCL.Common.Models.ViewModel.DICV;
 using HPCL.Common.Resources;
 using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace HPCL_Web.Controllers
@@ -98,6 +100,48 @@ namespace HPCL_Web.Controllers
         {
             ViewBag.Message = Message;
             return View();
+        }
+        public async Task<IActionResult> DICVCustomerEnrollment()
+        {
+            var modals = await _dicvService.DICVCustomerEnrollment();
+            return View(modals);
+        }
+        [HttpPost]
+        public async Task<IActionResult> DICVCustomerEnrollment(DICVCustomerEnrollmentModel customerModel)
+        {
+
+            customerModel = await _dicvService.DICVCustomerEnrollment(customerModel);
+
+            if (customerModel.Internel_Status_Code == 1000)
+            {
+                return RedirectToAction("SuccessRedirectDICVCustomerEnrollment", new { Message = customerModel.Remarks });
+            }
+
+            return View(customerModel);
+        }
+        public async Task<IActionResult> SuccessRedirectDICVCustomerEnrollment(string Message)
+        {
+            ViewBag.Message = Message;
+            return View();
+        }
+        public async Task<IActionResult> GetDICVCustomerOTCCardPartialView([FromBody] List<DICVCardEntryDetails> objCardDetails)
+        {
+            var modals = await _dicvService.GetDICVCustomerOTCCardPartialView(objCardDetails);
+            return PartialView("~/Views/DICV/_DICVCustomerOTCCardVehicleDetailsTbl.cshtml", modals);
+        }
+        [HttpPost]
+        public async Task<JsonResult> GetAvailableDICVOTCCardForDealer(string DealerCode)
+        {
+            List<DICVOTCCardDetails> lstCardDetails = await _dicvService.GetAvailableDICVOTCCardForDealer(DealerCode);
+
+            if (lstCardDetails != null)
+            {
+                return Json(new { lstCardDetails = lstCardDetails });
+            }
+            else
+            {
+                return Json("Failed to load Card Details");
+            }
         }
 
     }
