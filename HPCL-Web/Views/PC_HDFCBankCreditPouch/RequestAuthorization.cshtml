@@ -257,9 +257,9 @@
                                 var approvedBy = (girdList[i].approvedBy || '');
                                 var approveOn = appOn;
                                 var remarks = "<div style='width:160px;'><textarea onblur='remarksChange(this," + (i) + ")' disabled='disabled' class='form-control remarksVal' maxlength = '250'></textarea><i style='display:none;margin-top:10px;' class='fa fa-exclamation-triangle errs' id='remarks_error_"+i+"' aria-hidden='true'></i></div>";
-                                var creditLimit = "<div style='width:160px;'><input type='text' onblur='limitOnChage(this," + (i) + ")' disabled='disabled' maxlength='10' class='form-control cLimit' maxlength = '250' /><i style='display:none;margin-top:10px;' class='fa fa-exclamation-triangle errs' id='creditlimit_error_"+i+"' aria-hidden='true'></i></div>";
+                                var creditLimit = "<div style='width:160px;'><input type='text' id='creditlimit_id_"+i+"' onblur='limitOnChage(this," + (i) + ")' disabled='disabled' maxlength='10' class='form-control cLimit' maxlength = '250' /><i style='display:none;margin-top:10px;' class='fa fa-exclamation-triangle errs' id='creditlimit_error_"+i+"' aria-hidden='true'></i></div>";
                                 var status = (girdList[i].actionStatus || '');
-                                var action = "<select disabled='disabled' class='form-control actionVal'></select><span style='display:none;' class='reqId'>"+(res.searchList.data[i].requestNo)+"</span>";
+                                var action = "<select disabled='disabled' id='actionchange_id_"+i+"' onchange='actionChange(this," + (i) + ")' class='form-control actionVal'></select><span style='display:none;' class='reqId'>"+(res.searchList.data[i].requestNo)+"</span>";
 
                                 tbl.row.add([
                                    srNumber,
@@ -460,7 +460,7 @@
         }
     }
 
-     function limitOnChage(o, rowSelected){
+    function limitOnChage(o, rowSelected){
 
        var creditLimit = o.value;
        
@@ -468,15 +468,30 @@
             document.getElementById('creditlimit_error_'+rowSelected).title="Please enter Credit Limit.";
             document.getElementById('creditlimit_error_'+rowSelected).style.display = "block";
             return false;
-       }else if(creditLimit.trim() == 0){
-            document.getElementById('creditlimit_error_'+rowSelected).title="Invalid Credit Limit";
-            document.getElementById('creditlimit_error_'+rowSelected).style.display = "block";
-            return false;
-       }else{   
-           document.getElementById('creditlimit_error_'+rowSelected).title="";
-           document.getElementById('creditlimit_error_'+rowSelected).style.display = "none";
        }
        
+       if($('#actionchange_id_'+rowSelected).val() == "6" || $('#actionchange_id_'+rowSelected).val() == "7"){
+           if(creditLimit.trim() == 0){
+                document.getElementById('creditlimit_error_'+rowSelected).title="Invalid Credit Limit";
+                document.getElementById('creditlimit_error_'+rowSelected).style.display = "block";
+                return false;
+           }else{   
+               document.getElementById('creditlimit_error_'+rowSelected).title="";
+               document.getElementById('creditlimit_error_'+rowSelected).style.display = "none";
+           }  
+       } 
+    }
+
+    function actionChange(o, rowSelected){
+        var actionNameChange = o.value;
+
+        if(actionNameChange == "8"){
+            $('#creditlimit_id_'+rowSelected).val("0.00");
+            $('#creditlimit_id_'+rowSelected).attr("readonly", true);
+        }else if(actionNameChange == "6" || actionNameChange == "7"){
+            $('#creditlimit_id_'+rowSelected).val('');
+            $('#creditlimit_id_'+rowSelected).attr("readonly", false);
+        }
     }
 
     function downloadCSVFile(csv_data,fileName) {
