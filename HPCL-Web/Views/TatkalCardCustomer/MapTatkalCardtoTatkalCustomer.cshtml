@@ -137,6 +137,8 @@
 
         var customerId = $("#CustomerId").val();
          var flag="Y";
+         $("#reason").html("");
+         $("#reason").attr("style","display:none");
            if(customerId=="")
            {
                $("#customerId_error").attr("style", "display:block");
@@ -163,6 +165,7 @@
            }
            if(flag=="Y"){
                 document.getElementById("dvCards").innerHTML = "";
+                $("#divtable").attr("style", "display:none");
                 $.ajax({
                     type: 'POST',
                     url: '@Url.Action("GetMapTatkalCardtoCustomer", "TatkalCardCustomer")',
@@ -331,10 +334,16 @@
                         {
                             $("#reason").html("");
                             $("#reason").append("<span>" + data.commonResponseData[0].actionName + "</span></br></br>");
-                            $("#reason").append("<span>" + "Card Number" + "</span></br>");
+                            if(data.commonResponseData[0].cardNo!="")
+                            {
+                              $("#reason").append("<span>" + "Card Number" + "</span></br>");
+                            }
                             for(var i=0;i<data.commonResponseData.length;i++)
                             {
-                                $("#reason").append("<span>" + data.commonResponseData[i].cardNo + "</span></br>");
+                                if(data.commonResponseData[i].cardNo!="")
+                                {
+                                  $("#reason").append("<span>" + data.commonResponseData[i].cardNo + "</span></br>");
+                                }
                             }
                             if(data.commonResponseData[0].status=="0")
                             {
@@ -345,9 +354,10 @@
                             {
                                 $("#reason").addClass("alert-success");
                                 $("#reason").removeClass("alert-danger");
+                                $(".toBeHiddenOnSuccess").hide();
                             }
                             $("#reason").attr("style","display:block");
-                            $(".toBeHiddenOnSuccess").hide();
+                            
                         }
 
                     },
