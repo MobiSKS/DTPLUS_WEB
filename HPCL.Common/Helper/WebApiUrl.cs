@@ -638,5 +638,18 @@
         public static string updateDicvDealerEnrollment = "api/dtplus/DICV/update_dicv_dealer_enrollment";
         public static string checkDicvDealerCode = "api/dtplus/DICV/check_dealer_code";
         #endregion
+
+
+        #region "MO Dashboard"
+        public static string userinformation = "/api/dtplus/modashboard/mo_dashboard_user_information";
+        #endregion
+
+        #region "MO Dashboard"
+        public static string RegionInformation = "/api/dtplus/modashboard/mo_dashboard_region_information";
+        #endregion
+
+        #region "MO Dashboard"
+        public static string PendingTerminal = "/api/dtplus/modashboard/mo_dashboard_pending_terminal";
+        #endregion
     }
 }
