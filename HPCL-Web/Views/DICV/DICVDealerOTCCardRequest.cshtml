@@ -1,0 +1,273 @@
+﻿@model HPCL.Common.Models.ViewModel.DICV.DICVOTCCardRequestModel
+@using HPCL.Common.Resources
+
+@{
+    ViewData["Title"] = "DICV OTC Card Request";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="col-lg-12">
+    <div class="bg-white p-2 p-md-4">
+        <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
+            <li class="breadcrumb-item"><a href="@Url.Action("Index","DICV")" class="text_primary">DICV Dashboard</a> </li>
+            <li class="breadcrumb-item font-weight-light">DICV OTC Card Request</li>
+        </ul>
+        <form name="DICOTCCardRequestForm" method="post" asp-action="DICVDealerOTCCardRequest" class="w-100">
+            <div class="w-100">
+                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
+                    <div class="border-1 rounded border-grey pb-0">
+                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">DICV OTC Card Request</p>
+                        <div class="alert alert-danger mt-3 text-center" id="dvRemarks" style="@(Model.Remarks=="" ? "display:none":"display:block")">
+                            @Html.DisplayFor(m => m.Remarks)
+                        </div>
+                        <div class="col-lg-12 col-md-12 col-12 py-3">
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">Dealer Code <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.DealerCode, new { @class = "form-control", maxlength = "25", autocomplete = "off", onkeypress = "return AllowAlphaNumeric(event)" })
+                                                <span class="error" id="DealerCode_error"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal offset-md-1 col-md-4 col-12">No. Of Cards <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.NoofCards, new { @class = "form-control", maxlength = "3", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                <span class="error" id="NoofCards_error"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">Total limit(No. of cards)</label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                <label class="font-weight-normal col-md-4 col-12">200</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal offset-md-1 col-md-4 col-12" id="lblCapBalance" style="display:none">Limit left(No. of cards)</label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                <label class="font-weight-normal col-md-4 col-12" id="lblBalance" style="display:none"></label>                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="d-flex align-items-center justify-content-center mt-0">
+                                <div class="px-2">
+                                    <button class="btn btn_primary" type="submit" onclick="return CheckValidations();">@Label.ProcessRequest</button>
+                                </div>
+                                <div class="px-2">
+                                    <button class="btn btn_primary" type="button" onclick="ResetFields();">@Label.Reset</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>
+           <div style="display:none"> @Html.TextBoxFor(m => m.BalanceCard, new { @class = "form-control" })</div>
+        </form>
+        <div class="clearfix"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+            if($("#dvRemarks").html().trim()!="")
+            {
+                //debugger;
+                document.getElementById("lblBalance").innerHTML=document.getElementById("BalanceCard").value;
+                document.getElementById("lblCapBalance").style.display="block";
+                document.getElementById("lblBalance").style.display="block";
+            }
+
+        });
+
+    
+    function ResetFields() 
+    {
+        window.location.href = '@Url.Action("DICVDealerOTCCardRequest", "DICV")';
+    };
+
+
+    $("#DealerCode").on("blur", function () {
+        debugger;
+        localStorage.setItem("DEALERFOUND", "0");
+        localStorage.setItem("DEALERMSG", "");
+
+        var dealerCode = document.getElementById("DealerCode").value.trim();
+        if (dealerCode == "") 
+        {
+            document.getElementById("DealerCode_error").innerHTML = "Please enter Dealer Code";
+            return (false);
+        }
+        else 
+        {
+            document.getElementById("DealerCode_error").innerHTML = "";
+        }
+
+        //Need to comment this line after API developed
+        localStorage.setItem("DEALERFOUND", "1");
+        //$.ajax({
+        //    type: 'POST',  // http method
+        //    url: '@Url.Action("CheckDICVDealerBalanceQty", "DICV")',
+        //    data: { DealerCode: dealerCode },  // data to submit
+        //    dataType: "json",
+        //    success: function (data, status, xhr) {
+        //        console.log(data);
+        //        console.log(status);
+        //        console.log(data.status);
+
+        //        if (status == 'success') 
+        //        {
+        //            if (data.status == 1) 
+        //            {
+        //                document.getElementById("DealerCode_error").innerHTML = "";
+        //                localStorage.setItem("DEALERFOUND", "1");
+        //                document.getElementById("lblBalance").innerHTML=data.balanceRequestCard;
+        //                document.getElementById("BalanceCard").value=data.balanceRequestCard;
+        //                document.getElementById("lblCapBalance").style.display="block";
+        //                document.getElementById("lblBalance").style.display="block";
+        //            }
+        //            else
+        //            {
+        //                document.getElementById("DealerCode_error").innerHTML = data.reason;
+        //                localStorage.setItem("DEALERFOUND", "0");
+        //                localStorage.setItem("DEALERMSG", data.reason);
+        //                document.getElementById("lblCapBalance").style.display="none";
+        //                document.getElementById("lblBalance").style.display="none";
+        //            }
+
+        //            if (data == "Failed to load Dealer Details") 
+        //            {
+        //                document.getElementById("DealerCode_error").innerHTML = "Invalid Dealer Code";
+        //                localStorage.setItem("DEALERFOUND", "0");
+        //                localStorage.setItem("DEALERMSG", "Invalid Dealer Code");
+        //                document.getElementById("lblCapBalance").style.display="none";
+        //                document.getElementById("lblBalance").style.display="none";
+        //            }
+        //        }
+        //        else 
+        //        {
+        //            document.getElementById("DealerCode_error").innerHTML = "Invalid Dealer Code";
+        //            localStorage.setItem("DEALERFOUND", "0");
+        //            localStorage.setItem("DEALERMSG", "Invalid Dealer Code");
+        //            document.getElementById("lblCapBalance").style.display="none";
+        //            document.getElementById("lblBalance").style.display="none";
+        //        }
+        //    },
+        //    error: function (xhr, ajaxOptions, thrownError) {
+        //        document.getElementById("DealerCode_error").innerHTML = "Invalid Dealer Code";
+        //        localStorage.setItem("DEALERFOUND", "0");
+        //        localStorage.setItem("DEALERMSG", "Invalid Dealer Code");
+        //        document.getElementById("lblCapBalance").style.display="none";
+        //        document.getElementById("lblBalance").style.display="none";
+        //    }
+        //});
+
+
+    });
+
+    function CheckValidations() 
+    {
+        debugger;
+
+        var ret = true;
+
+        if (document.getElementById('DealerCode').value.trim() == "") 
+        {
+            document.getElementById("DealerCode_error").innerHTML = "Please enter Dealer Code";
+            ret = false;
+        }
+        else 
+        {
+            if (localStorage.getItem("DEALERFOUND") == 0) 
+            {
+                if(localStorage.getItem("DEALERMSG")=="")
+                {
+                    document.getElementById("DealerCode_error").innerHTML = "Invalid Dealer Code";
+                    ret = false;
+                }
+                else
+                {
+                    document.getElementById("DealerCode_error").innerHTML = localStorage.getItem("DEALERMSG");
+                    ret = false;
+                }
+            }
+            else 
+            {
+                document.getElementById("DealerCode_error").innerHTML = "";
+            }
+        }
+
+        if (document.getElementById('NoofCards').value.trim() == "") 
+        {
+            document.getElementById("NoofCards_error").innerHTML = "Please enter Number of Cards";
+            ret = false;
+        }
+        else 
+        {
+            if (Number(document.getElementById('NoofCards').value.trim()) < 1 || Number(document.getElementById('NoofCards').value.trim()) > 200) 
+            {
+                document.getElementById("NoofCards_error").innerHTML = "No. of OTC Cards should be 1 to 200";
+                ret = false;
+            }
+            else 
+            {
+                document.getElementById("NoofCards_error").innerHTML = "";
+            }
+        }
+        
+        return ret;
+    }
+
+    $('#NoofCards').on("cut copy paste",function(e) 
+    {
+          e.preventDefault();
+     });
+
+   $("#NoofCards").on("blur", function () 
+   {
+    //debugger;
+       if (document.getElementById('NoofCards').value.trim() == "") 
+       {
+            document.getElementById("NoofCards_error").innerHTML = "Please enter Number of Cards";
+            return false;
+       }
+       else 
+       {
+            if (Number(document.getElementById('NoofCards').value) < 1 || Number(document.getElementById('NoofCards').value) > 200) 
+            {
+                document.getElementById("NoofCards_error").innerHTML = "No. of OTC Cards should be 1 to 200";
+                return false;
+            }
+            else if(!(document.getElementById('NoofCards').value).match(number))
+            {
+                document.getElementById("NoofCards_error").innerHTML = "No. of OTC Cards should be 1 to 200";
+                ret = false;
+            }
+            else 
+            {
+                document.getElementById("NoofCards_error").innerHTML = "";
+            }
+       }
+        
+    });
+</script>

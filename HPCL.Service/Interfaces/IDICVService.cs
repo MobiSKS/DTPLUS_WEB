@@ -1,6 +1,7 @@
 ﻿using HPCL.Common.Models;
 using HPCL.Common.Models.CommonEntity.ResponseEnities;
 using HPCL.Common.Models.ResponseModel.AshokLayland;
+using HPCL.Common.Models.ResponseModel.DICV;
 using HPCL.Common.Models.ViewModel.DICV;
 using System;
 using System.Collections.Generic;
@@ -18,5 +19,8 @@ namespace HPCL.Service.Interfaces
         Task<SearchAlResult> SearchDICVDealer(string dealerCode, string dtpCode, string OfficerType);
         Task<InsertResponse> DICVDealerEnrollmentUpdate(string getAllData);
         Task<CommonResponseData> CheckDICVDealerCodeExists(string DealerCode);
+        Task<DICVOTCCardRequestModel> DICVDealerOTCCardRequest();
+        Task<GetDICVBalanceOTCCardResponse> CheckDICVDealerBalanceQty(string DealerCode);
+        Task<DICVOTCCardRequestModel> DICVDealerOTCCardRequest(DICVOTCCardRequestModel model);
     }
 }
