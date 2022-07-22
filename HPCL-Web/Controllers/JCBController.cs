@@ -1,4 +1,5 @@
 ﻿using HPCL.Common.Helper;
+using HPCL.Common.Models.RequestModel.JCB;
 using HPCL.Common.Models.ResponseModel.JCB;
 using HPCL.Common.Models.ViewModel.JCB;
 using HPCL.Common.Resources;
@@ -244,6 +245,35 @@ namespace HPCL_Web.Controllers
             ModelState.Clear();
 
             return Json(new { updateResponse = updateResponse });
+        }
+        public async Task<IActionResult> JCBAddOrEditMobile(string CustomerId)
+        {
+            ViewBag.CustomerId = CustomerId;
+            return View();
+        }
+        [HttpPost]
+        public async Task<JsonResult> SearchCardMapping(JCBViewCardDetails viewCardDetails)
+        {
+            var searchList = await _jcbService.SearchCardMapping(viewCardDetails);
+
+            ModelState.Clear();
+            return Json(searchList);
+        }
+        [HttpPost]
+        public async Task<IActionResult> UpdateCards(JCBUpdateMobileandFastagNoInCard[] limitArray)
+        {
+            var reason = await _jcbService.UpdateCards(limitArray);
+
+            ModelState.Clear();
+            return Json(reason);
+        }
+        [HttpPost]
+        public async Task<JsonResult> AddCardMappingDetails(JCBViewCardDetails viewCardDetails)
+        {
+            var searchList = await _jcbService.AddCardMappingDetails(viewCardDetails);
+
+            ModelState.Clear();
+            return Json(searchList);
         }
 
     }

@@ -1,5 +1,6 @@
 ﻿using HPCL.Common.Models;
 using HPCL.Common.Models.CommonEntity;
+using HPCL.Common.Models.RequestModel.JCB;
 using HPCL.Common.Models.ResponseModel.AshokLayland;
 using HPCL.Common.Models.ResponseModel.CustomerManage;
 using HPCL.Common.Models.ResponseModel.JCB;
@@ -39,5 +40,8 @@ namespace HPCL.Service.Interfaces
         Task<JCBSearchDetailsByCardId> JCBViewCardDetails(string CardId);
         Task<JCBUpdateMobileModal> JCBCardlessMapping(string cardNumber, string mobileNumber, string LimitTypeName, string CCMSReloadSaleLimitValue);
         Task<List<SuccessResponse>> JCBCardlessMappingUpdate(string mobNoNew, string crdNo);
+        Task<JCBViewCardSearch> SearchCardMapping(JCBViewCardDetails viewCardDetails);
+        Task<List<string>> UpdateCards(JCBUpdateMobileandFastagNoInCard[] limitArray);
+        Task<JCBViewCardSearch> AddCardMappingDetails(JCBViewCardDetails viewCardDetails);
     }
 }

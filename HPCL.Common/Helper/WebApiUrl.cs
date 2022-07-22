@@ -202,7 +202,7 @@
         public static string updateconfigureemailalert = "api/dtplus/configure/update_configure_email_alert";
         public static string getcommunicationemailresetpassword = "api/dtplus/customer/get_communication_email_reset_password";
         public static string updatecommunicationemailresetpassword = "api/dtplus/customer/update_communication_email_reset_password";
-
+        public static string getCustomerStatus = "api/dtplus/customer/get_customer_status";
 
         #endregion
 
@@ -623,6 +623,8 @@
         public static string getJCBCommunicationEmailResetPassword = "api/dtplus/JCB/get_JCB_communication_email_reset_password";
         public static string updateJcbCommunicationEmailResetPassword = "api/dtplus/JCB/update_jcb_communication_email_reset_password";
         public static string jcbGetCardLimitFeatures = "api/dtplus/JCB/jcb_get_card_limit_features";
+        public static string JCBUpdateMobileAndFastagNoInCard = "api/dtplus/JCB/JCB_update_mobile_and_fastag_no_in_card";
+        public static string getJcbMobileAndFastagno = "api/dtplus/JCB/get_jcb_mobile_and_fastagno";
         #endregion
 
         #region "Customer Dashboard"

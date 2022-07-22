@@ -1,4 +1,4 @@
-﻿@model HPCL.Common.Models.ViewModel.HDFCBankCreditPouch.CustomerDetailsReq
+﻿@model HPCL.Common.Models.ViewModel.PC_HDFCBankCreditPouch.CustomerDetailsReq
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ajax-unobtrusive/3.2.6/jquery.unobtrusive-ajax.js"></script>
 
@@ -134,7 +134,7 @@
 
                     $.ajax({
                         type: 'POST',  // http method
-                        url: '@Url.Action("CheckEligibility", "HDFCBankCreditPouch")',
+                        url: '@Url.Action("CheckEligibility", "PC_HDFCBankCreditPouch")',
                         data: $('#formVal').serialize(),   // data to submit
                         success: function (res) {
 
@@ -148,7 +148,7 @@
 
                                     $.ajax({
                                         type: 'POST',  // http method
-                                        url: '@Url.Action("ReqAvailEnroll", "HDFCBankCreditPouch")',
+                                        url: '@Url.Action("ReqAvailEnroll", "PC_HDFCBankCreditPouch")',
                                         data: {customerId: $("#CustomerDefaultVal").val(),planTypeId: res.searchList.data[0].planTypeId},  // data to submit
                                         success: function (response, status, xhr) {
 
@@ -159,6 +159,10 @@
                                                 $("#EnrollSuccess").html('');
                                                 $("#EnrollSuccess").append(response.searchList[0].reason);
                                                 document.getElementById("EnrollSuccess").style.display = "block";
+                                            }else{
+                                                $("#noRecord").html("");
+                                                $("#noRecord").append("<span>" + response.searchList[0].reason + "</span>");
+                                                document.getElementById("noRecord").style.display = "block";
                                             }
 
                                         },

@@ -28,7 +28,7 @@
                                         <label class="font-weight-normal col-md-5 col-12">Customer ID<sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.CustomerId, new { @class = "form-control", @id = "CustomerId", maxlength = "10", onkeypress = "return isNumberKey(event)" })
+                                                @Html.TextBoxFor(m => m.CustomerId, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)" })
                                                 @Html.ValidationMessageFor(m => m.CustomerId, "", new { @class = "error", @id = "CustomerIdValErrMsg" })
                                             </div>
                                         </div>
@@ -634,6 +634,41 @@
                 $('#CustomerIdValErrMsg').text("");
              }
          }
+
+
+        $.ajax({
+                type: 'POST',   
+                url: '@Url.Action("GetCustomerStatus", "ApplicationFormDataEntry")',
+                data: { customerID: $("#CustomerId").val() }, 
+                dataType: "json",
+                success: function (data, status, xhr) {
+                    console.log(data);
+                    console.log(status);
+                    console.log(data.status);
+                    console.log(data.reason);
+
+                    if (status == 'success') 
+                    {
+                        if (data.status == "0") 
+                        {
+                            $('#CustomerIdValErrMsg').text(data.reason);
+                        }
+                        else 
+                        {
+                            $('#CustomerIdValErrMsg').text("");
+                        }
+                    }
+                    else 
+                    {
+                        $('#CustomerIdValErrMsg').text("");
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) 
+                {
+                    $('#CustomerIdValErrMsg').text("");
+                }
+            });
+
          
      });
 

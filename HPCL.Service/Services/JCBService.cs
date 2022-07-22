@@ -911,6 +911,98 @@ namespace HPCL.Service.Services
             List<SuccessResponse> updateResponse = updateRes.ToObject<List<SuccessResponse>>();
             return updateResponse;
         }
+        public async Task<JCBViewCardSearch> SearchCardMapping(JCBViewCardDetails viewCardDetails)
+        {
+            var searchBody = new JCBViewCardDetails();
+            JCBViewCardSearch viewCardSearch = new JCBViewCardSearch();
+            if (viewCardDetails.Customerid != null)
+            {
+                searchBody = new JCBViewCardDetails
+                {
+                    UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                    UserAgent = CommonBase.useragent,
+                    UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                    Customerid = viewCardDetails.Customerid,
+                    Cardno = viewCardDetails.CardNo,
+                    Vehiclenumber = viewCardDetails.VechileNo,
+                    Mobileno = viewCardDetails.MobileNo
+
+                };
+            }
+            else if (_httpContextAccessor.HttpContext.Session.GetString("LoginType") == "Customer")
+            {
+                searchBody = new JCBViewCardDetails
+                {
+                    UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                    UserAgent = CommonBase.useragent,
+                    UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                    Customerid = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                    Cardno = viewCardDetails.CardNo,
+                    Vehiclenumber = viewCardDetails.VechileNo,
+                    Mobileno = viewCardDetails.MobileNo
+                };
+            }
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.SearchCardMappingUrl);
+
+
+            viewCardSearch = JsonConvert.DeserializeObject<JCBViewCardSearch>(response);
+            return viewCardSearch;
+        }
+        public async Task<List<string>> UpdateCards(JCBUpdateMobileandFastagNoInCard[] limitArray)
+        {
+            var updateServiceBody = new JCBUpdateMobileRequest
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                ObjUpdateMobileandFastagNoInCard = limitArray,
+                ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(updateServiceBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.JCBUpdateMobileAndFastagNoInCard);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+
+            var updateRes = obj["Data"].Value<JArray>();
+            List<string> messageList = new List<string>();
+            List<SuccessResponse> updateResponse = updateRes.ToObject<List<SuccessResponse>>();
+            if (updateResponse.Count > 0)
+            {
+                messageList.Add(updateResponse[0].Status.ToString());
+                foreach (var item in updateResponse)
+                    messageList.Add(item.Reason);
+            }
+
+            return messageList;
+        }
+        public async Task<JCBViewCardSearch> AddCardMappingDetails(JCBViewCardDetails viewCardDetails)
+        {
+            var searchBody = new JCBViewCardDetails();
+            JCBViewCardSearch viewCardSearch = new JCBViewCardSearch();
+            if (viewCardDetails.Customerid != null)
+            {
+                searchBody = new JCBViewCardDetails
+                {
+                    UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                    UserAgent = CommonBase.useragent,
+                    UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                    Customerid = viewCardDetails.Customerid,
+                    Cardno = viewCardDetails.CardNo,
+                    Vehiclenumber = viewCardDetails.VechileNo,
+                    Mobileno = viewCardDetails.MobileNo
+                };
+            }
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.searchcardmappingdetailswithblankmobile);
+            //var response = await _requestService.CommonRequestService(content, WebApiUrl.getJcbMobileAndFastagno);
+
+            viewCardSearch = JsonConvert.DeserializeObject<JCBViewCardSearch>(response);
+            return viewCardSearch;
+        }
 
     }
 }
