@@ -1,6 +1,9 @@
 ﻿@model HPCL.Common.Models.ViewModel.ParentCustomer.ViewParentChildTransactionDetailsModel
 @using HPCL.Common.Resources
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.3/jspdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.6/jspdf.plugin.autotable.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
 
 <div class="col-lg-12 px-0">
     <div class="bg-white p-2 p-md-4" style="overflow: hidden;">
@@ -90,7 +93,7 @@
                                     <button class="btn btn_primary" type="button" onclick="tableToCSV()" id="btnExporttoExcel">EXPORT TO EXCEL</button>
                                 </div>
                                 <div class="px-2">
-                                    <button class="btn btn_primary" type="button" id="btnExporttoPDF">EXPORT TO PDF</button>
+                                    <button class="btn btn_primary" type="button" onclick="generatePDF()" id="btnExporttoPDF">EXPORT TO PDF</button>
                                 </div>
                                 <div class="px-2">
                                     <button class="btn btn_primary" type="button" id="btnReset">@Label.Reset</button>
@@ -193,7 +196,7 @@
                 </div>
             </div>
             <p class="px-3 py-2 m-0">** Service tax included in service charge.</p>
-             <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3" style="width:100%;display:none;" id="divLocation" >
+            <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3" style="width:100%;display:none;" id="divLocation">
                 <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold" id="locationText"></p>
                 <div id="divLocationDetails">
                     <table id="locationDetailsTbl" class="table table-striped d-md-table d-block table-bordered nowrap table-responsive mt-3" style="width:100%;">
@@ -218,6 +221,106 @@
     </div>
     <div class="clearfix"></div>
 </div>
+<div class="col-lg-12 px-0" style="display:none">
+    <div class="bg-white p-2 p-md-4" style="overflow: hidden;">
+
+
+        <div class="w-100">
+            <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
+                <div class="border-1 rounded border-grey pb-3">
+                    <div class="col-lg-12 col-md-12 col-12 py-3" id="filterRepo">
+                        <div class="d-flex align-items-center flex-wrap">
+                            <div class="col-lg-6 col-12">
+                                <div class="d-flex align-items-center flex-wrap mb-3">
+                                    <h5 class="font-weight-normal">PARENT CUSTOMER ID :<span id="parentId"></span></h5>
+                                  
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center flex-wrap">
+                            <div class="col-lg-6 col-12">
+                                <div class="d-flex align-items-center flex-wrap mb-3">
+                                    <h5  class="font-weight-normal">PERIOD :<span id="period"></span></h5>
+                                  
+
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="clearfix"></div>
+
+        </div>
+
+        <div class="clearfix"></div>
+        <div id="show_table">
+            <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3" style="width:100%;">
+                <table id="ParentDetailsforPDF" class="table table-striped d-block table-bordered nowrap table-responsive mt-3" style="width:100%;">
+                    <thead>
+                        <tr>
+                            <th>S.No.</th>
+                            <th>Terminal ID</th>
+                            <th>Merchant</th>
+                            <th>Batch ID /ROC</th>
+                            <th>Account Number</th>
+                            <th>Vehicle No./User Name</th>
+                            <th>Txn Date</th>
+                            <th>Txn Type</th>
+                            <th>Product</th>
+                            <th>Price</th>
+                            <th>Volume(Ltr.)</th>
+                            <th>Currency</th>
+                            <th>Service Charge</th>
+                            <th>Amount</th>
+                            <th>Odometer Reading</th>
+                            <th>Status</th>
+
+                        </tr>
+                    </thead>
+
+                </table>
+
+
+            </div>
+            <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3" style="width:100%;">
+                <table id="ChildDetailsforPDF" class="table table-striped d-block table-bordered nowrap table-responsive mt-3" style="width:100%;">
+                    <thead>
+                        <tr>
+                            <th>S.No.</th>
+                            <th>Terminal ID</th>
+                            <th>Customer ID</th>
+                            <th>Merchant</th>
+                            <th>Batch ID /ROC</th>
+                            <th>Account Number</th>
+                            <th>Vehicle No./User Name</th>
+                            <th>Txn Date</th>
+                            <th>Txn Type</th>
+                            <th>Product</th>
+                            <th>Price</th>
+                            <th>Volume(Ltr.)</th>
+                            <th>Currency</th>
+                            <th>Service Charge</th>
+                            <th>Amount</th>
+                            <th>Odometer Reading</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+
+                </table>
+
+
+            </div>
+
+        </div>
+    </div>
+    <div class="clearfix"></div>
+</div>
+
 <script type="text/javascript">
       $(document).ready(function () {
           debugger;
@@ -227,14 +330,20 @@
         var selectedChildIds="@ViewBag.SelectedChildCustomerIds";
 
           if(selectedChildIds!=""){
-              var ids=[];
-              if(selectedChildIds.indexOf(',')!=-1)
-                        ids=selectedChildIds.split(',');
-                    else
-                        ids[0]=selectedChildIds;
+              if(selectedChildIds=="All"){
+                  $('#ChildCustomerId')[0].sumo.selectAll();
+                  $("#checkAll").prop("checked",true);
+              }
+              else{
+                  var ids=[];
+                  if(selectedChildIds.indexOf(',')!=-1)
+                            ids=selectedChildIds.split(',');
+                        else
+                            ids[0]=selectedChildIds;
 
-              for(var i=0; i<ids.length;i++){
-                  $('#ChildCustomerId')[0].sumo.selectItem(ids[i]);
+                  for(var i=0; i<ids.length;i++){
+                      $('#ChildCustomerId')[0].sumo.selectItem(ids[i]);
+                  }
               }
           }
     });
@@ -281,6 +390,11 @@
               objChildIds.push({Id:i,ChildCustomerID:selectedText});
           });
           if (flag == "Y") {
+              $("#ParentCustomerID").attr("readonly",true);
+              $("#FromDate").attr("disabled",true);
+              $("#ToDate").attr("disabled",true);
+              $("#ChildCustomerId").attr("disabled",true);
+              $("#checkAll").attr("disabled",true);
               var reqModel={ParentCustomerID:parentId,FromDate:fromdate,ToDate:todate,ObjChildCustomerIdDtl:objChildIds};
               console.log(JSON.stringify(reqModel));
               $.ajax({
@@ -295,11 +409,13 @@
                            $("#TransactionSummary td").parent().remove();
                            $("#ParentDetails td").parent().remove();
                            $("#ChildDetails td").parent().remove();
-
+                           $("#ParentDetailsforPDF td").parent().remove();
+                           $("#ChildDetailsforPDF td").parent().remove();
                            var dataSummary=res.data.getParentTransactionsSaleDetails;
                            var parentDetails=res.data.getParentTransactionsDetailSummary;
                            var childDetails=res.data.getChildTransactionsDetailSummary;
-
+                           $("#parentId").text(parentId);
+                           $("#period").text(fromdate +" - "+ todate);
                            if(dataSummary.length>0){
 
 
@@ -342,7 +458,7 @@
 
                                 for (var i = 0; i < parentDetails.length; i++) {
                                     var srNumber = (i + 1);
-                                    var terminalId = "<a href='#' class='location' onclick='loadTransactionLocationDetails(this,"+parentDetails[i].customerID+","+parentDetails[i].transactionId+")'>"+(parentDetails[i].terminalId|| '')+"</a>"; 
+                                    var terminalId = "<a href='#' class='location' onclick='loadTransactionLocationDetails(this,"+parentDetails[i].customerID+","+parentDetails[i].transactionId+")'>"+(parentDetails[i].terminalId|| '')+"</a>";
                                     var merchant =  (parentDetails[i].retailOutletName || '');
                                      var batchIdandROC =  "";
                                     if(parentDetails[i].batchIdandROC !="0")
@@ -380,6 +496,25 @@
                                         trStatus
                                     ]).order( [ 1, 'asc' ] ).draw();
 
+                                     var rows = "<tbody><tr>"
+                                     + "<td>" + srNumber + "</td>"
+                                    + "<td>" + (parentDetails[i].terminalId || '') + "</td>"
+                                    + "<td>" + (parentDetails[i].retailOutletName || '') + "</td>"
+                                    + "<td>" + (parentDetails[i].batchIdandROC || '') + "</td>"
+                                    + "<td>" + (parentDetails[i].accountNumber || '') + "</td>"
+                                    + "<td>" + (parentDetails[i].vechileNo || '') + "</td>"
+                                    + "<td>" + (parentDetails[i].txnDate || '') + "</td>"
+                                    + "<td>" + (parentDetails[i].txnType || '') + "</td>"
+                                    + "<td>" + (parentDetails[i].productName || '') + "</td>"
+                                    + "<td>" + (parentDetails[i].price || '') + "</td>"
+                                    + "<td>" + (parentDetails[i].volume || '') + "</td>"
+                                    + "<td>" + (parentDetails[i].currency || '') + "</td>"
+                                    + "<td>" + (parentDetails[i].serviceCharge || '') + "</td>"
+                                    + "<td>" + (parentDetails[i].amount || '') + "</td>"
+                                    + "<td>" + (parentDetails[i].odometerReading || '') + "</td>"
+                                    + "<td>" + (parentDetails[i].trStatus || '') + "</td>"
+                                    + "</tr ></tbody>";
+                                    $('#ParentDetailsforPDF').append(rows);
                                 }
 
                                 $("#parentReason").attr("style","display:none");
@@ -408,28 +543,28 @@
                                 //    }
                                 //});
 
-                                for (var i = 0; i < childDetails.length; i++) {
-                                    var srNumber = (i + 1);
-                                    var terminalId ="<a href='#' class='location' onclick='loadTransactionLocationDetails(this,"+childDetails[i].customerID+","+childDetails[i].transactionId+")'>"+(childDetails[i].terminalId|| '')+"</a>"; 
-                                    var customerID = (childDetails[i].customerID || '');
-                                    var merchant =  (childDetails[i].retailOutletName || '');
+                                for (var j = 0; j < childDetails.length; j++) {
+                                    var srNumber = (j + 1);
+                                    var terminalId ="<a href='#' class='location' onclick='loadTransactionLocationDetails(this,"+childDetails[i].customerID+","+childDetails[i].transactionId+")'>"+(childDetails[i].terminalId|| '')+"</a>";
+                                    var customerID = (childDetails[j].customerID || '');
+                                    var merchant =  (childDetails[j].retailOutletName || '');
                                     var batchIdandROC =  "";
-                                    if(childDetails[i].batchIdandROC !="0")
-                                        batchIdandROC=childDetails[i].batchIdandROC;
-                                    var accountNumber =  (childDetails[i].accountNumber || '');
-                                    var vechileNo =  (childDetails[i].vechileNo || '');
+                                    if(childDetails[j].batchIdandROC !="0")
+                                        batchIdandROC=childDetails[j].batchIdandROC;
+                                    var accountNumber =  (childDetails[j].accountNumber || '');
+                                    var vechileNo =  (childDetails[j].vechileNo || '');
 
-                                    var txnDate =  (childDetails[i].txnDate || '');
-                                    var txnType =  (childDetails[i].txnType || '');
-                                    var productName =  (childDetails[i].productName || '');
-                                    var price =  (childDetails[i].price || '');
-                                    var volume =  (childDetails[i].volume || '');
-                                    var currency =  (childDetails[i].currency || '');
-                                    var serviceCharge =  (childDetails[i].serviceCharge || '');
-                                    var amount =  (childDetails[i].amount || '');
-                                    var odometerReading =  (childDetails[i].odometerReading || '');
-                                    var trStatus =  (childDetails[i].trStatus || '');
-                                    var transactionId =  (childDetails[i].transactionId || '');
+                                    var txnDate =  (childDetails[j].txnDate || '');
+                                    var txnType =  (childDetails[j].txnType || '');
+                                    var productName =  (childDetails[j].productName || '');
+                                    var price =  (childDetails[j].price || '');
+                                    var volume =  (childDetails[j].volume || '');
+                                    var currency =  (childDetails[j].currency || '');
+                                    var serviceCharge =  (childDetails[j].serviceCharge || '');
+                                    var amount =  (childDetails[j].amount || '');
+                                    var odometerReading =  (childDetails[j].odometerReading || '');
+                                    var trStatus =  (childDetails[j].trStatus || '');
+                                    var transactionId =  (childDetails[j].transactionId || '');
                                     tbl.row.add([
                                         srNumber,
                                         terminalId,
@@ -449,7 +584,26 @@
                                         odometerReading,
                                         trStatus
                                     ]).order( [ 1, 'asc' ] ).draw();
-
+                                    var rows = "<tbody><tr>"
+                                     + "<td>" + srNumber + "</td>"
+                                    + "<td>" + (childDetails[j].terminalId || '') + "</td>"
+                                    + "<td>" + (childDetails[j].customerID || '') + "</td>"
+                                    + "<td>" + (childDetails[j].retailOutletName || '') + "</td>"
+                                    + "<td>" + (childDetails[j].batchIdandROC || '') + "</td>"
+                                    + "<td>" + (childDetails[j].accountNumber || '') + "</td>"
+                                    + "<td>" + (childDetails[j].vechileNo || '') + "</td>"
+                                    + "<td>" + (childDetails[j].txnDate || '') + "</td>"
+                                    + "<td>" + (childDetails[j].txnType || '') + "</td>"
+                                    + "<td>" + (childDetails[j].productName || '') + "</td>"
+                                    + "<td>" + (childDetails[j].price || '') + "</td>"
+                                    + "<td>" + (childDetails[j].volume || '') + "</td>"
+                                    + "<td>" + (childDetails[j].currency || '') + "</td>"
+                                    + "<td>" + (childDetails[j].serviceCharge || '') + "</td>"
+                                    + "<td>" + (childDetails[j].amount || '') + "</td>"
+                                    + "<td>" + (childDetails[j].odometerReading || '') + "</td>"
+                                    + "<td>" + (childDetails[j].trStatus || '') + "</td>"
+                                    + "</tr ></tbody>";
+                                    $('#ChildDetailsforPDF').append(rows);
                                 }
 
                                 $("#childReason").attr("style","display:none");
@@ -492,7 +646,7 @@
                 if (status == 'success') {
                     $("#locationDetailsTbl td").parent().remove();
                     var locationDetails=res.transactionLocationDetails;
-                           
+
                     if(locationDetails.length>0){
                         for (var i = 0; i < locationDetails.length; i++) {
                             var rows = "<tbody><tr>"
@@ -510,8 +664,8 @@
                         $("#locationReason").attr("style","display:none");
                         $("#locationReason").html("");
                         $("#divLocation").attr("style","display:block");
-                        $("#divLocationDetails").attr("style","display:block"); 
-                        
+                        $("#divLocationDetails").attr("style","display:block");
+
                     }
                     else{
                         $("#locationReason").attr("style","display:block");
@@ -523,17 +677,17 @@
                     $('html, body').animate({
                                 scrollTop: $("#divLocation").offset().top
                             }, 2000);
-                            
+
                 }
             }
         })
     }
-     function tableToCSV() {
+    function tableToCSV() {
          debugger;
             // Variable to store the final csv data
             var csv_data = [];
             var csvrow = [];
-            
+
             var fromdate = $("#FromDate").val();
             var todate = $("#ToDate").val();
             var parentId=$("#ParentCustomerID").val();
@@ -565,9 +719,12 @@
             tableName1.rows().every(function(){
                i++;
                             var csvrow = [];
-
+                            var text=this.data()[1];
+                            let startPos=text.indexOf(">")+1;
+                            let endPos=text.indexOf("</");
+                            terminalId=text.slice(startPos,endPos);
                             csvrow.push(i);
-                            csvrow.push(this.data()[1]);
+                            csvrow.push(terminalId);
                             csvrow.push(this.data()[2]);
                             csvrow.push(this.data()[3]);
                             csvrow.push(this.data()[4]);
@@ -580,7 +737,7 @@
                             csvrow.push(this.data()[10]);
                             csvrow.push(this.data()[11]);
                             csvrow.push(this.data()[12]);
-                            
+
                             csvrow.push(this.data()[13]);
                             csvrow.push(this.data()[14]);
                             csvrow.push(this.data()[15]);
@@ -595,6 +752,10 @@
             csv_data.push(csvrowName1.join(","));
             csv_data.join('\n');
 
+            var csvrowBrk1= [];
+            csvrowBrk.push("");
+            csv_data.push(csvrowBrk1.join(","));
+            csv_data.join('\n');
             var csvrow2 = [];
             csvrow2.push("S.No.","Terminal ID","Customer ID", "Merchant", "BatchID/ROC","Account Number","Vehicle Number","Transaction Date","Transaction Type","Product","Price","Volume(Ltr.)","Currency","Service Charge","Amount(Rs.)","Odometer Reading","Status");
             csv_data.push(csvrow2.join(","));
@@ -605,9 +766,12 @@
             tableName2.rows().every(function(){
                j++;
                             var csvrow = [];
-
+                            var text=this.data()[1];
+                            let startPos=text.indexOf(">")+1;
+                            let endPos=text.indexOf("</");
+                            terminalId=text.slice(startPos,endPos);
                             csvrow.push(j);
-                            csvrow.push(this.data()[1]);
+                            csvrow.push(terminalId);
                             csvrow.push(this.data()[2]);
                             csvrow.push(this.data()[3]);
                             csvrow.push(this.data()[4]);
@@ -619,47 +783,117 @@
                             csvrow.push(this.data()[10]);
                             csvrow.push(this.data()[11]);
                             csvrow.push(this.data()[12]);
-                            
+
                             csvrow.push(this.data()[13]);
                             csvrow.push(this.data()[14]);
                             csvrow.push(this.data()[15]);
                             csvrow.push(this.data()[16]);
-                        
+
                             csvrow.push(this.data()[17]);
                             csv_data.push(csvrow.join(","));
                         });
                         // Combine each row data with new line character
             csv_data = csv_data.join('\n');
-            
+
             // Call this function to download csv file
             downloadCSVFile(csv_data);
 
-        }
+    }
 
-        function downloadCSVFile(csv_data) {
+    function downloadCSVFile(csv_data) {
 
-            // Create CSV file object and feed
-            // our csv_data into it
-            CSVFile = new Blob([csv_data], {
-                type: "text/csv"
-            });
+        // Create CSV file object and feed
+        // our csv_data into it
+        CSVFile = new Blob([csv_data], {
+            type: "text/csv"
+        });
 
-            // Create to temporary link to initiate
-            // download process
-            var temp_link = document.createElement('a');
+        // Create to temporary link to initiate
+        // download process
+        var temp_link = document.createElement('a');
 
-            // Download csv file
-            temp_link.download = "Transaction-Details.csv";
-            var url = window.URL.createObjectURL(CSVFile);
-            temp_link.href = url;
+        // Download csv file
+        temp_link.download = "Transaction-Details.csv";
+        var url = window.URL.createObjectURL(CSVFile);
+        temp_link.href = url;
 
-            // This link should not be displayed
-            temp_link.style.display = "none";
-            document.body.appendChild(temp_link);
+        // This link should not be displayed
+        temp_link.style.display = "none";
+        document.body.appendChild(temp_link);
 
-            // Automatically click the link to
-            // trigger download
-            temp_link.click();
-            document.body.removeChild(temp_link);
+        // Automatically click the link to
+        // trigger download
+        temp_link.click();
+        document.body.removeChild(temp_link);
+    }
+     
+
+
+        function generatePDF() {
+             var doc = new jsPDF({
+                orientation: 'l', // landscape
+                unit: 'pt', // points, pixels won't work properly
+                format: [1020, 680] // set needed dimensions for any element
+            })
+          //create jsPDF object
+           source = $('#filterRepo')[0];
+             var htmlstring = '';
+             var tempVarToCheckPageHeight = 0;
+             var pageHeight = 0;
+             pageHeight = doc.internal.pageSize.height;
+             var finalY = 100;
+             margins = {
+                top: 50,
+                bottom: 60,
+                left: 10,
+                right: 10,
+                width: 800
+             };
+             doc.setFontSize(10);
+             var y = 20;
+             doc.setLineWidth(3);
+               doc.fromHTML(
+                    source, // HTML string or DOM elem ref.
+                    margins.left, // x coord
+                    margins.top, { // y coord
+                        'width': margins.width, // max width of content on PDF
+                    })
+
+             //doc.text(300, y = y + 20, "Customer Transaction Details");
+             doc.text("PARENT TRANSACTION DETAILS REPORT",
+                    10,
+                    finalY + 20
+                    )
+             doc.autoTable({
+                html: '#ParentDetailsforPDF',
+                startY: finalY + 40,
+                tableWidth: 'wrap',
+                margin: {right:10,left:10},
+                //theme: 'striped',
+                 useCss: true,
+                columnStyles: { text: { cellWidth: 'auto' } },
+                styles: {
+                    minCellHeight: 10
+                }
+             })
+             finalY = doc.lastAutoTable.finalY
+            doc.text("CHILD TRANSACTION DETAILS REPORT",
+                    10,
+                    finalY + 20
+                    )
+               doc.autoTable({
+                html: '#ChildDetailsforPDF',
+                startY: finalY + 40,
+                tableWidth: 'wrap',
+                margin: {right:10,left:10},
+                //theme: 'striped',
+                 useCss: true,
+                columnStyles: { text: { cellWidth: 'auto' } },
+                styles: {
+                    minCellHeight: 10
+                }
+             })
+             doc.save('PCTransactionDetails.pdf');
+
         }
 </script>
