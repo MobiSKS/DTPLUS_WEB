@@ -145,6 +145,10 @@ namespace HPCL_Web.Controllers
                             HttpContext.Session.SetString("CustomerZonalOfcName", loginRes[0].ZonalOfficeName ?? "");
                             HttpContext.Session.SetString("CustomerRegionalOfcName",loginRes[0].RegionalOfficeName ?? "");
 
+                            HttpContext.Session.SetInt32("CustomerSbuTypeId", loginRes[0].SBUTypeId);
+                            HttpContext.Session.SetString("CustomerSbuTypeName", loginRes[0].SBUName ?? "");
+
+
                             HttpContext.Session.SetString("UserId", loginRes[0].UserId.ToLower());
 
                             if (loginRes[0].LoginType == "Customer")
