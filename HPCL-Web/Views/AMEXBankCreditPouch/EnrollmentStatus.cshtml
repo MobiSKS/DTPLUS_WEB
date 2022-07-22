@@ -19,8 +19,11 @@
                                     <div class="d-flex align-items-center flex-wrap mb-3">
                                         <label class="font-weight-normal col-md-4 col-12">SBU Type</label>
                                         <div class="col-md-7 col-12">
-                                            <div class="custom_select">
+                                           <div class="custom_select" id="sbuTypeAll">
                                                 @Html.DropDownListFor(m => m.SBUTypeId, new SelectList(Model.SBUTypes, "SBUId", "SBUName"), new { @class = "form-control" })
+                                            </div>
+                                            <div class="custom_select" id="sbuTypeCust">
+                                                
                                             </div>
                                         </div>
                                     </div>
@@ -187,37 +190,43 @@
 
                var loginType = '@Context.Session.GetString("LoginType")';
 
-                if (loginType == "Customer") {
+               if (loginType == "Customer") {
 
-                    $("#SBUTypeId").attr("disabled",true);
+                   $("#sbuTypeAll").hide();
+                   $("#zonalAll").hide();
+                   $("#regionalAll").hide();
 
-                    $("#zonalAll").hide();
-                    $("#regionalAll").hide();
+                   $("#sbuTypeCust").html('');
+                   $("#sbuTypeCust").append("<select><option value=@Context.Session.GetInt32("CustomerSbuTypeId")>@Context.Session.GetString("CustomerSbuTypeName")</option></select>");
 
-                    $("#zonalcust").html('');
-                    $("#zonalcust").append("<select><option value='@Context.Session.GetString("CustomerZonalOfcId")'>@Context.Session.GetString("CustomerZonalOfcName")</option></select>");
+                   $("#zonalcust").html('');
+                   $("#zonalcust").append("<select><option value='@Context.Session.GetString("CustomerZonalOfcId")'>@Context.Session.GetString("CustomerZonalOfcName")</option></select>");
 
-                    $("#regionalCust").html('');
-                    $("#regionalCust").append("<select><option value='@Context.Session.GetString("RegionalOfcId")'>@Context.Session.GetString("CustomerRegionalOfcName")</option></select>");
+                   $("#regionalCust").html('');
+                   $("#regionalCust").append("<select><option value='@Context.Session.GetString("RegionalOfcId")'>@Context.Session.GetString("CustomerRegionalOfcName")</option></select>");
 
-                    $("#CustomerDefaultVal").val('@Context.Session.GetString("UserId")');
-                    $("#CustomerDefaultVal").attr("readonly",true);
+                   $("#CustomerDefaultVal").val('@Context.Session.GetString("UserId")');
+                   $("#CustomerDefaultVal").attr("readonly",true);
 
-                    $("#ZO").attr("disabled",true);
-                    $("#RO").attr("disabled",true);
+                   //$("#SBUTypeId").attr("disabled",true);
+                   //$("#ZO").attr("disabled",true);
+                   //$("#RO").attr("disabled",true);
 
-                    $("#zonalcust").show();
-                    $("#regionalCust").show();
-                }else{
-                    $("#SBUTypeId").attr("disabled",false);
-                    $("#ZO").attr("disabled",false);
-                    $("#RO").attr("disabled",false);
-                    $("#CustomerDefaultVal").attr("readonly",false);
-                    $("#zonalcust").hide();
-                    $("#regionalCust").hide();
-                    $("#zonalAll").show();
-                    $("#regionalAll").show();
-                }
+                   $("#sbuTypeCust").show();
+                   $("#zonalcust").show();
+                   $("#regionalCust").show();
+               }else{
+                   //$("#SBUTypeId").attr("disabled",false);
+                   //$("#ZO").attr("disabled",false);
+                   //$("#RO").attr("disabled",false);
+                   $("#CustomerDefaultVal").attr("readonly",false);
+                   $("#sbuTypeCust").hide();
+                   $("#zonalcust").hide();
+                   $("#regionalCust").hide();
+                   $("#sbuTypeAll").show();
+                   $("#zonalAll").show();
+                   $("#regionalAll").show();
+               }
 
                function isNumberKey(evt) {
                     var charCode = (evt.which) ? evt.which : event.keyCode;
