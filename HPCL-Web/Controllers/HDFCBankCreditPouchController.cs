@@ -1,4 +1,5 @@
 ﻿using HPCL.Common.Helper;
+using HPCL.Common.Models.CommonEntity;
 using HPCL.Common.Models.ResponseModel.HDFCBankCreditPouch;
 using HPCL.Common.Models.ViewModel.HDFCBankCreditPouch;
 using HPCL.Service.Interfaces;
@@ -22,7 +23,7 @@ namespace HPCL_Web.Controllers
         }
         public IActionResult Index()
         {
-            return View();  
+            return View(SessionMenuModel.menuList);  
         }
 
         public IActionResult ExceptionRequestToAddCustomer()

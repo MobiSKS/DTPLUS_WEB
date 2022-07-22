@@ -263,8 +263,8 @@ namespace HPCL.Service.Services
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
                 UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
-                RegionalId = _httpContextAccessor.HttpContext.Session.GetString("LoginType") == "Admin" ? "": _httpContextAccessor.HttpContext.Session.GetString("RegionalId"),
-                CustomerId=customerId
+                RegionalId = _httpContextAccessor.HttpContext.Session.GetString("LoginType") == "Admin" ? "" : _httpContextAccessor.HttpContext.Session.GetString("RegionalId"),
+                CustomerId = customerId
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");
@@ -290,7 +290,7 @@ namespace HPCL.Service.Services
 
 
 
-            
+
         }
         public async Task<List<SuccessResponseTatkalCustomer>> UpdateTatkalCardtoCustomer([FromBody] MapTatkalCardtoCustomerUpdateModel UpdateDetails)
         {
@@ -303,7 +303,8 @@ namespace HPCL.Service.Services
                 UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 CustomerId = UpdateDetails.CustomerId,
                 ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
-                ObjCardMap = UpdateDetails.ObjCardMap
+                ObjCardMap = UpdateDetails.ObjCardMap,
+                RegionalOfcId = _httpContextAccessor.HttpContext.Session.GetString("LoginType") == "Admin" ? "" : _httpContextAccessor.HttpContext.Session.GetString("RegionalId"),
             };
 
             StringContent requestContent = new StringContent(JsonConvert.SerializeObject(RequestForms), Encoding.UTF8, "application/json");
@@ -339,14 +340,14 @@ namespace HPCL.Service.Services
                 FromDate = entity.FromDate,
                 ToDate = entity.ToDate,
                 StatusId = entity.StatusId == "-1" ? "" : entity.StatusId,
-                SBUTypeId=entity.SBUTypeId,
+                SBUTypeId = entity.SBUTypeId,
 
             };
             StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
             var response = await _requestService.CommonRequestService(content, WebApiUrl.viewtatkalcards);
 
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
-            ViewTatkalCardsResponseModel ViewTatkalCardsResponseModel  = obj.ToObject<ViewTatkalCardsResponseModel>();
+            ViewTatkalCardsResponseModel ViewTatkalCardsResponseModel = obj.ToObject<ViewTatkalCardsResponseModel>();
 
             return ViewTatkalCardsResponseModel;
         }

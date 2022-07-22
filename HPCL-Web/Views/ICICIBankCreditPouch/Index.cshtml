@@ -1,79 +1,27 @@
-﻿<div style="width:100%;">
+﻿@model IEnumerable<HPCL.Common.Models.CommonEntity.MenuDetailModel>
+@using Microsoft.AspNetCore.Http;
+
+@{
+    int menuID = Model.FirstOrDefault().CalledMenuId;
+}
+
+<div style="width:100%;">
     <div class="pt-3 px-0">
         <div class="d-flex align-items-stretch justify-content-start flex-wrap">
-
-            <div class="col-lg-3 col-md-4 col-12 mb-3">
-                <a href="@Url.Action("RequestToAvail", "ICICIBankCreditPouch")" class="dashboard_thumb py-3 d-flex align-items-start justify-content-start">
-                    <div class="thumb_icon">
-                        <img src="~/assets/images/manage_users.png" class="img-fluid" alt="">
-                    </div>
-                    <div class="px-3">
-                        <h4>Request to avail ICICI Bank Credit Pouch</h4>
-                        <p>Request to avail ICICI Bank Credit Pouch</p>
-                    </div>
-                </a>
-            </div>
-
-            <div class="col-lg-3 col-md-4 col-12 mb-3">
-                <a href="@Url.Action("ExceptionRequestToAddCustomer", "ICICIBankCreditPouch")" class="dashboard_thumb py-3 d-flex align-items-start justify-content-start">
-                    <div class="thumb_icon">
-                        <img src="~/assets/images/manage_users.png" class="img-fluid" alt="">
-                    </div>
-                    <div class="px-3">
-                        <h4>Exception Request to Add Customer for ICICI Bank Credit Pouch</h4>
-                        <p>Exception Request to Add Customer for ICICI Bank Credit Pouch</p>
-                    </div>
-                </a>
-            </div>
-
-            <div class="col-lg-3 col-md-4 col-12 mb-3">
-                <a href="@Url.Action("RequestApproval", "ICICIBankCreditPouch")" class="dashboard_thumb py-3 d-flex align-items-start justify-content-start">
-                    <div class="thumb_icon">
-                        <img src="~/assets/images/manage_users.png" class="img-fluid" alt="">
-                    </div>
-                    <div class="px-3">
-                        <h4>ICICI Bank Credit Pouch Request Approval</h4>
-                        <p>ICICI Bank Credit Pouch Request Approval</p>
-                    </div>
-                </a>
-            </div>
-
-            <div class="col-lg-3 col-md-4 col-12 mb-3">
-                <a href="@Url.Action("EnrollmentStatus", "ICICIBankCreditPouch")" class="dashboard_thumb py-3 d-flex align-items-start justify-content-start">
-                    <div class="thumb_icon">
-                        <img src="~/assets/images/manage_users.png" class="img-fluid" alt="">
-                    </div>
-                    <div class="px-3">
-                        <h4>Enrollment Status – Credit Pouch</h4>
-                        <p>Enrollment Status – Credit Pouch</p>
-                    </div>
-                </a>
-            </div>
-
-            <div class="col-lg-3 col-md-4 col-12 mb-3">
-                <a href="@Url.Action("RequestAuthorization", "ICICIBankCreditPouch")" class="dashboard_thumb py-3 d-flex align-items-start justify-content-start">
-                    <div class="thumb_icon">
-                        <img src="~/assets/images/manage_users.png" class="img-fluid" alt="">
-                    </div>
-                    <div class="px-3">
-                        <h4>ICICI Bank Credit Pouch Request Authorization</h4>
-                        <p>ICICI Bank Credit Pouch Request Authorization</p>
-                    </div>
-                </a>
-            </div>
-
-   @*         <div class="col-lg-3 col-md-4 col-12 mb-3">
-                <a href="@Url.Action("CCMSRechargeThroughCreditPouch", "ICICIBankCreditPouch")" class="dashboard_thumb py-3 d-flex align-items-start justify-content-start">
-                    <div class="thumb_icon">
-                        <img src="~/assets/images/manage_users.png" class="img-fluid" alt="">
-                    </div>
-                    <div class="px-3">
-                        <h4>CCMS Recharge through Credit Pouch– ICICI Bank</h4>
-                        <p>CCMS Recharge through Credit Pouch– ICICI Bank</p>
-                    </div>
-                </a>
-            </div>*@
-
+            @foreach (var mdl in Model.Where(x => x.ParentMenuId == menuID && x.UserID == Context.Session.GetString("UserId") && x.MenuLevel != 1).OrderBy(x => x.MenuOrder))
+            {
+                <div class="col-lg-3 col-md-4 col-12 mb-3">
+                    <a href="@Url.Action(mdl.Action, mdl.Controller)" class="dashboard_thumb py-3 d-flex align-items-start justify-content-start">
+                        <div class="thumb_icon">
+                            <img src="/icons/@mdl.ImageUrl" class="img-fluid" alt="">
+                        </div>
+                        <div class="px-3">
+                            <h4>@mdl.Heading</h4>
+                            <p>@mdl.Details</p>
+                        </div>
+                    </a>
+                </div>
+            }
         </div>
     </div>
 </div>

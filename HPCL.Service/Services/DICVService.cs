@@ -5,6 +5,8 @@ using HPCL.Common.Models.CommonEntity.ResponseEnities;
 using HPCL.Common.Models.RequestModel.DICV;
 using HPCL.Common.Models.RequestModel.Merchant;
 using HPCL.Common.Models.ResponseModel.AshokLayland;
+using HPCL.Common.Models.ResponseModel.Customer;
+using HPCL.Common.Models.ResponseModel.DICV;
 using HPCL.Common.Models.ViewModel.DICV;
 using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Http;
@@ -197,6 +199,82 @@ namespace HPCL.Service.Services
             responseData.Internel_Status_Code = Convert.ToInt32(obj["Internel_Status_Code"].ToString());
 
             return responseData;
+        }
+        public async Task<DICVOTCCardRequestModel> DICVDealerOTCCardRequest()
+        {
+            var model = new DICVOTCCardRequestModel();
+            model.Remarks = "";
+            return model;
+        }
+        public async Task<GetDICVBalanceOTCCardResponse> CheckDICVDealerBalanceQty(string DealerCode)
+        {
+            GetDICVBalanceOTCCardResponse responseData = new GetDICVBalanceOTCCardResponse();
+
+            VerifyDealerRequestModel requestinfo = new VerifyDealerRequestModel()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                DealerCode = DealerCode
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(requestinfo), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getJcbBalanceOtcCard);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<GetDICVBalanceOTCCardResponse> searchList = jarr.ToObject<List<GetDICVBalanceOTCCardResponse>>();
+            responseData = searchList[0];
+            responseData.Internel_Status_Code = Convert.ToInt32(obj["Internel_Status_Code"].ToString());
+
+            if (responseData != null && responseData.Status == 1)
+            {
+                Int32 totalCard = Convert.ToInt32(string.IsNullOrEmpty(responseData.TotalCard) ? "0" : responseData.TotalCard);
+                //Int32 balanceCard = Convert.ToInt32(string.IsNullOrEmpty(responseData.BalanceCard) ? "0" : responseData.BalanceCard);
+                //if ((totalCard - balanceCard) >= 0)
+                //    responseData.BalanceRequestCard = (totalCard - balanceCard).ToString();
+                //else
+                //    responseData.BalanceRequestCard = "0";
+                responseData.BalanceRequestCard = responseData.BalanceCard;
+            }
+            else
+            {
+                responseData.BalanceRequestCard = "0";
+            }
+
+            return responseData;
+        }
+        public async Task<DICVOTCCardRequestModel> DICVDealerOTCCardRequest(DICVOTCCardRequestModel model)
+        {
+            model.UserAgent = CommonBase.useragent;
+            model.UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress");
+            model.UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
+            model.CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId");
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.insertDealerWiseDicvOtcCardRequest);
+
+
+            CustomerResponse customerResponse = JsonConvert.DeserializeObject<CustomerResponse>(response);
+
+            model.Internel_Status_Code = customerResponse.Internel_Status_Code;
+            model.Remarks = customerResponse.Message;
+
+            if (customerResponse.Internel_Status_Code != 1000)
+            {
+                if (customerResponse.Data != null && customerResponse.Data.Count > 0)
+                    model.Remarks = customerResponse.Data[0].Reason;
+                else
+                    model.Remarks = customerResponse.Message;
+            }
+            else
+            {
+                if (customerResponse.Data != null && customerResponse.Data.Count > 0)
+                    model.Remarks = customerResponse.Data[0].Reason;
+            }
+
+            return model;
         }
 
     }
