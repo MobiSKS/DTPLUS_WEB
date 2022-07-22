@@ -491,7 +491,7 @@ namespace HPCL.Service.Services
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 MerchantID = entity.MerchantID,
                 StateID = entity.StateID,
-                DistrictID = entity.DistrictID,
+                DistrictID = entity.DistrictID ?? null,
                 City = entity.City,
                 HighwayName = entity.HighwayName,
                 HighwayNo1 = "",
