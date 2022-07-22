@@ -1,0 +1,564 @@
+﻿@model HPCL.Common.Models.ViewModel.PC_HDFCBankCreditPouch.GetRequestAuthorizationReq
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ajax-unobtrusive/3.2.6/jquery.unobtrusive-ajax.js"></script>
+
+<div class="col-lg-12">
+    <div class="bg-white p-2 p-md-4">
+        <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
+            <li class="breadcrumb-item"><a href="@Url.Action("Index")" class="text_primary">HDFC Bank Credit Pouch</a> </li>
+            <li class="breadcrumb-item font-weight-light">HDFC Bank Credit Pouch Request Authorization</li>
+        </ul>
+        <form id="formValid">
+            <div class="w-100">
+                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mb-3">
+                    <div class="border-1 rounded border-grey pb-0">
+                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">HDFC Bank Credit Pouch Request Authorization</p>
+                        <div class="col-lg-12 col-md-12 col-12 py-3">                         
+                            <div id="successUpdate" class="mb-3 text-center alert alert-success" style="display:none;"></div>
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">From Date</label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.FromDate, new { @class = "form-control fromDate",@placeholder="dd-mm-yyyy", @autocomplete = "off", @onchange = "checkDates('fromDate_error');" })
+                                            </div>
+                                            @Html.ValidationMessageFor(m => m.FromDate, "", new { @class = "text-danger", @id = "fromDate_error" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal offset-md-1 col-md-4 col-12">To Date</label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.ToDate, new { @class = "form-control toDate",@placeholder="dd-mm-yyyy", @autocomplete = "off", @onchange = "checkDates('fromDate_error');" })
+                                            </div>
+                                            @Html.ValidationMessageFor(m => m.ToDate, "", new { @class = "text-danger", @id = "toDate_error" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                              <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">Customer ID</label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.CustomerId, new { @id = "CustomerDefaultVal", @class = "form-control restrictPaste", onkeypress = "return isNumberKey(event)" })
+                                                @Html.ValidationMessageFor(m => m.CustomerId, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="d-flex align-items-center justify-content-center mt-3">
+                                <div class="px-md-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2">
+                                    <button class="btn btn_primary" type="button" name="submit" onclick="searchEnroll()">Search</button>
+                                </div>
+                                <div class="px-md-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2">
+                                    <a class="btn btn_primary" href="#" id="btnCancel" name="cancel" onclick="resetClick()">Reset</a>
+                                </div>
+                                <div class="px-md-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2">
+                                      <button class="btn btn_primary" type="button" onclick="tableToCSV()">Export to Excel</button>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div id="noRecord" class="mb-0 mt-3 text-center alert alert-danger" style="display:none;"></div>
+
+                        <div id="approvalRejectSection" style="display:none;">
+                            <div class="table-responsive mt-3">
+                                <table id="authHdfcList" class="datatable table table-striped d-block table-bordered nowrap table-responsive mt-3" style="width:100%;">
+                                    <thead>
+                                        <tr>
+                                            <th>S.No.</th>
+                                            <th>Select</th>
+                                            <th>Reference No.</th>
+                                            <th>ZO</th>
+                                            <th>RO</th>
+                                            <th>Customer ID</th>
+                                            <th>Customer Name</th>
+                                            <th>Address</th>
+                                            <th>Mobile No.</th>
+                                            <th>Email</th>
+                                            <th>Requested By</th>
+                                            <th>Requested On</th>
+                                            <th>Approved By</th>
+                                            <th>Approved On</th>
+                                            <th>Authorization Remarks</th>
+                                            <th>Credit Limit assigned per Month(in Rs)</th>
+                                            <th>Status</th>
+                                            <th style="min-width:70px">Action</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+
+                            <div class="d-flex align-items-center justify-content-center mt-3">
+                                <div class="px-md-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2">
+                                    <button class="btn btn_primary" type="button" onclick="requestAuthSubmit()">Submit</button>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </form>
+        <div class="clearfix"></div>
+    </div>
+</div>
+
+
+@using Microsoft.AspNetCore.Http;
+<script src="https://rawgit.com/moment/moment/2.2.1/min/moment.min.js"></script>
+
+
+<script type="text/javascript">
+
+        function resetClick() {
+            window.location.reload();
+        }
+
+        $('.restrictPaste').on('paste', function (event) {
+            if (event.originalEvent.clipboardData.getData('Text').match(/[^\d]/)) {
+                event.preventDefault();
+            }
+        });
+
+        $("#authHdfcList").on('keydown', '.cLimit', function (event) {
+            if (event.shiftKey == true) {
+                event.preventDefault();
+            }
+            if ((event.keyCode >= 48 && event.keyCode <= 57) || (event.keyCode >= 96 && event.keyCode <= 105) || event.keyCode == 8 || event.keyCode == 9 || event.keyCode == 37 || event.keyCode == 39 || event.keyCode == 46 || event.keyCode == 190 || event.keyCode==110) {
+
+            } else {
+                event.preventDefault();
+            }
+            if($(this).val().indexOf('.') !== -1 && (event.keyCode == 190|| event.keyCode == 110))
+                event.preventDefault();
+        });
+
+        $(document).ready(function () {
+
+           function isNumberKey(evt) {
+                var charCode = (evt.which) ? evt.which : event.keyCode;
+                if (charCode != 46 && charCode > 31
+                    && (charCode < 48 || charCode > 57))
+                    return false;
+
+                return true;
+            }
+
+            $('select').SumoSelect({
+                placeholder: '-Select-',
+                search: true,
+                searchText: 'Enter Text here.'
+            });
+        });
+
+
+    $("#authHdfcList").on('click', '.checkRow', function (e) {
+
+        currentRow = $(this).closest("tr");
+
+        if ($(this).is(':checked')) {
+
+            currentRow.find('.cLimit').attr("disabled", false);
+            currentRow.find('.remarksVal').attr("disabled", false);
+            currentRow.find('.actionVal').attr("disabled", false);
+        }
+        if (!$(this).is(':checked')) {
+            currentRow.find('.cLimit').attr("disabled", true);
+            currentRow.find('.remarksVal').attr("disabled", true);
+            currentRow.find('.actionVal').attr("disabled", true);
+            currentRow.find('.errs').css("display", "none");
+        }
+    });
+
+    function searchEnroll() {
+
+        document.getElementById("successUpdate").style.display = "none";
+
+        var fromdate = $("#FromDate").val();
+        var todate = $("#ToDate").val();
+
+        var flag = "Y";
+        if (fromdate != "" && todate != "") {
+            flag = checkDates("fromdate_error");
+        }
+
+        if (flag == "N")
+            e.preventDefault();
+
+        if (flag == "Y") {
+            if ($("#formValid").valid()) {
+
+                $.ajax({
+                    type: 'POST',  // http method
+                    url: '@Url.Action("RequestAuthorization", "PC_HDFCBankCreditPouch")',
+                    data: $('#formValid').serialize(),  // data to submit
+                    success: function (res, status, xhr) {
+
+                        console.log("res",res);
+
+                        if (res.searchList.success == true) {
+
+                            var girdList = res.searchList.data;
+
+                            document.getElementById("noRecord").style.display = "none";
+
+                            $('#authHdfcList').DataTable().clear().destroy();
+
+                            var tbl = $('#authHdfcList').DataTable({
+                                paging: true,
+                                searching: false,
+                                stateSave: true,
+                                "bDestroy": true,
+                                "lengthMenu": [10, 20, 50, 100, 200, 500, 1000, 2000],
+                                "autoWidth": false,
+                                "oLanguage": {
+                                    "sLengthMenu": "Display _MENU_ Records",
+                                    "info": "Showing _START_ to _END_ of _TOTAL_ Records",
+                                }
+                            });
+
+                            for (var i = 0; i < girdList.length; i++) {
+
+                                var reqOn;
+                                var appOn;
+
+                                if(((girdList[i].requestedDate) == "01-01-0001") || ((girdList[i].requestedDate) == "01-01-1900") || ((girdList[i].requestedDate) == null)){
+                                    reqOn = "";
+                                }else{
+                                    reqOn = moment(girdList[i].requestedDate, 'DD-MM-YYYY').format('DD-MM-YYYY');
+                                }
+
+                                if(((girdList[i].approvedDate) == "01-01-0001") || ((girdList[i].approvedDate) == "01-01-1900") || ((girdList[i].approvedDate) == null)){
+                                    appOn = "";
+                                }else{
+                                    appOn = moment(girdList[i].approvedDate, 'DD-MM-YYYY').format('DD-MM-YYYY');
+                                }
+
+                                var srNumber = (i + 1);
+                                var select = "<input type='checkbox' class='checkRow'>";
+                                var refNo = (girdList[i].referenceNo || '');
+                                var zo = (girdList[i].zo || '');
+                                var ro = (girdList[i].ro || '');
+                                var customerId = "<span class='getCustId'>"+(girdList[i].customerId || '')+"</span>";
+                                var customerName = (girdList[i].customerName || '');
+                                var address =  (girdList[i].address || '');
+                                var mobNo = (girdList[i].mobileNo || '');
+                                var email = (girdList[i].email || '');
+                                var reqBy = (girdList[i].requestedBy || '');
+                                var requestNo = reqOn;
+                                var approvedBy = (girdList[i].approvedBy || '');
+                                var approveOn = appOn;
+                                var remarks = "<div style='width:160px;'><textarea onblur='remarksChange(this," + (i) + ")' disabled='disabled' class='form-control remarksVal' maxlength = '250'></textarea><i style='display:none;margin-top:10px;' class='fa fa-exclamation-triangle errs' id='remarks_error_"+i+"' aria-hidden='true'></i></div>";
+                                var creditLimit = "<div style='width:160px;'><input type='text' id='creditlimit_id_"+i+"' onblur='limitOnChage(this," + (i) + ")' disabled='disabled' maxlength='10' class='form-control cLimit' maxlength = '250' /><i style='display:none;margin-top:10px;' class='fa fa-exclamation-triangle errs' id='creditlimit_error_"+i+"' aria-hidden='true'></i></div>";
+                                var status = (girdList[i].actionStatus || '');
+                                var action = "<select disabled='disabled' id='actionchange_id_"+i+"' onchange='actionChange(this," + (i) + ")' class='form-control actionVal'></select><span style='display:none;' class='reqId'>"+(res.searchList.data[i].requestNo)+"</span>";
+
+                                tbl.row.add([
+                                   srNumber,
+                                   select,
+                                   refNo,
+                                   zo,
+                                   ro,
+                                   customerId,
+                                   customerName,
+                                   address,
+                                   mobNo,
+                                   email,
+                                   reqBy,
+                                   requestNo,
+                                   approvedBy,
+                                   approveOn,
+                                   remarks,
+                                   creditLimit,
+                                   status,
+                                   action
+                                ]).draw();
+                            }
+
+                            $.ajax({
+                                type: 'POST',  // http method
+                                url: '@Url.Action("GetCreditPouchStatus", "Common")',
+                                data: {pagename : "BankAuthorization"},
+                                dataType: "json",
+                                success: function (data, status, xhr) {
+
+                                    console.log(data);
+                                    $.each(data.getStatus, function (i, option) {
+                                        $("<option/>").val(option.statusId).text(option.statusName).appendTo(".actionVal");
+                                    });
+                                },
+                                error: function (jqXhr, textStatus, errorMessage) {
+                                    alert("Error Populating Status Type");
+                                }
+                            });
+
+                            document.getElementById('approvalRejectSection').style.display = 'block';
+                        } else {
+                            document.getElementById("approvalRejectSection").style.display = "none";
+                            $("#noRecord").html("");
+                            $("#noRecord").append("<span>" + res.searchList.message + "</span>");
+                            document.getElementById("noRecord").style.display = "block";
+                        }
+
+                    },
+                    error: function (jqXhr, textStatus, errorMessage) {
+                        console.log("Error");
+                    }
+                });
+            } else {
+                return false;
+            }
+        }
+    }
+
+    
+    function requestAuthSubmit(){
+
+        document.getElementById("successUpdate").style.display = "none";
+        document.getElementById("noRecord").style.display = "none";
+
+        var updateArray = new Array();
+
+        var flag = "Y";
+        var CustomerId;
+
+        $("#authHdfcList input[type=checkbox]:checked").each(function () {
+            
+            var selectedRow = $(this).closest("tr")[0];
+          
+            var indexS = (selectedRow.rowIndex) - 1;
+
+            console.log("indexS",indexS);
+
+            var row = $(this).closest("tr");
+
+            CustomerId = row.find('.getCustId').text();
+            var RequestId = row.find('.reqId').text();
+            var AuthorizationRemark = row.find('.remarksVal').val();
+            var ActionType = row.find('.actionVal option:selected').val();
+            var CreditLimitAssigned = row.find('.cLimit').val();
+            var AuthorizBy = row.find('.getCustId').text();
+            
+            updateArray.push({
+                CustomerId: CustomerId,
+                RequestId: RequestId,
+                AuthorizationRemark: AuthorizationRemark,
+                ActionType: ActionType,
+                CreditLimitAssigned: CreditLimitAssigned,
+                AuthorizBy: '@Context.Session.GetString("UserId")'
+            });
+
+            if(AuthorizationRemark.trim() == ''){
+                document.getElementById('remarks_error_'+indexS).title="Please enter Authorization Remarks.";
+                document.getElementById('remarks_error_'+indexS).style.display = "block";
+                flag = "N";
+            }
+            else{
+             if(AuthorizationRemark.trim()!=''){
+                if (!AuthorizationRemark.match(/^[A-Za-z0-9 ]+$/)){
+                    document.getElementById('remarks_error_'+indexS).title="Special characters are not allowed";
+                    document.getElementById('remarks_error_'+indexS).style.display = "block";
+                    flag = "N";
+                }
+              }
+            }
+
+            if(CreditLimitAssigned.trim() == ''){
+                document.getElementById('creditlimit_error_'+indexS).title="Please enter Credit Limit.";
+                document.getElementById('creditlimit_error_'+indexS).style.display = "block";
+                flag = "N";
+            }else if(CreditLimitAssigned.trim() == 0){
+                document.getElementById('creditlimit_error_'+indexS).title="Invalid Credit Limit";
+                document.getElementById('creditlimit_error_'+indexS).style.display = "block";
+                flag = "N";
+            }    
+
+
+        });
+
+        if (CustomerId == undefined) {
+                alert("Please select atleast one record");
+                flag = "N";
+        }
+ 
+        if (flag == "N")
+            e.preventDefault();
+
+        if (flag == "Y") {
+
+            if (confirm('Are you sure! You want to process the selected record(s)?')) {
+                console.log('ok');
+
+                $("#authHdfcList input[type=checkbox]:checked").each(function () {
+                    var selectedRow = $(this).closest("tr")[0];
+                    console.log("index",selectedRow.rowIndex);
+                    var indexS = (selectedRow.rowIndex) - 1;
+                    document.getElementById('remarks_error_'+indexS).style.display = "none";
+                    $(this).closest("tr").find(".checkRow").prop('checked',false);
+                    $(this).closest("tr").find('.remarksVal').val('');
+                    $(this).closest("tr").find('.cLimit').val('');
+                    $(this).closest("tr").find('.cLimit').attr("disabled", true);
+                    $(this).closest("tr").find('.remarksVal').attr("disabled", true);
+                    $(this).closest("tr").find('.actionVal').attr("disabled", true);
+                });
+
+                $.ajax({
+                    url: "@Url.Action("AuthorizationAction", "PC_HDFCBankCreditPouch")",
+                    type: "POST",
+                    traditional: true,
+                    data: { authReq: JSON.stringify(updateArray) },
+                    success: function (res) {
+
+                        if(res.reasonList[0].status == 1){
+                            $("#successUpdate").html('');
+                            $("#successUpdate").append("<span>"+(res.reasonList[0].reason)+"</span>");
+                            document.getElementById("successUpdate").style.display = "block";
+                        }else{
+                            $("#noRecord").html('');
+                            $("#noRecord").append("<span>"+(res.reasonList[0].reason)+"</span>");
+                            document.getElementById("noRecord").style.display = "block";
+                        }
+                    },
+                    error: function (ex) {
+                        alert('Failed' + ex);
+                    }
+                });
+
+            } else {
+                console.log('cancel')
+            }
+        }
+    }
+
+    function remarksChange(o, rowSelected){
+
+       var AuthorizationRemark = o.value;
+       
+       if(AuthorizationRemark.trim() == ''){
+                document.getElementById('remarks_error_'+rowSelected).title="Please enter Apporval Remarks.";
+                document.getElementById('remarks_error_'+rowSelected).style.display = "block";
+                return false;
+            }else{
+            if(AuthorizationRemark.trim()!=''){
+                if (!AuthorizationRemark.match(/^[A-Za-z0-9 ]+$/)){
+                    document.getElementById('remarks_error_'+rowSelected).title="Special characters are not allowed";
+                    document.getElementById('remarks_error_'+rowSelected).style.display = "block";
+                    return false;
+                }else{
+                    document.getElementById('remarks_error_'+rowSelected).title="";
+                    document.getElementById('remarks_error_'+rowSelected).style.display = "none";
+                }
+            }
+        }
+    }
+
+    function limitOnChage(o, rowSelected){
+
+       var creditLimit = o.value;
+       
+       if(creditLimit.trim() == ''){
+            document.getElementById('creditlimit_error_'+rowSelected).title="Please enter Credit Limit.";
+            document.getElementById('creditlimit_error_'+rowSelected).style.display = "block";
+            return false;
+       }
+       
+       if($('#actionchange_id_'+rowSelected).val() == "6" || $('#actionchange_id_'+rowSelected).val() == "7"){
+           if(creditLimit.trim() == 0){
+                document.getElementById('creditlimit_error_'+rowSelected).title="Invalid Credit Limit";
+                document.getElementById('creditlimit_error_'+rowSelected).style.display = "block";
+                return false;
+           }else{   
+               document.getElementById('creditlimit_error_'+rowSelected).title="";
+               document.getElementById('creditlimit_error_'+rowSelected).style.display = "none";
+           }  
+       } 
+    }
+
+    function actionChange(o, rowSelected){
+        var actionNameChange = o.value;
+
+        if(actionNameChange == "8"){
+            $('#creditlimit_error_'+rowSelected).attr("style", "display:none");
+            $('#creditlimit_id_'+rowSelected).val("0.00");
+            $('#creditlimit_id_'+rowSelected).attr("readonly", true);
+        }else if(actionNameChange == "6" || actionNameChange == "7"){
+            $('#creditlimit_id_'+rowSelected).val('');
+            $('#creditlimit_id_'+rowSelected).attr("readonly", false);
+        }
+    }
+
+    function downloadCSVFile(csv_data,fileName) {
+
+        CSVFile = new Blob([csv_data], {
+            type: "text/excel"
+        });
+
+        var temp_link = document.createElement('a');
+
+        temp_link.download = fileName;
+        var url = window.URL.createObjectURL(CSVFile);
+        temp_link.href = url;
+
+        temp_link.style.display = "none";
+        document.body.appendChild(temp_link);
+
+        temp_link.click();
+        document.body.removeChild(temp_link);
+    }
+
+    function tableToCSV(){
+        var csv_data = [];
+        var rows = document.getElementById("authHdfcList").getElementsByTagName('tr');
+        if (rows.length > 0) {
+            for (var i = 0; i < rows.length; i++) {
+                var cols = rows[i].querySelectorAll('td,th');
+                var csvrow = [];
+                for (var j = 0; j < cols.length; j++) {
+
+                    if(j != 1 && j != 17){
+                        console.log("cols[j]", cols[j]);
+
+                        const checkBox = cols[j].querySelector('input[class="checkX"]');
+
+                        const custVal = cols[j].querySelector('span');
+                        const remarks = cols[j].querySelector('textarea');
+                        const amt = cols[j].querySelector('input');
+
+                        if(!checkBox){
+                            if(custVal){
+                                csvrow.push(custVal.innerText);
+                            }else if(remarks){
+                                csvrow.push(remarks.value);
+                            }else if(amt){
+                                csvrow.push(amt.value);
+                            }else{
+                                csvrow.push(cols[j].innerText.replace(/,/g, " "));
+                            } 
+                        }
+                    }
+                }
+
+                csv_data.push(csvrow.join(","));
+            }
+            csv_data = csv_data.join('\n');
+
+            var fileName = "HDFCCreditPouchRequestAuthorization.csv";
+
+            downloadCSVFile(csv_data,fileName);
+        }
+    }
+</script>
+
+<style>
+textarea {
+   resize: none;
+}
+</style>

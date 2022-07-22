@@ -14,7 +14,7 @@
                     <div class="border-1 rounded border-grey pb-0">
                         <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Enrollment Status – Credit Pouch</p>
                         <div class="col-lg-12 col-md-12 col-12 py-3">
-                            <div class="d-flex align-items-center flex-wrap">
+                            <div class="d-flex align-items-center flex-wrap" id="sbutypeSection">
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
                                         <label class="font-weight-normal col-md-4 col-12">SBU Type</label>
@@ -26,13 +26,15 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="d-flex align-items-center flex-wrap">
+                            <div class="d-flex align-items-center flex-wrap" id="zonalRegionalOfcSection">
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
                                         <label class="font-weight-normal col-md-4 col-12">Zonal Office</label>
                                         <div class="col-md-7 col-12">
-                                            <div class="custom_select">
+                                            <div class="custom_select" id="zonalAll">
                                                 @Html.DropDownListFor(m => m.ZO, new SelectList(Model.ZoneMdl, "ZonalOfficeID", "ZonalOfficeName"), new { @class = "form-control", onchange = "getRegionalOfc()" })
+                                            </div>
+                                             <div class="custom_select" id="zonalcust">
                                             </div>
                                         </div>
                                     </div>
@@ -41,8 +43,10 @@
                                     <div class="d-flex align-items-center flex-wrap mb-3">
                                         <label class="font-weight-normal offset-md-1 col-md-4 col-12">Regional Office</label>
                                         <div class="col-md-7 col-12">
-                                            <div class="custom_select">
+                                            <div class="custom_select" id="regionalAll">
                                                 @Html.DropDownListFor(m => m.RO, new SelectList(Model.RegionMdl, "RegionalOfficeID", "RegionalOfficeName"), new { @class = "form-control" })
+                                            </div>
+                                            <div class="custom_select" id="regionalCust">
                                             </div>
                                         </div>
                                     </div>
@@ -176,6 +180,41 @@
         });
 
         $(document).ready(function () {
+
+           var loginType = '@Context.Session.GetString("LoginType")';
+
+            if (loginType == "Customer") {
+
+                $("#SBUTypeId").attr("disabled",true);
+
+                $("#zonalAll").hide();
+                $("#regionalAll").hide();
+
+                $("#zonalcust").html('');
+                $("#zonalcust").append("<select><option value='@Context.Session.GetString("CustomerZonalOfcId")'>@Context.Session.GetString("CustomerZonalOfcName")</option></select>");
+
+                $("#regionalCust").html('');
+                $("#regionalCust").append("<select><option value='@Context.Session.GetString("RegionalOfcId")'>@Context.Session.GetString("CustomerRegionalOfcName")</option></select>");
+
+                $("#CustomerDefaultVal").val('@Context.Session.GetString("UserId")');
+                $("#CustomerDefaultVal").attr("readonly",true);
+
+                $("#ZO").attr("disabled",true);
+                $("#RO").attr("disabled",true);
+
+                $("#zonalcust").show();
+                $("#regionalCust").show();
+            }else{
+                $("#SBUTypeId").attr("disabled",false);
+                $("#ZO").attr("disabled",false);
+                $("#RO").attr("disabled",false);
+                $("#CustomerDefaultVal").attr("readonly",false);
+                $("#zonalcust").hide();
+                $("#regionalCust").hide();
+                $("#zonalAll").show();
+                $("#regionalAll").show();
+            }
+
 
            function isNumberKey(evt) {
                 var charCode = (evt.which) ? evt.which : event.keyCode;

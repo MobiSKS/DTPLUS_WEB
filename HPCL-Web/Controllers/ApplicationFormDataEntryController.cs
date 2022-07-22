@@ -195,6 +195,13 @@ namespace HPCL_Web.Controllers
                 return wb.Deliver("NewCardFormGeneral.xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
             }
         }
+        [HttpPost]
+        public async Task<JsonResult> GetCustomerStatus(string customerID)
+        {
+            var Model = await _applicationFormDataEntryService.GetCustomerStatus(customerID);
+
+            return Json(Model);
+        }
 
     }
 }

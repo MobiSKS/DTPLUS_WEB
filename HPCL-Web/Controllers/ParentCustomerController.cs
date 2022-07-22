@@ -267,7 +267,7 @@ namespace HPCL_Web.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<JsonResult> SubmitRestPinforParentCustomer([FromBody] ParentCustomerSearchRequestModel reqModel)
+        public async Task<JsonResult> SubmitRestPinforParentCustomer([FromBody] ControlCardPinRestRequestModel reqModel)
         {
             var modals = await _customerService.SubmitRestPinforParentCustomer(reqModel);
             return Json(modals);
@@ -328,6 +328,37 @@ namespace HPCL_Web.Controllers
             viewParentChildTransactionDetails = await _customerService.GetParentChildTransactionDetails(reqEntity);
 
             return Json(viewParentChildTransactionDetails);
+
+        }
+        public async Task<IActionResult> CustomerBasicSearch(BasicSearchViewModel reqEntity,string reset)
+        {
+            var modals = new BasicSearchViewModel();
+
+            if((reqEntity.CustomerId != null || reqEntity.CustomerName != null || reqEntity.NameOnCard != null || reqEntity.MobileNumber != null || reqEntity.FormNumber != null) && (reqEntity.CustomerId!="" ||reqEntity.CustomerName!="" || reqEntity.NameOnCard!=""|| reqEntity.MobileNumber!="" || reqEntity.FormNumber!=""))
+                modals = await _customerService.CustomerBasicSearch(reqEntity);
+            modals.SearchStateMdl.AddRange(await _commonActionService.GetStateList());
+            ViewBag.reset = String.IsNullOrEmpty(reset) ? "" : reset;
+            return View(modals);
+        }
+        public async Task<IActionResult> ViewParentCustomerProfile(string CustomerId,string RequestId)
+        {
+            //string CustomerId = "4000000029";
+            //string RequestId = "1770";
+            var modals = await _customerService.UpdateParentCustomer(CustomerId, RequestId);
+            return View(modals);
+        }
+        public async Task<IActionResult> ConvertParenttoAggregator(BasicSearchViewModel reqEntity, string reset)
+        {
+            var modals = new ConvertParenttoAggregatorViewModel();
+
+           
+            return View(modals);
+        }
+        [HttpPost]
+        public async Task<JsonResult> GetTransactionLocationDetails([FromBody]PCTransactionLocationrequest reqEntity)
+        {
+            var modals = await _customerService.GetTransactionLocationDetails(reqEntity);
+            return Json(modals);
 
         }
     }

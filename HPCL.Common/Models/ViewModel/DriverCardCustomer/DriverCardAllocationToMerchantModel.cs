@@ -20,7 +20,7 @@ namespace HPCL.Common.Models.ViewModel.DriverCardCustomer
         }
         public virtual List<CustomerRegionModel> RegionMdl { get; set; }
 
-        [Required(ErrorMessage = "No of Allocated Cards is Required")]
+        //[Required(ErrorMessage = "No of Allocated Cards is Required")]
         public string NoofAllocatedCards { get; set; }
 
         public string NoOfUnallocatedCards { get; set; }
@@ -30,7 +30,7 @@ namespace HPCL.Common.Models.ViewModel.DriverCardCustomer
         public string Remarks { get; set; }
         public int Internel_Status_Code { get; set; }
 
-        [Required(ErrorMessage = "Merchant ID is Required")]
+        //[Required(ErrorMessage = "Merchant ID is Required")]
         public string MerchantID { get; set; }
     }
 }

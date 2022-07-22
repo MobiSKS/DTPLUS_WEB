@@ -52,6 +52,7 @@ namespace HPCL.Service
             services.AddTransient<ICustomerDashBoardServices, CustomerDashBoardService>();
             services.AddTransient<IDICVService, DICVService>();
             services.AddTransient<IMODashboardService, MODashboardServices>();
+            services.AddTransient<IPC_HDFCBankCreditPouchService, PC_HDFCBankCreditPouchService >();
 
             return services;
         }

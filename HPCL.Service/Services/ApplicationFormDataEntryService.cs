@@ -342,6 +342,25 @@ namespace HPCL.Service.Services
             List<CustomerInserCardResponseData> lst = jarr.ToObject<List<CustomerInserCardResponseData>>();
             return lst[0];
         }
+        public async Task<CustomerInserCardResponseData> GetCustomerStatus(string customerID)
+        {
+            var requestInfo = new CheckCardIdentifierDuplicationRequest()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                CustomerID = customerID
+            };
+
+            StringContent cusFormcontent = new StringContent(JsonConvert.SerializeObject(requestInfo), Encoding.UTF8, "application/json");
+
+            var ResponseContent = await _requestService.CommonRequestService(cusFormcontent, WebApiUrl.getCustomerStatus);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(ResponseContent).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<CustomerInserCardResponseData> lst = jarr.ToObject<List<CustomerInserCardResponseData>>();
+            return lst[0];
+        }
 
     }
 }

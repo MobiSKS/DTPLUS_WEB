@@ -153,7 +153,6 @@
                                 <th>Odometer Reading</th>
                                 <th>Status</th>
 
-
                             </tr>
                         </thead>
 
@@ -185,7 +184,6 @@
                                 <th>Amount</th>
                                 <th>Odometer Reading</th>
                                 <th>Status</th>
-
                             </tr>
                         </thead>
 
@@ -195,7 +193,27 @@
                 </div>
             </div>
             <p class="px-3 py-2 m-0">** Service tax included in service charge.</p>
+             <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3" style="width:100%;display:none;" id="divLocation" >
+                <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold" id="locationText"></p>
+                <div id="divLocationDetails">
+                    <table id="locationDetailsTbl" class="table table-striped d-md-table d-block table-bordered nowrap table-responsive mt-3" style="width:100%;">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Customer ID</th>
+                                <th>Location</th>
+                                <th>City</th>
+                                <th>District</th>
+                                <th>NH</th>
+                                <th>State</th>
+                            </tr>
+                        </thead>
 
+                    </table>
+                </div>
+                <div id="locationReason" class="mb-3 text-center alert alert-danger" style="display:none">
+                </div>
+            </div>
         </div>
     </div>
     <div class="clearfix"></div>
@@ -309,22 +327,22 @@
                             if(parentDetails.length>0){
                                  $('#ParentDetails').DataTable().clear().destroy();
 
-                                var tbl = $('#ParentDetails').DataTable({
-                                    paging: true,
-                                    searching: false,
-                                    stateSave: true,
-                                    "bDestroy": true,
-                                    "lengthMenu": [10, 20, 50, 100, 200, 500, 1000, 2000],
-                                    "autoWidth": false,
-                                    "oLanguage": {
-                                        "sLengthMenu": "Display _MENU_ Records",
-                                        "info": "Showing _START_ to _END_ of _TOTAL_ Records",
-                                    }
-                                });
+                                var tbl = $('#ParentDetails').DataTable();
+                                //    paging: true,
+                                //    searching: false,
+                                //    stateSave: true,
+                                //    "bDestroy": true,
+                                //    "lengthMenu": [10, 20, 50, 100, 200, 500, 1000, 2000],
+                                //    "autoWidth": false,
+                                //    "oLanguage": {
+                                //        "sLengthMenu": "Display _MENU_ Records",
+                                //        "info": "Showing _START_ to _END_ of _TOTAL_ Records",
+                                //    }
+                                //});
 
                                 for (var i = 0; i < parentDetails.length; i++) {
                                     var srNumber = (i + 1);
-                                    var terminalId = (parentDetails[i].terminalId|| '');
+                                    var terminalId = "<a href='#' class='location' onclick='loadTransactionLocationDetails(this,"+parentDetails[i].customerID+","+parentDetails[i].transactionId+")'>"+(parentDetails[i].terminalId|| '')+"</a>"; 
                                     var merchant =  (parentDetails[i].retailOutletName || '');
                                      var batchIdandROC =  "";
                                     if(parentDetails[i].batchIdandROC !="0")
@@ -342,6 +360,7 @@
                                     var amount =  (parentDetails[i].amount || '');
                                     var odometerReading =  (parentDetails[i].odometerReading || '');
                                     var trStatus =  (parentDetails[i].trStatus || '');
+                                    var transactionId =  (parentDetails[i].transactionId || '');
                                     tbl.row.add([
                                         srNumber,
                                         terminalId,
@@ -376,22 +395,22 @@
                             if(childDetails.length>0){
                                  $('#ChildDetails').DataTable().clear().destroy();
 
-                                var tbl = $('#ChildDetails').DataTable({
-                                    paging: true,
-                                    searching: false,
-                                    stateSave: true,
-                                    "bDestroy": true,
-                                    "lengthMenu": [10, 20, 50, 100, 200, 500, 1000, 2000],
-                                    "autoWidth": false,
-                                    "oLanguage": {
-                                        "sLengthMenu": "Display _MENU_ Records",
-                                        "info": "Showing _START_ to _END_ of _TOTAL_ Records",
-                                    }
-                                });
+                                var tbl = $('#ChildDetails').DataTable();
+                                //    paging: true,
+                                //    searching: false,
+                                //    stateSave: true,
+                                //    "bDestroy": true,
+                                //    "lengthMenu": [10, 20, 50, 100, 200, 500, 1000, 2000],
+                                //    "autoWidth": false,
+                                //    "oLanguage": {
+                                //        "sLengthMenu": "Display _MENU_ Records",
+                                //        "info": "Showing _START_ to _END_ of _TOTAL_ Records",
+                                //    }
+                                //});
 
                                 for (var i = 0; i < childDetails.length; i++) {
                                     var srNumber = (i + 1);
-                                    var terminalId = (childDetails[i].terminalId|| '');
+                                    var terminalId ="<a href='#' class='location' onclick='loadTransactionLocationDetails(this,"+childDetails[i].customerID+","+childDetails[i].transactionId+")'>"+(childDetails[i].terminalId|| '')+"</a>"; 
                                     var customerID = (childDetails[i].customerID || '');
                                     var merchant =  (childDetails[i].retailOutletName || '');
                                     var batchIdandROC =  "";
@@ -410,6 +429,7 @@
                                     var amount =  (childDetails[i].amount || '');
                                     var odometerReading =  (childDetails[i].odometerReading || '');
                                     var trStatus =  (childDetails[i].trStatus || '');
+                                    var transactionId =  (childDetails[i].transactionId || '');
                                     tbl.row.add([
                                         srNumber,
                                         terminalId,
@@ -457,6 +477,57 @@
               });
           }
     }));
+    function loadTransactionLocationDetails(o,customerId,transactionId){
+        var terminalId=o.innerText;
+        var reqModel={CustomerId:customerId.toString(),TransactionId:transactionId.toString()};
+        console.log(JSON.stringify(reqModel));
+        $.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("GetTransactionLocationDetails", "ParentCustomer")',
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify(reqModel),
+            dataType: "json",
+            success: function (res, status, xhr) {
+                console.log(res);
+                if (status == 'success') {
+                    $("#locationDetailsTbl td").parent().remove();
+                    var locationDetails=res.transactionLocationDetails;
+                           
+                    if(locationDetails.length>0){
+                        for (var i = 0; i < locationDetails.length; i++) {
+                            var rows = "<tbody><tr>"
+                            + "<td>" + (locationDetails[i].name || '') + "</td>"
+                            + "<td>" + (customerId || '') + "</td>"
+                            + "<td>" + (locationDetails[i].location || '') + "</td>"
+                            + "<td>" + (locationDetails[i].city || '') + "</td>"
+                            + "<td>" + (locationDetails[i].district || '') + "</td>"
+                            + "<td>" + (locationDetails[i].nh || '') + "</td>"
+                            + "<td>" + (locationDetails[i].state || '') + "</td>"
+                            + "</tr ></tbody>";
+                            $('#locationDetailsTbl').append(rows);
+                        }
+                        $("#locationText").text("Transaction Location Details (Terminal ID :"+terminalId+")");
+                        $("#locationReason").attr("style","display:none");
+                        $("#locationReason").html("");
+                        $("#divLocation").attr("style","display:block");
+                        $("#divLocationDetails").attr("style","display:block"); 
+                        
+                    }
+                    else{
+                        $("#locationReason").attr("style","display:block");
+                        $("#locationReason").html("No Data Found");
+                        $("#divLocation").attr("style","display:block");
+                        $("#divLocationDetails").attr("style","display:none");
+
+                    }
+                    $('html, body').animate({
+                                scrollTop: $("#divLocation").offset().top
+                            }, 2000);
+                            
+                }
+            }
+        })
+    }
      function tableToCSV() {
          debugger;
             // Variable to store the final csv data

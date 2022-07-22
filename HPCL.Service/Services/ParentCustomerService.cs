@@ -1211,7 +1211,7 @@ namespace HPCL.Service.Services
 
             return controlCardDetails;
         }
-        public async Task<List<SuccessResponse>> SubmitRestPinforParentCustomer([FromBody] ParentCustomerSearchRequestModel reqModel)
+        public async Task<List<SuccessResponse>> SubmitRestPinforParentCustomer([FromBody] ControlCardPinRestRequestModel reqModel)
         {
             var reqBody = new ParentCustomerSearchRequestModel
             {
@@ -1382,5 +1382,57 @@ namespace HPCL.Service.Services
 
             return transactionResponse;
         }
+        public async Task<BasicSearchViewModel> CustomerBasicSearch(BasicSearchViewModel reqEntity)
+        {
+            BasicSearchViewModel searchResponse = new BasicSearchViewModel();
+
+            var Request = new BasicSearchRequestModel()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                CustomerId = reqEntity.CustomerId,
+                FormNumber = reqEntity.FormNumber,
+                MobileNo = reqEntity.MobileNumber,
+                NameonCard = reqEntity.NameOnCard,
+                CustomerName = reqEntity.CustomerName,
+                CommunicationCityName = reqEntity.City,
+                CommunicationStateId = reqEntity.StateId
+
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(Request), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getparentcustomerbasicsearch);
+
+            searchResponse = JsonConvert.DeserializeObject<BasicSearchViewModel>(response);
+
+            return searchResponse;
+        }
+        public async Task<ViewParentChildTransactionDetailsModel> GetTransactionLocationDetails(PCTransactionLocationrequest requestInfo)
+        {
+            ViewParentChildTransactionDetailsModel transactionResponse = new ViewParentChildTransactionDetailsModel();
+           
+            var Request = new PCTransactionLocationrequest()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                CustomerId= requestInfo.CustomerId,
+                TransactionId=requestInfo.TransactionId,
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(Request), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getparenttransactionlocationdetails);
+
+           
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<TransactionLocationDetails> locationDetails = jarr.ToObject<List<TransactionLocationDetails>>();
+            transactionResponse.TransactionLocationDetails.AddRange(locationDetails);
+            return transactionResponse;
+        }
+        
     }
 }

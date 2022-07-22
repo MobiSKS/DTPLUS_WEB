@@ -1054,7 +1054,7 @@ namespace HPCL.Service.Services
         {
             var searchBody = new GetCardDetailsRequest()
             {
-                UserId = CommonBase.userid,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
                 UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 CustomerId = CustomerId,

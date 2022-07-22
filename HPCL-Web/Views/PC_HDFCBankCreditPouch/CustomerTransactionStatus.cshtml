@@ -1,0 +1,298 @@
+﻿@model HPCL.Common.Models.ViewModel.PC_HDFCBankCreditPouch.GetTransactionStatus
+
+<div class="col-lg-12">
+    <div class="bg-white p-2 p-md-4">
+        <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
+            <li class="breadcrumb-item"><a href="@Url.Action("Index")" class="text_primary">HDFC Bank Credit Pouch</a> </li>
+            <li class="breadcrumb-item font-weight-light">HDFC Bank Customer Transaction Status</li>
+        </ul>
+        <form id="formValid">
+            <div class="w-100">
+                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mb-3">
+                    <div class="border-1 rounded border-grey pb-0">
+                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">HDFC Bank Customer Transaction Status</p>
+                        <div class="col-lg-12 col-md-12 col-12 py-3">
+
+                            <div id="successUpdate" class="mb-3 text-center alert alert-success" style="display:none;"></div>
+
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">Customer ID</label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.CustomerId, new { @id = "CustomerDefaultVal", @class = "form-control restrictPaste", onkeypress = "return isNumberKey(event)" })
+                                            </div>
+                                            @Html.ValidationMessageFor(m => m.CustomerId, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">From Date<sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.FromDate, new { @class = "form-control fromDate",@placeholder="dd-mm-yyyy", @autocomplete = "off", @onchange = "checkDates('fromDate_error');" })
+                                            </div>
+                                            @Html.ValidationMessageFor(m => m.FromDate, "", new { @class = "text-danger", @id = "fromDate_error" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">To Date<sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.ToDate, new { @class = "form-control toDate",@placeholder="dd-mm-yyyy", @autocomplete = "off", @onchange = "checkDates('fromDate_error');" })
+                                            </div>
+                                            @Html.ValidationMessageFor(m => m.ToDate, "", new { @class = "text-danger", @id = "toDate_error" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="d-flex align-items-center justify-content-center mt-3">
+                                <div class="px-md-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2">
+                                    <button class="btn btn_primary" type="button" name="submit" onclick="searchTransaction()">Search</button>
+                                </div>
+                                <div class="px-md-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2">
+                                    <a class="btn btn_primary" href="#" id="btnCancel" name="cancel" onclick="resetClick()">Reset</a>
+                                </div>
+                                <div class="px-md-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2">
+                                    <button class="btn btn_primary" type="button" onclick="tableToCSV()">Export to Excel</button>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div id="noRecord" class="mb-0 mt-3 text-center alert alert-danger" style="display:none;"></div>
+
+                    <div id="transactionStatusSection" style="display:none;">
+                        <div class="table-responsive mt-3">
+                            <table id="transactionStatusList" class="datatable table table-striped d-block table-bordered nowrap table-responsive mt-3" style="width:100%;">
+                                <thead>
+                                    <tr>
+                                        <th>S.No.</th>
+                                        <th>ZO</th>
+                                        <th>RO</th>
+                                        <th>Customer ID</th>
+                                        <th>Customer Name</th>
+                                        <th>Name On Card</th>
+                                        <th>Track ID</th>
+                                        <th>Payment ID</th>
+                                        <th>Transaction ID</th>
+                                        <th>Plan Name</th>
+                                        <th>Request Amount</th>
+                                        <th>Transaction Date</th>
+                                        <th>Transaction Status</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="clearfix"></div>
+    </div>
+</div>
+
+
+@using Microsoft.AspNetCore.Http;
+
+<script src="https://rawgit.com/moment/moment/2.2.1/min/moment.min.js"></script>
+
+<script>
+
+        function resetClick() {
+            window.location.reload();
+        }
+
+        $('.restrictPaste').on('paste', function (event) {
+            if (event.originalEvent.clipboardData.getData('Text').match(/[^\d]/)) {
+                event.preventDefault();
+            }
+        });
+
+        $(document).ready(function () {
+
+           function isNumberKey(evt) {
+                var charCode = (evt.which) ? evt.which : event.keyCode;
+                if (charCode != 46 && charCode > 31
+                    && (charCode < 48 || charCode > 57))
+                    return false;
+
+                return true;
+            }
+        });
+
+        function searchTransaction() {
+
+            document.getElementById("transactionStatusSection").style.display = "none";
+            document.getElementById("noRecord").style.display = "none";
+
+            var fromdate = $("#FromDate").val();
+            var todate = $("#ToDate").val();
+
+            var flag = "Y";
+            if (fromdate == "") {
+                $("#fromDate_error").attr("style", "display:block");
+                $("#fromDate_error").html("Select From Date");
+                flag = "N";
+            }
+            if (todate == "") {
+                $("#toDate_error").attr("style", "display:block");
+                $("#toDate_error").html("Select To Date");
+                flag = "N";
+            }
+            if (fromdate != "" && todate != "") {
+                flag = checkDates("fromdate_error");
+            }
+
+            if (flag == "N")
+                e.preventDefault();
+
+            if (flag == "Y") {
+                if ($("#formValid").valid()) {
+
+                    $.ajax({
+                        type: 'POST',  // http method
+                        url: '@Url.Action("CustomerTransactionStatus", "PC_HDFCBankCreditPouch")',
+                        data: $('#formValid').serialize(),  // data to submit
+                        success: function (res, status, xhr) {
+
+                            console.log("res",res);
+
+                            if (res.searchList.success == true) {
+
+                                var girdList = res.searchList.data;
+
+                                $('#transactionStatusList').DataTable().clear().destroy();
+
+                                var tbl = $('#transactionStatusList').DataTable();
+
+                                for (var i = 0; i < girdList.length; i++) {
+
+                                    var transDate;
+
+                                    if(((girdList[i].transactionDate) == "01-1-0001") || ((girdList[i].transactionDate) == "01-01-1900") || ((girdList[i].transactionDate) == null)){
+                                        transDate = "";
+                                    }else{
+                                        transDate = moment(girdList[i].transactionDate, 'DD-MM-YYYY').format('DD-MM-YYYY');
+                                    }
+
+                                    var srNumber = (i + 1);
+                                    var zo = (girdList[i].zo || '');
+                                    var ro = (girdList[i].ro || '');
+                                    var customerId = (girdList[i].customerId || '');
+                                    var customerName = (girdList[i].customerName || '');
+                                    var nameOnCard = (girdList[i].nameOnCard || '');
+                                    var trackID = (girdList[i].trackID);
+                                    var paymentID = (girdList[i].paymentID || '');
+                                    var transactionId = (girdList[i].transactionId || '');
+                                    var planName = (girdList[i].planName || '');
+                                    var requestAmount = (girdList[i].requestAmount || '');
+                                    var transactionDate = transDate;
+                                    var transactionStatus = (girdList[i].transactionStatus || '');
+                                    
+                                    tbl.row.add([
+                                        srNumber,
+                                        zo,
+                                        ro,
+                                        customerId,
+                                        customerName,
+                                        nameOnCard,
+                                        trackID,
+                                        paymentID,
+                                        transactionId,
+                                        planName,
+                                        requestAmount,
+                                        transactionDate,
+                                        transactionStatus
+                                    ]).draw();
+                                }
+                                document.getElementById('transactionStatusSection').style.display = 'block';
+                            } else {
+                                $("#noRecord").html("");
+                                $("#noRecord").append("<span>" + res.searchList.message + "</span>");
+                                document.getElementById("noRecord").style.display = "block";
+                            }
+
+                        },
+                        error: function (jqXhr, textStatus, errorMessage) {
+                            console.log("Error");
+                        }
+                    });
+                } else {
+                    return false;
+                }
+            }
+        }
+
+        function downloadCSVFile(csv_data,fileName) {
+            CSVFile = new Blob([csv_data], {
+                type: "text/csv"
+            });
+
+            var temp_link = document.createElement('a');
+
+            temp_link.download = fileName;
+            var url = window.URL.createObjectURL(CSVFile);
+            temp_link.href = url;
+
+            temp_link.style.display = "none";
+            document.body.appendChild(temp_link);
+
+            temp_link.click();
+            document.body.removeChild(temp_link);
+        }
+
+
+        function tableToCSV(){
+            var csv_data = [];
+            var rows = document.getElementById("transactionStatusList").getElementsByTagName('tr');
+            if (rows.length > 0) {
+                for (var i = 0; i < rows.length; i++) {
+                    var cols = rows[i].querySelectorAll('td,th');
+                    var csvrow = [];
+                    for (var j = 0; j < cols.length; j++) {
+
+                        csvrow.push(cols[j].innerText);
+
+                        //if(j != 1 && j != 12){
+                        //    console.log("cols[j]", cols[j]);
+
+                        //    const checkBox = cols[j].querySelector('input[class="checkX"]');
+
+                        //    const custVal = cols[j].querySelector('span');
+                        //    const remarks = cols[j].querySelector('textarea');
+
+                        //    if(!checkBox){
+                        //        if(custVal){
+                        //            csvrow.push(custVal.innerText);
+                        //        }else if(remarks){
+                        //            csvrow.push(remarks.value);
+                        //        }else{
+                        //            csvrow.push(cols[j].innerText);
+                        //        }
+                        //    }
+                        //}
+                    }
+
+                    csv_data.push(csvrow.join(",")); 
+                 }
+                csv_data = csv_data.join('\n');
+
+                var fileName = "HDFCCustomerTransactionStatus.csv";
+
+                downloadCSVFile(csv_data,fileName);
+              }
+          }
+</script>
