@@ -661,5 +661,18 @@
         public static string PC_RequestToAvailEnrollUrl = "api/dtplus/PCHDFCCreditPouch/insrt_cp_rqst_by_customer_for_pc";
         public static string PC_CustomerTransactionStatusUrl = "api/dtplus/ParentCustomer/pc_hdfc_transaction_status";
         #endregion
+
+
+        #region "MO Dashboard"
+        public static string userinformation = "/api/dtplus/modashboard/mo_dashboard_user_information";
+        #endregion
+
+        #region "MO Dashboard"
+        public static string RegionInformation = "/api/dtplus/modashboard/mo_dashboard_region_information";
+        #endregion
+
+        #region "MO Dashboard"
+        public static string PendingTerminal = "/api/dtplus/modashboard/mo_dashboard_pending_terminal";
+        #endregion
     }
 }
