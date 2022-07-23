@@ -103,7 +103,20 @@
             $("#message").hide();
             document.getElementById("captcha_error").innerHTML = "";
         }
-        $("#Userip").val("100:100:100:100");
+        //$("#Userip").val("100:100:100:100");
+
+        $.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("GetIpAddress", "Home")',
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data, status, xhr) {
+                    $("#Userip").val(data);
+                },
+            error: function (jqXhr, textStatus, errorMessage) {
+                //document.getElementById("CustomerRegionID_error").innerHTML = "Error populating card details";
+            }
+        });
 
     });
 
@@ -153,7 +166,7 @@
         if (ret == "Y") {
             sessionStorage.removeItem("LoginCheck");
             sessionStorage.setItem("LoginCheck", "Login");
-            $("#Userip").val("100:100:100:100");
+            //$("#Userip").val("100:100:100:100");
 
             $("#register_form").unbind().submit();
         }

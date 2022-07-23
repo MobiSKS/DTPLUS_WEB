@@ -8,5 +8,7 @@ namespace HPCL.Common.Models.ResponseModel.CustomerDashboard
 {
     public class ReminderResponseModel
     {
+        public string ExpiringDrivestars { get; set; }
+        public string ExpiringCards { get; set; }
     }
 }

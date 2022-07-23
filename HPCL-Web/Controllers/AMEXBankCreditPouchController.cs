@@ -1,4 +1,5 @@
 ﻿using HPCL.Common.Helper;
+using HPCL.Common.Models.CommonEntity;
 using HPCL.Common.Models.ResponseModel.AMEXBankCreditPouch;
 using HPCL.Common.Models.ViewModel.AMEXBankCreditPouch;
 using HPCL.Service.Interfaces;
@@ -22,7 +23,7 @@ namespace HPCL_Web.Controllers
         }
         public IActionResult Index()
         {
-            return View();
+            return View(SessionMenuModel.menuList);
         }
 
         public IActionResult ExceptionRequestToAddCustomer()

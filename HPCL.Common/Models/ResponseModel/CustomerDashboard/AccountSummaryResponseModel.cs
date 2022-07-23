@@ -8,5 +8,13 @@ namespace HPCL.Common.Models.ResponseModel.CustomerDashboard
 {
     public class AccountSummaryResponseModel
     {
+        public string CCMS { get; set; }
+        public string CardCash { get; set; }
+        public string Drivestars { get; set; }
+        public string LastUpdateForCCMS { get; set; }
+        public string LastUpdateForCardCash { get; set; }
+        public string LastUpdateForDrivestars { get; set; }
+      
+
     }
 }

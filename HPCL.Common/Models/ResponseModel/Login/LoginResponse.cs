@@ -19,5 +19,7 @@
         public int Status { get; set; }
         public string Reason { get; set; }
         public string Token { get; set; }
+        public int SBUTypeId { get; set; }
+        public string SBUName { get; set; }
     }
 }

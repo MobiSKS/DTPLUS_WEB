@@ -16,6 +16,7 @@ using System.IO;
 using System;
 using HPCL.Common.Models.CommonEntity;
 using System.Linq;
+using System.Net;
 
 namespace HPCL_Web.Controllers
 {
@@ -137,13 +138,19 @@ namespace HPCL_Web.Controllers
                             };
 
                             SessionMenuModel.sessionList.AddRange(sessionData);
-                            HttpContext.Session.SetString("RegionalOfcId", loginRes[0].RegionalOfficeID ?? "");
+
                             HttpContext.Session.SetString("LocalStorage", num.ToString());
                             HttpContext.Session.SetString("UserName", loginRes[0].UserName);
 
-                            HttpContext.Session.SetString("CustomerZonalOfcId", loginRes[0].ZonalOfficeID ?? "");
-                            HttpContext.Session.SetString("CustomerZonalOfcName", loginRes[0].ZonalOfficeName ?? "");
-                            HttpContext.Session.SetString("CustomerRegionalOfcName",loginRes[0].RegionalOfficeName ?? "");
+                            if (loginRes[0].LoginType == "Customer")
+                            {
+                                HttpContext.Session.SetString("CustomerZonalOfcId", loginRes[0].ZonalOfficeID ?? "");
+                                HttpContext.Session.SetString("CustomerZonalOfcName", loginRes[0].ZonalOfficeName ?? "");
+                                HttpContext.Session.SetString("CustomerRegionalOfcName", loginRes[0].RegionalOfficeName ?? "");
+                                HttpContext.Session.SetString("RegionalOfcId", loginRes[0].RegionalOfficeID ?? "");
+                                HttpContext.Session.SetInt32("CustomerSbuTypeId", loginRes[0].SBUTypeId);
+                                HttpContext.Session.SetString("CustomerSbuTypeName", loginRes[0].SBUName ?? "");
+                            }
 
                             HttpContext.Session.SetString("UserId", loginRes[0].UserId.ToLower());
 
@@ -312,6 +319,17 @@ namespace HPCL_Web.Controllers
                     HttpContext.Session.SetString("IpAddress", item.IpAddress);
                 }
                 return Json("Success");
+            }
+        }
+        [HttpPost]
+        public async Task<JsonResult> GetIpAddress()
+        {
+            using (WebClient client = new WebClient())
+            {
+                string jsonData = client.DownloadString("https://api.ipify.org/?format=json");
+                IpAddressResponseModel results = JsonConvert.DeserializeObject<IpAddressResponseModel>(jsonData);
+                string externalIp = results.ip;
+                return Json(externalIp);
             }
         }
 

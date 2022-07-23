@@ -8,5 +8,10 @@ namespace HPCL.Common.Models.ResponseModel.CustomerDashboard
 {
     public class KeyEventsResponseModel
     {
+        public string LastLogin { get; set; }
+        public string LastTransaction { get; set; }
+        public string LastRedemption { get; set; }
+        public string LastPasswordChange { get; set; }
+        public string LastContactDetailsUpdate { get; set; }
     }
 }
