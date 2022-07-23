@@ -91,6 +91,8 @@
         <div class="clearfix"></div>
         <div id="show_Table" class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3 toBeHiddenOnSuccess">
         </div>
+        <div id="download_table" style="display:none" class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3 toBeHiddenOnSuccess">
+        </div>
         <div class="clearfix"></div>
 
     </div>
@@ -311,6 +313,80 @@
                        $('html, body').animate({
                            scrollTop: $("#show_Table").offset().top
                        }, 2000);
+
+                   }
+                   else {
+                       console.log(v);
+                   }
+               },
+               error: function (jqXhr, textStatus, errorMessage) {
+                   alert("Error"+ errorMessage);
+               }
+           });
+               }
+      })
+      );
+         $("#btnDownload").on("click", (function (e) {
+
+          var merchantId = $("#MerchantID").val();
+          var customerId = $("#CustomerID").val();
+          var statementDate= $("#StatementDate").val();
+          var flag = "Y";
+
+            if (merchantId != "") {
+             if (!merchantId.match(mappedMerchantID)) {
+                 $("#merchantId_error").attr("style", "display:block");
+                 $("#merchantId_error").html("Invalid Merchant ID");
+                 flag = "N";
+             }
+         }
+         else{
+             $("#merchantId_error").attr("style", "display:block");
+             $("#merchantId_error").html("Merchant ID field can not be left blank");
+             flag = "N";
+         }
+         if (customerId != "") {
+             if (!customerId.match(mappedCustomerId)) {
+                 $("#customerId_error").attr("style", "display:block");
+                 $("#customerId_error").html("Invalid Customer ID");
+                 flag = "N";
+             }
+         }
+          else{
+             $("#customerId_error").attr("style", "display:block");
+             $("#customerId_error").html("Customer ID field can not be left blank");
+             flag = "N";
+         }
+         if(statementDate=="" || statementDate=="0"){
+             $("#ddlDate_error").attr("style", "display:block");
+             $("#ddlDate_error").html("Statement date cannot be left blank");
+             flag = "N";
+         }
+
+
+          if (flag == "Y") {
+             $("#ddlDate_error").attr("style", "display:none");
+              $("#ddlDate_error").html("");
+              $("#merchantId_error").attr("style", "display:none");
+              $("#merchantId_error").html("");
+              $("#customerId_error").attr("style", "display:none");
+              $("#customerId_error").html("");
+          }
+          if (flag == "N")
+              e.preventDefault();
+           else{
+
+               $.ajax({
+               type: 'GET',  // http method
+               url: '@Url.Action("GetCreditSaleStatementforDownload", "Dealer")',
+               contentType: "application/json; charset=utf-8",
+               dataType: 'text',
+               data: { CustomerID: customerId, MerchantID: merchantId, SearchDate: statementDate},
+               success: function (data, status, xhr) {
+                   var v = data;
+                   if (status == 'success') {
+                       $("#download_table").html(data);
+                     
 
                    }
                    else {
