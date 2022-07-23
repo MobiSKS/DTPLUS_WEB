@@ -231,6 +231,29 @@
                             </div>
                         </div>
                         <!-- Modal : Dialog -->
+
+                        <!-- Modal : Dialog -->
+                        <!-- Image Download Modal -->
+                        <div class="modal fade" id="dvUploadViewImage" tabindex="-1" role="dialog" aria-labelledby="exampleUploadModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+                            <div class="modal-dialog" role="document" style="max-width:700px; width:100%;">
+                                <div class="modal-content">
+                                    <div class="modal-header py-2">
+                                        <h5 class="modal-title" id="exampleUploadModalLabel" style="font-size:14px;">View Image</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div> 
+                                    <div class="col-12 col-sm-12">
+                                        <img style="max-width:100%;width:100%;max-height: 420px;" src="/assets/images/id-card.png" class="py-3" alt="Image" id="imgUploadAttachment" /> @*class="imgZoom py-3"*@
+                                    </div>
+                                    <div class="d-flex align-items-center justify-content-start flex-wrap px-3 mb-3">
+                                        <button type="button" id="ImgUploadDownload" class="btn btn_primary down_btn_sty">Download Image</button>
+                                    </div>
+                                </div> 
+                            </div>
+                            <label id="selectedButton" style="display:none"></label>
+                        </div>
+                        <!-- Modal : Dialog -->
                     </form>
                 </div>
 
@@ -498,10 +521,13 @@
                  if (typeof (FileReader) != "undefined") {
                      if(this.files[0].size < 5242880){
                          var regexImage = /(.*?)\.(png|jpeg|JPEG|jpg|gif)$/;
+                         var extension = $(this).val().toLowerCase().substring($(this).val().lastIndexOf('.')+1);
+                         console.log(extension);
                          if (regexImage.test($(this).val())) 
                          {
                              $("#idPfrontImg").show();
-                             $("#idPfrontImg").append("<img class='imgZoom'/><a id='downloadIdFrontDoc'/><button class='btn btn_primary' style='margin-top:2%' type='button' onclick='idFrontClick()' id='idBack_btn'>Download File</button>");
+                             //$("#idPfrontImg").append("<img class='imgZoom'/><a id='downloadIdFrontDoc'/><button class='btn btn_primary' style='margin-top:2%' type='button' onclick='idFrontClick()' id='idBack_btn'>Download File</button>");
+                             $("#idPfrontImg").append("<img id='IdProofFrontSrc' class='imgZoom'/><a id='downloadIdFrontDoc'><a id='downloadIdFrontDoc1' onclick='OpenUploadModelPOPup(1);return false;'><b>Enlarge " + extension + " </b></a></a>");
                              var reader = new FileReader();
                              reader.onload = function (e) {
                                  $("#idPfrontImg img").attr("src", e.target.result);
@@ -515,7 +541,8 @@
                          else
                          {
                              $("#idPfrontImg").show();
-                             $("#idPfrontImg").append("<img /><a id='downloadIdFrontDoc'/><button class='btn btn_primary' style='margin-top:2%' type='button' onclick='idFrontClick()' id='idBack_btn'>Download File</button>");
+                             //$("#idPfrontImg").append("<img /><a id='downloadIdFrontDoc'/><button class='btn btn_primary' style='margin-top:2%' type='button' onclick='idFrontClick()' id='idBack_btn'>Download File</button>");
+                             $("#idPfrontImg").append("<img id='IdProofFrontSrc'/><a id='downloadIdFrontDoc'><a id='downloadIdFrontDoc1' onclick='OpenUploadModelPOPup(1);return false;'><b>Download " + extension + " </b></a></a>");
                              var reader = new FileReader();
                              reader.onload = function (e) {
                                  $("#idPfrontImg img").attr("src", e.target.result);
@@ -576,10 +603,13 @@
                  if (typeof (FileReader) != "undefined") {
                      if(this.files[0].size < 5242880){
                          var regexImage = /(.*?)\.(png|jpeg|JPEG|jpg|gif)$/;
+                         var extension = $(this).val().toLowerCase().substring($(this).val().lastIndexOf('.')+1);
+                         console.log(extension);
                          if (regexImage.test($(this).val())) 
                          {
                              $("#idPbackImg").show();
-                             $("#idPbackImg").append("<img class='imgZoom'/><a id='downloadIdBackDoc'/><button class='btn btn_primary' style='margin-top:2%' type='button' onclick='idbackClick()' id='idBack_btn'>Download File</button>");
+                             //$("#idPbackImg").append("<img class='imgZoom'/><a id='downloadIdBackDoc'/><button class='btn btn_primary' style='margin-top:2%' type='button' onclick='idbackClick()' id='idBack_btn'>Download File</button>");
+                             $("#idPbackImg").append("<img id='IdProofBackSrc' class='imgZoom'/><a id='downloadIdBackDoc'><a id='downloadIdBackDoc1' onclick='OpenUploadModelPOPup(2);return false;'><b>Enlarge " + extension + " </b></a></a>");
                              var reader = new FileReader();
                              reader.onload = function (e) 
                              {
@@ -594,7 +624,8 @@
                          else
                          {
                              $("#idPbackImg").show();
-                             $("#idPbackImg").append("<img /><a id='downloadIdBackDoc'/><button class='btn btn_primary' style='margin-top:2%' type='button' onclick='idbackClick()' id='idBack_btn'>Download File</button>");
+                             //$("#idPbackImg").append("<img /><a id='downloadIdBackDoc'/><button class='btn btn_primary' style='margin-top:2%' type='button' onclick='idbackClick()' id='idBack_btn'>Download File</button>");
+                             $("#idPbackImg").append("<img id='IdProofBackSrc' /><a id='downloadIdBackDoc'><a id='downloadIdBackDoc1' onclick='OpenUploadModelPOPup(2);return false;'><b>Download " + extension + " </b></a></a>");
                              var reader = new FileReader();
                              reader.onload = function (e) 
                              {
@@ -656,10 +687,13 @@
                  if (typeof (FileReader) != "undefined") {
                      if(this.files[0].size < 5242880){
                          var regexImage = /(.*?)\.(png|jpeg|JPEG|jpg|gif)$/;
+                         var extension = $(this).val().toLowerCase().substring($(this).val().lastIndexOf('.')+1);
+                         console.log(extension);
                          if(regexImage.test($(this).val())) 
                          {
                              $("#idAfrontImg").show();
-                             $("#idAfrontImg").append("<img class='imgZoom'/><a id='downloadAddFrontDoc'/><button class='btn btn_primary' style='margin-top:2%' type='button' onclick='addfrotClick()' id='addFront_btn'>Download File</button>");
+                             //$("#idAfrontImg").append("<img class='imgZoom'/><a id='downloadAddFrontDoc'/><button class='btn btn_primary' style='margin-top:2%' type='button' onclick='addfrotClick()' id='addFront_btn'>Download File</button>");
+                             $("#idAfrontImg").append("<img id='AddressProofFrontSrc' class='imgZoom'/><a id='downloadAddFrontDoc'><a id='downloadAddFrontDoc1' onclick='OpenUploadModelPOPup(3);return false;'><b>Enlarge " + extension + " </b></a></a>");
                              var reader = new FileReader();
                              reader.onload = function (e) 
                              {
@@ -674,7 +708,8 @@
                          else
                          {
                              $("#idAfrontImg").show();
-                             $("#idAfrontImg").append("<img /><a id='downloadAddFrontDoc'/><button class='btn btn_primary' style='margin-top:2%' type='button' onclick='addfrotClick()' id='addFront_btn'>Download File</button>");
+                             //$("#idAfrontImg").append("<img /><a id='downloadAddFrontDoc'/><button class='btn btn_primary' style='margin-top:2%' type='button' onclick='addfrotClick()' id='addFront_btn'>Download File</button>");
+                             $("#idAfrontImg").append("<img id='AddressProofFrontSrc' /><a id='downloadAddFrontDoc'><a id='downloadAddFrontDoc1' onclick='OpenUploadModelPOPup(3); return false;'><b>Download " + extension + " </b></a></a>");
                              var reader = new FileReader();
                              reader.onload = function (e) 
                              {
@@ -736,10 +771,13 @@
                  if (typeof (FileReader) != "undefined") {
                      if(this.files[0].size < 5242880){
                          var regexImage = /(.*?)\.(png|jpeg|JPEG|jpg|gif)$/;
+                         var extension = $(this).val().toLowerCase().substring($(this).val().lastIndexOf('.')+1);
+                         console.log(extension);
                          if(regexImage.test($(this).val())) 
                          {
                              $("#idAbackImg").show();
-                             $("#idAbackImg").append("<img class='imgZoom'/><a id='downloadAddBackDoc'/><button class='btn btn_primary' style='margin-top:2%' type='button' onclick='addBackClick()' id='addBack_btn'>Download File</button>");
+                             //$("#idAbackImg").append("<img class='imgZoom'/><a id='downloadAddBackDoc'/><button class='btn btn_primary' style='margin-top:2%' type='button' onclick='addBackClick()' id='addBack_btn'>Download File</button>");
+                             $("#idAbackImg").append("<img id='AddressProofBackSrc' class='imgZoom'/><a id='downloadAddBackDoc'><a id='downloadAddBackDoc1' onclick='OpenUploadModelPOPup(4);return false;'><b>Enlarge " + extension + " </b></a></a>");
                              var reader = new FileReader();
                              reader.onload = function (e) 
                              {
@@ -754,7 +792,8 @@
                          else
                          {
                              $("#idAbackImg").show();
-                             $("#idAbackImg").append("<img /><a id='downloadAddBackDoc'/><button class='btn btn_primary' style='margin-top:2%' type='button' onclick='addBackClick()' id='addBack_btn'>Download File</button>");
+                             //$("#idAbackImg").append("<img /><a id='downloadAddBackDoc'/><button class='btn btn_primary' style='margin-top:2%' type='button' onclick='addBackClick()' id='addBack_btn'>Download File</button>");
+                             $("#idAbackImg").append("<img id='AddressProofBackSrc' /><a id='downloadAddBackDoc'><a id='downloadAddBackDoc1' onclick='OpenUploadModelPOPup(4);return false;'><b>Download " + extension + " </b></a></a>");
                              var reader = new FileReader();
                              reader.onload = function (e) 
                              {
@@ -929,6 +968,93 @@
         //url = url.replace("zzzzxx", encodeURIComponent(upath));
         url = url.replace("zzzzxx", upath);
         window.location.href = url;
+    });
+
+    function OpenUploadModelPOPup(selectedbutton)
+    {
+        if(selectedbutton==1)
+        {
+          var txt = $("#downloadIdFrontDoc1").html();
+          let arr = txt.split(' ');
+          if(arr[1].toLowerCase()=="gif" || arr[1].toLowerCase()=="png" || arr[1].toLowerCase()=="jpeg" || arr[1].toLowerCase()=="jpg")
+          {
+              $('#dvUploadViewImage').modal('show');
+              $('#imgUploadAttachment').attr('src',$('#IdProofFrontSrc').prop('src'));
+              $('#selectedButton').html("1");
+          }
+          else
+          {
+              $("#downloadIdFrontDoc")[0].click();  
+          }
+        }
+        else if(selectedbutton==2)
+        {
+          var txt = $("#downloadIdBackDoc1").html();
+          let arr = txt.split(' ');
+          if(arr[1].toLowerCase()=="gif" || arr[1].toLowerCase()=="png" || arr[1].toLowerCase()=="jpeg" || arr[1].toLowerCase()=="jpg")
+          {
+              $('#dvUploadViewImage').modal('show');
+              $('#imgUploadAttachment').attr('src',$('#IdProofBackSrc').prop('src'));
+              $('#selectedButton').html("2");
+          }
+          else
+          {
+              $("#downloadIdBackDoc")[0].click();
+          }
+        }
+        else if(selectedbutton==3)
+        {
+          var txt = $("#downloadAddFrontDoc1").html();
+          let arr = txt.split(' ');
+          if(arr[1].toLowerCase()=="gif" || arr[1].toLowerCase()=="png" || arr[1].toLowerCase()=="jpeg" || arr[1].toLowerCase()=="jpg")
+          {
+              $('#dvUploadViewImage').modal('show');
+              $('#imgUploadAttachment').attr('src',$('#AddressProofFrontSrc').prop('src'));
+              $('#selectedButton').html("3");
+          }
+          else
+          {
+              $("#downloadAddFrontDoc")[0].click();
+          }
+        }
+        else if(selectedbutton==4)
+        {
+          var txt = $("#downloadAddBackDoc1").html();
+          let arr = txt.split(' ');
+          if(arr[1].toLowerCase()=="gif" || arr[1].toLowerCase()=="png" || arr[1].toLowerCase()=="jpeg" || arr[1].toLowerCase()=="jpg")
+          {
+              $('#dvUploadViewImage').modal('show');
+              $('#imgUploadAttachment').attr('src',$('#AddressProofBackSrc').prop('src'));
+              $('#selectedButton').html("4");
+          }
+          else
+          {
+              $("#downloadAddBackDoc")[0].click();
+          }
+        }
+    }
+
+    $("#ImgUploadDownload").click(function () 
+    {
+        var selectedButton = $('#selectedButton').html();
+
+        if(selectedButton==1)
+        {
+            $("#downloadIdFrontDoc")[0].click();
+        }
+        else if(selectedButton==2)
+        {
+            $("#downloadIdBackDoc")[0].click();
+        }
+        else if(selectedButton==3)
+        {
+            $("#downloadAddFrontDoc")[0].click();
+        }
+        else if(selectedButton==4)
+        {
+            $("#downloadAddBackDoc")[0].click();
+        }
+
     });
 </script>
 
