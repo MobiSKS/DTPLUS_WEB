@@ -1,7 +1,7 @@
 ﻿using HPCL.Common.Helper;
 using HPCL.Common.Models.CommonEntity;
-using HPCL.Common.Models.ResponseModel.ICICIBankCreditPouch;
-using HPCL.Common.Models.ViewModel.ICICIBankCreditPouch;
+using HPCL.Common.Models.ResponseModel.PC_ICICIBankCreditPouch;
+using HPCL.Common.Models.ViewModel.PC_ICICIBankCreditPouch;
 using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
@@ -14,13 +14,13 @@ using System.Threading.Tasks;
 
 namespace HPCL.Service.Services
 {
-    public class ICICIBankCreditPouchService : IICICIBankCreditPouchService
+    public class PC_ICICIBankCreditPouchService : IPC_ICICIBankCreditPouchService
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IRequestService _requestService;
         private readonly ICommonActionService _commonActionService;
 
-        public ICICIBankCreditPouchService(IHttpContextAccessor httpContextAccessor, IRequestService requestServices, ICommonActionService commonActionService)
+        public PC_ICICIBankCreditPouchService(IHttpContextAccessor httpContextAccessor, IRequestService requestServices, ICommonActionService commonActionService)
         {
             _httpContextAccessor = httpContextAccessor;
             _requestService = requestServices;
@@ -40,7 +40,7 @@ namespace HPCL.Service.Services
 
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
-            var response = await _requestService.CommonRequestService(content, WebApiUrl.ICICIGetCustomerDetailsUrl);
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.PCICICIGetCustomerDetailsUrl);
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
             CustomerDetailsRes searchList = obj.ToObject<CustomerDetailsRes>();
             return searchList;
@@ -57,7 +57,7 @@ namespace HPCL.Service.Services
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
-            var response = await _requestService.CommonRequestService(content, WebApiUrl.GetICICIPlanUrl);
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.PCGetICICIPlanUrl);
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
             GetPlanRes searchList = obj.ToObject<GetPlanRes>();
             return searchList;
@@ -80,7 +80,7 @@ namespace HPCL.Service.Services
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
-            var response = await _requestService.CommonRequestService(content, WebApiUrl.ICICIEnrollExceptionReqUrl);
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.PCICICIEnrollExceptionReqUrl);
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
             var jarr = obj["Data"].Value<JArray>();
             List<SuccessResponse> reasonList = jarr.ToObject<List<SuccessResponse>>();
@@ -102,7 +102,7 @@ namespace HPCL.Service.Services
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
-            var response = await _requestService.CommonRequestService(content, WebApiUrl.ICICIGetExApprovalUrl);
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.PCICICIGetExApprovalUrl);
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
             SearchRequestApprovalRes searchList = obj.ToObject<SearchRequestApprovalRes>();
             return searchList;
@@ -121,7 +121,7 @@ namespace HPCL.Service.Services
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
-            var response = await _requestService.CommonRequestService(content, WebApiUrl.ICICISubmitExApprovalUrl);
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.PCICICISubmitExApprovalUrl);
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
             var jarr = obj["Data"].Value<JArray>();
             List<SuccessResponse> reasonList = jarr.ToObject<List<SuccessResponse>>();
@@ -156,7 +156,7 @@ namespace HPCL.Service.Services
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
-            var response = await _requestService.CommonRequestService(content, WebApiUrl.ICICIGetEnrollStatusUrl);
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.PCICICIGetEnrollStatusUrl);
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
             SearchEnrollStatusRes searchList = obj.ToObject<SearchEnrollStatusRes>();
             return searchList;
@@ -174,48 +174,11 @@ namespace HPCL.Service.Services
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
-            var response = await _requestService.CommonRequestService(content, WebApiUrl.ICICIGetEnrollStatusReportUrl);
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.PCICICIGetEnrollStatusReportUrl);
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
             GetEnrollStatusReportRes searchList = obj.ToObject<GetEnrollStatusReportRes>();
             return searchList;
         }
-
-        //public async Task<CcmsRechargeAmexRes> CCMSRechargeICICI(string customerId, string amount)
-        //{
-        //    var searchBody = new CcmsRechargeIcici
-        //    {
-        //        UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
-        //        UserAgent = CommonBase.useragent,
-        //        UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
-        //        CustomerId = customerId,
-        //        Amount = Convert.ToDecimal(amount)
-        //    };
-
-        //    StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
-        //    var response = await _requestService.CommonRequestService(content, WebApiUrl.ICICICcmsRechargeUrl);
-        //    JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
-        //    CcmsRechargeAmexRes searchList = obj.ToObject<CcmsRechargeAmexRes>();
-        //    return searchList;
-        //}
-
-        //public async Task<IciciInitateRecharge> CCMSInitiateRechargeICICI(string customerId, string amount)
-        //{
-        //    var searchBody = new CcmsRechargeIcici
-        //    {
-        //        UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
-        //        UserAgent = CommonBase.useragent,
-        //        UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
-        //        CustomerId = customerId,
-        //        Amount = Convert.ToDecimal(amount)
-        //    };
-
-        //    StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
-        //    var response = await _requestService.CommonRequestService(content, WebApiUrl.ICICICcmsRechargeUrl);
-        //    JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
-
-        //    IciciInitateRecharge checkList = obj.ToObject<IciciInitateRecharge>();
-        //    return checkList;
-        //}
 
         public async Task<GetRequestAuthorizationRes> GetRequestAuthorizationDetails(GetRequestAuthorizationReq entity)
         {
@@ -242,7 +205,7 @@ namespace HPCL.Service.Services
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
-            var response = await _requestService.CommonRequestService(content, WebApiUrl.ICICIGetRequestAuthorizationDetailsUrl);
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.PCICICIGetRequestAuthorizationDetailsUrl);
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
             GetRequestAuthorizationRes searchList = obj.ToObject<GetRequestAuthorizationRes>();
             return searchList;
@@ -261,7 +224,7 @@ namespace HPCL.Service.Services
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
-            var response = await _requestService.CommonRequestService(content, WebApiUrl.ICICIRequestAuthorizationActionUrl);
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.PCICICIRequestAuthorizationActionUrl);
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
             var jarr = obj["Data"].Value<JArray>();
             List<SuccessResponse> reasonList = jarr.ToObject<List<SuccessResponse>>();
@@ -279,7 +242,7 @@ namespace HPCL.Service.Services
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
-            var response = await _requestService.CommonRequestService(content, WebApiUrl.ICICIRequestToAvailCheckUrl);
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.PCICICIRequestToAvailCheckUrl);
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
             CheckEligibleRes reasonList = obj.ToObject<CheckEligibleRes>();
             return reasonList;
@@ -302,7 +265,7 @@ namespace HPCL.Service.Services
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
-            var response = await _requestService.CommonRequestService(content, WebApiUrl.ICICIRequestToAvailEnrollUrl);
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.PCICICIRequestToAvailEnrollUrl);
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
             var jarr = obj["Data"].Value<JArray>();
             List<SuccessResponse> reasonList = jarr.ToObject<List<SuccessResponse>>();
