@@ -303,7 +303,7 @@ namespace HPCL.Service.Services
 
             StringContent custRefcontent = new StringContent(JsonConvert.SerializeObject(requestInfo), Encoding.UTF8, "application/json");
 
-            var response = await _requestService.CommonRequestService(custRefcontent, WebApiUrl.getAlSalesExeEmpidAddonOtcCardMapping);
+            var response = await _requestService.CommonRequestService(custRefcontent, WebApiUrl.getJcbSalesExeEmpidAddonOtcCardMapping);
 
             SalesExecutiveEmployeeIDResponse salesExecutiveEmployeeIDResponse = JsonConvert.DeserializeObject<SalesExecutiveEmployeeIDResponse>(response);
 

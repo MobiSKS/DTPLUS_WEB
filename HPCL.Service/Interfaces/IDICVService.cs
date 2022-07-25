@@ -2,7 +2,9 @@
 using HPCL.Common.Models.CommonEntity.ResponseEnities;
 using HPCL.Common.Models.ResponseModel.AshokLayland;
 using HPCL.Common.Models.ResponseModel.DICV;
+using HPCL.Common.Models.ResponseModel.VolvoEicher;
 using HPCL.Common.Models.ViewModel.DICV;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,5 +24,10 @@ namespace HPCL.Service.Interfaces
         Task<DICVOTCCardRequestModel> DICVDealerOTCCardRequest();
         Task<GetDICVBalanceOTCCardResponse> CheckDICVDealerBalanceQty(string DealerCode);
         Task<DICVOTCCardRequestModel> DICVDealerOTCCardRequest(DICVOTCCardRequestModel model);
+        Task<DICVCustomerEnrollmentModel> DICVCustomerEnrollment();
+        Task<DICVCustomerEnrollmentModel> DICVCustomerEnrollment(DICVCustomerEnrollmentModel customerModel);
+        Task<DICVCustomerEnrollmentModel> GetDICVCustomerOTCCardPartialView([FromBody] List<DICVCardEntryDetails> arrs);
+        Task<List<DICVOTCCardDetails>> GetAvailableDICVOTCCardForDealer(string DealerCode);
+        Task<GetSalesExecutiveEmployeeIDResponse> GetDICVSalesExeEmpId(string dealerCode);
     }
 }

@@ -368,6 +368,11 @@ namespace HPCL_Web.Controllers
             ViewBag.Message = Message;
             return View();
         }
+        public async Task<ActionResult> GetALCustomerCardDispatchDetails(string CustomerID)
+        {
+            var model = await _ashokLeyLandService.GetALCustomerCardDispatchDetails(CustomerID);
+            return PartialView("~/Views/AshokLeyLand/_ViewALCardDispatchDetails.cshtml", model);
+        }
 
     }
 }

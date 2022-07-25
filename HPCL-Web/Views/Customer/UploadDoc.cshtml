@@ -3,15 +3,15 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ajax-unobtrusive/3.2.6/jquery.unobtrusive-ajax.js"></script>
 
 <div class="col-lg-12">
-    <div class="bg-white p-2 p-md-4">
+    <div class="bg-white p-2 p-md-4" style="background: #edecec !important;">
         <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
             <li class="breadcrumb-item"><a href="@Url.Action("Index","Enrollments")" class="text_primary">Enrollments</a> </li>
             <li class="breadcrumb-item font-weight-light">Upload Document</li>
         </ul>
         <div class="tab-content mt-3" id="myTabContent">
             <div class="tab-pane fade show active" id="basicInfo" role="tabpanel" aria-labelledby="basicInfo-tab">
-                <div class="border-1 rounded border-grey h-100 mt-3">
-                    <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Upload Document</p>
+                <div class="border-1 rounded border-grey h-100 mt-3 bg-white">
+                    <p class="text-white px-3 py-2 m-0 font-weight-bold" style="background: #084693;">Upload Document</p>
                     <div class="w-100">
 
                         @Html.ValidationSummary(false)
@@ -80,9 +80,8 @@
 
                     <form id="saveDocs" method="post" data-ajax="true" enctype="multipart/form-data" asp-controller="Customer" asp-action="SaveUploadDoc" data-ajax-method="POST" data-ajax-success="OnSuccessUploadDocSave" data-ajax-failure="OnFailure">
                         <div id="docUpdateId">
-
-                            <div class="border-1 rounded border-grey mb-3">
-                                <p class="text_primary px-3 py-2 bg-grey mb-3 font-weight-bold">ID Proof</p>
+                            <div class="border-1 rounded border-grey mb-3 bg-white">
+                                <p class="text-white px-3 py-2 mb-3 font-weight-bold" style="background: #084693;">ID Proof</p>
                                 <div class="col-md-6 col-12 px-2">
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                         <label class="font-weight-normal col-md-5 col-12 mb-0">Proof of Identity<sup class="text-danger">*</sup></label>
@@ -143,8 +142,8 @@
                                 <div class="clearfix"></div>
                             </div>
 
-                            <div class="border-1 rounded border-grey mb-4 pt-0">
-                                <p class="text_primary px-3 py-2 bg-grey mb-3 font-weight-bold">Address Proof</p>
+                            <div class="border-1 rounded border-grey mb-4 pt-0 bg-white">
+                                <p class="text-white px-3 py-2 mb-3 font-weight-bold" style="background: #084693;">Address Proof</p>
                                 <div class="col-md-6 col-12 px-2">
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                         <label class="font-weight-normal col-md-5 col-12 mb-0">Proof of Address<sup class="text-danger">*</sup></label>
@@ -230,6 +229,29 @@
                                     </div>
                                 </div> 
                             </div>
+                        </div>
+                        <!-- Modal : Dialog -->
+
+                        <!-- Modal : Dialog -->
+                        <!-- Image Download Modal -->
+                        <div class="modal fade" id="dvUploadViewImage" tabindex="-1" role="dialog" aria-labelledby="exampleUploadModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+                            <div class="modal-dialog" role="document" style="max-width:700px; width:100%;">
+                                <div class="modal-content">
+                                    <div class="modal-header py-2">
+                                        <h5 class="modal-title" id="exampleUploadModalLabel" style="font-size:14px;">View Image</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div> 
+                                    <div class="col-12 col-sm-12">
+                                        <img style="max-width:100%;width:100%;max-height: 420px;" src="/assets/images/id-card.png" class="py-3" alt="Image" id="imgUploadAttachment" /> @*class="imgZoom py-3"*@
+                                    </div>
+                                    <div class="d-flex align-items-center justify-content-start flex-wrap px-3 mb-3">
+                                        <button type="button" id="ImgUploadDownload" class="btn btn_primary down_btn_sty">Download Image</button>
+                                    </div>
+                                </div> 
+                            </div>
+                            <label id="selectedButton" style="display:none"></label>
                         </div>
                         <!-- Modal : Dialog -->
                     </form>
@@ -370,11 +392,21 @@
                         }
                         else
                         {
-                            $("#idPfrontImg").append("<img id='IdProofFrontSrc' /><a href='#' id='IdProofFrontDownloadlnk' onclick='OpenModelPOPup(1); return false;'><b>Download " + extension + "</b></a>");
+                            $("#idPfrontImg").append("<img id='IdProofFrontSrc' /><img id='IdProofFrontSrcPDFDOC' /><a href='#' id='IdProofFrontDownloadlnk' onclick='OpenModelPOPup(1); return false;'><b>Download " + extension + "</b></a>");
                             $('#idPfrontImg img').attr('src',  ifimg);
                             $("#idPfrontImg img").attr("style", "width: 200px");
                             $("#idPfrontImg img").attr("style", "height: 100px");
                             $("#idPfrontImg img").show();
+
+                            $('#IdProofFrontSrc').attr('style', "display:none");
+                            if(extension.toLowerCase()=="pdf")
+                            {
+                                $('#IdProofFrontSrcPDFDOC').attr('src', "/MyStaticFiles/IconPDF.png");
+                            }
+                            else
+                            {
+                                $('#IdProofFrontSrcPDFDOC').attr('src', "/MyStaticFiles/IconDoc.png");
+                            }
                         }
 
                     }
@@ -397,11 +429,21 @@
                         }
                         else
                         {
-                            $("#idPbackImg").append("<img id='IdProofBackSrc' /><a href='#' id='IdProofBackDownloadlnk' onclick='OpenModelPOPup(2); return false;'><b>Download " + extension + "</b></a>");
+                            $("#idPbackImg").append("<img id='IdProofBackSrc' /><img id='IdProofBackSrcPDFDOC' /><a href='#' id='IdProofBackDownloadlnk' onclick='OpenModelPOPup(2); return false;'><b>Download " + extension + "</b></a>");
                             $('#idPbackImg img').attr('src',  ibimg);
                             $("#idPbackImg img").attr("style", "width: 200px");
                             $("#idPbackImg img").attr("style", "height: 100px");
                             $("#idPbackImg img").show();
+
+                            $('#IdProofBackSrc').attr('style', "display:none");
+                            if(extension.toLowerCase()=="pdf")
+                            {
+                                $('#IdProofBackSrcPDFDOC').attr('src', "/MyStaticFiles/IconPDF.png");
+                            }
+                            else
+                            {
+                                $('#IdProofBackSrcPDFDOC').attr('src', "/MyStaticFiles/IconDoc.png");
+                            }
                         }
 
                     }
@@ -424,11 +466,21 @@
                         }
                         else
                         {
-                            $("#idAfrontImg").append("<img id='AddressProofFrontSrc' /><a href='#' id='AddressProofFrontDownloadlnk' onclick='OpenModelPOPup(3); return false;'><b>Download " + extension + "</b></a>");
+                            $("#idAfrontImg").append("<img id='AddressProofFrontSrc' /><img id='AddressProofFrontSrcPDFDOC' /><a href='#' id='AddressProofFrontDownloadlnk' onclick='OpenModelPOPup(3); return false;'><b>Download " + extension + "</b></a>");
                             $('#idAfrontImg img').attr('src',  afimg);
                             $("#idAfrontImg img").attr("style", "width: 200px");
                             $("#idAfrontImg img").attr("style", "height: 100px");
                             $("#idAfrontImg img").show();
+
+                            $('#AddressProofFrontSrc').attr('style', "display:none");
+                            if(extension.toLowerCase()=="pdf")
+                            {
+                                $('#AddressProofFrontSrcPDFDOC').attr('src', "/MyStaticFiles/IconPDF.png");
+                            }
+                            else
+                            {
+                                $('#AddressProofFrontSrcPDFDOC').attr('src', "/MyStaticFiles/IconDoc.png");
+                            }
                         }
                     }
                     if(abimg!="")
@@ -451,11 +503,21 @@
                         }
                         else
                         {
-                            $("#idAbackImg").append("<img id='AddressProofBackSrc' /><a href='#' id='AddressProofBackDownloadlnk' onclick='OpenModelPOPup(4); return false;'><b>Download " + extension + "</b></a>");
+                            $("#idAbackImg").append("<img id='AddressProofBackSrc' /><img id='AddressProofBackSrcPDFDOC' /><a href='#' id='AddressProofBackDownloadlnk' onclick='OpenModelPOPup(4); return false;'><b>Download " + extension + "</b></a>");
                             $('#idAbackImg img').attr('src',  abimg);
                             $("#idAbackImg img").attr("style", "width: 200px");
                             $("#idAbackImg img").attr("style", "height: 100px");
                             $("#idAbackImg img").show();
+
+                            $('#AddressProofBackSrc').attr('style', "display:none");
+                            if(extension.toLowerCase()=="pdf")
+                            {
+                                $('#AddressProofBackSrcPDFDOC').attr('src', "/MyStaticFiles/IconPDF.png");
+                            }
+                            else
+                            {
+                                $('#AddressProofBackSrcPDFDOC').attr('src', "/MyStaticFiles/IconDoc.png");
+                            }
                         }
                     }
                         
@@ -499,10 +561,13 @@
                  if (typeof (FileReader) != "undefined") {
                      if(this.files[0].size < 5242880){
                          var regexImage = /(.*?)\.(png|jpeg|JPEG|jpg|gif)$/;
+                         var extension = $(this).val().toLowerCase().substring($(this).val().lastIndexOf('.')+1).toLowerCase();
+                         console.log(extension);
                          if (regexImage.test($(this).val())) 
                          {
                              $("#idPfrontImg").show();
-                             $("#idPfrontImg").append("<img class='imgZoom'/><a id='downloadIdFrontDoc'/><button class='btn btn_primary' style='margin-top:2%' type='button' onclick='idFrontClick()' id='idBack_btn'>Download File</button>");
+                             //$("#idPfrontImg").append("<img class='imgZoom'/><a id='downloadIdFrontDoc'/><button class='btn btn_primary' style='margin-top:2%' type='button' onclick='idFrontClick()' id='idBack_btn'>Download File</button>");
+                             $("#idPfrontImg").append("<img id='IdProofFrontSrc' class='imgZoom'/><a id='downloadIdFrontDoc'><a id='downloadIdFrontDoc1' onclick='OpenUploadModelPOPup(1);return false;'><b>Enlarge " + extension + " </b></a></a>");
                              var reader = new FileReader();
                              reader.onload = function (e) {
                                  $("#idPfrontImg img").attr("src", e.target.result);
@@ -516,16 +581,30 @@
                          else
                          {
                              $("#idPfrontImg").show();
-                             $("#idPfrontImg").append("<img /><a id='downloadIdFrontDoc'/><button class='btn btn_primary' style='margin-top:2%' type='button' onclick='idFrontClick()' id='idBack_btn'>Download File</button>");
+                             //$("#idPfrontImg").append("<img /><a id='downloadIdFrontDoc'/><button class='btn btn_primary' style='margin-top:2%' type='button' onclick='idFrontClick()' id='idBack_btn'>Download File</button>");
+                             $("#idPfrontImg").append("<img id='IdProofFrontSrc' /><img id='IdProofFrontSrcPDFDOC' /><a id='downloadIdFrontDoc'><a id='downloadIdFrontDoc1' onclick='OpenUploadModelPOPup(1);return false;'><b>Download " + extension + " </b></a></a>");
                              var reader = new FileReader();
-                             reader.onload = function (e) {
+                             reader.onload = function (e) 
+                             {
                                  $("#idPfrontImg img").attr("src", e.target.result);
                                  $("#idPfrontImg img").attr("style", "width: 200px");
                                  $("#idPfrontImg img").attr("style", "height: 100px");
                                  $("#idPfrontImg a").attr("href",e.target.result);
                                  $("#idPfrontImg a").attr("download",idFront);
+
+                                $('#IdProofFrontSrc').attr('style', "display:none");
+                                if(extension.toLowerCase()=="pdf")
+                                {
+                                    $('#IdProofFrontSrcPDFDOC').attr('src', "/MyStaticFiles/IconPDF.png");
+                                }
+                                else
+                                {
+                                    $('#IdProofFrontSrcPDFDOC').attr('src', "/MyStaticFiles/IconDoc.png");
+                                }
+                                  
                              }
                              reader.readAsDataURL($(this)[0].files[0]);
+                            
                          }
                      }else{
                         $("#idFrontErr").text("");
@@ -577,10 +656,13 @@
                  if (typeof (FileReader) != "undefined") {
                      if(this.files[0].size < 5242880){
                          var regexImage = /(.*?)\.(png|jpeg|JPEG|jpg|gif)$/;
+                         var extension = $(this).val().toLowerCase().substring($(this).val().lastIndexOf('.')+1);
+                         console.log(extension);
                          if (regexImage.test($(this).val())) 
                          {
                              $("#idPbackImg").show();
-                             $("#idPbackImg").append("<img class='imgZoom'/><a id='downloadIdBackDoc'/><button class='btn btn_primary' style='margin-top:2%' type='button' onclick='idbackClick()' id='idBack_btn'>Download File</button>");
+                             //$("#idPbackImg").append("<img class='imgZoom'/><a id='downloadIdBackDoc'/><button class='btn btn_primary' style='margin-top:2%' type='button' onclick='idbackClick()' id='idBack_btn'>Download File</button>");
+                             $("#idPbackImg").append("<img id='IdProofBackSrc' class='imgZoom'/><a id='downloadIdBackDoc'><a id='downloadIdBackDoc1' onclick='OpenUploadModelPOPup(2);return false;'><b>Enlarge " + extension + " </b></a></a>");
                              var reader = new FileReader();
                              reader.onload = function (e) 
                              {
@@ -595,7 +677,8 @@
                          else
                          {
                              $("#idPbackImg").show();
-                             $("#idPbackImg").append("<img /><a id='downloadIdBackDoc'/><button class='btn btn_primary' style='margin-top:2%' type='button' onclick='idbackClick()' id='idBack_btn'>Download File</button>");
+                             //$("#idPbackImg").append("<img /><a id='downloadIdBackDoc'/><button class='btn btn_primary' style='margin-top:2%' type='button' onclick='idbackClick()' id='idBack_btn'>Download File</button>");
+                             $("#idPbackImg").append("<img id='IdProofBackSrc' /><img id='IdProofBackSrcPDFDOC' /><a id='downloadIdBackDoc'><a id='downloadIdBackDoc1' onclick='OpenUploadModelPOPup(2);return false;'><b>Download " + extension + " </b></a></a>");
                              var reader = new FileReader();
                              reader.onload = function (e) 
                              {
@@ -604,8 +687,19 @@
                                  $("#idPbackImg img").attr("style", "height: 100px");
                                  $("#idPbackImg a").attr("href",e.target.result);
                                  $("#idPbackImg a").attr("download",idBack);
+
+                                $('#IdProofBackSrc').attr('style', "display:none");
+                                if(extension.toLowerCase()=="pdf")
+                                {
+                                    $('#IdProofBackSrcPDFDOC').attr('src', "/MyStaticFiles/IconPDF.png");
+                                }
+                                else
+                                {
+                                    $('#IdProofBackSrcPDFDOC').attr('src', "/MyStaticFiles/IconDoc.png");
+                                }
                              }
                              reader.readAsDataURL($(this)[0].files[0]);
+                            
                          }
                      }else{
                         $("#idBackErr").text("");
@@ -657,10 +751,13 @@
                  if (typeof (FileReader) != "undefined") {
                      if(this.files[0].size < 5242880){
                          var regexImage = /(.*?)\.(png|jpeg|JPEG|jpg|gif)$/;
+                         var extension = $(this).val().toLowerCase().substring($(this).val().lastIndexOf('.')+1);
+                         console.log(extension);
                          if(regexImage.test($(this).val())) 
                          {
                              $("#idAfrontImg").show();
-                             $("#idAfrontImg").append("<img class='imgZoom'/><a id='downloadAddFrontDoc'/><button class='btn btn_primary' style='margin-top:2%' type='button' onclick='addfrotClick()' id='addFront_btn'>Download File</button>");
+                             //$("#idAfrontImg").append("<img class='imgZoom'/><a id='downloadAddFrontDoc'/><button class='btn btn_primary' style='margin-top:2%' type='button' onclick='addfrotClick()' id='addFront_btn'>Download File</button>");
+                             $("#idAfrontImg").append("<img id='AddressProofFrontSrc' class='imgZoom'/><a id='downloadAddFrontDoc'><a id='downloadAddFrontDoc1' onclick='OpenUploadModelPOPup(3);return false;'><b>Enlarge " + extension + " </b></a></a>");
                              var reader = new FileReader();
                              reader.onload = function (e) 
                              {
@@ -675,7 +772,8 @@
                          else
                          {
                              $("#idAfrontImg").show();
-                             $("#idAfrontImg").append("<img /><a id='downloadAddFrontDoc'/><button class='btn btn_primary' style='margin-top:2%' type='button' onclick='addfrotClick()' id='addFront_btn'>Download File</button>");
+                             //$("#idAfrontImg").append("<img /><a id='downloadAddFrontDoc'/><button class='btn btn_primary' style='margin-top:2%' type='button' onclick='addfrotClick()' id='addFront_btn'>Download File</button>");
+                             $("#idAfrontImg").append("<img id='AddressProofFrontSrc' /><img id='AddressProofFrontSrcPDFDOC' /><a id='downloadAddFrontDoc'><a id='downloadAddFrontDoc1' onclick='OpenUploadModelPOPup(3); return false;'><b>Download " + extension + " </b></a></a>");
                              var reader = new FileReader();
                              reader.onload = function (e) 
                              {
@@ -684,8 +782,19 @@
                                  $("#idAfrontImg img").attr("style", "height: 100px");
                                  $("#idAfrontImg a").attr("href",e.target.result);
                                  $("#idAfrontImg a").attr("download",addFront);
+
+                                 $('#AddressProofFrontSrc').attr('style', "display:none");
+                                if(extension.toLowerCase()=="pdf")
+                                {
+                                    $('#AddressProofFrontSrcPDFDOC').attr('src', "/MyStaticFiles/IconPDF.png");
+                                }
+                                else
+                                {
+                                    $('#AddressProofFrontSrcPDFDOC').attr('src', "/MyStaticFiles/IconDoc.png");
+                                }
                              }
                              reader.readAsDataURL($(this)[0].files[0]);
+                            
                          }
                       }else{
                         $("#addFrontErr").text("");
@@ -737,10 +846,13 @@
                  if (typeof (FileReader) != "undefined") {
                      if(this.files[0].size < 5242880){
                          var regexImage = /(.*?)\.(png|jpeg|JPEG|jpg|gif)$/;
+                         var extension = $(this).val().toLowerCase().substring($(this).val().lastIndexOf('.')+1);
+                         console.log(extension);
                          if(regexImage.test($(this).val())) 
                          {
                              $("#idAbackImg").show();
-                             $("#idAbackImg").append("<img class='imgZoom'/><a id='downloadAddBackDoc'/><button class='btn btn_primary' style='margin-top:2%' type='button' onclick='addBackClick()' id='addBack_btn'>Download File</button>");
+                             //$("#idAbackImg").append("<img class='imgZoom'/><a id='downloadAddBackDoc'/><button class='btn btn_primary' style='margin-top:2%' type='button' onclick='addBackClick()' id='addBack_btn'>Download File</button>");
+                             $("#idAbackImg").append("<img id='AddressProofBackSrc' class='imgZoom'/><a id='downloadAddBackDoc'><a id='downloadAddBackDoc1' onclick='OpenUploadModelPOPup(4);return false;'><b>Enlarge " + extension + " </b></a></a>");
                              var reader = new FileReader();
                              reader.onload = function (e) 
                              {
@@ -755,7 +867,8 @@
                          else
                          {
                              $("#idAbackImg").show();
-                             $("#idAbackImg").append("<img /><a id='downloadAddBackDoc'/><button class='btn btn_primary' style='margin-top:2%' type='button' onclick='addBackClick()' id='addBack_btn'>Download File</button>");
+                             //$("#idAbackImg").append("<img /><a id='downloadAddBackDoc'/><button class='btn btn_primary' style='margin-top:2%' type='button' onclick='addBackClick()' id='addBack_btn'>Download File</button>");
+                             $("#idAbackImg").append("<img id='AddressProofBackSrc' /><img id='AddressProofBackSrcPDFDOC' /><a id='downloadAddBackDoc'><a id='downloadAddBackDoc1' onclick='OpenUploadModelPOPup(4);return false;'><b>Download " + extension + " </b></a></a>");
                              var reader = new FileReader();
                              reader.onload = function (e) 
                              {
@@ -764,8 +877,19 @@
                                  $("#idAbackImg img").attr("style", "height: 100px");
                                  $("#idAbackImg a").attr("href",e.target.result);
                                  $("#idAbackImg a").attr("download",addBack);
+
+                                $('#AddressProofBackSrc').attr('style', "display:none");
+                                if(extension.toLowerCase()=="pdf")
+                                {
+                                    $('#AddressProofBackSrcPDFDOC').attr('src', "/MyStaticFiles/IconPDF.png");
+                                }
+                                else
+                                {
+                                    $('#AddressProofBackSrcPDFDOC').attr('src', "/MyStaticFiles/IconDoc.png");
+                                }
                              }
                              reader.readAsDataURL($(this)[0].files[0]);
+                            
                          }
                     }else{
                         $("#addBackErr").text("");
@@ -930,6 +1054,93 @@
         //url = url.replace("zzzzxx", encodeURIComponent(upath));
         url = url.replace("zzzzxx", upath);
         window.location.href = url;
+    });
+
+    function OpenUploadModelPOPup(selectedbutton)
+    {
+        if(selectedbutton==1)
+        {
+          var txt = $("#downloadIdFrontDoc1").html();
+          let arr = txt.split(' ');
+          if(arr[1].toLowerCase()=="gif" || arr[1].toLowerCase()=="png" || arr[1].toLowerCase()=="jpeg" || arr[1].toLowerCase()=="jpg")
+          {
+              $('#dvUploadViewImage').modal('show');
+              $('#imgUploadAttachment').attr('src',$('#IdProofFrontSrc').prop('src'));
+              $('#selectedButton').html("1");
+          }
+          else
+          {
+              $("#downloadIdFrontDoc")[0].click();  
+          }
+        }
+        else if(selectedbutton==2)
+        {
+          var txt = $("#downloadIdBackDoc1").html();
+          let arr = txt.split(' ');
+          if(arr[1].toLowerCase()=="gif" || arr[1].toLowerCase()=="png" || arr[1].toLowerCase()=="jpeg" || arr[1].toLowerCase()=="jpg")
+          {
+              $('#dvUploadViewImage').modal('show');
+              $('#imgUploadAttachment').attr('src',$('#IdProofBackSrc').prop('src'));
+              $('#selectedButton').html("2");
+          }
+          else
+          {
+              $("#downloadIdBackDoc")[0].click();
+          }
+        }
+        else if(selectedbutton==3)
+        {
+          var txt = $("#downloadAddFrontDoc1").html();
+          let arr = txt.split(' ');
+          if(arr[1].toLowerCase()=="gif" || arr[1].toLowerCase()=="png" || arr[1].toLowerCase()=="jpeg" || arr[1].toLowerCase()=="jpg")
+          {
+              $('#dvUploadViewImage').modal('show');
+              $('#imgUploadAttachment').attr('src',$('#AddressProofFrontSrc').prop('src'));
+              $('#selectedButton').html("3");
+          }
+          else
+          {
+              $("#downloadAddFrontDoc")[0].click();
+          }
+        }
+        else if(selectedbutton==4)
+        {
+          var txt = $("#downloadAddBackDoc1").html();
+          let arr = txt.split(' ');
+          if(arr[1].toLowerCase()=="gif" || arr[1].toLowerCase()=="png" || arr[1].toLowerCase()=="jpeg" || arr[1].toLowerCase()=="jpg")
+          {
+              $('#dvUploadViewImage').modal('show');
+              $('#imgUploadAttachment').attr('src',$('#AddressProofBackSrc').prop('src'));
+              $('#selectedButton').html("4");
+          }
+          else
+          {
+              $("#downloadAddBackDoc")[0].click();
+          }
+        }
+    }
+
+    $("#ImgUploadDownload").click(function () 
+    {
+        var selectedButton = $('#selectedButton').html();
+
+        if(selectedButton==1)
+        {
+            $("#downloadIdFrontDoc")[0].click();
+        }
+        else if(selectedButton==2)
+        {
+            $("#downloadIdBackDoc")[0].click();
+        }
+        else if(selectedButton==3)
+        {
+            $("#downloadAddFrontDoc")[0].click();
+        }
+        else if(selectedButton==4)
+        {
+            $("#downloadAddBackDoc")[0].click();
+        }
+
     });
 </script>
 

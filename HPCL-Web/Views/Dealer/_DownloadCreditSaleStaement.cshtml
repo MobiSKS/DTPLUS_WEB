@@ -1,0 +1,251 @@
+﻿@model HPCL.Common.Models.ViewModel.Dealer.MerchanDealerSaleStatementModel
+@using HPCL.Common.Resources
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.6/jspdf.plugin.autotable.min.js"></script>
+@if (Model != null && Model.Data != null)
+{
+    if (Model.Data.ViewCustomerMerchantDetails != null)
+    {
+        <table id="CustomerDetails" class="table table-bordered " style="width:100%;">
+
+
+            <tbody>
+
+                @foreach (var item in Model.Data.ViewCustomerMerchantDetails)
+                {
+                    <tr>
+                        <td>Customer Name</td>
+                        <td>@item.IndividualOrgName</td>
+                        <td>Merchant Name</td>
+                        <td>@item.RetailOutletName</td>
+
+                    </tr>
+                    <tr>
+                        <td>Customer ID</td>
+                        <td>@item.CustomerID</td>
+                        <td>Merchant ID</td>
+                        <td>@item.MerchantID</td>
+                    </tr>
+                    <tr>
+                        <td>Merchant Address</td>
+                        <td colspan="3">@item.MerchantAddress</td>
+
+                    </tr>
+                    <tr>
+                        <td>Customer Address</td>
+                        <td colspan="3">@item.CustomerAddress</td>
+
+                    </tr>
+                    <tr>
+                        <td>Statement Period</td>
+                        <td colspan="3">@item.StatementPeriod</td>
+
+                    </tr>
+                    <tr>
+                        <td>Statement Date</td>
+                        <td colspan="3">@item.StatementDate</td>
+
+                    </tr>
+                    <tr>
+                        <td>Reference Number</td>
+                        <td colspan="3">@item.ReferenceNumber</td>
+
+                    </tr>
+                }
+            </tbody>
+
+        </table>
+    }
+    if (Model.Data.GetStatementDetails != null)
+    {
+        if (Model.Data.GetStatementDetails.Count() > 0 && Model.Data.TransactionDetails.Count() > 0)
+        {
+            <table id="TransactionSummary" class="table d-md-table table-bordered table-striped table-responsive" style="width:100%;">
+                <thead>
+                    <tr>
+                        <th>Statement Date</th>
+                        <th>Statement Period</th>
+                        <th>Purchase</th>
+                        <th>Payment</th>
+                        <th>Previous Outstanding</th>
+                        <th>Amount Due</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    @foreach (var item in Model.Data.GetStatementDetails)
+                    {
+                        <tr>
+                            <td>@item.StatementDate</td>
+                            <td>@item.StatementPeriod</td>
+                            <td>@item.Purchase</td>
+                            <td>@item.Payment</td>
+                            <td>@item.PreviousOutstanding</td>
+                            <td>@item.AmountDue</td>
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+        }
+    }
+    <div class="clearfix"></div>
+    @if (Model.Data.TransactionDetails != null)
+    {
+        @if (Model.Data.GetStatementDetails.Count() > 0 && Model.Data.TransactionDetails.Count() > 0)
+        {
+            <div>
+                <table id="TransactionDetails" class="table d-md-table table-striped table-bordered table-responsive" style="width:100%;">
+                    <thead>
+                        <tr>
+                            <th>S.No.</th>
+                            <th>Merchant ID</th>
+                            <th>Customer ID</th>
+                            <th>Transaction Type</th>
+                            <th>Transaction Date</th>
+                            <th>Account Number</th>
+                            <th>Token Number</th>
+                            <th>Transaction Amount</th>
+                            <th>Balance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            int Sno = 0;
+                        }
+                        @foreach (var item in Model.Data.TransactionDetails)
+                        {
+                            Sno++;
+                            <tr>
+                                <td>@Sno</td>
+                                <td>@item.MerchantID</td>
+                                <td>@item.CustomerID</td>
+                                <td>@item.TransactionType</td>
+                                <td>@item.TransactionDate</td>
+                                <td>@item.AccountNumber</td>
+                                <td>@item.TokenNumber</td>
+                                <td>@item.TransactionAmount</td>
+                                <td>@item.Balance</td>
+
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="clearfix"></div>
+        }
+    }
+}
+<div class="px-2">
+    <button class="btn btn_primary" onclick="generatePDF()" id="btnPDFDownload" type="button">Download</button>
+</div>
+<img id="img1" src="../assets/images/logo.png" class="img-fluid" alt="">
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        //encodeImageFileAsURL();
+        $("#btnPDFDownload").click();
+    });
+    function addImagetoPDF(){
+       
+        var c = document.createElement('canvas');
+        var img = document.getElementById('img1');
+        c.height = img.height;
+        c.width = img.width;
+        var ctx = c.getContext('2d');
+
+        ctx.drawImage(img, 0, 0, c.width, c.height);
+        var base64String = c.toDataURL("image/png");
+        return base64String;
+    }
+     function generatePDF() {
+             var doc = new jsPDF({
+                orientation: 'l', // landscape
+                unit: 'pt', // points, pixels won't work properly
+                format: [740, 680] // set needed dimensions for any element
+            })
+
+             var htmlstring = '';
+             var tempVarToCheckPageHeight = 0;
+             var pageHeight = 0;
+             pageHeight = doc.internal.pageSize.height;
+             var finalY = 50;
+             margins = {
+                top: 50,
+                bottom: 60,
+                left: 10,
+                right: 10,
+                width: 740
+             };
+             doc.setFontSize(14);
+             var y = 20;
+             doc.setLineWidth(5);
+             
+             var base64logoImg=addImagetoPDF();
+             doc.addImage(base64logoImg,"png", 100, 20,80, 40);//doc.addImage(imgData, 'image format', x, y, w, h, 'alias');
+            
+ 
+             doc.text("Credit Sale Statement",
+                    300,
+                    finalY 
+                    )
+             doc.autoTable({
+                html: '#CustomerDetails',
+                startY: finalY + 40,
+                tableWidth: 680,
+                margin: {right:30,left:20},
+                //theme: 'striped',
+                 useCss: true,
+                columnStyles:{
+                     0: {
+                        cellWidth: 150
+                    },
+                    1: {
+                        cellWidth: 250
+                    },
+                    2: {
+                        cellWidth: 100
+                    },
+                     3: {
+                        cellWidth: 180
+                    },
+
+                },
+                styles: {
+                    minCellHeight: 10
+                }
+             })
+             finalY = doc.lastAutoTable.finalY
+
+               doc.autoTable({
+                html: '#TransactionSummary',
+                startY: finalY + 20,
+                tableWidth: 680,
+                margin: {right:30,left:20},
+                //theme: 'striped',
+                 useCss: true,
+                columnStyles: { text: { cellWidth: 'auto' } },
+                styles: {
+                    minCellHeight: 10
+                }
+             })
+              finalY = doc.lastAutoTable.finalY
+
+               doc.autoTable({
+                html: '#TransactionDetails',
+                startY: finalY + 20,
+                tableWidth: 680,
+                margin: {right:30,left:20},
+                //theme: 'striped',
+                 useCss: true,
+                columnStyles: { text: { cellWidth: 'auto' } },
+                styles: {
+                    minCellHeight: 10
+                }
+             })
+             doc.save('CreditSaleStatement.pdf');
+
+        }
+ 
+</script>

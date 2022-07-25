@@ -35,7 +35,7 @@ namespace HPCL.Service.Services
                 UserAgent = CommonBase.useragent,
                 UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 CustomerId = entity.CustomerId,
-                RequestedBy = entity.CustomerId
+                RequestedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
             };
 
 
@@ -180,42 +180,42 @@ namespace HPCL.Service.Services
             return searchList;
         }
 
-        public async Task<CcmsRechargeAmexRes> CCMSRechargeICICI(string customerId, string amount)
-        {
-            var searchBody = new CcmsRechargeIcici
-            {
-                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
-                UserAgent = CommonBase.useragent,
-                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
-                CustomerId = customerId,
-                Amount = Convert.ToDecimal(amount)
-            };
+        //public async Task<CcmsRechargeAmexRes> CCMSRechargeICICI(string customerId, string amount)
+        //{
+        //    var searchBody = new CcmsRechargeIcici
+        //    {
+        //        UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+        //        UserAgent = CommonBase.useragent,
+        //        UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+        //        CustomerId = customerId,
+        //        Amount = Convert.ToDecimal(amount)
+        //    };
 
-            StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
-            var response = await _requestService.CommonRequestService(content, WebApiUrl.ICICICcmsRechargeUrl);
-            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
-            CcmsRechargeAmexRes searchList = obj.ToObject<CcmsRechargeAmexRes>();
-            return searchList;
-        }
+        //    StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+        //    var response = await _requestService.CommonRequestService(content, WebApiUrl.ICICICcmsRechargeUrl);
+        //    JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+        //    CcmsRechargeAmexRes searchList = obj.ToObject<CcmsRechargeAmexRes>();
+        //    return searchList;
+        //}
 
-        public async Task<IciciInitateRecharge> CCMSInitiateRechargeICICI(string customerId, string amount)
-        {
-            var searchBody = new CcmsRechargeIcici
-            {
-                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
-                UserAgent = CommonBase.useragent,
-                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
-                CustomerId = customerId,
-                Amount = Convert.ToDecimal(amount)
-            };
+        //public async Task<IciciInitateRecharge> CCMSInitiateRechargeICICI(string customerId, string amount)
+        //{
+        //    var searchBody = new CcmsRechargeIcici
+        //    {
+        //        UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+        //        UserAgent = CommonBase.useragent,
+        //        UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+        //        CustomerId = customerId,
+        //        Amount = Convert.ToDecimal(amount)
+        //    };
 
-            StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
-            var response = await _requestService.CommonRequestService(content, WebApiUrl.ICICICcmsRechargeUrl);
-            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+        //    StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+        //    var response = await _requestService.CommonRequestService(content, WebApiUrl.ICICICcmsRechargeUrl);
+        //    JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
 
-            IciciInitateRecharge checkList = obj.ToObject<IciciInitateRecharge>();
-            return checkList;
-        }
+        //    IciciInitateRecharge checkList = obj.ToObject<IciciInitateRecharge>();
+        //    return checkList;
+        //}
 
         public async Task<GetRequestAuthorizationRes> GetRequestAuthorizationDetails(GetRequestAuthorizationReq entity)
         {

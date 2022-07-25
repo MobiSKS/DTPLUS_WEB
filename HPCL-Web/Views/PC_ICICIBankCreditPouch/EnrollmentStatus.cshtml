@@ -1,0 +1,483 @@
+﻿@model HPCL.Common.Models.ViewModel.ICICIBankCreditPouch.SearchEnrollStatus
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ajax-unobtrusive/3.2.6/jquery.unobtrusive-ajax.js"></script>
+
+<div class="col-lg-12">
+    <div class="bg-white p-2 p-md-4">
+        <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
+            <li class="breadcrumb-item"><a href="@Url.Action("Index")" class="text_primary">ICICI Bank Credit Pouch</a> </li>
+            <li class="breadcrumb-item font-weight-light">Enrollment Status – Credit Pouch</li>
+        </ul>
+        <form id="formValid">
+            <div class="w-100">
+                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mb-3">
+                    <div class="border-1 rounded border-grey pb-0">
+                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Enrollment Status – Credit Pouch</p>
+                        <div class="col-lg-12 col-md-12 col-12 py-3">
+                            <div class="d-flex align-items-center flex-wrap" id="sbutypeSection">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">SBU Type</label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select" id="sbuTypeAll">
+                                                @Html.DropDownListFor(m => m.SBUTypeId, new SelectList(Model.SBUTypes, "SBUId", "SBUName"), new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center flex-wrap" id="zonalRegionalOfcSection">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">Zonal Office</label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select" id="zonalAll">
+                                                @Html.DropDownListFor(m => m.ZO, new SelectList(Model.ZoneMdl, "ZonalOfficeID", "ZonalOfficeName"), new { @class = "form-control", onchange = "getRegionalOfc()" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal offset-md-1 col-md-4 col-12">Regional Office</label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select" id="regionalAll">
+                                                @Html.DropDownListFor(m => m.RO, new SelectList(Model.RegionMdl, "RegionalOfficeID", "RegionalOfficeName"), new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">From Date</label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.FromDate, new { @class = "form-control fromDate",@placeholder="dd-mm-yyyy", @autocomplete = "off", @onchange = "checkDates('fromDate_error');" })
+                                            </div>
+                                            @Html.ValidationMessageFor(m => m.FromDate, "", new { @class = "text-danger", @id = "fromDate_error" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal offset-md-1 col-md-4 col-12">To Date</label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.ToDate, new { @class = "form-control toDate",@placeholder="dd-mm-yyyy", @autocomplete = "off", @onchange = "checkDates('fromDate_error');" })
+                                            </div>
+                                            @Html.ValidationMessageFor(m => m.ToDate, "", new { @class = "text-danger", @id = "toDate_error" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                              <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">Customer ID</label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.CustomerId, new { @id = "CustomerDefaultVal", @class = "form-control restrictPaste", onkeypress = "return isNumberKey(event)" })
+                                                @Html.ValidationMessageFor(m => m.CustomerId, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-center mt-3">
+                                <div class="px-md-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2">
+                                    <button class="btn btn_primary" type="button" name="submit" onclick="searchEnroll()">Search</button>
+                                </div>
+                                <div class="px-md-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2">
+                                    <a class="btn btn_primary" href="#" id="btnCancel" name="cancel" onclick="resetClick()">Reset</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+
+                    <div id="noRecord" class="mt-3 mb-0 text-center alert alert-danger" style="display:none;"></div>
+
+                    <div id="approvalRejectSection" style="display:none;">
+                        <div class="table-responsive mt-3">
+                            <table id="approvalHdfcList" class="datatable table table-striped d-block nowarp table-bordered table-responsive mt-3" style="width:100%;">
+                                <thead>
+                                    <tr>
+                                        <th>S.No.</th>
+                                        <th>ZO</th>
+                                        <th>RO</th>
+                                        <th>Customer ID</th>
+                                        <th>Customer Name</th>
+                                        <th>Plan Name</th>
+                                        <th>Enrolled Date</th>
+                                        <th>Enrolled By</th>
+                                        <th>Approver Remark</th>
+                                        <th>Authorizer Remark</th>
+                                        <th>Status</th>
+                                        <th>Credit Limit assigned per Month (in Rs)</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="clearfix"></div>
+    </div>
+</div>
+
+<div id="viewHdfcEnrollReport" class="modal fade">
+    <div class="vertical-alignment-helper">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text_primary" id="exampleModalLabel">ICICI Payment Enrollment Details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        &times;
+                    </button>
+                </div>
+                <div class="modal-body" id="bodyFetch">
+                    <div id="CustDetails">
+                        <table id="reportList" class="table table-striped d-md-table d-block table-bordered table-responsive mt-3" style="width:100%;">
+                            <tr>
+                                <th>S.No.</th>
+                                <th>Customer ID</th>
+                                <th>Customer Name</th>
+                                <th>Plan Name</th>
+                                <th>Modified Date</th>
+                                <th>Modified By</th>
+                                <th>Status</th>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@using Microsoft.AspNetCore.Http;
+<script src="https://rawgit.com/moment/moment/2.2.1/min/moment.min.js"></script>
+
+<script type="text/javascript">
+
+        function resetClick() {
+            window.location.reload();
+        }
+
+        $('.restrictPaste').on('paste', function (event) {
+            if (event.originalEvent.clipboardData.getData('Text').match(/[^\d]/)) {
+                event.preventDefault();
+            }
+        });
+
+        $(document).ready(function () {
+
+           var loginType = "@Context.Session.GetString("LoginType")";
+
+           if (loginType == "Customer" && loginType != "Admin") {
+
+               $("#SBUTypeId").html("");
+               $('<option>',{ value: "@Context.Session.GetInt32("CustomerSbuTypeId")", text: "@Context.Session.GetString("CustomerSbuTypeName")" }).html("@Context.Session.GetString("CustomerSbuTypeName")").appendTo("#SBUTypeId");
+
+               $("#ZO").html("");
+               $('<option>',{ value: "@Context.Session.GetString("CustomerZonalOfcId")", text: "@Context.Session.GetString("CustomerZonalOfcName")" }).html("@Context.Session.GetString("CustomerZonalOfcName")").appendTo("#ZO");
+
+               $("#RO").html("");
+               $('<option>',{ value: "@Context.Session.GetString("RegionalOfcId")", text: "@Context.Session.GetString("CustomerRegionalOfcName")" }).html("@Context.Session.GetString("CustomerRegionalOfcName")").appendTo("#RO");
+
+               $("#SBUTypeId").css({"background-color":"rgb(238, 238, 238)", "pointer-events":"none"}).keydown(false);
+               $("#ZO").css({"background-color":"rgb(238, 238, 238)", "pointer-events":"none"}).keydown(false);
+               $("#RO").css({"background-color":"rgb(238, 238, 238)", "pointer-events":"none"}).keydown(false);
+
+               $("#CustomerDefaultVal").val('@Context.Session.GetString("UserId")');
+               $("#CustomerDefaultVal").attr("readonly",true);
+           }
+
+
+           function isNumberKey(evt) {
+                var charCode = (evt.which) ? evt.which : event.keyCode;
+                if (charCode != 46 && charCode > 31
+                    && (charCode < 48 || charCode > 57))
+                    return false;
+
+                return true;
+            }
+
+            $('select').SumoSelect({
+                placeholder: '-Select-',
+                search: true,
+                searchText: 'Enter Text here.'
+            });
+
+        });
+
+    $("#SBUTypeId").change(function () {
+             var id = this.value;
+
+             $.ajax({
+                 type: 'POST',  // http method
+                 url: '@Url.Action("GetZonalOfficebySBUType", "Common")',
+                 data: { SBUTypeId: id },  // data to submit
+                 dataType: "json",
+                 success: function (data, status, xhr) {
+                     var v = data;
+                     if (status == 'success') {
+
+                         $("#ZO").html("");
+                         $('<option>',{
+                                         value: 0, text: "--All--"
+                                     }).html("--All--").appendTo("#ZO");
+                         $.each(data, function (i, data) { // bind the dropdown list using json result
+                                 
+                                 $('<option>',
+                                     {
+                                         value: data.zonalOfficeID,
+                                         text: data.zonalOfficeName
+                                     }).html(data.zonalOfficeName).appendTo("#ZO");
+
+                         });
+                         $("#ZO")[0].sumo.reload();
+                         $("#ZO").trigger("change");
+                     }
+                     else {
+                         console.log(v);
+                     }
+                 },
+                 error: function (jqXhr, textStatus, errorMessage) {
+                     alert("Error Populating Customer Zone");
+                 }
+             });
+         });
+
+    function getRegionalOfc() {
+        var id = $('#ZO :selected').val();
+        if(id>0){
+            $.ajax({
+                type: 'POST',  // http method
+                url: '@Url.Action("GetRegionalOfcDetails", "Common")',
+                data: { ZonalOfcID: id },  // data to submit
+                dataType: "json",
+                success: function (data, status, xhr) {
+                    var v = data;
+                    if (status == 'success') {
+                        $("#RO").html("");
+                        $.each(data, function (i, data) { // bind the dropdown list using json result
+                            if (i == 0) {
+                                $('<option>',
+                                    {
+                                        value: 0,
+                                        text: "-All-"
+                                    }).html("--All--").appendTo("#RO");
+                                $('<option>',
+                                    {
+                                        value: data.regionalOfficeID,
+                                        text: data.regionalOfficeName
+                                    }).html(data.regionalOfficeName).appendTo("#RO");
+                            }
+                            else {
+                                $('<option>',
+                                    {
+                                        value: data.regionalOfficeID,
+                                        text: data.regionalOfficeName
+                                    }).html(data.regionalOfficeName).appendTo("#RO");
+                            }
+
+                        });
+                        $("#RO")[0].sumo.reload();
+                    }
+                    else {
+                        console.log(v);
+                    }
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+                    alert("Error");
+                }
+            });
+        }
+        else{
+             $("#RO").html('');
+            $("#RO")[0].sumo.reload();
+        }
+    };
+
+    $("#RO").change(function () {
+        var id = this.value;
+        $("#RO").val(id);
+    });
+
+
+    function searchEnroll() {
+
+        var fromdate = $("#FromDate").val();
+        var todate = $("#ToDate").val();
+
+        var flag = "Y";
+        ////if (fromdate == "") {
+        ////    $("#fromDate_error").attr("style", "display:block");
+        ////    $("#fromDate_error").html("Select From Date");
+        ////    flag = "N";
+        ////}
+        ////if (todate == "") {
+        ////    $("#toDate_error").attr("style", "display:block");
+        ////    $("#toDate_error").html("Select To Date");
+        ////    flag = "N";
+        ////}
+        if (fromdate != "" && todate != "") {
+            flag = checkDates("fromdate_error");
+        }
+
+        if (flag == "N")
+            e.preventDefault();
+
+        if (flag == "Y") {
+            if ($("#formValid").valid()) {
+
+                $.ajax({
+                    type: 'POST',  // http method
+                    url: '@Url.Action("EnrollmentStatus", "PC_ICICIBankCreditPouch")',
+                    data: $('#formValid').serialize(),  // data to submit
+                    success: function (res, status, xhr) {
+
+                        console.log("res",res);
+
+                        if (res.searchList.success == true) {
+
+                            var girdList = res.searchList.data;
+
+                            document.getElementById("noRecord").style.display = "none";
+
+                            $('#approvalHdfcList').DataTable().clear().destroy();
+
+                            var tbl = $('#approvalHdfcList').DataTable({
+                                paging: true,
+                                searching: false,
+                                stateSave: true,
+                                "bDestroy": true,
+                                "lengthMenu": [10, 20, 50, 100, 200, 500, 1000, 2000],
+                                "autoWidth": false,
+                                "oLanguage": {
+                                    "sLengthMenu": "Display _MENU_ Records",
+                                    "info": "Showing _START_ to _END_ of _TOTAL_ Records",
+                                }
+                            });
+
+                            for (var i = 0; i < girdList.length; i++) {
+
+                                var enDate;
+
+                                if(((girdList[i].enrolledDate) == "01-01-0001") || ((girdList[i].enrolledDate) == "01-01-1900") || ((girdList[i].enrolledDate) == null)){
+                                    enDate = "";
+                                }else{
+                                    enDate = moment(girdList[i].enrolledDate, 'DD-MM-YYYY').format('DD-MM-YYYY');
+                                }
+
+                                var srNumber = (i + 1);
+                                var zo = (girdList[i].zo || '');
+                                var ro = (girdList[i].ro || '');
+                                var customerId = "<span class='getCustId'>"+(girdList[i].customerId || '')+"</span>";
+                                var customerName = (girdList[i].customerName || '');
+                                var planName = (girdList[i].planName || '');
+                                var enrolledDate = enDate;
+                                var enrolledBy = (girdList[i].enrolledBy || '');
+                                var approverRemark = (girdList[i].approverRemark == "--") ? approverRemark = "" : approverRemark = (girdList[i].approverRemark);
+                                var authorizerRemark = (girdList[i].authorizerRemark == "--") ? authorizerRemark = "" : authorizerRemark = (girdList[i].authorizerRemark);
+                                var status = (girdList[i].status || '');
+                                var creditLimitAssigned = (girdList[i].creditLimitAssigned == 0) ? creditLimitAssigned = "" : creditLimitAssigned = (girdList[i].creditLimitAssigned.toFixed(2));
+                                var view = "<a href='#' class='viewListReport'>View</a><span class='getReqId' style='display:none;'>"+(girdList[i].requestNo)+"</span>";
+
+                                tbl.row.add([
+                                    srNumber,
+                                    zo,
+                                    ro,
+                                    customerId,
+                                    customerName,
+                                    planName,
+                                    enrolledDate,
+                                    enrolledBy,
+                                    approverRemark,
+                                    authorizerRemark,
+                                    status,
+                                    creditLimitAssigned,
+                                    view
+                                ]).draw();
+                            }
+                            document.getElementById('approvalRejectSection').style.display = 'block';
+                        } else {
+                            document.getElementById("approvalRejectSection").style.display = "none";
+                            $("#noRecord").html("");
+                            $("#noRecord").append("<span>" + res.searchList.message + "</span>");
+                            document.getElementById("noRecord").style.display = "block";
+                        }
+
+                    },
+                    error: function (jqXhr, textStatus, errorMessage) {
+                        console.log("Error");
+                    }
+                });
+            } else {
+                return false;
+            }
+        }
+    }
+
+$("#approvalHdfcList").on('click', '.viewListReport', function (e) {
+    
+      document.getElementById("noRecord").style.display = "none";
+
+      var currentRow = $(this).closest("tr");
+
+      var customerId = currentRow.find('.getCustId').text();
+      var requestId = currentRow.find('.getReqId').text();
+
+        $.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("GetEnrollStatusReport", "PC_ICICIBankCreditPouch")',
+            data: {customerId: customerId, requestId: requestId },  // data to submit
+            success: function (res, status, xhr) {
+                
+                    console.log("view report",res);
+
+                    if(res.searchList.success == true){
+
+                        $("#reportList td").parent().remove();
+
+                        for (var i = 0; i < res.searchList.data.length; i++) {
+
+                            var modifiedDate;
+                            if(((res.searchList.data[i].modifiedDate) == "01-01-0001") || ((res.searchList.data[i].modifiedDate) == "01-01-1900") || ((res.searchList.data[i].modifiedDate) == null)){
+                                modifiedDate = "";
+                            }else{
+                                modifiedDate = moment(res.searchList.data[i].modifiedDate, 'DD-MM-YYYY').format('DD-MM-YYYY');
+                            }
+
+                            var rows = "<tbody><tr>"
+                                + "<td>"+(i+1)+"</td>"
+                                + "<td>" + (res.searchList.data[i].customerId || '') + "</td>"
+                                + "<td>" + (res.searchList.data[i].customerName || '') + "</td>"
+                                + "<td>" + (res.searchList.data[i].planName || '') + "</td>"
+                                + "<td>" + (modifiedDate) + "</td>"
+                                + "<td>" + (res.searchList.data[i].modifiedBy || '') + "</td>"
+                                + "<td>" + (res.searchList.data[i].status || '') + "</td>"
+                                + "</tr ></tbody>";
+
+                            $('#reportList').append(rows);
+                        }
+                        $("#viewHdfcEnrollReport").modal('show');
+                    }else{
+                        //document.getElementById("approvalRejectSection").style.display = "none";
+                        $("#noRecord").html("");
+                        $("#noRecord").append("<span>" + res.searchList.message + "</span>");
+                        document.getElementById("noRecord").style.display = "block";
+                    }
+            },
+            error: function (jqXhr, textStatus, errorMessage) {
+                console.log("Error");
+            }
+        });
+  });
+</script>

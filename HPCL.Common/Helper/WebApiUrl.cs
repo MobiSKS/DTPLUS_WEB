@@ -317,6 +317,7 @@
         public static string GetAllLimitTypeUrl = "api/dtplus/card/get_limit_type";
         public static string getAlUploadKycDocument = "api/dtplus/ashokleyland/get_al_upload_kyc_document";
         public static string insertAlCustomerKYC = "api/dtplus/ashokleyland/insert_al_customer_kyc";
+        public static string getAlDispatchDetail = "api/dtplus/ashokleyland/get_al_dispatch_detail";
         #endregion
 
         #region Customer Financial
@@ -597,7 +598,6 @@
         public static string GetICICIPlanUrl = "api/dtplus/ICICICreditPouch/get_plan";
         public static string ICICIGetEnrollStatusUrl = "api/dtplus/ICICICreditPouch/get_cp_status";
         public static string ICICIGetEnrollStatusReportUrl = "api/dtplus/ICICICreditPouch/get_cp_status_Report";
-        public static string ICICICcmsRechargeUrl = "api/dtplus/ICICICreditPouch/insert_cp_pg_log";
         public static string ICICIGetRequestAuthorizationDetailsUrl = "api/dtplus/ICICIcreditPouch/get_cp_by_bank_auth";
         public static string ICICIRequestAuthorizationActionUrl = "api/dtplus/ICICIcreditPouch/auth_action_cp";
         public static string ICICIRequestToAvailCheckUrl = "api/dtplus/ICICICreditPouch/chk_eligibility";
@@ -625,6 +625,7 @@
         public static string jcbGetCardLimitFeatures = "api/dtplus/JCB/jcb_get_card_limit_features";
         public static string JCBUpdateMobileAndFastagNoInCard = "api/dtplus/JCB/JCB_update_mobile_and_fastag_no_in_card";
         public static string getJcbMobileAndFastagno = "api/dtplus/JCB/get_jcb_mobile_and_fastagno";
+        public static string getJcbSalesExeEmpidAddonOtcCardMapping = "api/dtplus/JCB/get_jcb_sales_exe_empid_addon_otc_card_mapping";
         #endregion
 
         #region "Customer Dashboard"
@@ -645,6 +646,9 @@
         public static string updateDicvDealerEnrollment = "api/dtplus/DICV/update_dicv_dealer_enrollment";
         public static string checkDicvDealerCode = "api/dtplus/DICV/check_dealer_code";
         public static string insertDealerWiseDicvOtcCardRequest = "api/dtplus/DICV/insert_dealer_wise_dicv_otc_card_request";
+        public static string insertDicvCustomer = "api/dtplus/DICV/insert_dicv_customer";
+        public static string getAvailityDicvOtcCard = "api/dtplus/DICV/get_availity_dicv_otc_card";
+        public static string getDicvSalesExeEmpidAddonOtcCardMapping = "api/dtplus/DICV/get_dicv_sales_exe_empid_addon_otc_card_mapping";
         #endregion
 
         #region "Parent Customer HDFC Bank Credit Pouch"
@@ -675,6 +679,20 @@
 
         #region "MO Dashboard"
         public static string PendingTerminal = "/api/dtplus/modashboard/mo_dashboard_pending_terminal";
+        #endregion
+
+        #region "Parent Customer ICICI Bank Credit Pouch"
+        public static string PCICICIGetCustomerDetailsUrl = "api/dtplus/PCICICICreditPouch/get_dtail_mo_for_pc";
+        public static string PCICICIEnrollExceptionReqUrl = "api/dtplus/PCICICICreditPouch/insrt_cp_rqst_for_pc";
+        public static string PCICICIGetExApprovalUrl = "api/dtplus/PCICICICreditPouch/get_cp_by_bank_for_pc";
+        public static string PCICICISubmitExApprovalUrl = "api/dtplus/PCICICICreditPouch/action_cp_for_pc";
+        public static string PCGetICICIPlanUrl = "api/dtplus/PCICICICreditPouch/get_plan_for_pc";
+        public static string PCICICIGetEnrollStatusUrl = "api/dtplus/PCICICICreditPouch/get_cp_status_for_pc";
+        public static string PCICICIGetEnrollStatusReportUrl = "api/dtplus/PCICICICreditPouch/get_cp_status_Report_for_pc";
+        public static string PCICICIGetRequestAuthorizationDetailsUrl = "api/dtplus/PCICICICreditPouch/get_cp_by_bank_auth_for_pc";
+        public static string PCICICIRequestAuthorizationActionUrl = "api/dtplus/PCICICICreditPouch/auth_action_cp_for_pc";
+        public static string PCICICIRequestToAvailCheckUrl = "api/dtplus/PCICICICreditPouch/chk_eligibility_for_pc";
+        public static string PCICICIRequestToAvailEnrollUrl = "api/dtplus/PCICICICreditPouch/insrt_cp_rqst_by_customer_for_pc";
         #endregion
     }
 }

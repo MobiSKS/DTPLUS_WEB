@@ -3,7 +3,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ajax-unobtrusive/3.2.6/jquery.unobtrusive-ajax.js"></script>
 
 <div class="col-lg-12">
-    <div class="bg-white p-2 p-md-4">
+    <div class="bg-white p-2 p-md-4" style="background: #edecec !important;">
         <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
             <li class="breadcrumb-item"><a href="@Url.Action("Index","Enrollments")" class="text_primary">Enrollments</a> </li>
             <li class="breadcrumb-item font-weight-light">Validate New Customer</li>
@@ -16,11 +16,9 @@
         {
             <div class="tab-content mt-3" id="myTabContent">
                 <div class="tab-pane fade show active" id="basicInfo" role="tabpanel" aria-labelledby="basicInfo-tab">
-
                     <div class="border-1 rounded border-grey h-100 mt-3">
-
-                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold" id="ManageCardHeader"> Validate New Customer </p>
-                        <div class="p-2 p-md-4">
+                        <p class="text-white px-3 py-2 m-0 font-weight-bold" id="ManageCardHeader" style="background: #084693;"> Validate New Customer </p>
+                        <div class="p-2 p-md-4 bg-white">
                             <div>
                                 <ul class="nav nav-tabs mt-2 form_tabs mb-3">
                                     <li id="CustomerCards" class="nav-item">
@@ -42,7 +40,6 @@
                             </div>
 
                             <div class="tab-content">
-
                                 <div id="CustomerCardsSection" class="tab-pane active" role="tabpanel">
                                     <div class="d-flex align-items-center justify-content-between flex-wrap w-100">
                                         <div class="col-md-6 col-12 px-0">
@@ -940,6 +937,7 @@
                                                     <label class="font-weight-normal col-md-5 col-12">Front Photo<sup class="text-danger">*</sup></label>
                                                     <div class="col-md-7 col-12">
                                                         <img src="/assets/images/id-card.png" alt="Id proof front" class="imgZoom" id="IdProofFront" />
+                                                        <img src="/assets/images/id-card.png" alt="Id proof front" id="IdProofFrontPDFDOC" style="display:none" />
                                                     </div>
                                                 </div>
                                                 <div class="d-flex align-items-center justify-content-end flex-wrap px-3">
@@ -952,6 +950,7 @@
                                                     <label class="font-weight-normal col-md-5 col-12">Back Photo<sup class="text-danger">*</sup></label>
                                                     <div class="col-md-7 col-12">
                                                         <img src="/assets/images/id-card.png" alt="Id proof back" class="imgZoom" id="IdProofBack" />
+                                                        <img src="/assets/images/id-card.png" alt="Id proof back" id="IdProofBackPDFDOC" style="display:none" />
                                                     </div>
                                                 </div>
                                                 <div class="d-flex align-items-center justify-content-end flex-wrap px-3">
@@ -1010,6 +1009,7 @@
                                                     <label class="font-weight-normal col-md-5 col-12">Front Photo<sup class="text-danger">*</sup></label>
                                                     <div class="col-md-7 col-12">
                                                         <img src="/assets/images/id-card.png" alt="Address proof front" class="imgZoom" id="AddressProofFront" />
+                                                        <img src="/assets/images/id-card.png" alt="Address proof front" id="AddressProofFrontPDFDOC" style="display:none" />
                                                     </div>
                                                 </div>
                                                 <div class="d-flex align-items-center justify-content-end flex-wrap px-3">
@@ -1022,6 +1022,7 @@
                                                     <label class="font-weight-normal col-md-5 col-12">Back Photo<sup class="text-danger">*</sup></label>
                                                     <div class="col-md-7 col-12">
                                                         <img src="/assets/images/id-card.png" alt="Address proof back" class="imgZoom" id="AddressProofBack" />
+                                                        <img src="/assets/images/id-card.png" alt="Address proof back" id="AddressProofBackPDFDOC" style="display:none" />
                                                     </div>
                                                 </div>
                                                 <div class="d-flex align-items-center justify-content-end flex-wrap px-3">
@@ -1567,56 +1568,111 @@ debugger;
                         $("#IdProofType")[0].sumo.reload();
                         $('#IdProofDocumentNo').val(res.kycDetailsResult[0].idProofDocumentNo);
 
-                        var extension = res.kycDetailsResult[0].idProofFront.substring(res.kycDetailsResult[0].idProofFront.lastIndexOf('.')+1);
+                        var extension = res.kycDetailsResult[0].idProofFront.substring(res.kycDetailsResult[0].idProofFront.lastIndexOf('.')+1).toLowerCase();
                         
                         if(extension.toLowerCase()=="gif" || extension.toLowerCase()=="png" || extension.toLowerCase()=="jpeg" || extension.toLowerCase()=="jpg")
                         {
                            $("a#IdProofFrontDownloadlnk").html("<b>Enlarge " + extension + " </b>");
                            document.getElementById("IdProofFront").classList.add("imgZoom");
+                           $('#IdProofFrontPDFDOC').hide();
+                           $('#IdProofFront').show();
                         }
                         else
                         {
                            $("a#IdProofFrontDownloadlnk").html("<b>Download " + extension + "</b>");
                            document.getElementById("IdProofFront").classList.remove("imgZoom");
+
+                           if(extension.toLowerCase()=="pdf")
+                           {
+                               $('#IdProofFrontPDFDOC').attr('src', "/MyStaticFiles/IconPDF.png");
+                           }
+                           else
+                           {
+                               $('#IdProofFrontPDFDOC').attr('src', "/MyStaticFiles/IconDoc.png");
+                           }
+                           $('#IdProofFrontPDFDOC').show();
+                           $('#IdProofFront').hide();
                         }
 
-                        var extension = res.kycDetailsResult[0].idProofBack.substring(res.kycDetailsResult[0].idProofBack.lastIndexOf('.')+1);
+                        var extension = res.kycDetailsResult[0].idProofBack.substring(res.kycDetailsResult[0].idProofBack.lastIndexOf('.')+1).toLowerCase();
 
                         if(extension.toLowerCase()=="gif" || extension.toLowerCase()=="png" || extension.toLowerCase()=="jpeg" || extension.toLowerCase()=="jpg")
                         {
                            $("a#IdProofBackDownloadlnk").html("<b>Enlarge " + extension + " </b>");
                            document.getElementById("IdProofBack").classList.add("imgZoom");
+
+                           $('#IdProofBackPDFDOC').hide();
+                           $('#IdProofBack').show();
                         }
                         else
                         {
                             $("a#IdProofBackDownloadlnk").html("<b>Download " + extension + "</b>");
                             document.getElementById("IdProofBack").classList.remove("imgZoom");
+
+                           if(extension.toLowerCase()=="pdf")
+                           {
+                               $('#IdProofBackPDFDOC').attr('src', "/MyStaticFiles/IconPDF.png");
+                           }
+                           else
+                           {
+                               $('#IdProofBackPDFDOC').attr('src', "/MyStaticFiles/IconDoc.png");
+                           }
+                           $('#IdProofBackPDFDOC').show();
+                           $('#IdProofBack').hide();
                         }
 
-                        var extension = res.kycDetailsResult[0].addressProofFront.substring(res.kycDetailsResult[0].addressProofFront.lastIndexOf('.')+1);
+                        var extension = res.kycDetailsResult[0].addressProofFront.substring(res.kycDetailsResult[0].addressProofFront.lastIndexOf('.')+1).toLowerCase();
 
                         if(extension.toLowerCase()=="gif" || extension.toLowerCase()=="png" || extension.toLowerCase()=="jpeg" || extension.toLowerCase()=="jpg")
                         {
                            $("a#AddressProofFrontDownloadlnk").html("<b>Enlarge " + extension + " </b>");
                            document.getElementById("AddressProofFront").classList.add("imgZoom");
+
+                           $('#AddressProofFrontPDFDOC').hide();
+                           $('#AddressProofFront').show();
                         }
                         else
                         {
                             $("a#AddressProofFrontDownloadlnk").html("<b>Download " + extension + "</b>");
                             document.getElementById("AddressProofFront").classList.remove("imgZoom");
+
+                           if(extension.toLowerCase()=="pdf")
+                           {
+                               $('#AddressProofFrontPDFDOC').attr('src', "/MyStaticFiles/IconPDF.png");
+                           }
+                           else
+                           {
+                               $('#AddressProofFrontPDFDOC').attr('src', "/MyStaticFiles/IconDoc.png");
+                           }
+                           $('#AddressProofFrontPDFDOC').show();
+                           $('#AddressProofFront').hide();
                         }
 
-                        var extension = res.kycDetailsResult[0].addressProofBack.substring(res.kycDetailsResult[0].addressProofBack.lastIndexOf('.')+1);
+                        var extension = res.kycDetailsResult[0].addressProofBack.substring(res.kycDetailsResult[0].addressProofBack.lastIndexOf('.')+1).toLowerCase();
 
                         if(extension.toLowerCase()=="gif" || extension.toLowerCase()=="png" || extension.toLowerCase()=="jpeg" || extension.toLowerCase()=="jpg")
                         {
                            $("a#AddressProofBackDownloadlnk").html("<b>Enlarge " + extension + " </b>");
                            document.getElementById("AddressProofBack").classList.add("imgZoom");
+
+                           $('#AddressProofBackPDFDOC').hide();
+                           $('#AddressProofBack').show();
                         }
                         else
                         {
                             $("a#AddressProofBackDownloadlnk").html("<b>Download " + extension + "</b>");
                             document.getElementById("AddressProofBack").classList.remove("imgZoom");
+
+                           if(extension.toLowerCase()=="pdf")
+                           {
+                               $('#AddressProofBackPDFDOC').attr('src', "/MyStaticFiles/IconPDF.png");
+                           }
+                           else
+                           {
+                               $('#AddressProofBackPDFDOC').attr('src', "/MyStaticFiles/IconDoc.png");
+                           }
+                           $('#AddressProofBackPDFDOC').show();
+                           $('#AddressProofBack').hide();
                         }
 
                         $('#IdProofFront').attr('src', res.kycDetailsResult[0].idProofFront);
@@ -1641,6 +1697,11 @@ debugger;
                         $('#IdProofBack').attr('src', null);
                         $('#AddressProofBack').attr('src', null);
                         $('#AddressProofFront').attr('src', null);
+
+                        $('#IdProofFrontPDFDOC').hide();
+                        $('#IdProofBackPDFDOC').hide();
+                        $('#AddressProofFrontPDFDOC').hide();
+                        $('#AddressProofBackPDFDOC').hide();
 
 
                         var AddressProofTypeName1 = $('<option value="' + '' + '">' + '' + '</option>');

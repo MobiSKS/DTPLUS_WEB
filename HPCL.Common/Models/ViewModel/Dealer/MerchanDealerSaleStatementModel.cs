@@ -20,14 +20,16 @@ namespace HPCL.Common.Models.ViewModel.Dealer
     {
         public MerchanDealerSaleStatement()
         {
-            ViewStatementDetails = new List<SaleStatementDetails>();
-            TransactionDetails = new List<SaleStatementSummary>();
+            ViewStatementDetails = new List<SaleStatementSummary>();
+            TransactionDetails = new List<SaleStatementDetails>();
             ViewCustomerMerchantDetails = new List<CustomerMerchantDetails>();
         }
-        public List<SaleStatementSummary> TransactionDetails  { get; set; }
-        public List<SaleStatementDetails> ViewStatementDetails { get; set; }
+        public List<SaleStatementDetails> TransactionDetails  { get; set; }
+        public List<SaleStatementSummary> ViewStatementDetails { get; set; }
+        public List<SaleStatementSummary> GetStatementDetails { get; set; }
         public List<CustomerMerchantDetails> ViewCustomerMerchantDetails { get; set; }
     }
+   
     public class SaleStatementSummary
     {
         public string StatementDate { get; set; }
@@ -38,7 +40,7 @@ namespace HPCL.Common.Models.ViewModel.Dealer
         public string AmountDue { get; set; }
 
     }
-   
+    
     public class SaleStatementDetails
     {
         
