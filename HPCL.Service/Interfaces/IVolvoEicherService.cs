@@ -38,5 +38,6 @@ namespace HPCL.Service.Interfaces
         Task<VEAddonOTCCardMapping> GetVEAddonOTCCardCustomerDetailsPartialView([FromBody] List<VEAddonOTCCardDetails> arrs);
         Task<VEAddonOTCCardMapping> GetVEAddonOTCCardAddCardsPartialView([FromBody] List<VEAddonOTCCardDetails> arrs);
         Task<VEAddonOTCCardMapping> ExistingCustomerCardMap(VEAddonOTCCardMapping addAddOnCard);
+        Task<GetVEDealerCardDispatchResponse> GetVECardDispatchDetails(string CustomerID);
     }
 }
