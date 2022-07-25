@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace HPCL.Common.Models.ResponseModel.CustomerDashboard
 {
-    internal class LatestDrivestarsTransactions
+    public class LatestDrivestarsTransactions
     {
     }
 }

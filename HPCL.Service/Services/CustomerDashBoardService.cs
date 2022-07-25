@@ -22,13 +22,11 @@ namespace HPCL.Service.Services
 
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IRequestService _requestService;
-        private readonly ICommonActionService _commonActionService;
 
-        public CustomerDashBoardService(IHttpContextAccessor httpContextAccessor, IRequestService requestServices, ICommonActionService commonActionService)
+        public CustomerDashBoardService(IHttpContextAccessor httpContextAccessor, IRequestService requestServices)
         {
             _httpContextAccessor = httpContextAccessor;
             _requestService = requestServices;
-            _commonActionService = commonActionService;
         }
         public async Task<List<AccountSummaryResponseModel>> AccountSummary (string CustomerId)
         {
@@ -154,30 +152,5 @@ namespace HPCL.Service.Services
 
             return LastestDrivestarsTransactionResponseModel;
         }
-
-        public Task<KeyEventsResponseModel> KeyEvents(CustomerDashboardRequestModel customerDashboardRequestModel)
-        {
-            throw new NotImplementedException();
-        }
-        [HttpPost]
-        public async Task<JsonResult> GetKeyEvents(string CustomerId)
-        {
-            CustomerDashboardModel CustomerDashboard = new CustomerDashboardModel();
-
-            var KeyEvents = await _customerdashboardservice.KeyEvents(CustomerId);
-
-            return Json(KeyEvents);
-        }
-
-        [HttpPost]
-        public async Task<JsonResult> GetLastFiveTransaction(string CustomerId)
-        {
-            CustomerDashboardModel CustomerDashboard = new CustomerDashboardModel();
-
-            var LastFiveTransaction = await _customerdashboardservice.LastFiveTransaction(CustomerId);
-
-            return Json(LastFiveTransaction);
-        }
-
     }
 }
