@@ -1003,6 +1003,25 @@ namespace HPCL.Service.Services
             viewCardSearch = JsonConvert.DeserializeObject<JCBViewCardSearch>(response);
             return viewCardSearch;
         }
+        public async Task<GetJCBDealerCardDispatchResponse> GetJCBDealerCardDispatchDetails(string CustomerID)
+        {
+            var request = new GetALCardDispatchDetailsRequest
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                CustomerID = CustomerID
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getJcbDispatchDetail);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            GetJCBDealerCardDispatchResponse roleLocationResponse = obj.ToObject<GetJCBDealerCardDispatchResponse>();
+
+            return roleLocationResponse;
+        }
 
     }
 }

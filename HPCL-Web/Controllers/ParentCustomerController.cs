@@ -103,9 +103,10 @@ namespace HPCL_Web.Controllers
             return PartialView("~/Views/ParentCustomer/_GetCardandDispatchDetailsTbl.cshtml", modals);
         }
 
-        public async Task<IActionResult> UpdateParentCustomer(string CustomerId, string RequestId)
+        public async Task<IActionResult> UpdateParentCustomer(string CustomerId, string RequestId,string IsSearch)
         {
             var modals = await _customerService.UpdateParentCustomer(CustomerId, RequestId);
+            ViewBag.IsSearch = String.IsNullOrEmpty(IsSearch) ? "false" : "true";
             return View(modals);
         }
 
@@ -293,7 +294,7 @@ namespace HPCL_Web.Controllers
             var modals = await _customerService.UpdateDndSmsAlertsConfigure(CustomerId);
             return Json(modals);
         }
-        public async Task<IActionResult> AccountStatementRequest(AccountStatementRequestViewModel reqEntity,string reset)
+        public async Task<IActionResult> AccountStatementRequest(AccountStatementRequestViewModel reqEntity, string reset)
         {
             AccountStatementRequestViewModel modals = new AccountStatementRequestViewModel();
             if (reqEntity.CustomerId != null && reqEntity.CustomerId != "")
@@ -302,7 +303,7 @@ namespace HPCL_Web.Controllers
                 modals.CustomerId = reqEntity.CustomerId;
             }
             modals.StatementTypes.AddRange(await _commonActionService.GetAccountStatementRequestType());
-            
+
             ViewBag.Reset = String.IsNullOrEmpty(reset) ? "N" : reset;
             return View(modals);
         }
@@ -330,32 +331,40 @@ namespace HPCL_Web.Controllers
             return Json(viewParentChildTransactionDetails);
 
         }
-        public async Task<IActionResult> CustomerBasicSearch(BasicSearchViewModel reqEntity,string reset)
+        public async Task<IActionResult> CustomerBasicSearch()
+        {
+
+            var modals = new BasicSearchViewModel();
+            modals.SearchStateMdl.AddRange(await _commonActionService.GetStateList());
+            return View(modals);
+        }
+        [HttpPost]
+        public async Task<IActionResult> CustomerBasicSearch(BasicSearchViewModel reqEntity)
         {
             var modals = new BasicSearchViewModel();
 
-            if((reqEntity.CustomerId != null || reqEntity.CustomerName != null || reqEntity.NameOnCard != null || reqEntity.MobileNumber != null || reqEntity.FormNumber != null) && (reqEntity.CustomerId!="" ||reqEntity.CustomerName!="" || reqEntity.NameOnCard!=""|| reqEntity.MobileNumber!="" || reqEntity.FormNumber!=""))
+            if ((reqEntity.CustomerId != null || reqEntity.CustomerName != null || reqEntity.NameOnCard != null || reqEntity.MobileNumber != null || reqEntity.FormNumber != null) && (reqEntity.CustomerId != "" || reqEntity.CustomerName != "" || reqEntity.NameOnCard != "" || reqEntity.MobileNumber != "" || reqEntity.FormNumber != ""))
                 modals = await _customerService.CustomerBasicSearch(reqEntity);
             modals.SearchStateMdl.AddRange(await _commonActionService.GetStateList());
-            ViewBag.reset = String.IsNullOrEmpty(reset) ? "" : reset;
             return View(modals);
         }
-        public async Task<IActionResult> ViewParentCustomerProfile(string CustomerId,string RequestId)
+        public async Task<IActionResult> ViewParentCustomerProfile(string CustomerId, string RequestId)
         {
             //string CustomerId = "4000000029";
             //string RequestId = "1770";
             var modals = await _customerService.UpdateParentCustomer(CustomerId, RequestId);
+            ViewBag.IsSearch = "true";
             return View(modals);
         }
         public async Task<IActionResult> ConvertParenttoAggregator(BasicSearchViewModel reqEntity, string reset)
         {
             var modals = new ConvertParenttoAggregatorViewModel();
 
-           
+
             return View(modals);
         }
         [HttpPost]
-        public async Task<JsonResult> GetTransactionLocationDetails([FromBody]PCTransactionLocationrequest reqEntity)
+        public async Task<JsonResult> GetTransactionLocationDetails([FromBody] PCTransactionLocationrequest reqEntity)
         {
             var modals = await _customerService.GetTransactionLocationDetails(reqEntity);
             return Json(modals);

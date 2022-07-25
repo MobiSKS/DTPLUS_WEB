@@ -627,6 +627,7 @@
         public static string JCBUpdateMobileAndFastagNoInCard = "api/dtplus/JCB/JCB_update_mobile_and_fastag_no_in_card";
         public static string getJcbMobileAndFastagno = "api/dtplus/JCB/get_jcb_mobile_and_fastagno";
         public static string getJcbSalesExeEmpidAddonOtcCardMapping = "api/dtplus/JCB/get_jcb_sales_exe_empid_addon_otc_card_mapping";
+        public static string getJcbDispatchDetail = "api/dtplus/JCB/get_jcb_dispatch_detail";
         #endregion
 
         #region "Customer Dashboard"
@@ -650,6 +651,7 @@
         public static string insertDicvCustomer = "api/dtplus/DICV/insert_dicv_customer";
         public static string getAvailityDicvOtcCard = "api/dtplus/DICV/get_availity_dicv_otc_card";
         public static string getDicvSalesExeEmpidAddonOtcCardMapping = "api/dtplus/DICV/get_dicv_sales_exe_empid_addon_otc_card_mapping";
+        public static string getDicvBalanceOtcCard = "api/dtplus/DICV/get_dicv_balance_otc_card";
         #endregion
 
         #region "Parent Customer HDFC Bank Credit Pouch"

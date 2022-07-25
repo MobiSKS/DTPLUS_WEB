@@ -222,7 +222,7 @@ namespace HPCL.Service.Services
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(requestinfo), Encoding.UTF8, "application/json");
 
-            var response = await _requestService.CommonRequestService(content, WebApiUrl.getJcbBalanceOtcCard);
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getDicvBalanceOtcCard);
 
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
             var jarr = obj["Data"].Value<JArray>();

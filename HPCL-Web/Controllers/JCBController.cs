@@ -275,6 +275,11 @@ namespace HPCL_Web.Controllers
             ModelState.Clear();
             return Json(searchList);
         }
+        public async Task<ActionResult> GetJCBDealerCardDispatchDetails(string CustomerID)
+        {
+            var model = await _jcbService.GetJCBDealerCardDispatchDetails(CustomerID);
+            return PartialView("~/Views/JCB/_ViewJCBDealerCardDispatchDetails.cshtml", model);
+        }
 
     }
 }

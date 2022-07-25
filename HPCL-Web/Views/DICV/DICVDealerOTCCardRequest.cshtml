@@ -123,64 +123,62 @@
             document.getElementById("DealerCode_error").innerHTML = "";
         }
 
-        //Need to comment this line after API developed
-        localStorage.setItem("DEALERFOUND", "1");
-        //$.ajax({
-        //    type: 'POST',  // http method
-        //    url: '@Url.Action("CheckDICVDealerBalanceQty", "DICV")',
-        //    data: { DealerCode: dealerCode },  // data to submit
-        //    dataType: "json",
-        //    success: function (data, status, xhr) {
-        //        console.log(data);
-        //        console.log(status);
-        //        console.log(data.status);
+        $.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("CheckDICVDealerBalanceQty", "DICV")',
+            data: { DealerCode: dealerCode },  // data to submit
+            dataType: "json",
+            success: function (data, status, xhr) {
+                console.log(data);
+                console.log(status);
+                console.log(data.status);
 
-        //        if (status == 'success') 
-        //        {
-        //            if (data.status == 1) 
-        //            {
-        //                document.getElementById("DealerCode_error").innerHTML = "";
-        //                localStorage.setItem("DEALERFOUND", "1");
-        //                document.getElementById("lblBalance").innerHTML=data.balanceRequestCard;
-        //                document.getElementById("BalanceCard").value=data.balanceRequestCard;
-        //                document.getElementById("lblCapBalance").style.display="block";
-        //                document.getElementById("lblBalance").style.display="block";
-        //            }
-        //            else
-        //            {
-        //                document.getElementById("DealerCode_error").innerHTML = data.reason;
-        //                localStorage.setItem("DEALERFOUND", "0");
-        //                localStorage.setItem("DEALERMSG", data.reason);
-        //                document.getElementById("lblCapBalance").style.display="none";
-        //                document.getElementById("lblBalance").style.display="none";
-        //            }
+                if (status == 'success') 
+                {
+                    if (data.status == 1) 
+                    {
+                        document.getElementById("DealerCode_error").innerHTML = "";
+                        localStorage.setItem("DEALERFOUND", "1");
+                        document.getElementById("lblBalance").innerHTML=data.balanceRequestCard;
+                        document.getElementById("BalanceCard").value=data.balanceRequestCard;
+                        document.getElementById("lblCapBalance").style.display="block";
+                        document.getElementById("lblBalance").style.display="block";
+                    }
+                    else
+                    {
+                        document.getElementById("DealerCode_error").innerHTML = data.reason;
+                        localStorage.setItem("DEALERFOUND", "0");
+                        localStorage.setItem("DEALERMSG", data.reason);
+                        document.getElementById("lblCapBalance").style.display="none";
+                        document.getElementById("lblBalance").style.display="none";
+                    }
 
-        //            if (data == "Failed to load Dealer Details") 
-        //            {
-        //                document.getElementById("DealerCode_error").innerHTML = "Invalid Dealer Code";
-        //                localStorage.setItem("DEALERFOUND", "0");
-        //                localStorage.setItem("DEALERMSG", "Invalid Dealer Code");
-        //                document.getElementById("lblCapBalance").style.display="none";
-        //                document.getElementById("lblBalance").style.display="none";
-        //            }
-        //        }
-        //        else 
-        //        {
-        //            document.getElementById("DealerCode_error").innerHTML = "Invalid Dealer Code";
-        //            localStorage.setItem("DEALERFOUND", "0");
-        //            localStorage.setItem("DEALERMSG", "Invalid Dealer Code");
-        //            document.getElementById("lblCapBalance").style.display="none";
-        //            document.getElementById("lblBalance").style.display="none";
-        //        }
-        //    },
-        //    error: function (xhr, ajaxOptions, thrownError) {
-        //        document.getElementById("DealerCode_error").innerHTML = "Invalid Dealer Code";
-        //        localStorage.setItem("DEALERFOUND", "0");
-        //        localStorage.setItem("DEALERMSG", "Invalid Dealer Code");
-        //        document.getElementById("lblCapBalance").style.display="none";
-        //        document.getElementById("lblBalance").style.display="none";
-        //    }
-        //});
+                    if (data == "Failed to load Dealer Details") 
+                    {
+                        document.getElementById("DealerCode_error").innerHTML = "Invalid Dealer Code";
+                        localStorage.setItem("DEALERFOUND", "0");
+                        localStorage.setItem("DEALERMSG", "Invalid Dealer Code");
+                        document.getElementById("lblCapBalance").style.display="none";
+                        document.getElementById("lblBalance").style.display="none";
+                    }
+                }
+                else 
+                {
+                    document.getElementById("DealerCode_error").innerHTML = "Invalid Dealer Code";
+                    localStorage.setItem("DEALERFOUND", "0");
+                    localStorage.setItem("DEALERMSG", "Invalid Dealer Code");
+                    document.getElementById("lblCapBalance").style.display="none";
+                    document.getElementById("lblBalance").style.display="none";
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                document.getElementById("DealerCode_error").innerHTML = "Invalid Dealer Code";
+                localStorage.setItem("DEALERFOUND", "0");
+                localStorage.setItem("DEALERMSG", "Invalid Dealer Code");
+                document.getElementById("lblCapBalance").style.display="none";
+                document.getElementById("lblBalance").style.display="none";
+            }
+        });
 
 
     });

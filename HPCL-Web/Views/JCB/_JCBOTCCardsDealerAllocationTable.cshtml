@@ -64,12 +64,15 @@
                 <td>@item.CustomerId</td>
                 <td>@item.AllocationDate</td>
                 <td>@item.MappingDate</td>
-                <td><a class='CardNumber' href='#Details' onclick='ViewRoleDetails(this,"@item.CardNo")'><span class='rowCardNo'>View</span></a></td>
+                <td><a class='CardNumber' href='#Details' onclick='ViewDispatchDetails(this,"@item.CustomerId")'><span class='rowCardNo'>View</span></a></td>
             </tr>
             }
         </tbody>
     </table>
     <div class="clearfix"></div>
+    <div class="clearfix"></div>
+    <div id="show_Table" class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3 toBeHiddenOnSuccess">
+    </div>
 }
 else
 {
@@ -220,45 +223,60 @@ else
         document.body.removeChild(temp_link);
     }
 
-function ViewRoleDetails(o,userName)
+function ViewDispatchDetails(o,CustomerID)
 {
     debugger;
     var flag="Y";
- 
-    //if(flag=="Y")
-    //{
-    //    $.ajax({
-    //        type: 'GET',  // http method
-    //        url: '@Url.Action("GetUserRoleLocation", "Security")',
-    //        contentType: "application/json; charset=utf-8",
-    //        dataType: 'text',
-    //        data: { UserName: userName},
-    //        success: function (data, status, xhr)
-    //        {
-    //            console.log(data);
-    //            var v = data;
-    //            if (status == 'success') {
-    //                $("#show_Table").html(data);
-    //                $('html, body').animate({
-    //                    scrollTop: $("#show_Table").offset().top
-    //                }, 2000);
-    //            }
-    //            else
-    //            {
-    //                console.log(v);
-    //            }
 
-    //            //var count = $('#tblCustomer tr').length;
-    //            //console.log(count);
-                
-    //        },
-    //        error: function (jqXhr, textStatus, errorMessage)
-    //        {
-    //            alert("Error"+ errorMessage);
-    //        }
-    //    });
+    if(CustomerID!="")
+    {
+        if(flag=="Y")
+        {
+            $.ajax({
+                type: 'GET',  // http method
+                url: '@Url.Action("GetJCBDealerCardDispatchDetails", "JCB")',
+                contentType: "application/json; charset=utf-8",
+                dataType: 'text',
+                data: { CustomerID: CustomerID},
+                success: function (data, status, xhr)
+                {
+                    console.log(data);
+                    var v = data;
+                    if (status == 'success') {
+                        $("#show_Table").html(data);
+                        $('html, body').animate({
+                            scrollTop: $("#show_Table").offset().top
+                        }, 2000);
+                    }
+                    else
+                    {
+                        console.log(v);
+                    }
 
-    //}
+                },
+                error: function (jqXhr, textStatus, errorMessage)
+                {
+                    alert("Error"+ errorMessage);
+                }
+            });
+
+        }
+    }
+    else
+    {
+            $("#show_Table").html("");
+    }
 
 }
+$("#tblMerchantViewCardDetail").on('page.dt', function ()
+{
+    //debugger;
+    document.getElementById("show_Table").innerHTML="";
+});
+
+$("#tblMerchantViewCardDetail").on('length.dt', function ()
+{
+    //debugger;
+    document.getElementById("show_Table").innerHTML="";
+});
 </script>
