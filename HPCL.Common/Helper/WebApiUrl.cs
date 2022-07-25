@@ -317,6 +317,7 @@
         public static string GetAllLimitTypeUrl = "api/dtplus/card/get_limit_type";
         public static string getAlUploadKycDocument = "api/dtplus/ashokleyland/get_al_upload_kyc_document";
         public static string insertAlCustomerKYC = "api/dtplus/ashokleyland/insert_al_customer_kyc";
+        public static string getAlDispatchDetail = "api/dtplus/ashokleyland/get_al_dispatch_detail";
         #endregion
 
         #region Customer Financial
