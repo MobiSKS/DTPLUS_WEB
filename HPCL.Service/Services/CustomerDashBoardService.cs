@@ -122,7 +122,7 @@ namespace HPCL.Service.Services
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
                 UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
-                CustomerID = CustomerId
+                CustomerID = "2600000097"
             };
 
             StringContent KeyEventsTableContent = new StringContent(JsonConvert.SerializeObject(KeyEventsForms), Encoding.UTF8, "application/json");
