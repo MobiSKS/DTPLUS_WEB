@@ -1,12 +1,12 @@
 ﻿using HPCL.Common.Models.CommonEntity;
-using HPCL.Common.Models.ResponseModel.ICICIBankCreditPouch;
-using HPCL.Common.Models.ViewModel.ICICIBankCreditPouch;
+using HPCL.Common.Models.ResponseModel.PC_ICICIBankCreditPouch;
+using HPCL.Common.Models.ViewModel.PC_ICICIBankCreditPouch;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace HPCL.Service.Interfaces
 {
-    public interface IICICIBankCreditPouchService
+    public interface IPC_ICICIBankCreditPouchService
     {
         Task<CustomerDetailsRes> GetCustomerDetails(CustomerDetailsReq entity);
         Task<GetPlanRes> GetPlan(string amount);
@@ -15,8 +15,6 @@ namespace HPCL.Service.Interfaces
         Task<List<SuccessResponse>> SubmitRequestApproval(string bankEntryDetail);
         Task<SearchEnrollStatusRes> GetEnrollStatus(SearchEnrollStatus entity);
         Task<GetEnrollStatusReportRes> GetEnrollStatusReport(string customerId, int requestId);
-        //Task<CcmsRechargeAmexRes> CCMSRechargeICICI(string customerId, string amount);
-        //Task<IciciInitateRecharge> CCMSInitiateRechargeICICI(string customerId, string amount);
         Task<GetRequestAuthorizationRes> GetRequestAuthorizationDetails(GetRequestAuthorizationReq entity);
         Task<List<SuccessResponse>> AuthorizationAction(string authReq);
         Task<CheckEligibleRes> CheckEligibility(CheckEligibleReq entity);

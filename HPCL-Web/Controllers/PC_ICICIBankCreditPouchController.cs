@@ -1,7 +1,7 @@
 ﻿using HPCL.Common.Helper;
 using HPCL.Common.Models.CommonEntity;
-using HPCL.Common.Models.ResponseModel.ICICIBankCreditPouch;
-using HPCL.Common.Models.ViewModel.ICICIBankCreditPouch;
+using HPCL.Common.Models.ResponseModel.PC_ICICIBankCreditPouch;
+using HPCL.Common.Models.ViewModel.PC_ICICIBankCreditPouch;
 using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,14 +11,14 @@ using System.Threading.Tasks;
 namespace HPCL_Web.Controllers
 {
     [TypeFilter(typeof(SessionExpireActionFilter))]
-    public class ICICIBankCreditPouchController : Controller
+    public class PC_ICICIBankCreditPouchController : Controller
     {
-        private readonly IICICIBankCreditPouchService _iCICIBankCreditPouchService;
+        private readonly IPC_ICICIBankCreditPouchService _ipc_ICICIBankCreditPouchService;
         private readonly ICommonActionService _commonActionService;
 
-        public ICICIBankCreditPouchController(IICICIBankCreditPouchService iCICIBankCreditPouchService, ICommonActionService commonActionService)
+        public PC_ICICIBankCreditPouchController(IPC_ICICIBankCreditPouchService ipc_ICICIBankCreditPouchService, ICommonActionService commonActionService)
         {
-            _iCICIBankCreditPouchService = iCICIBankCreditPouchService;
+            _ipc_ICICIBankCreditPouchService = ipc_ICICIBankCreditPouchService;
             _commonActionService = commonActionService;
         }
         public IActionResult Index()
@@ -34,7 +34,7 @@ namespace HPCL_Web.Controllers
         [HttpPost]
         public async Task<JsonResult> ExceptionRequestToAddCustomer(CustomerDetailsReq entity)
         {
-            var searchList = await _iCICIBankCreditPouchService.GetCustomerDetails(entity);
+            var searchList = await _ipc_ICICIBankCreditPouchService.GetCustomerDetails(entity);
             ModelState.Clear();
             return Json(new { searchList = searchList });
         }
@@ -42,7 +42,7 @@ namespace HPCL_Web.Controllers
         [HttpPost]
         public async Task<JsonResult> CheckPlan(string amount)
         {
-            var searchList = await _iCICIBankCreditPouchService.GetPlan(amount);
+            var searchList = await _ipc_ICICIBankCreditPouchService.GetPlan(amount);
             ModelState.Clear();
             return Json(new { searchList = searchList });
         }
@@ -61,7 +61,7 @@ namespace HPCL_Web.Controllers
                 MoComment = arrs[0].MoComment,
                 RequestedBy = arrs[0].RequestedBy
             };
-            var reasonList = await _iCICIBankCreditPouchService.InsertExceptionRequest(entity);
+            var reasonList = await _ipc_ICICIBankCreditPouchService.InsertExceptionRequest(entity);
             ModelState.Clear();
             return Json(new { reasonList = reasonList });
         }
@@ -78,7 +78,7 @@ namespace HPCL_Web.Controllers
         [HttpPost]
         public async Task<JsonResult> RequestApproval(SearchRequestApproval entity)
         {
-            var searchList = await _iCICIBankCreditPouchService.SearchRequestApproval(entity);
+            var searchList = await _ipc_ICICIBankCreditPouchService.SearchRequestApproval(entity);
             ModelState.Clear();
             return Json(new { searchList = searchList });
         }
@@ -86,7 +86,7 @@ namespace HPCL_Web.Controllers
         [HttpPost]
         public async Task<JsonResult> SubmitRequestApproval(string bankEntryDetail)
         {
-            var reasonList = await _iCICIBankCreditPouchService.SubmitRequestApproval(bankEntryDetail);
+            var reasonList = await _ipc_ICICIBankCreditPouchService.SubmitRequestApproval(bankEntryDetail);
             ModelState.Clear();
             return Json(new { reasonList = reasonList });
         }
@@ -102,7 +102,7 @@ namespace HPCL_Web.Controllers
         [HttpPost]
         public async Task<JsonResult> EnrollmentStatus(SearchEnrollStatus entity)
         {
-            var searchList = await _iCICIBankCreditPouchService.GetEnrollStatus(entity);
+            var searchList = await _ipc_ICICIBankCreditPouchService.GetEnrollStatus(entity);
             ModelState.Clear();
             return Json(new { searchList = searchList });
         }
@@ -110,39 +110,9 @@ namespace HPCL_Web.Controllers
         [HttpPost]
         public async Task<JsonResult> GetEnrollStatusReport(string customerId, int requestId)
         {
-            var searchList = await _iCICIBankCreditPouchService.GetEnrollStatusReport(customerId, requestId);
+            var searchList = await _ipc_ICICIBankCreditPouchService.GetEnrollStatusReport(customerId, requestId);
             ModelState.Clear();
             return Json(new { searchList = searchList });
-        }
-
-        public IActionResult CCMSRechargeThroughCreditPouch()
-        {
-            return View();
-        }
-
-        //[HttpPost]
-        //public async Task<JsonResult> CCMSInitiateRechargeICICI(string customerId, string amount)
-        //{
-        //    var checkList = await _iCICIBankCreditPouchService.CCMSInitiateRechargeICICI(customerId, amount);
-        //    return Json(new { checkList = checkList });
-        //}
-
-        //[HttpPost]
-        //public async Task<JsonResult> CCMSRechargeThroughCreditPouch(string customerId, string amount)
-        //{
-        //    var searchList = await _iCICIBankCreditPouchService.CCMSRechargeICICI(customerId, amount);
-        //    return Json(new { searchList = searchList });
-        //}
-
-        public async Task<IActionResult> IciciRedirectToPaymentGateway(string inputTxtValues)
-        {
-            //CcmsRechargeHdfcResData arrs = JsonConvert.DeserializeObject<CcmsRechargeHdfcResData>(inputTxtValues);
-
-            //HttpContext.Session.SetString("hdfcpgurl", arrs.response.apiurl);
-            //HttpContext.Session.SetString("hdfcreqhash", arrs.response.request_Hash);
-            //HttpContext.Session.SetString("hdfcaccesscode", arrs.response.accessCode);
-
-            return View();
         }
 
         public IActionResult RequestAuthorization()
@@ -154,7 +124,7 @@ namespace HPCL_Web.Controllers
         [HttpPost]
         public async Task<JsonResult> RequestAuthorization(GetRequestAuthorizationReq entity)
         {
-            var searchList = await _iCICIBankCreditPouchService.GetRequestAuthorizationDetails(entity);
+            var searchList = await _ipc_ICICIBankCreditPouchService.GetRequestAuthorizationDetails(entity);
             ModelState.Clear();
             return Json(new { searchList = searchList });
         }
@@ -162,7 +132,7 @@ namespace HPCL_Web.Controllers
         [HttpPost]
         public async Task<JsonResult> AuthorizationAction(string authReq)
         {
-            var reasonList = await _iCICIBankCreditPouchService.AuthorizationAction(authReq);
+            var reasonList = await _ipc_ICICIBankCreditPouchService.AuthorizationAction(authReq);
             ModelState.Clear();
             return Json(new { reasonList = reasonList });
         }
@@ -175,7 +145,7 @@ namespace HPCL_Web.Controllers
         [HttpPost]
         public async Task<JsonResult> CheckEligibility(CheckEligibleReq entity)
         {
-            var searchList = await _iCICIBankCreditPouchService.CheckEligibility(entity);
+            var searchList = await _ipc_ICICIBankCreditPouchService.CheckEligibility(entity);
             ModelState.Clear();
             return Json(new { searchList = searchList });
         }
@@ -183,7 +153,7 @@ namespace HPCL_Web.Controllers
         [HttpPost]
         public async Task<JsonResult> ReqAvailEnroll(string customerId, string planTypeId)
         {
-            var searchList = await _iCICIBankCreditPouchService.ReqAvailEnroll(customerId, planTypeId);
+            var searchList = await _ipc_ICICIBankCreditPouchService.ReqAvailEnroll(customerId, planTypeId);
             ModelState.Clear();
             return Json(new { searchList = searchList });
         }

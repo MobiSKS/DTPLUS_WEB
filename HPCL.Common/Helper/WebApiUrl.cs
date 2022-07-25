@@ -597,7 +597,6 @@
         public static string GetICICIPlanUrl = "api/dtplus/ICICICreditPouch/get_plan";
         public static string ICICIGetEnrollStatusUrl = "api/dtplus/ICICICreditPouch/get_cp_status";
         public static string ICICIGetEnrollStatusReportUrl = "api/dtplus/ICICICreditPouch/get_cp_status_Report";
-        public static string ICICICcmsRechargeUrl = "api/dtplus/ICICICreditPouch/insert_cp_pg_log";
         public static string ICICIGetRequestAuthorizationDetailsUrl = "api/dtplus/ICICIcreditPouch/get_cp_by_bank_auth";
         public static string ICICIRequestAuthorizationActionUrl = "api/dtplus/ICICIcreditPouch/auth_action_cp";
         public static string ICICIRequestToAvailCheckUrl = "api/dtplus/ICICICreditPouch/chk_eligibility";
@@ -678,6 +677,20 @@
 
         #region "MO Dashboard"
         public static string PendingTerminal = "/api/dtplus/modashboard/mo_dashboard_pending_terminal";
+        #endregion
+
+        #region "Parent Customer ICICI Bank Credit Pouch"
+        public static string PCICICIGetCustomerDetailsUrl = "api/dtplus/PCICICICreditPouch/get_dtail_mo_for_pc";
+        public static string PCICICIEnrollExceptionReqUrl = "api/dtplus/PCICICICreditPouch/insrt_cp_rqst_for_pc";
+        public static string PCICICIGetExApprovalUrl = "api/dtplus/PCICICICreditPouch/get_cp_by_bank_for_pc";
+        public static string PCICICISubmitExApprovalUrl = "api/dtplus/PCICICICreditPouch/action_cp_for_pc";
+        public static string PCGetICICIPlanUrl = "api/dtplus/PCICICICreditPouch/get_plan_for_pc";
+        public static string PCICICIGetEnrollStatusUrl = "api/dtplus/PCICICICreditPouch/get_cp_status_for_pc";
+        public static string PCICICIGetEnrollStatusReportUrl = "api/dtplus/PCICICICreditPouch/get_cp_status_Report_for_pc";
+        public static string PCICICIGetRequestAuthorizationDetailsUrl = "api/dtplus/PCICICICreditPouch/get_cp_by_bank_auth_for_pc";
+        public static string PCICICIRequestAuthorizationActionUrl = "api/dtplus/PCICICICreditPouch/auth_action_cp_for_pc";
+        public static string PCICICIRequestToAvailCheckUrl = "api/dtplus/PCICICICreditPouch/chk_eligibility_for_pc";
+        public static string PCICICIRequestToAvailEnrollUrl = "api/dtplus/PCICICICreditPouch/insrt_cp_rqst_by_customer_for_pc";
         #endregion
     }
 }
