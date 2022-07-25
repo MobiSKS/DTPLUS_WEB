@@ -16,6 +16,7 @@ using HPCL.Common.Models.RequestModel.Customer;
 using System.IO;
 using System.Net.Http;
 using System.Net.Mime;
+using HPCL.Common.Models.ViewModel;
 
 namespace HPCL_Web.Controllers
 {
