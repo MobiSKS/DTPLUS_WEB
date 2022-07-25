@@ -26,7 +26,7 @@ namespace HPCL.Common.Models.ViewModel.Cards
         public string customerId { get; set; }
         public string fromDate { get; set; }
         public string toDate { get; set; }
-        [StringLength(10)]
+        [StringLength(16)]
         [RegularExpression(FieldValidation.ValidCardNo, ErrorMessage = FieldValidation.ValidCardNoErrMsg)]
         public string cardNumber { get; set; }
         public string limitType { get; set; }

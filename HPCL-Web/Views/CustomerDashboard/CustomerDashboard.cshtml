@@ -17,37 +17,32 @@
                         <div class="col-lg-12 col-md-12 col-12 px-0">
                             <table class="table table-striped d-md-table d-block">
                                 <tbody>
-                                    @foreach (var item in Model.KeyEventsResponseModels)
+                                    @foreach (var item2 in Model.KeyEventsResponseModels)
                                     {
                                         <tr>
-                                            <td class="font-weight-bold">Last Login</td>
-                                            <td>@item.LastLogin</td>
-
+                                            <td style="font-size:13px">Last Login</td>
+                                            <td>@item2.LastLogin</td>
                                         </tr>
                                         <tr>
-                                            <td class="font-weight-bold">Last Transaction</td>
-                                            <td>@item.LastTransaction</td>
-
+                                            <td style="font-size:13px">Last Transaction</td>
+                                            <td>@item2.LastTransaction</td>
                                         </tr>
                                         <tr>
-                                            <td class="font-weight-bold">Last Redemption</td>
-                                            <td>@item.LastRedemption</td>
-
+                                            <td style="font-size:13px">Last Redemption</td>
+                                            <td>@item2.LastRedemption</td>
                                         </tr>
                                         <tr>
-                                            <td class="font-weight-bold">Last Password Change</td>
-                                            <td>@item.LastPasswordChange</td>
-
+                                            <td style="font-size:13px">Last Password Change</td>
+                                            <td>@item2.LastPasswordChange</td>
                                         </tr>
                                         <tr>
-                                            <td class="font-weight-bold">Last Contact Details Update</td>
-                                            <td>@item.LastContactDetailsUpdate</td>
-
+                                            <td style="font-size:13px">Last Contact Details Update</td>
+                                            <td>@item2.LastContactDetailsUpdate</td>
                                         </tr>
-
                                     }
-                                </tbody>
-                            </table>
+                                </tbody>       
+
+                        </table>
                         </div>
                         <div class="clearfix"></div>
                     </div>
@@ -139,7 +134,7 @@
 
                                         </tr>
                                         <tr style="background-color:#feffb3;color:#000;font-weight: 500;font-size: 14px;">
-                                            <td colspan="3">Loyalty Accounts</td>
+                                            <td colspan="3">Loyalty Account</td>
                                         </tr>
                                         <tr>
                                             <td style="font-size: 14px;font-weight: bold;color: #084693;">Drivestars</td>
@@ -184,7 +179,7 @@
                                             <td>@item2.Amount</td>
                                         </tr>
                                     }
-                                </tbody>
+                              </tbody>
                             </table>
                         </div>
                         <div class="clearfix"></div>
@@ -210,26 +205,29 @@
                                 <h2 class="last_rw_dt_txt">Last Rewarding Details</h2>
                                 <table class="table table-striped d-md-table d-block mb-0">
                                     <tbody>
+                                         @foreach (var item2 in Model.LastestDrivestarsTransactionResponseModel)
+                                         {
                                         <tr>
                                             <td style="font-size:13px">Transaction Type:</td>
-                                            <td>26/05/22 10:32:30</td>
+                                            <td>@item2.TransactionType</td>
                                         </tr>
                                         <tr>
                                             <td style="font-size:13px">Description:</td>
-                                            <td>26/05/22 10:32:30</td>
+                                            <td>@item2.Description</td>
                                         </tr>
                                         <tr>
                                             <td style="font-size:13px">Period:</td>
-                                            <td>26/05/22 10:32:30</td>
+                                            <td>@item2.Period</td>
                                         </tr>
                                         <tr>
                                             <td style="font-size:13px">Transaction Date:</td>
-                                            <td>26/05/22 10:32:30</td>
+                                            <td>@item2.TransactionDate</td>
                                         </tr>
                                         <tr>
                                             <td style="font-size:13px">Drivestars Awarded:</td>
-                                            <td>24/05/22 18:42:13</td>
+                                            <td>@item2.Drivestars Awarded</td>
                                         </tr>
+                                        }
                                     </tbody>
                                 </table>
                                 <p class="text-white m-0 text-center" style="background: #7e7e7e;padding: 7px 10px;"><a href="#" class="text-white"> View All Rewarding Details <i class="fa fa-angle-double-right"></i></a></p>
@@ -238,6 +236,7 @@
                                 <h2 class="last_rw_dt_txt">Last Redemption Details</h2>
                                 <table class="table table-striped d-md-table d-block mb-0">
                                     <tbody>
+                                        
                                         <tr>
                                             <td style="font-size:13px">Reference Number:</td>
                                             <td>26/05/22 10:32:30</td>
@@ -326,3 +325,60 @@
         <div class="clearfix"></div>
     </div>
 </div>
+<div class="clearfix"></div>
+<script type="text/javascript">
+    function keyevents()
+    {
+        var CustomerId="2600000097";
+
+          $.ajax({
+                type: 'POST',  // http method
+                url: '@Url.Action("Getkeyevents","CustomerDashboard")',
+                data: { CustomerId: CustomerId },
+                dataType: "json",
+                success: function(data, status,xhr) {
+                    var v = data;
+                    $.each(data, function (i, data) { // bind the dropdown list using json result
+                        var testHtml ='<tr><td class="font-weight-bold">LastLogin</td><td>' + data.LastLogin + '</td></tr><tr><td class="font-weight-bold">LastTransaction</td><td>' + data.LastTransaction + '<tr><td class="font-weight-bold">LastRedemption</td><td>' + data.LastRedemption
+                        + '</td></tr><tr><td class="font-weight-bold">LastPasswordChange</td><td>' + data.LastPasswordChange + '</td></tr><tr><td class="font-weight-bold">LastContactDetailsUpdate</td><td>' + data.LastContactDetailsUpdate  'td></tr>'
+                        $("#test").html(testHtml);
+                    });
+
+                },
+                error: function(jqXhr, textStatus, errorMessage) {
+                    alert("Error");
+                }
+            });
+
+
+    }
+</script>
+
+<div class="clearfix"></div>
+<script type="text/javascript">
+    function LastFiveTransaction()
+    {
+        var CustomerId="2600000097";
+
+          $.ajax({
+                type: 'POST',  // http method
+                url: '@Url.Action("GetLastFiveTransaction","CustomerDashboard")',
+                data: { CustomerId: CustomerId },
+                dataType: "json",
+                success: function(data, status,xhr) {
+                    var v = data;
+                    $.each(data, function (i, data) { // bind the dropdown list using json result
+                        var testHtml ='<tr><td class="font-weight-bold">AccountNo</td><td>' + data.AccountNo + '</td></tr><tr><td class="font-weight-bold">VehicleNo_UserName</td><td>' + data.VehicleNo_UserName + '<tr><td class="font-weight-bold">TxnDate</td><td>' + data.TxnDate
+                        + '</td></tr><tr><td class="font-weight-bold">TxnType</td><td>' + data.TxnType + '</td></tr><tr><td class="font-weight-bold">Amount</td><td>' + data.Amount  'td></tr>'
+                        $("#test").html(testHtml);
+                    });
+
+                },
+                error: function(jqXhr, textStatus, errorMessage) {
+                    alert("Error");
+                }
+            });
+
+
+    }
+</script>

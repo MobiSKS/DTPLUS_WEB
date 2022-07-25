@@ -637,6 +637,7 @@
         public static string customerDashboardLatestDrivestarsTransactions = "api/dtplus/customerdashboard/customer_dashboard_latest_drivestars_transactions";
         public static string customerDashboardReminder = "api/dtplus/customerdashboard/customer_dashboard_reminder";
         public static string customerDashboardUpdateVerifyYourDetails = "api/dtplus/customerdashboard/customer_dashboard_update_verify_your_details";
+        public static string customerDashboardLastestDrivestarsTransactions = "/api/dtplus/customerdashboard/customer_dashboard_latest_drivestars_transactions";
         #endregion
 
         #region DICV
