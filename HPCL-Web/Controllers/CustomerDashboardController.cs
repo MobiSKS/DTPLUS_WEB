@@ -4,6 +4,7 @@ using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using HPCL.Common.Models.ResponseModel.CustomerDashboard;
 
 namespace HPCL_Web.Controllers
 {
@@ -24,14 +25,21 @@ namespace HPCL_Web.Controllers
             var dashboardLst = await _customerDashboardService.AccountSummary(CustomerId);
             var verifyDetailsLst = await _customerDashboardService.VerifyYourDetails(CustomerId);
             var reminderLst = await _customerDashboardService.Reminder(CustomerId);
+            var lastfivetran = await _customerDashboardService.LastFiveTransactions(CustomerId);
+            var lastestDriveTrans = await _customerDashboardService.LastestDrivestarsTransaction(CustomerId);
+            var keyevents = await _customerDashboardService.KeyEvents(CustomerId);
 
             CustomerDashboardModel customerDashbord = new CustomerDashboardModel();
 
             customerDashbord.accountSummaryResponseModels = dashboardLst;
             customerDashbord.verifyYourDetailsResponseModels = verifyDetailsLst;
             customerDashbord.reminderResponseModels = reminderLst;
+            customerDashbord.LastFiveTransactionsResponseModels = lastfivetran;
+            customerDashbord.LastestDrivestarsTransactionResponseModel = lastestDriveTrans;
+            customerDashbord.KeyEventsResponseModels = keyevents;
 
-            return View(customerDashbord);
+             return View(customerDashbord);
         }
+   
     }
 }

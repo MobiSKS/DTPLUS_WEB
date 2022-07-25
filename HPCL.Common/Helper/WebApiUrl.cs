@@ -564,6 +564,7 @@
         public static string updateVECustomerDetail = "api/dtplus/VE/update_ve_customer_detail";
         public static string getVolvoEicherAddonOtcCardMappingCustomerDetails = "api/dtplus/VE/get_volvo_eicher_addon_otc_card_mapping_customer_details";
         public static string volvoEicherAddonOtcCard = "api/dtplus/VE/volvo_eicher_addon_otc_card";
+        public static string getVolovoEicherDispatchDetail = "api/dtplus/VE/get_volovo_eicher_dispatch_detail";
         #endregion
 
         #region COMCO Manager
@@ -636,6 +637,7 @@
         public static string customerDashboardLatestDrivestarsTransactions = "api/dtplus/customerdashboard/customer_dashboard_latest_drivestars_transactions";
         public static string customerDashboardReminder = "api/dtplus/customerdashboard/customer_dashboard_reminder";
         public static string customerDashboardUpdateVerifyYourDetails = "api/dtplus/customerdashboard/customer_dashboard_update_verify_your_details";
+        public static string customerDashboardLastestDrivestarsTransactions = "/api/dtplus/customerdashboard/customer_dashboard_latest_drivestars_transactions";
         #endregion
 
         #region DICV
@@ -678,6 +680,16 @@
 
         #region "MO Dashboard"
         public static string PendingTerminal = "/api/dtplus/modashboard/mo_dashboard_pending_terminal";
+        #endregion
+
+        #region Dashboard
+
+        public static string getkeyinformation = "api/dtplus/merchantdashboard/merchant_dashboard_key_information";
+        public static string todaysTransactions = "api/dtplus/merchantdashboard/merchant_dashboard_todays_transaction_summary";
+        public static string lastTrasactions = "api/dtplus/merchantdashboard/merchant_dashboard_last_transaction";
+        public static string lastBatch = "api/dtplus/merchantdashboard/merchant_dashboard_last_batch_deatils";
+        public static string lastSaleEarning = "api/dtplus/merchantdashboard/merchant_dashboard_last_sale_reload_earning_details";
+        public static string lastKeyEvent = "api/dtplus/merchantdashboard/merchant_dashboard_key_events_and_figures";
         #endregion
 
         #region "Parent Customer ICICI Bank Credit Pouch"

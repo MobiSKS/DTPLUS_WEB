@@ -994,5 +994,25 @@ namespace HPCL.Service.Services
 
             return addAddOnCard;
         }
+        public async Task<GetVEDealerCardDispatchResponse> GetVECardDispatchDetails(string CustomerID)
+        {
+            var request = new GetALCardDispatchDetailsRequest
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                CustomerID = CustomerID
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getVolovoEicherDispatchDetail);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            GetVEDealerCardDispatchResponse dispatchDetails = obj.ToObject<GetVEDealerCardDispatchResponse>();
+
+            return dispatchDetails;
+        }
+
     }
 }
