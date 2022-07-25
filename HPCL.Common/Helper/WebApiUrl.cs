@@ -679,5 +679,10 @@
         #region "MO Dashboard"
         public static string PendingTerminal = "/api/dtplus/modashboard/mo_dashboard_pending_terminal";
         #endregion
+
+
+        #region "MobileDispenser"
+        public static string MobileDispenserRetailOutletMapping="/api/dtplus/merchant/get_mobile_dispenser_retail_outlet_mapping";
+        #endregion
     }
 }
