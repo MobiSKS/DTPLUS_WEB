@@ -140,23 +140,23 @@
 <div class="px-2">
     <button class="btn btn_primary" onclick="generatePDF()" id="btnPDFDownload" type="button">Download</button>
 </div>
-<img id="img1" src="../assets/images/logo.png" class="img-fluid" alt="">
-
+<img id="img1" src="../assets/images/HP-logo.jpg" class="img-fluid" alt="">
+<img id="img2" src="../assets/images/drivetruckdrive-logo.jpg" class="img-fluid" alt="">
 <script type="text/javascript">
     $(document).ready(function () {
         //encodeImageFileAsURL();
         $("#btnPDFDownload").click();
     });
-    function addImagetoPDF(){
+    function addImagetoPDF(imgId){
        
         var c = document.createElement('canvas');
-        var img = document.getElementById('img1');
+        var img = document.getElementById(imgId);
         c.height = img.height;
         c.width = img.width;
         var ctx = c.getContext('2d');
 
         ctx.drawImage(img, 0, 0, c.width, c.height);
-        var base64String = c.toDataURL("image/png");
+        var base64String = c.toDataURL("image/jpg");
         return base64String;
     }
      function generatePDF() {
@@ -182,8 +182,10 @@
              var y = 20;
              doc.setLineWidth(5);
              
-             var base64logoImg=addImagetoPDF();
-             doc.addImage(base64logoImg,"png", 100, 20,80, 40);//doc.addImage(imgData, 'image format', x, y, w, h, 'alias');
+             var base64HPlogoImg=addImagetoPDF("img1");
+             var base64DTlogoImg=addImagetoPDF("img2");
+             doc.addImage(base64HPlogoImg,"jpg", 100, 20,45, 50);//doc.addImage(imgData, 'image format', x, y, w, h, 'alias');
+             doc.addImage(base64DTlogoImg,"jpg", 540, 20,75, 50);//doc.addImage(imgData, 'image format', x, y, w, h, 'alias');
             
  
              doc.text("Credit Sale Statement",

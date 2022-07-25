@@ -39,7 +39,7 @@
                                                 <label class="font-weight-normal col-md-4 col-12">Customer ID</label>
                                                 <div class="col-md-7 col-12">
                                                     @Html.TextBoxFor(m => m.CustomerId, new { @class = "form-control", maxlength = "10" , onkeypress = "return isNumberKey(event)"})
-                                                    
+
                                                 </div>
                                                 <span class="error" id="CustomerID_error"></span>
                                             </div>
@@ -117,7 +117,7 @@
                                             <button class="btn btn_primary" type="submit" id="btnSearch">Search</button>
                                         </div>
                                         <div class="px-2">
-                                            <button class="btn btn_primary" type="button" onclick="location.href='@Url.Action("CustomerBasicSearch", "ParentCustomer", new { reset="Y" })'">Reset</button>
+                                            <button class="btn btn_primary" type="button" onclick="location.href='@Url.Action("CustomerBasicSearch", "ParentCustomer")'">Reset</button>
                                         </div>
                                     </div>
 
@@ -128,109 +128,107 @@
                         </div>
                     </div>
                     <div class="clearfix"></div>
-                    @if (ViewBag.reset != "Y")
+
+                    @if (Model.Data.Count() > 0)
                     {
-                        @if (Model.Data.Count() > 0)
-                        {
-                            <div id="CustomerSearch">
-                                <table class="datatable table table-striped table-bordered d-md-table table-responsive" style="width:100%;word-wrap:break-word;">
-                                    <thead>
-                                        <tr>
-                                            <th>S.No.</th>
-                                            <th>
-                                                @Html.DisplayName("Customer ID")
-                                            </th>
-                                            <th>
-                                                @Html.DisplayName("Name on Card")
-                                            </th>
-                                            <th>
-                                                @Html.DisplayName("Customer Name")
-                                            </th>
-                                            <th>
-                                                @Html.DisplayName("Regional Office")
-                                            </th>
-                                            <th>
-                                                @Html.DisplayName("Form Number")
-                                            </th>
-                                            <th>
-                                                @Html.DisplayName("Form Receipt Date")
-                                            </th>
-                                            <th>
-                                                @Html.DisplayName("Status")
-                                            </th>
-                                            <th>
-                                                @Html.DisplayName("Customer Type")
-                                            </th>
-                                            <th>
-                                                @Html.DisplayName("Dispatch Details")
-                                            </th>
-                                            <th>
-                                                @Html.DisplayName("Actions")
-                                            </th>
-                                            <th style="display:none">
+                        <div id="CustomerSearch">
+                            <table class="datatable table table-striped table-bordered d-md-table table-responsive" style="width:100%;word-wrap:break-word;">
+                                <thead>
+                                    <tr>
+                                        <th>S.No.</th>
+                                        <th>
+                                            @Html.DisplayName("Customer ID")
+                                        </th>
+                                        <th>
+                                            @Html.DisplayName("Name on Card")
+                                        </th>
+                                        <th>
+                                            @Html.DisplayName("Customer Name")
+                                        </th>
+                                        <th>
+                                            @Html.DisplayName("Regional Office")
+                                        </th>
+                                        <th>
+                                            @Html.DisplayName("Form Number")
+                                        </th>
+                                        <th>
+                                            @Html.DisplayName("Form Receipt Date")
+                                        </th>
+                                        <th>
+                                            @Html.DisplayName("Status")
+                                        </th>
+                                        <th>
+                                            @Html.DisplayName("Customer Type")
+                                        </th>
+                                        <th>
+                                            @Html.DisplayName("Dispatch Details")
+                                        </th>
+                                        <th>
+                                            @Html.DisplayName("Actions")
+                                        </th>
+                                        <th style="display:none">
 
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="searchTableBody">
-                                        @{
-                                            int i = 0;
-                                        }
-                                        @foreach (var item in Model.Data.OrderBy(m => m.CustomerId))
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody id="searchTableBody">
+                                    @{
+                                        int i = 0;
+                                    }
+                                    @foreach (var item in Model.Data.OrderBy(m => m.CustomerId))
+                                    {
+                                        i = i + 1;
+                                        if (item.FormReceiptDate != null)
                                         {
-                                            i = i + 1;
-                                            if (item.FormReceiptDate != null)
+                                            if (item.FormReceiptDate.IndexOf('/') != -1)
                                             {
-                                                if (item.FormReceiptDate.IndexOf('/') != -1)
-                                                {
-                                                    string[] subs = item.FormReceiptDate.Split(' ');
-                                                    string[] date = subs[0].Split('/');
-                                                    item.FormReceiptDate = date[1] + "-" + date[0] + "-" + date[2];
-                                                }
+                                                string[] subs = item.FormReceiptDate.Split(' ');
+                                                string[] date = subs[0].Split('/');
+                                                item.FormReceiptDate = date[1] + "-" + date[0] + "-" + date[2];
                                             }
-                                            <tr>
-                                                <td>@i</td>
-                                                <td>
-                                                    @item.CustomerId
-                                                </td>
-
-                                                <td>@item.NameOnCard</td>
-                                                <td>@item.CustomerName</td>
-                                                <td>@item.RO</td>
-                                                <td>@item.FormNumber</td>
-                                                <td>@item.FormReceiptDate</td>
-                                                <td>@item.StatusName</td>
-                                                <td>@item.CustomerType</td>
-                                                <td><a href='#show_TableDispatch' data-toggle='tooltip' tooltip="View Dispatch Details" class='viewDispatchDetails' onclick='GetDispatchSearch(this," @item.CustomerId "," @item.Id")'><i class='fa fa-eye'></i></a></td>
-                                                <td>
-                                                    <div class="d-flex align-items-center justify-content-start">
-                                                        <a asp-action="ViewParentCustomerProfile" class="d-block" asp-route-CustomerId="@item.CustomerId" asp-route-RequestId=@item.Id
-                                           data-toggle="tooltip" title="" tooltip="View Customer Details"><i class="fa fa-search view" aria-hidden="true"></i></a>
-                                                        <a asp-action="UpdateParentCustomer" class="d-block" asp-route-CustomerId="@item.CustomerId" asp-route-RequestId=@item.Id
-                                           data-toggle="tooltip" title="" tooltip="Edit Customer Details"><i class="fa fa-pencil-square-o edit" aria-hidden="true"></i></a>
-                                                        @*<a href="#"
-                                                            data-toggle="tooltip" title="" tooltip="CRM Call Report"><i class="fa fa-search crmsearch" aria-hidden="true"></i></a>*@
-                                                    </div>
-
-
-                                                </td>
-                                                <td style="display:none">@item.Id</td>
-                                            </tr>
                                         }
-                                    </tbody>
-                                </table>
-                            </div>
-                        }
-                        else
+                                        <tr>
+                                            <td>@i</td>
+                                            <td>
+                                                @item.CustomerId
+                                            </td>
+
+                                            <td>@item.NameOnCard</td>
+                                            <td>@item.CustomerName</td>
+                                            <td>@item.RO</td>
+                                            <td>@item.FormNumber</td>
+                                            <td>@item.FormReceiptDate</td>
+                                            <td>@item.StatusName</td>
+                                            <td>@item.CustomerType</td>
+                                            <td><a href='#show_TableDispatch' data-toggle='tooltip' tooltip="View Dispatch Details" class='viewDispatchDetails' onclick='GetDispatchSearch(this," @item.CustomerId "," @item.requestId")'><i class='fa fa-eye'></i></a></td>
+                                            <td>
+                                                <div class="d-flex align-items-center justify-content-start">
+                                                    <a asp-action="ViewParentCustomerProfile" class="d-block" asp-route-CustomerId="@item.CustomerId" asp-route-RequestId=@item.requestId
+                                           data-toggle="tooltip" title="" tooltip="View Customer Details"><i class="fa fa-search view" aria-hidden="true"></i></a>
+                                                    <a asp-action="UpdateParentCustomer" class="d-block" asp-route-CustomerId="@item.CustomerId" asp-route-RequestId=@item.requestId asp-route-IsSearch="true"
+                                           data-toggle="tooltip" title="" tooltip="Edit Customer Details"><i class="fa fa-pencil-square-o edit" aria-hidden="true"></i></a>
+                                                    @*<a href="#"
+                                                        data-toggle="tooltip" title="" tooltip="CRM Call Report"><i class="fa fa-search crmsearch" aria-hidden="true"></i></a>*@
+                                                </div>
+
+
+                                            </td>
+                                            <td style="display:none">@item.Id</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        @if (Model.Message != null && Model.Message != "")
                         {
-                            @if (Model.Message != null && Model.Message != "")
-                            {
-                                <div>
-                                    <div class="alert alert-danger mt-3 text-center" id="noRecord">
-                                        @Model.Message
-                                    </div>
+                            <div>
+                                <div class="alert alert-danger mt-3 text-center" id="noRecord">
+                                    @Model.Message
                                 </div>
-                            }
+                            </div>
                         }
                     }
                     <div class="clearfix"></div>
