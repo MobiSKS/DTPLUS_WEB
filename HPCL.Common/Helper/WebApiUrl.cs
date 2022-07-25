@@ -564,6 +564,7 @@
         public static string updateVECustomerDetail = "api/dtplus/VE/update_ve_customer_detail";
         public static string getVolvoEicherAddonOtcCardMappingCustomerDetails = "api/dtplus/VE/get_volvo_eicher_addon_otc_card_mapping_customer_details";
         public static string volvoEicherAddonOtcCard = "api/dtplus/VE/volvo_eicher_addon_otc_card";
+        public static string getVolovoEicherDispatchDetail = "api/dtplus/VE/get_volovo_eicher_dispatch_detail";
         #endregion
 
         #region COMCO Manager
