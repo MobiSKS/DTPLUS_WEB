@@ -11,5 +11,6 @@ namespace HPCL.Common.Models.ViewModel.JCB
         public string DealerCode { get; set; }
         public string CardNumber { get; set; }
         public string Remarks { get; set; }
+        public bool ShowUnmappedCard { get; set; }
     }
 }
