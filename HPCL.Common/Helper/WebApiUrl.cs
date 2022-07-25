@@ -680,6 +680,16 @@
         public static string PendingTerminal = "/api/dtplus/modashboard/mo_dashboard_pending_terminal";
         #endregion
 
+        #region Dashboard
+
+        public static string getkeyinformation = "api/dtplus/merchantdashboard/merchant_dashboard_key_information";
+        public static string todaysTransactions = "api/dtplus/merchantdashboard/merchant_dashboard_todays_transaction_summary";
+        public static string lastTrasactions = "api/dtplus/merchantdashboard/merchant_dashboard_last_transaction";
+        public static string lastBatch = "api/dtplus/merchantdashboard/merchant_dashboard_last_batch_deatils";
+        public static string lastSaleEarning = "api/dtplus/merchantdashboard/merchant_dashboard_last_sale_reload_earning_details";
+        public static string lastKeyEvent = "api/dtplus/merchantdashboard/merchant_dashboard_key_events_and_figures";
+        #endregion
+
         #region "Parent Customer ICICI Bank Credit Pouch"
         public static string PCICICIGetCustomerDetailsUrl = "api/dtplus/PCICICICreditPouch/get_dtail_mo_for_pc";
         public static string PCICICIEnrollExceptionReqUrl = "api/dtplus/PCICICICreditPouch/insrt_cp_rqst_for_pc";
