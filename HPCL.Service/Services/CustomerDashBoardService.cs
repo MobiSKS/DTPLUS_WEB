@@ -41,12 +41,19 @@ namespace HPCL.Service.Services
             StringContent customerDashboardAccountSummaryTableContent = new StringContent(JsonConvert.SerializeObject(customerDashboardAccountSummaryForms), Encoding.UTF8, "application/json");
 
             var customerDashboardAccountSummaryResponse = await _requestService.CommonRequestService(customerDashboardAccountSummaryTableContent, WebApiUrl.customerDashboardAccountSummary);
+            if (string.IsNullOrEmpty(customerDashboardAccountSummaryResponse))
+            {
+                List<AccountSummaryResponseModel> accountSummaryResponseModels = new List<AccountSummaryResponseModel>();
+                return accountSummaryResponseModels;
+            }
+            else
+            {
+                JObject customerDashboardAccountSummaryTableObj = JObject.Parse(JsonConvert.DeserializeObject(customerDashboardAccountSummaryResponse).ToString());
+                var customerDashboardAccountSummaryTableJarr = customerDashboardAccountSummaryTableObj["Data"].Value<JArray>();
+                List<AccountSummaryResponseModel> accountSummaryResponseModel = customerDashboardAccountSummaryTableJarr.ToObject<List<AccountSummaryResponseModel>>();
 
-            JObject customerDashboardAccountSummaryTableObj = JObject.Parse(JsonConvert.DeserializeObject(customerDashboardAccountSummaryResponse).ToString());
-            var customerDashboardAccountSummaryTableJarr = customerDashboardAccountSummaryTableObj["Data"].Value<JArray>();
-            List<AccountSummaryResponseModel> accountSummaryResponseModel = customerDashboardAccountSummaryTableJarr.ToObject<List<AccountSummaryResponseModel>>();
-            
-            return accountSummaryResponseModel;
+                return accountSummaryResponseModel;
+            }
         }
 
         public async Task<List<VerifyYourDetailsResponseModel>> VerifyYourDetails(string CustomerId)
@@ -63,11 +70,21 @@ namespace HPCL.Service.Services
 
             var verifyYourDetailsResponse = await _requestService.CommonRequestService(verifyYourDetailsTableContent, WebApiUrl.customerDashboardVerifyYourDetails);
 
-            JObject verifyYourDetailsTableObj = JObject.Parse(JsonConvert.DeserializeObject(verifyYourDetailsResponse).ToString());
-            var verifyYourDetailsTableJarr = verifyYourDetailsTableObj["Data"].Value<JArray>();
-            List<VerifyYourDetailsResponseModel> verifyYourDetailsResponseModel = verifyYourDetailsTableJarr.ToObject<List<VerifyYourDetailsResponseModel>>();
+            if (string.IsNullOrEmpty(verifyYourDetailsResponse))
+            {
+                List<VerifyYourDetailsResponseModel> verifyYourDetailsResponseModel = new List<VerifyYourDetailsResponseModel>();
+                return verifyYourDetailsResponseModel;
+            }
+            else
+            {
+                JObject verifyYourDetailsTableObj = JObject.Parse(JsonConvert.DeserializeObject(verifyYourDetailsResponse).ToString());
+                var verifyYourDetailsTableJarr = verifyYourDetailsTableObj["Data"].Value<JArray>();
+                List<VerifyYourDetailsResponseModel> verifyYourDetailsResponseModel = verifyYourDetailsTableJarr.ToObject<List<VerifyYourDetailsResponseModel>>();
 
-            return verifyYourDetailsResponseModel;
+                return verifyYourDetailsResponseModel;
+            }
+
+
         }
         public async Task<List<ReminderResponseModel>> Reminder(string CustomerId)
         {
@@ -83,11 +100,19 @@ namespace HPCL.Service.Services
 
             var reminderResponse = await _requestService.CommonRequestService(reminderTableContent, WebApiUrl.customerDashboardReminder);
 
-            JObject reminderTableObj = JObject.Parse(JsonConvert.DeserializeObject(reminderResponse).ToString());
-            var reminderTableJarr = reminderTableObj["Data"].Value<JArray>();
-            List<ReminderResponseModel> reminderResponseModel = reminderTableJarr.ToObject<List<ReminderResponseModel>>();
+            if (string.IsNullOrEmpty(reminderResponse))
+            {
+                List<ReminderResponseModel> reminderResponseModel = new List<ReminderResponseModel>();
+                return reminderResponseModel;
+            }
+            else
+            {
+                JObject reminderTableObj = JObject.Parse(JsonConvert.DeserializeObject(reminderResponse).ToString());
+                var reminderTableJarr = reminderTableObj["Data"].Value<JArray>();
+                List<ReminderResponseModel> reminderResponseModel = reminderTableJarr.ToObject<List<ReminderResponseModel>>();
 
-            return reminderResponseModel;
+                return reminderResponseModel;
+            }
         }
 
         public async Task<List<KeyEventsResponseModel>> KeyEvents(string CustomerId)
@@ -104,11 +129,19 @@ namespace HPCL.Service.Services
 
             var KeyEventsResponse = await _requestService.CommonRequestService(KeyEventsTableContent, WebApiUrl.customerDashboardKeyEvent);
 
-            JObject KeyEventsTableObj = JObject.Parse(JsonConvert.DeserializeObject(KeyEventsResponse).ToString());
-            var KeyEventsTableJarr = KeyEventsTableObj["Data"].Value<JArray>();
-            List<KeyEventsResponseModel> KeyEventsResponseModel = KeyEventsTableJarr.ToObject<List<KeyEventsResponseModel>>();
+            if (string.IsNullOrEmpty(KeyEventsResponse))
+            {
+                List<KeyEventsResponseModel> KeyEventsResponseModel = new List<KeyEventsResponseModel>();
+                return KeyEventsResponseModel;
+            }
+            else
+            {
+                JObject KeyEventsTableObj = JObject.Parse(JsonConvert.DeserializeObject(KeyEventsResponse).ToString());
+                var KeyEventsTableJarr = KeyEventsTableObj["Data"].Value<JArray>();
+                List<KeyEventsResponseModel> KeyEventsResponseModel = KeyEventsTableJarr.ToObject<List<KeyEventsResponseModel>>();
 
-            return KeyEventsResponseModel;
+                return KeyEventsResponseModel;
+            }
         }
 
         public async Task<List<LastFiveTransactionsResponseModel>> LastFiveTransactions(string CustomerId)
@@ -125,11 +158,19 @@ namespace HPCL.Service.Services
 
             var LastFiveTransactionsResponse = await _requestService.CommonRequestService(LastFiveTransactionsTableContent, WebApiUrl.customerDashboardLastTransactions);
 
-            JObject LastFiveTransactionsTableObj = JObject.Parse(JsonConvert.DeserializeObject(LastFiveTransactionsResponse).ToString());
-            var LastFiveTransactionsTableJarr = LastFiveTransactionsTableObj["Data"].Value<JArray>();
-            List<LastFiveTransactionsResponseModel> LastFiveTransactionsResponseModel = LastFiveTransactionsTableJarr.ToObject<List<LastFiveTransactionsResponseModel>>();
+            if (string.IsNullOrEmpty(LastFiveTransactionsResponse))
+            {
+                List<LastFiveTransactionsResponseModel> LastFiveTransactionsResponseModel = new List<LastFiveTransactionsResponseModel>();
+                return LastFiveTransactionsResponseModel;
+            }
+            else
+            {
+                JObject LastFiveTransactionsTableObj = JObject.Parse(JsonConvert.DeserializeObject(LastFiveTransactionsResponse).ToString());
+                var LastFiveTransactionsTableJarr = LastFiveTransactionsTableObj["Data"].Value<JArray>();
+                List<LastFiveTransactionsResponseModel> LastFiveTransactionsResponseModel = LastFiveTransactionsTableJarr.ToObject<List<LastFiveTransactionsResponseModel>>();
 
-            return LastFiveTransactionsResponseModel;
+                return LastFiveTransactionsResponseModel;
+            }
         }
 
         public async Task<List<LastestDrivestarsTransactionResponseModel>> LastestDrivestarsTransaction(string CustomerId)
@@ -146,11 +187,19 @@ namespace HPCL.Service.Services
 
             var LastestDrivestarsTransactionResponse = await _requestService.CommonRequestService(LastestDrivestarsTransactionTableContent, WebApiUrl.customerDashboardLastestDrivestarsTransactions);
 
-            JObject LastestDrivestarsTransactionTableObj = JObject.Parse(JsonConvert.DeserializeObject(LastestDrivestarsTransactionResponse).ToString());
-            var LastestDrivestarsTransactionTableJarr = LastestDrivestarsTransactionTableObj["Data"].Value<JArray>();
-            List<LastestDrivestarsTransactionResponseModel> LastestDrivestarsTransactionResponseModel = LastestDrivestarsTransactionTableJarr.ToObject<List<LastestDrivestarsTransactionResponseModel>>();
+            if (string.IsNullOrEmpty(LastestDrivestarsTransactionResponse))
+            {
+                List<LastestDrivestarsTransactionResponseModel> LastFiveTransactionsResponseModel = new List<LastestDrivestarsTransactionResponseModel>();
+                return LastFiveTransactionsResponseModel;
+            }
+            else
+            {
+                JObject LastestDrivestarsTransactionTableObj = JObject.Parse(JsonConvert.DeserializeObject(LastestDrivestarsTransactionResponse).ToString());
+                var LastestDrivestarsTransactionTableJarr = LastestDrivestarsTransactionTableObj["Data"].Value<JArray>();
+                List<LastestDrivestarsTransactionResponseModel> LastestDrivestarsTransactionResponseModel = LastestDrivestarsTransactionTableJarr.ToObject<List<LastestDrivestarsTransactionResponseModel>>();
 
-            return LastestDrivestarsTransactionResponseModel;
+                return LastestDrivestarsTransactionResponseModel;
+            }
         }
     }
 }

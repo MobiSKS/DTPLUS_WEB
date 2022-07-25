@@ -22,21 +22,21 @@ namespace HPCL_Web.Controllers
         }
         public async Task<IActionResult> CustomerDashboard(string CustomerId)
         {
-            var dashboardLst = await _customerDashboardService.AccountSummary(CustomerId);
-            var verifyDetailsLst = await _customerDashboardService.VerifyYourDetails(CustomerId);
-            var reminderLst = await _customerDashboardService.Reminder(CustomerId);
-            var lastfivetran = await _customerDashboardService.LastFiveTransactions(CustomerId);
-            var lastestDriveTrans = await _customerDashboardService.LastestDrivestarsTransaction(CustomerId);
-            var keyevents = await _customerDashboardService.KeyEvents(CustomerId);
+            //var dashboardLst = await _customerDashboardService.AccountSummary(CustomerId);
+            //var verifyDetailsLst = await _customerDashboardService.VerifyYourDetails(CustomerId);
+            //var reminderLst = await _customerDashboardService.Reminder(CustomerId);
+            //var lastfivetran = await _customerDashboardService.LastFiveTransactions(CustomerId);
+            //var lastestDriveTrans = await _customerDashboardService.LastestDrivestarsTransaction(CustomerId);
+            //var keyevents = await _customerDashboardService.KeyEvents(CustomerId);
 
             CustomerDashboardModel customerDashbord = new CustomerDashboardModel();
 
-            customerDashbord.accountSummaryResponseModels = dashboardLst;
-            customerDashbord.verifyYourDetailsResponseModels = verifyDetailsLst;
-            customerDashbord.reminderResponseModels = reminderLst;
-            customerDashbord.LastFiveTransactionsResponseModels = lastfivetran;
-            customerDashbord.LastestDrivestarsTransactionResponseModel = lastestDriveTrans;
-            customerDashbord.KeyEventsResponseModels = keyevents;
+            //customerDashbord.accountSummaryResponseModels = dashboardLst;
+            //customerDashbord.verifyYourDetailsResponseModels = verifyDetailsLst;
+            //customerDashbord.reminderResponseModels = reminderLst;
+            //customerDashbord.LastFiveTransactionsResponseModels = lastfivetran;
+            //customerDashbord.LastestDrivestarsTransactionResponseModel = lastestDriveTrans;
+            //customerDashbord.KeyEventsResponseModels = keyevents;
 
              return View(customerDashbord);
         }
