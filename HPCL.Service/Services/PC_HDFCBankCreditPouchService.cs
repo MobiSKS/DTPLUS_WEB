@@ -35,7 +35,7 @@ namespace HPCL.Service.Services
                 UserAgent = CommonBase.useragent,
                 UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 CustomerId = entity.CustomerId,
-                RequestedBy = entity.CustomerId
+                RequestedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
             };
 
 
