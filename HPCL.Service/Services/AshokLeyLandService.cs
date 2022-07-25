@@ -1266,6 +1266,25 @@ namespace HPCL.Service.Services
             InsertResponse result = obj.ToObject<InsertResponse>();
             return result;
         }
+        public async Task<GetALCustomerCardDispatchResponse> GetALCustomerCardDispatchDetails(string CustomerID)
+        {
+            var request = new GetALCardDispatchDetailsRequest
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                CustomerID = CustomerID
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getAlDispatchDetail);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            GetALCustomerCardDispatchResponse roleLocationResponse = obj.ToObject<GetALCustomerCardDispatchResponse>();
+            
+            return roleLocationResponse;
+        }
 
     }
 }

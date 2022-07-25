@@ -120,19 +120,19 @@ namespace HPCL_Web.Controllers
             return View();
         }
 
-        [HttpPost]
-        public async Task<JsonResult> CCMSInitiateRechargeICICI(string customerId, string amount)
-        {
-            var checkList = await _iCICIBankCreditPouchService.CCMSInitiateRechargeICICI(customerId, amount);
-            return Json(new { checkList = checkList });
-        }
+        //[HttpPost]
+        //public async Task<JsonResult> CCMSInitiateRechargeICICI(string customerId, string amount)
+        //{
+        //    var checkList = await _iCICIBankCreditPouchService.CCMSInitiateRechargeICICI(customerId, amount);
+        //    return Json(new { checkList = checkList });
+        //}
 
-        [HttpPost]
-        public async Task<JsonResult> CCMSRechargeThroughCreditPouch(string customerId, string amount)
-        {
-            var searchList = await _iCICIBankCreditPouchService.CCMSRechargeICICI(customerId, amount);
-            return Json(new { searchList = searchList });
-        }
+        //[HttpPost]
+        //public async Task<JsonResult> CCMSRechargeThroughCreditPouch(string customerId, string amount)
+        //{
+        //    var searchList = await _iCICIBankCreditPouchService.CCMSRechargeICICI(customerId, amount);
+        //    return Json(new { searchList = searchList });
+        //}
 
         public async Task<IActionResult> IciciRedirectToPaymentGateway(string inputTxtValues)
         {

@@ -11,6 +11,9 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using HPCL.Common.Models.ResponseModel.CommonResponse;
+using Microsoft.AspNetCore.Mvc;
+using HPCL.Common.Models.ViewModel;
 
 namespace HPCL.Service.Services
 {
@@ -19,13 +22,11 @@ namespace HPCL.Service.Services
 
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IRequestService _requestService;
-        private readonly ICommonActionService _commonActionService;
 
-        public CustomerDashBoardService(IHttpContextAccessor httpContextAccessor, IRequestService requestServices, ICommonActionService commonActionService)
+        public CustomerDashBoardService(IHttpContextAccessor httpContextAccessor, IRequestService requestServices)
         {
             _httpContextAccessor = httpContextAccessor;
             _requestService = requestServices;
-            _commonActionService = commonActionService;
         }
         public async Task<List<AccountSummaryResponseModel>> AccountSummary (string CustomerId)
         {
@@ -131,14 +132,25 @@ namespace HPCL.Service.Services
             return LastFiveTransactionsResponseModel;
         }
 
-        public Task<KeyEventsResponseModel> KeyEvents(CustomerDashboardRequestModel customerDashboardRequestModel)
+        public async Task<List<LastestDrivestarsTransactionResponseModel>> LastestDrivestarsTransaction(string CustomerId)
         {
-            throw new NotImplementedException();
-        }
+            var LastestDrivestarsTransactionForms = new CustomerDashboardRequestModel
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                CustomerID = CustomerId
+            };
 
-        public Task<LastFiveTransactionsResponseModel> LastFiveTransactions(CustomerDashboardRequestModel customerDashboardRequestModel)
-        {
-            throw new NotImplementedException();
+            StringContent LastestDrivestarsTransactionTableContent = new StringContent(JsonConvert.SerializeObject(LastestDrivestarsTransactionForms), Encoding.UTF8, "application/json");
+
+            var LastestDrivestarsTransactionResponse = await _requestService.CommonRequestService(LastestDrivestarsTransactionTableContent, WebApiUrl.customerDashboardLastestDrivestarsTransactions);
+
+            JObject LastestDrivestarsTransactionTableObj = JObject.Parse(JsonConvert.DeserializeObject(LastestDrivestarsTransactionResponse).ToString());
+            var LastestDrivestarsTransactionTableJarr = LastestDrivestarsTransactionTableObj["Data"].Value<JArray>();
+            List<LastestDrivestarsTransactionResponseModel> LastestDrivestarsTransactionResponseModel = LastestDrivestarsTransactionTableJarr.ToObject<List<LastestDrivestarsTransactionResponseModel>>();
+
+            return LastestDrivestarsTransactionResponseModel;
         }
     }
 }

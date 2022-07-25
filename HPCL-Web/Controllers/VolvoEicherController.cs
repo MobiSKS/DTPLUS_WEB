@@ -239,6 +239,11 @@ namespace HPCL_Web.Controllers
             ViewBag.Message = Message;
             return View();
         }
+        public async Task<ActionResult> GetVECardDispatchDetails(string CustomerID)
+        {
+            var model = await _volvoEicherService.GetVECardDispatchDetails(CustomerID);
+            return PartialView("~/Views/VolvoEicher/_ViewVECardDispatchDetails.cshtml", model);
+        }
 
     }
 }

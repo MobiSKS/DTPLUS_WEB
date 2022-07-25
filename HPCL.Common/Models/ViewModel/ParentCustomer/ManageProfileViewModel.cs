@@ -324,6 +324,7 @@ namespace HPCL.Common.Models.ViewModel.ParentCustomer
         public string SBUTypeId { get; set; }
         
              public virtual List<SbuTypeResponseModal> SBUTypes { get; set; }
+        public string IsSearch { get; set; }
     }
     public class SearchCustomerData
     {
@@ -336,5 +337,6 @@ namespace HPCL.Common.Models.ViewModel.ParentCustomer
         public string Id { get; set; }
         public string RO { get; set; }
         public string CustomerType { get; set; }
+        public string requestId { get; set; }
     }
 }

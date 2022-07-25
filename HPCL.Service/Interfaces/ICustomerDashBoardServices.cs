@@ -13,7 +13,9 @@ namespace HPCL.Service.Interfaces
         Task<List<AccountSummaryResponseModel>> AccountSummary(string CustomerId);
         Task<List<VerifyYourDetailsResponseModel>> VerifyYourDetails(string CustomerId);
         Task<List<ReminderResponseModel>> Reminder(string CustomerId);
-        Task<KeyEventsResponseModel> KeyEvents(CustomerDashboardRequestModel customerDashboardRequestModel);
-        Task<LastFiveTransactionsResponseModel> LastFiveTransactions(CustomerDashboardRequestModel customerDashboardRequestModel);
+        Task<List<KeyEventsResponseModel>> KeyEvents(string CustomerId);
+        Task<List<LastFiveTransactionsResponseModel>> LastFiveTransactions(string CustomerId);
+        Task<List<LastestDrivestarsTransactionResponseModel>> LastestDrivestarsTransaction(string CustomerId);
+   
     }
 }

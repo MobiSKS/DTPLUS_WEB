@@ -16,11 +16,14 @@ namespace HPCL.Common.Models.ViewModel
             reminderResponseModels = new List<ReminderResponseModel>();
             KeyEventsResponseModels = new List<KeyEventsResponseModel>();
             LastFiveTransactionsResponseModels = new List<LastFiveTransactionsResponseModel>();
+            LastestDrivestarsTransactionResponseModel = new List<LastestDrivestarsTransactionResponseModel>();
         }
         public List<AccountSummaryResponseModel> accountSummaryResponseModels { get; set; }
         public List<VerifyYourDetailsResponseModel> verifyYourDetailsResponseModels { get; set; }
         public List<ReminderResponseModel> reminderResponseModels { get; set; }
         public List<KeyEventsResponseModel> KeyEventsResponseModels { get; set; }
         public List<LastFiveTransactionsResponseModel> LastFiveTransactionsResponseModels { get; set; }
+        public List<LastestDrivestarsTransactionResponseModel> LastestDrivestarsTransactionResponseModel { get; set; }
     }
+
 }

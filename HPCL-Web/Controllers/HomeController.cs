@@ -156,11 +156,11 @@ namespace HPCL_Web.Controllers
 
                             if (loginRes[0].LoginType == "Customer")
                             {
-                                return RedirectToAction("Dashboard", "CustomerDashboard", new { CustomerId = HttpContext.Session.GetString("UserId").ToString() });
+                                return RedirectToAction("CustomerDashboard", "CustomerDashboard", new { CustomerId = HttpContext.Session.GetString("UserId").ToString() });
                             }
                             else if (loginRes[0].LoginType == "Merchant")
                             {
-                                return RedirectToAction("Dashboard", "MerchantDashboard");
+                                return RedirectToAction("Dashboard", "MerchantDashboard", new { CustomerId = HttpContext.Session.GetString("UserId").ToString() });
                             }
                             else
                             {
