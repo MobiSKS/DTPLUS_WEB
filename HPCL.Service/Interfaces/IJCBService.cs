@@ -43,5 +43,6 @@ namespace HPCL.Service.Interfaces
         Task<JCBViewCardSearch> SearchCardMapping(JCBViewCardDetails viewCardDetails);
         Task<List<string>> UpdateCards(JCBUpdateMobileandFastagNoInCard[] limitArray);
         Task<JCBViewCardSearch> AddCardMappingDetails(JCBViewCardDetails viewCardDetails);
+        Task<GetJCBDealerCardDispatchResponse> GetJCBDealerCardDispatchDetails(string CustomerID);
     }
 }

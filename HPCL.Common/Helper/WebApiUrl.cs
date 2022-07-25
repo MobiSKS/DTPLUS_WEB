@@ -627,6 +627,7 @@
         public static string JCBUpdateMobileAndFastagNoInCard = "api/dtplus/JCB/JCB_update_mobile_and_fastag_no_in_card";
         public static string getJcbMobileAndFastagno = "api/dtplus/JCB/get_jcb_mobile_and_fastagno";
         public static string getJcbSalesExeEmpidAddonOtcCardMapping = "api/dtplus/JCB/get_jcb_sales_exe_empid_addon_otc_card_mapping";
+        public static string getJcbDispatchDetail = "api/dtplus/JCB/get_jcb_dispatch_detail";
         #endregion
 
         #region "Customer Dashboard"
