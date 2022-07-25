@@ -11,6 +11,9 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using HPCL.Common.Models.ResponseModel.CommonResponse;
+using Microsoft.AspNetCore.Mvc;
+using HPCL.Common.Models.ViewModel;
 
 namespace HPCL.Service.Services
 {
@@ -131,14 +134,50 @@ namespace HPCL.Service.Services
             return LastFiveTransactionsResponseModel;
         }
 
+        public async Task<List<LastestDrivestarsTransactionResponseModel>> LastestDrivestarsTransaction(string CustomerId)
+        {
+            var LastestDrivestarsTransactionForms = new CustomerDashboardRequestModel
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                CustomerID = CustomerId
+            };
+
+            StringContent LastestDrivestarsTransactionTableContent = new StringContent(JsonConvert.SerializeObject(LastestDrivestarsTransactionForms), Encoding.UTF8, "application/json");
+
+            var LastestDrivestarsTransactionResponse = await _requestService.CommonRequestService(LastestDrivestarsTransactionTableContent, WebApiUrl.customerDashboardLastestDrivestarsTransactions);
+
+            JObject LastestDrivestarsTransactionTableObj = JObject.Parse(JsonConvert.DeserializeObject(LastestDrivestarsTransactionResponse).ToString());
+            var LastestDrivestarsTransactionTableJarr = LastestDrivestarsTransactionTableObj["Data"].Value<JArray>();
+            List<LastestDrivestarsTransactionResponseModel> LastestDrivestarsTransactionResponseModel = LastestDrivestarsTransactionTableJarr.ToObject<List<LastestDrivestarsTransactionResponseModel>>();
+
+            return LastestDrivestarsTransactionResponseModel;
+        }
+
         public Task<KeyEventsResponseModel> KeyEvents(CustomerDashboardRequestModel customerDashboardRequestModel)
         {
             throw new NotImplementedException();
         }
-
-        public Task<LastFiveTransactionsResponseModel> LastFiveTransactions(CustomerDashboardRequestModel customerDashboardRequestModel)
+        [HttpPost]
+        public async Task<JsonResult> GetKeyEvents(string CustomerId)
         {
-            throw new NotImplementedException();
+            CustomerDashboardModel CustomerDashboard = new CustomerDashboardModel();
+
+            var KeyEvents = await _customerdashboardservice.KeyEvents(CustomerId);
+
+            return Json(KeyEvents);
         }
+
+        [HttpPost]
+        public async Task<JsonResult> GetLastFiveTransaction(string CustomerId)
+        {
+            CustomerDashboardModel CustomerDashboard = new CustomerDashboardModel();
+
+            var LastFiveTransaction = await _customerdashboardservice.LastFiveTransaction(CustomerId);
+
+            return Json(LastFiveTransaction);
+        }
+
     }
 }
