@@ -17,6 +17,7 @@ namespace HPCL.Common.Models.ResponseModel.CustomerDashboard
         public string ItemName { get; set; }
         public string RequestedDate { get; set; }
         public string RedeemedPoints { get; set; }
+        public string Status { get; set; }
 
     }
 }
