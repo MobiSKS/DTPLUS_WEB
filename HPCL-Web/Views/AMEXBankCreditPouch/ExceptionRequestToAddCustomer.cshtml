@@ -322,46 +322,66 @@
             $("#transDate").html('');
             $("#lastQuaterSpend").html('');
             $("#custType").html('');
-            $("#custZonal").append("<span>"+(res.searchList.data[0].zo || '')+"</span>");
-            $("#custRegional").append("<span>"+(res.searchList.data[0].ro || '')+"</span>");
-            $("#custName").append("<span>"+(res.searchList.data[0].customerName || '')+"</span>");
-            $("#nameOnCard").append("<span>"+(res.searchList.data[0].nameOnCard || '')+"</span>");
+            $("#custZonal").append("<span>"+(res.searchList.data.getCustomerInfo[0].zo || '')+"</span>");
+            $("#custRegional").append("<span>"+(res.searchList.data.getCustomerInfo[0].ro || '')+"</span>");
+            $("#custName").append("<span>"+(res.searchList.data.getCustomerInfo[0].customerName || '')+"</span>");
+            $("#nameOnCard").append("<span>"+(res.searchList.data.getCustomerInfo[0].nameOnCard || '')+"</span>");
 
             var transDate;
 
-            if(((res.searchList.data[0].lastTransactionDate) == "01-01-0001") || ((res.searchList.data[0].lastTransactionDate) == "01-01-1900") || ((res.searchList.data[0].lastTransactionDate) == null)){
+            if(((res.searchList.data.getCustomerInfo[0].lastTransactionDate) == "01-01-0001") || ((res.searchList.data.getCustomerInfo[0].lastTransactionDate) == "01-01-1900") || ((res.searchList.data.getCustomerInfo[0].lastTransactionDate) == null)){
                 transDate = "";
             }else{
-                transDate = moment(res.searchList.data[0].lastTransactionDate, 'DD-MM-YYYY').format('DD-MM-YYYY');
+                transDate = moment(res.searchList.data.getCustomerInfo[0].lastTransactionDate, 'DD-MM-YYYY').format('DD-MM-YYYY');
             }
 
             $("#transDate").append("<span>"+(transDate)+"</span>");
 
-            var lstSpend = (res.searchList.data[0].totalSpend == 0) ? lstSpend = "" : lstSpend = (res.searchList.data[0].totalSpend);
+            var lstSpend = (res.searchList.data.getCustomerInfo[0].totalSpend == 0) ? lstSpend = "" : lstSpend = (res.searchList.data.getCustomerInfo[0].totalSpend);
 
             $("#lastQuaterSpend").append("<span>"+(lstSpend)+"</span>");
-            $("#custType").append("<span>"+(res.searchList.data[0].customerType || '')+"</span>");
+            $("#custType").append("<span>"+(res.searchList.data.getCustomerInfo[0].customerType || '')+"</span>");
 
-            if(res.searchList.data[0].status == 1){
+            if(res.searchList.data.getCustomerInfo[0].status == 1){
+
                 document.getElementById("customerDetailsSection").style.display = "block";
 
-                if(res.searchList.data[0].customerType == "Eligible"){
+                if(res.searchList.data.getCustomerInfo[0].customerType == "Eligible"){
                     document.getElementById("custEnrollUpdateSection").style.display = "none";
                 }else{
-                    document.getElementById("custEnrollUpdateSection").style.display = "block";
+
+                    if(res.searchList.data.getCustomerPrevInfo[0].reqStatus == "Rejected"){
+
+                        if(res.searchList.data.getCustomerPrevInfo.length > 0){
+                            $("#customerEnrollmentDetailsSectionList td").parent().remove();
+
+                            var rows = "<tbody><tr>"
+                                + "<td>" + (res.searchList.data.getCustomerPrevInfo[0].enrolledDate || '') + "</td>"
+                                + "<td>" + (res.searchList.data.getCustomerPrevInfo[0].planName || '') + "</td>"
+                                + "<td>" + (res.searchList.data.getCustomerPrevInfo[0].reqStatus || '') + "</td>"
+                                + "<td>" + (res.searchList.data.getCustomerPrevInfo[0].requestedBy || '') + "</td>"
+                                + "<td>" + (res.searchList.data.getCustomerPrevInfo[0].comment || '') + "</td>"
+                                + "</tr ></tbody>";
+
+                            $('#customerEnrollmentDetailsSectionList').append(rows);
+              
+                            document.getElementById("customerEnrollmentDetailsSection").style.display = "block";
+                        }
+                        document.getElementById("custEnrollUpdateSection").style.display = "block";
+                    }
                 }
             }
 
-            else if(res.searchList.data[0].status == 2){
+            else if(res.searchList.data.getCustomerInfo[0].status == 2){
                 
                 $("#customerEnrollmentDetailsSectionList td").parent().remove();
 
                 var rows = "<tbody><tr>"
-                    + "<td>" + (res.searchList.data[0].enrolledDate || '') + "</td>"
-                    + "<td>" + (res.searchList.data[0].planName || '') + "</td>"
-                    + "<td>" + (res.searchList.data[0].reqStatus || '') + "</td>"
-                    + "<td>" + (res.searchList.data[0].requestedBy || '') + "</td>"
-                    + "<td>" + (res.searchList.data[0].comment || '') + "</td>"
+                    + "<td>" + (res.searchList.data.getCustomerPrevInfo[0].enrolledDate || '') + "</td>"
+                    + "<td>" + (res.searchList.data.getCustomerPrevInfo[0].planName || '') + "</td>"
+                    + "<td>" + (res.searchList.data.getCustomerPrevInfo[0].reqStatus || '') + "</td>"
+                    + "<td>" + (res.searchList.data.getCustomerPrevInfo[0].requestedBy || '') + "</td>"
+                    + "<td>" + (res.searchList.data.getCustomerPrevInfo[0].comment || '') + "</td>"
                     + "</tr ></tbody>";
 
                 $('#customerEnrollmentDetailsSectionList').append(rows);
@@ -370,21 +390,12 @@
                 document.getElementById("customerEnrollmentDetailsSection").style.display = "block";
             }
 
-            else if(res.searchList.data[0].status == 0){
+            else if(res.searchList.data.getCustomerInfo[0].status == 0){
                  $("#AlreadyEnroll").html("");
-                 $("#AlreadyEnroll").append("<span>" + res.searchList.data[0].reason + "</span>");
+                 $("#AlreadyEnroll").append("<span>" + res.searchList.data.getCustomerInfo[0].reason + "</span>");
                  document.getElementById("customerDetailsSection").style.display = "block";
                  document.getElementById("AlreadyEnroll").style.display = "block";
             }
-
-            //else{
-            //    document.getElementById("customerDetailsSection").style.display = "block";
-            //    document.getElementById("custEnrollUpdateSection").style.display = "none";
-            //    $("#AlreadyEnroll").html("");
-            //    $("#AlreadyEnroll").append("<span>" + res.searchList.data[0].reason + "</span>");
-            //    document.getElementById("AlreadyEnroll").style.display = "block";
-            //}
-
         }else{
             document.getElementById("customerDetailsSection").style.display = "none";
             document.getElementById("custEnrollUpdateSection").style.display = "none";
