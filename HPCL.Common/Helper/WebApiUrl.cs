@@ -650,6 +650,7 @@
         public static string insertDicvCustomer = "api/dtplus/DICV/insert_dicv_customer";
         public static string getAvailityDicvOtcCard = "api/dtplus/DICV/get_availity_dicv_otc_card";
         public static string getDicvSalesExeEmpidAddonOtcCardMapping = "api/dtplus/DICV/get_dicv_sales_exe_empid_addon_otc_card_mapping";
+        public static string getDicvBalanceOtcCard = "api/dtplus/DICV/get_dicv_balance_otc_card";
         #endregion
 
         #region "Parent Customer HDFC Bank Credit Pouch"
