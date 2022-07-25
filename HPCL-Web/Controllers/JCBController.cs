@@ -280,6 +280,12 @@ namespace HPCL_Web.Controllers
             var model = await _jcbService.GetJCBDealerCardDispatchDetails(CustomerID);
             return PartialView("~/Views/JCB/_ViewJCBDealerCardDispatchDetails.cshtml", model);
         }
+        [HttpPost]
+        public async Task<JsonResult> ResetJCBDealerPassword(string UserName)
+        {
+            var result = await _jcbService.ResetJCBDealerPassword(UserName);
+            return Json(new { result = result });
+        }
 
     }
 }
