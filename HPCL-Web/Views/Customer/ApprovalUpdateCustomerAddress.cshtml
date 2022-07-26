@@ -20,9 +20,9 @@
         {
             <div class="w-100">
                 <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
-                    <div class="border-1 rounded border-grey pb-3">
+                    <div class="border-1 rounded border-grey pb-0">
                         <p class="text-white px-3 py-2 m-0 font-weight-bold" style="background: #084693;">Approve Customer Address Requests</p>
-                        <div class="col-lg-12 col-md-12 col-12 pt-3 bg-white">
+                        <div class="col-lg-12 col-md-12 col-12 p-3 bg-white">
                             <div class="d-flex align-items-center flex-wrap">
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
@@ -47,16 +47,17 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="clearfix"></div>
+                            <div class="d-flex align-items-center justify-content-center mt-0">
+                                <div class="px-2">
+                                    <button class="btn btn_primary" type="submit" id="btnSearch" onclick="return SearchValidations()">SEARCH</button>
+                                </div>
+                                <div class="px-2">
+                                    <button class="btn btn_primary" type="button" id="btnReset" onclick="location.href='@Url.Action("ApprovalUpdateCustomerAddress", "Customer", new { reset="Y" })'">RESET</button>
+                                </div>
+                            </div>
                         </div>
                         <div class="clearfix"></div>
-                        <div class="d-flex align-items-center justify-content-center mt-0">
-                            <div class="px-2">
-                                <button class="btn btn_primary" type="submit" id="btnSearch" onclick="return SearchValidations()">SEARCH</button>
-                            </div>
-                            <div class="px-2">
-                                <button class="btn btn_primary" type="button" id="btnReset" onclick="location.href='@Url.Action("ApprovalUpdateCustomerAddress", "Customer", new { reset="Y" })'">RESET</button>
-                            </div>
-                        </div>
                     </div>
                 </div>
 
@@ -124,9 +125,9 @@
                                 </div>
                             </div>
 
-                           <div class="clearfix"></div>
-                           <div id="show_Table" class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3 toBeHiddenOnSuccess">
-                           </div>
+                            <div class="clearfix"></div>
+                            <div id="show_Table" class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3 toBeHiddenOnSuccess">
+                            </div>
                         }
                         else
                         {
@@ -143,344 +144,344 @@
 </div>
 <div class="clearfix"></div>
 <script>
-    var pageStatus="@ViewBag.Reset";//ViewBag.Reset has value "Y" for reset click, "A" for Add button click
-    var activeRow="";
-    $(document).ready(function () {
-         $('.table').DataTable({
-            "lengthMenu": [10, 20, 50, 100, 200, 500],
-            "oLanguage": {
-                "sLengthMenu": "Display _MENU_ Records",
-                "info": "Showing _START_ to _END_ of _TOTAL_ Records",
-            }
-        });
-
-    });
-
-    $("#checkAll").click(function ()
-    {
-        $('input:checkbox').not(this).prop('checked', this.checked);
-
-        $("#CustomerSearch tbody tr").each(function () {
-             //debugger;
-
-            var row = $(this);
-            var i = row[0].cells[0].textContent;
-            if (row.find('input[type="checkbox"]').is(":checked"))
-            {
-                $('#Remarks_'+i).prop('disabled', false);
-                $('#Remarks_error_'+i).html("");
-            }
-            else
-            {
-                $('#Remarks_'+i).prop('disabled', true);
-                $('#Remarks_error_'+i).html("");
-            }
-         });
-    });
-
-    $('td input[type="checkbox"]').change(function () {
-      $(this).closest('tr').find('input[type="text"]').prop('disabled', !this.checked);
-      var row = $(this).closest('tr');
-      var i = row[0].cells[0].textContent;
-       $('#Remarks_error_'+i).html("");
-    }).change();
-
-    function ApproveCustomer(ApproveReject)
-    {
-        debugger;
-        //alert("inside submit");
-        var flag = "Y";
-        approvalDetail = [];
-        var count=0;
-        var message="";
-        var actionType="";
-        if(ApproveReject=="Approve")
-        {
-            message="Are you sure! You want to approve the selected record(s)?";
-            actionType="Approve";
-        }
-        else
-        {
-            message="Are you sure! You want to reject the selected record(s)?";
-            actionType="Reject";
-        }
-
-         $("#CustomerSearch tbody tr").each(function () {
-             debugger;
-
-            var row = $(this);
-            if (row.find('input[type="checkbox"]').is(":checked"))
-            {
-                 var i = row[0].cells[0].textContent;
-                 var customerID = row.find("td.customerID").text();
-                 var remarks = $('#Remarks_'+i).val();
-
-                 count=count+1;
-
-                if(remarks.trim()=='')
-                {
-                    document.getElementById('Remarks_error_'+i).innerHTML="Please enter Remarks";
-                    flag="N";
-                }
-                else
-                {
-                    if(!remarks.match(atLeastOneAlphabet))
-                    {
-                        document.getElementById('Remarks_error_'+i).innerHTML="Invalid Remarks";
-                        flag="N";
-                    }
-                    else
-                    {
-                        document.getElementById('Remarks_error_'+i).innerHTML="";
-                    }
-                }
-
-                 approvalDetail.push({ CustomerID: customerID, Comments: remarks });
-             }
-         });
-
-         if(count==0)
-         {
-             if(ApproveReject=="Approve")
-             {
-               alert("Please select atleast one record to approve.");
-             }
-             else
-             {
-                 alert("Please select atleast one record to reject.");
-             }
-         }
-
-        if (approvalDetail.length > 0 && flag == "Y")
-        {
-            if (confirm(message))
-            {
-                var updateReqmodel = { ActionType: actionType, TypeApprovalApproveCustomerAddressRequests: approvalDetail };
-                $.ajax({
-                    type: 'POST',
-                    url: '@Url.Action("ApproveCustomerAddressRequests", "Customer")',
-                    contentType: "application/json; charset=utf-8",
-                    dataType: 'json',
-                    data: JSON.stringify(updateReqmodel),
-                    success: function (res)
-                    {
-                        console.log(res);
-                        console.log(res);
-                        if(res.customer.internel_Status_Code == 1000)
-                        {
-                           // var successMsg="",errorMsg="";
-                           // if(res.customer.status==1)
-                           //     successMsg=res.customer.reason;
-                           // else if(data[0].status==0)
-                           //     errorMsg=res.customer.reason;
-                           // var url = '@Html.Raw(@Url.Action("ApprovalUpdateCustomerAddress", "Customer",new { reset = "Y", success = "mm", error = "ee", FromDate="zzz", ToDate="aaa" }))';
-                           // url = url.replace("mm", encodeURIComponent(successMsg)).replace("ee", encodeURIComponent(errorMsg));
-                           // url = url.replace("zzz", encodeURIComponent($("#FromDate").val())).replace("aaa", encodeURIComponent($("#ToDate").val()));
-                           //window.location.href=url;
-                            $("#dvSuccess").html(res.customer.reason);
-                            $(".toBeHiddenOnSuccess").hide();
-                            document.getElementById("dvSuccess").style.display = "block";
-                            document.getElementById("dvFailure").style.display = "none";
-                        }
-                        else
-                        {
-                            $("#dvFailure").html(res.customer.reason);
-                            document.getElementById("dvFailure").style.display = "block";
-                            document.getElementById("dvSuccess").style.display = "none";
-                        }
-
-                    },
-                    error: function (ex) {
-                        alert('Error.' + ex);
-                    }
-                });
-            }
-        }
-
-    };
-
-    function SearchValidations()
-    {
-        debugger;
-        var ret=true;
-
-        var fromdate = $("#FromDate").val();
-        var todate = $("#ToDate").val();
-
-        var flag = "Y";
-        debugger;
-        if (fromdate != "" && todate != "") {
-            flag = checkDates("FromDate_error");
-        }
-
-        if (fromdate != "" && todate == "")
-        {
-            document.getElementById("ToDate_error").innerHTML = "Please select To Date";
-            ret=false;
-        }
-        if (fromdate == "" && todate != "")
-        {
-            document.getElementById("FromDate_error").innerHTML = "Please select From Date";
-            ret=false;
-        }
-
-
-        if(flag == "N")
-        {
-            ret=false;
-        }
-
-        console.log(ret);
-        return ret;
-    }
-    function SubmitValidations()
-    {
-        debugger;
-        var ret=true;
-
-        var fromdate = $("#FromDate").val();
-        var todate = $("#ToDate").val();
-
-        var flag = "Y";
-        debugger;
-        if (fromdate != "" && todate != "") {
-            flag = checkDates("FromDate_error");
-        }
-
-        if (fromdate != "" && todate == "")
-        {
-            document.getElementById("ToDate_error").innerHTML = "Please select To Date";
-            ret=false;
-        }
-        if (fromdate == "" && todate != "")
-        {
-            document.getElementById("FromDate_error").innerHTML = "Please select From Date";
-            ret=false;
-        }
-
-         var count=0;
-         $("#CustomerSearch tbody tr").each(function () {
-             debugger;
-
-            var row = $(this);
-            if (row.find('input[type="checkbox"]').is(":checked"))
-            {
-                 var i = row[0].cells[0].textContent;
-                 var customerID = row.find("td.customerID").text();
-                 var remarks = $('#Remarks_'+i).val();
-
-                 count=count+1;
-
-                if(remarks.trim()=='')
-                {
-                    document.getElementById('Remarks_error_'+i).innerHTML="Please enter Remarks";
-                    flag="N";
-                }
-                else
-                {
-                    if(!remarks.match(nameWithSpaceCheck))
-                    {
-                        document.getElementById('Remarks_error_'+i).innerHTML="Invalid Remarks";
-                        flag="N";
-                    }
-                    else
-                    {
-                        document.getElementById('Remarks_error_'+i).innerHTML="";
-                    }
-                }
-
-
-            }
-         });
-
-         if(count==0)
-         {
-             alert("Please select at least one record");
-             flag="N";
-         }
-
-        if(flag == "N")
-        {
-            ret=false;
-        }
-
-        console.log(ret);
-        return ret;
-    }
-    function RemarksChange(o, rowSelected)
-    {
-          var remarks = o.value;
-          console.log(remarks);
-
-        if(remarks.trim()=='')
-        {
-            document.getElementById('Remarks_error_'+rowSelected).innerHTML="Please enter Remarks";
-            return false;
-        }
-        else if (!remarks.match(atLeastOneAlphabet))
-        {
-            document.getElementById('Remarks_error_'+rowSelected).innerHTML="Invalid Remarks";
-            return false;
-        }
-        else
-        {
-            document.getElementById('Remarks_error_'+rowSelected).innerHTML="";
-        }
-
-     }
-
-    function ViewAddressDetails(o,customercode)
-    {
-        debugger;
-        var flag="Y";
- 
-        if(flag=="Y")
-        {
-            $.ajax({
-                type: 'GET',  // http method
-                url: '@Url.Action("GetCustomerOldAndNewAddressList", "Customer")',
-                contentType: "application/json; charset=utf-8",
-                dataType: 'text',
-                data: { CustomerId: customercode},
-                success: function (data, status, xhr)
-                {
-                    console.log(data);
-                    var v = data;
-                    if (status == 'success') {
-                        $("#show_Table").html(data);
-                        $('html, body').animate({
-                            scrollTop: $("#show_Table").offset().top
-                        }, 2000);
-                    }
-                    else
-                    {
-                        console.log(v);
-                    }
-
-                    //var count = $('#tblCustomer tr').length;
-                    //console.log(count);
-                
-                },
-                error: function (jqXhr, textStatus, errorMessage)
-                {
-                    alert("Error"+ errorMessage);
+        var pageStatus="@ViewBag.Reset";//ViewBag.Reset has value "Y" for reset click, "A" for Add button click
+        var activeRow="";
+        $(document).ready(function () {
+             $('.table').DataTable({
+                "lengthMenu": [10, 20, 50, 100, 200, 500],
+                "oLanguage": {
+                    "sLengthMenu": "Display _MENU_ Records",
+                    "info": "Showing _START_ to _END_ of _TOTAL_ Records",
                 }
             });
 
+        });
+
+        $("#checkAll").click(function ()
+        {
+            $('input:checkbox').not(this).prop('checked', this.checked);
+
+            $("#CustomerSearch tbody tr").each(function () {
+                 //debugger;
+
+                var row = $(this);
+                var i = row[0].cells[0].textContent;
+                if (row.find('input[type="checkbox"]').is(":checked"))
+                {
+                    $('#Remarks_'+i).prop('disabled', false);
+                    $('#Remarks_error_'+i).html("");
+                }
+                else
+                {
+                    $('#Remarks_'+i).prop('disabled', true);
+                    $('#Remarks_error_'+i).html("");
+                }
+             });
+        });
+
+        $('td input[type="checkbox"]').change(function () {
+          $(this).closest('tr').find('input[type="text"]').prop('disabled', !this.checked);
+          var row = $(this).closest('tr');
+          var i = row[0].cells[0].textContent;
+           $('#Remarks_error_'+i).html("");
+        }).change();
+
+        function ApproveCustomer(ApproveReject)
+        {
+            debugger;
+            //alert("inside submit");
+            var flag = "Y";
+            approvalDetail = [];
+            var count=0;
+            var message="";
+            var actionType="";
+            if(ApproveReject=="Approve")
+            {
+                message="Are you sure! You want to approve the selected record(s)?";
+                actionType="Approve";
+            }
+            else
+            {
+                message="Are you sure! You want to reject the selected record(s)?";
+                actionType="Reject";
+            }
+
+             $("#CustomerSearch tbody tr").each(function () {
+                 debugger;
+
+                var row = $(this);
+                if (row.find('input[type="checkbox"]').is(":checked"))
+                {
+                     var i = row[0].cells[0].textContent;
+                     var customerID = row.find("td.customerID").text();
+                     var remarks = $('#Remarks_'+i).val();
+
+                     count=count+1;
+
+                    if(remarks.trim()=='')
+                    {
+                        document.getElementById('Remarks_error_'+i).innerHTML="Please enter Remarks";
+                        flag="N";
+                    }
+                    else
+                    {
+                        if(!remarks.match(atLeastOneAlphabet))
+                        {
+                            document.getElementById('Remarks_error_'+i).innerHTML="Invalid Remarks";
+                            flag="N";
+                        }
+                        else
+                        {
+                            document.getElementById('Remarks_error_'+i).innerHTML="";
+                        }
+                    }
+
+                     approvalDetail.push({ CustomerID: customerID, Comments: remarks });
+                 }
+             });
+
+             if(count==0)
+             {
+                 if(ApproveReject=="Approve")
+                 {
+                   alert("Please select atleast one record to approve.");
+                 }
+                 else
+                 {
+                     alert("Please select atleast one record to reject.");
+                 }
+             }
+
+            if (approvalDetail.length > 0 && flag == "Y")
+            {
+                if (confirm(message))
+                {
+                    var updateReqmodel = { ActionType: actionType, TypeApprovalApproveCustomerAddressRequests: approvalDetail };
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("ApproveCustomerAddressRequests", "Customer")',
+                        contentType: "application/json; charset=utf-8",
+                        dataType: 'json',
+                        data: JSON.stringify(updateReqmodel),
+                        success: function (res)
+                        {
+                            console.log(res);
+                            console.log(res);
+                            if(res.customer.internel_Status_Code == 1000)
+                            {
+                               // var successMsg="",errorMsg="";
+                               // if(res.customer.status==1)
+                               //     successMsg=res.customer.reason;
+                               // else if(data[0].status==0)
+                               //     errorMsg=res.customer.reason;
+                               // var url = '@Html.Raw(@Url.Action("ApprovalUpdateCustomerAddress", "Customer",new { reset = "Y", success = "mm", error = "ee", FromDate="zzz", ToDate="aaa" }))';
+                               // url = url.replace("mm", encodeURIComponent(successMsg)).replace("ee", encodeURIComponent(errorMsg));
+                               // url = url.replace("zzz", encodeURIComponent($("#FromDate").val())).replace("aaa", encodeURIComponent($("#ToDate").val()));
+                               //window.location.href=url;
+                                $("#dvSuccess").html(res.customer.reason);
+                                $(".toBeHiddenOnSuccess").hide();
+                                document.getElementById("dvSuccess").style.display = "block";
+                                document.getElementById("dvFailure").style.display = "none";
+                            }
+                            else
+                            {
+                                $("#dvFailure").html(res.customer.reason);
+                                document.getElementById("dvFailure").style.display = "block";
+                                document.getElementById("dvSuccess").style.display = "none";
+                            }
+
+                        },
+                        error: function (ex) {
+                            alert('Error.' + ex);
+                        }
+                    });
+                }
+            }
+
+        };
+
+        function SearchValidations()
+        {
+            debugger;
+            var ret=true;
+
+            var fromdate = $("#FromDate").val();
+            var todate = $("#ToDate").val();
+
+            var flag = "Y";
+            debugger;
+            if (fromdate != "" && todate != "") {
+                flag = checkDates("FromDate_error");
+            }
+
+            if (fromdate != "" && todate == "")
+            {
+                document.getElementById("ToDate_error").innerHTML = "Please select To Date";
+                ret=false;
+            }
+            if (fromdate == "" && todate != "")
+            {
+                document.getElementById("FromDate_error").innerHTML = "Please select From Date";
+                ret=false;
+            }
+
+
+            if(flag == "N")
+            {
+                ret=false;
+            }
+
+            console.log(ret);
+            return ret;
+        }
+        function SubmitValidations()
+        {
+            debugger;
+            var ret=true;
+
+            var fromdate = $("#FromDate").val();
+            var todate = $("#ToDate").val();
+
+            var flag = "Y";
+            debugger;
+            if (fromdate != "" && todate != "") {
+                flag = checkDates("FromDate_error");
+            }
+
+            if (fromdate != "" && todate == "")
+            {
+                document.getElementById("ToDate_error").innerHTML = "Please select To Date";
+                ret=false;
+            }
+            if (fromdate == "" && todate != "")
+            {
+                document.getElementById("FromDate_error").innerHTML = "Please select From Date";
+                ret=false;
+            }
+
+             var count=0;
+             $("#CustomerSearch tbody tr").each(function () {
+                 debugger;
+
+                var row = $(this);
+                if (row.find('input[type="checkbox"]').is(":checked"))
+                {
+                     var i = row[0].cells[0].textContent;
+                     var customerID = row.find("td.customerID").text();
+                     var remarks = $('#Remarks_'+i).val();
+
+                     count=count+1;
+
+                    if(remarks.trim()=='')
+                    {
+                        document.getElementById('Remarks_error_'+i).innerHTML="Please enter Remarks";
+                        flag="N";
+                    }
+                    else
+                    {
+                        if(!remarks.match(nameWithSpaceCheck))
+                        {
+                            document.getElementById('Remarks_error_'+i).innerHTML="Invalid Remarks";
+                            flag="N";
+                        }
+                        else
+                        {
+                            document.getElementById('Remarks_error_'+i).innerHTML="";
+                        }
+                    }
+
+
+                }
+             });
+
+             if(count==0)
+             {
+                 alert("Please select at least one record");
+                 flag="N";
+             }
+
+            if(flag == "N")
+            {
+                ret=false;
+            }
+
+            console.log(ret);
+            return ret;
+        }
+        function RemarksChange(o, rowSelected)
+        {
+              var remarks = o.value;
+              console.log(remarks);
+
+            if(remarks.trim()=='')
+            {
+                document.getElementById('Remarks_error_'+rowSelected).innerHTML="Please enter Remarks";
+                return false;
+            }
+            else if (!remarks.match(atLeastOneAlphabet))
+            {
+                document.getElementById('Remarks_error_'+rowSelected).innerHTML="Invalid Remarks";
+                return false;
+            }
+            else
+            {
+                document.getElementById('Remarks_error_'+rowSelected).innerHTML="";
+            }
+
+         }
+
+        function ViewAddressDetails(o,customercode)
+        {
+            debugger;
+            var flag="Y";
+
+            if(flag=="Y")
+            {
+                $.ajax({
+                    type: 'GET',  // http method
+                    url: '@Url.Action("GetCustomerOldAndNewAddressList", "Customer")',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: 'text',
+                    data: { CustomerId: customercode},
+                    success: function (data, status, xhr)
+                    {
+                        console.log(data);
+                        var v = data;
+                        if (status == 'success') {
+                            $("#show_Table").html(data);
+                            $('html, body').animate({
+                                scrollTop: $("#show_Table").offset().top
+                            }, 2000);
+                        }
+                        else
+                        {
+                            console.log(v);
+                        }
+
+                        //var count = $('#tblCustomer tr').length;
+                        //console.log(count);
+
+                    },
+                    error: function (jqXhr, textStatus, errorMessage)
+                    {
+                        alert("Error"+ errorMessage);
+                    }
+                });
+
+            }
+
         }
 
-    }
+    $("#CustomerSearch").on('page.dt', function ()
+    {
+        //debugger;
+        document.getElementById("show_Table").innerHTML="";
+    });
 
-$("#CustomerSearch").on('page.dt', function () 
-{
-    //debugger;
-    document.getElementById("show_Table").innerHTML="";
-});
-
-$("#CustomerSearch").on('length.dt', function () 
-{
-    //debugger;
-    document.getElementById("show_Table").innerHTML="";
-});
+    $("#CustomerSearch").on('length.dt', function ()
+    {
+        //debugger;
+        document.getElementById("show_Table").innerHTML="";
+    });
 
 </script>
