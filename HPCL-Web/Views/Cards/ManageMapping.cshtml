@@ -153,7 +153,7 @@
                         <div class="clearfix"></div>
                     </form>
 
-                    <form method="post" data-ajax="true" asp-controller="Cards" asp-action="GetMerchantForMapping" data-ajax-method="POST" data-ajax-success="OnSuccessSearch" data-ajax-failure="OnFailure">
+                    <form id="merchantSearchFormId">
 
                         <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3">
 
@@ -164,7 +164,7 @@
                                         <div class="d-flex align-items-center flex-wrap">
                                             <div class="col-lg-6 col-12">
                                                 <div class="d-flex align-items-center flex-wrap mb-3">
-                                                    <label class="font-weight-normal col-md-4 col-12">Merchant ID <sup class="text-danger">*</sup></label>
+                                                    <label class="font-weight-normal col-md-4 col-12">Merchant ID</label>
                                                     <div class="col-md-7 col-12">
                                                         <div class="custom_select">
                                                             @Html.TextBoxFor(m => m.MerchantID, new { @class = "form-control", onkeypress = "return isNumberKey(event)", @maxlength="10" })
@@ -175,11 +175,11 @@
                                             </div>
                                             <div class="col-lg-6 col-12">
                                                 <div class="d-flex align-items-center flex-wrap mb-3">
-                                                    <label class="font-weight-normal offset-md-1 col-md-4 col-12">State <sup class="text-danger">*</sup></label>
+                                                    <label class="font-weight-normal offset-md-1 col-md-4 col-12">State</label>
                                                     <div class="col-md-7 col-12">
                                                         <div class="custom_select">
                                                             @Html.DropDownListFor(m => m.StateID, Enumerable.Empty<SelectListItem>(), "--Select--", new { @class = "form-control stateVal" })
-                                                            @Html.ValidationMessageFor(m => m.StateID, "", new { @class = "text-danger" })
+                                                            @Html.ValidationMessageFor(m => m.StateID, "", new {@id="StateIDErrVal", @class = "text-danger" })
                                                         </div>
                                                     </div>
                                                 </div>
@@ -188,7 +188,7 @@
                                         <div class="d-flex align-items-center flex-wrap">
                                             <div class="col-lg-6 col-12">
                                                 <div class="d-flex align-items-center flex-wrap mb-3">
-                                                    <label class="font-weight-normal col-md-4 col-12">District <sup class="text-danger">*</sup></label>
+                                                    <label class="font-weight-normal col-md-4 col-12">District</label>
                                                     <div class="col-md-7 col-12">
                                                         <div class="custom_select">
                                                             @Html.DropDownListFor(m => m.DistrictID, Enumerable.Empty<SelectListItem>(), "--Select--", new { @class = "form-control distVal" })
@@ -198,7 +198,7 @@
                                             </div>
                                             <div class="col-lg-6 col-12">
                                                 <div class="d-flex align-items-center flex-wrap mb-3">
-                                                    <label class="font-weight-normal offset-md-1 col-md-4 col-12">City <sup class="text-danger">*</sup></label>
+                                                    <label class="font-weight-normal offset-md-1 col-md-4 col-12">City</label>
                                                     <div class="col-md-7 col-12">
                                                         <div class="custom_select">
                                                             @Html.TextBoxFor(m => m.City, new { @class = "form-control" })
@@ -211,10 +211,10 @@
                                         <div class="d-flex align-items-center flex-wrap">
                                             <div class="col-lg-6 col-12">
                                                 <div class="d-flex align-items-center flex-wrap mb-3">
-                                                    <label class="font-weight-normal col-md-4 col-12">Highway <sup class="text-danger">*</sup></label>
+                                                    <label class="font-weight-normal col-md-4 col-12">Highway</label>
                                                     <div class="col-md-7 col-12">
                                                         <div class="custom_select">
-                                                            @Html.TextBoxFor(m => m.HighwayName, new { @id = "CustomerDefaultVal", @class = "form-control" })
+                                                            @Html.TextBoxFor(m => m.HighwayName, new { @class = "form-control" })
                                                             @Html.ValidationMessageFor(m => m.CustomerID, "", new { @class = "text-danger" })
                                                         </div>
                                                     </div>
@@ -222,19 +222,19 @@
                                             </div>
                                             <div class="col-lg-6 col-12">
                                                 <div class="d-flex align-items-center flex-wrap mb-3">
-                                                    <label class="font-weight-normal offset-md-1 col-md-4 col-12">Highway No <sup class="text-danger">*</sup></label>
+                                                    <label class="font-weight-normal offset-md-1 col-md-4 col-12">Highway No</label>
                                                     <div class="col-md-7 col-12">
                                                         <div class="row">
                                                             <div class="col-md-5">
                                                                 <div class="custom_select">
-                                                                    <select name="HighwayNo1" id="" class="form-control">
+                                                                    <select name="HighwayNo1" id="HighwayNo1" class="form-control">
                                                                         <option value="7">NH</option>
                                                                         <option value="9">SH</option>
                                                                     </select>
                                                                 </div>
                                                             </div>
                                                             <div class="col-md-7">
-                                                                @Html.TextBoxFor(m => m.HighwayNo2, new { @id = "CustomerDefaultVal", @class = "form-control" })
+                                                                @Html.TextBoxFor(m => m.HighwayNo2, new { @class = "form-control" })
                                                                 @Html.ValidationMessageFor(m => m.CustomerID, "", new { @class = "text-danger" })
                                                             </div>
                                                         </div>
@@ -245,7 +245,7 @@
                                         <div class="clearfix"></div>
                                         <div class="d-flex align-items-center justify-content-center mt-0 mb-3">
                                             <div class="px-2">
-                                                <button class="btn btn_primary" type="submit">Search</button>
+                                                <button class="btn btn_primary" type="button" onclick="merchantSearchForm()">Search</button>
                                             </div>
                                             <div class="px-2">
                                                 <button class="btn btn_primary" type="button" onclick="resetClickMer()">Reset</button>
@@ -452,38 +452,91 @@
         }
     }
 
-    function OnSuccessSearch(res) {
+    function merchantSearchForm() {
 
-        console.log(res);
+        var flag = "Y";
 
-        if (res.merchantList.success == true) {
+        var MerchantID = $("#MerchantID").val();
+        var StateID = $("#StateID").val();
+        var DistrictID = $("#DistrictID").val();
+        var City = $("#City").val();
+        var HighwayName = $("#HighwayName").val();
+        var HighwayNo2 = $("#HighwayNo2").val();
 
-            document.getElementById("noRecord").style.display = "none";
-            document.getElementById("noRecordMerchant").style.display = "none";
+        if(MerchantID != '' || StateID != '' || DistrictID != '' || City != '' || HighwayName != '' || HighwayNo2 != ''){
+            $("#StateIDErrVal").text("Please select either State or Merchant ID or City or Highway or Highway No");
+            flag = "N";
+        }
 
-            $("#mapMerchantTbl td").parent().remove();
+        if (flag == "Y") {
+            if ($("#merchantSearchFormId").valid()) {
 
-            for (var i = 0; i < res.merchantList.data.length; i++) {
+                $("#StateIDErrVal").attr("style","display:none");
 
-                var rows = "<tbody><tr>"
-                    + "<td><input type='checkbox' class='merchantRow' name='merchantCheck'></td>"
-                    + "<td><span class='merchantIdVal'>" + (res.merchantList.data[i].merchantId || '') + "</span></td>"
-                    + "<td>" + (res.merchantList.data[i].merchantName || '') + "</td>"
-                    + "<td>" + (res.merchantList.data[i].retailOutletName || '') + "</td>"
-                    + "<td>" + (res.merchantList.data[i].address || '') + "</td>"
-                    + "</tr ></tbody>";
+                //var aars = [];
+                //arrs.push({
+                //    MerchantID:MerchantID,
+                //    StateID:StateID,
+                //    DistrictID:DistrictID,
+                //    City:City,
+                //    HighwayName:HighwayName,
+                //    HighwayNo2:HighwayNo2
+                //});
 
-                $('#mapMerchantTbl').append(rows);
+                $.ajax({
+                    url: "@Url.Action("GetMerchantForMapping", "Cards")",
+                    type: "POST",
+                    data: $("#merchantSearchFormId").serialize(),
+                    dataType: "JSON",
+                    success: function (res) {
+
+                        console.log(res);
+
+                        if (res.merchantList.success == true) {
+
+                            document.getElementById("noRecord").style.display = "none";
+                            document.getElementById("noRecordMerchant").style.display = "none";
+
+                            $("#mapMerchantTbl td").parent().remove();
+
+                            for (var i = 0; i < res.merchantList.data.length; i++) {
+
+                                var rows = "<tbody><tr>"
+                                    + "<td><input type='checkbox' class='merchantRow' name='merchantCheck'></td>"
+                                    + "<td><span class='merchantIdVal'>" + (res.merchantList.data[i].merchantId || '') + "</span></td>"
+                                    + "<td>" + (res.merchantList.data[i].merchantName || '') + "</td>"
+                                    + "<td>" + (res.merchantList.data[i].retailOutletName || '') + "</td>"
+                                    + "<td>" + (res.merchantList.data[i].address || '') + "</td>"
+                                    + "</tr ></tbody>";
+
+                                $('#mapMerchantTbl').append(rows);
+                            }
+                            document.getElementById("searchMerchantId").style.display = "block";
+                        } else {
+                            $("#noRecord").html("");
+                            $("#noRecordMerchant").html("");
+                            $("#noRecordMerchant").append("<span>" + res.merchantList.message + "</span>");
+                            document.getElementById("noRecord").style.display = "none";
+                            document.getElementById("noRecordMerchant").style.display = "block";
+                        }
+
+                    },
+                    error: function (ex) {
+                        alert('Failed' + ex);
+                    }
+                });
+            }else{
+                return false;
             }
-            document.getElementById("searchMerchantId").style.display = "block";
-        } else {
-            $("#noRecord").html("");
-            $("#noRecordMerchant").html("");
-            $("#noRecordMerchant").append("<span>" + res.merchantList.message + "</span>");
-            document.getElementById("noRecord").style.display = "none";
-            document.getElementById("noRecordMerchant").style.display = "block";
         }
     }
+
+
+    $("#StateID").on('change', function(){
+        if($("#StateID").val() != ''){
+            $("#StateIDErrVal").attr("style","display:none");
+        }
+    });
 
     $(".checkAll").click(function () {
         if (this.checked) {

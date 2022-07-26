@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HPCL.Common.Models.ResponseModel.CommonResponse;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace HPCL.Common.Models.ResponseModel.CustomerDashboard
 {
-    public class KeyEventsResponseModel
+    public class KeyEventsResponseModel : ResponseMsg
     {
         public string LastLogin { get; set; }
         public string LastTransaction { get; set; }

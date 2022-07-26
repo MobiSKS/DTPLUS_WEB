@@ -4,6 +4,7 @@ using HPCL.Common.Models.RequestModel.Cards;
 using HPCL.Common.Models.ViewModel.Cards;
 using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -212,6 +213,18 @@ namespace HPCL_Web.Controllers
         [HttpPost]
         public async Task<JsonResult> GetMerchantForMapping(GetCustomerDetailsMapMerchant entity)
         {
+            //GetCustomerDetailsMapMerchant[] arrs = JsonConvert.DeserializeObject<GetCustomerDetailsMapMerchant[]>(reqBody);
+
+            //var entity = new GetCustomerDetailsMapMerchant
+            //{
+            //    MerchantID = arrs[0].MerchantID,
+            //    StateID = arrs[0].StateID,
+            //    DistrictID = arrs[0].DistrictID,
+            //    City = arrs[0].City,
+            //    HighwayName = arrs[0].HighwayName,
+            //    HighwayNo2 = arrs[0].HighwayNo2
+            //};
+
             var merchantList = await _cardService.GetMerchantForMapping(entity);
             return Json(new { merchantList = merchantList });
         }

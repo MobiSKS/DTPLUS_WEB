@@ -27,11 +27,9 @@
                                 </div>
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
-                                        @* <label class="font-weight-normal offset-md-1 col-md-4 col-12">Card Number </label>*@
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @*@Html.TextBoxFor(m => m.CardNumber, new { @class = "form-control", autocomplete = "off", maxlength = "16", onkeypress = "return isNumberKey(event)" })*@
-                                                @*<span class="error" id="CardNumber_error"></span>*@
+                                                @Html.CheckBoxFor(m=>m.ShowUnmappedCard,new {@checked = false})<span class="ml-2">Show Unmapped Card</span>
                                             </div>
                                         </div>
                                     </div>
@@ -67,6 +65,19 @@
          {
               window.location.href = '@Url.Action("ViewJCBUnmappedOTCCards", "JCB")';
          });
+
+       $('#ShowUnmappedCard').click(function()
+       {
+            if ($(this).prop("checked"))
+            {
+                $("#btnSearch").click();
+            }
+            else
+            {
+                $("#btnSearch").click();
+            }
+
+       });
 
          $("#btnSearch").click(function () {
              //debugger;
@@ -107,7 +118,7 @@
                  type: 'GET',  // http method
                  url: '@Url.Action("GetViewJCBOTCCardDealerAllocation", "JCB")',
                  contentType: "application/json; charset=utf-8",
-                 data: { DealerCode: dealerCode, CardNo: cardNumber },
+                 data: { DealerCode: dealerCode, CardNo: cardNumber, ShowUnmappedCard: $("#ShowUnmappedCard").prop("checked") },
                  dataType: "text",
                  success: function (data, status, xhr) {
                      var v = data;

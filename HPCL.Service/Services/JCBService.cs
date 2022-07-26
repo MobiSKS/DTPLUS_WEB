@@ -255,7 +255,7 @@ namespace HPCL.Service.Services
             return model;
         }
 
-        public async Task<JCBOTCCardDealerAllocationResponse> GetViewJCBOTCCardDealerAllocation(string DealerCode, string CardNo)
+        public async Task<JCBOTCCardDealerAllocationResponse> GetViewJCBOTCCardDealerAllocation(string DealerCode, string CardNo, bool ShowUnmappedCard)
         {
             var searchBody = new GetJCBOTCCardDealerAllocationRequestModel()
             {
@@ -273,6 +273,9 @@ namespace HPCL.Service.Services
             JCBOTCCardDealerAllocationResponse response = new JCBOTCCardDealerAllocationResponse();
 
             response = JsonConvert.DeserializeObject<JCBOTCCardDealerAllocationResponse>(ResponseContent);
+
+            if (response != null)
+                response.ShowUnmappedCard = ShowUnmappedCard;
 
             return response;
         }
@@ -1002,6 +1005,42 @@ namespace HPCL.Service.Services
 
             viewCardSearch = JsonConvert.DeserializeObject<JCBViewCardSearch>(response);
             return viewCardSearch;
+        }
+        public async Task<GetJCBDealerCardDispatchResponse> GetJCBDealerCardDispatchDetails(string CustomerID)
+        {
+            var request = new GetALCardDispatchDetailsRequest
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                CustomerID = CustomerID
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getJcbDispatchDetail);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            GetJCBDealerCardDispatchResponse roleLocationResponse = obj.ToObject<GetJCBDealerCardDispatchResponse>();
+
+            return roleLocationResponse;
+        }
+        public async Task<InsertResponse> ResetJCBDealerPassword(string UserName)
+        {
+            var requestBody = new UpdateAlDealePasswordReset
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                UserName = UserName
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.updateJcbDealerCommunicationEmailResetPassword);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            InsertResponse result = obj.ToObject<InsertResponse>();
+            return result;
         }
 
     }
