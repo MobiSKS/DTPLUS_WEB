@@ -629,6 +629,8 @@
         public static string getJcbSalesExeEmpidAddonOtcCardMapping = "api/dtplus/JCB/get_jcb_sales_exe_empid_addon_otc_card_mapping";
         public static string getJcbDispatchDetail = "api/dtplus/JCB/get_jcb_dispatch_detail";
         public static string updateJcbDealerCommunicationEmailResetPassword = "api/dtplus/JCB/update_jcb_dealer_communication_email_reset_password";
+        public static string jcbHotlistReactive = "api/dtplus/JCB/jcb_hotlist_reactive";
+        public static string jcbUpdateHotlistReactivate = "api/dtplus/JCB/jcb_update_hotlist_reactivate";
         #endregion
 
         #region "Customer Dashboard"
