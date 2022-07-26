@@ -15,6 +15,7 @@ namespace HPCL.Common.Models.ResponseModel.JCB
         {
             Data = new JCBOTCCardResponseData();
         }
+        public bool ShowUnmappedCard { get; set; }
     }
 
     public class JCBOTCCardResponseData

@@ -113,9 +113,9 @@ namespace HPCL_Web.Controllers
 
             return View(Model);
         }
-        public async Task<IActionResult> GetViewJCBOTCCardDealerAllocation(string DealerCode, string CardNo)
+        public async Task<IActionResult> GetViewJCBOTCCardDealerAllocation(string DealerCode, string CardNo, bool ShowUnmappedCard)
         {
-            var modals = await _jcbService.GetViewJCBOTCCardDealerAllocation(DealerCode, CardNo);
+            var modals = await _jcbService.GetViewJCBOTCCardDealerAllocation(DealerCode, CardNo, ShowUnmappedCard);
             return PartialView("~/Views/JCB/_JCBOTCCardsDealerAllocationTable.cshtml", modals);
         }
         public async Task<IActionResult> JCBCustomerEnrollment()
@@ -279,6 +279,12 @@ namespace HPCL_Web.Controllers
         {
             var model = await _jcbService.GetJCBDealerCardDispatchDetails(CustomerID);
             return PartialView("~/Views/JCB/_ViewJCBDealerCardDispatchDetails.cshtml", model);
+        }
+        [HttpPost]
+        public async Task<JsonResult> ResetJCBDealerPassword(string UserName)
+        {
+            var result = await _jcbService.ResetJCBDealerPassword(UserName);
+            return Json(new { result = result });
         }
 
     }
