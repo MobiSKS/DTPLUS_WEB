@@ -656,7 +656,50 @@ $(document).ready(function ()
             var panNumber = document.getElementById("PanCardNumber").value.trim();
             let forthdigitPan = panNumber.substr(3, 1);
             console.log(forthdigitPan);
-            if (forthdigitPan != 'P') 
+            //if (forthdigitPan != 'P') 
+            //{
+            //    document.getElementById("PanCardNumber_error").innerHTML = "Invalid Income Tax PAN Number";
+            //    document.getElementById("PanCardNumber_error").className = "error";
+            //    ret = false;
+            //}
+            //else
+            //{
+            //    if (!$('#PanCardNumber').val().match(pancard)) 
+            //    {
+            //        document.getElementById("PanCardNumber_error").innerHTML = "Invalid Income Tax PAN Number";
+            //        document.getElementById("PanCardNumber_error").className = "error";
+            //        ret = false;
+            //    }
+            //    else
+            //    {
+            //        if (localStorage.getItem("PANNOALREADYUSED") == 0) 
+            //        {
+            //            document.getElementById("PanCardNumber_error").innerHTML = "PAN Number already exists";
+            //            document.getElementById("PanCardNumber_error").className = "error";
+            //            ret = false;
+            //        }
+            //        else if (localStorage.getItem("INVALIDPAN") == 0) 
+            //        {
+            //            document.getElementById("PanCardNumber_error").innerHTML = "Invalid Income Tax PAN Number";
+            //            document.getElementById("PanCardNumber_error").className = "error";
+            //            ret = false;
+            //        }
+            //        else if (localStorage.getItem("PANNOANDNAMEMATCHING") == 0) 
+            //        {
+            //            document.getElementById("PanCardNumber_error").innerHTML = "Customer Name not match with pan name";
+            //            document.getElementById("PanCardNumber_error").className = "error";
+            //            ret = false;
+            //        }
+            //        else 
+            //        {
+            //            document.getElementById("PanCardNumber_error").innerHTML = "Income Tax PAN Number is valid";
+            //            document.getElementById("PanCardNumber_error").className = "error text-success";
+            //        }
+            //    }
+            //}
+
+            
+            if (!$('#PanCardNumber').val().match(pancard)) 
             {
                 document.getElementById("PanCardNumber_error").innerHTML = "Invalid Income Tax PAN Number";
                 document.getElementById("PanCardNumber_error").className = "error";
@@ -664,39 +707,31 @@ $(document).ready(function ()
             }
             else
             {
-                if (!$('#PanCardNumber').val().match(pancard)) 
+                if (localStorage.getItem("PANNOALREADYUSED") == 0) 
+                {
+                    document.getElementById("PanCardNumber_error").innerHTML = "PAN Number already exists";
+                    document.getElementById("PanCardNumber_error").className = "error";
+                    ret = false;
+                }
+                else if (localStorage.getItem("INVALIDPAN") == 0) 
                 {
                     document.getElementById("PanCardNumber_error").innerHTML = "Invalid Income Tax PAN Number";
                     document.getElementById("PanCardNumber_error").className = "error";
                     ret = false;
                 }
-                else
+                else if (localStorage.getItem("PANNOANDNAMEMATCHING") == 0) 
                 {
-                    if (localStorage.getItem("PANNOALREADYUSED") == 0) 
-                    {
-                        document.getElementById("PanCardNumber_error").innerHTML = "PAN Number already exists";
-                        document.getElementById("PanCardNumber_error").className = "error";
-                        ret = false;
-                    }
-                    else if (localStorage.getItem("INVALIDPAN") == 0) 
-                    {
-                        document.getElementById("PanCardNumber_error").innerHTML = "Invalid Income Tax PAN Number";
-                        document.getElementById("PanCardNumber_error").className = "error";
-                        ret = false;
-                    }
-                    else if (localStorage.getItem("PANNOANDNAMEMATCHING") == 0) 
-                    {
-                        document.getElementById("PanCardNumber_error").innerHTML = "Customer Name not match with pan name";
-                        document.getElementById("PanCardNumber_error").className = "error";
-                        ret = false;
-                    }
-                    else 
-                    {
-                        document.getElementById("PanCardNumber_error").innerHTML = "Income Tax PAN Number is valid";
-                        document.getElementById("PanCardNumber_error").className = "error text-success";
-                    }
+                    document.getElementById("PanCardNumber_error").innerHTML = "Customer Name not match with pan name";
+                    document.getElementById("PanCardNumber_error").className = "error";
+                    ret = false;
+                }
+                else 
+                {
+                    document.getElementById("PanCardNumber_error").innerHTML = "Income Tax PAN Number is valid";
+                    document.getElementById("PanCardNumber_error").className = "error text-success";
                 }
             }
+
             
         }
 
@@ -1848,40 +1883,56 @@ debugger;
 
      });
 
-    $("#PanCardNumber").on("blur", function () 
-    {
+   $("#PanCardNumber").on("blur", function () 
+   {
         //debugger;
         var panNumber = document.getElementById("PanCardNumber").value.trim();
         localStorage.setItem("PANNOALREADYUSED", "1");
         localStorage.setItem("PANNOANDNAMEMATCHING", "1");
         localStorage.setItem("INVALIDPAN", "1");
 
-        if (panNumber == "") 
-        {
-            document.getElementById("PanCardNumber_error").innerHTML = "Income Tax PAN field is required";
-            document.getElementById("PanCardNumber_error").className = "error";
-            return (false);
-        }
-        else 
-        {
-            document.getElementById("PanCardNumber_error").innerHTML = "";
-        }
+        //if (panNumber == "") 
+        //{
+        //    document.getElementById("PanCardNumber_error").innerHTML = "Income Tax PAN field is required";
+        //    document.getElementById("PanCardNumber_error").className = "error";
+        //    return (false);
+        //}
+        //else 
+        //{
+        //    document.getElementById("PanCardNumber_error").innerHTML = "";
+        //}
 
-        var panNumberUsed = false;
-
-        document.getElementById("PanCardNumber").value = document.getElementById("PanCardNumber").value.trim().toUpperCase();
-        panNumber = document.getElementById("PanCardNumber").value.trim();
-
-        let forthdigitPan = panNumber.substr(3, 1);
-        console.log(forthdigitPan);
-        if (forthdigitPan != 'P') 
+        if (panNumber != "") 
         {
-            document.getElementById("PanCardNumber_error").innerHTML = "Invalid Income Tax PAN Number";
-            document.getElementById("PanCardNumber_error").className = "error";
-            return (false);
-        }
-        else 
-        {
+
+            var panNumberUsed = false;
+
+            document.getElementById("PanCardNumber").value = document.getElementById("PanCardNumber").value.trim().toUpperCase();
+            panNumber = document.getElementById("PanCardNumber").value.trim();
+
+            let forthdigitPan = panNumber.substr(3, 1);
+            console.log(forthdigitPan);
+            //if (forthdigitPan != 'P') 
+            //{
+            //    document.getElementById("PanCardNumber_error").innerHTML = "Invalid Income Tax PAN Number";
+            //    document.getElementById("PanCardNumber_error").className = "error";
+            //    return (false);
+            //}
+            //else 
+            //{
+            //    if ($('#PanCardNumber').val().match(pancard)) 
+            //    {
+            //        document.getElementById("PanCardNumber_error").innerHTML = "Income Tax PAN Number is valid";
+            //        document.getElementById("PanCardNumber_error").className = "error text-success";
+            //    }
+            //    else 
+            //    {
+            //        document.getElementById("PanCardNumber_error").innerHTML = "Invalid Income Tax PAN Number";
+            //        document.getElementById("PanCardNumber_error").className = "error";
+            //        return (false);
+            //    }
+            //}
+                
             if ($('#PanCardNumber').val().match(pancard)) 
             {
                 document.getElementById("PanCardNumber_error").innerHTML = "Income Tax PAN Number is valid";
@@ -1893,69 +1944,75 @@ debugger;
                 document.getElementById("PanCardNumber_error").className = "error";
                 return (false);
             }
-        }
 
-        var panno = $('#PanCardNumber').val();
-        var OrgName = $('#IndividualOrgName').val();
-        var correctPANName = '';
 
-        var externalPANAPIStatus="Y";
+            var panno = $('#PanCardNumber').val();
+            var OrgName = $('#IndividualOrgName').val();
+            var correctPANName = '';
 
-        externalPANAPIStatus = document.getElementById("ExternalPANAPIStatus").value.trim();
+            var externalPANAPIStatus="Y";
 
-        console.log(externalPANAPIStatus);
+            externalPANAPIStatus = document.getElementById("ExternalPANAPIStatus").value.trim();
 
-        if(externalPANAPIStatus=="Y")
-        {
+            console.log(externalPANAPIStatus);
 
-            $.ajax({
-                type: 'POST',
-                url: "PANValidation/MyHpOTCCardCustomer",
-                data: { PANNumber: document.getElementById("PanCardNumber").value },
-                dataType: "json",
-                success: function (data, status, xhr) 
-                {
-                    //debugger;
-                    var jsonData = JSON.parse(data);
-                     console.log(jsonData);
-                    if (status == 'success' && jsonData['status-code'] == '101') 
+            if(externalPANAPIStatus=="Y")
+            {
+
+                $.ajax({
+                    type: 'POST',
+                    url: "PANValidation/MyHpOTCCardCustomer",
+                    data: { PANNumber: document.getElementById("PanCardNumber").value },
+                    dataType: "json",
+                    success: function (data, status, xhr) 
                     {
-                        //document.applicationForm.IndividualOrgName.value = jsonData["result"]["name"];
-                        correctPANName = jsonData["result"]["name"];
-                        if (OrgName.toUpperCase() == correctPANName.toUpperCase()) 
+                        //debugger;
+                        var jsonData = JSON.parse(data);
+                         console.log(jsonData);
+                        if (status == 'success' && jsonData['status-code'] == '101') 
                         {
-                            localStorage.setItem("PANNOANDNAMEMATCHING", "1");
+                            //document.applicationForm.IndividualOrgName.value = jsonData["result"]["name"];
+                            correctPANName = jsonData["result"]["name"];
+                            if (OrgName.toUpperCase() == correctPANName.toUpperCase()) 
+                            {
+                                localStorage.setItem("PANNOANDNAMEMATCHING", "1");
+                            }
+                            else 
+                            {
+                                document.getElementById("PanCardNumber_error").innerHTML = "Customer Name not match with pan name";
+                                document.getElementById("PanCardNumber_error").className = "error";
+                                localStorage.setItem("PANNOANDNAMEMATCHING", "0");
+                            }
+                            console.log(OrgName);
+                            console.log(correctPANName);
+                            console.log(localStorage.getItem("PANNOANDNAMEMATCHING"));
                         }
                         else 
                         {
-                            document.getElementById("PanCardNumber_error").innerHTML = "Customer Name not match with pan name";
+                            document.getElementById("PanCardNumber_error").innerHTML = "Invalid Income Tax PAN Number";
                             document.getElementById("PanCardNumber_error").className = "error";
-                            localStorage.setItem("PANNOANDNAMEMATCHING", "0");
+                            localStorage.setItem("INVALIDPAN", "0");
                         }
-                        console.log(OrgName);
-                        console.log(correctPANName);
-                        console.log(localStorage.getItem("PANNOANDNAMEMATCHING"));
-                    }
-                    else 
+                    },
+                    error: function (jqXhr, textStatus, errorMessage) 
                     {
                         document.getElementById("PanCardNumber_error").innerHTML = "Invalid Income Tax PAN Number";
                         document.getElementById("PanCardNumber_error").className = "error";
                         localStorage.setItem("INVALIDPAN", "0");
                     }
-                },
-                error: function (jqXhr, textStatus, errorMessage) 
-                {
-                    document.getElementById("PanCardNumber_error").innerHTML = "Invalid Income Tax PAN Number";
-                    document.getElementById("PanCardNumber_error").className = "error";
-                    localStorage.setItem("INVALIDPAN", "0");
-                }
-            });
+                });
+
+            }
+            else
+            {
+                localStorage.setItem("INVALIDPAN", "1");
+                localStorage.setItem("PANNOANDNAMEMATCHING", "1");
+            }
 
         }
-        else
+        else 
         {
-            localStorage.setItem("INVALIDPAN", "1");
-            localStorage.setItem("PANNOANDNAMEMATCHING", "1");
+            document.getElementById("PanCardNumber_error").innerHTML = "";
         }
 
     });
@@ -1967,98 +2024,107 @@ function ValidatePAN()
     var OrgName = $('#IndividualOrgName').val().trim();
     var correctPANName = '';
 
-    if (panno == '')
-    {
-        document.getElementById("PanCardNumber_error").innerHTML = "Income Tax PAN field is required";
-        document.getElementById("PanCardNumber_error").className = "error";
-        return (false);
-    }
+    //if (panno == '')
+    //{
+    //    document.getElementById("PanCardNumber_error").innerHTML = "Income Tax PAN field is required";
+    //    document.getElementById("PanCardNumber_error").className = "error";
+    //    return (false);
+    //}
 
-    if (OrgName == '')
-    {
-        document.getElementById("IndividualOrgName_error").innerHTML = "Customer/Org.Name is required";
-        return (false);
-    }
-
-    if ($('#PanCardNumber').val().match(pancard))
-    {
-        document.getElementById("PanCardNumber_error").innerHTML = "Income Tax PAN Number is valid";
-        document.getElementById("PanCardNumber_error").className = "error text-success";
-    }
-    else
-    {
-        document.getElementById("PanCardNumber_error").innerHTML = "Invalid Income Tax PAN Number";
-        document.getElementById("PanCardNumber_error").className = "error";
-        return (false);
-    }
-
-    //solo Propritorship 4th Char Pan should be 'P'
-    let forthdigitPan = panno.substr(3, 1);
-    console.log(forthdigitPan);
-    if (forthdigitPan != 'P')
-    {
-        document.getElementById("PanCardNumber_error").innerHTML = "Invalid Income Tax PAN Number";
-        document.getElementById("PanCardNumber_error").className = "error";
-        //alert('Please Enter Valid Income Tax PAN');
-        return (false);
-    }
-    else
-    {
-        document.getElementById("PanCardNumber_error").innerHTML = "Income Tax PAN Number is valid";
-        document.getElementById("PanCardNumber_error").className = "error text-success";
-    }
-
-
-    var externalPANAPIStatus = "Y";
-
-    externalPANAPIStatus = document.getElementById("ExternalPANAPIStatus").value.trim();
-
-    console.log(externalPANAPIStatus);
-
-    if (externalPANAPIStatus == "Y")
+    if(panno != '')
     {
 
-        $.ajax({
-            type: 'POST',  // http method
-            url: '@Url.Action("PANValidation", "Customer")',
-            data: { PANNumber: panno },  // data to submit
-            dataType: "json",
-            success: function (data, status, xhr) {
-                //debugger;
-                var jsonData = JSON.parse(data);
-                if (status == 'success' && jsonData['status-code'] == '101') {
+        if (OrgName == '')
+        {
+            document.getElementById("IndividualOrgName_error").innerHTML = "Customer/Org.Name is required";
+            return (false);
+        }
 
-                    console.log(jsonData);
-                    //document.applicationForm.IndividualOrgName.value = jsonData["result"]["name"];
-                    correctPANName = jsonData["result"]["name"];
+        if ($('#PanCardNumber').val().match(pancard))
+        {
+            document.getElementById("PanCardNumber_error").innerHTML = "Income Tax PAN Number is valid";
+            document.getElementById("PanCardNumber_error").className = "error text-success";
+        }
+        else
+        {
+            document.getElementById("PanCardNumber_error").innerHTML = "Invalid Income Tax PAN Number";
+            document.getElementById("PanCardNumber_error").className = "error";
+            return (false);
+        }
 
-                    document.getElementById("PanCardNumber_error").innerHTML = "";
-                    document.getElementById("PanCardNumber_error").className = "error text-success";
+        //solo Propritorship 4th Char Pan should be 'P'
+        let forthdigitPan = panno.substr(3, 1);
+        console.log(forthdigitPan);
+        //if (forthdigitPan != 'P')
+        //{
+        //    document.getElementById("PanCardNumber_error").innerHTML = "Invalid Income Tax PAN Number";
+        //    document.getElementById("PanCardNumber_error").className = "error";
+        //    //alert('Please Enter Valid Income Tax PAN');
+        //    return (false);
+        //}
+        //else
+        //{
+        //    document.getElementById("PanCardNumber_error").innerHTML = "Income Tax PAN Number is valid";
+        //    document.getElementById("PanCardNumber_error").className = "error text-success";
+        //}
 
-                    console.log(correctPANName);
-                    console.log(OrgName);
-                    if (correctPANName.toUpperCase() != OrgName.toUpperCase()) {
-                        document.getElementById("PanCardNumber_error").innerHTML = "Customer Name not match with pan name";
-                        document.getElementById("PanCardNumber_error").className = "error";
-                    }
-                    else {
+
+        var externalPANAPIStatus = "Y";
+
+        externalPANAPIStatus = document.getElementById("ExternalPANAPIStatus").value.trim();
+
+        console.log(externalPANAPIStatus);
+
+        if (externalPANAPIStatus == "Y")
+        {
+
+            $.ajax({
+                type: 'POST',  // http method
+                url: '@Url.Action("PANValidation", "Customer")',
+                data: { PANNumber: panno },  // data to submit
+                dataType: "json",
+                success: function (data, status, xhr) {
+                    //debugger;
+                    var jsonData = JSON.parse(data);
+                    if (status == 'success' && jsonData['status-code'] == '101') {
+
+                        console.log(jsonData);
+                        //document.applicationForm.IndividualOrgName.value = jsonData["result"]["name"];
+                        correctPANName = jsonData["result"]["name"];
+
                         document.getElementById("PanCardNumber_error").innerHTML = "";
                         document.getElementById("PanCardNumber_error").className = "error text-success";
-                    }
 
-                }
-                else {
+                        console.log(correctPANName);
+                        console.log(OrgName);
+                        if (correctPANName.toUpperCase() != OrgName.toUpperCase()) {
+                            document.getElementById("PanCardNumber_error").innerHTML = "Customer Name not match with pan name";
+                            document.getElementById("PanCardNumber_error").className = "error";
+                        }
+                        else {
+                            document.getElementById("PanCardNumber_error").innerHTML = "";
+                            document.getElementById("PanCardNumber_error").className = "error text-success";
+                        }
+
+                    }
+                    else {
+                        document.getElementById("PanCardNumber_error").innerHTML = "Invalid Income Tax PAN Number";
+                        document.getElementById("PanCardNumber_error").className = "error";
+                        console.log(jsonData['status-code']);
+                    }
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
                     document.getElementById("PanCardNumber_error").innerHTML = "Invalid Income Tax PAN Number";
-                    document.getElementById("PanCardNumber_error").className = "error";
                     console.log(jsonData['status-code']);
+                    document.getElementById("PanCardNumber_error").className = "error";
                 }
-            },
-            error: function (jqXhr, textStatus, errorMessage) {
-                document.getElementById("PanCardNumber_error").innerHTML = "Invalid Income Tax PAN Number";
-                console.log(jsonData['status-code']);
-                document.getElementById("PanCardNumber_error").className = "error";
-            }
-        });
+            });
+        }
+
+    }
+    else
+    {
+         document.getElementById("PanCardNumber_error").innerHTML = "";
     }
     
 }
