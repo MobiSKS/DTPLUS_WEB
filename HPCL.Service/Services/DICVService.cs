@@ -476,6 +476,45 @@ namespace HPCL.Service.Services
             }
             return customerCardInfo;
         }
+        public async Task<DICVHotlistorReactivateViewModel> DICVHotlistAndReactivate()
+        {
+            DICVHotlistorReactivateViewModel model = new DICVHotlistorReactivateViewModel();
+
+            var entitytype = await _commonActionService.GetEntityTypeList();
+
+            List<HotlistEntity> newlist = new List<HotlistEntity>();
+
+            foreach (HotlistEntity entity in entitytype)
+            {
+                if (entity.EntityId == 1 || entity.EntityId == 3)
+                {
+                    newlist.Add(entity);
+                }
+            }
+
+            model.HotlistEntity.AddRange(newlist);
+
+            return model;
+        }
+        public async Task<List<DICVHotlistReason>> GetReasonListForEntities(string EntityTypeId)
+        {
+            var forms = new DICVHotlistRequestModel
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                EntityTypeId = EntityTypeId != "" ? Convert.ToInt32(EntityTypeId) : 0
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.dicvHotlistReason);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<DICVHotlistReason> HotlistReason = jarr.ToObject<List<DICVHotlistReason>>();
+            var sortedtList = HotlistReason.OrderBy(x => x.ReasonId).ToList();
+            return sortedtList;
+        }
 
     }
 }

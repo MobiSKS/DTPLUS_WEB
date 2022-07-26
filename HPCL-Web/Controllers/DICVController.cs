@@ -150,6 +150,20 @@ namespace HPCL_Web.Controllers
 
             return Json(addonOTCCardMapping);
         }
+        public async Task<IActionResult> DICVHotlistAndReactivate()
+        {
+            var model = await _dicvService.DICVHotlistAndReactivate();
+
+            return View(model);
+        }
+        [HttpPost]
+        public async Task<JsonResult> GetReasonListForEntities(string EntityTypeId)
+        {
+            var sortedtList = await _dicvService.GetReasonListForEntities(EntityTypeId);
+
+            ModelState.Clear();
+            return Json(sortedtList);
+        }
 
     }
 }
