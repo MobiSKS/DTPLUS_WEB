@@ -507,7 +507,7 @@ namespace HPCL.Service.Services
             return merchantList;
         }
 
-        public async Task<string> SaveCustomerMappingMerchant(string objCardMerchantMaps, string status)
+        public async Task<List<SuccessResponse>> SaveCustomerMappingMerchant(string objCardMerchantMaps, string status)
         {
             ObjCardMerchantMap[] arrs = JsonConvert.DeserializeObject<ObjCardMerchantMap[]>(objCardMerchantMaps);
 
@@ -526,7 +526,7 @@ namespace HPCL.Service.Services
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
             var jarr = obj["Data"].Value<JArray>();
             List<SuccessResponse> searchCcmsCard = jarr.ToObject<List<SuccessResponse>>();
-            return searchCcmsCard[0].Reason;
+            return searchCcmsCard;
         }
 
         public async Task<SearchAllowedMerchantResponse> SearchAllowedMerchant(SearchAllowedMerchant entity)
