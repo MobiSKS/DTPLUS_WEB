@@ -1,4 +1,5 @@
 ﻿using HPCL.Common.Models.CommonEntity;
+using HPCL.Common.Models.CommonEntity.ResponseEnities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,11 +18,11 @@ namespace HPCL.Common.Models.ViewModel.JCB
                 EntityId = 0,
                 EntityName = "--Select--"
             });
-            HotlistReason = new List<HotlistReason>();
-            HotlistReason.Add(new HotlistReason
+            HotlistReason = new List<JCBHotlistReason>();
+            HotlistReason.Add(new JCBHotlistReason
             {
-                StatusId = 0,
-                StatusName = "--Select--"
+                ReasonId = 0,
+                ReasonName = "--Select--"
             });
             HotlistStatus = new List<HotlistStatus>();
             HotlistStatus.Add(new HotlistStatus
@@ -46,7 +47,7 @@ namespace HPCL.Common.Models.ViewModel.JCB
         public string ReasonId { get; set; }
         public string ReasonDetails { get; set; }
         public virtual List<HotlistEntity> HotlistEntity { get; set; }
-        public virtual List<HotlistReason> HotlistReason { get; set; }
+        public virtual List<JCBHotlistReason> HotlistReason { get; set; }
         public virtual List<HotlistStatus> HotlistStatus { get; set; }
         public string FromDate { get; set; }
         public string ToDate { get; set; }

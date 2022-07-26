@@ -1101,7 +1101,7 @@ namespace HPCL.Service.Services
                 CardNo = cardNo,
                 ActionId = hotlistorReactivateViewModel.ActionId != "" ? Convert.ToInt32(hotlistorReactivateViewModel.ActionId) : 0,
                 ReasonId = hotlistorReactivateViewModel.ReasonId != "" ? Convert.ToInt32(hotlistorReactivateViewModel.ReasonId) : 0,
-                ReasonDetails = hotlistorReactivateViewModel.ReasonDetails,
+                RemarksOthers = hotlistorReactivateViewModel.ReasonDetails,
                 Remarks = hotlistorReactivateViewModel.Remarks,
                 ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
             };

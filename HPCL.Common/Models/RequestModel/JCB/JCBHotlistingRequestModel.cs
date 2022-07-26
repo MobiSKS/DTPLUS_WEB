@@ -14,7 +14,7 @@ namespace HPCL.Common.Models.RequestModel.JCB
         public int EntityTypeId { get; set; }
         public int ActionId { get; set; }
         public int ReasonId { get; set; }
-        public string ReasonDetails { get; set; }
+        public string RemarksOthers { get; set; }
         public string FromDate { get; set; }
         public string ToDate { get; set; }
         public string CustomerId { get; set; }
