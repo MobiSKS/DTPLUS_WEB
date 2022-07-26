@@ -77,7 +77,8 @@ namespace HPCL.Service.Services
                 UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 CardNo = CardNo,
-                CardStatus= string.IsNullOrEmpty(CardStatus)?1: Convert.ToInt32(CardStatus)
+                CardStatus= string.IsNullOrEmpty(CardStatus)?1: Convert.ToInt32(CardStatus),
+                CreatedBy= _httpContextAccessor.HttpContext.Session.GetString("UserId")
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
