@@ -19,6 +19,7 @@ namespace HPCL.Common.Models.ResponseModel.CustomerRequest
         public string YearOfRegistration { get; set; }
         public string Manufacturer { get; set; }
         public string CardCategory { get; set; }
+        public string HotlistStatus { get; set; }
         public int Status { get; set; }
         public string Reason { get; set; }
     }

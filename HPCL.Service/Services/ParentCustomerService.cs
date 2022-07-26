@@ -1219,8 +1219,8 @@ namespace HPCL.Service.Services
                 UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
-                CustomerID = reqModel.CustomerID,
-                ControlCardNo = reqModel.ControlCardNo, 
+                CustomerID = reqModel.CustomerID==""?null: reqModel.CustomerID,
+                ControlCardNo = reqModel.ControlCardNo==""?null:reqModel.ControlCardNo, 
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");

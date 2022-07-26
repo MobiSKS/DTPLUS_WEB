@@ -490,7 +490,8 @@ namespace HPCL.Service.Services
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 RoleName = manageRolesRequestModel.RoleName,
                 RoleDescription = manageRolesRequestModel.RoleDescription,
-                TypeInsertAddManageUsers = manageRolesRequestModel.TypeInsertAddManageUsers
+                TypeInsertAddManageUsers = manageRolesRequestModel.TypeInsertAddManageUsers,
+                CreatedBy= _httpContextAccessor.HttpContext.Session.GetString("UserId"),
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
