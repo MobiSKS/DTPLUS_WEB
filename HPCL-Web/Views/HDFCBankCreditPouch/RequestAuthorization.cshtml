@@ -421,10 +421,27 @@
                     success: function (res) {
 
                         if(res.reasonList[0].status == 1){
-                            document.getElementById("approvalRejectSection").style.display = "none";
-                            $("#successUpdate").html('');
-                            $("#successUpdate").append("<span>"+(res.reasonList[0].reason)+"</span>");
-                            document.getElementById("successUpdate").style.display = "block";
+
+                            $.ajax({
+                                url: "@Url.Action("PostAuthForCreditPouch", "Common")",
+                                type: "POST",
+                                traditional: true,
+                                data: { CreditPouchType : "HDFC" },
+                                success: function (resp) {
+
+                                    if(resp[0].status == 1){
+                                        document.getElementById("approvalRejectSection").style.display = "none";
+                                        $("#successUpdate").html('');
+                                        $("#successUpdate").append("<span>"+(res.reasonList[0].reason)+"</span>");
+                                        document.getElementById("successUpdate").style.display = "block";
+                                    }
+
+                                },
+                                error: function (ex) {
+                                    alert('Failed' + ex);
+                                }
+                            });
+
                         }else{
                             $("#noRecord").html('');
                             $("#noRecord").append("<span>"+(res.reasonList[0].reason)+"</span>");
