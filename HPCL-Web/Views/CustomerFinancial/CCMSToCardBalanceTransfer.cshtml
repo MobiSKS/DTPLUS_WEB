@@ -192,77 +192,88 @@
 
         if (res.searchList.success == true) {
 
-            var girdList = res.searchList.data.getCcmsToCardBalanceTransferDetailModelOutput;
+            if (res.searchList.data[0].status == 1) {
 
-            document.getElementById("noRecord").style.display = "none";
+                var girdList = res.searchList.data.getCcmsToCardBalanceTransferDetailModelOutput;
+
+                document.getElementById("noRecord").style.display = "none";
              
-            RestBal = res.searchList.data.availableCcmsBalanceModelOutput[0].availableCcmsBalance.toFixed(2);
+                RestBal = res.searchList.data.availableCcmsBalanceModelOutput[0].availableCcmsBalance.toFixed(2);
 
-            $("#avalLimit").html("");
-            $("#avalLimit").append("<p class='mb-0 text-center font-weight-bold'>Available CCMS Balance : " + RestBal + "</p>");
-            document.getElementById("avalLimit").style.display = "block";
+                $("#avalLimit").html("");
+                $("#avalLimit").append("<p class='mb-0 text-center font-weight-bold'>Available CCMS Balance : " + RestBal + "</p>");
+                document.getElementById("avalLimit").style.display = "block";
 
-            $('#CCMSToCardSearch').DataTable().clear().destroy();
+                $('#CCMSToCardSearch').DataTable().clear().destroy();
 
-            var tbl = $('#CCMSToCardSearch').DataTable({
-                paging: true,
-                searching: false,
-                stateSave: true,
-                "lengthMenu": [10, 20, 50, 100, 200, 500, 1000, 2000],
-                "autoWidth": false,
-                "oLanguage": {
-                    "sLengthMenu": "Display _MENU_ Records",
-                    "info": "Showing _START_ to _END_ of _TOTAL_ Records",
-                }
-            });
+                var tbl = $('#CCMSToCardSearch').DataTable({
+                    paging: true,
+                    searching: false,
+                    stateSave: true,
+                    "lengthMenu": [10, 20, 50, 100, 200, 500, 1000, 2000],
+                    "autoWidth": false,
+                    "oLanguage": {
+                        "sLengthMenu": "Display _MENU_ Records",
+                        "info": "Showing _START_ to _END_ of _TOTAL_ Records",
+                    }
+                });
             
-            for (var i = 0; i < girdList.length; i++) {
+                for (var i = 0; i < girdList.length; i++) {
                
-                var isDts;
-                var expDts;
+                    var isDts;
+                    var expDts;
 
-                if(((girdList[i].issueDate) == "01-01-0001 00:00:00") || ((girdList[i].issueDate) == "01-01-1900 00:00:00") || ((girdList[i].issueDate) == null)){
-                    isDts = "";
-                }else{
-                    isDts = moment(girdList[i].issueDate, 'DD-MM-YYYY').format('DD-MM-YYYY');
-                }
+                    if(((girdList[i].issueDate) == "01-01-0001 00:00:00") || ((girdList[i].issueDate) == "01-01-1900 00:00:00") || ((girdList[i].issueDate) == null)){
+                        isDts = "";
+                    }else{
+                        isDts = moment(girdList[i].issueDate, 'DD-MM-YYYY').format('DD-MM-YYYY');
+                    }
 
-                var checkBoxValid;
+                    var checkBoxValid;
 
-                if(girdList[i].status != "Active"){
-                    checkBoxValid = "<input type='checkbox' class='checkEnable' name='enableRow' disabled='disabled'>";
-                }else{
-                    checkBoxValid = "<input type='checkbox' class='checkEnable' name='enableRow'>";
-                }
+                    if(girdList[i].cardStatus != "Active"){
+                        checkBoxValid = "<input type='checkbox' class='checkEnable' name='enableRow' disabled='disabled'>";
+                    }else{
+                        checkBoxValid = "<input type='checkbox' class='checkEnable' name='enableRow'>";
+                    }
 
-                var srNumber = (i+1);
-                var pressCheck = checkBoxValid;
-                var cardNo = "<span class='cdn'>" + (girdList[i].cardNo || '') + "</span>";
-                var vechileNo = (girdList[i].vechileNo || '');
-                var mobileno = "<span class='mobN'>" + (girdList[i].mobileno || '') + "</span>";
-                var issueDate = isDts;
-                var status = (girdList[i].status || '');
-                var balance = "<span class='balanceAmt' id='balanceId_"+i+"'>"+(girdList[i].balance.toFixed(2))+"</span>";
-                var cashPurseLimit = "<span class='cashPurseLimit' id='cashPurseLimitId_"+i+"'>"+(girdList[i].cashPurseLimit.toFixed(2))+"</span>";
-                var ccmsLimit = (girdList[i].ccmsLimitValue.toFixed(2));
-                var transAmt = "<div style='width:160px;display:flex;'><input maxlength='10' onblur='amtToTransChange(this," + (i) + ")' class='form-control txnAmt cgl' id='amtTotransId_"+i+"' name='AmountToTransfer' type='text' readonly='readonly'><i style='display:none;margin-top:10px;' class='fa fa-exclamation-triangle errss' id='amtToTrans_error_"+i+"' aria-hidden='true'></i></div>";
+                    var srNumber = (i+1);
+                    var pressCheck = checkBoxValid;
+                    var cardNo = "<span class='cdn'>" + (girdList[i].cardNo || '') + "</span>";
+                    var vechileNo = (girdList[i].vechileNo || '');
+                    var mobileno = "<span class='mobN'>" + (girdList[i].mobileno || '') + "</span>";
+                    var issueDate = isDts;
+                    var status = (girdList[i].cardStatus || '');
+                    var balance = "<span class='balanceAmt' id='balanceId_"+i+"'>"+(girdList[i].balance.toFixed(2))+"</span>";
+                    var cashPurseLimit = "<span class='cashPurseLimit' id='cashPurseLimitId_"+i+"'>"+(girdList[i].cashPurseLimit.toFixed(2))+"</span>";
+                    var ccmsLimit = (girdList[i].ccmsLimitValue.toFixed(2));
+                    var transAmt = "<div style='width:160px;display:flex;'><input maxlength='10' onblur='amtToTransChange(this," + (i) + ")' class='form-control txnAmt cgl' id='amtTotransId_"+i+"' name='AmountToTransfer' type='text' readonly='readonly'><i style='display:none;margin-top:10px;' class='fa fa-exclamation-triangle errss' id='amtToTrans_error_"+i+"' aria-hidden='true'></i></div>";
 
-                tbl.row.add([
-                    srNumber,
-                    pressCheck,
-                    cardNo,
-                    vechileNo,
-                    mobileno,
-                    issueDate,
-                    status,
-                    balance,
-                    cashPurseLimit,
-                    ccmsLimit,
-                    transAmt
-                ]).draw();
+                    tbl.row.add([
+                        srNumber,
+                        pressCheck,
+                        cardNo,
+                        vechileNo,
+                        mobileno,
+                        issueDate,
+                        status,
+                        balance,
+                        cashPurseLimit,
+                        ccmsLimit,
+                        transAmt
+                    ]).draw();
                 
-                document.getElementById('searchResSection').style.display = 'block';
+                    document.getElementById('searchResSection').style.display = 'block';
+                }
+
+            } else {
+                document.getElementById("searchResSection").style.display = "none";
+                document.getElementById("avalLimit").style.display = "none";
+                $("#noRecord").html("");
+                $("#noRecord").append("<span>" + res.searchList.message + "</span>");
+                document.getElementById("noRecord").style.display = "block";
             }
+
         } else {
             document.getElementById("searchResSection").style.display = "none";
             document.getElementById("avalLimit").style.display = "none";
@@ -391,7 +402,6 @@
                                  document.getElementById('ErrorResponse').style.display = "block";
                             }
                         }
-                        document.getElementById('successUpdate').style.display = "block";
                     },
                     error: function (ex) {
                         alert('Failed' + ex);
