@@ -134,7 +134,7 @@
                     @if (Model.Data.Count() > 0)
                     {
                         <div id="CustomerSearch">
-                            <table class="datatable table table-striped table-bordered d-md-table table-responsive" style="width:100%;word-wrap:break-word;">
+                            <table class="datatable table table-striped table-bordered d-md-table table-responsive" style="width:100%;word-wrap:break-word;" id="customerDataTbl">
                                 <thead>
                                     <tr>
                                         <th>S.No.</th>
@@ -244,6 +244,24 @@
     </div>
 </div>
 <script type="text/javascript">
+   
+     $(document).ready(function () {
+         
+          
+          var search="@ViewBag.Search";
+          if(search=="Yes"){
+                $("#CustomerId").attr("readonly",true);
+                $("#FormNumber").attr("readonly",true);
+                $("#CustomerName").attr("readonly",true);
+                $("#StateId").attr("disabled",true);
+                $("#City").attr("readonly",true);
+                $("#NameOnCard").attr("readonly",true);
+                $("#MobileNumber").attr("readonly",true);
+                $(".rbSearchType").attr("disabled",true); 
+          }
+        });
+
+
       $(".rbSearchType").change(function () {
 
          if ($("#rbCustomerID").is(":checked")) {
@@ -260,6 +278,21 @@
          $("#CustomerID_error").html("");
 
      });
+     
+     $("#SortResult").change(function(){
+          var tbl = $('#customerDataTbl').DataTable();
+         var sortType=$("#SortResult").val();
+         if(sortType=="Status"){
+            tbl.order( [7,'asc'] ).draw();
+         }
+         else if(sortType=="NameonCard"){
+             tbl.order( [2,'asc'] ).draw();
+         }
+         else{
+             tbl.order( [1,'asc'] ).draw();
+         }
+     });
+
     $("#btnSearch").on("click",(function(e){
         var custtId = $("#CustomerId").val().trim();
         var formNumber = $("#FormNumber").val().trim();
@@ -340,16 +373,19 @@
                 flag = "N";
             }
         }
-        $("#CustomerId").attr("readonly",true);
-        $("#FormNumber").attr("readonly",true);
-        $("#CustomerName").attr("readonly",true);
-        $("#StateId").attr("disabled",true);
-        $("#City").val().attr("readonly",true);
-        $("#NameOnCard").attr("readonly",true);
-        $("#MobileNumber").attr("readonly",true);
-        $(".rbSearchType").attr("disabled",true); 
+       
         if (flag == "N")
             e.preventDefault();
+        else{
+            $("#CustomerId").attr("readonly",true);
+            $("#FormNumber").attr("readonly",true);
+            $("#CustomerName").attr("readonly",true);
+            $("#StateId").attr("disabled",true);
+            $("#City").attr("readonly",true);
+            $("#NameOnCard").attr("readonly",true);
+            $("#MobileNumber").attr("readonly",true);
+            $(".rbSearchType").attr("disabled",true); 
+        }
         //else{
 
         //    $("#custErrMsg").html("");
