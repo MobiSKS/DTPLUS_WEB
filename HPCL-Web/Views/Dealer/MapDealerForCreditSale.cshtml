@@ -9,11 +9,11 @@
             <li class="breadcrumb-item"><a href="@Url.Action("DealerCreditMapping","Dealer")" class="text_primary">Dealer Credit Mapping</a> </li>
             <li class="breadcrumb-item font-weight-light">Map Dealer For Credit Sale</li>
         </ul>
-        <div id="reason" class="mb-3 text-center alert" style="display:none" ></div>
+        <div id="reason" class="mb-3 text-center alert" style="display:none"></div>
         <form class="toBeHiddenOnSuccess">
             <div class="w-100">
                 <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
-                    <div class="border-1 rounded border-grey pb-3">
+                    <div class="border-1 rounded border-grey pb-0">
                         <p class="text-white px-3 py-2 m-0 font-weight-bold" style="background: #084693;">Map Dealer For Credit Sale</p>
                         <div class="col-lg-12 col-md-12 col-12 py-3 bg-white">
                             <div class="d-flex align-items-center flex-wrap">
@@ -26,17 +26,17 @@
                                                 <span class="error" id="CustomerId_error"></span>
                                             </div>
                                         </div>
-
                                     </div>
+                                </div>
+                                <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal col-md-3 col-12">No of Entries ID <sup class="text-danger">*</sup></label>
+                                        <label class="font-weight-normal offset-md-1 col-md-4 col-12">No of Entries ID <sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
                                                 @Html.TextBoxFor(m => m.NoofEntries, new { @class = "form-control", maxlength = "2", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
                                                 <span class="error" id="number_error"></span>
                                             </div>
                                         </div>
-
                                     </div>
                                 </div>
                             </div>
@@ -60,71 +60,66 @@
 
             @if (!String.IsNullOrEmpty(Model.NoofEntries))
             {
-                @for (int i = 0; i < Convert.ToInt32(Model.NoofEntries); i++)
-                {
+                <div class="bg-white py-3">
+                    @for (int i = 0; i < Convert.ToInt32(Model.NoofEntries); i++)
+                    {
 
-                    <div class="d-flex align-items-center flex-wrap">
-                        <div class="col-lg-4 col-12">
-                            <div class="d-flex align-items-center flex-wrap mb-3">
-                                <label class="font-weight-normal col-md-6 col-12">Merchant ID <sup class="text-danger">*</sup></label>
-                                <div class="col-md-6 col-12">
-                                    <div class="custom_select">
-                                        @Html.TextBoxFor(m => m.MerchantID, new { @id="MerchantID_"+@i, @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off", onblur="validateMerchant("+@i+");" })
-                                        <span class="error" id="MerchantID_error_@i"></span>
+                        <div class="d-flex align-items-center flex-wrap">
+                            <div class="col-lg-4 col-12">
+                                <div class="d-flex align-items-center flex-wrap mb-3">
+                                    <label class="font-weight-normal col-md-6 col-12">Merchant ID <sup class="text-danger">*</sup></label>
+                                    <div class="col-md-6 col-12">
+                                        <div class="custom_select">
+                                            @Html.TextBoxFor(m => m.MerchantID, new { @id="MerchantID_"+@i, @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off", onblur="validateMerchant("+@i+");" })
+                                            <span class="error" id="MerchantID_error_@i"></span>
+                                        </div>
                                     </div>
-                                </div>
 
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-12">
+                                <div class="d-flex align-items-center flex-wrap mb-3">
+                                    <label class="font-weight-normal col-md-6 col-12">Credit Period<sup class="text-danger">*</sup></label>
+                                    <div class="col-md-6 col-12">
+                                        <div class="custom_select">
+                                            @Html.DropDownListFor(m => m.CreditPeriod, new[]{
+                                    new SelectListItem(){ Text = "--Select--", Value = "-1" },
+                                    new SelectListItem(){ Text = "7 Days", Value = "7"},
+                                    new SelectListItem(){ Text = "14 Days", Value = "14"},
+                                    new SelectListItem(){ Text = "21 Days", Value = "21"},
+                                    new SelectListItem(){ Text = "30 Days", Value = "30"},
+                                    new SelectListItem(){ Text = "10 Days", Value = "10"},
+                                    }, null, new { @id="CreditPeriod_"+@i,@class = "form-control px-0" ,@onchange="validateCreditperiod("+@i+");"})
+                                            <span class="error" id="creditPeriod_error_@i"></span>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-12">
+                                <div class="d-flex align-items-center flex-wrap mb-3">
+                                    <label class="font-weight-normal col-md-6 col-12">Effective Date<sup class="text-danger">*</sup></label>
+                                    <div class="col-md-6 col-12">
+                                        <div class="custom_select">
+                                            @Html.TextBoxFor(m => m.EffectiveDate, new {@id="EffectiveDate_"+@i,  @class = "form-control nodefaultDate",@placeholder="dd-mm-yyyy", @autocomplete = "off", @onchange = "validateDate('EffectiveDate_"+@i+"','EffectiveDate_error_"+@i+"');" })
+                                            <span class="error" id="EffectiveDate_error_@i"></span>
+                                        </div>
+                                    </div>
+
+                                </div>
                             </div>
                         </div>
-                        <div class="col-lg-4 col-12">
-                            <div class="d-flex align-items-center flex-wrap mb-3">
-                                <label class="font-weight-normal col-md-6 col-12">Credit Period<sup class="text-danger">*</sup></label>
-                                <div class="col-md-6 col-12">
-                                    <div class="custom_select">
-                                        @Html.DropDownListFor(m => m.CreditPeriod, new[]{
-                                new SelectListItem(){ Text = "--Select--", Value = "-1" },
-                                new SelectListItem(){ Text = "7 Days", Value = "7"},
-                                new SelectListItem(){ Text = "14 Days", Value = "14"},
-                                new SelectListItem(){ Text = "21 Days", Value = "21"},
-                                new SelectListItem(){ Text = "30 Days", Value = "30"},
-                                new SelectListItem(){ Text = "10 Days", Value = "10"},
-                                }, null, new { @id="CreditPeriod_"+@i,@class = "form-control px-0" ,@onchange="validateCreditperiod("+@i+");"})
-                                        <span class="error" id="creditPeriod_error_@i"></span>
-                                    </div>
-                                </div>
-
-                            </div>
+                    }
+                    <div class="d-flex align-items-center justify-content-center mt-3 mb-3">
+                        <div class="px-2">
+                            <button class="btn btn_primary" type="button" onclick="SaveDealerForCreditSale();">SAVE</button>
                         </div>
-                        <div class="col-lg-4 col-12">
-                            <div class="d-flex align-items-center flex-wrap mb-3">
-                                <label class="font-weight-normal col-md-6 col-12">Effective Date<sup class="text-danger">*</sup></label>
-                                <div class="col-md-6 col-12">
-                                    <div class="custom_select">
-                                        @Html.TextBoxFor(m => m.EffectiveDate, new {@id="EffectiveDate_"+@i,  @class = "form-control nodefaultDate",@placeholder="dd-mm-yyyy", @autocomplete = "off", @onchange = "validateDate('EffectiveDate_"+@i+"','EffectiveDate_error_"+@i+"');" })
-                                        <span class="error" id="EffectiveDate_error_@i"></span>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-
-
-
                     </div>
-                }
-                <div class="d-flex align-items-center justify-content-center mt-3">
-                    <div class="px-2">
-                        <button class="btn btn_primary" type="button" onclick="SaveDealerForCreditSale();">SAVE</button>
-                    </div>
-
                 </div>
 
             }
 
-
         </div>
-
-
         <div class="clearfix"></div>
     </div>
 </div>
@@ -262,7 +257,7 @@
                          alert('Error.' + ex);
                      }
                  });
-             
+
          }
 
 
