@@ -20,7 +20,7 @@
                                 <div class="col-lg-12 col-md-12 col-12 pl-0 pr-md-2 pr-0 py-3">
                                     <div class="d-flex align-items-center justify-content-start flex-wrap">
                                         <div class="col-lg-6 col-12">
-                                            <div class="d-flex align-items-center flex-wrap">
+                                            <div class="d-flex align-items-center flex-wrap mb-3">
                                                 <label class="col-md-4 col-12">&nbsp;</label>
                                                 <div class="col-md-7 col-12">
                                                     <div class="custom_select">
@@ -41,7 +41,9 @@
                                                     @Html.TextBoxFor(m => m.CustomerId, new { @class = "form-control", maxlength = "10" , onkeypress = "return isNumberKey(event)"})
 
                                                 </div>
-                                                <span class="error" id="CustomerID_error"></span>
+                                                <div class="col-12  offset-4 offset-md-4 col-md-12">
+                                                    <span class="error" id="CustomerID_error"></span>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="col-lg-6 col-12 divmobile" style="display:none">
@@ -338,6 +340,14 @@
                 flag = "N";
             }
         }
+        $("#CustomerId").attr("readonly",true);
+        $("#FormNumber").attr("readonly",true);
+        $("#CustomerName").attr("readonly",true);
+        $("#StateId").attr("disabled",true);
+        $("#City").val().attr("readonly",true);
+        $("#NameOnCard").attr("readonly",true);
+        $("#MobileNumber").attr("readonly",true);
+        $(".rbSearchType").attr("disabled",true); 
         if (flag == "N")
             e.preventDefault();
         //else{
@@ -378,4 +388,97 @@
         });
 
     }
+    $("#CustomerId").on("blur", function ()
+    {
+        //debugger;
+        if (document.getElementById("CustomerId").value.trim() == "")
+        {
+            //$("#CustomerID_error").attr("style", "display:block");
+            //$("#CustomerID_error").html("Enter Customer ID");
+            //return false;
+        }
+        else if (!$("#CustomerId").val().match(mappedCustomerId))
+        {
+            $("#CustomerID_error").attr("style", "display:block");
+            $("#CustomerID_error").html("Invalid Customer ID");
+            //return false;
+        }
+        else
+        {
+            $("#CustomerID_error").html("");
+        }
+
+    });
+    $("#FormNumber").on("blur", function ()
+    {
+        var formNumber = $("#FormNumber").val().trim();
+        if (formNumber == "")
+        {
+            //$("#CustomerID_error").attr("style", "display:block");
+            //$("#CustomerID_error").html("Enter Customer ID");
+            //return false;
+        }
+        if(formNumber!="") {
+
+            if (formNumber.substring(0, 1) == "0") {
+                document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Min-Max 10 digits";
+            }
+            else
+            {
+                if (formNumber.length < 10)
+                {
+                    document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Min-Max 10 digits";
+                }
+                else
+                {
+                    if (!(formNumber.match(number))) {
+                        document.getElementById("formNumber_error").innerHTML = "Invalid Form Number. Min-Max 10 digits";
+                    }
+                    else{
+                        document.getElementById("formNumber_error").innerHTML = "";
+
+                    }
+
+                }
+            }
+        }
+
+    });
+    $("#CustomerName").on("blur", function ()
+    {
+         var customerName = $("#CustomerName").val().trim();
+         if(customerName!=""){
+            if (!customerName.match(nameWithSpaceCheck))
+            {
+                $("#customerName_error").html("Invalid Customer Name");
+                flag = "N";
+            }
+        }
+
+    });
+    $("#NameOnCard").on("blur", function ()
+    {
+         var nameOnCard = $("#NameOnCard").val().trim();
+         if(nameOnCard!=""){
+            if (!nameOnCard.match(nameWithSpaceCheck))
+            {
+                $("#nameonCard_error").html("Invalid Name on Card");
+                flag = "N";
+            }
+        }
+
+    });
+    $("#MobileNumber").on("blur", function ()
+    {
+         var mobileNo = $("#MobileNumber").val().trim();
+         if(mobileNo!=""){
+            if (!mobileNo.match(phone))
+            {
+                $("#mobile_error").html("Invalid Mobile No.");
+                flag = "N";
+            }
+        }
+
+    });
+
 </script>
