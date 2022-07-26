@@ -33,5 +33,7 @@ namespace HPCL.Common.Models.ResponseModel.CustomerFinancial
         public Decimal CashPurseLimit { get; set; }
         public string CCMSLimit { get; set; }
         public Decimal CCMSLimitValue { get; set; }
+        public string CardStatus { get; set; }
+        public string Reason { get; set; }
     }
 }

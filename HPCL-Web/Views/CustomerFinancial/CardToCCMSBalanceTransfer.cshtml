@@ -184,68 +184,78 @@
 
         if (res.searchList.success == true) {
 
-            var girdList = res.searchList.data;
+            if (res.searchList.data[0].status == 1) {
 
-            document.getElementById("noRecord").style.display = "none";
+                var girdList = res.searchList.data;
 
-            $('#cardToCCMSSearch').DataTable().clear().destroy();
+                document.getElementById("noRecord").style.display = "none";
 
-            var tbl = $('#cardToCCMSSearch').DataTable({
-                paging: true,
-                searching: false,
-                stateSave: true,
-                "lengthMenu": [10, 20, 50, 100, 200, 500, 1000, 2000],
-                "autoWidth": false,
-                "oLanguage": {
-                    "sLengthMenu": "Display _MENU_ Records",
-                    "info": "Showing _START_ to _END_ of _TOTAL_ Records",
-                }
-            });
+                $('#cardToCCMSSearch').DataTable().clear().destroy();
+
+                var tbl = $('#cardToCCMSSearch').DataTable({
+                    paging: true,
+                    searching: false,
+                    stateSave: true,
+                    "lengthMenu": [10, 20, 50, 100, 200, 500, 1000, 2000],
+                    "autoWidth": false,
+                    "oLanguage": {
+                        "sLengthMenu": "Display _MENU_ Records",
+                        "info": "Showing _START_ to _END_ of _TOTAL_ Records",
+                    }
+                });
     
-             for (var i = 0; i < girdList.length; i++) {
+                 for (var i = 0; i < girdList.length; i++) {
                  
-                var isDts;
-                var expDts;
+                    var isDts;
+                    var expDts;
 
-                if(((girdList[i].issueDate) == "01-01-0001 00:00:00") || ((girdList[i].issueDate) == "01-01-1900 00:00:00") || ((girdList[i].issueDate) == null)){
-                    isDts = "";
-                }else{
-                    isDts = moment(girdList[i].issueDate, 'DD-MM-YYYY').format('DD-MM-YYYY');
+                    if(((girdList[i].issueDate) == "01-01-0001 00:00:00") || ((girdList[i].issueDate) == "01-01-1900 00:00:00") || ((girdList[i].issueDate) == null)){
+                        isDts = "";
+                    }else{
+                        isDts = moment(girdList[i].issueDate, 'DD-MM-YYYY').format('DD-MM-YYYY');
+                    }
+
+                    var checkBoxValid;
+
+                    if((girdList[i].cardStatus) != "Active"){
+                        checkBoxValid = "<input type='checkbox' class='checkEnable' name='enableRow' disabled='disabled'>";
+                    }else{
+                        checkBoxValid = "<input type='checkbox' class='checkEnable' name='enableRow'>";
+                    }
+
+                    var srNumber = (i+1);
+                    var pressCheck = checkBoxValid;
+                    var cardNumber = "<span class='cdn'>" + (girdList[i].cardNumber || '') + "</span>";
+                    var vechileNo = (girdList[i].vechileNo || '');
+                    var mobileno = "<span class='mobN'>" + (girdList[i].mobileno || '') + "</span>";
+                    var issueDate = isDts;
+                    //var expiryDate = expDts;
+                    var status = (girdList[i].cardStatus || '');
+                    var cardBalance = "<span  class='balanceAmt' id='balanceId_"+i+"'>"+(girdList[i].cardBalance.toFixed(2))+"</span>";
+                    var transAmt = "<div style='width:160px;display:flex;'><input maxlength='10' onblur='amtToTransChange(this," + (i) + ")' class='form-control txnAmt cgl' id='amtTotransId_"+i+"' name='AmountToTransfer' type='text' readonly='readonly'><i style='display:none;margin-top:10px;' class='fa fa-exclamation-triangle errss' id='amtToTrans_error_"+i+"' aria-hidden='true'></i></div>";
+
+                    tbl.row.add([
+                        srNumber,
+                        pressCheck,
+                        cardNumber,
+                        vechileNo,
+                        mobileno,
+                        issueDate,
+                        status,
+                        cardBalance,
+                        transAmt
+                    ]).draw();
                 }
-
-                var checkBoxValid;
-
-                if(((girdList[i].cardBalance) == 0) || ((girdList[i].status) != "Active")){
-                    checkBoxValid = "<input type='checkbox' class='checkEnable' name='enableRow' disabled='disabled'>";
-                }else{
-                    checkBoxValid = "<input type='checkbox' class='checkEnable' name='enableRow'>";
-                }
-
-                var srNumber = (i+1);
-                var pressCheck = checkBoxValid;
-                var cardNumber = "<span class='cdn'>" + (girdList[i].cardNumber || '') + "</span>";
-                var vechileNo = (girdList[i].vechileNo || '');
-                var mobileno = "<span class='mobN'>" + (girdList[i].mobileno || '') + "</span>";
-                var issueDate = isDts;
-                //var expiryDate = expDts;
-                var status = (girdList[i].status || '');
-                var cardBalance = "<span  class='balanceAmt' id='balanceId_"+i+"'>"+(girdList[i].cardBalance.toFixed(2))+"</span>";
-                var transAmt = "<div style='width:160px;display:flex;'><input maxlength='10' onblur='amtToTransChange(this," + (i) + ")' class='form-control txnAmt cgl' id='amtTotransId_"+i+"' name='AmountToTransfer' type='text' readonly='readonly'><i style='display:none;margin-top:10px;' class='fa fa-exclamation-triangle errss' id='amtToTrans_error_"+i+"' aria-hidden='true'></i></div>";
-
-                tbl.row.add([
-                    srNumber,
-                    pressCheck,
-                    cardNumber,
-                    vechileNo,
-                    mobileno,
-                    issueDate,
-                    status,
-                    cardBalance,
-                    transAmt
-                ]).draw();
-            }
          
-            document.getElementById('searchResult').style.display = 'block';
+                document.getElementById('searchResult').style.display = 'block';
+
+            } else {
+                document.getElementById("searchResult").style.display = "none";
+                $("#noRecord").html("");
+                $("#noRecord").append("<span>" + res.searchList.data[0].reason + "</span>");
+                document.getElementById("noRecord").style.display = "block";
+            }
+
         } else {
             document.getElementById("searchResult").style.display = "none";
             $("#noRecord").html("");

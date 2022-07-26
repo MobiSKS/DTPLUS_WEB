@@ -20,5 +20,7 @@ namespace HPCL.Common.Models.ResponseModel.CustomerFinancial
         public string ExpiryDate { get; set; }
         public string Status { get; set; }
         public decimal CardBalance { get; set; }
+        public string CardStatus { get; set; }
+        public string Reason { get; set; }
     }
 }
