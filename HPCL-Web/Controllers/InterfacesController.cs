@@ -1,4 +1,5 @@
 ﻿using HPCL.Common.Helper;
+using HPCL.Common.Models.CommonEntity;
 using HPCL.Common.Models.ViewModel.Interface;
 using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -22,7 +23,7 @@ namespace HPCL_Web.Controllers
         }
         public IActionResult Index()
         {
-            return View();
+            return View(SessionMenuModel.menuList);
         }
         public async Task<IActionResult> SearchCustomerandCardForm()
         {
