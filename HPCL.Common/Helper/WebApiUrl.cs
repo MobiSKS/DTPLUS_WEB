@@ -631,7 +631,7 @@
         public static string updateJcbDealerCommunicationEmailResetPassword = "api/dtplus/JCB/update_jcb_dealer_communication_email_reset_password";
         #endregion
 
-        #region "Customer Dashboard"
+        #region Customer Dashboard
         public static string customerDashboardVerifyYourDetails = "api/dtplus/customerdashboard/customer_dashboard_verify_your_details";
         public static string customerDashboardAccountSummary = "api/dtplus/customerdashboard/customer_dashboard_account_summary";
         public static string customerDashboardLastTransactions = "api/dtplus/customerdashboard/customer_dashboard_last_transactions";
@@ -640,6 +640,7 @@
         public static string customerDashboardReminder = "api/dtplus/customerdashboard/customer_dashboard_reminder";
         public static string customerDashboardUpdateVerifyYourDetails = "api/dtplus/customerdashboard/customer_dashboard_update_verify_your_details";
         public static string customerDashboardLastestDrivestarsTransactions = "/api/dtplus/customerdashboard/customer_dashboard_latest_drivestars_transactions";
+        public static string customerDashboardGetNotificationContent = "/api/dtplus/customerdashboard/get_notification_content";
         #endregion
 
         #region DICV
@@ -673,16 +674,10 @@
         #endregion
 
 
-        #region "MO Dashboard"
-        public static string userinformation = "/api/dtplus/modashboard/mo_dashboard_user_information";
-        #endregion
-
-        #region "MO Dashboard"
-        public static string RegionInformation = "/api/dtplus/modashboard/mo_dashboard_region_information";
-        #endregion
-
-        #region "MO Dashboard"
-        public static string PendingTerminal = "/api/dtplus/modashboard/mo_dashboard_pending_terminal";
+        #region MO Dashboard
+        public static string userinformation = "api/dtplus/modashboard/mo_dashboard_user_information";
+        public static string RegionInformation = "api/dtplus/modashboard/mo_dashboard_region_information";
+        public static string PendingTerminal = "api/dtplus/modashboard/mo_dashboard_pending_terminal";
         #endregion
 
         #region Dashboard
