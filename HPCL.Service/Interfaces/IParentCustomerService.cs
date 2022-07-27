@@ -49,5 +49,6 @@ namespace HPCL.Service.Interfaces
         Task<ViewParentChildTransactionDetailsModel> GetParentChildTransactionDetails(ParentChildransactionRequestModel requestInfo);
         Task<BasicSearchViewModel> CustomerBasicSearch(BasicSearchViewModel reqEntity);
         Task<ViewParentChildTransactionDetailsModel> GetTransactionLocationDetails(PCTransactionLocationrequest requestInfo);
+        Task<ConvertParenttoAggregatorViewModel> ConvertParentToAggregator(string CustomerId, string NameOnCard);
     }
 }

@@ -543,6 +543,8 @@
 
         public static string getparentcustomerbasicsearch = "api/dtplus/ParentCustomer/get_parent_customer_basic_search";
         public static string getparenttransactionlocationdetails = "api/dtplus/ParentCustomer/transaction_details";
+        public static string Convertparentcustomertoaggregator = "api/dtplus/ParentCustomer/Convert_parent_customer_to_aggregator";
+        
 
 
         #endregion
@@ -657,6 +659,8 @@
         public static string getDicvBalanceOtcCard = "api/dtplus/DICV/get_dicv_balance_otc_card";
         public static string dicvHotlistReason = "api/dtplus/DICV/dicv_hotlist_reason";
         public static string dicvUpdateHotlistReactivate = "api/dtplus/DICV/dicv_update_hotlist_reactivate";
+        public static string getDicvCommunicationEmailResetPassword = "api/dtplus/DICV/get_dicv_communication_email_reset_password";
+        public static string updateDicvCommunicationEmailResetPassword = "api/dtplus/DICV/update_dicv_communication_email_reset_password";
         #endregion
 
         #region "Parent Customer HDFC Bank Credit Pouch"
