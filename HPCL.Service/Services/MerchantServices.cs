@@ -498,5 +498,30 @@ namespace HPCL.Service.Services
         }
 
         #endregion
+
+        public async Task<RequestforReactivationViewModel> MerchantRequestForReactivation(RequestforReactivationViewModel reqEntity)
+        {
+            RequestforReactivationViewModel requestforReactivationModel = new RequestforReactivationViewModel();
+
+            var Request = new MerchantReactivationRequestModel()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                MerchantID = reqEntity.MerchantId==null?"":reqEntity.MerchantId,
+                MerchantRO=reqEntity.RegionalOfficeId == null ? "0" : reqEntity.RegionalOfficeId,
+                MerchantZO =reqEntity.ZonalOfficeId == null ? "0" : reqEntity.ZonalOfficeId,
+                MerchantStatus =reqEntity.StatusId == null ? "0" : reqEntity.StatusId,
+                HotlistDate =reqEntity.HotlistDate == null ? "" : reqEntity.HotlistDate,
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(Request), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.GetRequestForApprovalReactivateMerchant);
+
+            requestforReactivationModel = JsonConvert.DeserializeObject<RequestforReactivationViewModel>(response);
+
+            return requestforReactivationModel;
+        }
     }
 }
