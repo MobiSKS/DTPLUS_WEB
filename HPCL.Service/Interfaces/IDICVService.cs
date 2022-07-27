@@ -38,5 +38,6 @@ namespace HPCL.Service.Interfaces
         Task<DICVViewCardSearch> SearchCardMapping(DICVViewCardDetails viewCardDetails);
         Task<List<string>> UpdateCards(DICVUpdateMobileandFastagNoInCard[] limitArray);
         Task<DICVViewCardSearch> AddCardMappingDetails(DICVViewCardDetails viewCardDetails);
+        Task<InsertResponse> ResetDICVDealerPassword(string UserName);
     }
 }

@@ -219,6 +219,12 @@ namespace HPCL_Web.Controllers
             ModelState.Clear();
             return Json(searchList);
         }
+        [HttpPost]
+        public async Task<JsonResult> ResetDICVDealerPassword(string UserName)
+        {
+            var result = await _dicvService.ResetDICVDealerPassword(UserName);
+            return Json(new { result = result });
+        }
 
     }
 }
