@@ -93,6 +93,34 @@ namespace HPCL.Service.Services
 
             return UserInformationResponseModel;
         }
+        public async Task<List<GetNotificationContentResponseModel>> GetNotificationContent(string UserType)
+        {
+            var GetNotificationContentForms = new MODashboard
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                UserType = "MO"
+            };
+
+            StringContent GetNotificationContentTableContent = new StringContent(JsonConvert.SerializeObject(GetNotificationContentForms), Encoding.UTF8, "application/json");
+
+            var GetNotificationContentResponse = await _requestService.CommonRequestService(GetNotificationContentTableContent, WebApiUrl.GetNotificationContent);
+
+            if (string.IsNullOrEmpty(GetNotificationContentResponse))
+            {
+                List<GetNotificationContentResponseModel> GetNotificationContentResponseModel = new List<GetNotificationContentResponseModel>();
+                return GetNotificationContentResponseModel;
+            }
+            else
+            {
+                JObject GetNotificationContentTableObj = JObject.Parse(JsonConvert.DeserializeObject(GetNotificationContentResponse).ToString());
+                var GetNotificationContentTableJarr = GetNotificationContentTableObj["Data"].Value<JArray>();
+                List<GetNotificationContentResponseModel> GetNotificationContentResponseModel = GetNotificationContentTableJarr.ToObject<List<GetNotificationContentResponseModel>>();
+
+                return GetNotificationContentResponseModel;
+            }
+        }
 
     }
 }

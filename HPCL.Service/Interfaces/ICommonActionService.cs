@@ -86,5 +86,6 @@ namespace HPCL.Service.Interfaces
         Task<List<GetLimitTypeResponse>> GetAllLimitType();
         Task<List<GetAccountStatementType>> GetAccountStatementRequestType();
         Task<List<CommonResponseData>> PostAuthForCreditPouch(string CreditPouchType);
+        Task<List<MerchantReactivationStatus>> GetMerchantReactivationStatus();
     }
 }
