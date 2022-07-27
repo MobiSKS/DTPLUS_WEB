@@ -11,6 +11,7 @@ using HPCL.Common.Models.ResponseModel.Customer;
 using HPCL.Common.Models.ResponseModel.MyHpOTCCardCustomer;
 using HPCL.Common.Models.ResponseModel.ParentCustomer;
 using HPCL.Common.Models.ViewModel.Locations;
+using HPCL.Common.Models.ViewModel.Merchant;
 using HPCL.Common.Models.ViewModel.Officers;
 using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Http;
@@ -1813,6 +1814,22 @@ namespace HPCL.Service.Services
             var jarr = obj["Data"].Value<JArray>();
             List<CommonResponseData> authStatus = jarr.ToObject<List<CommonResponseData>>();
             return authStatus;
+        }
+        public async Task<List<MerchantReactivationStatus>> GetMerchantReactivationStatus()
+        {
+            var requestInfo = new VehicleDuplicationCheckRequestModel()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId")
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(requestInfo), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getapprovedmerchantreactivationstatus);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<MerchantReactivationStatus> lst = jarr.ToObject<List<MerchantReactivationStatus>>();
+            return lst;
         }
     }
 }
