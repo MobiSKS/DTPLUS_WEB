@@ -13,6 +13,8 @@ using HPCL.Common.Models.CommonEntity;
 using HPCL.Common.Models.ResponseModel.Customer;
 using System;
 using HPCL.Common.Models.ViewModel.Aggregator;
+using HPCL.Common.Models.ViewModel.ParentCustomer;
+using Newtonsoft.Json;
 
 namespace HPCL_Web.Controllers
 {
@@ -22,10 +24,12 @@ namespace HPCL_Web.Controllers
     {
         private readonly IAggregatorService _aggregatorService;
         private readonly ICommonActionService _commonActionService;
-        public AggregatorController(IAggregatorService aggregatorService, ICommonActionService commonActionService)
+        private readonly IParentCustomerService _ParentCustomerService;
+        public AggregatorController(IAggregatorService aggregatorService, ICommonActionService commonActionService,IParentCustomerService parentCustomerService)
         {
             _aggregatorService = aggregatorService;
             _commonActionService = commonActionService;
+            _ParentCustomerService = parentCustomerService;
         }
         public IActionResult Index()
         {
@@ -294,9 +298,20 @@ namespace HPCL_Web.Controllers
             return Json(lstDistrict);
         }
 
-        public async Task<IActionResult> UpdateAggregatorCustomer(string FormNumber)
+        public async Task<IActionResult> UpdateAggregatorCustomer(string FormNumber,string customerId,string requestId)
         {
-            var modals = await _aggregatorService.UpdateAggregatorCustomer(FormNumber);
+            var modals = new ManageAggregatorViewModel();
+            if (FormNumber!=null && FormNumber!="")
+                modals = await _aggregatorService.UpdateAggregatorCustomer(FormNumber);
+            if (customerId!=null && customerId!="")
+            {
+                var parentModal = await _ParentCustomerService.UpdateParentCustomer(customerId, requestId);
+                if (parentModal != null)
+                {
+                    var reqEntity= JsonConvert.SerializeObject(parentModal);
+                    modals = JsonConvert.DeserializeObject<ManageAggregatorViewModel>(reqEntity);
+                }
+            }
             return View(modals);
         }
 
@@ -382,5 +397,6 @@ namespace HPCL_Web.Controllers
             ViewBag.FormNumber = FormNumber;
             return View();
         }
+        
     }
 }

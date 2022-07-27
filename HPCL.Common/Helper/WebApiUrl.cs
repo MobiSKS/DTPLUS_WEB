@@ -116,6 +116,9 @@
         public static string validateErpCode = "api/dtplus/merchant/validate_merchant_erp_code";
         public static string validateMappedMerchantID = "api/dtplus/merchant/check_mapped_merchant_id";
         public static string approveRejectMerchantUpdate = "api/dtplus/merchant/approve_reject_merchant_update";
+        public static string getapprovedmerchantreactivationstatus = "api/dtplus/merchant/get_approved_merchant_reactivation_status";
+        public static string GetRequestForApprovalReactivateMerchant = "api/dtplus/merchant/Get_Request_For_Approval_Reactivate_Merchant";
+
         #endregion
 
         #region customer
