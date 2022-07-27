@@ -30,7 +30,8 @@ namespace HPCL.Service.Services
                 UserAgent = CommonBase.useragent,
                 UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 CustomerID = entity.CustomerID ?? "",
-                ControlCardNo = entity.ControlCardNo ?? ""
+                ControlCardNo = entity.ControlCardNo ?? "",
+                CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");

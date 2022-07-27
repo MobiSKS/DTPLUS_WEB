@@ -543,6 +543,8 @@
 
         public static string getparentcustomerbasicsearch = "api/dtplus/ParentCustomer/get_parent_customer_basic_search";
         public static string getparenttransactionlocationdetails = "api/dtplus/ParentCustomer/transaction_details";
+        public static string Convertparentcustomertoaggregator = "api/dtplus/ParentCustomer/Convert_parent_customer_to_aggregator";
+        
 
 
         #endregion
