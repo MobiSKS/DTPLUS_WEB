@@ -14,11 +14,12 @@ namespace HPCL.Common.Models.ViewModel.MerchantDashboard
         public MerchantDashboardModel()
         {
           KeyInformationResponseModels = new List<KeyInformationResponseModel>();
-         todaysTransactionResponseModels = new List<TodaysTransactionSummaryResponseModel>();
+          todaysTransactionResponseModels = new List<TodaysTransactionSummaryResponseModel>();
             LastTrasactionResponseModels = new List<LastTrasactionResponseModel>();
             LastBatchDetailResponseModels = new List<LastBatchDetailResponseModel>();
             LastSaleReloadEarningDetailsResponseModels = new List<LastSaleReloadEarningDetailsResponseModel>();
             keyEVentsAndFigureResponseModels = new List<KeyEventAndFigureResponseModel>();
+
 
         }
         public List<KeyInformationResponseModel> KeyInformationResponseModels { get; set; }

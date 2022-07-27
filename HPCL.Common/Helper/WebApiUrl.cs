@@ -686,6 +686,7 @@
         public static string userinformation = "api/dtplus/modashboard/mo_dashboard_user_information";
         public static string RegionInformation = "api/dtplus/modashboard/mo_dashboard_region_information";
         public static string PendingTerminal = "api/dtplus/modashboard/mo_dashboard_pending_terminal";
+        public static string GetNotificationContent = "api/dtplus/customerdashboard/get_notification_content";
         #endregion
 
         #region Dashboard
