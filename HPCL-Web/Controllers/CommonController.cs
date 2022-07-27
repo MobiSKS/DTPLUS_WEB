@@ -270,6 +270,7 @@ namespace HPCL_Web.Controllers
 
             return Json(new { sbuTypeResponseList = sbuTypeResponseLst });
         }
+
         [HttpPost]
         public async Task<JsonResult> GetZonalOfficeListbySBUtype(string SBUTypeId)
         {
@@ -277,6 +278,15 @@ namespace HPCL_Web.Controllers
 
             ModelState.Clear();
             return Json(sortedtList);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> PostAuthForCreditPouch(string CreditPouchType)
+        {
+            var authStatus = await _commonActionService.PostAuthForCreditPouch(CreditPouchType);
+
+            ModelState.Clear();
+            return Json(authStatus);
         }
     }
 }

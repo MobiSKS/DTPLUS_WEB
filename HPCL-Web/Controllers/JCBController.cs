@@ -286,6 +286,26 @@ namespace HPCL_Web.Controllers
             var result = await _jcbService.ResetJCBDealerPassword(UserName);
             return Json(new { result = result });
         }
+        public async Task<IActionResult> JCBHotlistAndReactivate()
+        {
+            var model = await _jcbService.JCBHotlistAndReactivate();
+
+            return View(model);
+        }
+        [HttpPost]
+        public async Task<JsonResult> GetReasonListForEntities(string EntityTypeId)
+        {
+            var sortedtList = await _jcbService.GetReasonListForEntities(EntityTypeId);
+
+            ModelState.Clear();
+            return Json(sortedtList);
+        }
+        [HttpPost]
+        public async Task<IActionResult> ApplyHotlistorReactivate([FromBody] JCBHotlistorReactivateViewModel HotlistorReactivateResponseModel)
+        {
+            var result = await _jcbService.ApplyHotlistorReactivate(HotlistorReactivateResponseModel);
+            return Json(result);
+        }
 
     }
 }

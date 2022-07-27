@@ -92,6 +92,8 @@
 </div>
 </div>
 
+@using Microsoft.AspNetCore.Http;
+
 <script>
 
     $('#CustomerDefaultVal').on('paste', function (event) {
@@ -113,6 +115,16 @@
 
             return true;
         }
+
+        var loginType = '@Context.Session.GetString("LoginType")';
+
+        if (loginType == "Customer") {
+
+            $("#CustomerDefaultVal").val('@Context.Session.GetString("UserId")');
+            $("#CustomerDefaultVal").attr("readonly", true);
+
+        }
+
      });
 
     function OnSuccess(res) {

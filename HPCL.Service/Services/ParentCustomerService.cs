@@ -125,7 +125,7 @@ namespace HPCL.Service.Services
             {
                 KeyOfficialDOB = await _commonActionService.changeDateFormat(cust.KeyOfficialDOB);
             }
-            string CustomerTypeID = "901", CustomerSubTypeID = "913";//For Parent Customer
+            string CustomerTypeID = "981", CustomerSubTypeID = "913";//For Parent Customer
 
             var CustomerTypeForms = new CustomerCreationRequestModel
             {
@@ -426,7 +426,7 @@ namespace HPCL.Service.Services
             ManageProfileViewModel custMdl = new ManageProfileViewModel();
             custMdl.Remarks = "";
 
-            int CustomerTypeID = 901, CustomerSubTypeID = 913;
+            int CustomerTypeID = 981, CustomerSubTypeID = 913;
             custMdl.CustomerSubTypeMdl.AddRange(await _commonActionService.GetCustomerSubTypeDropdown(CustomerTypeID));
             custMdl.SBUTypes.AddRange(await _commonActionService.GetSbuTypeList());
             //custMdl.CustomerZonalOfficeMdl.AddRange(await _commonActionService.GetZonalOfficeListForDropdown());
@@ -789,7 +789,7 @@ namespace HPCL.Service.Services
                 KeyOfficialDOB = await _commonActionService.changeDateFormat(cust.KeyOfficialDOB);
             }
 
-            string CustomerTypeID = "901", CustomerSubTypeID = "913";//For Parent Customer
+            string CustomerTypeID = "981", CustomerSubTypeID = "913";//For Parent Customer
 
             var CustomerTypeForms = new CustomerCreationRequestModel
             {
@@ -1219,8 +1219,9 @@ namespace HPCL.Service.Services
                 UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
-                CustomerID = reqModel.CustomerID,
-                ControlCardNo = reqModel.ControlCardNo, 
+                CustomerID = reqModel.CustomerID==""?null: reqModel.CustomerID,
+                ControlCardNo = reqModel.ControlCardNo==""?null:reqModel.ControlCardNo, 
+                CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
@@ -1391,17 +1392,17 @@ namespace HPCL.Service.Services
                 UserAgent = CommonBase.useragent,
                 UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
-                CustomerId = reqEntity.CustomerId,
-                FormNumber = reqEntity.FormNumber,
-                MobileNo = reqEntity.MobileNumber,
-                NameonCard = reqEntity.NameOnCard,
-                CustomerName = reqEntity.CustomerName,
-                CommunicationCityName = reqEntity.City,
-                CommunicationStateId = reqEntity.StateId
+                CustomerId = reqEntity.CustomerId==""?null:reqEntity.CustomerId,
+                FormNumber = reqEntity.FormNumber == "" ? null : reqEntity.FormNumber,
+                MobileNo = reqEntity.MobileNumber == "" ? null : reqEntity.MobileNumber,
+                NameonCard = reqEntity.NameOnCard == "" ? null : reqEntity.NameOnCard,
+                CustomerName = reqEntity.CustomerName == "" ? null : reqEntity.CustomerName,
+                CommunicationCityName = reqEntity.City == "" ? null : reqEntity.City,
+                CommunicationStateId = reqEntity.StateId==null?"0": reqEntity.StateId
 
             };
 
-            StringContent content = new StringContent(JsonConvert.SerializeObject(Request), Encoding.UTF8, "application/json");
+             StringContent content = new StringContent(JsonConvert.SerializeObject(Request), Encoding.UTF8, "application/json");
 
             var response = await _requestService.CommonRequestService(content, WebApiUrl.getparentcustomerbasicsearch);
 
@@ -1432,6 +1433,30 @@ namespace HPCL.Service.Services
             List<TransactionLocationDetails> locationDetails = jarr.ToObject<List<TransactionLocationDetails>>();
             transactionResponse.TransactionLocationDetails.AddRange(locationDetails);
             return transactionResponse;
+        }
+        public async Task<ConvertParenttoAggregatorViewModel> ConvertParentToAggregator(string CustomerId, string NameOnCard)
+        {
+            ConvertParenttoAggregatorViewModel custMdl = new ConvertParenttoAggregatorViewModel();
+            if (CustomerId != null || NameOnCard != null && (CustomerId != "" || NameOnCard != ""))
+            {
+                var reqForms = new ManageProfilerequestModel
+                {
+                    UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                    UserAgent = CommonBase.useragent,
+                    UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                    CustomerId = CustomerId,
+                    NameOnCard = NameOnCard,
+                };
+
+                StringContent stringContent = new StringContent(JsonConvert.SerializeObject(reqForms), Encoding.UTF8, "application/json");
+
+                var responseContent = await _requestService.CommonRequestService(stringContent, WebApiUrl.Convertparentcustomertoaggregator);
+
+                JObject obj = JObject.Parse(JsonConvert.DeserializeObject(responseContent).ToString());
+                custMdl = obj.ToObject<ConvertParenttoAggregatorViewModel>();
+            }
+
+            return custMdl;
         }
         
     }

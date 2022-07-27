@@ -1,61 +1,27 @@
-﻿<div style="width:100%;">
-    <div class="py-3 px-0 p-md-4">
+﻿@model IEnumerable<HPCL.Common.Models.CommonEntity.MenuDetailModel>
+@using Microsoft.AspNetCore.Http;
+
+@{
+    int menuID = Model.FirstOrDefault().CalledMenuId;
+}
+
+<div style="width:100%;">
+    <div class="pt-3 px-0">
         <div class="d-flex align-items-stretch justify-content-start flex-wrap">
-            <div class="col-md-3 col-12 mb-3">
-                <a href="@Url.Action("Index","ApplicationFormDataEntry")" class="dashboard_thumb py-3 d-flex align-items-start justify-content-start">
-                    <div class="thumb_icon">
-                        <img src="assets/images/recharge_ccms.png" class="img-fluid" alt="">
-                    </div>
-                    <div class="px-3">
-                        <h4>DTP Support</h4>
-                        <p>DTP Support</p>
-                    </div>
-                </a>
-            </div>
-            @*<div class="col-md-3 col-12 mb-3">
-                <a href="#" class="dashboard_thumb py-3 d-flex align-items-start justify-content-start">
-                    <div class="thumb_icon">
-                        <img src="assets/images/list-accept.png" class="img-fluid" alt="">
-                    </div>
-                    <div class="px-3">
-                        <h4>CCMS Recharge Approval</h4>
-                        <p>Approve, Authorize the Recharge Requests for RTGS</p>
-                    </div>
-                </a>
-            </div>
-            <div class="col-md-3 col-12 mb-3">
-                <a href="#" class="dashboard_thumb py-3 d-flex align-items-start justify-content-start">
-                    <div class="thumb_icon">
-                        <img src="assets/images/reverse_ccms.png" class="img-fluid" alt="">
-                    </div>
-                    <div class="px-3">
-                        <h4>CCMS Recharge Reversal</h4>
-                        <p>Reverse CCMS Recharge through EFT</p>
-                    </div>
-                </a>
-            </div>
-            <div class="col-md-3 col-12 mb-3">
-                <a href="#" class="dashboard_thumb py-3 d-flex align-items-start justify-content-start">
-                    <div class="thumb_icon">
-                        <img src="assets/images/approval_ccms.png" class="img-fluid" alt="">
-                    </div>
-                    <div class="px-3">
-                        <h4>CCMS Reverse Recharge Approval</h4>
-                        <p>Approve Reversed CCMS Recharge Request</p>
-                    </div>
-                </a>
-            </div>
-            <div class="col-md-3 col-12 mb-3">
-                <a href="#" class="dashboard_thumb py-3 d-flex align-items-start justify-content-start">
-                    <div class="thumb_icon">
-                        <img src="assets/images/view_ccms.png" class="img-fluid" alt="">
-                    </div>
-                    <div class="px-3">
-                        <h4>View EFT Requests</h4>
-                        <p>View CCMS Recharge through EFT</p>
-                    </div>
-                </a>
-            </div>*@
+            @foreach (var mdl in Model.Where(x => x.ParentMenuId == menuID && x.UserID == Context.Session.GetString("UserId") && x.MenuLevel != 1).OrderBy(x => x.MenuOrder))
+            {
+                <div class="col-lg-3 col-md-4 col-12 mb-3">
+                    <a href="@Url.Action(mdl.Action, mdl.Controller)" class="dashboard_thumb py-3 d-flex align-items-start justify-content-start">
+                        <div class="thumb_icon">
+                            <img src="/icons/@mdl.ImageUrl" class="img-fluid" alt="">
+                        </div>
+                        <div class="px-3">
+                            <h4>@mdl.Heading</h4>
+                            <p>@mdl.Details</p>
+                        </div>
+                    </a>
+                </div>
+            }
         </div>
     </div>
 </div>
