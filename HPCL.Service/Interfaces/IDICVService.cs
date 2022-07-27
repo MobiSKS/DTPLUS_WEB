@@ -29,5 +29,8 @@ namespace HPCL.Service.Interfaces
         Task<DICVCustomerEnrollmentModel> GetDICVCustomerOTCCardPartialView([FromBody] List<DICVCardEntryDetails> arrs);
         Task<List<DICVOTCCardDetails>> GetAvailableDICVOTCCardForDealer(string DealerCode);
         Task<GetSalesExecutiveEmployeeIDResponse> GetDICVSalesExeEmpId(string dealerCode);
+        Task<DICVHotlistorReactivateViewModel> DICVHotlistAndReactivate();
+        Task<List<DICVHotlistReason>> GetReasonListForEntities(string EntityTypeId);
+        Task<List<string>> ApplyHotlistorReactivate([FromBody] DICVHotlistorReactivateViewModel hotlistorReactivateViewModel);
     }
 }

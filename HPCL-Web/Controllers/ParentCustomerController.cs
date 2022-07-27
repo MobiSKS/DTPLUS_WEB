@@ -344,7 +344,10 @@ namespace HPCL_Web.Controllers
             var modals = new BasicSearchViewModel();
 
             if ((reqEntity.CustomerId != null || reqEntity.CustomerName != null || reqEntity.NameOnCard != null || reqEntity.MobileNumber != null || reqEntity.FormNumber != null) && (reqEntity.CustomerId != "" || reqEntity.CustomerName != "" || reqEntity.NameOnCard != "" || reqEntity.MobileNumber != "" || reqEntity.FormNumber != ""))
+            {
                 modals = await _customerService.CustomerBasicSearch(reqEntity);
+                ViewBag.Search = "Yes";
+            }
             modals.SearchStateMdl.AddRange(await _commonActionService.GetStateList());
             return View(modals);
         }

@@ -476,6 +476,86 @@ namespace HPCL.Service.Services
             }
             return customerCardInfo;
         }
+        public async Task<DICVHotlistorReactivateViewModel> DICVHotlistAndReactivate()
+        {
+            DICVHotlistorReactivateViewModel model = new DICVHotlistorReactivateViewModel();
+
+            var entitytype = await _commonActionService.GetEntityTypeList();
+
+            List<HotlistEntity> newlist = new List<HotlistEntity>();
+
+            foreach (HotlistEntity entity in entitytype)
+            {
+                if (entity.EntityId == 1 || entity.EntityId == 3)
+                {
+                    newlist.Add(entity);
+                }
+            }
+
+            model.HotlistEntity.AddRange(newlist);
+
+            return model;
+        }
+        public async Task<List<DICVHotlistReason>> GetReasonListForEntities(string EntityTypeId)
+        {
+            var forms = new DICVHotlistRequestModel
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                EntityTypeId = EntityTypeId != "" ? Convert.ToInt32(EntityTypeId) : 0
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.dicvHotlistReason);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<DICVHotlistReason> HotlistReason = jarr.ToObject<List<DICVHotlistReason>>();
+            var sortedtList = HotlistReason.OrderBy(x => x.ReasonId).ToList();
+            return sortedtList;
+        }
+        public async Task<List<string>> ApplyHotlistorReactivate([FromBody] DICVHotlistorReactivateViewModel hotlistorReactivateViewModel)
+        {
+            string customerId = "";
+            string cardNo = "";
+            if (hotlistorReactivateViewModel.EntityTypeId == "1")
+                customerId = hotlistorReactivateViewModel.EntityIdVal;
+            if (hotlistorReactivateViewModel.EntityTypeId == "3")
+                cardNo = hotlistorReactivateViewModel.EntityIdVal;
+
+            var hotlistRequest = new DICVHotlistingRequestModel
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                EntityTypeId = hotlistorReactivateViewModel.EntityTypeId != "" ? Convert.ToInt32(hotlistorReactivateViewModel.EntityTypeId) : 0,
+                CustomerId = customerId,
+                CardNo = cardNo,
+                ActionId = hotlistorReactivateViewModel.ActionId != "" ? Convert.ToInt32(hotlistorReactivateViewModel.ActionId) : 0,
+                ReasonId = hotlistorReactivateViewModel.ReasonId != "" ? Convert.ToInt32(hotlistorReactivateViewModel.ReasonId) : 0,
+                RemarksOthers = hotlistorReactivateViewModel.ReasonDetails,
+                Remarks = hotlistorReactivateViewModel.Remarks,
+                ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
+            };
+
+            StringContent requestContent = new StringContent(JsonConvert.SerializeObject(hotlistRequest), Encoding.UTF8, "application/json");
+            var Response = await _requestService.CommonRequestService(requestContent, WebApiUrl.dicvUpdateHotlistReactivate);
+            JObject ResponseObj = JObject.Parse(JsonConvert.DeserializeObject(Response).ToString());
+            List<string> messageList = new List<string>();
+            if (ResponseObj["Status_Code"].ToString() == "200")
+            {
+                var responseJarr = ResponseObj["Data"].Value<JArray>();
+                List<HotlistSuccessResponse> responseList = responseJarr.ToObject<List<HotlistSuccessResponse>>();
+                messageList.Add(responseList[0].Status.ToString());
+                messageList.Add(responseList[0].ActionName.ToString());
+            }
+            else
+            {
+                messageList.Add(ResponseObj["Message"].ToString());
+            }
+            return messageList;
+        }
 
     }
 }
