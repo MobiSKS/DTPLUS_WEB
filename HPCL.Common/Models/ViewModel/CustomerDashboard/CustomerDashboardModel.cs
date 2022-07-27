@@ -17,6 +17,7 @@ namespace HPCL.Common.Models.ViewModel
             KeyEventsResponseModels = new List<KeyEventsResponseModel>();
             LastFiveTransactionsResponseModels = new List<LastFiveTransactionsResponseModel>();
             LastestDrivestarsTransactionResponseModel = new List<LastestDrivestarsTransactionResponseModel>();
+            GetNotificationContentResponseModel = new List<GetNotificationContentResponseModel>();
         }
         public List<AccountSummaryResponseModel> accountSummaryResponseModels { get; set; }
         public List<VerifyYourDetailsResponseModel> verifyYourDetailsResponseModels { get; set; }
@@ -24,6 +25,7 @@ namespace HPCL.Common.Models.ViewModel
         public List<KeyEventsResponseModel> KeyEventsResponseModels { get; set; }
         public List<LastFiveTransactionsResponseModel> LastFiveTransactionsResponseModels { get; set; }
         public List<LastestDrivestarsTransactionResponseModel> LastestDrivestarsTransactionResponseModel { get; set; }
+        public List<GetNotificationContentResponseModel> GetNotificationContentResponseModel { get; set; }
     }
 
 }

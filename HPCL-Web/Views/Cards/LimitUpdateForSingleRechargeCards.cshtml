@@ -150,6 +150,29 @@
 
             return true;
         }
+
+        var loginType = '@Context.Session.GetString("LoginType")';
+
+        if (loginType == "Customer") {
+
+            $("#CustomerDefaultVal").val('@Context.Session.GetString("UserId")');
+            $("#CustomerDefaultVal").attr("readonly", true);
+
+            $.ajax({
+                url: "@Url.Action("LimitUpdateForSingleRechargeCards", "Cards")",
+                type: "POST",
+                dataType: "JSON",
+                data: $("#formVal").serialize(),
+                success: function (res) {
+                    OnSuccess(res);
+                },
+                error: function (ex) {
+                    alert('Failed' + ex);
+                }
+            });
+
+        }
+
      });
 
       function OnSuccess(res) {
