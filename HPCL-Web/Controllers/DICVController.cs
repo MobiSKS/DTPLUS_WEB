@@ -164,6 +164,12 @@ namespace HPCL_Web.Controllers
             ModelState.Clear();
             return Json(sortedtList);
         }
+        [HttpPost]
+        public async Task<IActionResult> ApplyHotlistorReactivate([FromBody] DICVHotlistorReactivateViewModel HotlistorReactivateResponseModel)
+        {
+            var result = await _dicvService.ApplyHotlistorReactivate(HotlistorReactivateResponseModel);
+            return Json(result);
+        }
 
     }
 }

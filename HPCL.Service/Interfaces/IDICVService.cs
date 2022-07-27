@@ -31,5 +31,6 @@ namespace HPCL.Service.Interfaces
         Task<GetSalesExecutiveEmployeeIDResponse> GetDICVSalesExeEmpId(string dealerCode);
         Task<DICVHotlistorReactivateViewModel> DICVHotlistAndReactivate();
         Task<List<DICVHotlistReason>> GetReasonListForEntities(string EntityTypeId);
+        Task<List<string>> ApplyHotlistorReactivate([FromBody] DICVHotlistorReactivateViewModel hotlistorReactivateViewModel);
     }
 }
