@@ -32,5 +32,7 @@ namespace HPCL.Service.Interfaces
         Task<DICVHotlistorReactivateViewModel> DICVHotlistAndReactivate();
         Task<List<DICVHotlistReason>> GetReasonListForEntities(string EntityTypeId);
         Task<List<string>> ApplyHotlistorReactivate([FromBody] DICVHotlistorReactivateViewModel hotlistorReactivateViewModel);
+        Task<GetDICVCommunicationEmailResetPasswordResponse> GetDICVCommunicationEmailResetPassword(string CustomerId);
+        Task<InsertResponse> UpdateDICVCommunicationEmailResetPassword(string CustomerId, string AlternateEmailId);
     }
 }
