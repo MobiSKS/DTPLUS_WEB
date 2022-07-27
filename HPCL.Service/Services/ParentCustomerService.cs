@@ -1434,6 +1434,30 @@ namespace HPCL.Service.Services
             transactionResponse.TransactionLocationDetails.AddRange(locationDetails);
             return transactionResponse;
         }
+        public async Task<ConvertParenttoAggregatorViewModel> ConvertParentToAggregator(string CustomerId, string NameOnCard)
+        {
+            ConvertParenttoAggregatorViewModel custMdl = new ConvertParenttoAggregatorViewModel();
+            if (CustomerId != null || NameOnCard != null && (CustomerId != "" || NameOnCard != ""))
+            {
+                var reqForms = new ManageProfilerequestModel
+                {
+                    UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                    UserAgent = CommonBase.useragent,
+                    UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                    CustomerId = CustomerId,
+                    NameOnCard = NameOnCard,
+                };
+
+                StringContent stringContent = new StringContent(JsonConvert.SerializeObject(reqForms), Encoding.UTF8, "application/json");
+
+                var responseContent = await _requestService.CommonRequestService(stringContent, WebApiUrl.Convertparentcustomertoaggregator);
+
+                JObject obj = JObject.Parse(JsonConvert.DeserializeObject(responseContent).ToString());
+                custMdl = obj.ToObject<ConvertParenttoAggregatorViewModel>();
+            }
+
+            return custMdl;
+        }
         
     }
 }
