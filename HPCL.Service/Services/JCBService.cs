@@ -1115,7 +1115,7 @@ namespace HPCL.Service.Services
                 var responseJarr = ResponseObj["Data"].Value<JArray>();
                 List<HotlistSuccessResponse> responseList = responseJarr.ToObject<List<HotlistSuccessResponse>>();
                 messageList.Add(responseList[0].Status.ToString());
-                messageList.Add(responseList[0].ActionName.ToString());
+                messageList.Add(responseList[0].Reason.ToString());
             }
             else
             {

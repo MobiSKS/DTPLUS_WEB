@@ -35,7 +35,7 @@ namespace HPCL.Service.Services
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
                 UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
-                CustomerID = CustomerId
+                CustomerID = "2000000237"
             };
 
             StringContent customerDashboardAccountSummaryTableContent = new StringContent(JsonConvert.SerializeObject(customerDashboardAccountSummaryForms), Encoding.UTF8, "application/json");
@@ -63,7 +63,7 @@ namespace HPCL.Service.Services
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
                 UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
-                CustomerID = CustomerId
+                CustomerID = "2000000237"
             };
 
             StringContent verifyYourDetailsTableContent = new StringContent(JsonConvert.SerializeObject(verifyYourDetailsForms), Encoding.UTF8, "application/json");
@@ -93,7 +93,7 @@ namespace HPCL.Service.Services
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
                 UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
-                CustomerID = CustomerId
+                CustomerID = "2000000114"
             };
 
             StringContent reminderTableContent = new StringContent(JsonConvert.SerializeObject(reminderForms), Encoding.UTF8, "application/json");
@@ -145,13 +145,14 @@ namespace HPCL.Service.Services
         }
 
         public async Task<List<LastFiveTransactionsResponseModel>> LastFiveTransactions(string CustomerId)
+        
         {
             var LastFiveTransactionsForms = new CustomerDashboardRequestModel
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
                 UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
-                CustomerID = CustomerId
+                CustomerID = "2000000141"
             };
 
             StringContent LastFiveTransactionsTableContent = new StringContent(JsonConvert.SerializeObject(LastFiveTransactionsForms), Encoding.UTF8, "application/json");
@@ -180,7 +181,7 @@ namespace HPCL.Service.Services
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
                 UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
-                CustomerID = CustomerId
+                CustomerID = ""
             };
 
             StringContent LastestDrivestarsTransactionTableContent = new StringContent(JsonConvert.SerializeObject(LastestDrivestarsTransactionForms), Encoding.UTF8, "application/json");
@@ -200,6 +201,40 @@ namespace HPCL.Service.Services
 
                 return LastestDrivestarsTransactionResponseModel;
             }
+        }
+
+        public async Task<List<GetNotificationContentResponseModel>> GetNotificationContent(string UserType)
+        {
+           var GetNotificationContentForms = new CustomerDashboardRequestModel
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                UserType = "Customer"
+            };
+
+            StringContent GetNotificationContentTableContent = new StringContent(JsonConvert.SerializeObject(GetNotificationContentForms), Encoding.UTF8, "application/json");
+
+            var GetNotificationContentResponse = await _requestService.CommonRequestService(GetNotificationContentTableContent, WebApiUrl.customerDashboardGetNotificationContent);
+
+            if (string.IsNullOrEmpty(GetNotificationContentResponse))
+            {
+                List<GetNotificationContentResponseModel> GetNotificationContentResponseModel = new List<GetNotificationContentResponseModel>();
+                return GetNotificationContentResponseModel;
+            }
+            else
+            {
+                JObject GetNotificationContentTableObj = JObject.Parse(JsonConvert.DeserializeObject(GetNotificationContentResponse).ToString());
+                var GetNotificationContentTableJarr = GetNotificationContentTableObj["Data"].Value<JArray>();
+                List<GetNotificationContentResponseModel> GetNotificationContentResponseModel = GetNotificationContentTableJarr.ToObject<List<GetNotificationContentResponseModel>>();
+
+                return GetNotificationContentResponseModel;
+            }
+        }
+
+        public Task GetNotificationContent(object userType)
+        {
+            throw new NotImplementedException();
         }
     }
 }
