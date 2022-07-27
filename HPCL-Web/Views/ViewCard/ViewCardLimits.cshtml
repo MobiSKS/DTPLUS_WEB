@@ -23,7 +23,7 @@
                                         <div class="col-md-7 col-12"> 
                                             <div class="d-flex align-items-center justify-content-start">
                                                 <div class="px-2">
-                                                    <button class="btn btn_primary" type="button" id="btnSearch"><i class="fa fa-search">&nbsp;</i> SEARCH</button>
+                                                    <button class="btn btn_primary" type="button" id="btnSearch" onclick="ViewCardSearchFun()"><i class="fa fa-search">&nbsp;</i> SEARCH</button>
                                                 </div>
                                                 <div class="px-2">
                                                     <button class="btn btn_primary" id="btnReset"><i class="fa fa-refresh">&nbsp;</i> RESET</button>
@@ -51,17 +51,33 @@
             
         </div>
     </div>
+
+    @using Microsoft.AspNetCore.Http;
+
     <script type="text/javascript">
      $(document).ready(function () {
+
+         var loginType = '@Context.Session.GetString("LoginType")';
+
+         if (loginType == "Customer") {
+
+            $("#Customerid").val('@Context.Session.GetString("UserId")');
+            $("#Customerid").attr("readonly", true);
+
+            ViewCardSearchFun();
+
+        }
     });
-     $("#btnReset").click(function () {
+
+    $("#btnReset").click(function () {
        window.location.reload(true);
     });
-    $("#btnSearch").on("click", (function (e) {
 
-       var flag="Y";
+    function ViewCardSearchFun(){
+
+        var flag="Y";
         var customerId = $("#Customerid").val();
-         if (customerId != "") {
+        if (customerId != "") {
               if (!customerId.match(mappedCustomerId)) {
                   $("#customerId_error").attr("style", "display:block");
                   $("#customerId_error").html("Invalid Customer ID");
@@ -71,13 +87,13 @@
                  $("#customerId_error").attr("style", "display:none");
                  $("#customerId_error").html("");
               }
-          }
-          else
-          {
-                $("#customerId_error").attr("style", "display:block");
-                $("#customerId_error").html("Please enter Customer ID");
-                flag = "N";
-          }
+        }
+        else
+        {
+            $("#customerId_error").attr("style", "display:block");
+            $("#customerId_error").html("Please enter Customer ID");
+            flag = "N";
+        }
         if(flag=="Y"){
               $.ajax({
                  type: 'GET',  // http method
@@ -103,11 +119,9 @@
                      alert("Error"+ errorMessage);
                  }
                 });
-        }
-        
-             
-             
-    }));
+        }     
+    }
+
     $("#Customerid").on("blur", function () {
          var customerId = $("#Customerid").val();
           if (customerId != "") {
