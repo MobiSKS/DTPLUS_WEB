@@ -170,6 +170,25 @@ namespace HPCL_Web.Controllers
             var result = await _dicvService.ApplyHotlistorReactivate(HotlistorReactivateResponseModel);
             return Json(result);
         }
+        public async Task<IActionResult> DICVResetPasswordByMo()
+        {
+            var custMdl = new DICVCustomerResetPassword();
+
+            return View(custMdl);
+        }
+        [HttpPost]
+        public async Task<JsonResult> GetDICVCommunicationEmailResetPassword(string CustomerId)
+        {
+            var responseData = await _dicvService.GetDICVCommunicationEmailResetPassword(CustomerId);
+            ModelState.Clear();
+            return Json(responseData);
+        }
+        [HttpPost]
+        public async Task<JsonResult> UpdateDICVCommunicationEmailResetPassword(string CustomerId, string AlternateEmailId)
+        {
+            var result = await _dicvService.UpdateDICVCommunicationEmailResetPassword(CustomerId, AlternateEmailId);
+            return Json(new { result = result });
+        }
 
     }
 }

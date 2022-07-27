@@ -532,10 +532,10 @@ namespace HPCL.Service.Services
                 EntityTypeId = hotlistorReactivateViewModel.EntityTypeId != "" ? Convert.ToInt32(hotlistorReactivateViewModel.EntityTypeId) : 0,
                 CustomerId = customerId,
                 CardNo = cardNo,
-                ActionId = hotlistorReactivateViewModel.ActionId != "" ? Convert.ToInt32(hotlistorReactivateViewModel.ActionId) : 0,
                 ReasonId = hotlistorReactivateViewModel.ReasonId != "" ? Convert.ToInt32(hotlistorReactivateViewModel.ReasonId) : 0,
-                RemarksOthers = hotlistorReactivateViewModel.ReasonDetails,
                 Remarks = hotlistorReactivateViewModel.Remarks,
+                RemarksOthers = hotlistorReactivateViewModel.ReasonDetails,
+                ActionId = hotlistorReactivateViewModel.ActionId != "" ? Convert.ToInt32(hotlistorReactivateViewModel.ActionId) : 0,
                 ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
             };
 
@@ -555,6 +555,52 @@ namespace HPCL.Service.Services
                 messageList.Add(ResponseObj["Message"].ToString());
             }
             return messageList;
+        }
+        public async Task<GetDICVCommunicationEmailResetPasswordResponse> GetDICVCommunicationEmailResetPassword(string CustomerId)
+        {
+            var responseData = new GetDICVCommunicationEmailResetPasswordResponse();
+
+            var requestinfo = new GetDICVCommunicationEmailResetPasswordRequest()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                CustomerId = CustomerId
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(requestinfo), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getDicvCommunicationEmailResetPassword);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<GetDICVCommunicationEmailResetPasswordResponse> searchList = jarr.ToObject<List<GetDICVCommunicationEmailResetPasswordResponse>>();
+            responseData = searchList[0];
+            responseData.Internel_Status_Code = Convert.ToInt32(obj["Internel_Status_Code"].ToString());
+
+            return responseData;
+        }
+        public async Task<InsertResponse> UpdateDICVCommunicationEmailResetPassword(string CustomerId, string AlternateEmailId)
+        {
+            var email = "";
+
+            email = AlternateEmailId.ToLower();
+
+            var request = new DICVCustomerResetPassword
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                CustomerId = CustomerId,
+                AlternateEmailId = AlternateEmailId
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.updateDicvCommunicationEmailResetPassword);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            InsertResponse result = obj.ToObject<InsertResponse>();
+            return result;
         }
 
     }
