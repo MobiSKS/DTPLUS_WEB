@@ -114,10 +114,18 @@
 
 <script type="text/javascript">
 
+    var loginType = '@Context.Session.GetString("LoginType")';
+
     function resetClick() {
-        $("#custIdVal").attr("readonly", false);
-        $("#CardNo").attr("readonly", false);
-        $("#MobileNo").attr("readonly", false);
+        if (loginType == "Customer") {
+            $("#custIdVal").attr("readonly", true);
+            $("#CardNo").attr("readonly", false);
+            $("#MobileNo").attr("readonly", false);
+        }else{
+            $("#custIdVal").attr("readonly", false);
+            $("#CardNo").attr("readonly", false);
+            $("#MobileNo").attr("readonly", false);
+        }
         window.location.reload(true);
     }
 
@@ -151,9 +159,10 @@
             return true;
         }
 
-        var loginType = '@Context.Session.GetString("LoginType")';
-
         if (loginType == "Customer") {
+
+            $("#custIdVal").val('@Context.Session.GetString("UserId")');
+            $("#custIdVal").attr("readonly", true);
 
             $.ajax({
                 url: "@Url.Action("CardToCardBalanceTransfer", "CustomerFinancial")",
@@ -162,9 +171,6 @@
                 success: function (data) {
 
                     OnSuccess(data);
-
-                    $("#custIdVal").val('@Context.Session.GetString("UserId")');
-                    $("#custIdVal").attr("readonly", true);
 
                 },
                 error: function (ex) {
