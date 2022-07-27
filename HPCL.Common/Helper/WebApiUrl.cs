@@ -497,7 +497,7 @@
         public static string HdfcInitiateCcmsRechargeUrl = "api/dtplus/HDFCCreditPouch/initiate_cp_recharge";
         public static string RequestToAvailCheckUrl = "api/dtplus/HDFCCreditPouch/chk_eligibility";
         public static string RequestToAvailEnrollUrl = "api/dtplus/HDFCCreditPouch/insrt_cp_rqst_by_customer";
-        public static string CustomerTransactionStatusUrl = "api/dtplus/ParentCustomer/hdfc_transaction_status";
+        public static string CustomerTransactionStatusUrl = "api/dtplus/HDFCCreditPouch/hdfc_transaction_status";
         #endregion
 
         #region "CCMS Recharge"
@@ -539,7 +539,7 @@
         
 
         public static string getaccountstatmentrequestdetails = " api/dtplus/AccountStatement/get_account_statment_request_details";
-        public static string actiongetaccountstatmentrequesttype = " api/dtplus/AccountStatement/action_get_account_statment_request_type";
+        public static string actiongetaccountstatmentrequesttype = "api/dtplus/AccountStatement/action_get_account_statment_request_type";
         public static string insertaccountstatmentrequest = " api/dtplus/AccountStatement/insert_account_statment_request";
         public static string updateaccountstatmentrequeststatus = " api/dtplus/AccountStatement/update_account_statment_request_status";
         public static string getparenttransactionssummarydetails = "api/dtplus/ParentCustomer/get_parent_transactions_summary_details";
@@ -547,7 +547,7 @@
         public static string getparentcustomerbasicsearch = "api/dtplus/ParentCustomer/get_parent_customer_basic_search";
         public static string getparenttransactionlocationdetails = "api/dtplus/ParentCustomer/transaction_details";
         public static string Convertparentcustomertoaggregator = "api/dtplus/ParentCustomer/Convert_parent_customer_to_aggregator";
-        
+        public static string PostAuthCreditPouchUrl = "api/dtplus/customer/post_authorization_for_credit_pouch";
 
 
         #endregion
@@ -638,7 +638,7 @@
         public static string jcbUpdateHotlistReactivate = "api/dtplus/JCB/jcb_update_hotlist_reactivate";
         #endregion
 
-        #region "Customer Dashboard"
+        #region Customer Dashboard
         public static string customerDashboardVerifyYourDetails = "api/dtplus/customerdashboard/customer_dashboard_verify_your_details";
         public static string customerDashboardAccountSummary = "api/dtplus/customerdashboard/customer_dashboard_account_summary";
         public static string customerDashboardLastTransactions = "api/dtplus/customerdashboard/customer_dashboard_last_transactions";
@@ -647,6 +647,7 @@
         public static string customerDashboardReminder = "api/dtplus/customerdashboard/customer_dashboard_reminder";
         public static string customerDashboardUpdateVerifyYourDetails = "api/dtplus/customerdashboard/customer_dashboard_update_verify_your_details";
         public static string customerDashboardLastestDrivestarsTransactions = "/api/dtplus/customerdashboard/customer_dashboard_latest_drivestars_transactions";
+        public static string customerDashboardGetNotificationContent = "/api/dtplus/customerdashboard/get_notification_content";
         #endregion
 
         #region DICV
@@ -684,16 +685,11 @@
         #endregion
 
 
-        #region "MO Dashboard"
-        public static string userinformation = "/api/dtplus/modashboard/mo_dashboard_user_information";
-        #endregion
-
-        #region "MO Dashboard"
-        public static string RegionInformation = "/api/dtplus/modashboard/mo_dashboard_region_information";
-        #endregion
-
-        #region "MO Dashboard"
-        public static string PendingTerminal = "/api/dtplus/modashboard/mo_dashboard_pending_terminal";
+        #region MO Dashboard
+        public static string userinformation = "api/dtplus/modashboard/mo_dashboard_user_information";
+        public static string RegionInformation = "api/dtplus/modashboard/mo_dashboard_region_information";
+        public static string PendingTerminal = "api/dtplus/modashboard/mo_dashboard_pending_terminal";
+        public static string GetNotificationContent = "api/dtplus/customerdashboard/get_notification_content";
         #endregion
 
         #region Dashboard

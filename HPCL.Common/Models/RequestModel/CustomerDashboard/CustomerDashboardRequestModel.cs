@@ -10,5 +10,6 @@ namespace HPCL.Common.Models.RequestModel.CustomerDashboard
     public class CustomerDashboardRequestModel : BaseEntity
     {
         public string CustomerID { get; set; }
+        public string UserType { get; set; }
     }
 }

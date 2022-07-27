@@ -193,7 +193,7 @@ namespace HPCL_Web.Controllers
             return View(Model);
         }
 
-        public async Task<IActionResult> UploadDoc(string customerReferenceNo, string FormNumber)
+        public async Task<IActionResult> UploadDoc(string customerReferenceNo, string FormNumber, string IsSearch)
         {
             UploadDoc uploadDoc = new UploadDoc();
             uploadDoc.CustomerReferenceNo = "";
@@ -202,6 +202,11 @@ namespace HPCL_Web.Controllers
             uploadDoc.AddressProofType = 0;
             uploadDoc.IdProofDocumentNo = "";
             uploadDoc.AddressProofDocumentNo = "";
+            uploadDoc.IsSearch = "0";
+            if (!string.IsNullOrEmpty(IsSearch) && IsSearch == "1")
+            {
+                uploadDoc.IsSearch = "1";
+            }
 
             if (!string.IsNullOrEmpty(FormNumber))
             {

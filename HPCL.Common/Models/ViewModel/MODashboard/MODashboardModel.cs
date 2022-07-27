@@ -14,9 +14,11 @@ namespace HPCL.Common.Models.ViewModel.MODashboard
             RegionInformationResponseModel = new List<RegionInformationResponseModel>();
             PendingTerminalResponseModel = new List<PendingTerminalResponseModel>();
             UserInformationResponseModel = new List<UserInformationResponseModel>();
+            GetNotificationContentResponseModel = new List<GetNotificationContentResponseModel>();
         }
         public List<RegionInformationResponseModel> RegionInformationResponseModel { get; set; }
         public List<PendingTerminalResponseModel> PendingTerminalResponseModel { get; set; }
         public List<UserInformationResponseModel> UserInformationResponseModel { get; set; }
+        public List<GetNotificationContentResponseModel> GetNotificationContentResponseModel { get; set; }
     }
 }

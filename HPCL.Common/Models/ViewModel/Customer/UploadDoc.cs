@@ -84,6 +84,7 @@ namespace HPCL.Common.Models.ViewModel.Customer
         public string PanFrontimg { get; set; }
         public string VehFrontimg { get; set; }
         public string CustFrontimg { get; set; }
+        public string IsSearch { get; set; }
     }
 
     public class UploadDocResponse: ResponseMsg

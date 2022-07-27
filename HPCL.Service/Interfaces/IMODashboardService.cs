@@ -12,6 +12,7 @@ namespace HPCL.Service.Interfaces
         Task<List<PendingTerminalResponseModel>> PendingTerminal(string UserName);
         Task<List<UserInformationResponseModel>> UserInformation(string UserName);
         Task<List<RegionInformationResponseModel>> RegionInformation(string UserName);
+        Task<List<GetNotificationContentResponseModel>> GetNotificationContent(string UserType);
 
     }
 }

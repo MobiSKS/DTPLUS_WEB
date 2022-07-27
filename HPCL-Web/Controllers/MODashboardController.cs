@@ -30,18 +30,22 @@ namespace HPCL_Web.Controllers
             _modashboardservice = customerDashboardServices;
             _commonActionService = commonActionService;
         }
+        public string UserType { get;  set; }
         public async Task<IActionResult> MODashboard(string UserName)
         {
             UserName = "adityamo";
             var modashboardlist = await _modashboardservice.UserInformation(UserName);
             var RegionInformationList = await _modashboardservice.RegionInformation(UserName);
             var PendingTerminalList = await _modashboardservice.PendingTerminal(UserName);
+            var GetNotificationContent = await _modashboardservice.GetNotificationContent(UserType);
 
             MODashboardModel MODashboard = new MODashboardModel();
             MODashboard.UserInformationResponseModel = modashboardlist;
 
             MODashboard.RegionInformationResponseModel = RegionInformationList;
             MODashboard.PendingTerminalResponseModel = PendingTerminalList;
+
+            MODashboard.GetNotificationContentResponseModel = GetNotificationContent;
 
             return View(MODashboard);
         }

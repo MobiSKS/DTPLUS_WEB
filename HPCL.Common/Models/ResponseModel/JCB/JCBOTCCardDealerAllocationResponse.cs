@@ -42,6 +42,8 @@ namespace HPCL.Common.Models.ResponseModel.JCB
         public string Status { get; set; }
         public string RetailOutletName { get; set; }
         public string DealerCode { get; set; }
+        public string VINNumber { get; set; }
+        public string VechileNo { get; set; }
     }
     public class JCBOTCCardDealerTotalCardDetail
     {
