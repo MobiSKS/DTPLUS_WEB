@@ -107,6 +107,7 @@ namespace HPCL_Web.Controllers
         {
             var modals = await _customerService.UpdateParentCustomer(CustomerId, RequestId);
             ViewBag.IsSearch = String.IsNullOrEmpty(IsSearch) ? "false" : "true";
+            modals.IsSearch = String.IsNullOrEmpty(IsSearch) ? "false" : "true";
             return View(modals);
         }
 
@@ -115,7 +116,7 @@ namespace HPCL_Web.Controllers
         {
 
             var modals = await _customerService.UpdateParentCustomer(cust);
-
+            modals.IsSearch = cust.IsSearch;
             if (cust.Internel_Status_Code == 1000)
             {
                 ViewBag.Success = cust.Remarks;
@@ -359,10 +360,11 @@ namespace HPCL_Web.Controllers
             ViewBag.IsSearch = "true";
             return View(modals);
         }
-        public async Task<IActionResult> ConvertParenttoAggregator(BasicSearchViewModel reqEntity, string reset)
+        public async Task<IActionResult> ConvertParenttoAggregator(string CustomerId, string NameOnCard)
         {
             var modals = new ConvertParenttoAggregatorViewModel();
-
+            if (CustomerId != null || NameOnCard != null || CustomerId != "" || NameOnCard != "")
+                modals = await _customerService.ConvertParentToAggregator(CustomerId, NameOnCard);
 
             return View(modals);
         }
