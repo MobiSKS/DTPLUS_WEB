@@ -602,6 +602,99 @@ namespace HPCL.Service.Services
             InsertResponse result = obj.ToObject<InsertResponse>();
             return result;
         }
+        public async Task<DICVViewCardSearch> SearchCardMapping(DICVViewCardDetails viewCardDetails)
+        {
+            var searchBody = new DICVViewCardDetails();
+            DICVViewCardSearch viewCardSearch = new DICVViewCardSearch();
+            if (viewCardDetails.Customerid != null)
+            {
+                searchBody = new DICVViewCardDetails
+                {
+                    UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                    UserAgent = CommonBase.useragent,
+                    UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                    Customerid = viewCardDetails.Customerid,
+                    Cardno = viewCardDetails.CardNo,
+                    Vehiclenumber = viewCardDetails.VechileNo,
+                    Mobileno = viewCardDetails.MobileNo,
+                    IsNewMapping = false
+
+                };
+            }
+            else if (_httpContextAccessor.HttpContext.Session.GetString("LoginType") == "Customer")
+            {
+                searchBody = new DICVViewCardDetails
+                {
+                    UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                    UserAgent = CommonBase.useragent,
+                    UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                    Customerid = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                    Cardno = viewCardDetails.CardNo,
+                    Vehiclenumber = viewCardDetails.VechileNo,
+                    Mobileno = viewCardDetails.MobileNo,
+                    IsNewMapping = false
+                };
+            }
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getDicvMobileAndFastagno);
+
+            viewCardSearch = JsonConvert.DeserializeObject<DICVViewCardSearch>(response);
+            return viewCardSearch;
+        }
+        public async Task<List<string>> UpdateCards(DICVUpdateMobileandFastagNoInCard[] limitArray)
+        {
+            var updateServiceBody = new DICVUpdateMobileRequest
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                ObjUpdateMobileandFastagNoInCard = limitArray,
+                ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(updateServiceBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.dicvUpdateMobileAndFastagNoInCard);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+
+            var updateRes = obj["Data"].Value<JArray>();
+            List<string> messageList = new List<string>();
+            List<SuccessResponse> updateResponse = updateRes.ToObject<List<SuccessResponse>>();
+            if (updateResponse.Count > 0)
+            {
+                messageList.Add(updateResponse[0].Status.ToString());
+                foreach (var item in updateResponse)
+                    messageList.Add(item.Reason);
+            }
+
+            return messageList;
+        }
+        public async Task<DICVViewCardSearch> AddCardMappingDetails(DICVViewCardDetails viewCardDetails)
+        {
+            var searchBody = new DICVViewCardDetails();
+            DICVViewCardSearch viewCardSearch = new DICVViewCardSearch();
+            if (viewCardDetails.Customerid != null)
+            {
+                searchBody = new DICVViewCardDetails
+                {
+                    UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                    UserAgent = CommonBase.useragent,
+                    UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                    Customerid = viewCardDetails.Customerid,
+                    Cardno = viewCardDetails.CardNo,
+                    Vehiclenumber = viewCardDetails.VechileNo,
+                    Mobileno = viewCardDetails.MobileNo,
+                    IsNewMapping = true
+                };
+            }
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getDicvMobileAndFastagno);
+
+            viewCardSearch = JsonConvert.DeserializeObject<DICVViewCardSearch>(response);
+            return viewCardSearch;
+        }
 
     }
 }

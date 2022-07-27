@@ -1,4 +1,5 @@
 ﻿using HPCL.Common.Helper;
+using HPCL.Common.Models.RequestModel.DICV;
 using HPCL.Common.Models.ResponseModel.DICV;
 using HPCL.Common.Models.ViewModel.DICV;
 using HPCL.Common.Resources;
@@ -188,6 +189,35 @@ namespace HPCL_Web.Controllers
         {
             var result = await _dicvService.UpdateDICVCommunicationEmailResetPassword(CustomerId, AlternateEmailId);
             return Json(new { result = result });
+        }
+        public async Task<IActionResult> DICVAddOrEditMobile(string CustomerId)
+        {
+            ViewBag.CustomerId = CustomerId;
+            return View();
+        }
+        [HttpPost]
+        public async Task<JsonResult> SearchCardMapping(DICVViewCardDetails viewCardDetails)
+        {
+            var searchList = await _dicvService.SearchCardMapping(viewCardDetails);
+
+            ModelState.Clear();
+            return Json(searchList);
+        }
+        [HttpPost]
+        public async Task<IActionResult> UpdateCards(DICVUpdateMobileandFastagNoInCard[] limitArray)
+        {
+            var reason = await _dicvService.UpdateCards(limitArray);
+
+            ModelState.Clear();
+            return Json(reason);
+        }
+        [HttpPost]
+        public async Task<JsonResult> AddCardMappingDetails(DICVViewCardDetails viewCardDetails)
+        {
+            var searchList = await _dicvService.AddCardMappingDetails(viewCardDetails);
+
+            ModelState.Clear();
+            return Json(searchList);
         }
 
     }

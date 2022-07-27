@@ -1,5 +1,6 @@
 ﻿using HPCL.Common.Models;
 using HPCL.Common.Models.CommonEntity.ResponseEnities;
+using HPCL.Common.Models.RequestModel.DICV;
 using HPCL.Common.Models.ResponseModel.AshokLayland;
 using HPCL.Common.Models.ResponseModel.DICV;
 using HPCL.Common.Models.ResponseModel.VolvoEicher;
@@ -34,5 +35,8 @@ namespace HPCL.Service.Interfaces
         Task<List<string>> ApplyHotlistorReactivate([FromBody] DICVHotlistorReactivateViewModel hotlistorReactivateViewModel);
         Task<GetDICVCommunicationEmailResetPasswordResponse> GetDICVCommunicationEmailResetPassword(string CustomerId);
         Task<InsertResponse> UpdateDICVCommunicationEmailResetPassword(string CustomerId, string AlternateEmailId);
+        Task<DICVViewCardSearch> SearchCardMapping(DICVViewCardDetails viewCardDetails);
+        Task<List<string>> UpdateCards(DICVUpdateMobileandFastagNoInCard[] limitArray);
+        Task<DICVViewCardSearch> AddCardMappingDetails(DICVViewCardDetails viewCardDetails);
     }
 }
