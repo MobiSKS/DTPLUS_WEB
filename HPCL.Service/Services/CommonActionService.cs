@@ -1808,7 +1808,7 @@ namespace HPCL.Service.Services
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(requestInfo), Encoding.UTF8, "application/json");
-            var response = await _requestService.CommonRequestService(content, WebApiUrl.actiongetaccountstatmentrequesttype);
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.PostAuthCreditPouchUrl);
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
             var jarr = obj["Data"].Value<JArray>();
             List<CommonResponseData> authStatus = jarr.ToObject<List<CommonResponseData>>();
