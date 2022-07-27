@@ -21,7 +21,7 @@ namespace HPCL_Web.Controllers
             _commonActionService = commonActionService;
         }
 
-        public string UserType { get; private set; }
+        public string UserType { get; set; }
 
         public async Task<IActionResult> CustomerDashboard(string CustomerId)
         {
