@@ -375,5 +375,10 @@ namespace HPCL_Web.Controllers
             return Json(modals);
 
         }
+        public async Task<IActionResult> UpdateParentasAggregator(string CustomerId, string RequestId)
+        {
+            return RedirectToAction("UpdateAggregatorCustomer","Aggregator", new { customerId = CustomerId, requestId= RequestId });
+        }
+
     }
 }

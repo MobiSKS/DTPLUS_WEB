@@ -1,4 +1,4 @@
-﻿@model HPCL.Common.Models.ViewModel.ICICIBankCreditPouch.SearchRequestApproval
+﻿@model HPCL.Common.Models.ViewModel.PC_ICICIBankCreditPouch.SearchRequestApproval
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ajax-unobtrusive/3.2.6/jquery.unobtrusive-ajax.js"></script>
 
@@ -306,79 +306,87 @@
 
         if (res.searchList.success == true) {
 
-            $('#approvalIciciList').DataTable().clear().destroy();
+            if(res.searchList.data[0].status == 1){
 
-            var tbl = $('#approvalIciciList').DataTable({
-                paging: true,
-                searching: false,
-                stateSave: true,
-                "bDestroy": true,
-                "lengthMenu": [10, 20, 50, 100, 200, 500, 1000, 2000],
-                "autoWidth": false,
-                "oLanguage": {
-                    "sLengthMenu": "Display _MENU_ Records",
-                    "info": "Showing _START_ to _END_ of _TOTAL_ Records",
+                $('#approvalIciciList').DataTable().clear().destroy();
+
+                var tbl = $('#approvalIciciList').DataTable({
+                    paging: true,
+                    searching: false,
+                    stateSave: true,
+                    "bDestroy": true,
+                    "lengthMenu": [10, 20, 50, 100, 200, 500, 1000, 2000],
+                    "autoWidth": false,
+                    "oLanguage": {
+                        "sLengthMenu": "Display _MENU_ Records",
+                        "info": "Showing _START_ to _END_ of _TOTAL_ Records",
+                    }
+                });
+
+                for (var i = 0; i < res.searchList.data.length; i++) {
+
+                    var isDts;
+                    if(((res.searchList.data[i].requestedDate) == "01-01-0001") || ((res.searchList.data[i].requestedDate) == "01-01-1900") || ((res.searchList.data[i].requestedDate) == null)){
+                        isDts = "";
+                    }else{
+                        isDts = moment(res.searchList.data[i].requestedDate, 'DD-MM-YYYY').format('DD-MM-YYYY');
+                    }
+
+                    var srNumber = (i + 1);
+                    var checkBx = "<input type='checkbox' class='checkRow' name='checkRowName'>";
+                    var referenceNo = (res.searchList.data[i].referenceNo || '');
+                    var zo = (res.searchList.data[i].zo || '');
+                    var ro =  (res.searchList.data[i].ro || '');
+                    var customerId = "<span class='custVal'>"+(res.searchList.data[i].customerId)+"</span>";
+                    var customerName = (res.searchList.data[i].customerName);
+                    var planName = (res.searchList.data[i].planName);
+                    var requestedBy = (res.searchList.data[i].requestedBy);
+                    var requestedDate = isDts;
+                    var status = (res.searchList.data[i].actionStatus);
+                    var remarks = "<div style='width:160px;'><textarea onchange='remarksChange(this," + (i) + ")' readonly='readonly' class='form-control remarksVal' maxlength = '250'></textarea><i style='display:none;margin-top:10px;' class='fa fa-exclamation-triangle errs' id='remarks_error_"+i+"' aria-hidden='true'></i></div>";
+                    var action = "<select readonly='readonly' disabled='disabled' class='form-control actionVal' style='padding:3px;'></select><span style='display:none;' class='reqId'>"+(res.searchList.data[i].requestNo)+"</span>";
+
+                    tbl.row.add([
+                        srNumber,
+                        checkBx,
+                        referenceNo,
+                        zo,
+                        ro,
+                        customerId,
+                        customerName,
+                        planName,
+                        requestedBy,
+                        requestedDate,
+                        status,
+                        remarks,
+                        action
+                    ]).order( [ 1, 'asc' ] ).draw();
                 }
-            });
 
-            for (var i = 0; i < res.searchList.data.length; i++) {
+                $.ajax({
+                    type: 'POST',  // http method
+                    url: '@Url.Action("GetCreditPouchStatus", "Common")',
+                    data: {pagename : "BankApprovalAction"},
+                    dataType: "json",
+                    success: function (data, status, xhr) {
 
-                var isDts;
-                if(((res.searchList.data[i].requestedDate) == "01-01-0001") || ((res.searchList.data[i].requestedDate) == "01-01-1900") || ((res.searchList.data[i].requestedDate) == null)){
-                    isDts = "";
-                }else{
-                    isDts = moment(res.searchList.data[i].requestedDate, 'DD-MM-YYYY').format('DD-MM-YYYY');
-                }
+                        console.log(data);
+                        $.each(data.getStatus, function (i, option) {
+                            $("<option/>").val(option.statusId).text(option.statusName).appendTo(".actionVal");
+                        });
+                    },
+                    error: function (jqXhr, textStatus, errorMessage) {
+                        alert("Error Populating Status Type");
+                    }
+                });
 
-                var srNumber = (i + 1);
-                var checkBx = "<input type='checkbox' class='checkRow' name='checkRowName'>";
-                var referenceNo = (res.searchList.data[i].referenceNo || '');
-                var zo = (res.searchList.data[i].zo || '');
-                var ro =  (res.searchList.data[i].ro || '');
-                var customerId = "<span class='custVal'>"+(res.searchList.data[i].customerId)+"</span>";
-                var customerName = (res.searchList.data[i].customerName);
-                var planName = (res.searchList.data[i].planName);
-                var requestedBy = (res.searchList.data[i].requestedBy);
-                var requestedDate = isDts;
-                var status = (res.searchList.data[i].actionStatus);
-                var remarks = "<div style='width:160px;'><textarea onchange='remarksChange(this," + (i) + ")' readonly='readonly' class='form-control remarksVal' maxlength = '250'></textarea><i style='display:none;margin-top:10px;' class='fa fa-exclamation-triangle errs' id='remarks_error_"+i+"' aria-hidden='true'></i></div>";
-                var action = "<select readonly='readonly' disabled='disabled' class='form-control actionVal' style='padding:3px;'></select><span style='display:none;' class='reqId'>"+(res.searchList.data[i].requestNo)+"</span>";
-
-                tbl.row.add([
-                    srNumber,
-                    checkBx,
-                    referenceNo,
-                    zo,
-                    ro,
-                    customerId,
-                    customerName,
-                    planName,
-                    requestedBy,
-                    requestedDate,
-                    status,
-                    remarks,
-                    action
-                ]).order( [ 1, 'asc' ] ).draw();
+                document.getElementById("approvalRejectSection").style.display = "grid";
+            }else{
+                document.getElementById("approvalRejectSection").style.display = "none";
+                $("#noRecord").html("");
+                $("#noRecord").append("<span>" + res.searchList.data[0].reason + "</span>");
+                document.getElementById("noRecord").style.display = "block";
             }
-
-            $.ajax({
-                type: 'POST',  // http method
-                url: '@Url.Action("GetCreditPouchStatus", "Common")',
-                data: {pagename : "BankApprovalAction"},
-                dataType: "json",
-                success: function (data, status, xhr) {
-
-                    console.log(data);
-                    $.each(data.getStatus, function (i, option) {
-                        $("<option/>").val(option.statusId).text(option.statusName).appendTo(".actionVal");
-                    });
-                },
-                error: function (jqXhr, textStatus, errorMessage) {
-                    alert("Error Populating Status Type");
-                }
-            });
-
-            document.getElementById("approvalRejectSection").style.display = "grid";
         } else {
             document.getElementById("approvalRejectSection").style.display = "none";
             $("#noRecord").html("");

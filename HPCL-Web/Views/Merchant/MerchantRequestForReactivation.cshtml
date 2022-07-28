@@ -1,0 +1,389 @@
+﻿@model HPCL.Common.Models.ViewModel.Merchant.RequestforReactivationViewModel
+@using Microsoft.AspNetCore.Http;
+<div class="col-lg-12">
+    <div class="bg-white p-2 p-md-4">
+        <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
+            <li class="breadcrumb-item"><a href="@Url.Action("Request", "Merchant")" class="text_primary">Request</a> </li>
+            <li class="breadcrumb-item font-weight-light">Request for Reactivation Merchant</li>
+        </ul>
+        <div id="reason" class="mb-3 text-center alert" style="display:none"></div>
+        @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "form1", @class = "toBeHiddenOnSuccess" }))
+        {
+            <div class="w-100">
+                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mb-3">
+                    <div class="border-1 rounded border-grey">
+                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Request for Reactivation Merchant</p>
+                        <div class="col-lg-12 col-md-12 col-12 py-3">
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">Merchant ID</label>
+                                        <div class="col-md-7 col-12">
+                                            @Html.TextBoxFor(m => m.MerchantId, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                            <span style="display:none" class="error" id="merchantId_error"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">SBU Type </label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.DropDownListFor(m => m.SBUTypeId, new SelectList(Model.SBUTypes, "SBUId", "SBUName"), new { @class = "form-control" })
+                                                <span class="error" id="sbuType_error"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">Zonal Office </label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+
+                                                @Html.DropDownListFor(m => m.ZonalOfficeId, new SelectList(Model.ZonalOffices, "ZonalOfficeID", "ZonalOfficeName"), new { @class = "form-control", onchange = "getMerchantRegionalOfc()" })
+                                                <span class="error" id="zonal_office_error"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">Regional Office </label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                <select name="RegionalOfficeId" id="RegionalOfficeId" class="form-control"></select>
+                                                <span class="error" id="regionalOfc_error"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            <div class="d-flex align-items-center flex-wrap">
+
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">Status </label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+
+                                                @Html.DropDownListFor(m => m.StatusId, new SelectList(Model.StatusList, "StatusId", "StatusName"), new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">Hotlist Month and Year</label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+
+                                                @Html.DropDownListFor(m => m.HotlistDate, new SelectList(Model.HotlistedDates, "HotlistDateId", "HotlistDate"), new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="clearfix"></div>
+                            <div class="d-flex align-items-center justify-content-center mt-0">
+                                <div class="px-2">
+                                    <button class="btn btn_primary" id="btnSearch" type="submit">SEARCH</button>
+                                </div>
+
+                            </div>
+                            <div style="display:none;">@Html.TextBoxFor(m => m.RegionalOfcIdVal)</div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+        }
+        <div class="clearfix"></div>
+        @if (Model.Data.Count() > 0)
+        {
+            <div id="MerchantsTbl">
+                <table class="datatable table table-striped table-bordered d-md-table table-responsive" style="width:100%;word-wrap:break-word;">
+                    <thead>
+                        <tr>
+                            <th style="width:3%;"><input type="checkbox" id="checkAll" /></th>
+                            <th>
+                                @Html.DisplayName("Merchant ID")
+                            </th>
+                            <th>
+                                @Html.DisplayName("Retail Outlet Name")
+                            </th>
+                            <th>
+                                @Html.DisplayName("Reason for Hotlist")
+                            </th>
+
+                            <th>
+                                @Html.DisplayName("Hotlisted Date")
+                            </th>
+                            <th>
+                                @Html.DisplayName("Status")
+                            </th>
+                            <th>
+                                @Html.DisplayName("Action")
+                            </th>
+                            <th>
+                                @Html.DisplayName("Remarks")
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="searchTableBody">
+                        @{
+                            int i = 0;
+                        }
+                        @foreach (var item in Model.Data)
+                        {
+                            i = i + 1;
+
+                            <tr>
+                                <td><input type="checkbox" class="checkEnable" id="check_@i" /></td>
+
+                                <td>@item.MerchantId</td>
+                                <td>@item.RetailOutletName</td>
+                                <td>@item.HotlistReasonId</td>
+                                <td>@item.HotlistedDate</td>
+                                <td>@item.Status</td>
+                                <td><a href="#"><span>Upload Document</span></a></td>
+                                <td><input type="text" id="remarks_@i" class="form-control remarks" maxlength="50" disabled /><span class="remarks_error"></span></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-12 d-flex align-items-center justify-content-center mt-3 px-0">
+                <div class="col-md-3 col-12 d-flex align-items-center justify-content-center">
+                    <div class="pr-2">
+                        <button class="btn btn_primary" type="button">SUBMIT</button>
+                    </div>
+                    
+                </div>
+            </div>
+        }
+        else
+        {
+            @if (Model.Message != null && Model.Message != "")
+            {
+                <div>
+                    <div class="alert alert-danger mt-3 text-center" id="noRecord">
+                        @Model.Message
+                    </div>
+                </div>
+            }
+        }
+        <div class="clearfix"></div>
+
+    </div>
+</div>
+
+<script type="text/javascript">
+      //debugger;
+
+      var zonalID = $("#ZonalOfficeId").val();
+      var regionalID = $("#RegionalOfcIdVal").val();
+
+
+      $(document).ready(function () {
+
+
+      });
+       $("#checkAll").click(function () {
+        $('input:checkbox').not(this).prop('checked', this.checked);
+        if ($(this).is(':checked')) {
+            $("#MerchantsTbl tr").each(function () {
+                $(this).find("input:text").attr("disabled", false);
+            });
+        }
+        else{
+            $("#MerchantsTbl tr").each(function () {
+                $(this).find("input:text").attr("disabled", true);
+                $(this).find("input:text").val("");
+                $(this).find('.remarks_error').html("");
+                $(this).find('.remarks_error').attr("style","dispaly:none");
+            });
+        }
+
+    });
+    $("#MerchantsTbl").on('click', '.checkEnable', function (e) {
+        currentRow = $(this).closest("tr");
+        if ($(this).is(':checked')) {
+            currentRow.find('input:text').attr("disabled", false);
+        }
+        if (!$(this).is(':checked')) {
+            currentRow.find('input:text').attr("disabled", true);
+            currentRow.find('input:text').val("");
+            currentRow.find('.remarks_error').html("");
+            currentRow.find('.remarks_error').attr("style","dispaly:none");
+        }
+    });
+
+     $("#SBUTypeId").change(function () {
+             var id = this.value;
+
+             $.ajax({
+                 type: 'POST',  // http method
+                 url: '@Url.Action("GetZonalOfficebySBUType", "Common")',
+                 data: { SBUTypeId: id },  // data to submit
+                 dataType: "json",
+                 success: function (data, status, xhr) {
+                     var v = data;
+                     if (status == 'success') {
+
+                         $("#ZonalOfficeId").html("");
+                         $('<option>',{
+                                         value: 0, text: "--All--"
+                                     }).html("--All--").appendTo("#ZonalOfficeId");
+                         $.each(data, function (i, data) { // bind the dropdown list using json result
+
+                                 $('<option>',
+                                     {
+                                         value: data.zonalOfficeID,
+                                         text: data.zonalOfficeName
+                                     }).html(data.zonalOfficeName).appendTo("#ZonalOfficeId");
+
+                         });
+                         $("#ZonalOfficeId")[0].sumo.reload();
+                         $("#ZonalOfficeId").trigger("change");
+                     }
+                     else {
+                         console.log(v);
+                     }
+                 },
+                 error: function (jqXhr, textStatus, errorMessage) {
+                     alert("Error Populating Customer Zone");
+                 }
+             });
+         });
+      $("#btnSearch").on("click", (function (e) {
+
+          var merchantId = $("#MerchantId").val();
+
+          var flag = "Y";
+
+          if (merchantId != "") {
+              if (!merchantId.match(mappedMerchantID)) {
+                  $("#merchantId_error").attr("style", "display:block");
+                  $("#merchantId_error").html("Please enter valid Merchant ID");
+                  flag = "N";
+              }
+          }
+
+          if (flag == "Y") {
+
+              $("#merchantId_error").attr("style", "display:none");
+              $("#merchantId_error").html("");
+          }
+          if (flag == "N")
+              e.preventDefault();
+
+      }));
+
+
+      $("#RegionalOfficeId").change(function () {
+          var id = this.value;
+          $("#RegionalOfcIdVal").val(id);
+      });
+    function getMerchantRegionalOfc() {
+         var id = $('#ZonalOfficeId :selected').val();
+         var regionalID = $("#RegionalOfcIdVal").val();
+         if(id>0){
+              $.ajax({
+                  type: 'POST',  // http method
+                  url: '@Url.Action("GetRegionalOfcDetails", "Common")',
+                  data: { ZonalOfcID: id },  // data to submit
+                  dataType: "json",
+                  success: function (data, status, xhr) {
+                      var v = data;
+                      if (status == 'success') {
+                          $("#RegionalOfficeId").html("");
+                          $.each(data, function (i, data) { // bind the dropdown list using json result
+                              if (i == 0) {
+                                  $('<option>',
+                                      {
+                                          value: 0,
+                                          text: "--All--"
+                                      }).html("--All--").appendTo("#RegionalOfficeId");
+                                  if (data.regionalOfficeID == regionalID) {
+                                      $('<option selected = "selected">',
+                                          {
+                                              value: data.regionalOfficeID,
+                                              text: data.regionalOfficeName
+                                          }).html(data.regionalOfficeName).appendTo("#RegionalOfficeId");
+                                  }
+                                  else {
+                                      $('<option>',
+                                          {
+                                              value: data.regionalOfficeID,
+                                              text: data.regionalOfficeName
+                                          }).html(data.regionalOfficeName).appendTo("#RegionalOfficeId");
+                                  }
+                              }
+                              else if (data.regionalOfficeID == regionalID) {
+                                  $('<option selected = "selected">',
+                                      {
+                                          value: data.regionalOfficeID,
+                                          text: data.regionalOfficeName
+                                      }).html(data.regionalOfficeName).appendTo("#RegionalOfficeId");
+                              }
+                              else {
+                                  $('<option>',
+                                      {
+                                          value: data.regionalOfficeID,
+                                          text: data.regionalOfficeName
+                                      }).html(data.regionalOfficeName).appendTo("#RegionalOfficeId");
+                              }
+                          });
+                          $("#RegionalOfficeId")[0].sumo.reload();
+                      }
+                      else {
+                          console.log(v);
+                      }
+                  },
+                  error: function (jqXhr, textStatus, errorMessage) {
+                      alert("Error Populating Regional Office Data");
+                  }
+              });
+          }
+          else{
+             $("#RegionalOfficeId").html('');
+             $("#RegionalOfficeId")[0].sumo.reload();
+          }
+      };
+        $('select').SumoSelect({
+             placeholder: '-All-',
+             search: true,
+             searchText: 'Enter Text here.'
+         });
+      $("#MerchantId").on("blur", function () {
+          var merchantId = $("#MerchantId").val();
+          if (merchantId != "") {
+             if (!merchantId.match(mappedMerchantID)) {
+                 $("#merchantId_error").attr("style", "display:block");
+                 $("#merchantId_error").html("Please enter valid Merchant ID");
+
+             }
+             else{
+                 $("#merchantId_error").attr("style", "display:none");
+                 $("#merchantId_error").html("");
+             }
+          }
+          else{
+              $("#merchantId_error").attr("style", "display:none");
+              $("#merchantId_error").html("");
+          }
+      });
+
+
+
+</script>

@@ -116,6 +116,9 @@
         public static string validateErpCode = "api/dtplus/merchant/validate_merchant_erp_code";
         public static string validateMappedMerchantID = "api/dtplus/merchant/check_mapped_merchant_id";
         public static string approveRejectMerchantUpdate = "api/dtplus/merchant/approve_reject_merchant_update";
+        public static string getapprovedmerchantreactivationstatus = "api/dtplus/merchant/get_approved_merchant_reactivation_status";
+        public static string GetRequestForApprovalReactivateMerchant = "api/dtplus/merchant/Get_Request_For_Approval_Reactivate_Merchant";
+
         #endregion
 
         #region customer
@@ -663,6 +666,9 @@
         public static string dicvUpdateHotlistReactivate = "api/dtplus/DICV/dicv_update_hotlist_reactivate";
         public static string getDicvCommunicationEmailResetPassword = "api/dtplus/DICV/get_dicv_communication_email_reset_password";
         public static string updateDicvCommunicationEmailResetPassword = "api/dtplus/DICV/update_dicv_communication_email_reset_password";
+        public static string getDicvMobileAndFastagno = "api/dtplus/DICV/get_dicv_mobile_and_fastagno";
+        public static string dicvUpdateMobileAndFastagNoInCard = "api/dtplus/DICV/dicv_update_mobile_and_fastag_no_in_card";
+        public static string updateDicvDealerEmailResetPassword = "api/dtplus/DICV/update_dicv_dealer_email_reset_password";
         #endregion
 
         #region "Parent Customer HDFC Bank Credit Pouch"
