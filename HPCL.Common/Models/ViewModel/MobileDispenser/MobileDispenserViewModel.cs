@@ -1,4 +1,6 @@
-﻿using System;
+﻿using HPCL.Common.Models.ResponseModel.MobileDispenser;
+using HPCL.Common.Models.CommonEntity;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,8 +8,10 @@ using System.Threading.Tasks;
 
 namespace HPCL.Common.Models.ViewModel.MobileDispenser
 {
-    public  class MobileDispenserViewModel
+    public  class MobileDispenserViewModel 
     {
+
+        public int SerialNum { get; set; }
         public string MobileDispenserId { get; set; }
 
 
@@ -20,7 +24,7 @@ namespace HPCL.Common.Models.ViewModel.MobileDispenser
         public string CreatedTime { get; set; }
 
 
-        public  int Status { get; set; }
+        public int Status { get; set; }
 
 
         public string ModifiedBy { get; set; }

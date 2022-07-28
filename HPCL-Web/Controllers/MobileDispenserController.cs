@@ -19,15 +19,38 @@ namespace HPCL_Web.Controllers
         //    return View();
         //}
 
-        public async Task<IActionResult> MobileDispenserRetailOutletMapping(string MobileDispenserId, int Status)
+        public async Task<IActionResult> MobileDispenserRetailsOutletMapping(string MobileDispenserId, int Status)
         {
             var modals = await _mobiledispenser.MobileDispenserRetailOutletMapping(MobileDispenserId, Status);
 
-            ViewBag.Status = Status;
-            MobileDispenserId = "";
-            Status = 0;
+           //ViewBag.Status = Status;
+            //ViewBag.Status = Status;
+            //MobileDispenserId = "";
+            //Status = 0;
 
             return View(modals);
+        }
+
+        public async Task<IActionResult> SearchMobileDispenserRetailsOutletMapping(string MobileDispenserId, int Status)
+        {
+            var modals = await _mobiledispenser.SearchMobileDispenserRetailOutletMapping(MobileDispenserId, Status);
+
+            //ViewBag.Status = Status;
+            //ViewBag.Status = Status;
+            //MobileDispenserId = "";
+            //Status = 0;
+
+            return View("~/Views/MobileDispenser/_SearchMobileDispenserRetailsOutletMapping.cshtml", modals);
+        }
+
+
+        public async Task<IActionResult> StatusMobileDispenserRetailsOutletMapping(string Status)
+        {
+            var modals = await _mobiledispenser.GetStatusMobileDispenserRetailOutletMapping(Status);
+
+         
+
+            return View("~/Views/MobileDispenser/_StatusMobileDispenserRetailsOutletMapping.cshtml", modals);
         }
     }
 }
