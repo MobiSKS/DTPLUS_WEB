@@ -53,6 +53,10 @@ namespace HPCL.Service
             services.AddTransient<IDICVService, DICVService>();
             services.AddTransient<IMODashboardService, MODashboardServices>();
             services.AddTransient<IPC_HDFCBankCreditPouchService, PC_HDFCBankCreditPouchService >();
+
+            services.AddTransient<IMobileDispenser, MobileDispenser>();//Surya
+         
+
             services.AddTransient<IPC_ICICIBankCreditPouchService, PC_ICICIBankCreditPouchService>();
             return services;
         }
