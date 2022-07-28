@@ -57,7 +57,7 @@ namespace HPCL.Common.Models.ViewModel.DICV
         public int OfficerSearchTypeId { get; set; }
         public virtual List<OfficerTypeResponseModal> OfficerTypes { get; set; }
         public int OfficerType { get; set; }
-
+        public string DealerStatus { get; set; }
         public DICVDealerEnrollmentModel()
         {
             OfficerTypes = new List<OfficerTypeResponseModal>();

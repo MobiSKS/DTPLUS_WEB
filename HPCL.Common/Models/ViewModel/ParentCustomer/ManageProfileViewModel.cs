@@ -340,5 +340,6 @@ namespace HPCL.Common.Models.ViewModel.ParentCustomer
         public string requestId { get; set; }
         public string Status{ get; set; }
         public string CustomerTypeName { get; set; }
+        public string RegionalOfficeName { get; set; }
     }
 }

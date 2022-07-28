@@ -531,7 +531,7 @@ namespace HPCL.Service.Services
                     custMdl.CommunicationCity = Customer.CommunicationCityName;
                     custMdl.CommunicationPinCode = Customer.CommunicationPincode;
                     custMdl.CommunicationStateID = Convert.ToInt32(string.IsNullOrEmpty(Customer.CommunicationStateId) ? "0" : Customer.CommunicationStateId);
-                    if(custMdl.CommunicationDistrictMdl.Count()>0)
+                    if (custMdl.CommunicationDistrictMdl.Count() > 0)
                         custMdl.CommunicationDistrictMdl.RemoveAt(0);
                     custMdl.CommunicationDistrictMdl.AddRange(await _commonActionService.GetDistrictDetails(custMdl.CommunicationStateID.ToString()));
 
@@ -909,7 +909,7 @@ namespace HPCL.Service.Services
 
             return cust;
         }
-        public async Task<ParentCustomerReportModel> SearchParentCustomerRequestStatus(string ZonalOfficeId, string RegionalOfficeId, string FromDate, string ToDate, string FormNumber,string SBUtypeId)
+        public async Task<ParentCustomerReportModel> SearchParentCustomerRequestStatus(string ZonalOfficeId, string RegionalOfficeId, string FromDate, string ToDate, string FormNumber, string SBUtypeId)
         {
             ParentCustomerReportModel parentCustomerReportModel = new ParentCustomerReportModel();
             if (!string.IsNullOrEmpty(FromDate) && !string.IsNullOrEmpty(FromDate))
@@ -927,12 +927,12 @@ namespace HPCL.Service.Services
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
                 UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
-                FormId = FormNumber==null?"0":FormNumber,
-                ZO = ZonalOfficeId==null?"0":ZonalOfficeId,
+                FormId = FormNumber == null ? "0" : FormNumber,
+                ZO = ZonalOfficeId == null ? "0" : ZonalOfficeId,
                 RO = RegionalOfficeId == null ? "0" : RegionalOfficeId,
                 FromDate = FromDate,
                 ToDate = ToDate,
-                SBUTypeId= SBUtypeId,
+                SBUTypeId = SBUtypeId,
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
@@ -941,18 +941,18 @@ namespace HPCL.Service.Services
             parentCustomerReportModel = obj.ToObject<ParentCustomerReportModel>();
             return parentCustomerReportModel;
         }
-        public async Task<ParentCustomerReportModel> SearchParentCustomerRequestStatusReport(string FormNumber,string RequestId)
+        public async Task<ParentCustomerReportModel> SearchParentCustomerRequestStatusReport(string FormNumber, string RequestId)
         {
             ParentCustomerReportModel parentCustomerReportModel = new ParentCustomerReportModel();
-    
+
             var searchBody = new ParentCustomerRequestModel
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
                 UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 FormNumber = FormNumber == null ? "0" : FormNumber,
-                RequestId=RequestId
-                
+                RequestId = RequestId
+
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
@@ -972,7 +972,7 @@ namespace HPCL.Service.Services
                 UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 ParentCustomerID = requestInfo.ParentCustomerID,
-                ChildCustomerId=requestInfo.ChildCustomerId
+                ChildCustomerId = requestInfo.ChildCustomerId
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(Request), Encoding.UTF8, "application/json");
@@ -1068,7 +1068,7 @@ namespace HPCL.Service.Services
         }
         public async Task<ParentChildCustomerMappingViewModel> ParentChildCustomerMapping(ParentChildCustomerMappingRequest requestInfo)
         {
-            ParentChildCustomerMappingViewModel parentChildCustomerMapping= new ParentChildCustomerMappingViewModel();
+            ParentChildCustomerMappingViewModel parentChildCustomerMapping = new ParentChildCustomerMappingViewModel();
 
             var Request = new ParentChildCustomerMappingRequest()
             {
@@ -1077,7 +1077,7 @@ namespace HPCL.Service.Services
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 ParentCustomerId = requestInfo.ParentCustomerId,
                 ObjChildDtl = requestInfo.ObjChildDtl,
-               CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(Request), Encoding.UTF8, "application/json");
@@ -1108,7 +1108,7 @@ namespace HPCL.Service.Services
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
 
 
-            var searchRes = obj["Data"].Value<JArray>(); 
+            var searchRes = obj["Data"].Value<JArray>();
             List<ChildCustomerDetails> searchList = searchRes.ToObject<List<ChildCustomerDetails>>();
             customerTransactionResponse.ParentCustomerID = ParentCustomerID;
             customerTransactionResponse.ChildCustomerIds.AddRange(searchList);
@@ -1222,8 +1222,8 @@ namespace HPCL.Service.Services
                 UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
-                CustomerID = reqModel.CustomerID==""?null: reqModel.CustomerID,
-                ControlCardNo = reqModel.ControlCardNo==""?null:reqModel.ControlCardNo, 
+                CustomerID = reqModel.CustomerID == "" ? null : reqModel.CustomerID,
+                ControlCardNo = reqModel.ControlCardNo == "" ? null : reqModel.ControlCardNo,
                 CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
             };
 
@@ -1324,7 +1324,7 @@ namespace HPCL.Service.Services
                 UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 CustomerId = reqEntity.CustomerId,
                 CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
-                StatementType=reqEntity.StatementType,
+                StatementType = reqEntity.StatementType,
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
@@ -1374,8 +1374,8 @@ namespace HPCL.Service.Services
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 ParentCustomerID = requestInfo.ParentCustomerID,
                 FromDate = requestInfo.FromDate,
-                ToDate=requestInfo.ToDate,
-                ObjChildCustomerIdDtl=requestInfo.ObjChildCustomerIdDtl
+                ToDate = requestInfo.ToDate,
+                ObjChildCustomerIdDtl = requestInfo.ObjChildCustomerIdDtl
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(Request), Encoding.UTF8, "application/json");
@@ -1395,17 +1395,17 @@ namespace HPCL.Service.Services
                 UserAgent = CommonBase.useragent,
                 UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
-                CustomerId = reqEntity.CustomerId==""?null:reqEntity.CustomerId,
+                CustomerId = reqEntity.CustomerId == "" ? null : reqEntity.CustomerId,
                 FormNumber = reqEntity.FormNumber == "" ? null : reqEntity.FormNumber,
                 MobileNo = reqEntity.MobileNumber == "" ? null : reqEntity.MobileNumber,
                 NameonCard = reqEntity.NameOnCard == "" ? null : reqEntity.NameOnCard,
                 CustomerName = reqEntity.CustomerName == "" ? null : reqEntity.CustomerName,
                 CommunicationCityName = reqEntity.City == "" ? null : reqEntity.City,
-                CommunicationStateId = reqEntity.StateId==null?"0": reqEntity.StateId
+                CommunicationStateId = reqEntity.StateId == null ? "0" : reqEntity.StateId
 
             };
 
-             StringContent content = new StringContent(JsonConvert.SerializeObject(Request), Encoding.UTF8, "application/json");
+            StringContent content = new StringContent(JsonConvert.SerializeObject(Request), Encoding.UTF8, "application/json");
 
             var response = await _requestService.CommonRequestService(content, WebApiUrl.getparentcustomerbasicsearch);
 
@@ -1416,21 +1416,21 @@ namespace HPCL.Service.Services
         public async Task<ViewParentChildTransactionDetailsModel> GetTransactionLocationDetails(PCTransactionLocationrequest requestInfo)
         {
             ViewParentChildTransactionDetailsModel transactionResponse = new ViewParentChildTransactionDetailsModel();
-           
+
             var Request = new PCTransactionLocationrequest()
             {
                 UserAgent = CommonBase.useragent,
                 UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
-                CustomerId= requestInfo.CustomerId,
-                TransactionId=requestInfo.TransactionId,
+                CustomerId = requestInfo.CustomerId,
+                TransactionId = requestInfo.TransactionId,
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(Request), Encoding.UTF8, "application/json");
 
             var response = await _requestService.CommonRequestService(content, WebApiUrl.getparenttransactionlocationdetails);
 
-           
+
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
             var jarr = obj["Data"].Value<JArray>();
             List<TransactionLocationDetails> locationDetails = jarr.ToObject<List<TransactionLocationDetails>>();
@@ -1623,6 +1623,27 @@ namespace HPCL.Service.Services
             }
 
             return cust;
+        }
+        public async Task<ParentChildBalanceTransferViewModel> ParentChildBalanceFundTransfer(ParentChildBalanceTransferViewModel reqEntity)
+        {
+            ParentChildBalanceTransferViewModel searchResponse = new ParentChildBalanceTransferViewModel();
+
+            var Request = new GetCustomerBalanceRequest()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                ParentCustomerID = reqEntity.ParentCustomerID,
+                ChildCustomerId = reqEntity.ChildCustomerId==""?null:reqEntity.ChildCustomerId,
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(Request), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.parentchildbalancetransfer);
+
+            searchResponse = JsonConvert.DeserializeObject<ParentChildBalanceTransferViewModel>(response);
+
+            return searchResponse;
         }
     }
 }

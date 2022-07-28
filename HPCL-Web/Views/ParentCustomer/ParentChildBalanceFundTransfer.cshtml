@@ -1,0 +1,232 @@
+﻿@model HPCL.Common.Models.ViewModel.ParentCustomer.ParentChildBalanceTransferViewModel
+@using HPCL.Common.Resources
+
+
+<div class="col-lg-12 px-0">
+    <div class="bg-white p-2 p-md-4" style="overflow: hidden;">
+        <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
+            <li class="breadcrumb-item"><a href="@Url.Action("Financial","ParentCustomer")" class="text_primary">Financials</a> </li>
+            <li class="breadcrumb-item font-weight-light">Parent-Child And Child-Parent Fund Allocation</li>
+        </ul>
+        <form>
+            <div class="w-100">
+                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
+                    <div class="border-1 rounded border-grey pb-3">
+                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Parent-Child And Child-Parent Balance Transfer</p>
+
+                        <div class="col-lg-12 col-md-12 col-12 py-3">
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">Parent Customer ID <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12 offset-md-1">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.ParentCustomerID, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                <span class="error" id="parentCustomerId_error"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">Child Customer ID </label>
+                                        <div class="col-md-7 col-12 offset-md-1">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.ChildCustomerId, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                <span class="error" id="childCustomerId_error"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            @if (Model.Data != null)
+                            {
+                                if (Model.Data.GetParentCustomer != null && Model.Data.GetParentCustomer.Count() > 0)
+                                {
+                                    <div class="d-flex align-items-center flex-wrap">
+                                        <div class="col-lg-6 col-12">
+                                            <div class="d-flex align-items-center flex-wrap mb-3">
+                                                <label class="font-weight-normal col-md-4 col-12">Available CCMS Balance: </label>
+                                                <div class="col-md-7 col-12 offset-md-1">
+                                                    <div class="custom_select">
+                                                        @Model.Data.GetParentCustomer.First().AvailableCCMSBalance
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 col-12">
+                                            <div class="d-flex align-items-center flex-wrap mb-3">
+                                                <label class="font-weight-normal col-md-4 col-12">Available DriveStars: </label>
+                                                <div class="col-md-7 col-12 offset-md-1">
+                                                    <div class="custom_select">
+                                                        @Model.Data.GetParentCustomer.First().AvailableDriveStars
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+
+                            }
+                            <div class="clearfix"></div>
+                            <div class="d-flex align-items-center justify-content-center mt-0">
+                                <div class="px-2">
+                                    <button class="btn btn_primary" type="submit" id="btnSearch">@Label.Search</button>
+                                </div>
+                                <div class="px-2">
+                                    <button class="btn btn_primary" type="button" id="btnReset">@Label.Reset</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+
+                </div>
+                <div class="clearfix"></div>
+
+            </div>
+        </form>
+        <div class="clearfix"></div>
+        @if (Model.Data.GetChildCustomer != null && Model.Data.GetChildCustomer.Count() > 0)
+        {
+            <div id="CustomerSearch">
+                <table class="datatable table table-striped table-bordered d-md-table table-responsive" style="width:100%;word-wrap:break-word;">
+                    <thead>
+                        <tr>
+                            <th style="width:3%;"><input type="checkbox" id="checkAll" /></th>
+                            <th>
+                                @Html.DisplayName("Child Customer ID")
+                            </th>
+                            <th>
+                                @Html.DisplayName("Control Card Number")
+                            </th>
+                            <th>
+                                @Html.DisplayName("Name on Card")
+                            </th>
+                            <th>
+                                @Html.DisplayName("CCMS Balance")
+                            </th>
+
+                            <th>
+                                @Html.DisplayName("Drivestars")
+                            </th>
+                            <th>
+                                @Html.DisplayName("Regional Office")
+                            </th>
+                            <th>
+                                @Html.DisplayName("Status")
+                            </th>
+                            <th>
+                                @Html.DisplayName("Balance Transer Type")
+                            </th>
+                            <th>
+                                @Html.DisplayName("Amount/Drivestars To Transfer")
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="searchTableBody">
+                        @{
+                            int i = 0;
+                        }
+                        @foreach (var item in Model.Data.GetChildCustomer)
+                        {
+                            i = i + 1;
+
+                            <tr>
+                                <td><input type="checkbox" class="checkEnable" id="check_@i" /></td>
+                                <td>@item.ChildId</td>
+                                <td>@item.CardNo</td>
+                                <td>@item.NameOnCard</td>
+                                <td>@item.CCMSBalance</td>
+                                <td>@item.Drivestars</td>
+                                <td>@item.RegionalOffice</td>
+                                <td>@item.StatusName</td>
+                                <td>
+
+                                    <select id='transferType_@i' class="form-control" name="@item.BalanceTransferTypeId"> </select>
+
+
+                                </td>
+
+
+                                <td>
+
+                                    <input maxlength='10' class='form-control txnAmt cgl' name='AmountToTransfer' type='text' disabled="disabled">
+
+                                </td>
+
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="d-flex align-items-center justify-content-center mt-0">
+                <div class="px-2">
+                    <button class="btn btn_primary" type="button" id="btnTransfer">Transfer Amount</button>
+                </div>
+
+            </div>
+        }
+        else
+        {
+            @if (Model.Message != null && Model.Message != "")
+            {
+                <div>
+                    <div class="alert alert-danger mt-3 text-center" id="noRecord">
+                        @Model.Message
+                    </div>
+                </div>
+            }
+        }
+        <div class="clearfix"></div>
+
+
+    </div>
+    <div class="clearfix"></div>
+</div>
+<script type="text/javascript">
+
+    $("#checkAll").click(function () {
+        $('input:checkbox').not(this).prop('checked', this.checked);
+        if ($(this).is(':checked')) {
+            $("#CustomerSearch tr").each(function () {
+                $(this).find("input:text").attr("disabled", false);
+            });
+        }
+        else{
+            $("#CustomerSearch tr").each(function () {
+                $(this).find("input:text").attr("disabled", true);
+                $(this).find("input:text").val("");
+                //$(this).find('.amount_error').html("");
+                //$(this).find('.amount_error').attr("style","dispaly:none");
+            });
+        }
+
+    });
+
+    $("#CustomerSearch").on('click', '.checkEnable', function (e) {
+        currentRow = $(this).closest("tr");
+        if ($(this).is(':checked')) {
+            currentRow.find('input:text').attr("disabled", false);
+        }
+        if (!$(this).is(':checked')) {
+            currentRow.find('input:text').attr("disabled", true);
+            currentRow.find('input:text').val("");
+            //currentRow.find('.amount_error').html("");
+            //currentRow.find('.amount_error').attr("style","dispaly:none");
+        }
+    });
+
+    $("#CustomerSearch").on('keydown', '.txnAmt', function (event) {
+        if (event.shiftKey == true) {
+            event.preventDefault();
+        }
+        if ((event.keyCode >= 48 && event.keyCode <= 57) || (event.keyCode >= 96 && event.keyCode <= 105) || event.keyCode == 8 || event.keyCode == 9 || event.keyCode == 37 || event.keyCode == 39 || event.keyCode == 46 || event.keyCode == 190|| event.keyCode == 110) {
+
+        } else {
+            event.preventDefault();
+        }
+        if($(this).val().indexOf('.') !== -1 && (event.keyCode == 190|| event.keyCode == 110))
+            event.preventDefault();
+    });
+</script>
