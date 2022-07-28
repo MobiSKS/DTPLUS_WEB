@@ -364,6 +364,7 @@
         #region Interfaces
         public static string getrecordtype = "api/dtplus/settings/get_record_type";
         public static string searchcustomerandcardform = "api/dtplus/customer/search_customer_and_card_form";
+        public static string RegenerateIAC = "api/dtplus/dtp/regenerate_iac";
         #endregion
 
 
@@ -670,6 +671,9 @@
         public static string dicvUpdateHotlistReactivate = "api/dtplus/DICV/dicv_update_hotlist_reactivate";
         public static string getDicvCommunicationEmailResetPassword = "api/dtplus/DICV/get_dicv_communication_email_reset_password";
         public static string updateDicvCommunicationEmailResetPassword = "api/dtplus/DICV/update_dicv_communication_email_reset_password";
+        public static string getDicvMobileAndFastagno = "api/dtplus/DICV/get_dicv_mobile_and_fastagno";
+        public static string dicvUpdateMobileAndFastagNoInCard = "api/dtplus/DICV/dicv_update_mobile_and_fastag_no_in_card";
+        public static string updateDicvDealerEmailResetPassword = "api/dtplus/DICV/update_dicv_dealer_email_reset_password";
         #endregion
 
         #region "Parent Customer HDFC Bank Credit Pouch"

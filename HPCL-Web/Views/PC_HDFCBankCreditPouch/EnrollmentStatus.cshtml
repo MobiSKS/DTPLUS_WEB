@@ -355,64 +355,71 @@
 
                             var girdList = res.searchList.data;
 
-                            document.getElementById("noRecord").style.display = "none";
+                            if(girdList[0].status == 1){
+                                document.getElementById("noRecord").style.display = "none";
 
-                            $('#approvalHdfcList').DataTable().clear().destroy();
+                                $('#approvalHdfcList').DataTable().clear().destroy();
 
-                            var tbl = $('#approvalHdfcList').DataTable({
-                                paging: true,
-                                searching: false,
-                                stateSave: true,
-                                "bDestroy": true,
-                                "lengthMenu": [10, 20, 50, 100, 200, 500, 1000, 2000],
-                                "autoWidth": false,
-                                "oLanguage": {
-                                    "sLengthMenu": "Display _MENU_ Records",
-                                    "info": "Showing _START_ to _END_ of _TOTAL_ Records",
+                                var tbl = $('#approvalHdfcList').DataTable({
+                                    paging: true,
+                                    searching: false,
+                                    stateSave: true,
+                                    "bDestroy": true,
+                                    "lengthMenu": [10, 20, 50, 100, 200, 500, 1000, 2000],
+                                    "autoWidth": false,
+                                    "oLanguage": {
+                                        "sLengthMenu": "Display _MENU_ Records",
+                                        "info": "Showing _START_ to _END_ of _TOTAL_ Records",
+                                    }
+                                });
+
+                                for (var i = 0; i < girdList.length; i++) {
+
+                                    var enDate;
+
+                                    if(((girdList[i].enrolledDate) == "01-1-0001") || ((girdList[i].enrolledDate) == "01-01-1900") || ((girdList[i].enrolledDate) == null)){
+                                        enDate = "";
+                                    }else{
+                                        enDate = moment(girdList[i].enrolledDate, 'DD-MM-YYYY').format('DD-MM-YYYY');
+                                    }
+
+                                    var srNumber = (i + 1);
+                                    var zo = (girdList[i].zo || '');
+                                    var ro = (girdList[i].ro || '');
+                                    var customerId = "<span class='getCustId'>"+(girdList[i].customerId || '')+"</span>";
+                                    var customerName = (girdList[i].customerName || '');
+                                    var planName = (girdList[i].planName || '');
+                                    var enrolledDate = enDate;
+                                    var enrolledBy = (girdList[i].enrolledBy || '');
+                                    var approverRemark = (girdList[i].approverRemark == "--") ? approverRemark = "" : approverRemark = (girdList[i].approverRemark);
+                                    var authorizerRemark = (girdList[i].authorizerRemark == "--") ? authorizerRemark = "" : authorizerRemark = (girdList[i].authorizerRemark);
+                                    var status = (girdList[i].status || '');
+                                    var creditLimitAssigned = (girdList[i].creditLimitAssigned == 0) ? creditLimitAssigned = "" : creditLimitAssigned = (girdList[i].creditLimitAssigned.toFixed(2));
+                                    var view = "<a href='#' class='viewListReport'>View</a><span class='getReqId' style='display:none;'>"+(girdList[i].requestNo)+"</span>";
+
+                                    tbl.row.add([
+                                        srNumber,
+                                        zo,
+                                        ro,
+                                        customerId,
+                                        customerName,
+                                        planName,
+                                        enrolledDate,
+                                        enrolledBy,
+                                        approverRemark,
+                                        authorizerRemark,
+                                        status,
+                                        creditLimitAssigned,
+                                        view
+                                    ]).draw();
                                 }
-                            });
-
-                            for (var i = 0; i < girdList.length; i++) {
-
-                                var enDate;
-
-                                if(((girdList[i].enrolledDate) == "01-1-0001") || ((girdList[i].enrolledDate) == "01-01-1900") || ((girdList[i].enrolledDate) == null)){
-                                    enDate = "";
-                                }else{
-                                    enDate = moment(girdList[i].enrolledDate, 'DD-MM-YYYY').format('DD-MM-YYYY');
-                                }
-
-                                var srNumber = (i + 1);
-                                var zo = (girdList[i].zo || '');
-                                var ro = (girdList[i].ro || '');
-                                var customerId = "<span class='getCustId'>"+(girdList[i].customerId || '')+"</span>";
-                                var customerName = (girdList[i].customerName || '');
-                                var planName = (girdList[i].planName || '');
-                                var enrolledDate = enDate;
-                                var enrolledBy = (girdList[i].enrolledBy || '');
-                                var approverRemark = (girdList[i].approverRemark == "--") ? approverRemark = "" : approverRemark = (girdList[i].approverRemark);
-                                var authorizerRemark = (girdList[i].authorizerRemark == "--") ? authorizerRemark = "" : authorizerRemark = (girdList[i].authorizerRemark);
-                                var status = (girdList[i].status || '');
-                                var creditLimitAssigned = (girdList[i].creditLimitAssigned == 0) ? creditLimitAssigned = "" : creditLimitAssigned = (girdList[i].creditLimitAssigned.toFixed(2));
-                                var view = "<a href='#' class='viewListReport'>View</a><span class='getReqId' style='display:none;'>"+(girdList[i].requestNo)+"</span>";
-
-                                tbl.row.add([
-                                    srNumber,
-                                    zo,
-                                    ro,
-                                    customerId,
-                                    customerName,
-                                    planName,
-                                    enrolledDate,
-                                    enrolledBy,
-                                    approverRemark,
-                                    authorizerRemark,
-                                    status,
-                                    creditLimitAssigned,
-                                    view
-                                ]).draw();
+                                document.getElementById('approvalRejectSection').style.display = 'block';
+                            }else{
+                                document.getElementById("approvalRejectSection").style.display = "none";
+                                $("#noRecord").html("");
+                                $("#noRecord").append("<span>" + girdList[0].reason + "</span>");
+                                document.getElementById("noRecord").style.display = "block";
                             }
-                            document.getElementById('approvalRejectSection').style.display = 'block';
                         } else {
                             document.getElementById("approvalRejectSection").style.display = "none";
                             $("#noRecord").html("");
