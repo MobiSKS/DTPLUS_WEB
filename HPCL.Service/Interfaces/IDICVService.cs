@@ -40,5 +40,6 @@ namespace HPCL.Service.Interfaces
         Task<DICVViewCardSearch> AddCardMappingDetails(DICVViewCardDetails viewCardDetails);
         Task<InsertResponse> ResetDICVDealerPassword(string UserName);
         Task<InsertResponse> EnableDisableDICVDealer(string DealerCode, string OfficerType, string EnableDisableFlag);
+        Task<DICVSearchManageCards> DICVManageCards(DICVCustomerCards entity, string editFlag);
     }
 }

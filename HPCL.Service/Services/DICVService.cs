@@ -738,6 +738,64 @@ namespace HPCL.Service.Services
             InsertResponse result = obj.ToObject<InsertResponse>();
             return result;
         }
+        public async Task<DICVSearchManageCards> DICVManageCards(DICVCustomerCards entity, string editFlag)
+        {
+            var searchBody = new DICVCustomerCards();
+
+            var UserName = _httpContextAccessor.HttpContext.Session.GetString("UserId");
+            if (entity.CustomerId != null || entity.CardNo != null)
+            {
+                searchBody = new DICVCustomerCards
+                {
+                    UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                    UserAgent = CommonBase.useragent,
+                    UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                    CustomerId = entity.CustomerId,
+                    CardNo = entity.CardNo,
+                    MobileNo = entity.MobileNo,
+                    VehicleNumber = entity.VehicleNumber,
+                    StatusFlag = entity.StatusFlag
+                };
+                _httpContextAccessor.HttpContext.Session.SetString("viewUpdatedGrid", JsonConvert.SerializeObject(searchBody));
+            }
+            else if (_httpContextAccessor.HttpContext.Session.GetString("LoginType") == "Customer")
+            {
+                searchBody = new DICVCustomerCards
+                {
+                    UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                    UserAgent = CommonBase.useragent,
+                    UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                    CustomerId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                    StatusFlag = -1,
+                    CardNo = entity.CardNo,
+                    MobileNo = entity.MobileNo,
+                    VehicleNumber = entity.VehicleNumber,
+                };
+            }
+            else if (editFlag == "edit" && _httpContextAccessor.HttpContext.Session.GetString("LoginType") != "Customer")
+            {
+                var str = _httpContextAccessor.HttpContext.Session.GetString("viewUpdatedGrid");
+
+                DICVCustomerCards vGrid = JsonConvert.DeserializeObject<DICVCustomerCards>(str);
+
+                searchBody = new DICVCustomerCards
+                {
+                    UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                    UserAgent = CommonBase.useragent,
+                    UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                    CustomerId = vGrid.CustomerId,
+                    CardNo = vGrid.CardNo,
+                    MobileNo = vGrid.MobileNo,
+                    VehicleNumber = vGrid.VehicleNumber,
+                    StatusFlag = vGrid.StatusFlag
+                };
+            }
+            StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.searchDicvManageCard);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            DICVSearchManageCards searchList = obj.ToObject<DICVSearchManageCards>();
+            return searchList;
+        }
 
     }
 }

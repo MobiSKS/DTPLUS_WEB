@@ -236,5 +236,13 @@ namespace HPCL_Web.Controllers
             return View();
         }
 
+        [HttpPost]
+        public async Task<JsonResult> DICVManageCards(DICVCustomerCards entity, string editFlag)
+        {
+            var searchList = await _dicvService.DICVManageCards(entity, editFlag);
+            ModelState.Clear();
+            return Json(new { searchList = searchList });
+        }
+
     }
 }
