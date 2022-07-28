@@ -724,5 +724,11 @@
         public static string PCICICIRequestToAvailCheckUrl = "api/dtplus/PCICICICreditPouch/chk_eligibility_for_pc";
         public static string PCICICIRequestToAvailEnrollUrl = "api/dtplus/PCICICICreditPouch/insrt_cp_rqst_by_customer_for_pc";
         #endregion
+
+
+        #region "MobileDispenser Surya Yadav"
+        public static string MobileDispenserRetailOutletMapping="api/dtplus/merchant/get_mobile_dispenser_retail_outlet_mapping";
+        public static string StatusMobileDispenserRetailOutletMapping = "api/dtplus/merchant/get_status_mobiledispenser_retailoutletmapping";
+        #endregion
     }
 }
