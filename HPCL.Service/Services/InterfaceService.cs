@@ -1,4 +1,5 @@
 ﻿using HPCL.Common.Helper;
+using HPCL.Common.Models.RequestModel.Interfaces;
 using HPCL.Common.Models.ResponseModel.Interface;
 using HPCL.Common.Models.ViewModel.Interface;
 using HPCL.Service.Interfaces;
@@ -54,6 +55,37 @@ namespace HPCL.Service.Services
             List<GetCardFormDetails> cardFormDetails = CardObjJarr.ToObject<List<GetCardFormDetails>>();
             customerandCardFormResponse.CardFormDetails.AddRange(cardFormDetails);
             return customerandCardFormResponse;
+
+        }
+
+        public async Task<List<RegenerateIACResponseModel>> RegenerateIAC(string TerminalID)
+        {
+            var RegenerateIACForms = new RegenerateIACRequestModel
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                TerminalID = "5013204236"
+            };
+
+            StringContent RegenerateIACTableContent = new StringContent(JsonConvert.SerializeObject(RegenerateIACForms), Encoding.UTF8, "application/json");
+
+            var RegenerateIACResponse = await _requestService.CommonRequestService(RegenerateIACTableContent, WebApiUrl.RegenerateIAC);
+
+            if (string.IsNullOrEmpty(RegenerateIACResponse))
+            {
+                List<RegenerateIACResponseModel> RegenerateIACResponseModel = new List<RegenerateIACResponseModel>();
+                return RegenerateIACResponseModel;
+            }
+            else
+            {
+                JObject RegenerateIACResponseModelTableObj = JObject.Parse(JsonConvert.DeserializeObject(RegenerateIACResponse).ToString());
+                var RegenerateIACResponseModelTableJarr = RegenerateIACResponseModelTableObj["Data"].Value<JArray>();
+                List<RegenerateIACResponseModel> RegenerateIACResponseModel = RegenerateIACResponseModelTableJarr.ToObject<List<RegenerateIACResponseModel>>();
+
+                return RegenerateIACResponseModel;
+            }
+
 
         }
     }

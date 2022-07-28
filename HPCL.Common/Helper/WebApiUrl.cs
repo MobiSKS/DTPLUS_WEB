@@ -361,6 +361,7 @@
         #region Interfaces
         public static string getrecordtype = "api/dtplus/settings/get_record_type";
         public static string searchcustomerandcardform = "api/dtplus/customer/search_customer_and_card_form";
+        public static string RegenerateIAC = "api/dtplus/dtp/regenerate_iac";
         #endregion
 
 
