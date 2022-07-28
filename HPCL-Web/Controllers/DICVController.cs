@@ -225,6 +225,11 @@ namespace HPCL_Web.Controllers
             var result = await _dicvService.ResetDICVDealerPassword(UserName);
             return Json(new { result = result });
         }
-
+        [HttpPost]
+        public async Task<JsonResult> EnableDisableDICVDealer(string DealerCode, string OfficerType, string EnableDisableFlag)
+        {
+            var result = await _dicvService.EnableDisableDICVDealer(DealerCode, OfficerType, EnableDisableFlag);
+            return Json(new { result = result });
+        }
     }
 }

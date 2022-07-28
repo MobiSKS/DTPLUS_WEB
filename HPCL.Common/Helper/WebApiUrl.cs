@@ -670,6 +670,7 @@
         public static string getDicvMobileAndFastagno = "api/dtplus/DICV/get_dicv_mobile_and_fastagno";
         public static string dicvUpdateMobileAndFastagNoInCard = "api/dtplus/DICV/dicv_update_mobile_and_fastag_no_in_card";
         public static string updateDicvDealerEmailResetPassword = "api/dtplus/DICV/update_dicv_dealer_email_reset_password";
+        public static string enableDisableDicvDealer = "api/dtplus/DICV/enable_disable_dicv_dealer";
         #endregion
 
         #region "Parent Customer HDFC Bank Credit Pouch"
@@ -719,6 +720,12 @@
         public static string PCICICIRequestAuthorizationActionUrl = "api/dtplus/PCICICICreditPouch/auth_action_cp_for_pc";
         public static string PCICICIRequestToAvailCheckUrl = "api/dtplus/PCICICICreditPouch/chk_eligibility_for_pc";
         public static string PCICICIRequestToAvailEnrollUrl = "api/dtplus/PCICICICreditPouch/insrt_cp_rqst_by_customer_for_pc";
+        #endregion
+
+
+        #region "MobileDispenser Surya Yadav"
+        public static string MobileDispenserRetailOutletMapping="api/dtplus/merchant/get_mobile_dispenser_retail_outlet_mapping";
+        public static string StatusMobileDispenserRetailOutletMapping = "api/dtplus/merchant/get_status_mobiledispenser_retailoutletmapping";
         #endregion
     }
 }
