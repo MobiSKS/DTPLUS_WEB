@@ -1,6 +1,7 @@
 ﻿using HPCL.Common.Helper;
 using HPCL.Common.Models;
 using HPCL.Common.Models.CommonEntity;
+using HPCL.Common.Models.CommonEntity.ResponseEnities;
 using HPCL.Common.Models.RequestModel.AshokLeyLand;
 using HPCL.Common.Models.RequestModel.JCB;
 using HPCL.Common.Models.RequestModel.Merchant;
@@ -255,7 +256,7 @@ namespace HPCL.Service.Services
             return model;
         }
 
-        public async Task<JCBOTCCardDealerAllocationResponse> GetViewJCBOTCCardDealerAllocation(string DealerCode, string CardNo)
+        public async Task<JCBOTCCardDealerAllocationResponse> GetViewJCBOTCCardDealerAllocation(string DealerCode, string CardNo, bool ShowUnmappedCard)
         {
             var searchBody = new GetJCBOTCCardDealerAllocationRequestModel()
             {
@@ -273,6 +274,9 @@ namespace HPCL.Service.Services
             JCBOTCCardDealerAllocationResponse response = new JCBOTCCardDealerAllocationResponse();
 
             response = JsonConvert.DeserializeObject<JCBOTCCardDealerAllocationResponse>(ResponseContent);
+
+            if (response != null)
+                response.ShowUnmappedCard = ShowUnmappedCard;
 
             return response;
         }
@@ -925,7 +929,8 @@ namespace HPCL.Service.Services
                     Customerid = viewCardDetails.Customerid,
                     Cardno = viewCardDetails.CardNo,
                     Vehiclenumber = viewCardDetails.VechileNo,
-                    Mobileno = viewCardDetails.MobileNo
+                    Mobileno = viewCardDetails.MobileNo,
+                    IsNewMapping = false
 
                 };
             }
@@ -939,13 +944,14 @@ namespace HPCL.Service.Services
                     Customerid = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                     Cardno = viewCardDetails.CardNo,
                     Vehiclenumber = viewCardDetails.VechileNo,
-                    Mobileno = viewCardDetails.MobileNo
+                    Mobileno = viewCardDetails.MobileNo,
+                    IsNewMapping = false
                 };
             }
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
-            var response = await _requestService.CommonRequestService(content, WebApiUrl.SearchCardMappingUrl);
-
+            //var response = await _requestService.CommonRequestService(content, WebApiUrl.SearchCardMappingUrl);
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getJcbMobileAndFastagno);
 
             viewCardSearch = JsonConvert.DeserializeObject<JCBViewCardSearch>(response);
             return viewCardSearch;
@@ -992,16 +998,133 @@ namespace HPCL.Service.Services
                     Customerid = viewCardDetails.Customerid,
                     Cardno = viewCardDetails.CardNo,
                     Vehiclenumber = viewCardDetails.VechileNo,
-                    Mobileno = viewCardDetails.MobileNo
+                    Mobileno = viewCardDetails.MobileNo,
+                    IsNewMapping = true
                 };
             }
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
-            var response = await _requestService.CommonRequestService(content, WebApiUrl.searchcardmappingdetailswithblankmobile);
-            //var response = await _requestService.CommonRequestService(content, WebApiUrl.getJcbMobileAndFastagno);
+            //var response = await _requestService.CommonRequestService(content, WebApiUrl.searchcardmappingdetailswithblankmobile);
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getJcbMobileAndFastagno);
 
             viewCardSearch = JsonConvert.DeserializeObject<JCBViewCardSearch>(response);
             return viewCardSearch;
+        }
+        public async Task<GetJCBDealerCardDispatchResponse> GetJCBDealerCardDispatchDetails(string CustomerID)
+        {
+            var request = new GetALCardDispatchDetailsRequest
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                CustomerID = CustomerID
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getJcbDispatchDetail);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            GetJCBDealerCardDispatchResponse roleLocationResponse = obj.ToObject<GetJCBDealerCardDispatchResponse>();
+
+            return roleLocationResponse;
+        }
+        public async Task<InsertResponse> ResetJCBDealerPassword(string UserName)
+        {
+            var requestBody = new UpdateAlDealePasswordReset
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                UserName = UserName
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.updateJcbDealerCommunicationEmailResetPassword);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            InsertResponse result = obj.ToObject<InsertResponse>();
+            return result;
+        }
+        public async Task<JCBHotlistorReactivateViewModel> JCBHotlistAndReactivate()
+        {
+            JCBHotlistorReactivateViewModel model = new JCBHotlistorReactivateViewModel();
+
+            var entitytype = await _commonActionService.GetEntityTypeList();
+
+            List<HotlistEntity> newlist = new List<HotlistEntity>();
+
+            foreach (HotlistEntity entity in entitytype)
+            {
+                if (entity.EntityId == 1 || entity.EntityId == 3)
+                {
+                    newlist.Add(entity);
+                }
+            }
+
+            model.HotlistEntity.AddRange(newlist);
+
+            return model;
+        }
+        public async Task<List<JCBHotlistReason>> GetReasonListForEntities(string EntityTypeId)
+        {
+            var forms = new JCBHotlistRequestModel
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                EntityTypeId = EntityTypeId != "" ? Convert.ToInt32(EntityTypeId) : 0
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.jcbHotlistReactive);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<JCBHotlistReason> HotlistReason = jarr.ToObject<List<JCBHotlistReason>>();
+            var sortedtList = HotlistReason.OrderBy(x => x.ReasonId).ToList();
+            return sortedtList;
+        }
+        public async Task<List<string>> ApplyHotlistorReactivate([FromBody] JCBHotlistorReactivateViewModel hotlistorReactivateViewModel)
+        {
+            string customerId = "";
+            string cardNo = "";
+            if (hotlistorReactivateViewModel.EntityTypeId == "1")
+                customerId = hotlistorReactivateViewModel.EntityIdVal;
+            if (hotlistorReactivateViewModel.EntityTypeId == "3")
+                cardNo = hotlistorReactivateViewModel.EntityIdVal;
+
+            var hotlistRequest = new JCBHotlistingRequestModel
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                EntityTypeId = hotlistorReactivateViewModel.EntityTypeId != "" ? Convert.ToInt32(hotlistorReactivateViewModel.EntityTypeId) : 0,
+                CustomerId = customerId,
+                CardNo = cardNo,
+                ActionId = hotlistorReactivateViewModel.ActionId != "" ? Convert.ToInt32(hotlistorReactivateViewModel.ActionId) : 0,
+                ReasonId = hotlistorReactivateViewModel.ReasonId != "" ? Convert.ToInt32(hotlistorReactivateViewModel.ReasonId) : 0,
+                RemarksOthers = hotlistorReactivateViewModel.ReasonDetails,
+                Remarks = hotlistorReactivateViewModel.Remarks,
+                ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
+            };
+
+            StringContent requestContent = new StringContent(JsonConvert.SerializeObject(hotlistRequest), Encoding.UTF8, "application/json");
+            var Response = await _requestService.CommonRequestService(requestContent, WebApiUrl.jcbUpdateHotlistReactivate);
+            JObject ResponseObj = JObject.Parse(JsonConvert.DeserializeObject(Response).ToString());
+            List<string> messageList = new List<string>();
+            if (ResponseObj["Status_Code"].ToString() == "200")
+            {
+                var responseJarr = ResponseObj["Data"].Value<JArray>();
+                List<HotlistSuccessResponse> responseList = responseJarr.ToObject<List<HotlistSuccessResponse>>();
+                messageList.Add(responseList[0].Status.ToString());
+                messageList.Add(responseList[0].Reason.ToString());
+            }
+            else
+            {
+                messageList.Add(ResponseObj["Message"].ToString());
+            }
+            return messageList;
         }
 
     }

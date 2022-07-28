@@ -18,5 +18,6 @@ namespace HPCL.Service.Interfaces
         Task<MerchantModel> MerchantSummary(string ERPCode, string fromDate, string toDate);
         Task<SearchMerchantModel> SearchMerchant();
         Task<List<SearchDetailsTableModel>> SearchMerchantDetails(string merchantId, string erpCode, string retailOutletName, string city, string highwayNo, string status);
+        Task<RequestforReactivationViewModel> MerchantRequestForReactivation(RequestforReactivationViewModel reqEntity);
     }
 }

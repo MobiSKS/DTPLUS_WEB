@@ -1,5 +1,6 @@
 ﻿using HPCL.Common.Models;
 using HPCL.Common.Models.CommonEntity;
+using HPCL.Common.Models.CommonEntity.ResponseEnities;
 using HPCL.Common.Models.RequestModel.JCB;
 using HPCL.Common.Models.ResponseModel.AshokLayland;
 using HPCL.Common.Models.ResponseModel.CustomerManage;
@@ -25,7 +26,7 @@ namespace HPCL.Service.Interfaces
         Task<GetJCBBalanceOTCCardResponse> CheckJCBDealerBalanceQty(string DealerCode);
         Task<JCBOTCCardRequestModel> JCBDealerOTCCardRequest(JCBOTCCardRequestModel model);
         Task<ViewJCBUnmappedOTCCardsModel> ViewJCBUnmappedOTCCards();
-        Task<JCBOTCCardDealerAllocationResponse> GetViewJCBOTCCardDealerAllocation(string DealerCode, string CardNo);
+        Task<JCBOTCCardDealerAllocationResponse> GetViewJCBOTCCardDealerAllocation(string DealerCode, string CardNo, bool ShowUnmappedCard);
         Task<JCBCustomerEnrollmentModel> JCBCustomerEnrollment();
         Task<GetSalesExecutiveEmployeeIDResponse> GetJCBSalesExeEmpId(string dealerCode);
         Task<JCBCustomerEnrollmentModel> GetJCBCustomerOTCCardPartialView([FromBody] List<JCBCardEntryDetails> arrs);
@@ -43,5 +44,10 @@ namespace HPCL.Service.Interfaces
         Task<JCBViewCardSearch> SearchCardMapping(JCBViewCardDetails viewCardDetails);
         Task<List<string>> UpdateCards(JCBUpdateMobileandFastagNoInCard[] limitArray);
         Task<JCBViewCardSearch> AddCardMappingDetails(JCBViewCardDetails viewCardDetails);
+        Task<GetJCBDealerCardDispatchResponse> GetJCBDealerCardDispatchDetails(string CustomerID);
+        Task<InsertResponse> ResetJCBDealerPassword(string UserName);
+        Task<JCBHotlistorReactivateViewModel> JCBHotlistAndReactivate();
+        Task<List<JCBHotlistReason>> GetReasonListForEntities(string EntityTypeId);
+        Task<List<string>> ApplyHotlistorReactivate([FromBody] JCBHotlistorReactivateViewModel hotlistorReactivateViewModel);
     }
 }

@@ -16,6 +16,7 @@ namespace HPCL.Service.Interfaces
         Task<List<KeyEventsResponseModel>> KeyEvents(string CustomerId);
         Task<List<LastFiveTransactionsResponseModel>> LastFiveTransactions(string CustomerId);
         Task<List<LastestDrivestarsTransactionResponseModel>> LastestDrivestarsTransaction(string CustomerId);
-   
+        Task<List<GetNotificationContentResponseModel>> GetNotificationContent(string UserType);
+        
     }
 }

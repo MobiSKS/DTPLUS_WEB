@@ -1,4 +1,6 @@
 ﻿using HPCL.Common.Helper;
+using HPCL.Common.Models.CommonEntity;
+using HPCL.Common.Models.ViewModel;
 using HPCL.Common.Models.ViewModel.Interface;
 using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -20,9 +22,10 @@ namespace HPCL_Web.Controllers
             _interfaceService = interfaceService;
             _commonActionService = commonActionService;
         }
+     
         public IActionResult Index()
         {
-            return View();
+            return View(SessionMenuModel.menuList);
         }
         public async Task<IActionResult> SearchCustomerandCardForm()
         {
@@ -41,6 +44,17 @@ namespace HPCL_Web.Controllers
                 return PartialView("~/Views/Interfaces/_CustomerFormDetails.cshtml", modals);
             else
                 return PartialView("~/Views/Interfaces/_CardFormDetails.cshtml", modals);
+        }
+
+        public async Task<IActionResult> Interface(string TerminalID)
+        {   
+            var RegenerateIAC = await _interfaceService.RegenerateIAC(TerminalID);
+
+            RegenerateIACModel Interface = new RegenerateIACModel();
+
+            Interface.RegenerateIACResponseModel = RegenerateIAC;
+        
+            return View(Interface);
         }
     }
 }

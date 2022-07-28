@@ -1,6 +1,7 @@
 ﻿using HPCL.Common.Helper;
 using HPCL.Common.Models.RequestModel.Customer;
 using HPCL.Common.Models.RequestModel.ParentCustomer;
+using HPCL.Common.Models.ViewModel.Aggregator;
 using HPCL.Common.Models.ViewModel.ParentCustomer;
 using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -107,6 +108,7 @@ namespace HPCL_Web.Controllers
         {
             var modals = await _customerService.UpdateParentCustomer(CustomerId, RequestId);
             ViewBag.IsSearch = String.IsNullOrEmpty(IsSearch) ? "false" : "true";
+            modals.IsSearch = String.IsNullOrEmpty(IsSearch) ? "false" : "true";
             return View(modals);
         }
 
@@ -115,7 +117,7 @@ namespace HPCL_Web.Controllers
         {
 
             var modals = await _customerService.UpdateParentCustomer(cust);
-
+            modals.IsSearch = cust.IsSearch;
             if (cust.Internel_Status_Code == 1000)
             {
                 ViewBag.Success = cust.Remarks;
@@ -344,7 +346,10 @@ namespace HPCL_Web.Controllers
             var modals = new BasicSearchViewModel();
 
             if ((reqEntity.CustomerId != null || reqEntity.CustomerName != null || reqEntity.NameOnCard != null || reqEntity.MobileNumber != null || reqEntity.FormNumber != null) && (reqEntity.CustomerId != "" || reqEntity.CustomerName != "" || reqEntity.NameOnCard != "" || reqEntity.MobileNumber != "" || reqEntity.FormNumber != ""))
+            {
                 modals = await _customerService.CustomerBasicSearch(reqEntity);
+                ViewBag.Search = "Yes";
+            }
             modals.SearchStateMdl.AddRange(await _commonActionService.GetStateList());
             return View(modals);
         }
@@ -356,10 +361,11 @@ namespace HPCL_Web.Controllers
             ViewBag.IsSearch = "true";
             return View(modals);
         }
-        public async Task<IActionResult> ConvertParenttoAggregator(BasicSearchViewModel reqEntity, string reset)
+        public async Task<IActionResult> ConvertParenttoAggregator(string CustomerId, string NameOnCard)
         {
             var modals = new ConvertParenttoAggregatorViewModel();
-
+            if (CustomerId != null || NameOnCard != null || CustomerId != "" || NameOnCard != "")
+                modals = await _customerService.ConvertParentToAggregator(CustomerId, NameOnCard);
 
             return View(modals);
         }
@@ -369,6 +375,41 @@ namespace HPCL_Web.Controllers
             var modals = await _customerService.GetTransactionLocationDetails(reqEntity);
             return Json(modals);
 
+        }
+        public async Task<IActionResult> UpdateParentasAggregatorCustomer(string CustomerId, string RequestId)
+        {
+            var modals = new ManageAggregatorViewModel();
+            if (CustomerId != null && CustomerId != "")
+            {
+                var parentModal = await _customerService.UpdateParentCustomer(CustomerId, RequestId);
+                if (parentModal != null)
+                {
+                    var reqEntity = JsonConvert.SerializeObject(parentModal);
+                    modals = JsonConvert.DeserializeObject<ManageAggregatorViewModel>(reqEntity);
+                    modals.CustomerStateMdl.RemoveAt(0);
+                    modals.CommunicationDistrictMdl.RemoveAt(0);
+                    modals.PerOrRegAddressDistrictMdl.RemoveAt(0);
+                }
+
+            }
+            return View(modals);
+        }
+        [HttpPost]
+        public async Task<IActionResult> UpdateParentasAggregatorCustomer(ManageAggregatorViewModel cust)
+        {
+
+            var modals = await _customerService.UpdateParentasAggregatorCustomer(cust);
+
+            if (cust.Internel_Status_Code == 1000)
+            {
+                ViewBag.Success = cust.Remarks;
+            }
+            else
+            {
+                ViewBag.Success = "false";
+            }
+
+            return View(modals);
         }
     }
 }

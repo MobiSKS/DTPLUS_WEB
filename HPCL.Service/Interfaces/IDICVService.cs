@@ -1,5 +1,6 @@
 ﻿using HPCL.Common.Models;
 using HPCL.Common.Models.CommonEntity.ResponseEnities;
+using HPCL.Common.Models.RequestModel.DICV;
 using HPCL.Common.Models.ResponseModel.AshokLayland;
 using HPCL.Common.Models.ResponseModel.DICV;
 using HPCL.Common.Models.ResponseModel.VolvoEicher;
@@ -29,5 +30,14 @@ namespace HPCL.Service.Interfaces
         Task<DICVCustomerEnrollmentModel> GetDICVCustomerOTCCardPartialView([FromBody] List<DICVCardEntryDetails> arrs);
         Task<List<DICVOTCCardDetails>> GetAvailableDICVOTCCardForDealer(string DealerCode);
         Task<GetSalesExecutiveEmployeeIDResponse> GetDICVSalesExeEmpId(string dealerCode);
+        Task<DICVHotlistorReactivateViewModel> DICVHotlistAndReactivate();
+        Task<List<DICVHotlistReason>> GetReasonListForEntities(string EntityTypeId);
+        Task<List<string>> ApplyHotlistorReactivate([FromBody] DICVHotlistorReactivateViewModel hotlistorReactivateViewModel);
+        Task<GetDICVCommunicationEmailResetPasswordResponse> GetDICVCommunicationEmailResetPassword(string CustomerId);
+        Task<InsertResponse> UpdateDICVCommunicationEmailResetPassword(string CustomerId, string AlternateEmailId);
+        Task<DICVViewCardSearch> SearchCardMapping(DICVViewCardDetails viewCardDetails);
+        Task<List<string>> UpdateCards(DICVUpdateMobileandFastagNoInCard[] limitArray);
+        Task<DICVViewCardSearch> AddCardMappingDetails(DICVViewCardDetails viewCardDetails);
+        Task<InsertResponse> ResetDICVDealerPassword(string UserName);
     }
 }

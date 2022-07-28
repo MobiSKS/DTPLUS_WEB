@@ -16,7 +16,7 @@ namespace HPCL.Common.Models.ViewModel.Cards
             LimitTypeLst = new List<GetLimitTypeResponse>();
             LimitTypeLst.Add(new GetLimitTypeResponse
             {
-                Id = "0",
+                Id = "",
                 LimitType = "Select"
             });
         }

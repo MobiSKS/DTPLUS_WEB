@@ -28,7 +28,7 @@ namespace HPCL.Service.Interfaces
         Task<List<CardListResponse>> GetCardList();
         Task<CustomerSearchDetails> ManageMapping(GetCustomerDetailsMapMerchant entity);
         Task<FetchMerchant> GetMerchantForMapping(GetCustomerDetailsMapMerchant entity);
-        Task<string> SaveCustomerMappingMerchant(string objCardMerchantMaps, string status);
+        Task<List<SuccessResponse>> SaveCustomerMappingMerchant(string objCardMerchantMaps, string status);
         Task<SearchAllowedMerchantResponse> SearchAllowedMerchant(SearchAllowedMerchant entity);
         Task<LimitUpdateForSingleRechargeCardsRes> LimitUpdateForSingleRechargeCardsService(GetLimitUpdateForSingleRechargeCards entity);
         Task<List<SuccessResponse>> LimitUpdateForSingleRecharge(string objCCMSLimits);

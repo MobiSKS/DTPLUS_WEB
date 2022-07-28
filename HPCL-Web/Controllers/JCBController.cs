@@ -113,9 +113,9 @@ namespace HPCL_Web.Controllers
 
             return View(Model);
         }
-        public async Task<IActionResult> GetViewJCBOTCCardDealerAllocation(string DealerCode, string CardNo)
+        public async Task<IActionResult> GetViewJCBOTCCardDealerAllocation(string DealerCode, string CardNo, bool ShowUnmappedCard)
         {
-            var modals = await _jcbService.GetViewJCBOTCCardDealerAllocation(DealerCode, CardNo);
+            var modals = await _jcbService.GetViewJCBOTCCardDealerAllocation(DealerCode, CardNo, ShowUnmappedCard);
             return PartialView("~/Views/JCB/_JCBOTCCardsDealerAllocationTable.cshtml", modals);
         }
         public async Task<IActionResult> JCBCustomerEnrollment()
@@ -274,6 +274,37 @@ namespace HPCL_Web.Controllers
 
             ModelState.Clear();
             return Json(searchList);
+        }
+        public async Task<ActionResult> GetJCBDealerCardDispatchDetails(string CustomerID)
+        {
+            var model = await _jcbService.GetJCBDealerCardDispatchDetails(CustomerID);
+            return PartialView("~/Views/JCB/_ViewJCBDealerCardDispatchDetails.cshtml", model);
+        }
+        [HttpPost]
+        public async Task<JsonResult> ResetJCBDealerPassword(string UserName)
+        {
+            var result = await _jcbService.ResetJCBDealerPassword(UserName);
+            return Json(new { result = result });
+        }
+        public async Task<IActionResult> JCBHotlistAndReactivate()
+        {
+            var model = await _jcbService.JCBHotlistAndReactivate();
+
+            return View(model);
+        }
+        [HttpPost]
+        public async Task<JsonResult> GetReasonListForEntities(string EntityTypeId)
+        {
+            var sortedtList = await _jcbService.GetReasonListForEntities(EntityTypeId);
+
+            ModelState.Clear();
+            return Json(sortedtList);
+        }
+        [HttpPost]
+        public async Task<IActionResult> ApplyHotlistorReactivate([FromBody] JCBHotlistorReactivateViewModel HotlistorReactivateResponseModel)
+        {
+            var result = await _jcbService.ApplyHotlistorReactivate(HotlistorReactivateResponseModel);
+            return Json(result);
         }
 
     }

@@ -37,6 +37,10 @@ namespace HPCL_Web.Controllers
         {
             return View(SessionMenuModel.menuList);
         }
+        public async Task<IActionResult> Request()
+        {
+            return View(SessionMenuModel.menuList);
+        }
         public async Task<IActionResult> CreateMerchant(string merchantIdValue, string fromDate, string toDate, string category, string ERPCode, string actionFlow)
         {
             var modals = await _merchantServices.CreateMerchant(merchantIdValue, fromDate, toDate, category, ERPCode, actionFlow);
@@ -131,5 +135,16 @@ namespace HPCL_Web.Controllers
             var modals = await _merchantServices.SearchMerchantDetails(merchantId, erpCode, retailOutletName, city, highwayNo, status);
             return PartialView("~/Views/Merchant/_SearchResultForMerchantTable.cshtml", modals);
         }
+        public async Task<IActionResult> MerchantRequestForReactivation(RequestforReactivationViewModel reqEntity)
+        {
+            var modals = await _merchantServices.MerchantRequestForReactivation(reqEntity);
+            modals.SBUTypes.AddRange(await _commonActionService.GetSbuTypeList());
+            modals.ZonalOffices.AddRange(await _commonActionService.GetZonalOfficeListbySBUtype("1"));
+            modals.StatusList.AddRange(await _commonActionService.GetMerchantReactivationStatus());
+            //modals.HotlistedDates.AddRange(await _commonActionService.GetMerchantReactivationStatus());
+            return View(modals);
+            
+        }
+        
     }
 }

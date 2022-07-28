@@ -20,6 +20,9 @@ namespace HPCL_Web.Controllers
             _customerDashboardService = customerDashboardServices;
             _commonActionService = commonActionService;
         }
+
+        public string UserType { get; set; }
+
         public async Task<IActionResult> CustomerDashboard(string CustomerId)
         {
             var dashboardLst = await _customerDashboardService.AccountSummary(CustomerId);
@@ -28,6 +31,8 @@ namespace HPCL_Web.Controllers
             var lastfivetran = await _customerDashboardService.LastFiveTransactions(CustomerId);
             var lastestDriveTrans = await _customerDashboardService.LastestDrivestarsTransaction(CustomerId);
             var keyevents = await _customerDashboardService.KeyEvents(CustomerId);
+            var GetNotificationContent = await _customerDashboardService.GetNotificationContent(UserType);
+
 
             CustomerDashboardModel customerDashbord = new CustomerDashboardModel();
 
@@ -37,9 +42,37 @@ namespace HPCL_Web.Controllers
             customerDashbord.LastFiveTransactionsResponseModels = lastfivetran;
             customerDashbord.LastestDrivestarsTransactionResponseModel = lastestDriveTrans;
             customerDashbord.KeyEventsResponseModels = keyevents;
+            customerDashbord.GetNotificationContentResponseModel = GetNotificationContent;
 
-             return View(customerDashbord);
+            return View(customerDashbord);
         }
-   
+        [HttpPost]
+        public async Task<JsonResult> GetKeyEvents(string CustomerId)
+        {
+            CustomerDashboardModel CustomerDashboard = new CustomerDashboardModel();
+
+            var KeyEvents = await _customerDashboardService.KeyEvents(CustomerId);
+
+            return Json(KeyEvents);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> GetLast5Transactions(string CustomerId)
+        {
+            CustomerDashboardModel CustomerDashboard = new CustomerDashboardModel();
+
+            var Last5Transactions = await _customerDashboardService.LastFiveTransactions(CustomerId);
+
+            return Json(Last5Transactions);
+        }
+        [HttpPost]
+        public async Task<JsonResult> GetLastestDrivestarsTransactions(string CustomerId)
+        {
+            CustomerDashboardModel CustomerDashboard = new CustomerDashboardModel();
+
+            var LastestDrivestarsTransactions = await _customerDashboardService.LastestDrivestarsTransaction(CustomerId);
+
+            return Json(LastestDrivestarsTransactions);
+        }
     }
 }
