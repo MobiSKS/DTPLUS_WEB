@@ -5,13 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HPCL.Common.Models.ResponseModel.JCB
+namespace HPCL.Common.Models.ResponseModel.DICV
 {
-    public class JCBViewCardSearch : CommonResponseBase
+    public class DICVViewCardSearch : CommonResponseBase
     {
-        public virtual List<JCBViewCardSearchResult> Data { get; set; } = new List<JCBViewCardSearchResult>();
+        public virtual List<DICVViewCardSearchResult> Data { get; set; } = new List<DICVViewCardSearchResult>();
     }
-    public class JCBViewCardSearchResult
+    public class DICVViewCardSearchResult
     {
         public string SrNumber { get; set; }
         public string UserName { get; set; }

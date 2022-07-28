@@ -9,7 +9,7 @@
             <li class="breadcrumb-item"><a href="@Url.Action("Index")" class="text_primary">Request</a> </li>
             <li class="breadcrumb-item font-weight-light">Card Renewal Request</li>
         </ul>
-        <form method="post" data-ajax="true" data-ajax-controller="CustomerRequest" data-ajax-action="CardRenewalRequest" data-ajax-method="POST" data-ajax-success="OnSuccess" data-ajax-failure="OnFailure">
+        <form id="formVal" method="post" data-ajax="true" data-ajax-controller="CustomerRequest" data-ajax-action="CardRenewalRequest" data-ajax-method="POST" data-ajax-success="OnSuccess" data-ajax-failure="OnFailure">
             <div class="w-100">
                 <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
                     <div class="border-1 rounded border-grey h-100">
@@ -107,29 +107,28 @@
             return true;
         }
 
-        //var loginType = '@Context.Session.GetString("LoginType")';
+        var loginType = '@Context.Session.GetString("LoginType")';
 
-        //if (loginType == "Customer") {
+        if (loginType == "Customer") {
 
-        //    $.ajax({
-        //        url: "@Url.Action("SetSaleLimit", "Cards")",
-        //        type: "POST",
-        //        dataType: "JSON",
-        //        success: function (data) {
+            $("#CustomerDefaultVal").val('@Context.Session.GetString("UserId")');
+            $("#CustomerDefaultVal").attr("readonly", true);
 
-        //            OnSuccessSetLimit(data);
+            $.ajax({
+                url: "@Url.Action("CardRenewalRequest", "CustomerRequest")",
+                type: "POST",
+                data: $("#formVal").serialize(),
+                dataType: "JSON",
+                success: function (data) {
 
-        //            $("#CustomerDefaultVal").val('@Context.Session.GetString("UserId")');
-        //            $("#CustomerDefaultVal").attr("readonly", true);
+                    OnSuccess(data);
 
-        //            document.getElementById('UpdateGrid').style.display = 'block';
-
-        //        },
-        //        error: function (ex) {
-        //            alert('Failed' + ex);
-        //        }
-        //    });
-        //}
+                },
+                error: function (ex) {
+                    alert('Failed' + ex);
+                }
+            });
+        }
     });
 
     function resetClick() {

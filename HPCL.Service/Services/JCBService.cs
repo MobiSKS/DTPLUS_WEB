@@ -929,7 +929,8 @@ namespace HPCL.Service.Services
                     Customerid = viewCardDetails.Customerid,
                     Cardno = viewCardDetails.CardNo,
                     Vehiclenumber = viewCardDetails.VechileNo,
-                    Mobileno = viewCardDetails.MobileNo
+                    Mobileno = viewCardDetails.MobileNo,
+                    IsNewMapping = false
 
                 };
             }
@@ -943,13 +944,14 @@ namespace HPCL.Service.Services
                     Customerid = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                     Cardno = viewCardDetails.CardNo,
                     Vehiclenumber = viewCardDetails.VechileNo,
-                    Mobileno = viewCardDetails.MobileNo
+                    Mobileno = viewCardDetails.MobileNo,
+                    IsNewMapping = false
                 };
             }
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
-            var response = await _requestService.CommonRequestService(content, WebApiUrl.SearchCardMappingUrl);
-
+            //var response = await _requestService.CommonRequestService(content, WebApiUrl.SearchCardMappingUrl);
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getJcbMobileAndFastagno);
 
             viewCardSearch = JsonConvert.DeserializeObject<JCBViewCardSearch>(response);
             return viewCardSearch;
@@ -996,13 +998,14 @@ namespace HPCL.Service.Services
                     Customerid = viewCardDetails.Customerid,
                     Cardno = viewCardDetails.CardNo,
                     Vehiclenumber = viewCardDetails.VechileNo,
-                    Mobileno = viewCardDetails.MobileNo
+                    Mobileno = viewCardDetails.MobileNo,
+                    IsNewMapping = true
                 };
             }
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
-            var response = await _requestService.CommonRequestService(content, WebApiUrl.searchcardmappingdetailswithblankmobile);
-            //var response = await _requestService.CommonRequestService(content, WebApiUrl.getJcbMobileAndFastagno);
+            //var response = await _requestService.CommonRequestService(content, WebApiUrl.searchcardmappingdetailswithblankmobile);
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getJcbMobileAndFastagno);
 
             viewCardSearch = JsonConvert.DeserializeObject<JCBViewCardSearch>(response);
             return viewCardSearch;
