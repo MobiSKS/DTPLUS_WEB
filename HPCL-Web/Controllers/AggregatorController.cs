@@ -298,20 +298,12 @@ namespace HPCL_Web.Controllers
             return Json(lstDistrict);
         }
 
-        public async Task<IActionResult> UpdateAggregatorCustomer(string FormNumber,string customerId,string requestId)
+        public async Task<IActionResult> UpdateAggregatorCustomer(string FormNumber)
         {
             var modals = new ManageAggregatorViewModel();
             if (FormNumber!=null && FormNumber!="")
                 modals = await _aggregatorService.UpdateAggregatorCustomer(FormNumber);
-            if (customerId!=null && customerId!="")
-            {
-                var parentModal = await _ParentCustomerService.UpdateParentCustomer(customerId, requestId);
-                if (parentModal != null)
-                {
-                    var reqEntity= JsonConvert.SerializeObject(parentModal);
-                    modals = JsonConvert.DeserializeObject<ManageAggregatorViewModel>(reqEntity);
-                }
-            }
+           
             return View(modals);
         }
 

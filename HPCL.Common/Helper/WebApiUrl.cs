@@ -548,6 +548,11 @@
         public static string getparenttransactionlocationdetails = "api/dtplus/ParentCustomer/transaction_details";
         public static string Convertparentcustomertoaggregator = "api/dtplus/ParentCustomer/Convert_parent_customer_to_aggregator";
         public static string PostAuthCreditPouchUrl = "api/dtplus/customer/post_authorization_for_credit_pouch";
+        public static string convertparenttoaggregator = "api/dtplus/ParentCustomer/convert_parent_to_aggregator";
+        
+
+
+
 
 
         #endregion

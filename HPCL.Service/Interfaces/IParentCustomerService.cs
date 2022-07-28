@@ -3,6 +3,7 @@ using HPCL.Common.Models.RequestModel.Customer;
 using HPCL.Common.Models.RequestModel.ParentCustomer;
 using HPCL.Common.Models.ResponseModel.Customer;
 using HPCL.Common.Models.ResponseModel.ParentCustomer;
+using HPCL.Common.Models.ViewModel.Aggregator;
 using HPCL.Common.Models.ViewModel.ParentCustomer;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -50,5 +51,6 @@ namespace HPCL.Service.Interfaces
         Task<BasicSearchViewModel> CustomerBasicSearch(BasicSearchViewModel reqEntity);
         Task<ViewParentChildTransactionDetailsModel> GetTransactionLocationDetails(PCTransactionLocationrequest requestInfo);
         Task<ConvertParenttoAggregatorViewModel> ConvertParentToAggregator(string CustomerId, string NameOnCard);
+        Task<ManageAggregatorViewModel> UpdateParentasAggregatorCustomer(ManageAggregatorViewModel cust);
     }
 }
