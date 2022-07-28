@@ -231,5 +231,10 @@ namespace HPCL_Web.Controllers
             var result = await _dicvService.EnableDisableDICVDealer(DealerCode, OfficerType, EnableDisableFlag);
             return Json(new { result = result });
         }
+        public IActionResult DICVManageCards()
+        {
+            return View();
+        }
+
     }
 }

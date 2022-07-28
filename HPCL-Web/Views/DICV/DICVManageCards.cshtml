@@ -1,0 +1,1482 @@
+﻿@model HPCL.Common.Models.ViewModel.DICV.DICVCustomerCards
+@using HPCL.Common.Resources
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ajax-unobtrusive/3.2.6/jquery.unobtrusive-ajax.js"></script>
+
+<div class="bg-white p-2 p-md-4 mb-2 w-100">
+    <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
+        <li class="breadcrumb-item"><a href="@Url.Action("Index","DICV")" class="text_primary">DICV Dashboard</a> </li>
+        <li class="breadcrumb-item font-weight-light">Manage Cards</li>
+    </ul>
+    <form id="formVal">
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active asd" id="basicInfo" role="tabpanel" aria-labelledby="basicInfo-tab">
+                <div class="border-1 rounded border-grey h-100">
+                    <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold" id="ManageCardHeader"> Manage Cards </p>
+                    <div class="px-2 py-2 px-md-4">
+                        <div>
+                            <ul class="nav nav-tabs form_tabs mb-3">
+                                <li id="CustomerCards" class="nav-item">
+                                    <a class="nav-link active" id="CustomerCardTab" data-toggle="tab" href="#CustomerCardsSection" role="tab">Customer Cards</a>
+                                </li>
+                                <li id="CardDetails" class="nav-item">
+                                    <a class="nav-link disabled" id="CardDetailsTab" data-toggle="tab" href="#CardDetailsSection" role="tab">Card Details</a>
+                                </li>
+                                <li id="Limits" class="nav-item">
+                                    <a class="nav-link disabled" id="LimitTab" data-toggle="tab" href="#LimitSection" role="tab">Limits</a>
+                                </li>
+                                <li id="Services" class="nav-item">
+                                    <a class="nav-link disabled" id="ServicesTab" data-toggle="tab" href="#ServiceSection" role="tab">Services</a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="tab-content">
+                            <div id="CustomerCardsSection" class="tab-pane active" role="tabpanel">
+                                <fieldset class="border-1 rounded border-grey pb-3">
+                                    <legend class="font-12 font-weight-bold d-inline-block w-auto ml-3 mb-0 px-2">Search Cards</legend>
+                                    <div class="w-100">
+                                        <div class="d-flex align-items-center justify-content-between flex-wrap">
+                                            <div class="col-md-6 col-12 px-0">
+                                                <div class="form-group d-flex align-items-center flex-wrap">
+                                                    <label class="font-weight-normal col-md-4 col-12 mb-0">Customer ID<sup class="text-danger">*</sup></label>
+                                                    <div class="col-md-7 col-12">
+                                                        @Html.TextBoxFor(m => m.CustomerId, new { @class = "form-control restrictPaste", @id = "GetCustomerIdValue", onkeypress = "return isNumberKey(event)" })
+                                                        @Html.ValidationMessageFor(m => m.CustomerId, "", new {@id="GetCustomerIdValueErr", @class = "text-danger" })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 col-12 px-0">
+                                                <div class="form-group d-flex align-items-center flex-wrap">
+                                                    <label class="font-weight-normal col-md-4 col-12  mb-0 offset-md-1">Card Number</label>
+                                                    <div class="col-md-7 col-12">
+                                                        @Html.TextBoxFor(m => m.CardNo, new {@id="cardNoVal", @class = "form-control restrictPaste", onkeypress = "return isNumberKey(event)" })
+                                                        @Html.ValidationMessageFor(m => m.CardNo, "", new { @class = "text-danger" })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 col-12 px-0">
+                                                <div class="form-group d-flex align-items-center flex-wrap">
+                                                    <label class="font-weight-normal col-md-4 col-12  mb-0">Mobile Number</label>
+                                                    <div class="col-md-7 col-12">
+                                                        @Html.TextBoxFor(m => m.MobileNo, new {@id="mobNoVal", @class = "form-control restrictPaste", onkeypress = "return isNumberKey(event)" })
+                                                        @Html.ValidationMessageFor(m => m.MobileNo, "", new { @class = "text-danger" })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 col-12 px-0">
+                                                <div class="form-group d-flex align-items-center flex-wrap">
+                                                    <label class="font-weight-normal col-md-4 col-12  mb-0  offset-md-1">Vehicle No./Card Identifier</label>
+                                                    <div class="col-md-7 col-12">
+                                                        @Html.TextBoxFor(m => m.VehicleNumber, new {@id="vehicleNoVal", @class = "form-control", maxlength="16" })
+                                                        @Html.ValidationMessageFor(m => m.VehicleNumber, "", new { @class = "text-danger" })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 col-12 px-0">
+                                                <div class="form-group d-flex align-items-center flex-wrap">
+                                                    <label class="font-weight-normal col-md-4 col-12  mb-0">Status</label>
+                                                    <div class="col-md-7 col-12">
+                                                        <select name="StatusFlag" id="" class="form-control statusVal">
+                                                        </select>
+                                                        @Html.ValidationMessageFor(m => m.StatusFlag, "", new { @class = "text-danger" })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="d-flex align-items-center justify-content-center flex-wrap mb-3">
+                                        <div class="px-md-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2">
+                                            <button class="btn btn_primary" type="button" onclick="searchCards()">SEARCH</button>
+                                        </div>
+                                        <div class="px-md-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2" style="display:none">
+                                            <button class="btn btn_primary" type="button" onclick="viewGenericVehicleList()">VIEW GENERIC / ATTACHED VEHICLE</button>
+                                        </div>
+                                        <div class="px-md-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2" style="display:none">
+                                            <button class="btn btn_primary" type="button" onclick="tableToCSV()">DOWNLOAD GENERIC / ATTACHED VEHICLE</button>
+                                        </div>
+                                        <div class="px-md-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2">
+                                            <button class="btn btn_primary" type="button" onclick="tableToCSVManageCard()">Download Excel</button>
+                                        </div>
+                                    </div>
+                                </fieldset>
+
+                                <div id="noRecord" class="mb-3 mt-3 text-center alert alert-danger" style="display:none;"></div>
+
+                                <div id="CardSearch" style="display:none;">
+                                    <div class="d-flex align-items-center justify-content-between flex-wrap mt-3">
+                                        <div class="col-md-6 col-12 px-0">
+                                            <div class="form-group d-flex align-items-center flex-wrap">
+                                                <label class="font-weight-normal col-md-4 col-12 mb-0">Customer ID</label>
+                                                <div class="col-md-7 col-12">
+                                                    <input type="text" readonly class="form-control" id="CustomerIdRes">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-12 px-0">
+                                            <div class="form-group d-flex align-items-center flex-wrap">
+                                                <label class="font-weight-normal offset-md-1 col-md-4 col-12 mb-0">Customer Name</label>
+                                                <div class="col-md-7 col-12">
+                                                    <input type="text" readonly class="form-control" id="CustomerNameRes">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-12 px-0">
+                                            <div class="form-group d-flex align-items-center flex-wrap">
+                                                <label class="font-weight-normal col-md-4 col-12 mb-0">Regional Office Name</label>
+                                                <div class="col-md-7 col-12">
+                                                    <input type="text" readonly class="form-control" id="RegionalOfcRes">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="mt-3">
+                                        <table id="CardSearchTbl" class="datatable table table-striped d-block nowrap table-bordered table-responsive" style="width:100%">
+                                            <thead>
+                                                <tr>
+                                                    <th>S.No.</th>
+                                                    <th>Card Number</th>
+                                                    <th style="display:none;">Customer ID</th>
+                                                    <th>Card Type</th>
+                                                    <th>Vehicle No./Card Identifier</th>
+                                                    <th>Card Preference</th>
+                                                    <th>Vehicle Type</th>
+                                                    <th>Issue Date</th>
+                                                    <th style="display:none;">Expiry Date</th>
+                                                    <th>Status</th>
+                                                    <th style="display:none;">Year Of Registration</th>
+                                                    <th style="display:none;">Manufacturer</th>
+                                                    <th style="display:none;">Owned/Attached</th>
+                                                    <th>Mobile Number</th>
+                                                    <th>VIN Number</th>
+                                                    <th>Cardless Mapping</th>
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <div class="mt-3" id="SearchGenericVehicle" style="display:none;">
+                                    <table id="SearchGenericVehicleTbl" class="datatable table table-striped d-block d-table table-bordered table-responsive no-footer dataTable" style="width:100%">
+                                        <thead>
+                                            <tr>
+                                                <th>S.No.</th>
+                                                <th>Card Number</th>
+                                                <th>Vehicle Number</th>
+                                                <th>Vehicle Make</th>
+                                                <th>Vehicle Type</th>
+                                                <th>Registration Year</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+
+                                <div style="display:none;">
+                                    <table id="SearchGenericVehicleTblHidden" class="datatable table table-striped d-block d-table table-bordered table-responsive no-footer dataTable" style="width:100%">
+                                        <thead>
+                                            <tr class="gen">
+                                                <th>S.No.</th>
+                                                <th>Card Number</th>
+                                                <th>Vehicle Number</th>
+                                                <th>Vehicle Make</th>
+                                                <th>Vehicle Type</th>
+                                                <th>Registration Year</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div id="CardDetailsSection" class="tab-pane" role="tabpanel">
+                                <div class="tab-pane fade show active" id="basicInfo" role="tabpanel" aria-labelledby="basicInfo-tab">
+                                    <div class="w-100">
+                                        <div class="col-lg-6 col-md-12 col-12 pl-0 pr-md-2 pr-0 pb-2">
+                                            <fieldset class="border-1 rounded border-grey">
+                                                <legend class="font-12 font-weight-bold d-inline-block w-auto ml-3 mb-0 px-2">Card Details</legend>
+
+                                                <div class="p-2 col-12">
+                                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                                        <label class="font-weight-normal col-md-5 col-12 mb-0">Customer ID <sup class="text-danger">*</sup></label>
+                                                        <div class="col-md-7 col-12">
+                                                            @Html.TextBoxFor(m => m.CustomerId, new { @id = "CustomerIdCardValue", @class = "form-control", @readonly = "readonly" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                                        <label class="font-weight-normal col-md-5 col-12 mb-0">Card Number</label>
+                                                        <div class="col-md-7 col-12">
+                                                            @Html.TextBoxFor(m => m.CardNo, new { @id = "CardNoDValue", @class = "form-control", @readonly = "readonly" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                                        <label class="font-weight-normal col-md-5 col-12 mb-0">Card Category <sup class="text-danger">*</sup></label>
+                                                        <div class="col-md-7 col-12">
+                                                            <div class="custom_select">
+                                                                @Html.DropDownListFor(m => m.CardCategory, Enumerable.Empty<SelectListItem>(), new { @id = "CardCategoryValue", @class = "form-control disableSumo", disabled = "disabled", @readonly = "readonly" })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                                        <label class="font-weight-normal col-md-5 col-12 mb-0">Card Issue Type <sup class="text-danger">*</sup></label>
+                                                        <div class="col-md-7 col-12">
+                                                            <div class="custom_select">
+                                                                @Html.DropDownListFor(m => m.CardIssueType, Enumerable.Empty<SelectListItem>(), new { @id = "CardIssueTypeValue", @class = "form-control disableSumo", disabled = "disabled" })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                                        <label class="font-weight-normal col-md-5 col-12 mb-0">Request Date <sup class="text-danger">*</sup></label>
+                                                        <div class="col-md-7 col-12">
+                                                            @Html.TextBoxFor(m => m.RequestDate, new { @id = "RequestDateValue", @class = "form-control", @readonly = "readonly" })
+                                                            @Html.ValidationMessageFor(m => m.RequestDate, "", new { @class = "text-danger" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                                        <label class="font-weight-normal col-md-5 col-12 mb-0">Form Number</label>
+                                                        <div class="col-md-7 col-12">
+                                                            @Html.TextBoxFor(m => m.FormNumber, new { @id = "FormNumberValue", @class = "form-control", @readonly = "readonly" })
+                                                            @Html.ValidationMessageFor(m => m.FormNumber, "", new { @class = "text-danger" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                                        <label class="font-weight-normal col-md-5 col-12 mb-0">RBE ID<sup class="text-danger">*</sup></label>
+                                                        <div class="col-md-7 col-12">
+                                                            @Html.TextBoxFor(m => m.RbeId, new { @id = "RbeIdValue", @class = "form-control", @readonly = "readonly" })
+                                                            @Html.ValidationMessageFor(m => m.RbeId, "", new { @class = "text-danger" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                                        <label class="font-weight-normal col-md-5 col-12 mb-0">RBE Name<sup class="text-danger">*</sup></label>
+                                                        <div class="col-md-7 col-12">
+                                                            @Html.TextBoxFor(m => m.RbeName, new { @id = "RbeNameValue", @class = "form-control", @readonly = "readonly" })
+                                                            @Html.ValidationMessageFor(m => m.RbeName, "", new { @class = "text-danger" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </fieldset>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-12 col-12 pr-0 pl-md-2 pl-0 pb-2">
+                                        <fieldset class="border-1 rounded border-grey h-100">
+                                            <legend class="font-12 font-weight-bold d-inline-block w-auto ml-3 mb-0 px-2">Vehicle Details</legend>
+                                            <div class="p-2 col-12">
+                                                <div class="form-group d-flex align-items-center flex-wrap">
+                                                    <label class="font-weight-normal col-md-5 col-12 mb-0">Vehicle Reg. No./User Name<sup class="text-danger">*</sup></label>
+                                                    <div class="col-md-7 col-12">
+                                                        @Html.TextBoxFor(m => m.VehicleNumber, new { @id = "VehicleNumberValue", @class = "form-control", @readonly = "readonly" })
+                                                    </div>
+                                                </div>
+                                                <div class="form-group d-flex align-items-center flex-wrap">
+                                                    <label class="font-weight-normal col-md-5 col-12 mb-0">Type<sup class="text-danger">*</sup></label>
+                                                    <div class="col-md-7 col-12">
+                                                        <div class="custom_select">
+                                                            @Html.DropDownListFor(m => m.vehicleType, Enumerable.Empty<SelectListItem>(), new { @id = "vehicleTypeValue", @class = "form-control disableSumo", disabled = "disabled" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group d-flex align-items-center flex-wrap">
+                                                    <label class="font-weight-normal col-md-5 col-12 mb-0">Make<sup class="text-danger">*</sup></label>
+                                                    <div class="col-md-7 col-12">
+                                                        @Html.TextBoxFor(m => m.VehicleMake, new { @id = "VehicleMakeValue", @class = "form-control", @readonly = "readonly" })
+                                                    </div>
+                                                </div>
+                                                <div class="form-group d-flex align-items-center flex-wrap">
+                                                    <label class="font-weight-normal col-md-5 col-12 mb-0">Year Of Reg.<sup class="text-danger">*</sup></label>
+                                                    <div class="col-md-7 col-12">
+                                                        @Html.TextBoxFor(m => m.YearOfReg, new { @id = "YearOfRegValue", @class = "form-control", @readonly = "readonly" })
+                                                    </div>
+                                                </div>
+                                                <div class="form-group d-flex align-items-center flex-wrap">
+                                                    <label class="font-weight-normal col-md-5 col-12 mb-0">Ownership Type<sup class="text-danger">*</sup></label>
+                                                    <div class="col-md-7 col-12">
+                                                        <div class="custom_select">
+                                                            @Html.DropDownListFor(m => m.OwnerType, Enumerable.Empty<SelectListItem>(), new { @id = "OwnerTypeValue", @class = "form-control disableSumo", disabled = "disabled" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group d-flex align-items-center flex-wrap">
+                                                    <label class="font-weight-normal col-md-5 col-12  mb-0">VIN Number<sup class="text-danger">*</sup></label>
+                                                    <div class="col-md-7 col-12">
+                                                        @Html.TextBoxFor(m => m.VinNumber, new { @id = "VinNumberValue", @class = "form-control", @readonly = "readonly" })
+                                                    </div>
+                                                </div>
+
+                                                <div id="getCardD">
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                </div>
+
+                                <div class="clearfix"></div>
+
+                                <div class="align-items-center justify-content-between flex-wrap" id="feePaymentSection" style="display:none;">
+                                    <div class="w-100">
+                                        <div class="p-2 col-12">
+                                            <fieldset class="border-1 rounded border-grey">
+                                                <legend class="font-12 font-weight-bold d-inline-block w-auto ml-3 mb-0 px-2">Fee Payment Details</legend>
+                                                <div class="col-sm-10 col-12">
+                                                    <div class="form-group">
+                                                        <div class="d-flex align-items-center justify-content-start">
+                                                            <div class="d-flex align-items-center justify-content-start mr-3">
+                                                                @Html.RadioButton("FeePaymentsCollectorFeeWaiver", "1", new { @id = "cardChecked", disabled = "disabled" }) <span class="ml-2"> Online </span>
+                                                            </div>
+                                                            <div class="d-flex align-items-center justify-content-start">
+                                                                @Html.RadioButton("FeePaymentsCollectorFeeWaiver", "2", new { @id = "cardlessChecked", disabled = "disabled" }) <span class="ml-2"> Fee Waiver </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </fieldset>
+
+                                            <div id="onlineFeePayment" style="display:none;margin-top:2%;">
+                                                <div class="col-md-6 col-8">
+                                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                                        <label class="font-weight-normal col-md-5 col-12">Payment Source</label>
+                                                        <div class="col-md-7 col-12">
+                                                            <input type="text" name="perma_address1" class="form-control emailFromFeePayment" readonly="readonly">
+                                                            <div class="error" id="perma_address1_error"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 col-8">
+                                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                                        <label class="font-weight-normal col-md-5 col-12">Payment Date</label>
+                                                        <div class="col-md-7 col-12">
+                                                            <input type="text" name="perma_address2" class="form-control emailDateFeePayment" readonly="readonly">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div id="feeWaiverFeePayment" style="display:none;margin-top:2%;">
+                                                <div class="col-md-6 col-8">
+                                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                                        <label class="font-weight-normal col-md-5 col-12">Approval Email From</label>
+                                                        <div class="col-md-7 col-12">
+                                                            <input type="text" name="perma_address1" class="form-control emailFromFeePayment" readonly="readonly">
+                                                            <div class="error" id="perma_address1_error"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 col-8">
+                                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                                        <label class="font-weight-normal col-md-5 col-12">Approval Email Date</label>
+                                                        <div class="col-md-7 col-12">
+                                                            <input type="text" name="perma_address2" class="form-control emailDateFeePayment" readonly="readonly">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="LimitSection" class="tab-pane" role="tabpanel">
+                                <div class="w-100">
+                                    <div class="d-flex align-items-center justify-content-between flex-wrap">
+                                        <fieldset class="border-1 rounded border-grey">
+                                            <legend class="font-12 font-weight-bold d-inline-block w-auto ml-3 mb-0 px-2">Card Parameters</legend>
+                                            <div class="p-2 col-12">
+                                                <div class="col-md-6 col-12 px-0">
+                                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                                        <label class="font-weight-normal col-md-5 col-12 mb-0">Sale Transaction Limit</label>
+                                                        <div class="col-md-7 col-12">
+                                                            @Html.TextBoxFor(m => m.SaleTranscationLimit, new { @id = "SaleTranscationLimitValue", @class = "form-control", @readonly = "readonly" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 col-12 px-0">
+                                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                                        <label class="font-weight-normal col-md-5 col-12 mb-0">Daily Sale Limit</label>
+                                                        <div class="col-md-7 col-12">
+                                                            @Html.TextBoxFor(m => m.DailySaleLimit, new { @id = "DailySaleLimitValue", @class = "form-control", @readonly = "readonly" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 col-12 px-0">
+                                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                                        <label class="font-weight-normal col-md-5 col-12 mb-0">Daily Credit Limit</label>
+                                                        <div class="col-md-7 col-12">
+                                                            @Html.TextBoxFor(m => m.DailyCreditLimit, new { @id = "DailyCreditLimitValue", @class = "form-control", @readonly = "readonly" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 col-12 px-0">
+                                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                                        <label class="font-weight-normal col-md-5 col-12 mb-0">Cash Purse Limit</label>
+                                                        <div class="col-md-7 col-12">
+                                                            @Html.TextBoxFor(m => m.CashPurseLimit, new { @id = "CashPurseLimitValue", @class = "form-control", @readonly = "readonly" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 col-12 px-0">
+                                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                                        <label class="font-weight-normal col-md-5 col-12 mb-0">Monthly Sale Limit</label>
+                                                        <div class="col-md-7 col-12">
+                                                            @Html.TextBoxFor(m => m.MonthlySaleLimit, new { @id = "MonthlySaleLimitValue", @class = "form-control", @readonly = "readonly" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 col-12 px-0">
+                                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                                        <label class="font-weight-normal col-md-5 col-12 mb-0">Monthly Sale Balance</label>
+                                                        <div class="col-md-7 col-12">
+                                                            @Html.TextBoxFor(m => m.MonthlySaleBalance, new { @id = "MonthlySaleBalanceValue", @class = "form-control", @readonly = "readonly" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 col-12 px-0">
+                                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                                        <label class="font-weight-normal col-md-5 col-12 mb-4">CCMS Reload/Sale Limit<sup class="text-danger">*</sup></label>
+                                                        <div class="col-md-7 col-12">
+                                                            <div class="row">
+                                                                <div class="col-8">
+                                                                    @Html.DropDownListFor(m => m.CCMSReloadSaleLimit, Enumerable.Empty<SelectListItem>(), new { @id = "CCMSReloadSaleLimitTypeValue", @class = "form-control px-0 disableSumo", disabled = "disabled", @readonly = "readonly" })
+                                                                </div>
+                                                                <div class="col-4 pl-0">
+                                                                    @Html.TextBoxFor(m => m.CCMSReloadSaleLimitValue, new { @id = "CCMSReloadSaleLimitValueId", @class = "form-control", @readonly = "readonly" })
+                                                                </div>
+                                                            </div>
+                                                            <div class="d-flex align-items-center flex-wrap">
+                                                                <p id="CCMSReloadDefineSaleValue" class="mb-0 mt-2"></p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 col-12 px-0">
+                                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                                        <label class="font-weight-normal col-md-5 col-12 mb-0">Expiry Date</label>
+                                                        <div class="col-md-7 col-12">
+                                                            @Html.TextBoxFor(m => m.ExpiryDate, new { @id = "LimitExpiryDateValue", @class = "form-control", @readonly = "readonly" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 col-12 px-0">
+                                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                                        <label class="font-weight-normal col-md-5 col-12 mb-0">Enable For Credit Transaction</label>
+                                                        <div class="col-md-7 col-12">
+                                                            @Html.DropDownListFor(m => m.AllowCreditTranscation, Enumerable.Empty<SelectListItem>(), new { @id = "AllowCreditTranscationValue", @class = "form-control disableSumo", disabled = "disabled", @readonly = "readonly" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                    </div>
+
+                                    <div class="form-group d-flex align-items-center justify-content-center flex-wrap w-100 mt-4 mb-0">
+                                        <div class="col-md-12 col-12 px-0">
+                                            <div class="alert alert-info text-center" role="alert">
+                                                All Limits in Rupees
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+
+                            <div id="ServiceSection" class="tab-pane" role="tabpanel">
+
+                                <fieldset class="border-1 rounded border-grey">
+                                    <legend class="font-12 font-weight-bold d-inline-block w-auto ml-3 mb-0 px-2">Services</legend>
+
+                                    <div class="px-4 mb-0 mt-3">
+                                        <div class="mb-3 text-center alert alert-success" style="display:none;" id="serviceUpdateResponse">
+                                        </div>
+                                    </div>
+
+
+                                    <div class="p-2 col-12">
+                                        <div class="form-group d-flex align-items-center flex-wrap">
+                                            @*<ul class="list-group list-group-flush" id="wkslist">
+                                                </ul>*@
+
+                                            <div class="col-lg-6 col-md-6 col-12 pl-0 pr-2 mt-3">
+                                                <div class="border-1 rounded border-grey pb-3">
+                                                    <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Available Services</p>
+                                                    <div class="col-lg-12 col-md-12 col-12 py-3" style="height:398px; overflow-y:scroll;">
+                                                        <div class="d-flex align-items-center flex-wrap">
+                                                            <div class="col-md-12 col-12 px-0" id="AvailableProductTbl">
+                                                                <table class="table d-md-table d-block" style="width:100%;" id="AvailablePTbl">
+                                                                </table>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="clearfix"></div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6 col-md-6 col-12 pl-2 pr-0 mt-3">
+                                                <div class="border-1 rounded border-grey pb-3">
+                                                    <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Allowed Services</p>
+                                                    <div class="col-lg-12 col-md-12 col-12 py-3" style="height:398px; overflow-y:scroll;">
+                                                        <div class="d-flex align-items-center flex-wrap">
+                                                            <div class="col-md-12 col-12 px-0" id="AllowedProductTbl">
+                                                                <table class="table d-md-table d-block" style="width:100%;" id="AllowedPTbl">
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="clearfix"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group d-flex align-items-center flex-wrap">
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+@using Microsoft.AspNetCore.Http;
+
+
+<script src="https://rawgit.com/moment/moment/2.2.1/min/moment.min.js"></script>
+
+<script type="text/javascript">
+
+        $('.restrictPaste').on('paste', function (event) {
+        if (event.originalEvent.clipboardData.getData('Text').match(/[^\d]/)) {
+            event.preventDefault();
+        }
+    });
+
+
+    $(document).ready(function () {
+
+        function isNumberKey(evt) {
+            var charCode = (evt.which) ? evt.which : event.keyCode;
+            if (charCode != 46 && charCode > 31
+                && (charCode < 48 || charCode > 57))
+                return false;
+
+            return true;
+        }
+
+        $('select').SumoSelect({
+            placeholder: '-Select-',
+            search: true,
+            searchText: 'Enter Text here.'
+        });
+
+        $.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("GetStatusType", "Common")',
+            data: { status: "ManageCard" },
+            dataType: "json",
+            success: function (data, status, xhr) {
+
+                console.log(data);
+                $('<option>',{value: -1,text: "All"}).html("All").appendTo(".statusVal");
+                $.each(data.statusTypeList, function (i, option) {
+                    $("<option/>").val(option.statusId).text(option.statusName).appendTo(".statusVal");
+                });
+                $(".statusVal")[0].sumo.reload();
+            },
+            error: function (jqXhr, textStatus, errorMessage) {
+                alert("Error Populating Status Type");
+            }
+        });
+
+        let tableData = sessionStorage.getItem("tableData");
+        let getCusId = sessionStorage.getItem("cusmId");
+
+        console.log(tableData, "tbl");
+
+        let editOk = sessionStorage.getItem("editFlow");
+
+        var loginType = '@Context.Session.GetString("LoginType")';
+
+        console.log(editOk, "editOk");
+
+        if (editOk == "edit" && loginType != "Customer") {
+
+            $('#GetCustomerIdValue').html('');
+            console.log(getCusId);
+            $('#GetCustomerIdValue').val(getCusId);
+            $('#CardSearch table').html(tableData);
+             $.ajax({
+                url: "@Url.Action("JCBManageCards", "JCB")",
+                type: "POST",
+                 dataType: "JSON",
+                 data: { editFlag: editOk},
+                 success: function (data) {
+
+                     searchResponse(data);
+
+                     document.getElementById('CardSearch').style.display = 'block'
+
+                     sessionStorage.removeItem('editFlow');
+                },
+                error: function (ex) {
+                    alert('Failed' + ex);
+                }
+            });
+        }
+
+        if (editOk == "") {
+
+            sessionStorage.removeItem('tableData');
+            sessionStorage.removeItem('cusmId');
+
+        }
+
+        if (loginType == "Customer") {
+
+            $.ajax({
+                url: "@Url.Action("JCBManageCards", "JCB")",
+                type: "POST",
+                dataType: "JSON",
+                success: function (data) {
+
+                    searchResponse(data);
+
+                    $("#GetCustomerIdValue").html('');
+                    $("#GetCustomerIdValue").val('@Context.Session.GetString("UserId")');
+                    $("#GetCustomerIdValue").attr("readonly", true);
+
+                    document.getElementById('CardSearch').style.display = 'block';
+
+                },
+                error: function (ex) {
+                    alert('Failed' + ex);
+                }
+            });
+        }
+
+        //$('.btn-excel').click(function(){
+        //    $('.buttons-excel').trigger('click');
+        //});
+
+    });
+
+
+    function searchResponse(res){
+         console.log("search result",res);
+
+                    if (res.searchList.success == true) {
+
+                        var searchGrid = res.searchList.data;
+
+                        document.getElementById("noRecord").style.display = "none";
+
+
+                        $("#CustomerIdRes").val(searchGrid[0].customerID);
+                        $("#CustomerNameRes").val(searchGrid[0].individualOrgName);
+                        $("#RegionalOfcRes").val(searchGrid[0].regionalOfficeName);
+
+                        $('#CardSearchTbl').DataTable().clear().destroy();
+
+                        var tbl = $('#CardSearchTbl').DataTable({
+                                'columns' : [
+                                    null,
+                                    null,
+                                    { className: "hide_column" },
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    { className: "hide_column" },
+                                    null,
+                                    { className: "hide_column" },
+                                    { className: "hide_column" },
+                                    { className: "hide_column" },
+                                    null,
+                                    null,
+                                    null
+                                ]
+                                //,
+                                //dom: 'Blfrtip',
+                                //buttons: [
+                                //    {
+                                //         extend: 'excel',
+                                //         text: 'Download Excel',
+                                //         title: 'Manage Card',
+                                //         className: 'btn btn-default',
+                                //         exportOptions: {
+                                //            columns: 'th:not(:last-child)'
+                                //         }
+                                //     }
+                                //]
+                        });
+
+
+
+
+                        for (var i = 0; i < searchGrid.length; i++) {
+
+                            var isDts;
+                            var expDts;
+                            var yrOfReg;
+
+                            if(((searchGrid[i].issueDate) == "01-01-0001") || ((searchGrid[i].issueDate) == "01-01-1900") || ((searchGrid[i].issueDate) == null)){
+                                isDts = "";
+                            }else{
+                                isDts = moment(searchGrid[i].issueDate, 'DD-MM-YYYY').format('DD-MM-YYYY');
+                            }
+
+                            if(((searchGrid[i].expiryDate) == "01-01-0001") || ((searchGrid[i].expiryDate) == "01-01-1900") || ((searchGrid[i].expiryDate) == null)){
+                                expDts = "";
+                            }else{
+                                expDts = moment(searchGrid[i].expiryDate, 'DD-MM-YYYY').format('DD-MM-YYYY');
+                            }
+
+                            if((searchGrid[i].yearOfRegistration) == '0'){
+                                yrOfReg = '';
+                            }else{
+                                yrOfReg = searchGrid[i].yearOfRegistration;
+                            }
+
+                            var addEdit;
+
+                            if((searchGrid[i].mobileNumber) == '' || (searchGrid[i].mobileNumber) == null){
+                                addEdit = "<a href='#aaa' class='editNumber'>Add</a><span style='display:none;' class='lmtName'>" + (searchGrid[i].limitTypeName || '') + "</span><span style='display:none;' class='amts'>" + (searchGrid[i].ccmsReloadSaleLimitValue || '') + "</span>";
+                            }else{
+                                addEdit = "<a href='#aaa' class='editNumber'>Edit</a><span style='display:none;' class='lmtName'>" + (searchGrid[i].limitTypeName || '') + "</span><span style='display:none;' class='amts'>" + (searchGrid[i].ccmsReloadSaleLimitValue || '') + "</span>";
+                            }
+
+                            var srNumber = "<span class='rowData'>" + (searchGrid[i].srNumber || '') + "</span>";
+                            var cardNumber = "<a class='CardNumber' data-toggle='tab' href='#CardDetailsSection' onclick='ViewCardDetails(this)' role='tab'><span class='rowCardNo'>" + (searchGrid[i].cardNumber || '') + "</span></a>";
+                            var customerID = "<span style='display:none;' class='rowData cusId'>" + (searchGrid[i].customerID || '') + "</span>";
+                            var cardIssueType = (searchGrid[i].cardIssueType || '');
+                            var vechileNo = (searchGrid[i].vechileNo || '');
+                            var cardPref = (searchGrid[i].cardPreference || '');
+                            var vehicleType = (searchGrid[i].vehicleType || '');
+                            var issueDate = isDts;
+                            var expiryDate = "<span style='display:none;'>"+expDts+"</span>";
+                            var status = (searchGrid[i].status || '');
+                            var yearOfRegistration = "<span style='display:none;'>"+yrOfReg+"</span>";
+                            var manufacturer = "<span style='display:none;'>"+(searchGrid[i].vehicleMake || '')+"</span>";
+                            var ownershipType = "<span style='display:none;'>"+(searchGrid[i].ownedorAttached || '')+"</span>";
+                            var mobileNumber = "<span class='rowMobNo'>" + (searchGrid[i].mobileNumber || '') + "</span>";
+                            var vinNumber = (searchGrid[i].vinNumber || '');
+                            var edit = addEdit;
+                            //var limitTypeName = "";
+                            //var ccmsReloadSaleLimitValue = "";
+
+                            tbl.row.add([
+                                srNumber,
+                                cardNumber,
+                                customerID,
+                                cardIssueType,
+                                vechileNo,
+                                cardPref,
+                                vehicleType,
+                                issueDate,
+                                expiryDate,
+                                status,
+                                yearOfRegistration,
+                                manufacturer,
+                                ownershipType,
+                                mobileNumber,
+                                vinNumber,
+                                edit
+                                //limitTypeName,
+                                //ccmsReloadSaleLimitValue
+                            ]).draw();
+                        }
+
+                        //tbl.columns([16,17]).visible(false);
+
+                        document.getElementById('CardSearch').style.display = 'block';
+                    } else {
+                        document.getElementById("CardSearch").style.display = "none";
+                        $("#noRecord").html("");
+                        $("#noRecord").append("<span>" + res.searchList.message + "</span>");
+                        document.getElementById("noRecord").style.display = "block";
+                    }
+
+                    let tableData = $('#CardSearch table').html();
+                    sessionStorage.setItem("tableData", tableData);
+
+                    let custmId = $('.cusId').html();
+                    sessionStorage.setItem("cusmId", custmId);
+                    console.log(custmId,"cust");
+    }
+
+    function searchCards() {
+
+        var flag = "Y";
+
+        var customerId = $("#GetCustomerIdValue").val();
+        var cardNo = $("#cardNoVal").val();
+        var mobNo = $("#mobNoVal").val();
+        var vehicleNo = $("#vehicleNoVal").val();
+
+        if(mobNo != '' || vehicleNo != ''){
+            if(cardNo == ''){
+                if(customerId == ''){
+                    $("#GetCustomerIdValueErr").text("Customer ID should not be left blank");
+                    flag = "N";
+                }
+            }
+        }
+
+        if(mobNo == '' && vehicleNo == '' && cardNo == ''){
+            if(customerId == ''){
+                $("#GetCustomerIdValueErr").text("Please enter either Card Number and/or Customer ID");
+                flag = "N";
+            }
+        }
+
+        if (flag == "N")
+            e.preventDefault();
+
+        if (flag == "Y") {
+            if ($("#formVal").valid()) {
+
+                $.ajax({
+                    type: 'POST',  // http method
+                    url: '@Url.Action("JCBManageCards", "JCB")',
+                    data: $('#formVal').serialize(),  // data to submit
+                    success: function (res, status, xhr) {
+
+                       searchResponse(res);
+
+                    },
+                    error: function (jqXhr, textStatus, errorMessage) {
+                        console.log("Error");
+                    }
+                });
+            } else {
+                return false;
+            }
+        }
+    }
+
+
+    function viewGenericVehicleList() {
+
+        var flag = "Y";
+
+        var customerId = $("#GetCustomerIdValue").val();
+        var cardNo = $("#cardNoVal").val();
+        var mobNo = $("#mobNoVal").val();
+        var vehicleNo = $("#vehicleNoVal").val();
+
+        if(mobNo != '' || vehicleNo != ''){
+            if(cardNo == ''){
+                if(customerId == ''){
+                    $("#GetCustomerIdValueErr").text("Customer ID should not be left blank");
+                    flag = "N";
+                }
+            }
+        }
+
+        if(mobNo == '' && vehicleNo == '' && cardNo == ''){
+            if(customerId == ''){
+                $("#GetCustomerIdValueErr").text("Customer ID should not be left blank");
+                flag = "N";
+            }
+        }
+
+        if (flag == "N")
+            e.preventDefault();
+
+        if (flag == "Y") {
+
+            if ($("#formVal").valid()) {
+
+                $.ajax({
+                    type: 'POST',  // http method
+                    url: '@Url.Action("GetGenericAttachedVehicle", "Cards")',
+                    data: $('#formVal').serialize(),  // data to submit
+                    success: function (res, status, xhr) {
+
+                        console.log("search result",res);
+
+                        if (res.searchList.success == true) {
+
+                            var searchGrid = res.searchList.data;
+
+                            document.getElementById("noRecord").style.display = "none";
+
+                            $('#SearchGenericVehicleTbl').DataTable().clear().destroy();
+
+                            var tbl = $('#SearchGenericVehicleTbl').DataTable({
+                                paging: true,
+                                searching: true,
+                                stateSave: true,
+                                "bDestroy": true,
+                                bVisible: false,
+                                "lengthMenu": [10, 20, 50, 100, 200, 500, 1000, 2000],
+                                "autoWidth": false,
+                                "oLanguage": {
+                                    "sLengthMenu": "Display _MENU_ Records",
+                                    "info": "Showing _START_ to _END_ of _TOTAL_ Records",
+                                }
+                            });
+
+                            for (var i = 0; i < searchGrid.length; i++) {
+
+                                var yrOfReg;
+
+                                if((searchGrid[i].yearOfRegistration) == 0){
+                                    yrOfReg = '';
+                                }else{
+                                    yrOfReg = searchGrid[i].yearOfRegistration;
+                                }
+
+                                var srNumber = (i+1);
+                                var cardNumber = (searchGrid[i].cardNumber || '');
+                                var vechileNo = (searchGrid[i].vechileNo || '');
+                                var vehicleMake = (searchGrid[i].vehicleMake || '');
+                                var vehicleType = (searchGrid[i].vehicleType || '');
+                                var yrOfReg = yrOfReg;
+
+
+                                tbl.row.add([
+                                    srNumber,
+                                    cardNumber,
+                                    vechileNo,
+                                    vehicleMake,
+                                    vehicleType,
+                                    yrOfReg
+                                ]).draw();
+                            }
+
+                            document.getElementById('SearchGenericVehicle').style.display = 'block';
+
+                        } else {
+                            document.getElementById("SearchGenericVehicle").style.display = "none";
+                            $("#noRecord").html("");
+                            $("#noRecord").append("<span>" + res.searchList.message + "</span>");
+                            document.getElementById("noRecord").style.display = "block";
+                        }
+
+                    },
+                    error: function (jqXhr, textStatus, errorMessage) {
+                        console.log("Error");
+                    }
+                });
+            } else {
+                return false;
+            }
+        }
+    }
+
+
+    $("#CardSearchTbl").on('click', '.editNumber', function (e) {
+
+        var currentRow = $(this).closest("tr");
+
+        var cardNumber = currentRow.find(".CardNumber").text();
+        var mobileNumber = currentRow.find(".rowMobNo").text();
+        var LimitTypeName = currentRow.find(".lmtName").text();
+        var CCMSReloadSaleLimitValue = currentRow.find(".amts").text();
+
+        console.log("card number : ", cardNumber);
+        console.log("mobile number : ", mobileNumber);
+         console.log("LimitTypeName : ", LimitTypeName);
+        console.log("CCMSReloadSaleLimitValue : ", CCMSReloadSaleLimitValue);
+
+        var url = '@Html.Raw(@Url.Action("JCBCardlessMapping", new { cardNumber = "dd", mobileNumber = "mm", LimitTypeName = "ll", CCMSReloadSaleLimitValue = "cc" }))';
+
+        url = url.replace("dd", encodeURIComponent(cardNumber)).replace("mm", encodeURIComponent(mobileNumber)).replace("ll", encodeURIComponent(LimitTypeName)).replace("cc", encodeURIComponent(CCMSReloadSaleLimitValue));
+
+        $(this).attr('href', url);
+
+    });
+
+    function OnFailure(data) {
+        alert('HTTP Status Code: ' + data + '  Error Message: ' + data);
+    }
+
+
+    var cardNo;
+    var CardId;
+
+    function ViewCardDetails(o) {
+
+        $("#CardDetailsTab").addClass("disabled");
+        $("#LimitTab").addClass("disabled");
+        $("#ServicesTab").addClass("disabled");
+
+        CardId = o.innerText;
+
+        $.ajax({
+            url: "@Url.Action("JCBViewCardDetails", "JCB")",
+            type: "POST",
+            dataType: "JSON",
+            data: { CardId: CardId },
+            success: function (res) {
+
+                console.log("card clicked result",res);
+
+                if (res.searchList.success == true) {
+
+                    var cardDetails = res.searchList.data.getCardsDetailsModelOutput;
+                    var limitDetails = res.searchList.data.getCardLimtModel;
+                    var serviceDetails = res.searchList.data.cardServices;
+
+                    document.getElementById("noRecord").style.display = "none";
+
+                    $('#CustomerIdCardValue').val(cardDetails[0].customerID);
+                    $('#CardNoDValue').val(cardDetails[0].cardNumber);
+
+                    var cardCategory = $('<option value="' + cardDetails[0].cardCategory + '">' + (cardDetails[0].cardCategory || '') + '</option>');
+                    $('#CardCategoryValue').append(cardCategory);
+
+                    var issueType = $('<option value="' + cardDetails[0].cardIssueType + '">' + (cardDetails[0].cardIssueType || '') + '</option>');
+                    $('#CardIssueTypeValue').append(issueType);
+
+                    $('#RequestDateValue').val(cardDetails[0].requestDate);
+                    $('#FormNumberValue').val(cardDetails[0].formNumber);
+                    $('#RbeIdValue').val(cardDetails[0].rbeId || '');
+                    $('#RbeNameValue').val(cardDetails[0].rbeName || '');
+                    $('#VehicleNumberValue').val(cardDetails[0].vechileNo);
+
+                    var vehicleType = $('<option value="' + cardDetails[0].vehicleType + '">' + (cardDetails[0].vehicleType || '') + '</option>');
+                    $('#vehicleTypeValue').append(vehicleType);
+
+                    $('#VehicleMakeValue').val(cardDetails[0].vehicleMake);
+
+                    var yrOfReg;
+                    if((cardDetails[0].yearOfRegistration) == '0'){
+                        yrOfReg = '';
+                    }else{
+                        yrOfReg = cardDetails[0].yearOfRegistration;
+                    }
+                    $('#YearOfRegValue').val(yrOfReg);
+
+
+                    var ownType = $('<option value="' + (cardDetails[0].ownershipType || '') + '">' + (cardDetails[0].ownershipType || '') + '</option>');
+                    $('#OwnerTypeValue').append(ownType);
+
+                    $('#VinNumberValue').val(cardDetails[0].vinNumber);
+
+
+                    if ((cardDetails[0].feePaymentsCollectFeeWaiverId) == 0) {
+                        document.getElementById("feePaymentSection").style.display = "none";
+                        $("#feePaymentSection").removeClass("d-flex");
+                    }
+
+
+                    $('input[name="FeePaymentsCollectorFeeWaiver"][value="' + cardDetails[0].feePaymentsCollectFeeWaiverId + '"]').prop('checked', true);
+
+
+                    $('.emailFromFeePayment').val(cardDetails[0].feePaymentNo);
+                    var emailDatFee;
+                    if(((cardDetails[0].feePaymentDate) == "01-01-0001") || ((cardDetails[0].feePaymentDate) == "01-01-1900") || ((cardDetails[0].feePaymentDate) == null)){
+                        emailDatFee = "";
+                    }else{
+                        emailDatFee = moment(cardDetails[0].feePaymentDate, 'DD-MM-YYYY').format('DD-MM-YYYY');
+                    }
+                        $('.emailDateFeePayment').val(emailDatFee);
+
+
+                    if ((cardDetails[0].feePaymentsCollectFeeWaiverId) == 1) {
+                        document.getElementById("onlineFeePayment").style.display = "block";
+                        document.getElementById("feeWaiverFeePayment").style.display = "none";
+                        $("#feePaymentSection").addClass("d-flex");
+                        document.getElementById("feePaymentSection").style.display = "block";
+                    }
+
+                    if ((cardDetails[0].feePaymentsCollectFeeWaiverId) == 2) {
+                        document.getElementById("onlineFeePayment").style.display = "none";
+                        document.getElementById("feeWaiverFeePayment").style.display = "block";
+                        $("#feePaymentSection").addClass("d-flex");
+                        document.getElementById("feePaymentSection").style.display = "block";
+                    }
+
+                    $('#SaleTranscationLimitValue').val((limitDetails[0].saleTranscationLimit).toFixed(2));
+                    $('#DailySaleLimitValue').val(limitDetails[0].dailySaleLimit.toFixed(2));
+                    $('#DailyCreditLimitValue').val(limitDetails[0].dailyCreditLimit.toFixed(2));
+                    $('#CashPurseLimitValue').val(limitDetails[0].cashPurseLimit.toFixed(2));
+                    $('#MonthlySaleLimitValue').val(limitDetails[0].monthlySaleLimit.toFixed(2));
+                    $('#MonthlySaleBalanceValue').val(limitDetails[0].monthlySaleBalance.toFixed(2));
+
+                    var reloadSaleType = ('<option value="' + limitDetails[0].ccmsReloadSaleLimit + '">' + limitDetails[0].ccmsReloadSaleLimit + '</option>');
+                    $('#CCMSReloadSaleLimitTypeValue').append(reloadSaleType);
+
+                    $('#CCMSReloadSaleLimitValueId').val(limitDetails[0].ccmsReloadSaleLimitValue.toFixed(2));
+                    $('#CCMSReloadDefineSaleValue').html('');
+                    $('#CCMSReloadDefineSaleValue').append("<span>(Available Limit: " + (limitDetails[0].ccmsReloadSale).toFixed(2) + ")</span>");
+
+                    var limitExpiryDate;
+                    if(((limitDetails[0].expiryDate) == "01-01-0001") || ((limitDetails[0].expiryDate) == "01-01-1900") || ((limitDetails[0].expiryDate) == null)){
+                    limitExpiryDate = "";
+                    }else{
+                        limitExpiryDate = moment(limitDetails[0].expiryDate, 'DD-MM-YYYY').format('DD-MM-YYYY');
+                    }
+
+                    $('#LimitExpiryDateValue').val(limitExpiryDate);
+
+                    var creditTransType = $('<option value="' + limitDetails[0].allowCreditTranscation + '">' + limitDetails[0].allowCreditTranscation + '</option>');
+                    $('#AllowCreditTranscationValue').append(creditTransType);
+
+                    $("#AvailableProductTbl td").parent().remove();
+                    $("#AllowedProductTbl td").parent().remove();
+
+                     var availableRows = "<tbody>"
+                     var allowedRows = "<tbody>"
+                     var j=0;
+                     var k=0;
+                     var z=0;
+
+                    for (var i = 0; i < serviceDetails.length; i++)
+                    {
+                        //var checkboxList = "<li class='list-group-item py-0'>"
+                        //    + "<div class='custom-control custom-checkbox'>"
+                        //    + "<input type='checkbox' onclick='updateCheck(this)' class='custom-control-input cbk' name=" + serviceDetails[i].serviceID + " id=" + serviceDetails[i].serviceID + ">"
+                        //    + "<label class='custom-control-label' for=" + serviceDetails[i].serviceID + ">" + serviceDetails[i].serviceName + "</label>"
+                        //    + "</div></li>";
+
+                        //$('#wkslist').append(checkboxList);
+
+                        //if (serviceDetails[i].selectedServices == 1)
+                        //{
+                        //    console.log(serviceDetails[i].selectedServices);
+                        //    $('input[name *= "' + serviceDetails[i].serviceID + '"]').prop('checked', true);
+                        //}
+
+                        z=z+1;
+                        //debugger;
+                        if(serviceDetails[i].selectedServices==0)
+                        {
+                            j=j+1;
+
+                            availableRows += "<tr>"
+                                + "<td style='width: 7%;'>"+ (j) +"</td>"
+                                + "<td style='width: 93%;'>" + serviceDetails[i].serviceName + "</td>"
+                                + "<td style='display:none'>" + serviceDetails[i].serviceID + "</td>"
+                                + "</tr >";
+
+                        }
+                        //debugger;
+                        if(serviceDetails[i].selectedServices==1)
+                        {
+                            k=k+1;
+
+                                allowedRows += "<tr>"
+                                + "<td style='width: 7%;'>"+ (k) +"</td>"
+                                + "<td style='width: 93%;'>" + serviceDetails[i].serviceName + "</td>"
+                                + "<td style='display:none'>" + serviceDetails[i].serviceID + "</td>"
+                                + "</tr >";
+                        }
+
+                    }
+
+                    availableRows += "</tbody>"
+                    $('#AvailableProductTbl table').append(availableRows);
+
+                    allowedRows += "</tbody>"
+                    $('#AllowedProductTbl table').append(allowedRows);
+
+                    $("#ManageCardHeader").html('');
+                    $("#ManageCardHeader").append("Manage Cards CARD PAN: "+CardId);
+
+                    CardId = cardDetails[0].cardNumber;
+
+                    $('select.disableSumo')[0].sumo.reload();
+                    $('select.disableSumo')[1].sumo.reload();
+                    $('select.disableSumo')[2].sumo.reload();
+                    $('select.disableSumo')[3].sumo.reload();
+                    $('select.disableSumo')[4].sumo.reload();
+                    $('select.disableSumo')[5].sumo.reload();
+
+                    $("#CardDetailsTab").removeClass("disabled");
+                    $("#LimitTab").removeClass("disabled");
+                    $("#ServicesTab").removeClass("disabled");
+                    $('#CardDetailsTab').tab('show');
+                }
+                else {
+                    $("#noRecord").html("");
+                    $("#noRecord").append("<span>" + res.searchList.message + "</span>");
+                    document.getElementById("noRecord").style.display = "block";
+                }
+                },
+                error: function (ex) {
+                    alert('Failed' + ex);
+                }
+        });
+    };
+
+    $("#CustomerCardTab").on('click', function (e) {
+         $("#ManageCardHeader").html('');
+         $("#ManageCardHeader").append("Manage Card");
+         $('#CustomerCardTab').tab('show');
+    });
+
+    $("#CardDetailsTab").on('click', function (e) {
+        if(!$(this).hasClass("disabled")){
+             $("#ManageCardHeader").html('');
+             $("#ManageCardHeader").append("Manage Cards CARD PAN: "+CardId);
+             $('#CardDetailsTab').tab('show');
+        }
+    });
+
+    $("#LimitTab").on('click', function (e) {
+        if(!$(this).hasClass("disabled")){
+             $("#ManageCardHeader").html('');
+             $("#ManageCardHeader").append("Manage Cards CARD PAN: "+CardId);
+             $('#CardDetailsTab').tab('show');
+        }
+    });
+
+    $("#ServicesTab").on('click', function (e) {
+        if(!$(this).hasClass("disabled")){
+             $("#ManageCardHeader").html('');
+             $("#ManageCardHeader").append("Manage Cards CARD PAN: "+CardId);
+             $('#CardDetailsTab').tab('show');
+        }
+    });
+</script>
+
+<script type="text/javascript">
+
+    function updateCheck(serviceId) {
+
+        var flag = 0;
+
+        /*serviceId = $(a).attr("Id");*/
+        console.log("change name : ", serviceId.id);
+        if ($(serviceId).is(':checked')) {
+            flag = 1;
+            console.log("flag value : ", flag);
+            //console.log("checked item : ", $(a).attr("Id"));
+        } else {
+            flag = 0;
+            console.log("flag value : ", flag);
+        }
+
+        $.ajax({
+            url: "@Url.Action("UpdateService","Cards")",
+            type: "POST",
+            dataType: "JSON",
+            data: { serviceId: serviceId.id, flag: serviceId.checked },
+            success: function (res) {
+                if (serviceId.checked == true) {
+                    $('input[name *= "' + serviceId.id + '"]').prop('checked', true);
+                }
+                $("#serviceUpdateResponse").html("");
+                $("#serviceUpdateResponse").append("<span>" + res + "</span>");
+                document.getElementById("serviceUpdateResponse").style.display = "block";
+            },
+            error: function (ex) {
+                alert('Failed' + ex);
+            }
+        });
+    };
+
+
+    function tableToCSV() {
+
+        var flag = "Y";
+
+        var customerId = $("#GetCustomerIdValue").val();
+        var cardNo = $("#cardNoVal").val();
+        var mobNo = $("#mobNoVal").val();
+        var vehicleNo = $("#vehicleNoVal").val();
+
+        if(mobNo != '' || vehicleNo != ''){
+            if(cardNo == ''){
+                if(customerId == ''){
+                    $("#GetCustomerIdValueErr").text("Customer ID should not be left blank");
+                    flag = "N";
+                }
+            }
+        }
+
+        if(mobNo == '' && vehicleNo == '' && cardNo == ''){
+            if(customerId == ''){
+                $("#GetCustomerIdValueErr").text("Customer ID should not be left blank");
+                flag = "N";
+            }
+        }
+
+        if (flag == "N")
+            e.preventDefault();
+
+        if (flag == "Y") {
+
+
+            if ($("#formVal").valid()) {
+
+                $.ajax({
+                    type: 'POST',  // http method
+                    url: '@Url.Action("GetGenericAttachedVehicle", "Cards")',
+                    data: $('#formVal').serialize(),  // data to submit
+                    success: function (res, status, xhr) {
+
+                        console.log("search result",res);
+
+                        var searchGrid = res.searchList.data;
+
+                        if (res.searchList.success == true) {
+
+
+                            $("#SearchGenericVehicleTblHidden td").parent().remove();
+
+                            for (var i = 0; i < searchGrid.length; i++) {
+
+                                var yrOfReg;
+
+                                if((searchGrid[i].yearOfRegistration) == 0){
+                                    yrOfReg = '';
+                                }else{
+                                    yrOfReg = searchGrid[i].yearOfRegistration;
+                                }
+
+                                var rows = "<tbody><tr class='gen'>"
+                                    + "<td>"+(i+1)+"</td>"
+                                    + "<td><span>" + (searchGrid[i].cardNumber || '') + "</span></td>"
+                                    + "<td>" + (searchGrid[i].vechileNo || '')+ "</td>"
+                                    + "<td>" + (searchGrid[i].vehicleMake || '') + "</td>"
+                                    + "<td>" + (searchGrid[i].vehicleType || '') + "</td>"
+                                    + "<td>" + (yrOfReg) + "</td>"
+                                    + "</tr ></tbody>";
+
+                                $('#SearchGenericVehicleTblHidden').append(rows);
+                             }
+
+                            var csv_data = [];
+
+                            var rows = document.getElementById("SearchGenericVehicleTblHidden").getElementsByTagName('tr');
+
+                            console.log("rows",rows);
+
+                            if (rows.length > 0) {
+
+                                for (var i = 0; i < rows.length; i++) {
+
+                                    var cols = rows[i].querySelectorAll('td,th');
+
+                                    var csvrow = [];
+                                    for (var j = 0; j < cols.length; j++) {
+
+                                        const cardVal = cols[j].querySelector('span');
+                                        console.log("cardSpan       :",cardVal);
+
+                                        //var sel = document.getElementsByClassName("cpl")[j].defaultValue;
+                                        //console.log("sel",sel);
+                                        //if (selectElem) {
+                                        //    csvrow.push(selectElem.value);
+                                        //}else 
+
+                                        if(cardVal){
+                                            csvrow.push("`"+cardVal.innerText);
+                                        }else {
+                                            csvrow.push(cols[j].innerText);
+                                        } 
+                                    }
+                                    csv_data.push(csvrow.join(","));
+                                    }
+
+                                    csv_data = csv_data.join('\n');
+                                    var fileName = "ManageCardGenericOrAttached.csv";
+                                    downloadCSVFile(csv_data,fileName);
+                                }
+                            } else {
+                                alert(res.searchList.message);
+                            }
+
+                        },
+                        error: function (jqXhr, textStatus, errorMessage) {
+                            console.log("Error");
+                        }
+                });
+            } else {
+                return false;
+            }
+        }
+    }
+
+
+    function downloadCSVFile(csv_data,fileName) {
+
+        CSVFile = new Blob([csv_data], {
+            type: "text/csv"
+        });
+
+        var temp_link = document.createElement('a');
+
+        temp_link.download = fileName;
+        var url = window.URL.createObjectURL(CSVFile);
+        temp_link.href = url;
+
+        temp_link.style.display = "none";
+        document.body.appendChild(temp_link);
+
+        temp_link.click();
+        document.body.removeChild(temp_link);
+    }
+
+
+
+    function tableToCSVManageCard(){
+
+
+        var csv_data = [];
+        var rows = document.getElementById("CardSearchTbl").getElementsByTagName('tr');
+        if (rows.length > 0) {
+            for (var i = 0; i < rows.length; i++) {
+                var cols = rows[i].querySelectorAll('td,th');
+                var csvrow = [];
+                for (var j = 0; j < cols.length-1; j++) {
+
+                    console.log("cols[j]", cols[j]);
+
+                    //const selectElem = cols[j].querySelector('input');
+
+                    const cardVal = cols[j].querySelector('a');
+                    console.log("cardSpan       :",cardVal);
+
+                    //var sel = document.getElementsByClassName("cpl")[j].defaultValue;
+                    //console.log("sel",sel);
+                    //if (selectElem) {
+                    //    csvrow.push(selectElem.value);
+                    //}else 
+
+                    if(cardVal){
+                        csvrow.push("`"+cardVal.innerText);
+                    }else {
+                        csvrow.push(cols[j].innerText);
+                    } 
+                }
+
+                csv_data.push(csvrow.join(","));
+            }
+            csv_data = csv_data.join('\n');
+
+            var fileName = "ManageCard.csv";
+
+            downloadCSVFile(csv_data,fileName);
+        }
+    }
+
+</script>
+<style>
+    .nav-item > li.active > a,
+    .nav-item > li.active > a:focus,
+    .nav-item > li.active > a:hover {
+        background-color: gray;
+    }
+
+    .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+        background-color: gray;
+    }
+
+    .nav-pills .nav-link {
+        background-color: cornflowerblue;
+        color: black;
+    }
+
+    .list-group-item {
+        border: none;
+    }
+
+  .hide_column{
+      display:none;
+  }
+</style>
