@@ -196,8 +196,8 @@ namespace HPCL.Service.Services
                     {"NoOfCards", cust.NoOfCards.ToString()},
                     {"FeePaymentsCollectFeeWaiver", cust.FeePaymentsCollectFeeWaiver.ToString()},
                     {"Createdby", _httpContextAccessor.HttpContext.Session.GetString("UserId")},
-                    {"TierOfCustomer", cust.TierOfCustomerID.ToString()},
-                    {"TypeOfCustomer", cust.TypeOfCustomerID.ToString()},
+                    {"TierOfCustomer", "0"},
+                    {"TypeOfCustomer", "0"},
                     {"FormNumber", cust.FormNumber.ToString()},
                     {"PanCardRemarks", (String.IsNullOrEmpty(cust.PanCardRemarks)?"":cust.PanCardRemarks)},
                     {"RBEId", ""}
@@ -433,7 +433,8 @@ namespace HPCL.Service.Services
                     custMdl.CommunicationCity = Customer.CommunicationCityName;
                     custMdl.CommunicationPinCode = Customer.CommunicationPincode;
                     custMdl.CommunicationStateID = Convert.ToInt32(string.IsNullOrEmpty(Customer.CommunicationStateId) ? "0" : Customer.CommunicationStateId);
-
+                    if (custMdl.CommunicationDistrictMdl.Count() > 0)
+                        custMdl.CommunicationDistrictMdl.RemoveAt(0);
                     custMdl.CommunicationDistrictMdl.AddRange(await _commonActionService.GetDistrictDetails(custMdl.CommunicationStateID.ToString()));
 
                     custMdl.CommunicationDistrictId = (string.IsNullOrEmpty(Customer.CommunicationDistrictId) ? "0" : Customer.CommunicationDistrictId);
@@ -477,7 +478,8 @@ namespace HPCL.Service.Services
                     custMdl.PerOrRegAddressCity = Customer.PermanentCityName;
                     custMdl.PerOrRegAddressPinCode = Customer.PermanentPincode;
                     custMdl.PerOrRegAddressStateID = Convert.ToInt32(string.IsNullOrEmpty(Customer.PermanentStateId) ? "0" : Customer.PermanentStateId);
-
+                    if (custMdl.PerOrRegAddressDistrictMdl.Count() > 0)
+                        custMdl.PerOrRegAddressDistrictMdl.RemoveAt(0);
                     custMdl.PerOrRegAddressDistrictMdl.AddRange(await _commonActionService.GetDistrictDetails(custMdl.PerOrRegAddressStateID.ToString()));
 
                     custMdl.PermanentDistrictId = Convert.ToInt32(string.IsNullOrEmpty(Customer.PermanentDistrictId) ? "0" : Customer.PermanentDistrictId);
@@ -758,8 +760,8 @@ namespace HPCL.Service.Services
                     {"FleetSizeNoOfVechileOwnedCarJeep", (String.IsNullOrEmpty(cust.FleetSizeNoOfVechileOwnedCarJeep)?"0":cust.FleetSizeNoOfVechileOwnedCarJeep)},
                     {"CustomerType", CustomerTypeID.ToString()},
                     {"CustomerSubtype", CustomerSubTypeID.ToString()},
-                    {"TierOfCustomer", cust.TierOfCustomerID.ToString()},
-                    {"TypeOfCustomer", cust.TypeOfCustomerID.ToString()},
+                    {"TierOfCustomer", "0"},
+                    {"TypeOfCustomer", "0"},
                     {"PanCardRemarks", (String.IsNullOrEmpty(cust.PanCardRemarks)?"":cust.PanCardRemarks)}
 
             };
