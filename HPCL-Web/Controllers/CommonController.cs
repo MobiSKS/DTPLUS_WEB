@@ -1,5 +1,6 @@
 ﻿using HPCL.Common.Helper;
 using HPCL.Common.Models.CommonEntity;
+using HPCL.Common.Models.CommonEntity.RequestEnities;
 using HPCL.Common.Models.ResponseModel.Customer;
 using HPCL.Common.Models.ViewModel.Officers;
 using HPCL.Common.Resources;
@@ -281,9 +282,9 @@ namespace HPCL_Web.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> PostAuthForCreditPouch(string CreditPouchType)
+        public async Task<JsonResult> PostAuthForCreditPouch(ObjCustomerDetails[] postAuthCust, string CreditPouchType)
         {
-            var authStatus = await _commonActionService.PostAuthForCreditPouch(CreditPouchType);
+            var authStatus = await _commonActionService.PostAuthForCreditPouch(postAuthCust, CreditPouchType);
 
             ModelState.Clear();
             return Json(authStatus);
