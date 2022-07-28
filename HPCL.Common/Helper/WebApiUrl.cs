@@ -642,6 +642,7 @@
         public static string updateJcbDealerCommunicationEmailResetPassword = "api/dtplus/JCB/update_jcb_dealer_communication_email_reset_password";
         public static string jcbHotlistReactive = "api/dtplus/JCB/jcb_hotlist_reactive";
         public static string jcbUpdateHotlistReactivate = "api/dtplus/JCB/jcb_update_hotlist_reactivate";
+        public static string enableDisableJcbDealer = "api/dtplus/JCB/enable_disable_jcb_dealer";
         #endregion
 
         #region Customer Dashboard
