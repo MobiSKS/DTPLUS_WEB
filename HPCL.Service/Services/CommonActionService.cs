@@ -1798,15 +1798,17 @@ namespace HPCL.Service.Services
             return lst;
         }
 
-        public async Task<List<CommonResponseData>> PostAuthForCreditPouch(ObjCustomerDetails[] postAuthCust, string CreditPouchType)
+        public async Task<List<CommonResponseData>> PostAuthForCreditPouch(string postAuthCust, string CreditPouchType)
         {
+            ObjCustomerDetails[] arrs = JsonConvert.DeserializeObject<ObjCustomerDetails[]>(postAuthCust);
+
             var requestInfo = new PostAuth
             {
                 UserAgent = CommonBase.useragent,
                 UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 CreditPouchType = CreditPouchType,
-                ObjCustomerDetail = postAuthCust
+                ObjCustomerDetail = arrs
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(requestInfo), Encoding.UTF8, "application/json");
