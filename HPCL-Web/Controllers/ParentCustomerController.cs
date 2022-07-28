@@ -104,7 +104,7 @@ namespace HPCL_Web.Controllers
             return PartialView("~/Views/ParentCustomer/_GetCardandDispatchDetailsTbl.cshtml", modals);
         }
 
-        public async Task<IActionResult> UpdateParentCustomer(string CustomerId, string RequestId,string IsSearch)
+        public async Task<IActionResult> UpdateParentCustomer(string CustomerId, string RequestId, string IsSearch)
         {
             var modals = await _customerService.UpdateParentCustomer(CustomerId, RequestId);
             ViewBag.IsSearch = String.IsNullOrEmpty(IsSearch) ? "false" : "true";
@@ -407,6 +407,19 @@ namespace HPCL_Web.Controllers
             else
             {
                 ViewBag.Success = "false";
+            }
+
+            return View(modals);
+        }
+
+        public async Task<IActionResult> ParentChildBalanceFundTransfer(ParentChildBalanceTransferViewModel reqEntity)
+        {
+            var modals = new ParentChildBalanceTransferViewModel();
+            if (reqEntity.ParentCustomerID != null && reqEntity.ParentCustomerID != "")
+            {
+                modals = await _customerService.ParentChildBalanceFundTransfer(reqEntity);
+                modals.ParentCustomerID = reqEntity.ParentCustomerID;
+                modals.ChildCustomerId = reqEntity.ChildCustomerId;
             }
 
             return View(modals);
