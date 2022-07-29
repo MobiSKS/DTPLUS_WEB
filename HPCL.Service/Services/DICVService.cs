@@ -796,6 +796,34 @@ namespace HPCL.Service.Services
             DICVSearchManageCards searchList = obj.ToObject<DICVSearchManageCards>();
             return searchList;
         }
+        public async Task<DICVSearchDetailsByCardId> DICVViewCardDetails(string CardId)
+        {
+            _httpContextAccessor.HttpContext.Session.SetString("CardIdSession", CardId);
+
+            var cardDetailsBody = new DICVCardsSearch
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                CardNo = CardId,
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(cardDetailsBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.dicvGetCardLimitFeatures);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+
+            DICVSearchDetailsByCardId searchRes = obj.ToObject<DICVSearchDetailsByCardId>();
+
+            string cusId = string.Empty;
+            foreach (var item in searchRes.Data.GetCardsDetailsModelOutput)
+            {
+                cusId = item.CustomerID;
+            }
+            _httpContextAccessor.HttpContext.Session.SetString("CustomerIdSession", cusId);
+
+            return searchRes;
+        }
 
     }
 }

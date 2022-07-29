@@ -243,6 +243,17 @@ namespace HPCL_Web.Controllers
             ModelState.Clear();
             return Json(new { searchList = searchList });
         }
+        [HttpPost]
+        public async Task<JsonResult> DICVViewCardDetails(string CardId)
+        {
+            var searchList = await _dicvService.DICVViewCardDetails(CardId);
+
+            ModelState.Clear();
+            return Json(new
+            {
+                searchList = searchList
+            });
+        }
 
     }
 }
