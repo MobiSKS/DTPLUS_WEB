@@ -5,18 +5,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HPCL.Common.Models.ResponseModel.JCB
+namespace HPCL.Common.Models.ResponseModel.DICV
 {
-    public class GetJCBDealerOTCCardStatusResponse : CommonResponseBase
+    public class GetDICVDealerOTCCardStatusResponse : CommonResponseBase
     {
-        public GetJCBDealerOTCCardStatusResponse()
+        public GetDICVDealerOTCCardStatusResponse()
         {
-            Data = new List<JCBDealerOTCCardStatusDetails>();
+            Data = new List<DICVDealerOTCCardStatusDetails>();
         }
-        public List<JCBDealerOTCCardStatusDetails> Data { get; set; }
+        public List<DICVDealerOTCCardStatusDetails> Data { get; set; }
     }
-
-    public class JCBDealerOTCCardStatusDetails
+    public class DICVDealerOTCCardStatusDetails
     {
         public string TotalAllocatedCards { get; set; }
         public string TotalMappedCards { get; set; }

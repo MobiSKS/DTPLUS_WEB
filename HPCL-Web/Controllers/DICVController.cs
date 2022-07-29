@@ -268,6 +268,17 @@ namespace HPCL_Web.Controllers
 
             return Json(new { updateResponse = updateResponse });
         }
+        public async Task<IActionResult> ViewDICVDealerOTCCardStatus()
+        {
+            var model = await _dicvService.ViewDICVDealerOTCCardStatus();
+
+            return View(model);
+        }
+        public async Task<IActionResult> GetDICVDealerOTCCardStatus(string DealerCode, string CardNo)
+        {
+            var modals = await _dicvService.GetDICVDealerOTCCardStatus(DealerCode, CardNo);
+            return PartialView("~/Views/DICV/_DICVDealerOTCCardStatusTable.cshtml", modals);
+        }
 
     }
 }
