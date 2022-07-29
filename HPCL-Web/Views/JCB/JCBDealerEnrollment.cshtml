@@ -3,1206 +3,1659 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ajax-unobtrusive/3.2.6/jquery.unobtrusive-ajax.js"></script>
 
 <div class="col-lg-12">
-    <div class="bg-white p-2 p-md-4" style="overflow:hidden;">
+    <div class="bg-white p-2 p-md-4" style="overflow:hidden;background: #edecec !important;">
         <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
             <li class="breadcrumb-item"><a href="@Url.Action("Index","JCB")" class="text_primary">JCB Dashboard</a> </li>
             <li class="breadcrumb-item font-weight-light">Officier Enrollment</li>
         </ul>
-            <div class="w-100">
-                <div id="searchAl">
-                        <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
-                            <div class="border-1 rounded border-grey pb-0">
-                                <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Officier Enrollment</p>
-                                <div class="col-lg-12 col-md-12 col-12 py-3">
-                                    <p class="text-dark px-0 pb-2 mb-3 font-weight-bold">Search/Add Dealer</p>
-                                    <div class="d-flex align-items-center flex-wrap">
-                                        <div class="col-lg-6 col-12">
-                                            <div class="d-flex align-items-center flex-wrap mb-3">
-                                                <label class="font-weight-normal col-md-4 col-12">Officer Type <sup class="text-danger">*</sup></label>
-                                                <div class="col-md-7 col-12">
-                                                    <div class="custom_select">
-                                                        @Html.DropDownListFor(x => x.OfficerSearchTypeId, new[]{
-                                                            new SelectListItem(){ Text = "--select--", Value = "0" },
-                                                            new SelectListItem(){ Text = "Regional Viewer", Value = "21"},
-                                                            new SelectListItem(){ Text = "Dealership HQO Admin", Value = "22"},
-                                                            new SelectListItem(){ Text = "Branch Admin", Value = "23"},
-                                                            }, null, new { @class = "form-control px-0" })
-                                                         <span class="text-danger" id="OfficerSearchTypeId_error"></span>
-                                                    </div>
-                                                </div>
+        <div class="w-100">
+            <div id="searchAl">
+                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
+                    <div class="border-1 rounded border-grey pb-0">
+                        <p class="text-white px-3 py-2 m-0 font-weight-bold" style="background: #084693;">Officier Enrollment</p>
+                        <div class="col-lg-12 col-md-12 col-12 py-3 bg-white">
+                            <p class="text-dark px-0 pb-2 mb-3 font-weight-bold" style="border-bottom:1px solid #ccc;">Search/Add Dealer</p>
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">Officer Type <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.DropDownListFor(x => x.OfficerSearchTypeId, new[]{
+                                                new SelectListItem(){ Text = "--select--", Value = "0" },
+                                                new SelectListItem(){ Text = "Regional Viewer", Value = "21"},
+                                                new SelectListItem(){ Text = "Dealership HQO Admin", Value = "22"},
+                                                new SelectListItem(){ Text = "Branch Admin", Value = "23"},
+                                                }, null, new { @class = "form-control px-0" })
+                                                <span class="text-danger" id="OfficerSearchTypeId_error"></span>
                                             </div>
-                                        </div>
-
-                                        <div class="col-lg-6 col-12">
-                                            <div class="d-flex align-items-center flex-wrap mb-3">
-                                                
-                                                <div class="col-md-7 col-12">
-                                                    <div class="custom_select">
-
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex align-items-center flex-wrap">
-                                        <div class="col-lg-6 col-12">
-                                            <div class="d-flex align-items-center flex-wrap mb-3">
-                                                <label class="font-weight-normal col-md-4 col-12">Dealer Code <sup class="text-danger">*</sup></label>
-                                                <div class="col-md-7 col-12">
-                                                    <div class="custom_select">
-                                                        <input class="form-control" id="dealerCdVal" name="DealerCode" type="text" value="" maxlength="25" autocomplete="off" onkeypress = "return AllowAlphaNumeric(event)">
-                                                        @Html.ValidationMessageFor(m => m.DealerCode, "", new { @id = "dealerCodeErr", @class = "text-danger" })
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-lg-6 col-12">
-                                            <div class="d-flex align-items-center flex-wrap mb-3">
-                                                <label class="font-weight-normal offset-md-1 col-md-4 col-12">DTP Dealer Code <sup class="text-danger">*</sup></label>
-                                                <div class="col-md-7 col-12">
-                                                    <div class="custom_select">
-                                                        <input class="form-control" id="DTPDealerCdVal" name="DTPDealerCode" type="text" value="" maxlength = "10">
-                                                        @Html.ValidationMessageFor(m => m.DTPDealerCode, "", new { @class = "text-danger" })
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="clearfix"></div>
-                                    <div class="d-flex align-items-center justify-content-center mt-0">
-                                        <div class="px-2">
-                                            <button class="btn btn_primary" type="button" onclick="searchDealer()">Search</button>
-                                        </div>
-                                        <div class="px-2">
-                                            <button class="btn btn_primary" type="button" onclick="loadEnrollForm()">Add New Dealer</button>
-                                        </div>
-                                        <div class="px-2">
-                                            <button class="btn btn_primary" type="button" onclick="thisPageLoad()">Reset</button>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="clearfix"></div>
-                                <div class="clearfix"></div>
+
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">Dealer Code <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                <input class="form-control" id="dealerCdVal" name="DealerCode" type="text" value="" maxlength="25" autocomplete="off" onkeypress="return AllowAlphaNumeric(event)">
+                                                @Html.ValidationMessageFor(m => m.DealerCode, "", new { @id = "dealerCodeErr", @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal offset-md-1 col-md-4 col-12">DTP Dealer Code <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                <input class="form-control" id="DTPDealerCdVal" name="DTPDealerCode" type="text" value="" maxlength="10">
+                                                @Html.ValidationMessageFor(m => m.DTPDealerCode, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="d-flex align-items-center justify-content-center mt-0">
+                                <div class="px-2">
+                                    <button class="btn btn_primary" type="button" onclick="searchDealer()">Search</button>
+                                </div>
+                                <div class="px-2">
+                                    <button class="btn btn_primary" type="button" onclick="loadEnrollForm()">Add New Dealer</button>
+                                </div>
+                                <div class="px-2">
+                                    <button class="btn btn_primary" type="button" onclick="thisPageLoad()">Reset</button>
+                                </div>
                             </div>
                         </div>
-
-                </div>
-                <div class="col-12 col-md-12 px-0">
-                    <div class="alert alert-danger mt-3 text-center" role="alert" style="display:none;" id="noRecord">
+                        <div class="clearfix"></div>
+                        <div class="clearfix"></div>
                     </div>
                 </div>
-                <div id="detailsSection" style="display:none;">
-
-                    <form id="formsDts">
-
-                        <div class="col-12 col-md-12 px-0">
-                            <div class="alert alert-success text-center mt-3 mb-0" role="alert" style="display:none;" id="responseMsg">
-                            </div>
-                        </div>
-                        <div class="col-12 col-md-12 px-0">
-                            <div style="display:none;" class="alert alert-danger mt-3 mb-0 text-center" id="failureMsg">
-                            </div>
-                        </div>
-
-                        <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3" id="divDealerEnrollment">
-                            <div class="border-1 rounded border-grey pb-0">
-                                <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Officer Enrollment</p>
-                                <div class="col-lg-12 col-md-12 col-12 py-3">
-                                    <p class="text-dark px-0 pb-2 mb-3 font-weight-bold">Basic Information</p>
-                                    <div class="d-flex align-items-center flex-wrap">
-                                        <div class="col-lg-6 col-12">
-                                            <div class="d-flex align-items-center flex-wrap mb-3">
-                                                <label class="font-weight-normal col-md-4 col-12">Dealer <sup class="text-danger">*</sup></label>
-                                                <div class="col-md-7 col-12">
-                                                    <div class="custom_select">
-                                                         @Html.DropDownListFor(x => x.OfficerTypeId, new[]{
-                                                            new SelectListItem(){ Text = "--select--", Value = "0" },
-                                                            new SelectListItem(){ Text = "Regional Viewer", Value = "21"},
-                                                            new SelectListItem(){ Text = "Dealership HQO Admin", Value = "22"},
-                                                            new SelectListItem(){ Text = "Branch Admin", Value = "23"},
-                                                            }, null, new { @class = "form-control px-0" })
-                                                         <span class="text-danger" id="OfficerTypeId_error"></span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-lg-6 col-12">
-                                            <div class="d-flex align-items-center flex-wrap mb-3">
-                                                <div class="col-md-7 col-12">
-                                                    <div class="custom_select">
-                                                       
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex align-items-center flex-wrap">
-                                        <div class="col-lg-6 col-12">
-                                            <div class="d-flex align-items-center flex-wrap mb-3">
-                                                <label class="font-weight-normal col-md-4 col-12">Dealer Code <sup class="text-danger">*</sup></label>
-                                                <div class="col-md-7 col-12">
-                                                    <div class="custom_select">
-                                                        @Html.TextBoxFor(m => m.DealerCode, new { @id = "dealerCodedFetchVal", @class = "form-control", maxlength="25", onkeypress = "return AllowAlphaNumeric(event)" })
-                                                        @Html.ValidationMessageFor(m => m.DealerCode, "", new { @id = "dealerCodeError", @class = "text-danger" })
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-lg-6 col-12">
-                                            <div class="d-flex align-items-center flex-wrap mb-3">
-                                                <label class="font-weight-normal offset-md-1 col-md-4 col-12">Dealer Name <sup class="text-danger">*</sup></label>
-                                                <div class="col-md-7 col-12">
-                                                    <div class="custom_select">
-                                                        @Html.TextBoxFor(m => m.DealerName, new { @id = "dealerNameFetchVal", @class = "form-control", maxlength="50", onkeypress = "return AllowAlphaNumericWithSpace(event)" })
-                                                        @Html.ValidationMessageFor(m => m.DealerName, "", new { @id = "DealerNameErrorMsg", @class = "text-danger" })
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="clearfix"></div>
-                            </div>
-                        </div>
-
-                        <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3" id="divCommunicationAddress">
-                            <div class="border-1 rounded border-grey pb-0">
-                                <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Communication Address</p>
-                                <div class="col-lg-12 col-md-12 col-12 py-3">
-                                    <div class="d-flex align-items-center flex-wrap">
-                                        <div class="col-lg-6 col-12">
-                                            <div class="d-flex align-items-center flex-wrap mb-3">
-                                                <label class="font-weight-normal col-md-4 col-12">SBU Type <sup class="text-danger">*</sup></label>
-                                                <div class="col-md-7 col-12">
-                                                    <div class="custom_select">
-                                                        @Html.DropDownListFor(m => m.SBUId, Enumerable.Empty<SelectListItem>(), new { @class = "form-control SBUIdVal" })
-                                                        @Html.ValidationMessageFor(m => m.SBUId, "", new { @id = "SBUIdErrMsg", @class = "text-danger" })
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6 col-12">
-                                            <div class="d-flex align-items-center flex-wrap mb-3">
-                                                <label class="font-weight-normal offset-md-1 col-md-4 col-12">Zonal Office <sup class="text-danger">*</sup></label>
-                                                <div class="col-md-7 col-12">
-                                                    <div class="custom_select">
-                                                        @Html.DropDownListFor(m => m.ZonalOfficeId, Enumerable.Empty<SelectListItem>(), "--Select--", new { @class = "form-control zonalVal" })
-                                                        @Html.ValidationMessageFor(m => m.ZonalOfficeId, "", new { @id = "zonalErrMsg", @class = "text-danger" })                                                 
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex align-items-center flex-wrap">
-                                        <div class="col-lg-6 col-12">
-                                            <div class="d-flex align-items-center flex-wrap mb-3">
-                                                <label class="font-weight-normal col-md-4 col-12">Regional Office <sup class="text-danger">*</sup></label>
-                                                <div class="col-md-7 col-12">
-                                                    <div class="custom_select">
-                                                        @Html.DropDownListFor(m => m.RegionalOfficeId, Enumerable.Empty<SelectListItem>(), "--Select--", new { @class = "form-control regionalVal" })
-                                                        @Html.ValidationMessageFor(m => m.RegionalOfficeId, "", new { @id = "regionalErrMsg", @class = "text-danger" })
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6 col-12">
-                                            <div class="d-flex align-items-center flex-wrap mb-3">
-                                                <label class="font-weight-normal offset-md-1 col-md-4 col-12">Address 1 <sup class="text-danger">*</sup></label>
-                                                <div class="col-md-7 col-12">
-                                                    <div class="custom_select">
-                                                        @Html.TextAreaFor(m=>m.Address1, new { @rows = 2, @class = "form-control", @id= "add1Val", maxlength = "50", @style = "resize: none;" })
-                                                        @Html.ValidationMessageFor(m => m.Address1, "", new { @id = "Address1Err", @class = "text-danger" })
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex align-items-center flex-wrap">
-                                        <div class="col-lg-6 col-12">
-                                            <div class="d-flex align-items-center flex-wrap mb-3">
-                                                <label class="font-weight-normal col-md-4 col-12">Address 2 <sup class="text-danger">*</sup></label>
-                                                <div class="col-md-7 col-12">
-                                                    <div class="custom_select">
-                                                        @Html.TextAreaFor(m => m.Address2, new { @rows = 2, @class = "form-control", @id= "add2Val", maxlength = "50", @style = "resize: none;" })
-                                                        @Html.ValidationMessageFor(m => m.Address2, "", new { @id = "Address2Err", @class = "text-danger" })                                                      
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6 col-12">
-                                            <div class="d-flex align-items-center flex-wrap mb-3">
-                                                <label class="font-weight-normal offset-md-1 col-md-4 col-12">Address 3 </label>
-                                                <div class="col-md-7 col-12">
-                                                    <div class="custom_select">
-                                                        @Html.TextAreaFor(m => m.Address3, new { @rows = 2, @class = "form-control", @id= "add3Val", maxlength = "50", @style = "resize: none;" })
-                                                        @Html.ValidationMessageFor(m => m.Address3, "", new { @id = "Address3Err", @class = "text-danger" })                                                        
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex align-items-center flex-wrap">
-                                        <div class="col-lg-6 col-12">
-                                            <div class="d-flex align-items-center flex-wrap mb-3">
-                                                <label class="font-weight-normal col-md-4 col-12">City <sup class="text-danger">*</sup></label>
-                                                <div class="col-md-7 col-12">
-                                                    <div class="custom_select">
-                                                        @Html.TextBoxFor(m => m.CityName, new { @id = "cityFetchVal", @class = "form-control", maxlength = "20" })
-                                                        @Html.ValidationMessageFor(m => m.CityName, "", new { @id = "CityNameErr", @class = "text-danger" })
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6 col-12">
-                                            <div class="d-flex align-items-center flex-wrap mb-3">
-                                                <label class="font-weight-normal offset-md-1 col-md-4 col-12">State <sup class="text-danger">*</sup></label>
-                                                <div class="col-md-7 col-12">
-                                                    <div class="custom_select">
-                                                        @Html.DropDownListFor(m => m.StateId, Enumerable.Empty<SelectListItem>(), "--Select--", new { @class = "form-control stateVal" })
-                                                        @Html.ValidationMessageFor(m => m.StateId, "", new { @id = "stateErrMsg", @class = "text-danger" })                                                        
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex align-items-center flex-wrap">
-                                        <div class="col-lg-6 col-12">
-                                            <div class="d-flex align-items-center flex-wrap mb-3">
-                                                <label class="font-weight-normal col-md-4 col-12">District <sup class="text-danger">*</sup></label>
-                                                <div class="col-md-7 col-12">
-                                                    <div class="custom_select">
-                                                        @Html.DropDownListFor(m => m.DistrictId, Enumerable.Empty<SelectListItem>(), "--Select--", new { @class = "form-control distVal" })
-                                                        @Html.ValidationMessageFor(m => m.DistrictId, "", new { @id = "distErrMsg", @class = "text-danger" })
-                                                   </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6 col-12">
-                                            <div class="d-flex align-items-center flex-wrap mb-3">
-                                                <label class="font-weight-normal offset-md-1 col-md-4 col-12">Mobile Number <sup class="text-danger">*</sup></label>
-                                                <div class="col-md-7 col-12">
-                                                    <div class="custom_select">
-                                                        @Html.TextBoxFor(m => m.MobileNo, new { @id = "mobFetchVal", @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)" })
-                                                        @Html.ValidationMessageFor(m => m.MobileNo, "", new { @id = "MobileNoErr", @class = "text-danger" })                                                        
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex align-items-center flex-wrap">
-                                        <div class="col-lg-6 col-12">
-                                            <div class="d-flex align-items-center flex-wrap mb-3">
-                                                <label class="font-weight-normal col-md-4 col-12">PIN Code <sup class="text-danger">*</sup></label>
-                                                <div class="col-md-7 col-12">
-                                                    <div class="custom_select">
-                                                        @Html.TextBoxFor(m => m.Pin, new { @id = "pinFetchVal", @class = "form-control", maxlength = "6", onkeypress = "return isNumberKey(event)" })
-                                                        @Html.ValidationMessageFor(m => m.Pin, "", new { @id = "PinCodeErr", @class = "text-danger" })                                                        
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                         <div class="col-lg-6 col-12">
-                                            <div class="d-flex align-items-center flex-wrap mb-3">
-                                                <label class="font-weight-normal offset-md-1 col-md-4 col-12">Email ID <sup class="text-danger">*</sup></label>
-                                                <div class="col-md-7 col-12">
-                                                    <div class="custom_select">
-                                                        @Html.TextBoxFor(m => m.EmailId, new { @id = "emailFetchVal", @class = "form-control", @style = "text-transform:lowercase", maxlength = "50" })
-                                                        @Html.ValidationMessageFor(m => m.EmailId, "", new { @id = "EmailIdErr", @class = "text-danger" })                                                       
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="clearfix"></div>
-
-                                    <div style="display:none;" id="enrollNew">
-                                        <div class="d-flex align-items-center justify-content-center mt-0">
-                                            <div class="px-2">
-                                                <button class="btn btn_primary" type="button" onclick="thisPageLoad()">Back to Search</button>
-                                            </div>
-                                            <div class="px-2">
-                                                <button class="btn btn_primary" type="button" onclick="submitEnroll()">Submit</button>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div style="display:none;" id="updateExist">
-                                        <div class="d-flex align-items-center justify-content-center mt-0">
-                                            <div class="px-2">
-                                                <button class="btn btn_primary" type="button" id="btnEnableDisable" onclick="EnableDisableDealer()">DISABLE</button>
-                                            </div>
-                                            <div class="px-2">
-                                                <button class="btn btn_primary" type="button" onclick="thisPageLoad()">Back to Search</button>
-                                            </div>
-                                            <div class="px-2">
-                                                <button class="btn btn_primary" type="button" onclick="updateExist()">Update</button>
-                                            </div>
-                                            <div class="px-2">
-                                                <button class="btn btn_primary" type="button" onclick="ResetPassword()">Reset Password</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="clearfix"></div>
-                            </div>
-                        </div>
-                        @Html.HiddenFor(model => Model.UserName)
-                        @Html.HiddenFor(model => Model.DealerStatus)
-                    </form>
+            </div>
+            <div class="col-12 col-md-12 px-0">
+                <div class="alert alert-danger mt-3 mb-0 text-center" role="alert" style="display:none;" id="noRecord">
                 </div>
             </div>
-         <div class="clearfix"></div>
+            <div id="detailsSection" style="display:none;">
+
+                <form id="formsDts">
+
+                    <div class="col-12 col-md-12 px-0">
+                        <div class="alert alert-success text-center mt-3 mb-0" role="alert" style="display:none;" id="responseMsg">
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-12 px-0">
+                        <div style="display:none;" class="alert alert-danger mt-3 mb-0 text-center" id="failureMsg">
+                        </div>
+                    </div>
+
+                    <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3" id="divDealerEnrollment">
+                        <div class="border-1 rounded border-grey pb-0">
+                            <p class="text-white px-3 py-2 m-0 font-weight-bold" style="background: #084693;">Officer Enrollment</p>
+                            <div class="col-lg-12 col-md-12 col-12 py-3 bg-white">
+                                <p class="text-dark px-0 pb-2 mb-3 font-weight-bold">Basic Information</p>
+                                <div class="d-flex align-items-center flex-wrap">
+                                    <div class="col-lg-6 col-12">
+                                        <div class="d-flex align-items-center flex-wrap mb-3">
+                                            <label class="font-weight-normal col-md-4 col-12">Dealer <sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="custom_select">
+                                                    @Html.DropDownListFor(x => x.OfficerTypeId, new[]{
+                                                    new SelectListItem(){ Text = "--select--", Value = "0" },
+                                                    new SelectListItem(){ Text = "Regional Viewer", Value = "21"},
+                                                    new SelectListItem(){ Text = "Dealership HQO Admin", Value = "22"},
+                                                    new SelectListItem(){ Text = "Branch Admin", Value = "23"},
+                                                    }, null, new { @class = "form-control px-0" })
+                                                    <span class="text-danger" id="OfficerTypeId_error"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-6 col-12">
+                                        <div class="d-flex align-items-center flex-wrap mb-3">
+                                            <div class="col-md-7 col-12">
+                                                <div class="custom_select">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center flex-wrap">
+                                    <div class="col-lg-6 col-12">
+                                        <div class="d-flex align-items-center flex-wrap mb-3">
+                                            <label class="font-weight-normal col-md-4 col-12">Dealer Code <sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="custom_select">
+                                                    @Html.TextBoxFor(m => m.DealerCode, new { @id = "dealerCodedFetchVal", @class = "form-control", maxlength="25", onkeypress = "return AllowAlphaNumeric(event)" })
+                                                    @Html.ValidationMessageFor(m => m.DealerCode, "", new { @id = "dealerCodeError", @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-6 col-12">
+                                        <div class="d-flex align-items-center flex-wrap mb-3">
+                                            <label class="font-weight-normal offset-md-1 col-md-4 col-12">Dealer Name <sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="custom_select">
+                                                    @Html.TextBoxFor(m => m.DealerName, new { @id = "dealerNameFetchVal", @class = "form-control", maxlength="50", onkeypress = "return AllowAlphaNumericWithSpace(event)" })
+                                                    @Html.ValidationMessageFor(m => m.DealerName, "", new { @id = "DealerNameErrorMsg", @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3" id="divCommunicationAddress">
+                        <div class="border-1 rounded border-grey pb-0">
+                            <p class="text-white px-3 py-2 m-0 font-weight-bold" style="background: #084693;">Communication Address</p>
+                            <div class="col-lg-12 col-md-12 col-12 py-3 bg-white">
+                                <div class="d-flex align-items-center flex-wrap">
+                                    <div class="col-lg-6 col-12">
+                                        <div class="d-flex align-items-center flex-wrap mb-3">
+                                            <label class="font-weight-normal col-md-4 col-12">SBU Type <sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="custom_select">
+                                                    @Html.DropDownListFor(m => m.SBUId, Enumerable.Empty<SelectListItem>(), new { @class = "form-control SBUIdVal" })
+                                                    @Html.ValidationMessageFor(m => m.SBUId, "", new { @id = "SBUIdErrMsg", @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-12">
+                                        <div class="d-flex align-items-center flex-wrap mb-3">
+                                            <label class="font-weight-normal offset-md-1 col-md-4 col-12">Zonal Office <sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="custom_select">
+                                                    @Html.DropDownListFor(m => m.ZonalOfficeId, Enumerable.Empty<SelectListItem>(), "--Select--", new { @class = "form-control zonalVal" })
+                                                    @Html.ValidationMessageFor(m => m.ZonalOfficeId, "", new { @id = "zonalErrMsg", @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center flex-wrap">
+                                    <div class="col-lg-6 col-12">
+                                        <div class="d-flex align-items-center flex-wrap mb-3">
+                                            <label class="font-weight-normal col-md-4 col-12">Regional Office <sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="custom_select">
+                                                    @Html.DropDownListFor(m => m.RegionalOfficeId, Enumerable.Empty<SelectListItem>(), "--Select--", new { @class = "form-control regionalVal" })
+                                                    @Html.ValidationMessageFor(m => m.RegionalOfficeId, "", new { @id = "regionalErrMsg", @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-12">
+                                        <div class="d-flex align-items-center flex-wrap mb-3">
+                                            <label class="font-weight-normal offset-md-1 col-md-4 col-12">Address 1 <sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="custom_select">
+                                                    @Html.TextAreaFor(m=>m.Address1, new { @rows = 2, @class = "form-control", @id= "add1Val", maxlength = "50", @style = "resize: none;" })
+                                                    @Html.ValidationMessageFor(m => m.Address1, "", new { @id = "Address1Err", @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center flex-wrap">
+                                    <div class="col-lg-6 col-12">
+                                        <div class="d-flex align-items-center flex-wrap mb-3">
+                                            <label class="font-weight-normal col-md-4 col-12">Address 2 <sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="custom_select">
+                                                    @Html.TextAreaFor(m => m.Address2, new { @rows = 2, @class = "form-control", @id= "add2Val", maxlength = "50", @style = "resize: none;" })
+                                                    @Html.ValidationMessageFor(m => m.Address2, "", new { @id = "Address2Err", @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-12">
+                                        <div class="d-flex align-items-center flex-wrap mb-3">
+                                            <label class="font-weight-normal offset-md-1 col-md-4 col-12">Address 3 </label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="custom_select">
+                                                    @Html.TextAreaFor(m => m.Address3, new { @rows = 2, @class = "form-control", @id= "add3Val", maxlength = "50", @style = "resize: none;" })
+                                                    @Html.ValidationMessageFor(m => m.Address3, "", new { @id = "Address3Err", @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center flex-wrap">
+                                    <div class="col-lg-6 col-12">
+                                        <div class="d-flex align-items-center flex-wrap mb-3">
+                                            <label class="font-weight-normal col-md-4 col-12">City <sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="custom_select">
+                                                    @Html.TextBoxFor(m => m.CityName, new { @id = "cityFetchVal", @class = "form-control", maxlength = "20" })
+                                                    @Html.ValidationMessageFor(m => m.CityName, "", new { @id = "CityNameErr", @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-12">
+                                        <div class="d-flex align-items-center flex-wrap mb-3">
+                                            <label class="font-weight-normal offset-md-1 col-md-4 col-12">State <sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="custom_select">
+                                                    @Html.DropDownListFor(m => m.StateId, Enumerable.Empty<SelectListItem>(), "--Select--", new { @class = "form-control stateVal" })
+                                                    @Html.ValidationMessageFor(m => m.StateId, "", new { @id = "stateErrMsg", @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center flex-wrap">
+                                    <div class="col-lg-6 col-12">
+                                        <div class="d-flex align-items-center flex-wrap mb-3">
+                                            <label class="font-weight-normal col-md-4 col-12">District <sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="custom_select">
+                                                    @Html.DropDownListFor(m => m.DistrictId, Enumerable.Empty<SelectListItem>(), "--Select--", new { @class = "form-control distVal" })
+                                                    @Html.ValidationMessageFor(m => m.DistrictId, "", new { @id = "distErrMsg", @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-12">
+                                        <div class="d-flex align-items-center flex-wrap mb-3">
+                                            <label class="font-weight-normal offset-md-1 col-md-4 col-12">Mobile Number <sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="custom_select">
+                                                    @Html.TextBoxFor(m => m.MobileNo, new { @id = "mobFetchVal", @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)" })
+                                                    @Html.ValidationMessageFor(m => m.MobileNo, "", new { @id = "MobileNoErr", @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center flex-wrap">
+                                    <div class="col-lg-6 col-12">
+                                        <div class="d-flex align-items-center flex-wrap mb-3">
+                                            <label class="font-weight-normal col-md-4 col-12">PIN Code <sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="custom_select">
+                                                    @Html.TextBoxFor(m => m.Pin, new { @id = "pinFetchVal", @class = "form-control", maxlength = "6", onkeypress = "return isNumberKey(event)" })
+                                                    @Html.ValidationMessageFor(m => m.Pin, "", new { @id = "PinCodeErr", @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-12">
+                                        <div class="d-flex align-items-center flex-wrap mb-3">
+                                            <label class="font-weight-normal offset-md-1 col-md-4 col-12">Email ID <sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="custom_select">
+                                                    @Html.TextBoxFor(m => m.EmailId, new { @id = "emailFetchVal", @class = "form-control", @style = "text-transform:lowercase", maxlength = "50" })
+                                                    @Html.ValidationMessageFor(m => m.EmailId, "", new { @id = "EmailIdErr", @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+
+                                <div style="display:none;" id="enrollNew">
+                                    <div class="d-flex align-items-center justify-content-center mt-0">
+                                        <div class="px-2">
+                                            <button class="btn btn_primary" type="button" onclick="thisPageLoad()">Back to Search</button>
+                                        </div>
+                                        <div class="px-2">
+                                            <button class="btn btn_primary" type="button" onclick="submitEnroll()">Submit</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div style="display:none;" id="updateExist">
+                                    <div class="d-flex align-items-center justify-content-center mt-0">
+                                        <div class="px-2">
+                                            <button class="btn btn_primary" type="button" id="btnEnableDisable" onclick="EnableDisableDealer()">DISABLE</button>
+                                        </div>
+                                        <div class="px-2">
+                                            <button class="btn btn_primary" type="button" onclick="thisPageLoad()">Back to Search</button>
+                                        </div>
+                                        <div class="px-2">
+                                            <button class="btn btn_primary" type="button" onclick="updateExist()">Update</button>
+                                        </div>
+                                        <div class="px-2">
+                                            <button class="btn btn_primary" type="button" onclick="ResetPassword()">Reset Password</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                    @Html.HiddenFor(model => Model.UserName)
+                    @Html.HiddenFor(model => Model.DealerStatus)
+                </form>
+            </div>
+        </div>
+        <div class="clearfix"></div>
     </div>
 </div>
 
 <script type="text/javascript">
 
-    function thisPageLoad() 
-    {
-        window.location.href = '@Url.Action("JCBDealerEnrollment", "JCB")';
-    }
+        function thisPageLoad()
+        {
+            window.location.href = '@Url.Action("JCBDealerEnrollment", "JCB")';
+        }
 
-    $(document).ready(function () {
+        $(document).ready(function () {
 
-          $('select').SumoSelect({
-            placeholder: '-Select-',
-            search: true,
-            searchText: 'Enter Text here.'
-          });
+              $('select').SumoSelect({
+                placeholder: '-Select-',
+                search: true,
+                searchText: 'Enter Text here.'
+              });
 
-          $.ajax({
-              type: 'POST',  // http method
-              url: '@Url.Action("GetSbuTypeList", "Common")',
-              dataType: "json",
-              success: function (data, status, xhr) {
+              $.ajax({
+                  type: 'POST',  // http method
+                  url: '@Url.Action("GetSbuTypeList", "Common")',
+                  dataType: "json",
+                  success: function (data, status, xhr) {
 
-                  console.log(data);
+                      console.log(data);
 
-                  $.each(data.sbuTypeResponseList, function (i, option) {
-                      $("<option/>").val(option.sbuId).text(option.sbuName).appendTo(".SBUIdVal");
-                  });
-                  $(".SBUIdVal")[0].sumo.reload();
-                  $(".SBUIdVal").trigger('change');
-              },
-              error: function (jqXhr, textStatus, errorMessage) {
-                  alert("Error Populating SBU Type");
-              }
-          });
+                      $.each(data.sbuTypeResponseList, function (i, option) {
+                          $("<option/>").val(option.sbuId).text(option.sbuName).appendTo(".SBUIdVal");
+                      });
+                      $(".SBUIdVal")[0].sumo.reload();
+                      $(".SBUIdVal").trigger('change');
+                  },
+                  error: function (jqXhr, textStatus, errorMessage) {
+                      alert("Error Populating SBU Type");
+                  }
+              });
 
-          $(".SBUIdVal").change(function () {
-            var id = this.value;
+              $(".SBUIdVal").change(function () {
+                var id = this.value;
 
-            
-            if(id == ""){
-                $(".zonalVal").html("");
-                $(".zonalVal")[0].sumo.reload();
-                return false;
-            }
 
-            if (id != 0) 
-            {
-                $("#zonalErrMsg").html("");
-            }
-            $.ajax({
-                type: 'POST',  // http method
-                url: '@Url.Action("GetZonalOfficebySBUType", "Common")',
-                data: { SBUTypeId: id },  // data to submit
-                dataType: "json",
-                success: function (data, status, xhr) {
-                    var v = data;
-                    if (status == 'success') {
-                        $(".zonalVal").html("");
-                        $('<option value="">--Select--</option>').appendTo(".zonalVal");
-                        $.each(data, function (i, data) { // bind the dropdown list using json result
-                            $('<option>',
-                                {
-                                    value: data.zonalOfficeID,
-                                    text: data.zonalOfficeName
-                                }).html(data.zonalOfficeName).appendTo(".zonalVal");
-                        });
-                        $(".zonalVal")[0].sumo.reload();
-                        $('.zonalVal').trigger('change');
-                    }
-                    else {
-                        console.log(v);
-                    }
-                },
-                error: function (jqXhr, textStatus, errorMessage) {
-                    alert("Error Populating Regional Office");
+                if(id == ""){
+                    $(".zonalVal").html("");
+                    $(".zonalVal")[0].sumo.reload();
+                    return false;
                 }
-            });
-     });
 
-          //$.ajax({
-          //    type: 'POST',  // http method
-          //    url: '@Url.Action("GetzonalOfficeList", "Common")',
-          //    dataType: "json",
-          //    success: function (data, status, xhr) {
-
-          //        console.log(data);
-
-          //        $.each(data.zonalOfficeLst, function (i, option) {
-          //            $("<option/>").val(option.zonalOfficeID).text(option.zonalOfficeName).appendTo(".zonalVal");
-          //        });
-          //        $(".zonalVal")[0].sumo.reload();
-          //    },
-          //    error: function (jqXhr, textStatus, errorMessage) {
-          //        alert("Error Populating Zonal Office");
-          //    }
-          //});
-
-          $.ajax({
-              type: 'POST',  // http method
-              url: '@Url.Action("GetStateList", "Common")',
-              dataType: "json",
-              success: function (data, status, xhr) {
-
-                  console.log(data);
-
-                  $.each(data.stateLst, function (i, option) {
-                      $("<option/>").val(option.stateID).text(option.stateName).appendTo(".stateVal");
-                  });
-                  $(".stateVal")[0].sumo.reload();
-              },
-              error: function (jqXhr, textStatus, errorMessage) {
-                  alert("Error Populating State Data");
-              }
-          });
-    });
-
-    $(".zonalVal").change(function () {
-            var id = this.value;
-
-            
-            if(id == ""){
-                $(".regionalVal").html("");
-                $(".regionalVal")[0].sumo.reload();
-                return false;
-            }
-
-            if (id != 0) {
-                $("#zonalErrMsg").html("");
-            }
-            $.ajax({
-                type: 'POST',  // http method
-                url: '@Url.Action("GetRegionalOfcDetails", "Common")',
-                data: { zonalOfcId: id },  // data to submit
-                dataType: "json",
-                success: function (data, status, xhr) {
-                    var v = data;
-                    if (status == 'success') {
-                        $(".regionalVal").html("");
-                        $('<option value="">--Select Regional Office--</option>').appendTo(".regionalVal");
-                        $.each(data, function (i, data) { // bind the dropdown list using json result
-                            $('<option>',
-                                {
-                                    value: data.regionalOfficeID,
-                                    text: data.regionalOfficeName
-                                }).html(data.districtName).appendTo(".regionalVal");
-                        });
-                        $(".regionalVal")[0].sumo.reload();
-                    }
-                    else {
-                        console.log(v);
-                    }
-                },
-                error: function (jqXhr, textStatus, errorMessage) {
-                    alert("Error Populating Regional Office");
-                }
-            });
-     });
-
-    $(".stateVal").change(function () {
-            var id = this.value;
-
-            if(id == ""){
-                $(".distVal").html("");
-                $(".distVal")[0].sumo.reload();
-                return false;
-            }
-
-            if (id != 0) {
-                $("#stateErrMsg").html("");
-            }
-
-            $.ajax({
-                type: 'POST',  // http method
-                url: '@Url.Action("GetDistrictDetails", "Common")',
-                data: { Stateid: id },  // data to submit
-                dataType: "json",
-                success: function (data, status, xhr) {
-                    var v = data;
-                    if (status == 'success') {
-                        $(".distVal").html("");
-                        $('<option>--Select District--</option>').appendTo(".distVal");
-                        $.each(data, function (i, data) { // bind the dropdown list using json result
-                            $('<option>',
-                                {
-                                    value: data.districtID,
-                                    text: data.districtName
-                                }).html(data.districtName).appendTo(".distVal");
-                        });
-                        $(".distVal")[0].sumo.reload();
-                    }
-                    else {
-                        console.log(v);
-                    }
-                },
-                error: function (jqXhr, textStatus, errorMessage) {
-                    alert("Error Populating District Data");
-                }
-            });
-    });
-
-    function GetRegionId(zonalId, regionId) {
-         var id = zonalId;
-
-           if(id == ""){
-                $(".regionalVal").html("");
-                $(".regionalVal")[0].sumo.reload();
-                return false;
-            }
-
-
-            if (id != 0) {
-                $("#regionalOffice_error").html("");
-            }
-            $.ajax({
-                type: 'POST',  // http method
-                url: '@Url.Action("GetRegionalOfcDetails", "Common")',
-                data: { ZonalOfficeID: zonalId },  // data to submit
-                dataType: "json",
-                success: function (data, status, xhr) {
-                    var v = data;
-                    if (status == 'success') {
-                        $(".regionalVal").html("");
-                        $('<option value="">--Select Regional Office--</option>').appendTo(".regionalVal");
-                        $.each(data, function (i, data) { // bind the dropdown list using json result
-                            $('<option>',
-                                {
-                                    value: data.regionalOfficeID,
-                                    text: data.regionalOfficeName
-                                }).html(data.regionalOfficeName).appendTo(".regionalVal");
-                        });
-                        $(".regionalVal")[0].sumo.reload();
-                        //$(".regionalVal").val(regionId);
-                        //$('#RegionalOfficeId')[0].sumo.selectItem(regionId);
-                        //$(".regionalVal")[0].sumo.selectItem(regionId);
-                         setTimeout(function(){
-                                   $('#RegionalOfficeId')[0].sumo.selectItem(regionId);
-                               },500);
-                        //console.log($(".regionalVal").html());
-                        //console.log(regionId);
-                    }
-                    else {
-                        console.log(v);
-                    }
-                },
-                error: function (jqXhr, textStatus, errorMessage) {
-                    alert("Error Populating Regional Office");
-                }
-            });
-    };
-
-   function GetZonalOfficeId(sbuId, zOfficeID) {
-         var id = sbuId;
-
-           if(id == ""){
-                $(".zonalVal").html("");
-                $(".zonalVal")[0].sumo.reload();
-                return false;
-            }
-
-
-            if (id != 0) {
-                $("#zonalErrMsg").html("");
-            }
-            $.ajax({
-                type: 'POST',  // http method
-                url: '@Url.Action("GetZonalOfficebySBUType", "Common")',
-                data: { SBUTypeId: id },  // data to submit
-                dataType: "json",
-                success: function (data, status, xhr) {
-                    var v = data;
-                    if (status == 'success') {
-                        $(".zonalVal").html("");
-                        $('<option value="">--Select--</option>').appendTo(".zonalVal");
-                        $.each(data, function (i, data) { // bind the dropdown list using json result
-                            $('<option>',
-                                {
-                                    value: data.zonalOfficeID,
-                                    text: data.zonalOfficeName
-                                }).html(data.zonalOfficeName).appendTo(".zonalVal");
-                        });
-                        $(".zonalVal")[0].sumo.reload();
-                        //$("#ZonalOfficeId")[0].sumo.selectItem(zOfficeID);
-                        //$(".zonalVal")[0].sumo.selectItem(zOfficeID);
-                        setTimeout(function(){
-                                   $('#ZonalOfficeId')[0].sumo.selectItem(zOfficeID);
-                               },500);
-                        //console.log($(".zonalVal").html());
-                        //console.log(zOfficeID);
-                    }
-                    else 
-                    {
-                        console.log(v);
-                    }
-                },
-                error: function (jqXhr, textStatus, errorMessage) {
-                    alert("Error Populating Zonal Office");
-                }
-            });
-            
-    };
-
-    function GetPerDistrict(stateId, districtId) {
-        var id = stateId;
-
-        
-           if(id == ""){
-                $(".distVal").html("");
-                $(".distVal")[0].sumo.reload();
-                return false;
-            }
-
-
-            if (id != 0) {
-                $("#state_error").html("");
-            }
-
-        $.ajax({
-                type: 'POST',  // http method
-                url: '@Url.Action("GetDistrictDetails", "Common")',
-                data: { Stateid: id },  // data to submit
-                dataType: "json",
-                success: function (data, status, xhr) {
-                    var v = data;
-                    if (status == 'success') {
-                        $(".distVal").html("");
-                        $('<option>--Select District--</option>').appendTo(".distVal");
-                        $.each(data, function (i, data) { // bind the dropdown list using json result
-                            $('<option>',
-                                {
-                                    value: data.districtID,
-                                    text: data.districtName
-                                }).html(data.districtName).appendTo(".distVal");
-                        });
-                        $(".distVal")[0].sumo.reload();
-                        //$(".distVal").val(districtId);
-                        $('#DistrictId')[0].sumo.selectItem(districtId);
-                    }
-                    else {
-                        console.log(v);
-                    }
-                },
-                error: function (jqXhr, textStatus, errorMessage) {
-                    alert("Error Populating District Data");
-                }
-            });
-    };
-
-
-    function searchDealer() 
-    {
-        debugger;
-        var isValid=true;
-        document.getElementById("responseMsg").style.display = "none";
-        document.getElementById("failureMsg").style.display = "none";
-        
-        var dealerCodeVal = $("#dealerCdVal").val();
-        var dtpDealerVal = $("#DTPDealerCdVal").val();
-
-        if($("#OfficerSearchTypeId").val()=="0")
-        {
-            $('#OfficerSearchTypeId_error').text("Please select a dealer");
-            isValid=false;
-        }
-        else
-        {
-            $('#OfficerSearchTypeId_error').text("");
-        }
-
-        if ($('#dealerCdVal').val() == "" && $('#DTPDealerCdVal').val() == "") 
-        {
-            $('#dealerCodeErr').text("Please enter either Dealer Code or DTP Dealer Code");
-            isValid=false;
-        }
-        else if ($('#dealerCdVal').val()!="" && !($('#dealerCdVal').val().match(forVehicleNo)))
-        {
-            $('#dealerCodeErr').text("Dealer Code should be alphanumeric");
-            isValid=false;
-        }
-        else
-        {
-            $('#dealerCodeErr').text("");
-        }
-
-        if(isValid)
-        {
-            $.ajax({
-                url: "@Url.Action("SearchJCBDealer", "JCB")",
-                type: "POST",
-                dataType: "JSON",
-                data: { dealerCode: dealerCodeVal, dtpCode: dtpDealerVal, OfficerType : $("#OfficerSearchTypeId").val() },
-                success: function (res) {
-
-                    console.log("res", res);
-
-                    if (res.searchList.success == true) {
-
-                        document.getElementById("noRecord").style.display = "none";
-                        document.getElementById("searchAl").style.display = "none";
-
-                        var alList = res.searchList.data;
-
-                        $("#dealerCodedFetchVal").val(alList[0].dealerCode || '');
-                        $("#dealerNameFetchVal").val(alList[0].dealerName || '');
-
-                        $('#OfficerTypeId')[0].sumo.selectItem(alList[0].oTypeId);
-                        document.getElementById("OfficerTypeId").disabled=true;
-                        $("OfficerTypeId").attr("readOnly", "true");
-
-                        //$('select[name^="ZonalOfficeId"] option[value="' + alList[0].zonalOfficeID + '"]').attr("selected", "selected");
-                        if($('#SBUId').val()!=alList[0].sbuId)
-                        {
-                           $('#SBUId')[0].sumo.selectItem(alList[0].sbuId);
-                        }
-                        else
-                        {
-                            $("#SBUId").trigger("change");
-                        }
-                        //GetZonalOfficeId(alList[0].sbuId, alList[0].zOfficeID);
-
-                        setTimeout(function(){
-                                        console.log(alList[0].zOfficeID);
-                                        $('#ZonalOfficeId')[0].sumo.selectItem(alList[0].zOfficeID);
-                                        //console.log($('#ZonalOfficeId').html());
-                                    },2000);
-
-                        //$("#SBUId").trigger('change');
-                        //setTimeout(function(){
-                        //                     $('#ZonalOfficeId')[0].sumo.selectItem(alList[0].zOfficeID);
-                        //                     },500);
-                        //GetRegionId(alList[0].zonalOfficeID, alList[0].zonalOfficeID);
-                        //GetRegionId(alList[0].zonalOfficeID, alList[0].rOfficeID);
-
-
-
-                        //GetRegionId(alList[0].zOfficeID, alList[0].rOfficeID);
-
-                        setTimeout(function(){
-                                        console.log(alList[0].rOfficeID);
-                                        $('#RegionalOfficeId')[0].sumo.selectItem(alList[0].rOfficeID);
-                                        //console.log($('#RegionalOfficeId').html());
-                                    },4000);
-
-  
-                        //setTimeout(function(){
-                        //                   $('#RegionalOfficeId')[0].sumo.selectItem(alList[0].rOfficeID);
-                        //                   },500);
-
-                        $("#add1Val").val(alList[0].address1 || '');
-                        $("#add2Val").val(alList[0].address2 || '');
-                        $("#add3Val").val(alList[0].address3 || '');
-                        $("#cityFetchVal").val(alList[0].cityName || '');
-                        $("#UserName").val(alList[0].userName || '');
-                        $("#DealerStatus").val(alList[0].dealerStatus || '');
-
-                        console.log($("#DealerStatus").val());
-                        console.log(alList[0].dealerStatus);
-
-                        if(alList[0].dealerStatus=="Enabled")
-                        {
-                            $("#btnEnableDisable").text("DISABLE");
-                        }
-                        else
-                        {
-                            $("#btnEnableDisable").text("ENABLE");
-                        }
-
-                        //$('select[name^="StateId"] option[value="' + alList[0].stateId + '"]').attr("selected", "selected");
-                        //$('#StateId')[0].sumo.selectItem(alList[0].sId);
-                        if($('#StateId').val()!=alList[0].sId)
-                        {
-                          $('#StateId')[0].sumo.selectItem(alList[0].sId);
-                        }
-                        else
-                        {
-                            $("#StateId").trigger("change");
-                        }
-                        //GetPerDistrict(alList[0].stateId, alList[0].districtId);
-                        //GetPerDistrict(alList[0].stateId, alList[0].dId);
-
-                        setTimeout(function(){
-                                           $('#DistrictId')[0].sumo.selectItem(alList[0].dId);
-                                           },2000);
-
-                        $("#mobFetchVal").val(alList[0].mobileNo || '');
-                        $("#pinFetchVal").val(alList[0].pin || '');
-                        $("#emailFetchVal").val(alList[0].emailId || '');
-
-                        $("#dealerCodedFetchVal").attr("disabled", true);
-                        $("#dealerNameFetchVal").attr("disabled", true);
-
-                        document.getElementById("detailsSection").style.display = "block";
-                        document.getElementById("updateExist").style.display = "block";
-                    } 
-                    else 
-                    {
-                        document.getElementById("detailsSection").style.display = "none";
-                        $("#noRecord").html("");
-                        $("#noRecord").append("<span>" + res.searchList.message + "</span>");
-                        document.getElementById("noRecord").style.display = "block";
-                    }
-                },
-                error: function (ex) {
-                    alert('Failed' + ex);
-                }
-            });
-
-        }
-
-    }
-
-    function loadEnrollForm() 
-    {
-        document.getElementById("responseMsg").style.display = "none";
-        document.getElementById("failureMsg").style.display = "none";
-        document.getElementById("searchAl").style.display = "none";
-        document.getElementById("detailsSection").style.display = "block";
-        document.getElementById("enrollNew").style.display = "block";
-        document.getElementById("noRecord").style.display = "none";
-    }
-
-    $("#dealerCodedFetchVal").on("blur", function () 
-    {
-        debugger;
-        localStorage.setItem("DEALERFOUND", "0");
-        var isValid=true;
-
-        var dealerCode = document.getElementById("dealerCodedFetchVal").value.trim();
-        if (dealerCode == "") 
-        {
-            document.getElementById("dealerCodeError").innerHTML = "Dealer Code field cannot be left blank";
-            isValid=false;
-        }
-        else 
-        {
-            document.getElementById("dealerCodeError").innerHTML = "";
-        }
-
-
-        if(isValid)
-        {
-
-            $.ajax({
-                type: 'POST',  // http method
-                url: '@Url.Action("CheckJCBDealerCodeExists", "JCB")',
-                data: { DealerCode: dealerCode },  // data to submit
-                dataType: "json",
-                success: function (data, status, xhr) 
+                if (id != 0)
                 {
-                    console.log(data);
-                    console.log(status);
-                    console.log(data.status);
-    debugger;
-                    if (status == 'success') 
-                    {
-                        if (data.status == 1) 
-                        {
-                            document.getElementById("dealerCodeError").innerHTML = "Dealer Code already exists";
-                            localStorage.setItem("DEALERFOUND", "1");
+                    $("#zonalErrMsg").html("");
+                }
+                $.ajax({
+                    type: 'POST',  // http method
+                    url: '@Url.Action("GetZonalOfficebySBUType", "Common")',
+                    data: { SBUTypeId: id },  // data to submit
+                    dataType: "json",
+                    success: function (data, status, xhr) {
+                        var v = data;
+                        if (status == 'success') {
+                            $(".zonalVal").html("");
+                            $('<option value="">--Select--</option>').appendTo(".zonalVal");
+                            $.each(data, function (i, data) { // bind the dropdown list using json result
+                                $('<option>',
+                                    {
+                                        value: data.zonalOfficeID,
+                                        text: data.zonalOfficeName
+                                    }).html(data.zonalOfficeName).appendTo(".zonalVal");
+                            });
+                            $(".zonalVal")[0].sumo.reload();
+                            $('.zonalVal').trigger('change');
                         }
-                        else 
+                        else {
+                            console.log(v);
+                        }
+                    },
+                    error: function (jqXhr, textStatus, errorMessage) {
+                        alert("Error Populating Regional Office");
+                    }
+                });
+         });
+
+              //$.ajax({
+              //    type: 'POST',  // http method
+              //    url: '@Url.Action("GetzonalOfficeList", "Common")',
+              //    dataType: "json",
+              //    success: function (data, status, xhr) {
+
+              //        console.log(data);
+
+              //        $.each(data.zonalOfficeLst, function (i, option) {
+              //            $("<option/>").val(option.zonalOfficeID).text(option.zonalOfficeName).appendTo(".zonalVal");
+              //        });
+              //        $(".zonalVal")[0].sumo.reload();
+              //    },
+              //    error: function (jqXhr, textStatus, errorMessage) {
+              //        alert("Error Populating Zonal Office");
+              //    }
+              //});
+
+              $.ajax({
+                  type: 'POST',  // http method
+                  url: '@Url.Action("GetStateList", "Common")',
+                  dataType: "json",
+                  success: function (data, status, xhr) {
+
+                      console.log(data);
+
+                      $.each(data.stateLst, function (i, option) {
+                          $("<option/>").val(option.stateID).text(option.stateName).appendTo(".stateVal");
+                      });
+                      $(".stateVal")[0].sumo.reload();
+                  },
+                  error: function (jqXhr, textStatus, errorMessage) {
+                      alert("Error Populating State Data");
+                  }
+              });
+        });
+
+        $(".zonalVal").change(function () {
+                var id = this.value;
+
+
+                if(id == ""){
+                    $(".regionalVal").html("");
+                    $(".regionalVal")[0].sumo.reload();
+                    return false;
+                }
+
+                if (id != 0) {
+                    $("#zonalErrMsg").html("");
+                }
+                $.ajax({
+                    type: 'POST',  // http method
+                    url: '@Url.Action("GetRegionalOfcDetails", "Common")',
+                    data: { zonalOfcId: id },  // data to submit
+                    dataType: "json",
+                    success: function (data, status, xhr) {
+                        var v = data;
+                        if (status == 'success') {
+                            $(".regionalVal").html("");
+                            $('<option value="">--Select Regional Office--</option>').appendTo(".regionalVal");
+                            $.each(data, function (i, data) { // bind the dropdown list using json result
+                                $('<option>',
+                                    {
+                                        value: data.regionalOfficeID,
+                                        text: data.regionalOfficeName
+                                    }).html(data.districtName).appendTo(".regionalVal");
+                            });
+                            $(".regionalVal")[0].sumo.reload();
+                        }
+                        else {
+                            console.log(v);
+                        }
+                    },
+                    error: function (jqXhr, textStatus, errorMessage) {
+                        alert("Error Populating Regional Office");
+                    }
+                });
+         });
+
+        $(".stateVal").change(function () {
+                var id = this.value;
+
+                if(id == ""){
+                    $(".distVal").html("");
+                    $(".distVal")[0].sumo.reload();
+                    return false;
+                }
+
+                if (id != 0) {
+                    $("#stateErrMsg").html("");
+                }
+
+                $.ajax({
+                    type: 'POST',  // http method
+                    url: '@Url.Action("GetDistrictDetails", "Common")',
+                    data: { Stateid: id },  // data to submit
+                    dataType: "json",
+                    success: function (data, status, xhr) {
+                        var v = data;
+                        if (status == 'success') {
+                            $(".distVal").html("");
+                            $('<option>--Select District--</option>').appendTo(".distVal");
+                            $.each(data, function (i, data) { // bind the dropdown list using json result
+                                $('<option>',
+                                    {
+                                        value: data.districtID,
+                                        text: data.districtName
+                                    }).html(data.districtName).appendTo(".distVal");
+                            });
+                            $(".distVal")[0].sumo.reload();
+                        }
+                        else {
+                            console.log(v);
+                        }
+                    },
+                    error: function (jqXhr, textStatus, errorMessage) {
+                        alert("Error Populating District Data");
+                    }
+                });
+        });
+
+        function GetRegionId(zonalId, regionId) {
+             var id = zonalId;
+
+               if(id == ""){
+                    $(".regionalVal").html("");
+                    $(".regionalVal")[0].sumo.reload();
+                    return false;
+                }
+
+
+                if (id != 0) {
+                    $("#regionalOffice_error").html("");
+                }
+                $.ajax({
+                    type: 'POST',  // http method
+                    url: '@Url.Action("GetRegionalOfcDetails", "Common")',
+                    data: { ZonalOfficeID: zonalId },  // data to submit
+                    dataType: "json",
+                    success: function (data, status, xhr) {
+                        var v = data;
+                        if (status == 'success') {
+                            $(".regionalVal").html("");
+                            $('<option value="">--Select Regional Office--</option>').appendTo(".regionalVal");
+                            $.each(data, function (i, data) { // bind the dropdown list using json result
+                                $('<option>',
+                                    {
+                                        value: data.regionalOfficeID,
+                                        text: data.regionalOfficeName
+                                    }).html(data.regionalOfficeName).appendTo(".regionalVal");
+                            });
+                            $(".regionalVal")[0].sumo.reload();
+                            //$(".regionalVal").val(regionId);
+                            //$('#RegionalOfficeId')[0].sumo.selectItem(regionId);
+                            //$(".regionalVal")[0].sumo.selectItem(regionId);
+                             setTimeout(function(){
+                                       $('#RegionalOfficeId')[0].sumo.selectItem(regionId);
+                                   },500);
+                            //console.log($(".regionalVal").html());
+                            //console.log(regionId);
+                        }
+                        else {
+                            console.log(v);
+                        }
+                    },
+                    error: function (jqXhr, textStatus, errorMessage) {
+                        alert("Error Populating Regional Office");
+                    }
+                });
+        };
+
+       function GetZonalOfficeId(sbuId, zOfficeID) {
+             var id = sbuId;
+
+               if(id == ""){
+                    $(".zonalVal").html("");
+                    $(".zonalVal")[0].sumo.reload();
+                    return false;
+                }
+
+
+                if (id != 0) {
+                    $("#zonalErrMsg").html("");
+                }
+                $.ajax({
+                    type: 'POST',  // http method
+                    url: '@Url.Action("GetZonalOfficebySBUType", "Common")',
+                    data: { SBUTypeId: id },  // data to submit
+                    dataType: "json",
+                    success: function (data, status, xhr) {
+                        var v = data;
+                        if (status == 'success') {
+                            $(".zonalVal").html("");
+                            $('<option value="">--Select--</option>').appendTo(".zonalVal");
+                            $.each(data, function (i, data) { // bind the dropdown list using json result
+                                $('<option>',
+                                    {
+                                        value: data.zonalOfficeID,
+                                        text: data.zonalOfficeName
+                                    }).html(data.zonalOfficeName).appendTo(".zonalVal");
+                            });
+                            $(".zonalVal")[0].sumo.reload();
+                            //$("#ZonalOfficeId")[0].sumo.selectItem(zOfficeID);
+                            //$(".zonalVal")[0].sumo.selectItem(zOfficeID);
+                            setTimeout(function(){
+                                       $('#ZonalOfficeId')[0].sumo.selectItem(zOfficeID);
+                                   },500);
+                            //console.log($(".zonalVal").html());
+                            //console.log(zOfficeID);
+                        }
+                        else
+                        {
+                            console.log(v);
+                        }
+                    },
+                    error: function (jqXhr, textStatus, errorMessage) {
+                        alert("Error Populating Zonal Office");
+                    }
+                });
+
+        };
+
+        function GetPerDistrict(stateId, districtId) {
+            var id = stateId;
+
+
+               if(id == ""){
+                    $(".distVal").html("");
+                    $(".distVal")[0].sumo.reload();
+                    return false;
+                }
+
+
+                if (id != 0) {
+                    $("#state_error").html("");
+                }
+
+            $.ajax({
+                    type: 'POST',  // http method
+                    url: '@Url.Action("GetDistrictDetails", "Common")',
+                    data: { Stateid: id },  // data to submit
+                    dataType: "json",
+                    success: function (data, status, xhr) {
+                        var v = data;
+                        if (status == 'success') {
+                            $(".distVal").html("");
+                            $('<option>--Select District--</option>').appendTo(".distVal");
+                            $.each(data, function (i, data) { // bind the dropdown list using json result
+                                $('<option>',
+                                    {
+                                        value: data.districtID,
+                                        text: data.districtName
+                                    }).html(data.districtName).appendTo(".distVal");
+                            });
+                            $(".distVal")[0].sumo.reload();
+                            //$(".distVal").val(districtId);
+                            $('#DistrictId')[0].sumo.selectItem(districtId);
+                        }
+                        else {
+                            console.log(v);
+                        }
+                    },
+                    error: function (jqXhr, textStatus, errorMessage) {
+                        alert("Error Populating District Data");
+                    }
+                });
+        };
+
+
+        function searchDealer()
+        {
+            debugger;
+            var isValid=true;
+            document.getElementById("responseMsg").style.display = "none";
+            document.getElementById("failureMsg").style.display = "none";
+
+            var dealerCodeVal = $("#dealerCdVal").val();
+            var dtpDealerVal = $("#DTPDealerCdVal").val();
+
+            if($("#OfficerSearchTypeId").val()=="0")
+            {
+                $('#OfficerSearchTypeId_error').text("Please select a dealer");
+                isValid=false;
+            }
+            else
+            {
+                $('#OfficerSearchTypeId_error').text("");
+            }
+
+            if ($('#dealerCdVal').val() == "" && $('#DTPDealerCdVal').val() == "")
+            {
+                $('#dealerCodeErr').text("Please enter either Dealer Code or DTP Dealer Code");
+                isValid=false;
+            }
+            else if ($('#dealerCdVal').val()!="" && !($('#dealerCdVal').val().match(forVehicleNo)))
+            {
+                $('#dealerCodeErr').text("Dealer Code should be alphanumeric");
+                isValid=false;
+            }
+            else
+            {
+                $('#dealerCodeErr').text("");
+            }
+
+            if(isValid)
+            {
+                $.ajax({
+                    url: "@Url.Action("SearchJCBDealer", "JCB")",
+                    type: "POST",
+                    dataType: "JSON",
+                    data: { dealerCode: dealerCodeVal, dtpCode: dtpDealerVal, OfficerType : $("#OfficerSearchTypeId").val() },
+                    success: function (res) {
+
+                        console.log("res", res);
+
+                        if (res.searchList.success == true) {
+
+                            document.getElementById("noRecord").style.display = "none";
+                            document.getElementById("searchAl").style.display = "none";
+
+                            var alList = res.searchList.data;
+
+                            $("#dealerCodedFetchVal").val(alList[0].dealerCode || '');
+                            $("#dealerNameFetchVal").val(alList[0].dealerName || '');
+
+                            $('#OfficerTypeId')[0].sumo.selectItem(alList[0].oTypeId);
+                            document.getElementById("OfficerTypeId").disabled=true;
+                            $("OfficerTypeId").attr("readOnly", "true");
+
+                            //$('select[name^="ZonalOfficeId"] option[value="' + alList[0].zonalOfficeID + '"]').attr("selected", "selected");
+                            if($('#SBUId').val()!=alList[0].sbuId)
+                            {
+                               $('#SBUId')[0].sumo.selectItem(alList[0].sbuId);
+                            }
+                            else
+                            {
+                                $("#SBUId").trigger("change");
+                            }
+                            //GetZonalOfficeId(alList[0].sbuId, alList[0].zOfficeID);
+
+                            setTimeout(function(){
+                                            console.log(alList[0].zOfficeID);
+                                            $('#ZonalOfficeId')[0].sumo.selectItem(alList[0].zOfficeID);
+                                            //console.log($('#ZonalOfficeId').html());
+                                        },2000);
+
+                            //$("#SBUId").trigger('change');
+                            //setTimeout(function(){
+                            //                     $('#ZonalOfficeId')[0].sumo.selectItem(alList[0].zOfficeID);
+                            //                     },500);
+                            //GetRegionId(alList[0].zonalOfficeID, alList[0].zonalOfficeID);
+                            //GetRegionId(alList[0].zonalOfficeID, alList[0].rOfficeID);
+
+
+
+                            //GetRegionId(alList[0].zOfficeID, alList[0].rOfficeID);
+
+                            setTimeout(function(){
+                                            console.log(alList[0].rOfficeID);
+                                            $('#RegionalOfficeId')[0].sumo.selectItem(alList[0].rOfficeID);
+                                            //console.log($('#RegionalOfficeId').html());
+                                        },4000);
+
+
+                            //setTimeout(function(){
+                            //                   $('#RegionalOfficeId')[0].sumo.selectItem(alList[0].rOfficeID);
+                            //                   },500);
+
+                            $("#add1Val").val(alList[0].address1 || '');
+                            $("#add2Val").val(alList[0].address2 || '');
+                            $("#add3Val").val(alList[0].address3 || '');
+                            $("#cityFetchVal").val(alList[0].cityName || '');
+                            $("#UserName").val(alList[0].userName || '');
+                            $("#DealerStatus").val(alList[0].dealerStatus || '');
+
+                            console.log($("#DealerStatus").val());
+                            console.log(alList[0].dealerStatus);
+
+                            if(alList[0].dealerStatus=="Enabled")
+                            {
+                                $("#btnEnableDisable").text("DISABLE");
+                            }
+                            else
+                            {
+                                $("#btnEnableDisable").text("ENABLE");
+                            }
+
+                            //$('select[name^="StateId"] option[value="' + alList[0].stateId + '"]').attr("selected", "selected");
+                            //$('#StateId')[0].sumo.selectItem(alList[0].sId);
+                            if($('#StateId').val()!=alList[0].sId)
+                            {
+                              $('#StateId')[0].sumo.selectItem(alList[0].sId);
+                            }
+                            else
+                            {
+                                $("#StateId").trigger("change");
+                            }
+                            //GetPerDistrict(alList[0].stateId, alList[0].districtId);
+                            //GetPerDistrict(alList[0].stateId, alList[0].dId);
+
+                            setTimeout(function(){
+                                               $('#DistrictId')[0].sumo.selectItem(alList[0].dId);
+                                               },2000);
+
+                            $("#mobFetchVal").val(alList[0].mobileNo || '');
+                            $("#pinFetchVal").val(alList[0].pin || '');
+                            $("#emailFetchVal").val(alList[0].emailId || '');
+
+                            $("#dealerCodedFetchVal").attr("disabled", true);
+                            $("#dealerNameFetchVal").attr("disabled", true);
+
+                            document.getElementById("detailsSection").style.display = "block";
+                            document.getElementById("updateExist").style.display = "block";
+                        }
+                        else
+                        {
+                            document.getElementById("detailsSection").style.display = "none";
+                            $("#noRecord").html("");
+                            $("#noRecord").append("<span>" + res.searchList.message + "</span>");
+                            document.getElementById("noRecord").style.display = "block";
+                        }
+                    },
+                    error: function (ex) {
+                        alert('Failed' + ex);
+                    }
+                });
+
+            }
+
+        }
+
+        function loadEnrollForm()
+        {
+            document.getElementById("responseMsg").style.display = "none";
+            document.getElementById("failureMsg").style.display = "none";
+            document.getElementById("searchAl").style.display = "none";
+            document.getElementById("detailsSection").style.display = "block";
+            document.getElementById("enrollNew").style.display = "block";
+            document.getElementById("noRecord").style.display = "none";
+        }
+
+        $("#dealerCodedFetchVal").on("blur", function ()
+        {
+            debugger;
+            localStorage.setItem("DEALERFOUND", "0");
+            var isValid=true;
+
+            var dealerCode = document.getElementById("dealerCodedFetchVal").value.trim();
+            if (dealerCode == "")
+            {
+                document.getElementById("dealerCodeError").innerHTML = "Dealer Code field cannot be left blank";
+                isValid=false;
+            }
+            else
+            {
+                document.getElementById("dealerCodeError").innerHTML = "";
+            }
+
+
+            if(isValid)
+            {
+
+                $.ajax({
+                    type: 'POST',  // http method
+                    url: '@Url.Action("CheckJCBDealerCodeExists", "JCB")',
+                    data: { DealerCode: dealerCode },  // data to submit
+                    dataType: "json",
+                    success: function (data, status, xhr)
+                    {
+                        console.log(data);
+                        console.log(status);
+                        console.log(data.status);
+        debugger;
+                        if (status == 'success')
+                        {
+                            if (data.status == 1)
+                            {
+                                document.getElementById("dealerCodeError").innerHTML = "Dealer Code already exists";
+                                localStorage.setItem("DEALERFOUND", "1");
+                            }
+                            else
+                            {
+                                document.getElementById("dealerCodeError").innerHTML = "";
+                                localStorage.setItem("DEALERFOUND", "0");
+                            }
+                        }
+                        else
                         {
                             document.getElementById("dealerCodeError").innerHTML = "";
                             localStorage.setItem("DEALERFOUND", "0");
                         }
-                    }
-                    else 
+                    },
+                    error: function (xhr, ajaxOptions, thrownError)
                     {
                         document.getElementById("dealerCodeError").innerHTML = "";
                         localStorage.setItem("DEALERFOUND", "0");
                     }
-                },
-                error: function (xhr, ajaxOptions, thrownError) 
+                });
+
+            }
+
+        });
+
+        function submitEnroll()
+        {
+            debugger;
+            var ret=true;
+
+            if($("#OfficerTypeId").val()=="0")
+            {
+                $('#OfficerTypeId_error').text("Please select a dealer");
+                ret=false;
+            }
+            else
+            {
+                $('#OfficerTypeId_error').text("");
+            }
+
+            var dealerCode = document.getElementById("dealerCodedFetchVal").value.trim();
+            if(dealerCode=='')
+            {
+                $("#dealerCodeError").attr("style", "display:block");
+                $("#dealerCodeError").html("Dealer Code field cannot be left blank");
+                ret=false;
+            }
+            else if (!(dealerCode.match(forVehicleNo)))
+            {
+                $("#dealerCodeError").attr("style", "display:block");
+                $("#dealerCodeError").html("Dealer Code should be alphanumeric");
+                ret=false;
+            }
+            else if(localStorage.getItem("DEALERFOUND")=="1")
+            {
+                $("#dealerCodeError").attr("style", "display:block");
+                $("#dealerCodeError").html("Dealer Code already exists");
+                ret=false;
+            }
+            else
+            {
+                $("#dealerCodeError").html("");
+            }
+
+            var dealerName = document.getElementById("dealerNameFetchVal").value.trim();
+            if (dealerName == "")
+            {
+                document.getElementById("DealerNameErrorMsg").innerHTML = "Dealer Name field cannot be left blank";
+                ret=false;
+            }
+            else if (!isNaN(document.getElementById("dealerNameFetchVal").value.trim()))
+            {
+                document.getElementById("DealerNameErrorMsg").innerHTML = "Invalid Dealer Name";
+                ret=false;
+            }
+            else if (!document.getElementById("dealerNameFetchVal").value.match(nameWithSpaceCheck))
+            {
+                document.getElementById("DealerNameErrorMsg").innerHTML = "Invalid Dealer Name";
+                ret=false;
+            }
+            else
+            {
+                document.getElementById("DealerNameErrorMsg").innerHTML = "";
+            }
+
+            if(document.getElementById("ZonalOfficeId").value == "0" || document.getElementById("ZonalOfficeId").value == "")
+            {
+              document.getElementById("zonalErrMsg").innerHTML = "Zonal Office field cannot be left blank";
+              ret = false;
+            }
+            else
+            {
+                document.getElementById("zonalErrMsg").innerHTML = "";
+            }
+
+            if(document.getElementById("RegionalOfficeId").value == "0" || document.getElementById("RegionalOfficeId").value == "" || document.getElementById("RegionalOfficeId").value == "--Select Regional Office--")
+            {
+              document.getElementById("regionalErrMsg").innerHTML = "Regional Office field cannot be left blank";
+              ret = false;
+            }
+            else
+            {
+                document.getElementById("regionalErrMsg").innerHTML = "";
+            }
+
+            if(document.getElementById("StateId").value == "0" || document.getElementById("StateId").value == "")
+            {
+              document.getElementById("stateErrMsg").innerHTML = "State field cannot be left blank";
+              ret = false;
+            }
+            else
+            {
+                document.getElementById("stateErrMsg").innerHTML = "";
+            }
+
+            if(document.getElementById("DistrictId").value == "0" || document.getElementById("DistrictId").value == "" || document.getElementById("DistrictId").value == "--Select District--")
+            {
+              document.getElementById("distErrMsg").innerHTML = "District field cannot be left blank";
+              ret = false;
+            }
+            else
+            {
+                document.getElementById("distErrMsg").innerHTML = "";
+            }
+
+            var Address = document.getElementById("add1Val").value.trim();
+            if (Address == "")
+            {
+                document.getElementById("Address1Err").innerHTML = "Address1 field cannot be left blank";
+                ret=false;
+            }
+            else
+            {
+                if (!isNaN(Address))
                 {
-                    document.getElementById("dealerCodeError").innerHTML = "";
-                    localStorage.setItem("DEALERFOUND", "0");
+                    document.getElementById("Address1Err").innerHTML = "Invalid Address1";
+                    ret=false;
                 }
-            });
+                else if (!Address.match(atLeastOneAlphabet))
+                {
+                    document.getElementById("Address1Err").innerHTML = "Invalid Address1";
+                    ret=false;
+                }
+                else
+                {
+                    document.getElementById("Address1Err").innerHTML = "";
+                }
 
-        }
+            }
 
-    });
-
-    function submitEnroll() 
-    {
-        debugger;
-        var ret=true;
-
-        if($("#OfficerTypeId").val()=="0")
-        {
-            $('#OfficerTypeId_error').text("Please select a dealer");
-            ret=false;
-        }
-        else
-        {
-            $('#OfficerTypeId_error').text("");
-        }
-
-        var dealerCode = document.getElementById("dealerCodedFetchVal").value.trim();
-        if(dealerCode=='')
-        {
-            $("#dealerCodeError").attr("style", "display:block");
-            $("#dealerCodeError").html("Dealer Code field cannot be left blank");
-            ret=false;
-        }
-        else if (!(dealerCode.match(forVehicleNo)))
-        {
-            $("#dealerCodeError").attr("style", "display:block");
-            $("#dealerCodeError").html("Dealer Code should be alphanumeric");
-            ret=false;
-        }
-        else if(localStorage.getItem("DEALERFOUND")=="1")
-        {
-            $("#dealerCodeError").attr("style", "display:block");
-            $("#dealerCodeError").html("Dealer Code already exists");
-            ret=false;
-        }
-        else
-        {
-            $("#dealerCodeError").html("");
-        }
-
-        var dealerName = document.getElementById("dealerNameFetchVal").value.trim();
-        if (dealerName == "") 
-        {
-            document.getElementById("DealerNameErrorMsg").innerHTML = "Dealer Name field cannot be left blank";
-            ret=false;
-        }
-        else if (!isNaN(document.getElementById("dealerNameFetchVal").value.trim())) 
-        {
-            document.getElementById("DealerNameErrorMsg").innerHTML = "Invalid Dealer Name";
-            ret=false;
-        }
-        else if (!document.getElementById("dealerNameFetchVal").value.match(nameWithSpaceCheck)) 
-        {
-            document.getElementById("DealerNameErrorMsg").innerHTML = "Invalid Dealer Name";
-            ret=false;
-        }
-        else
-        {
-            document.getElementById("DealerNameErrorMsg").innerHTML = "";
-        }
-
-        if(document.getElementById("ZonalOfficeId").value == "0" || document.getElementById("ZonalOfficeId").value == "") 
-        {
-          document.getElementById("zonalErrMsg").innerHTML = "Zonal Office field cannot be left blank";
-          ret = false;
-        }
-        else 
-        {
-            document.getElementById("zonalErrMsg").innerHTML = "";
-        }
-
-        if(document.getElementById("RegionalOfficeId").value == "0" || document.getElementById("RegionalOfficeId").value == "" || document.getElementById("RegionalOfficeId").value == "--Select Regional Office--") 
-        {
-          document.getElementById("regionalErrMsg").innerHTML = "Regional Office field cannot be left blank";
-          ret = false;
-        }
-        else 
-        {
-            document.getElementById("regionalErrMsg").innerHTML = "";
-        }
-
-        if(document.getElementById("StateId").value == "0" || document.getElementById("StateId").value == "") 
-        {
-          document.getElementById("stateErrMsg").innerHTML = "State field cannot be left blank";
-          ret = false;
-        }
-        else 
-        {
-            document.getElementById("stateErrMsg").innerHTML = "";
-        }
-
-        if(document.getElementById("DistrictId").value == "0" || document.getElementById("DistrictId").value == "" || document.getElementById("DistrictId").value == "--Select District--") 
-        {
-          document.getElementById("distErrMsg").innerHTML = "District field cannot be left blank";
-          ret = false;
-        }
-        else 
-        {
-            document.getElementById("distErrMsg").innerHTML = "";
-        }
-
-        var Address = document.getElementById("add1Val").value.trim();
-        if (Address == "") 
-        {
-            document.getElementById("Address1Err").innerHTML = "Address1 field cannot be left blank";
-            ret=false;
-        }
-        else 
-        {
-            if (!isNaN(Address)) 
+            var Address = document.getElementById("add2Val").value.trim();
+            if (Address == "")
             {
-                document.getElementById("Address1Err").innerHTML = "Invalid Address1";
+                document.getElementById("Address2Err").innerHTML = "Address2 field cannot be left blank";
                 ret=false;
             }
-            else if (!Address.match(atLeastOneAlphabet)) 
+            else
             {
-                document.getElementById("Address1Err").innerHTML = "Invalid Address1";
+                if (!isNaN(Address))
+                {
+                    document.getElementById("Address2Err").innerHTML = "Invalid Address2";
+                    ret=false;
+                }
+                else if (!Address.match(atLeastOneAlphabet))
+                {
+                    document.getElementById("Address2Err").innerHTML = "Invalid Address2";
+                    ret=false;
+                }
+                else
+                {
+                    document.getElementById("Address2Err").innerHTML = "";
+                }
+
+            }
+
+            var Address = document.getElementById("add3Val").value.trim();
+            if (Address != "")
+            {
+                if (!isNaN(Address))
+                {
+                    document.getElementById("Address3Err").innerHTML = "Invalid Address3";
+                    ret=false;
+                }
+                else if (!Address.match(atLeastOneAlphabet))
+                {
+                    document.getElementById("Address3Err").innerHTML = "Invalid Address3";
+                    ret=false;
+                }
+                else
+                {
+                    document.getElementById("Address3Err").innerHTML = "";
+                }
+
+            }
+
+            var city = document.getElementById("cityFetchVal").value.trim();
+            if (city == "")
+            {
+                document.getElementById("CityNameErr").innerHTML = "City Name field cannot be left blank";
                 ret=false;
             }
-            else 
+            else
             {
-                document.getElementById("Address1Err").innerHTML = "";
+                if (!isNaN(city))
+                {
+                    document.getElementById("CityNameErr").innerHTML = "Invalid City";
+                    ret=false;
+                }
+                else if (!city.match(atLeastOneAlphabet))
+                {
+                    document.getElementById("CityNameErr").innerHTML = "Invalid City";
+                    ret=false;
+                }
+                else
+                {
+                    document.getElementById("CityNameErr").innerHTML = "";
+                }
             }
 
-        }
-
-        var Address = document.getElementById("add2Val").value.trim();
-        if (Address == "") 
-        {
-            document.getElementById("Address2Err").innerHTML = "Address2 field cannot be left blank";
-            ret=false;
-        }
-        else 
-        {
-            if (!isNaN(Address)) 
+            var communicationMobile = document.getElementById("mobFetchVal").value.trim();
+            if (communicationMobile == "")
             {
-                document.getElementById("Address2Err").innerHTML = "Invalid Address2";
+                document.getElementById("MobileNoErr").innerHTML = "Mobile Number field cannot be left blank";
                 ret=false;
             }
-            else if (!Address.match(atLeastOneAlphabet)) 
+            else if (communicationMobile.substring(0, 1) == "0")
             {
-                document.getElementById("Address2Err").innerHTML = "Invalid Address2";
+                document.getElementById("MobileNoErr").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
                 ret=false;
             }
-            else 
+            else if (communicationMobile.length < 10)
             {
-                document.getElementById("Address2Err").innerHTML = "";
-            }
-
-        }
-
-        var Address = document.getElementById("add3Val").value.trim();
-        if (Address != "") 
-        {
-            if (!isNaN(Address)) 
-            {
-                document.getElementById("Address3Err").innerHTML = "Invalid Address3";
+                document.getElementById("MobileNoErr").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
                 ret=false;
             }
-            else if (!Address.match(atLeastOneAlphabet)) 
+            else if (!communicationMobile.match(phoneno))
             {
-                document.getElementById("Address3Err").innerHTML = "Invalid Address3";
+                document.getElementById("MobileNoErr").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
                 ret=false;
             }
-            else 
+            else
             {
-                document.getElementById("Address3Err").innerHTML = "";
+                document.getElementById("MobileNoErr").innerHTML = "";
             }
 
-        }
 
-        var city = document.getElementById("cityFetchVal").value.trim();
-        if (city == "") 
-        {
-            document.getElementById("CityNameErr").innerHTML = "City Name field cannot be left blank";
-            ret=false;
-        }
-        else 
-        {
-            if (!isNaN(city)) 
+            if (document.getElementById("pinFetchVal").value.trim() == "")
             {
-                document.getElementById("CityNameErr").innerHTML = "Invalid City";
+                document.getElementById("PinCodeErr").innerHTML = "PIN Code field cannot be left blank";
                 ret=false;
             }
-            else if (!city.match(atLeastOneAlphabet)) 
+            else if (document.getElementById("pinFetchVal").value.substring(0, 1) == "0")
             {
-                document.getElementById("CityNameErr").innerHTML = "Invalid City";
+                document.getElementById("PinCodeErr").innerHTML = "Invalid PIN Code. Min-Max 6 digits";
                 ret=false;
             }
-            else 
+            else if (document.getElementById("pinFetchVal").value.length < 6)
             {
-                document.getElementById("CityNameErr").innerHTML = "";
+                document.getElementById("PinCodeErr").innerHTML = "Invalid PIN Code. Min-Max 6 digits";
+                ret=false;
+            }
+            else if (!document.getElementById("pinFetchVal").value.match(pincode))
+            {
+                document.getElementById("PinCodeErr").innerHTML = "Invalid PIN Code. Min-Max 6 digits";
+                ret=false;
+            }
+            else
+            {
+                document.getElementById("PinCodeErr").innerHTML = "";
+            }
+
+            var emailId = document.getElementById("emailFetchVal").value.trim();
+            if (emailId == "")
+            {
+                document.getElementById("EmailIdErr").innerHTML = "Email ID field cannot be left blank";
+                ret=false;
+            }
+            else if (!emailId.match(email))
+            {
+                document.getElementById("EmailIdErr").innerHTML = "Invalid email id (e.g.: abc@gmail.com)";
+                ret=false;
+            }
+            else
+            {
+                document.getElementById("EmailIdErr").innerHTML = "";
+            }
+
+            if (ret==true)
+            {
+
+                var DealerCode = $("#dealerCodedFetchVal").val();
+                var DealerName = $("#dealerNameFetchVal").val();
+                var Address1 = $("#add1Val").val();
+                var Address2 = $("#add2Val").val();
+                var Address3 = $("#add3Val").val();
+                var ZonalOfficeId = $(".zonalVal").val();
+                var RegionalOfficeId = $(".regionalVal").val();
+                var CityName = $("#cityFetchVal").val();
+                var StateId = $(".stateVal").val();
+                var DistrictId = $(".distVal").val();
+                var MobileNo = $("#mobFetchVal").val();
+                var Pin = $("#pinFetchVal").val();
+                var EmailId = $("#emailFetchVal").val();
+                var OfficerTypeId = $("#OfficerTypeId").val()
+
+                var getAllData = [];
+
+                getAllData.push({
+                    DealerCode: DealerCode,
+                    DealerName: DealerName,
+                    Address1: Address1,
+                    Address2: Address2,
+                    Address3: Address3,
+                    ZonalOfficeId: ZonalOfficeId,
+                    RegionalOfficeId: RegionalOfficeId,
+                    CityName: CityName,
+                    StateId: StateId,
+                    DistrictId: DistrictId,
+                    MobileNo: MobileNo,
+                    Pin: Pin,
+                    EmailId: EmailId,
+                    OfficerType: OfficerTypeId
+                })
+
+
+
+                $.ajax({
+                    url: "@Url.Action("JCBDealerEnrollment", "JCB")",
+                    type: "POST",
+                    data: { str: JSON.stringify(getAllData) },
+                    dataType: "JSON",
+                    success: function (res)
+                    {
+                        console.log(res);
+                        if (res.result.success == true)
+                        {
+                            $("input:text").each(function () {
+                                $(this).val("");
+                            });
+                            $("textarea").each(function () {
+                                $(this).val("");
+                            });
+                            $(".zonalVal").val("");
+                            $(".regionalVal").val("");
+                            $(".stateVal").val("");
+                            $(".distVal").val("");
+
+                            //$("#responseMsg").append("<span>" + res.result.data[0].reason + ". Dealer ID is : " + res.result.data[0].dealerId + "</span>");
+                            $("#responseMsg").append("<span>" + res.result.data[0].reason + "</span>");
+
+                            document.getElementById("responseMsg").style.display = "block";
+                            document.getElementById("failureMsg").style.display = "none";
+                            document.getElementById("failureMsg").innerHTML="";
+                            document.getElementById("divDealerEnrollment").style.display = "none";
+                            document.getElementById("divCommunicationAddress").style.display = "none";
+                        }
+                        else
+                        {
+                            document.getElementById("failureMsg").style.display = "block";
+                            document.getElementById("responseMsg").style.display = "none";
+                            document.getElementById("failureMsg").innerHTML="";
+                            document.getElementById("failureMsg").innerHTML=res.result.data[0].reason;
+                            document.getElementById("divDealerEnrollment").style.display = "block";
+                            document.getElementById("divCommunicationAddress").style.display = "block";
+                        }
+
+                    },
+                    error: function (ex)
+                    {
+                        alert('Failed' + ex);
+                    }
+                });
+            }
+            else
+            {
+                return false;
             }
         }
 
-        var communicationMobile = document.getElementById("mobFetchVal").value.trim();
-        if (communicationMobile == "") 
+        function ResetPassword()
         {
-            document.getElementById("MobileNoErr").innerHTML = "Mobile Number field cannot be left blank";
-            ret=false;
-        }
-        else if (communicationMobile.substring(0, 1) == "0") 
-        {
-            document.getElementById("MobileNoErr").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
-            ret=false;
-        }
-        else if (communicationMobile.length < 10) 
-        {
-            document.getElementById("MobileNoErr").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
-            ret=false;
-        }
-        else if (!communicationMobile.match(phoneno))
-        {
-            document.getElementById("MobileNoErr").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
-            ret=false;
-        }
-        else
-        {
-            document.getElementById("MobileNoErr").innerHTML = "";
+            var ret=true;
+
+            var userName = document.getElementById("UserName").value.trim();
+            if (userName == "")
+            {
+                alert("User Name is blank");
+                ret=false;
+            }
+
+            if (ret==true)
+            {
+
+                $.ajax({
+                    url: "@Url.Action("ResetJCBDealerPassword", "JCB")",
+                    type: "POST",
+                    dataType: "JSON",
+                    data: { UserName: userName },
+                    success: function (res)
+                    {
+
+                        if (res.result.success == true)
+                        {
+                            $("#responseMsg").append("<span>" + res.result.data[0].reason + "</span>");
+
+                            document.getElementById("responseMsg").style.display = "block";
+                            document.getElementById("failureMsg").style.display = "none";
+                            document.getElementById("divDealerEnrollment").style.display = "none";
+                            document.getElementById("divCommunicationAddress").style.display = "none";
+                        }
+                        else
+                        {
+                            document.getElementById("failureMsg").style.display = "block";
+                            document.getElementById("responseMsg").style.display = "none";
+                            document.getElementById("failureMsg").innerHTML=res.result.data[0].reason;
+                            document.getElementById("divDealerEnrollment").style.display = "block";
+                            document.getElementById("divCommunicationAddress").style.display = "block";
+                        }
+
+                    },
+                    error: function (ex) {
+                        alert('Failed' + ex);
+                    }
+                });
+            }
+            else {
+                return false;
+            }
         }
 
+        function EnableDisableDealer()
+        {
+            var ret=true;
 
-        if (document.getElementById("pinFetchVal").value.trim() == "") 
-        {
-            document.getElementById("PinCodeErr").innerHTML = "PIN Code field cannot be left blank";
-            ret=false;
-        }
-        else if (document.getElementById("pinFetchVal").value.substring(0, 1) == "0") 
-        {
-            document.getElementById("PinCodeErr").innerHTML = "Invalid PIN Code. Min-Max 6 digits";
-            ret=false;
-        }
-        else if (document.getElementById("pinFetchVal").value.length < 6) 
-        {
-            document.getElementById("PinCodeErr").innerHTML = "Invalid PIN Code. Min-Max 6 digits";
-            ret=false;
-        }
-        else if (!document.getElementById("pinFetchVal").value.match(pincode)) 
-        {
-            document.getElementById("PinCodeErr").innerHTML = "Invalid PIN Code. Min-Max 6 digits";
-            ret=false;
-        }
-        else
-        {
-            document.getElementById("PinCodeErr").innerHTML = "";
+            var dealerCode = document.getElementById("dealerCodedFetchVal").value.trim();
+            if (dealerCode == "")
+            {
+                document.getElementById("dealerCodeError").innerHTML = "Dealer Code field cannot be left blank";
+                ret=false;
+            }
+            else
+            {
+                document.getElementById("dealerCodeError").innerHTML = "";
+            }
+
+            if($("#OfficerTypeId").val()=="0")
+            {
+                $('#OfficerTypeId_error').text("Please select a dealer");
+                ret=false;
+            }
+            else
+            {
+                $('#OfficerTypeId_error').text("");
+            }
+
+            if (ret==true)
+            {
+
+                $.ajax({
+                    url: "@Url.Action("EnableDisableJCBDealer", "JCB")",
+                    type: "POST",
+                    dataType: "JSON",
+                    data: { DealerCode: dealerCode, OfficerType: $("#OfficerTypeId").val(), EnableDisableFlag:$("#DealerStatus").val()},
+                    success: function (res)
+                    {
+
+                        if (res.result.success == true)
+                        {
+                            $("#responseMsg").append("<span>" + res.result.data[0].reason + "</span>");
+
+                            document.getElementById("responseMsg").style.display = "block";
+                            document.getElementById("failureMsg").style.display = "none";
+                            document.getElementById("divDealerEnrollment").style.display = "none";
+                            document.getElementById("divCommunicationAddress").style.display = "none";
+                        }
+                        else
+                        {
+                            document.getElementById("failureMsg").style.display = "block";
+                            document.getElementById("responseMsg").style.display = "none";
+                            document.getElementById("failureMsg").innerHTML=res.result.data[0].reason;
+                            document.getElementById("divDealerEnrollment").style.display = "block";
+                            document.getElementById("divCommunicationAddress").style.display = "block";
+                        }
+
+                    },
+                    error: function (ex) {
+                        alert('Failed' + ex);
+                    }
+                });
+            }
+            else {
+                return false;
+            }
         }
 
-        var emailId = document.getElementById("emailFetchVal").value.trim();
-        if (emailId == "") 
+        function updateExist()
         {
-            document.getElementById("EmailIdErr").innerHTML = "Email ID field cannot be left blank";
-            ret=false;
-        }
-        else if (!emailId.match(email)) 
-        {
-            document.getElementById("EmailIdErr").innerHTML = "Invalid email id (e.g.: abc@gmail.com)";
-            ret=false;
-        }
-        else
-        {
-            document.getElementById("EmailIdErr").innerHTML = "";
-        }
+            var ret=true;
 
-        if (ret==true) 
-        {
+            var dealerCode = document.getElementById("dealerCodedFetchVal").value.trim();
+            if(dealerCode=='')
+            {
+                $("#dealerCodeError").attr("style", "display:block");
+                $("#dealerCodeError").html("Dealer Code field cannot be left blank");
+                ret=false;
+            }
+            else
+            {
+                if (!(dealerCode.match(forVehicleNo)))
+                {
+                    $("#dealerCodeError").attr("style", "display:block");
+                    $("#dealerCodeError").html("Dealer Code should be alphanumeric");
+                    ret=false;
+                }
+                else
+                {
+                    $("#dealerCodeError").html("");
+                }
+            }
+
+            var dealerName = document.getElementById("dealerNameFetchVal").value.trim();
+            if (dealerName == "")
+            {
+                document.getElementById("DealerNameErrorMsg").innerHTML = "Dealer Name field cannot be left blank";
+                ret=false;
+            }
+            else if (!isNaN(document.getElementById("dealerNameFetchVal").value.trim()))
+            {
+                document.getElementById("DealerNameErrorMsg").innerHTML = "Invalid Dealer Name";
+                ret=false;
+            }
+            else if (!document.getElementById("dealerNameFetchVal").value.match(nameWithSpaceCheck))
+            {
+                document.getElementById("DealerNameErrorMsg").innerHTML = "Invalid Dealer Name";
+                ret=false;
+            }
+            else
+            {
+                document.getElementById("DealerNameErrorMsg").innerHTML = "";
+            }
+
+            if(document.getElementById("ZonalOfficeId").value == "0" || document.getElementById("ZonalOfficeId").value == "")
+            {
+              document.getElementById("zonalErrMsg").innerHTML = "Zonal Office field cannot be left blank";
+              ret = false;
+            }
+            else
+            {
+                document.getElementById("zonalErrMsg").innerHTML = "";
+            }
+
+            if(document.getElementById("RegionalOfficeId").value == "0" || document.getElementById("RegionalOfficeId").value == "" || document.getElementById("RegionalOfficeId").value == "--Select Regional Office--")
+            {
+              document.getElementById("regionalErrMsg").innerHTML = "Regional Office field cannot be left blank";
+              ret = false;
+            }
+            else
+            {
+                document.getElementById("regionalErrMsg").innerHTML = "";
+            }
+
+            if(document.getElementById("StateId").value == "0" || document.getElementById("StateId").value == "")
+            {
+              document.getElementById("stateErrMsg").innerHTML = "State field cannot be left blank";
+              ret = false;
+            }
+            else
+            {
+                document.getElementById("stateErrMsg").innerHTML = "";
+            }
+
+            if(document.getElementById("DistrictId").value == "0" || document.getElementById("DistrictId").value == "" || document.getElementById("DistrictId").value == "--Select District--")
+            {
+              document.getElementById("distErrMsg").innerHTML = "District field cannot be left blank";
+              ret = false;
+            }
+            else
+            {
+                document.getElementById("distErrMsg").innerHTML = "";
+            }
+
+            var Address = document.getElementById("add1Val").value.trim();
+            if (Address == "")
+            {
+                document.getElementById("Address1Err").innerHTML = "Address1 field cannot be left blank";
+                ret=false;
+            }
+            else
+            {
+                if (!isNaN(Address))
+                {
+                    document.getElementById("Address1Err").innerHTML = "Invalid Address1";
+                    ret=false;
+                }
+                else if (!Address.match(atLeastOneAlphabet))
+                {
+                    document.getElementById("Address1Err").innerHTML = "Invalid Address1";
+                    ret=false;
+                }
+                else
+                {
+                    document.getElementById("Address1Err").innerHTML = "";
+                }
+
+            }
+
+            var Address = document.getElementById("add2Val").value.trim();
+            if (Address == "")
+            {
+                document.getElementById("Address2Err").innerHTML = "Address2 field cannot be left blank";
+                ret=false;
+            }
+            else
+            {
+                if (!isNaN(Address))
+                {
+                    document.getElementById("Address2Err").innerHTML = "Invalid Address2";
+                    ret=false;
+                }
+                else if (!Address.match(atLeastOneAlphabet))
+                {
+                    document.getElementById("Address2Err").innerHTML = "Invalid Address2";
+                    ret=false;
+                }
+                else
+                {
+                    document.getElementById("Address2Err").innerHTML = "";
+                }
+
+            }
+
+            var Address = document.getElementById("add3Val").value.trim();
+            if (Address != "")
+            {
+                if (!isNaN(Address))
+                {
+                    document.getElementById("Address3Err").innerHTML = "Invalid Address3";
+                    ret=false;
+                }
+                else if (!Address.match(atLeastOneAlphabet))
+                {
+                    document.getElementById("Address3Err").innerHTML = "Invalid Address3";
+                    ret=false;
+                }
+                else
+                {
+                    document.getElementById("Address3Err").innerHTML = "";
+                }
+
+            }
+
+            var city = document.getElementById("cityFetchVal").value.trim();
+            if (city == "")
+            {
+                document.getElementById("CityNameErr").innerHTML = "City Name field cannot be left blank";
+                ret=false;
+            }
+            else
+            {
+                if (!isNaN(city))
+                {
+                    document.getElementById("CityNameErr").innerHTML = "Invalid City";
+                    ret=false;
+                }
+                else if (!city.match(atLeastOneAlphabet))
+                {
+                    document.getElementById("CityNameErr").innerHTML = "Invalid City";
+                    ret=false;
+                }
+                else
+                {
+                    document.getElementById("CityNameErr").innerHTML = "";
+                }
+            }
+
+            var communicationMobile = document.getElementById("mobFetchVal").value.trim();
+            if (communicationMobile == "")
+            {
+                document.getElementById("MobileNoErr").innerHTML = "Mobile Number field cannot be left blank";
+                ret=false;
+            }
+            else if (communicationMobile.substring(0, 1) == "0")
+            {
+                document.getElementById("MobileNoErr").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
+                ret=false;
+            }
+            else if (communicationMobile.length < 10)
+            {
+                document.getElementById("MobileNoErr").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
+                ret=false;
+            }
+            else if (!communicationMobile.match(phoneno))
+            {
+                document.getElementById("MobileNoErr").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
+                ret=false;
+            }
+            else
+            {
+                document.getElementById("MobileNoErr").innerHTML = "";
+            }
+
+
+            if (document.getElementById("pinFetchVal").value.trim() == "")
+            {
+                document.getElementById("PinCodeErr").innerHTML = "PIN Code field cannot be left blank";
+                ret=false;
+            }
+            else if (document.getElementById("pinFetchVal").value.substring(0, 1) == "0")
+            {
+                document.getElementById("PinCodeErr").innerHTML = "Invalid PIN Code. Min-Max 6 digits";
+                ret=false;
+            }
+            else if (document.getElementById("pinFetchVal").value.length < 6)
+            {
+                document.getElementById("PinCodeErr").innerHTML = "Invalid PIN Code. Min-Max 6 digits";
+                ret=false;
+            }
+            else if (!document.getElementById("pinFetchVal").value.match(pincode))
+            {
+                document.getElementById("PinCodeErr").innerHTML = "Invalid PIN Code. Min-Max 6 digits";
+                ret=false;
+            }
+            else
+            {
+                document.getElementById("PinCodeErr").innerHTML = "";
+            }
+
+            var emailId = document.getElementById("emailFetchVal").value.trim();
+            if (emailId == "")
+            {
+                document.getElementById("EmailIdErr").innerHTML = "Email ID field cannot be left blank";
+                ret=false;
+            }
+            else if (!emailId.match(email))
+            {
+                document.getElementById("EmailIdErr").innerHTML = "Invalid email id (e.g.: abc@gmail.com)";
+                ret=false;
+            }
+            else
+            {
+                document.getElementById("EmailIdErr").innerHTML = "";
+            }
+
+            if (ret==true)
+            {
 
             var DealerCode = $("#dealerCodedFetchVal").val();
             var DealerName = $("#dealerNameFetchVal").val();
@@ -1217,7 +1670,6 @@
             var MobileNo = $("#mobFetchVal").val();
             var Pin = $("#pinFetchVal").val();
             var EmailId = $("#emailFetchVal").val();
-            var OfficerTypeId = $("#OfficerTypeId").val()
 
             var getAllData = [];
 
@@ -1234,818 +1686,363 @@
                 DistrictId: DistrictId,
                 MobileNo: MobileNo,
                 Pin: Pin,
-                EmailId: EmailId,
-                OfficerType: OfficerTypeId
+                EmailId: EmailId
             })
 
+                $.ajax({
+                    url: "@Url.Action("JCBDealerEnrollmentUpdate", "JCB")",
+                    type: "POST",
+                    dataType: "JSON",
+                    data: { getAllData: JSON.stringify(getAllData) },
+                    success: function (res) {
 
+                        if (res.result.success == true)
+                        {
+                            $("input:text").each(function () {
+                                $(this).val("");
+                            });
+                            $("textarea").each(function () {
+                                $(this).val("");
+                            });
 
-            $.ajax({
-                url: "@Url.Action("JCBDealerEnrollment", "JCB")",
-                type: "POST",
-                data: { str: JSON.stringify(getAllData) },
-                dataType: "JSON",
-                success: function (res) 
-                {
-                    console.log(res);
-                    if (res.result.success == true) 
-                    {
-                        $("input:text").each(function () {
-                            $(this).val("");
-                        });
-                        $("textarea").each(function () {
-                            $(this).val("");
-                        });
-                        $(".zonalVal").val("");
-                        $(".regionalVal").val("");
-                        $(".stateVal").val("");
-                        $(".distVal").val("");
+                            $(".zonalVal").val("");
+                            $(".regionalVal").val("");
+                            $(".stateVal").val("");
+                            $(".distVal").val("");
 
-                        //$("#responseMsg").append("<span>" + res.result.data[0].reason + ". Dealer ID is : " + res.result.data[0].dealerId + "</span>");
-                        $("#responseMsg").append("<span>" + res.result.data[0].reason + "</span>");
+                            $("#responseMsg").append("<span>" + res.result.data[0].reason + ". Dealer ID is : " + res.result.data[0].dealerId + "</span>");
 
-                        document.getElementById("responseMsg").style.display = "block";
-                        document.getElementById("failureMsg").style.display = "none";
-                        document.getElementById("failureMsg").innerHTML="";
-                        document.getElementById("divDealerEnrollment").style.display = "none";
-                        document.getElementById("divCommunicationAddress").style.display = "none";
+                            document.getElementById("responseMsg").style.display = "block";
+                            document.getElementById("failureMsg").style.display = "none";
+                            document.getElementById("divDealerEnrollment").style.display = "none";
+                            document.getElementById("divCommunicationAddress").style.display = "none";
+                        }
+                        else
+                        {
+                            document.getElementById("failureMsg").style.display = "block";
+                            document.getElementById("responseMsg").style.display = "none";
+                            document.getElementById("failureMsg").innerHTML=res.result.data[0].reason;
+                            document.getElementById("divDealerEnrollment").style.display = "block";
+                            document.getElementById("divCommunicationAddress").style.display = "block";
+                        }
+
+                    },
+                    error: function (ex) {
+                        alert('Failed' + ex);
                     }
-                    else
-                    {
-                        document.getElementById("failureMsg").style.display = "block";
-                        document.getElementById("responseMsg").style.display = "none";
-                        document.getElementById("failureMsg").innerHTML="";
-                        document.getElementById("failureMsg").innerHTML=res.result.data[0].reason;
-                        document.getElementById("divDealerEnrollment").style.display = "block";
-                        document.getElementById("divCommunicationAddress").style.display = "block";
-                    }
+                });
+            }
+            else {
+                return false;
+            }
+        }
 
-                },
-                error: function (ex) 
-                {
-                    alert('Failed' + ex);
-                }
-            });
-        } 
-        else 
+        $("#dealerCdVal").on("blur", function ()
         {
-            return false;
-        }
-    }
-
-    function ResetPassword()
-    {
-        var ret=true;
-
-        var userName = document.getElementById("UserName").value.trim();
-        if (userName == "") 
-        {
-            alert("User Name is blank");
-            ret=false;
-        }
-
-        if (ret==true)
-        {
-
-            $.ajax({
-                url: "@Url.Action("ResetJCBDealerPassword", "JCB")",
-                type: "POST",
-                dataType: "JSON",
-                data: { UserName: userName },
-                success: function (res) 
-                {
-
-                    if (res.result.success == true) 
-                    {
-                        $("#responseMsg").append("<span>" + res.result.data[0].reason + "</span>");
-
-                        document.getElementById("responseMsg").style.display = "block";
-                        document.getElementById("failureMsg").style.display = "none";
-                        document.getElementById("divDealerEnrollment").style.display = "none";
-                        document.getElementById("divCommunicationAddress").style.display = "none";
-                    }
-                    else
-                    {
-                        document.getElementById("failureMsg").style.display = "block";
-                        document.getElementById("responseMsg").style.display = "none";
-                        document.getElementById("failureMsg").innerHTML=res.result.data[0].reason;
-                        document.getElementById("divDealerEnrollment").style.display = "block";
-                        document.getElementById("divCommunicationAddress").style.display = "block";
-                    }
-
-                },
-                error: function (ex) {
-                    alert('Failed' + ex);
-                }
-            });
-        }
-        else {
-            return false;
-        }
-    }
-
-    function EnableDisableDealer()
-    {
-        var ret=true;
-
-        var dealerCode = document.getElementById("dealerCodedFetchVal").value.trim();
-        if (dealerCode == "") 
-        {
-            document.getElementById("dealerCodeError").innerHTML = "Dealer Code field cannot be left blank";
-            ret=false;
-        }
-        else 
-        {
-            document.getElementById("dealerCodeError").innerHTML = "";
-        }
-
-        if($("#OfficerTypeId").val()=="0")
-        {
-            $('#OfficerTypeId_error').text("Please select a dealer");
-            ret=false;
-        }
-        else
-        {
-            $('#OfficerTypeId_error').text("");
-        }
-
-        if (ret==true)
-        {
-
-            $.ajax({
-                url: "@Url.Action("EnableDisableJCBDealer", "JCB")",
-                type: "POST",
-                dataType: "JSON",
-                data: { DealerCode: dealerCode, OfficerType: $("#OfficerTypeId").val(), EnableDisableFlag:$("#DealerStatus").val()},
-                success: function (res) 
-                {
-
-                    if (res.result.success == true) 
-                    {
-                        $("#responseMsg").append("<span>" + res.result.data[0].reason + "</span>");
-
-                        document.getElementById("responseMsg").style.display = "block";
-                        document.getElementById("failureMsg").style.display = "none";
-                        document.getElementById("divDealerEnrollment").style.display = "none";
-                        document.getElementById("divCommunicationAddress").style.display = "none";
-                    }
-                    else
-                    {
-                        document.getElementById("failureMsg").style.display = "block";
-                        document.getElementById("responseMsg").style.display = "none";
-                        document.getElementById("failureMsg").innerHTML=res.result.data[0].reason;
-                        document.getElementById("divDealerEnrollment").style.display = "block";
-                        document.getElementById("divCommunicationAddress").style.display = "block";
-                    }
-
-                },
-                error: function (ex) {
-                    alert('Failed' + ex);
-                }
-            });
-        }
-        else {
-            return false;
-        }
-    }
-
-    function updateExist() 
-    {
-        var ret=true;
-
-        var dealerCode = document.getElementById("dealerCodedFetchVal").value.trim();
-        if(dealerCode=='')
-        {
-            $("#dealerCodeError").attr("style", "display:block");
-            $("#dealerCodeError").html("Dealer Code field cannot be left blank");
-            ret=false;
-        }
-        else
-        {
-            if (!(dealerCode.match(forVehicleNo)))
+            //debugger;
+            if (document.getElementById("dealerCdVal").value.trim() != "")
             {
-                $("#dealerCodeError").attr("style", "display:block");
-                $("#dealerCodeError").html("Dealer Code should be alphanumeric");
-                ret=false;
+                document.getElementById("dealerCodeErr").innerHTML = "";
+            }
+
+            var dealerCdVal = $("#dealerCdVal").val().trim();
+            var dTPDealerCode = $("#DTPDealerCdVal").val().trim();
+
+            if(dealerCdVal == "" && dealerCdVal == "")
+            {
+                $("#dealerCodeErr").attr("style", "display:block");
+                $("#dealerCodeErr").html("Please enter either Dealer Code or DTP Dealer Code");
+            }
+            else if (dealerCdVal!="" && !(dealerCdVal.match(forVehicleNo)))
+            {
+                $('#dealerCodeErr').text("Dealer Code should be alphanumeric");
+            }
+            else if(dealerCdVal != "")
+            {
+                 document.getElementById("dealerCodeErr").innerHTML = "";
+            }
+            else if(dTPDealerCode != "")
+            {
+                 document.getElementById("dealerCodeErr").innerHTML = "";
+            }
+
+        });
+
+        $("#DTPDealerCdVal").on("blur", function ()
+        {
+            //debugger;
+            if (document.getElementById("dealerCdVal").value.trim() != "")
+            {
+                document.getElementById("dealerCodeErr").innerHTML = "";
+            }
+
+            var dealerCdVal = $("#dealerCdVal").val().trim();
+            var dTPDealerCode = $("#DTPDealerCdVal").val().trim();
+
+            if(dealerCdVal == "" && dTPDealerCode == "")
+            {
+                $("#dealerCodeErr").attr("style", "display:block");
+                $("#dealerCodeErr").html("Please enter either Dealer Code or DTP Dealer Code");
+            }
+            else if(dealerCdVal != "")
+            {
+                 document.getElementById("dealerCodeErr").innerHTML = "";
+            }
+            else if(dTPDealerCode != "")
+            {
+                 document.getElementById("dealerCodeErr").innerHTML = "";
+            }
+
+        });
+
+        $("#dealerNameFetchVal").on("blur", function () {
+            //debugger;
+            var dealerName = document.getElementById("dealerNameFetchVal").value.trim();
+            if (dealerName == "")
+            {
+                document.getElementById("DealerNameErrorMsg").innerHTML = "Dealer Name field cannot be left blank";
+                return (false);
+            }
+            else if (!isNaN(document.getElementById("dealerNameFetchVal").value.trim()))
+            {
+                document.getElementById("DealerNameErrorMsg").innerHTML = "Invalid Dealer Name";
+                return false;
+            }
+            else if (!document.getElementById("dealerNameFetchVal").value.match(nameWithSpaceCheck))
+            {
+                document.getElementById("DealerNameErrorMsg").innerHTML = "Invalid Dealer Name";
+                return false;
             }
             else
             {
-                $("#dealerCodeError").html("");
+                document.getElementById("DealerNameErrorMsg").innerHTML = "";
             }
-        }
+        });
 
-        var dealerName = document.getElementById("dealerNameFetchVal").value.trim();
-        if (dealerName == "") 
+        $("#add1Val").on("blur", function ()
         {
-            document.getElementById("DealerNameErrorMsg").innerHTML = "Dealer Name field cannot be left blank";
-            ret=false;
-        }
-        else if (!isNaN(document.getElementById("dealerNameFetchVal").value.trim())) 
-        {
-            document.getElementById("DealerNameErrorMsg").innerHTML = "Invalid Dealer Name";
-            ret=false;
-        }
-        else if (!document.getElementById("dealerNameFetchVal").value.match(nameWithSpaceCheck)) 
-        {
-            document.getElementById("DealerNameErrorMsg").innerHTML = "Invalid Dealer Name";
-            ret=false;
-        }
-        else
-        {
-            document.getElementById("DealerNameErrorMsg").innerHTML = "";
-        }
-
-        if(document.getElementById("ZonalOfficeId").value == "0" || document.getElementById("ZonalOfficeId").value == "") 
-        {
-          document.getElementById("zonalErrMsg").innerHTML = "Zonal Office field cannot be left blank";
-          ret = false;
-        }
-        else 
-        {
-            document.getElementById("zonalErrMsg").innerHTML = "";
-        }
-
-        if(document.getElementById("RegionalOfficeId").value == "0" || document.getElementById("RegionalOfficeId").value == "" || document.getElementById("RegionalOfficeId").value == "--Select Regional Office--") 
-        {
-          document.getElementById("regionalErrMsg").innerHTML = "Regional Office field cannot be left blank";
-          ret = false;
-        }
-        else 
-        {
-            document.getElementById("regionalErrMsg").innerHTML = "";
-        }
-
-        if(document.getElementById("StateId").value == "0" || document.getElementById("StateId").value == "") 
-        {
-          document.getElementById("stateErrMsg").innerHTML = "State field cannot be left blank";
-          ret = false;
-        }
-        else 
-        {
-            document.getElementById("stateErrMsg").innerHTML = "";
-        }
-
-        if(document.getElementById("DistrictId").value == "0" || document.getElementById("DistrictId").value == "" || document.getElementById("DistrictId").value == "--Select District--") 
-        {
-          document.getElementById("distErrMsg").innerHTML = "District field cannot be left blank";
-          ret = false;
-        }
-        else 
-        {
-            document.getElementById("distErrMsg").innerHTML = "";
-        }
-
-        var Address = document.getElementById("add1Val").value.trim();
-        if (Address == "") 
-        {
-            document.getElementById("Address1Err").innerHTML = "Address1 field cannot be left blank";
-            ret=false;
-        }
-        else 
-        {
-            if (!isNaN(Address)) 
+            //debugger;
+            var Address = document.getElementById("add1Val").value.trim();
+            if (Address == "")
             {
-                document.getElementById("Address1Err").innerHTML = "Invalid Address1";
-                ret=false;
+                document.getElementById("Address1Err").innerHTML = "Address1 field cannot be left blank";
+                return (false);
             }
-            else if (!Address.match(atLeastOneAlphabet)) 
+            else
             {
-                document.getElementById("Address1Err").innerHTML = "Invalid Address1";
-                ret=false;
-            }
-            else 
-            {
-                document.getElementById("Address1Err").innerHTML = "";
-            }
+                if (!isNaN(Address))
+                {
+                    document.getElementById("Address1Err").innerHTML = "Invalid Address1";
+                    return false;
+                }
+                else if (!Address.match(atLeastOneAlphabet))
+                {
+                    document.getElementById("Address1Err").innerHTML = "Invalid Address1";
+                    return false;
+                }
+                else
+                {
+                    document.getElementById("Address1Err").innerHTML = "";
+                }
 
-        }
+            }
+       });
 
-        var Address = document.getElementById("add2Val").value.trim();
-        if (Address == "") 
-        {
-            document.getElementById("Address2Err").innerHTML = "Address2 field cannot be left blank";
-            ret=false;
-        }
-        else 
-        {
-            if (!isNaN(Address)) 
+       $("#add2Val").on("blur", function ()
+       {
+            //debugger;
+            var Address = document.getElementById("add2Val").value.trim();
+            if (Address == "")
             {
-                document.getElementById("Address2Err").innerHTML = "Invalid Address2";
-                ret=false;
+                document.getElementById("Address2Err").innerHTML = "Address2 field cannot be left blank";
+                return (false);
             }
-            else if (!Address.match(atLeastOneAlphabet)) 
+            else
             {
-                document.getElementById("Address2Err").innerHTML = "Invalid Address2";
-                ret=false;
-            }
-            else 
-            {
-                document.getElementById("Address2Err").innerHTML = "";
-            }
+                if (!isNaN(Address))
+                {
+                    document.getElementById("Address2Err").innerHTML = "Invalid Address2";
+                    return false;
+                }
+                else if (!Address.match(atLeastOneAlphabet))
+                {
+                    document.getElementById("Address2Err").innerHTML = "Invalid Address2";
+                    return false;
+                }
+                else
+                {
+                    document.getElementById("Address2Err").innerHTML = "";
+                }
 
-        }
-
-        var Address = document.getElementById("add3Val").value.trim();
-        if (Address != "") 
-        {
-            if (!isNaN(Address)) 
-            {
-                document.getElementById("Address3Err").innerHTML = "Invalid Address3";
-                ret=false;
             }
-            else if (!Address.match(atLeastOneAlphabet)) 
-            {
-                document.getElementById("Address3Err").innerHTML = "Invalid Address3";
-                ret=false;
-            }
-            else 
-            {
-                document.getElementById("Address3Err").innerHTML = "";
-            }
+       });
 
-        }
-
-        var city = document.getElementById("cityFetchVal").value.trim();
-        if (city == "") 
-        {
-            document.getElementById("CityNameErr").innerHTML = "City Name field cannot be left blank";
-            ret=false;
-        }
-        else 
-        {
-            if (!isNaN(city)) 
+       $("#add3Val").on("blur", function ()
+       {
+            //debugger;
+            var Address = document.getElementById("add3Val").value.trim();
+            if (Address != "")
             {
-                document.getElementById("CityNameErr").innerHTML = "Invalid City";
-                ret=false;
+                if (!isNaN(Address))
+                {
+                    document.getElementById("Address3Err").innerHTML = "Invalid Address3";
+                    return false;
+                }
+                else if (!Address.match(atLeastOneAlphabet))
+                {
+                    document.getElementById("Address3Err").innerHTML = "Invalid Address3";
+                    return false;
+                }
+                else
+                {
+                    document.getElementById("Address3Err").innerHTML = "";
+                }
+
             }
-            else if (!city.match(atLeastOneAlphabet)) 
+       });
+
+       $("#cityFetchVal").on("blur", function ()
+       {
+            //debugger;
+            var city = document.getElementById("cityFetchVal").value.trim();
+            if (city == "")
             {
-                document.getElementById("CityNameErr").innerHTML = "Invalid City";
-                ret=false;
+                document.getElementById("CityNameErr").innerHTML = "City Name field cannot be left blank";
+                return (false);
             }
-            else 
+            else
             {
-                document.getElementById("CityNameErr").innerHTML = "";
+                if (!isNaN(city))
+                {
+                    document.getElementById("CityNameErr").innerHTML = "Invalid City";
+                    return false;
+                }
+                else if (!city.match(atLeastOneAlphabet))
+                {
+                    document.getElementById("CityNameErr").innerHTML = "Invalid City";
+                    return false;
+                }
+                else
+                {
+                    document.getElementById("CityNameErr").innerHTML = "";
+                }
             }
-        }
+      });
 
-        var communicationMobile = document.getElementById("mobFetchVal").value.trim();
-        if (communicationMobile == "") 
-        {
-            document.getElementById("MobileNoErr").innerHTML = "Mobile Number field cannot be left blank";
-            ret=false;
-        }
-        else if (communicationMobile.substring(0, 1) == "0") 
-        {
-            document.getElementById("MobileNoErr").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
-            ret=false;
-        }
-        else if (communicationMobile.length < 10) 
-        {
-            document.getElementById("MobileNoErr").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
-            ret=false;
-        }
-        else if (!communicationMobile.match(phoneno))
-        {
-            document.getElementById("MobileNoErr").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
-            ret=false;
-        }
-        else
-        {
-            document.getElementById("MobileNoErr").innerHTML = "";
-        }
-
-
-        if (document.getElementById("pinFetchVal").value.trim() == "") 
+      $("#pinFetchVal").on("blur", function ()
+      {
+        //debugger;
+        if (document.getElementById("pinFetchVal").value.trim() == "")
         {
             document.getElementById("PinCodeErr").innerHTML = "PIN Code field cannot be left blank";
-            ret=false;
+            return (false);
         }
-        else if (document.getElementById("pinFetchVal").value.substring(0, 1) == "0") 
+        else if (document.getElementById("pinFetchVal").value.substring(0, 1) == "0")
         {
             document.getElementById("PinCodeErr").innerHTML = "Invalid PIN Code. Min-Max 6 digits";
-            ret=false;
+            return false;
         }
-        else if (document.getElementById("pinFetchVal").value.length < 6) 
+        else if (document.getElementById("pinFetchVal").value.length < 6)
         {
             document.getElementById("PinCodeErr").innerHTML = "Invalid PIN Code. Min-Max 6 digits";
-            ret=false;
+            return false;
         }
-        else if (!document.getElementById("pinFetchVal").value.match(pincode)) 
+        else if (!document.getElementById("pinFetchVal").value.match(pincode))
         {
             document.getElementById("PinCodeErr").innerHTML = "Invalid PIN Code. Min-Max 6 digits";
-            ret=false;
+            return false;
         }
         else
         {
             document.getElementById("PinCodeErr").innerHTML = "";
         }
 
+     });
+
+      $("#emailFetchVal").on("blur", function ()
+      {
+        //debugger;
         var emailId = document.getElementById("emailFetchVal").value.trim();
-        if (emailId == "") 
+        if (emailId == "")
         {
             document.getElementById("EmailIdErr").innerHTML = "Email ID field cannot be left blank";
-            ret=false;
+            return (false);
         }
-        else if (!emailId.match(email)) 
+        else if (!emailId.match(email))
         {
             document.getElementById("EmailIdErr").innerHTML = "Invalid email id (e.g.: abc@gmail.com)";
-            ret=false;
+            return (false);
         }
         else
         {
             document.getElementById("EmailIdErr").innerHTML = "";
         }
 
-        if (ret==true)
-        {
-
-        var DealerCode = $("#dealerCodedFetchVal").val();
-        var DealerName = $("#dealerNameFetchVal").val();
-        var Address1 = $("#add1Val").val();
-        var Address2 = $("#add2Val").val();
-        var Address3 = $("#add3Val").val();
-        var ZonalOfficeId = $(".zonalVal").val();
-        var RegionalOfficeId = $(".regionalVal").val();
-        var CityName = $("#cityFetchVal").val();
-        var StateId = $(".stateVal").val();
-        var DistrictId = $(".distVal").val();
-        var MobileNo = $("#mobFetchVal").val();
-        var Pin = $("#pinFetchVal").val();
-        var EmailId = $("#emailFetchVal").val();
-
-        var getAllData = [];
-
-        getAllData.push({
-            DealerCode: DealerCode,
-            DealerName: DealerName,
-            Address1: Address1,
-            Address2: Address2,
-            Address3: Address3,
-            ZonalOfficeId: ZonalOfficeId,
-            RegionalOfficeId: RegionalOfficeId,
-            CityName: CityName,
-            StateId: StateId,
-            DistrictId: DistrictId,
-            MobileNo: MobileNo,
-            Pin: Pin,
-            EmailId: EmailId
-        })
-
-            $.ajax({
-                url: "@Url.Action("JCBDealerEnrollmentUpdate", "JCB")",
-                type: "POST",
-                dataType: "JSON",
-                data: { getAllData: JSON.stringify(getAllData) },
-                success: function (res) {
-
-                    if (res.result.success == true) 
-                    {
-                        $("input:text").each(function () {
-                            $(this).val("");
-                        });
-                        $("textarea").each(function () {
-                            $(this).val("");
-                        });
-
-                        $(".zonalVal").val("");
-                        $(".regionalVal").val("");
-                        $(".stateVal").val("");
-                        $(".distVal").val("");
-
-                        $("#responseMsg").append("<span>" + res.result.data[0].reason + ". Dealer ID is : " + res.result.data[0].dealerId + "</span>");
-
-                        document.getElementById("responseMsg").style.display = "block";
-                        document.getElementById("failureMsg").style.display = "none";
-                        document.getElementById("divDealerEnrollment").style.display = "none";
-                        document.getElementById("divCommunicationAddress").style.display = "none";
-                    }
-                    else
-                    {
-                        document.getElementById("failureMsg").style.display = "block";
-                        document.getElementById("responseMsg").style.display = "none";
-                        document.getElementById("failureMsg").innerHTML=res.result.data[0].reason;
-                        document.getElementById("divDealerEnrollment").style.display = "block";
-                        document.getElementById("divCommunicationAddress").style.display = "block";
-                    }
-
-                },
-                error: function (ex) {
-                    alert('Failed' + ex);
-                }
-            });
-        }
-        else {
-            return false;
-        }
-    }
-
-    $("#dealerCdVal").on("blur", function () 
-    {
-        //debugger;
-        if (document.getElementById("dealerCdVal").value.trim() != "") 
-        {
-            document.getElementById("dealerCodeErr").innerHTML = "";
-        }
-
-        var dealerCdVal = $("#dealerCdVal").val().trim();
-        var dTPDealerCode = $("#DTPDealerCdVal").val().trim();
-
-        if(dealerCdVal == "" && dealerCdVal == "")
-        {
-            $("#dealerCodeErr").attr("style", "display:block");
-            $("#dealerCodeErr").html("Please enter either Dealer Code or DTP Dealer Code");
-        }
-        else if (dealerCdVal!="" && !(dealerCdVal.match(forVehicleNo)))
-        {
-            $('#dealerCodeErr').text("Dealer Code should be alphanumeric");
-        }
-        else if(dealerCdVal != "")
-        {
-             document.getElementById("dealerCodeErr").innerHTML = "";
-        }
-        else if(dTPDealerCode != "")
-        {
-             document.getElementById("dealerCodeErr").innerHTML = "";
-        }
-
     });
 
-    $("#DTPDealerCdVal").on("blur", function () 
+    $("#mobFetchVal").on("blur", function ()
     {
         //debugger;
-        if (document.getElementById("dealerCdVal").value.trim() != "") 
+        var communicationMobile = document.getElementById("mobFetchVal").value.trim();
+        if (communicationMobile == "")
         {
-            document.getElementById("dealerCodeErr").innerHTML = "";
-        }
-
-        var dealerCdVal = $("#dealerCdVal").val().trim();
-        var dTPDealerCode = $("#DTPDealerCdVal").val().trim();
-
-        if(dealerCdVal == "" && dTPDealerCode == "")
-        {
-            $("#dealerCodeErr").attr("style", "display:block");
-            $("#dealerCodeErr").html("Please enter either Dealer Code or DTP Dealer Code");
-        }
-        else if(dealerCdVal != "")
-        {
-             document.getElementById("dealerCodeErr").innerHTML = "";
-        }
-        else if(dTPDealerCode != "")
-        {
-             document.getElementById("dealerCodeErr").innerHTML = "";
-        }
-
-    });
-
-    $("#dealerNameFetchVal").on("blur", function () {
-        //debugger;
-        var dealerName = document.getElementById("dealerNameFetchVal").value.trim();
-        if (dealerName == "") 
-        {
-            document.getElementById("DealerNameErrorMsg").innerHTML = "Dealer Name field cannot be left blank";
+            document.getElementById("MobileNoErr").innerHTML = "Mobile Number field cannot be left blank";
             return (false);
         }
-        else if (!isNaN(document.getElementById("dealerNameFetchVal").value.trim())) 
+        else if (communicationMobile.substring(0, 1) == "0")
         {
-            document.getElementById("DealerNameErrorMsg").innerHTML = "Invalid Dealer Name";
+            document.getElementById("MobileNoErr").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
             return false;
         }
-        else if (!document.getElementById("dealerNameFetchVal").value.match(nameWithSpaceCheck)) 
+        else if (communicationMobile.length < 10)
         {
-            document.getElementById("DealerNameErrorMsg").innerHTML = "Invalid Dealer Name";
+            document.getElementById("MobileNoErr").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
+            return false;
+        }
+        else if (!communicationMobile.match(phoneno))
+        {
+            document.getElementById("MobileNoErr").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
             return false;
         }
         else
         {
-            document.getElementById("DealerNameErrorMsg").innerHTML = "";
+            document.getElementById("MobileNoErr").innerHTML = "";
+        }
+
+    });
+
+    $("#RegionalOfficeId").change(function ()
+    {
+        var id = this.value;
+
+        if (id != 0) {
+            $("#regionalErrMsg").html("");
         }
     });
 
-    $("#add1Val").on("blur", function () 
+    $("#DistrictId").change(function ()
     {
-        //debugger;
-        var Address = document.getElementById("add1Val").value.trim();
-        if (Address == "") 
-        {
-            document.getElementById("Address1Err").innerHTML = "Address1 field cannot be left blank";
-            return (false);
+        var id = this.value;
+
+        if (id != 0) {
+            $("#distErrMsg").html("");
         }
-        else 
-        {
-            if (!isNaN(Address)) 
-            {
-                document.getElementById("Address1Err").innerHTML = "Invalid Address1";
-                return false;
-            }
-            else if (!Address.match(atLeastOneAlphabet)) 
-            {
-                document.getElementById("Address1Err").innerHTML = "Invalid Address1";
-                return false;
-            }
-            else 
-            {
-                document.getElementById("Address1Err").innerHTML = "";
-            }
+    });
 
+    $("#OfficerSearchTypeId").change(function () {
+        var id = this.value;
+
+        if (id != 0) {
+            $("#OfficerSearchTypeId_error").html("");
         }
-   });
+    });
 
-   $("#add2Val").on("blur", function () 
-   {
-        //debugger;
-        var Address = document.getElementById("add2Val").value.trim();
-        if (Address == "") 
-        {
-            document.getElementById("Address2Err").innerHTML = "Address2 field cannot be left blank";
-            return (false);
+    $("#OfficerTypeId").change(function () {
+        var id = this.value;
+
+        if (id != 0) {
+            $("#OfficerTypeId_error").html("");
         }
-        else 
-        {
-            if (!isNaN(Address)) 
-            {
-                document.getElementById("Address2Err").innerHTML = "Invalid Address2";
-                return false;
-            }
-            else if (!Address.match(atLeastOneAlphabet)) 
-            {
-                document.getElementById("Address2Err").innerHTML = "Invalid Address2";
-                return false;
-            }
-            else 
-            {
-                document.getElementById("Address2Err").innerHTML = "";
-            }
-
-        }
-   });
-
-   $("#add3Val").on("blur", function () 
-   {
-        //debugger;
-        var Address = document.getElementById("add3Val").value.trim();
-        if (Address != "") 
-        {
-            if (!isNaN(Address)) 
-            {
-                document.getElementById("Address3Err").innerHTML = "Invalid Address3";
-                return false;
-            }
-            else if (!Address.match(atLeastOneAlphabet)) 
-            {
-                document.getElementById("Address3Err").innerHTML = "Invalid Address3";
-                return false;
-            }
-            else 
-            {
-                document.getElementById("Address3Err").innerHTML = "";
-            }
-
-        }
-   });
-
-   $("#cityFetchVal").on("blur", function () 
-   {
-        //debugger;
-        var city = document.getElementById("cityFetchVal").value.trim();
-        if (city == "") 
-        {
-            document.getElementById("CityNameErr").innerHTML = "City Name field cannot be left blank";
-            return (false);
-        }
-        else 
-        {
-            if (!isNaN(city)) 
-            {
-                document.getElementById("CityNameErr").innerHTML = "Invalid City";
-                return false;
-            }
-            else if (!city.match(atLeastOneAlphabet)) 
-            {
-                document.getElementById("CityNameErr").innerHTML = "Invalid City";
-                return false;
-            }
-            else 
-            {
-                document.getElementById("CityNameErr").innerHTML = "";
-            }
-        }
-  });
-    
-  $("#pinFetchVal").on("blur", function () 
-  {
-    //debugger;
-    if (document.getElementById("pinFetchVal").value.trim() == "") 
-    {
-        document.getElementById("PinCodeErr").innerHTML = "PIN Code field cannot be left blank";
-        return (false);
-    }
-    else if (document.getElementById("pinFetchVal").value.substring(0, 1) == "0") 
-    {
-        document.getElementById("PinCodeErr").innerHTML = "Invalid PIN Code. Min-Max 6 digits";
-        return false;
-    }
-    else if (document.getElementById("pinFetchVal").value.length < 6) 
-    {
-        document.getElementById("PinCodeErr").innerHTML = "Invalid PIN Code. Min-Max 6 digits";
-        return false;
-    }
-    else if (!document.getElementById("pinFetchVal").value.match(pincode)) 
-    {
-        document.getElementById("PinCodeErr").innerHTML = "Invalid PIN Code. Min-Max 6 digits";
-        return false;
-    }
-    else
-    {
-        document.getElementById("PinCodeErr").innerHTML = "";
-    }
-
- });
-
-  $("#emailFetchVal").on("blur", function () 
-  {
-    //debugger;
-    var emailId = document.getElementById("emailFetchVal").value.trim();
-    if (emailId == "") 
-    {
-        document.getElementById("EmailIdErr").innerHTML = "Email ID field cannot be left blank";
-        return (false);
-    }
-    else if (!emailId.match(email)) 
-    {
-        document.getElementById("EmailIdErr").innerHTML = "Invalid email id (e.g.: abc@gmail.com)";
-        return (false);
-    }
-    else
-    {
-        document.getElementById("EmailIdErr").innerHTML = "";
-    }
-
-});
-
-$("#mobFetchVal").on("blur", function () 
-{
-    //debugger;
-    var communicationMobile = document.getElementById("mobFetchVal").value.trim();
-    if (communicationMobile == "") 
-    {
-        document.getElementById("MobileNoErr").innerHTML = "Mobile Number field cannot be left blank";
-        return (false);
-    }
-    else if (communicationMobile.substring(0, 1) == "0") 
-    {
-        document.getElementById("MobileNoErr").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
-        return false;
-    }
-    else if (communicationMobile.length < 10) 
-    {
-        document.getElementById("MobileNoErr").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
-        return false;
-    }
-    else if (!communicationMobile.match(phoneno))
-    {
-        document.getElementById("MobileNoErr").innerHTML = "Invalid Mobile Number. Min-Max 10 digits";
-        return false;
-    }
-    else
-    {
-        document.getElementById("MobileNoErr").innerHTML = "";
-    }
-
-});
-
-$("#RegionalOfficeId").change(function () 
-{
-    var id = this.value;
-
-    if (id != 0) {
-        $("#regionalErrMsg").html("");
-    }
-});
-
-$("#DistrictId").change(function () 
-{
-    var id = this.value;
-
-    if (id != 0) {
-        $("#distErrMsg").html("");
-    }
-});
-
-$("#OfficerSearchTypeId").change(function () {
-    var id = this.value;
-
-    if (id != 0) {
-        $("#OfficerSearchTypeId_error").html("");
-    }
-});
-
-$("#OfficerTypeId").change(function () {
-    var id = this.value;
-
-    if (id != 0) {
-        $("#OfficerTypeId_error").html("");
-    }
-});
+    });
 
 </script>
