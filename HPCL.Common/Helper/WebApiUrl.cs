@@ -674,6 +674,7 @@
         public static string enableDisableDicvDealer = "api/dtplus/DICV/enable_disable_dicv_dealer";
         public static string searchDicvManageCard = "api/dtplus/DICV/search_dicv_manage_card";
         public static string dicvGetCardLimitFeatures = "api/dtplus/DICV/dicv_get_card_limit_features";
+        public static string dicvUpdateMobileInCard = "api/dtplus/DICV/dicv_update_mobile_in_card";
         #endregion
 
         #region "Parent Customer HDFC Bank Credit Pouch"

@@ -824,6 +824,38 @@ namespace HPCL.Service.Services
 
             return searchRes;
         }
+        public async Task<DICVUpdateMobileModal> DICVCardlessMapping(string cardNumber, string mobileNumber, string LimitTypeName, string CCMSReloadSaleLimitValue)
+        {
+            DICVUpdateMobileModal editMobBody = new DICVUpdateMobileModal();
+            editMobBody.CardNumber = cardNumber;
+            editMobBody.MobileNumber = mobileNumber;
+            editMobBody.LimitTypeName = LimitTypeName;
+            editMobBody.CCMSReloadSaleLimitValue = CCMSReloadSaleLimitValue;
+
+            _httpContextAccessor.HttpContext.Session.SetString("lmtType", editMobBody.LimitTypeName);
+            return editMobBody;
+        }
+
+        public async Task<List<SuccessResponse>> DICVCardlessMappingUpdate(string mobNoNew, string crdNo)
+        {
+            var cardDetailsBody = new DICVUpdateMobile
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                CardNo = crdNo,
+                MobileNo = mobNoNew,
+                ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
+            };
+            StringContent content = new StringContent(JsonConvert.SerializeObject(cardDetailsBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.dicvUpdateMobileInCard);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+
+            var updateRes = obj["Data"].Value<JArray>();
+            List<SuccessResponse> updateResponse = updateRes.ToObject<List<SuccessResponse>>();
+            return updateResponse;
+        }
 
     }
 }
