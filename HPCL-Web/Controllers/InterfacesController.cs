@@ -52,9 +52,18 @@ namespace HPCL_Web.Controllers
 
             RegenerateIACModel Interface = new RegenerateIACModel();
 
-            Interface.RegenerateIACResponseModel = RegenerateIAC;
+            Interface.RegenerateIACResponseModels = RegenerateIAC;
         
             return View(Interface);
+        }
+        [HttpPost]
+        public async Task<JsonResult> GetRegenerateIAC(string TerminalID)
+        {
+            RegenerateIACModel Interface = new RegenerateIACModel();
+
+            var RegenerateIAC = await _interfaceService.RegenerateIAC(TerminalID);
+
+            return Json(RegenerateIAC);
         }
     }
 }
