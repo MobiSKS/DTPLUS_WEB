@@ -856,6 +856,33 @@ namespace HPCL.Service.Services
             List<SuccessResponse> updateResponse = updateRes.ToObject<List<SuccessResponse>>();
             return updateResponse;
         }
+        public async Task<DICVDealerOTCCardStatusModel> ViewDICVDealerOTCCardStatus()
+        {
+            DICVDealerOTCCardStatusModel model = new DICVDealerOTCCardStatusModel();
+            model.Remarks = "";
+            return model;
+        }
+        public async Task<GetDICVDealerOTCCardStatusResponse> GetDICVDealerOTCCardStatus(string DealerCode, string CardNo)
+        {
+            var searchBody = new GetDICVDealerOTCCardStatusRequest()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                DealerCode = DealerCode,
+                CardNo = string.IsNullOrEmpty(CardNo) ? "" : CardNo
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+
+            var ResponseContent = await _requestService.CommonRequestService(content, WebApiUrl.viewDicvDealerOtcCardStatus);
+
+            GetDICVDealerOTCCardStatusResponse response = new GetDICVDealerOTCCardStatusResponse();
+
+            response = JsonConvert.DeserializeObject<GetDICVDealerOTCCardStatusResponse>(ResponseContent);
+
+            return response;
+        }
 
     }
 }
