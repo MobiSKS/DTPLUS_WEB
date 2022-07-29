@@ -65,7 +65,7 @@ namespace HPCL.Service.Services
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
                 UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
-                TerminalID = "5017427059"
+                TerminalID = TerminalID
             };
 
             StringContent RegenerateIACTableContent = new StringContent(JsonConvert.SerializeObject(RegenerateIACForms), Encoding.UTF8, "application/json");
