@@ -8,7 +8,7 @@ namespace HPCL.Common.Models.ResponseModel.ParentCustomer
 {
     public  class GetTransactionType
     {
-        public int TransactionTypeId { get; set; }
-        public int TransactionType { get; set; }
+        public int TransactionID { get; set; }
+        public string TransactionType { get; set; }
     }
 }

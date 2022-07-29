@@ -551,7 +551,10 @@
         public static string PostAuthCreditPouchUrl = "api/dtplus/customer/post_authorization_for_credit_pouch";
         public static string convertparenttoaggregator = "api/dtplus/ParentCustomer/convert_parent_to_aggregator";
         public static string parentchildbalancetransfer = "api/dtplus/ParentCustomer/parent_to_child_and_child_parent_fund_allocation";
-        
+        public static string gettransactiontypeforpc = "api/dtplus/ParentCustomer/get_transaction_type_for_pc";
+        public static string updatechildparentfundallocation = "api/dtplus/ParentCustomer/update_parent_to_child_and_child_parent_fund_allocation";
+
+
         #endregion
 
         #region Volvo Eicher

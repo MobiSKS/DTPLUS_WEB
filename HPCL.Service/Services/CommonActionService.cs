@@ -1842,7 +1842,7 @@ namespace HPCL.Service.Services
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(requestInfo), Encoding.UTF8, "application/json");
-            var response = await _requestService.CommonRequestService(content, WebApiUrl.getapprovedmerchantreactivationstatus);
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.gettransactiontypeforpc);
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
             var jarr = obj["Data"].Value<JArray>();
             List<GetTransactionType> lst = jarr.ToObject<List<GetTransactionType>>();

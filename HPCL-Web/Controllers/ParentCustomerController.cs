@@ -1,6 +1,7 @@
 ﻿using HPCL.Common.Helper;
 using HPCL.Common.Models.RequestModel.Customer;
 using HPCL.Common.Models.RequestModel.ParentCustomer;
+using HPCL.Common.Models.ResponseModel.ParentCustomer;
 using HPCL.Common.Models.ViewModel.Aggregator;
 using HPCL.Common.Models.ViewModel.ParentCustomer;
 using HPCL.Service.Interfaces;
@@ -412,17 +413,30 @@ namespace HPCL_Web.Controllers
             return View(modals);
         }
 
-        public async Task<IActionResult> ParentChildBalanceFundTransfer(ParentChildBalanceTransferViewModel reqEntity)
+        public async Task<IActionResult> ParentChildBalanceFundTransfer(ParentChildBalanceTransferViewModel reqEntity, string reset)
         {
             var modals = new ParentChildBalanceTransferViewModel();
-            if (reqEntity.ParentCustomerID != null && reqEntity.ParentCustomerID != "")
+            if (reset==null || reset=="")
             {
-                modals = await _customerService.ParentChildBalanceFundTransfer(reqEntity);
-                modals.ParentCustomerID = reqEntity.ParentCustomerID;
-                modals.ChildCustomerId = reqEntity.ChildCustomerId;
-            }
+                if (reqEntity.ParentCustomerID != null && reqEntity.ParentCustomerID != "")
+                {
+                    modals = await _customerService.ParentChildBalanceFundTransfer(reqEntity);
+                    modals.ParentCustomerID = reqEntity.ParentCustomerID;
+                    modals.ChildCustomerId = reqEntity.ChildCustomerId;
+                    modals.BalanceTransferTypes.AddRange(await _commonActionService.GetParentCustomerTransactionType());
 
+
+                }
+            }
             return View(modals);
+        }
+        [HttpPost]
+        public async Task<JsonResult> UpdatePCBalanceTransfer([FromBody] UpdatePCBalanceTransferRequest reqEntity)
+        {
+            var modals = await _customerService.UpdatePCBalanceTransfer(reqEntity);
+
+            return Json(modals);
+
         }
     }
 }

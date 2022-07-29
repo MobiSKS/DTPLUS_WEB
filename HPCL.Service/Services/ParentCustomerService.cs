@@ -1517,6 +1517,7 @@ namespace HPCL.Service.Services
                 UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 CustomerReferenceNo = cust.CustomerReferenceNo,
                 CustomerId = cust.CustomerId,
+                ParentCustomerId= cust.CustomerId,
                 ZonalOffice = cust.CustomerZonalOfficeID.ToString(),
                 RegionalOffice = cust.CustomerRegionID.ToString(),
                 DateOfApplication = customerDateOfApplication,
@@ -1644,6 +1645,24 @@ namespace HPCL.Service.Services
             searchResponse = JsonConvert.DeserializeObject<ParentChildBalanceTransferViewModel>(response);
 
             return searchResponse;
+        }
+        public async Task<List<BalanceTransferSuccessResponse>> UpdatePCBalanceTransfer([FromBody] UpdatePCBalanceTransferRequest reqEntity)
+        {
+            var reqBody = new UpdatePCBalanceTransferRequest
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                TypeUpdateParenttoChildandChildParentFund=reqEntity.TypeUpdateParenttoChildandChildParentFund,
+                ParentCustomerId=reqEntity.ParentCustomerId,
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.updatechildparentfundallocation);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<BalanceTransferSuccessResponse> reasonList = jarr.ToObject<List<BalanceTransferSuccessResponse>>();
+            return reasonList;
         }
     }
 }
