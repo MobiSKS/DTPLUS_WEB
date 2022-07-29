@@ -1153,5 +1153,33 @@ namespace HPCL.Service.Services
             return result;
         }
 
+        public async Task<JCBViewDealerOTCCardStatusModel> ViewJCBDealerOTCCardStatus()
+        {
+            JCBViewDealerOTCCardStatusModel model = new JCBViewDealerOTCCardStatusModel();
+            model.Remarks = "";
+            return model;
+        }
+        public async Task<GetJCBDealerOTCCardStatusResponse> GetViewJCBDealerOTCCardStatus(string DealerCode, string CardNo)
+        {
+            var searchBody = new GetJCBOTCCardDealerAllocationRequestModel()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                DealerCode = DealerCode,
+                CardNo = string.IsNullOrEmpty(CardNo) ? "" : CardNo
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+
+            var ResponseContent = await _requestService.CommonRequestService(content, WebApiUrl.viewJcbDealerOtcCardStatus);
+
+            GetJCBDealerOTCCardStatusResponse response = new GetJCBDealerOTCCardStatusResponse();
+
+            response = JsonConvert.DeserializeObject<GetJCBDealerOTCCardStatusResponse>(ResponseContent);
+
+            return response;
+        }
+
     }
 }
