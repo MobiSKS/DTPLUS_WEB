@@ -11,12 +11,12 @@ namespace HPCL.Common.Models.ResponseModel.JCB
     {
         public GetJCBDealerOTCCardStatusResponse()
         {
-            Data = new List<CBDealerOTCCardStatusDetails>();
+            Data = new List<JCBDealerOTCCardStatusDetails>();
         }
-        public List<CBDealerOTCCardStatusDetails> Data { get; set; }
+        public List<JCBDealerOTCCardStatusDetails> Data { get; set; }
     }
 
-    public class CBDealerOTCCardStatusDetails
+    public class JCBDealerOTCCardStatusDetails
     {
         public string TotalAllocatedCards { get; set; }
         public string TotalMappedCards { get; set; }
