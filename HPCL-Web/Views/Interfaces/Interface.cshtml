@@ -1,45 +1,138 @@
-﻿ @model HPCL.Common.Models.ViewModel.RegenerateIACModel
-<div class="col-lg-12 p-4 p-md-4">
-          <div class="bg-white p-2 p-md-4">
-            <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
-              <li class="breadcrumb-item"><a href="#" class="text_primary">DTP Support</a> </li>
-              <li class="breadcrumb-item font-weight-light">Regenerate IAC</li>
-            </ul>
-            <form>
-              <div class="w-100">
+﻿
+
+<div class="col-lg-12">
+    <div class="bg-white p-2 p-md-4">
+        <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
+            <li class="breadcrumb-item"><a href="#" class="text_primary">DTP Support</a> </li>
+            <li class="breadcrumb-item font-weight-light">Regenerate IAC</li>
+        </ul>
+        <form>
+            <div class="w-100">
                 <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
-                  <div class="border-1 rounded border-grey pb-0">
-                    <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Regenerate IAC</p>
-                    <div class="col-lg-12 col-md-12 col-12 py-3">
-					<div class="d-flex align-items-start flex-wrap">
-						<div class="col-lg-12 col-12">
-							<div class="d-flex align-items-center flex-wrap mb-3">
-								<label class="font-weight-normal col-md-2 col-12">Terminal ID <sup class="text-danger">*</sup></label>
-								<div class="col-md-3 col-12">
-								  <div class="custom_select">
-									<input class="form-control" id="" name="" type="text" value="">
-								  </div>
-								</div>
-								<div class="col-lg-7 col-12">
-									  <div class="d-flex align-items-start justify-content-start mt-0">
-										<div class="px-2">
-										  <button class="btn btn_primary" type="button">ReGenerate IAC</button>
-										</div>
-										<div class="px-2">
-										  <button class="btn btn_primary" type="button">Reset</button>
-										</div>
-									  </div>
-								</div>
-							</div>
-						</div>
-						</div>
-						<div class="clearfix"></div>
-					</div>
-                    <div class="clearfix"></div>
+                    <div class="border-1 rounded border-grey pb-0">
+                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Regenerate IAC</p>
+                        <div class="col-lg-12 col-md-12 col-12 py-3">
+                            <div class="d-flex align-items-start flex-wrap">
+                                <div class="col-lg-12 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-2 col-12">Terminal ID <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-3 col-12">
+                                            <div class="custom_select">
+                                                <input class="form-control" id="Termialid" name="" type="text" value="">
+                                                 
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-7 col-12">
+                                            <div class="d-flex align-items-start justify-content-start mt-0">
+                                                <div class="px-2">
+                                                    <button class="btn btn_primary" type="button" onclick="RegenerateIAC()">Regenerate IAC</button>
+                                                </div>
+                                                <div class="px-2">
+                                                    <button class="btn btn_primary" type="button">Reset</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                     @*<div id="noRecord" class="mt-3 mb-0 text-center alert alert-danger" style="display:none;"></div> *@
+                </div>
+                <div id="test" class="col-lg-12 col-md-12 col-12 pl-0 pr-0" style="display:none">
+                    <div class="border-1 rounded border-grey pb-0">
+                        <div class="col-lg-12 col-md-12 col-12 py-3">
+                            <div class="d-flex align-items-start flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-2 col-12">Regenerate IAC<sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                <input class="form-control" id="txtRegenerateIAC" name="txtRegenerateIAC" type="text" value="">
+                                             </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="clearfix"></div>
+                   </div>
+                </div>
+                <div class="clearfix"></div>
+                <div>
+                    <div style="display:none;" class="alert alert-danger mt-3 text-center ml-3 mr-3" id="noRecord">
                     </div>
                 </div>
-				</div>
-            </form>
-            <div class="clearfix"></div>
-          </div>
-        </div>
+            </div>
+        </form>
+        <div class="clearfix"></div>
+      
+    </div>
+</div>
+
+<script>
+    function RegenerateIAC()
+    {
+        var TerminalID = "5017427059";
+   debugger;     
+          $.ajax({
+                type: 'POST',  // http method
+                url: '@Url.Action("GetRegenerateIAC", "Interfaces")',
+                data: { TerminalID: $("#Termialid").val() },
+                dataType: "json",
+                success: function(data,status,xhr) 
+                {
+                    debugger;
+                    var v = data;
+                    console.log(v);
+                    var testHtml = '';
+                    //if (data.success ==  true) 
+                    //{
+                    //    console.log(v);
+                    // //$("#IACID").html("");
+                    //    $.each(data, function (i, data) {
+                    //else
+                    //{
+                    //     $("#Reason").html('');
+                    //  }
+                    //$.each(data, function (i, data) { // bind the dropdown list using json result
+                    //    testHtml = testHtml + '<tr><td>' 
+                    //});
+                    //$("#test").html(testHtml);
+
+                    var v = data;
+                    if (status == 'success') 
+                    {
+                        if(data[0].status==1)
+                        {
+                            $.each(data, function (i, data) { // bind the dropdown list using json result
+                               //$("#test").append(data.iacid + "<br/>");
+                               $("#txtRegenerateIAC").val(data.iacid);
+                            });
+                            document.getElementById("noRecord").style.display = "none";
+                            document.getElementById("test").style.display = "block";
+                        }
+                        else
+                        {
+                            document.getElementById("noRecord").style.display = "block";
+                            document.getElementById("noRecord").innerHTML = data[0].reason;
+                            document.getElementById("test").style.display = "none";
+                        }
+                    }
+                    else 
+                    {
+                        console.log(v);
+                    }
+
+                },
+                error: function(jqXhr, textStatus, errorMessage) {
+                    alert("Error");
+                }
+          });
+      
+ }
+    
+</script>
