@@ -7,7 +7,7 @@
 }
 
 <div class="col-lg-12">
-    <div class="bg-white p-2 p-md-4">
+    <div class="bg-white p-2 p-md-4" style="background: #edecec !important;">
         <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
             <li class="breadcrumb-item"><a href="@Url.Action("Index","JCB")" class="text_primary">JCB Dashboard</a> </li>
             <li class="breadcrumb-item font-weight-light">JCB OTC Card Request</li>
@@ -16,11 +16,11 @@
             <div class="w-100">
                 <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
                     <div class="border-1 rounded border-grey pb-0">
-                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">JCB OTC Card Request</p>
-                        <div class="alert alert-danger mt-3 text-center" id="dvRemarks" style="@(Model.Remarks=="" ? "display:none":"display:block")">
-                            @Html.DisplayFor(m => m.Remarks)
-                        </div>
-                        <div class="col-lg-12 col-md-12 col-12 py-3">
+                        <p class="text-white px-3 py-2 m-0 font-weight-bold" style="background: #084693;">JCB OTC Card Request</p>
+                        <div class="col-lg-12 col-md-12 col-12 py-3 bg-white">
+                            <div class="alert alert-danger mt-0 text-center" id="dvRemarks" style="@(Model.Remarks=="" ? "display:none":"display:block")">
+                                @Html.DisplayFor(m => m.Remarks)
+                            </div>
                             <div class="d-flex align-items-center flex-wrap">
                                 <div class="col-lg-6 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
@@ -61,7 +61,7 @@
                                         <label class="font-weight-normal offset-md-1 col-md-4 col-12" id="lblCapBalance" style="display:none">No. of Cards (Balance)</label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                <label class="font-weight-normal col-md-4 col-12" id="lblBalance" style="display:none"></label>                                                
+                                                <label class="font-weight-normal col-md-4 col-12" id="lblBalance" style="display:none"></label>
                                             </div>
                                         </div>
                                     </div>
@@ -81,207 +81,207 @@
                     </div>
                 </div>
             </div>
-           <div style="display:none"> @Html.TextBoxFor(m => m.BalanceCard, new { @class = "form-control" })</div>
+            <div style="display:none"> @Html.TextBoxFor(m => m.BalanceCard, new { @class = "form-control" })</div>
         </form>
         <div class="clearfix"></div>
     </div>
 </div>
 
 <script type="text/javascript">
-    $(document).ready(function () {
+     $(document).ready(function () {
 
-            if($("#dvRemarks").html().trim()!="")
-            {
-                //debugger;
-                document.getElementById("lblBalance").innerHTML=document.getElementById("BalanceCard").value;
-                document.getElementById("lblCapBalance").style.display="block";
-                document.getElementById("lblBalance").style.display="block";
-            }
+             if($("#dvRemarks").html().trim()!="")
+             {
+                 //debugger;
+                 document.getElementById("lblBalance").innerHTML=document.getElementById("BalanceCard").value;
+                 document.getElementById("lblCapBalance").style.display="block";
+                 document.getElementById("lblBalance").style.display="block";
+             }
 
-        });
-
-    
-    function ResetFields() 
-    {
-        window.location.href = '@Url.Action("JCBDealerOTCCardRequest", "JCB")';
-    };
+         });
 
 
-    $("#DealerCode").on("blur", function () {
-        debugger;
-        localStorage.setItem("DEALERFOUND", "0");
-        localStorage.setItem("DEALERMSG", "");
-
-        var dealerCode = document.getElementById("DealerCode").value.trim();
-        if (dealerCode == "") 
-        {
-            document.getElementById("DealerCode_error").innerHTML = "Please enter Dealer Code";
-            return (false);
-        }
-        else 
-        {
-            document.getElementById("DealerCode_error").innerHTML = "";
-        }
+     function ResetFields()
+     {
+         window.location.href = '@Url.Action("JCBDealerOTCCardRequest", "JCB")';
+     };
 
 
-        $.ajax({
-            type: 'POST',  // http method
-            url: '@Url.Action("CheckJCBDealerBalanceQty", "JCB")',
-            data: { DealerCode: dealerCode },  // data to submit
-            dataType: "json",
-            success: function (data, status, xhr) {
-                console.log(data);
-                console.log(status);
-                console.log(data.status);
+     $("#DealerCode").on("blur", function () {
+         debugger;
+         localStorage.setItem("DEALERFOUND", "0");
+         localStorage.setItem("DEALERMSG", "");
 
-                if (status == 'success') 
-                {
-                    if (data.status == 1) 
-                    {
-                        document.getElementById("DealerCode_error").innerHTML = "";
-                        localStorage.setItem("DEALERFOUND", "1");
-                        document.getElementById("lblBalance").innerHTML=data.balanceRequestCard;
-                        document.getElementById("BalanceCard").value=data.balanceRequestCard;
-                        document.getElementById("lblCapBalance").style.display="block";
-                        document.getElementById("lblBalance").style.display="block";
-                    }
-                    else
-                    {
-                        document.getElementById("DealerCode_error").innerHTML = data.reason;
-                        localStorage.setItem("DEALERFOUND", "0");
-                        localStorage.setItem("DEALERMSG", data.reason);
-                        document.getElementById("lblCapBalance").style.display="none";
-                        document.getElementById("lblBalance").style.display="none";
-                    }
-
-                    if (data == "Failed to load Dealer Details") 
-                    {
-                        document.getElementById("DealerCode_error").innerHTML = "Invalid Dealer Code";
-                        localStorage.setItem("DEALERFOUND", "0");
-                        localStorage.setItem("DEALERMSG", "Invalid Dealer Code");
-                        document.getElementById("lblCapBalance").style.display="none";
-                        document.getElementById("lblBalance").style.display="none";
-                    }
-                }
-                else 
-                {
-                    document.getElementById("DealerCode_error").innerHTML = "Invalid Dealer Code";
-                    localStorage.setItem("DEALERFOUND", "0");
-                    localStorage.setItem("DEALERMSG", "Invalid Dealer Code");
-                    document.getElementById("lblCapBalance").style.display="none";
-                    document.getElementById("lblBalance").style.display="none";
-                }
-            },
-            error: function (xhr, ajaxOptions, thrownError) {
-                document.getElementById("DealerCode_error").innerHTML = "Invalid Dealer Code";
-                localStorage.setItem("DEALERFOUND", "0");
-                localStorage.setItem("DEALERMSG", "Invalid Dealer Code");
-                document.getElementById("lblCapBalance").style.display="none";
-                document.getElementById("lblBalance").style.display="none";
-            }
-        });
+         var dealerCode = document.getElementById("DealerCode").value.trim();
+         if (dealerCode == "")
+         {
+             document.getElementById("DealerCode_error").innerHTML = "Please enter Dealer Code";
+             return (false);
+         }
+         else
+         {
+             document.getElementById("DealerCode_error").innerHTML = "";
+         }
 
 
-    });
+         $.ajax({
+             type: 'POST',  // http method
+             url: '@Url.Action("CheckJCBDealerBalanceQty", "JCB")',
+             data: { DealerCode: dealerCode },  // data to submit
+             dataType: "json",
+             success: function (data, status, xhr) {
+                 console.log(data);
+                 console.log(status);
+                 console.log(data.status);
 
-    function CheckValidations() 
-    {
-        debugger;
+                 if (status == 'success')
+                 {
+                     if (data.status == 1)
+                     {
+                         document.getElementById("DealerCode_error").innerHTML = "";
+                         localStorage.setItem("DEALERFOUND", "1");
+                         document.getElementById("lblBalance").innerHTML=data.balanceRequestCard;
+                         document.getElementById("BalanceCard").value=data.balanceRequestCard;
+                         document.getElementById("lblCapBalance").style.display="block";
+                         document.getElementById("lblBalance").style.display="block";
+                     }
+                     else
+                     {
+                         document.getElementById("DealerCode_error").innerHTML = data.reason;
+                         localStorage.setItem("DEALERFOUND", "0");
+                         localStorage.setItem("DEALERMSG", data.reason);
+                         document.getElementById("lblCapBalance").style.display="none";
+                         document.getElementById("lblBalance").style.display="none";
+                     }
 
-        var ret = true;
+                     if (data == "Failed to load Dealer Details")
+                     {
+                         document.getElementById("DealerCode_error").innerHTML = "Invalid Dealer Code";
+                         localStorage.setItem("DEALERFOUND", "0");
+                         localStorage.setItem("DEALERMSG", "Invalid Dealer Code");
+                         document.getElementById("lblCapBalance").style.display="none";
+                         document.getElementById("lblBalance").style.display="none";
+                     }
+                 }
+                 else
+                 {
+                     document.getElementById("DealerCode_error").innerHTML = "Invalid Dealer Code";
+                     localStorage.setItem("DEALERFOUND", "0");
+                     localStorage.setItem("DEALERMSG", "Invalid Dealer Code");
+                     document.getElementById("lblCapBalance").style.display="none";
+                     document.getElementById("lblBalance").style.display="none";
+                 }
+             },
+             error: function (xhr, ajaxOptions, thrownError) {
+                 document.getElementById("DealerCode_error").innerHTML = "Invalid Dealer Code";
+                 localStorage.setItem("DEALERFOUND", "0");
+                 localStorage.setItem("DEALERMSG", "Invalid Dealer Code");
+                 document.getElementById("lblCapBalance").style.display="none";
+                 document.getElementById("lblBalance").style.display="none";
+             }
+         });
 
-        if (document.getElementById('DealerCode').value.trim() == "") 
-        {
-            document.getElementById("DealerCode_error").innerHTML = "Please enter Dealer Code";
-            ret = false;
-        }
-        else 
-        {
-            if (localStorage.getItem("DEALERFOUND") == 0) 
-            {
-                if(localStorage.getItem("DEALERMSG")=="")
-                {
-                    document.getElementById("DealerCode_error").innerHTML = "Invalid Dealer Code";
-                    ret = false;
-                }
-                else
-                {
-                    document.getElementById("DealerCode_error").innerHTML = localStorage.getItem("DEALERMSG");
-                    ret = false;
-                }
-            }
-            else 
-            {
-                document.getElementById("DealerCode_error").innerHTML = "";
-            }
-        }
 
-        if (document.getElementById('NoofCards').value.trim() == "") 
-        {
-            document.getElementById("NoofCards_error").innerHTML = "Please enter Number of Cards";
-            ret = false;
-        }
-        else 
-        {
-            if (Number(document.getElementById('NoofCards').value.trim()) < 1 || Number(document.getElementById('NoofCards').value.trim()) > 200) 
-            {
-                document.getElementById("NoofCards_error").innerHTML = "No. of OTC Cards should be 1 to 200";
-                ret = false;
-            }
-            else 
-            {
-                document.getElementById("NoofCards_error").innerHTML = "";
-            }
-        }
-
-        if(document.getElementById('lblBalance').innerHTML.trim()!="")
-        {
-            if (Number(document.getElementById('lblBalance').innerHTML.trim()) < Number(document.getElementById('NoofCards').value.trim()))
-            {
-                document.getElementById("dvRemarks").innerHTML = "Dealer " + document.getElementById('DealerCode').value + " No. of Cards should not be greater than balance No. of Cards.";
-                document.getElementById("dvRemarks").style.display="block";
-                ret = false;
-            }
-            else
-            {
-                document.getElementById("dvRemarks").style.display="none";
-                document.getElementById("dvRemarks").innerHTML ="";
-            }
-        }
-        
-        return ret;
-    }
-
-    $('#NoofCards').on("cut copy paste",function(e) 
-    {
-          e.preventDefault();
      });
 
-   $("#NoofCards").on("blur", function () 
-   {
-    //debugger;
-       if (document.getElementById('NoofCards').value.trim() == "") 
-       {
-            document.getElementById("NoofCards_error").innerHTML = "Please enter Number of Cards";
-            return false;
-       }
-       else 
-       {
-            if (Number(document.getElementById('NoofCards').value) < 1 || Number(document.getElementById('NoofCards').value) > 200) 
-            {
-                document.getElementById("NoofCards_error").innerHTML = "No. of OTC Cards should be 1 to 200";
-                return false;
-            }
-            else if(!(document.getElementById('NoofCards').value).match(number))
-            {
-                document.getElementById("NoofCards_error").innerHTML = "No. of OTC Cards should be 1 to 200";
-                ret = false;
-            }
-            else 
-            {
-                document.getElementById("NoofCards_error").innerHTML = "";
-            }
-       }
-        
-    });
+     function CheckValidations()
+     {
+         debugger;
+
+         var ret = true;
+
+         if (document.getElementById('DealerCode').value.trim() == "")
+         {
+             document.getElementById("DealerCode_error").innerHTML = "Please enter Dealer Code";
+             ret = false;
+         }
+         else
+         {
+             if (localStorage.getItem("DEALERFOUND") == 0)
+             {
+                 if(localStorage.getItem("DEALERMSG")=="")
+                 {
+                     document.getElementById("DealerCode_error").innerHTML = "Invalid Dealer Code";
+                     ret = false;
+                 }
+                 else
+                 {
+                     document.getElementById("DealerCode_error").innerHTML = localStorage.getItem("DEALERMSG");
+                     ret = false;
+                 }
+             }
+             else
+             {
+                 document.getElementById("DealerCode_error").innerHTML = "";
+             }
+         }
+
+         if (document.getElementById('NoofCards').value.trim() == "")
+         {
+             document.getElementById("NoofCards_error").innerHTML = "Please enter Number of Cards";
+             ret = false;
+         }
+         else
+         {
+             if (Number(document.getElementById('NoofCards').value.trim()) < 1 || Number(document.getElementById('NoofCards').value.trim()) > 200)
+             {
+                 document.getElementById("NoofCards_error").innerHTML = "No. of OTC Cards should be 1 to 200";
+                 ret = false;
+             }
+             else
+             {
+                 document.getElementById("NoofCards_error").innerHTML = "";
+             }
+         }
+
+         if(document.getElementById('lblBalance').innerHTML.trim()!="")
+         {
+             if (Number(document.getElementById('lblBalance').innerHTML.trim()) < Number(document.getElementById('NoofCards').value.trim()))
+             {
+                 document.getElementById("dvRemarks").innerHTML = "Dealer " + document.getElementById('DealerCode').value + " No. of Cards should not be greater than balance No. of Cards.";
+                 document.getElementById("dvRemarks").style.display="block";
+                 ret = false;
+             }
+             else
+             {
+                 document.getElementById("dvRemarks").style.display="none";
+                 document.getElementById("dvRemarks").innerHTML ="";
+             }
+         }
+
+         return ret;
+     }
+
+     $('#NoofCards').on("cut copy paste",function(e)
+     {
+           e.preventDefault();
+      });
+
+    $("#NoofCards").on("blur", function ()
+    {
+     //debugger;
+        if (document.getElementById('NoofCards').value.trim() == "")
+        {
+             document.getElementById("NoofCards_error").innerHTML = "Please enter Number of Cards";
+             return false;
+        }
+        else
+        {
+             if (Number(document.getElementById('NoofCards').value) < 1 || Number(document.getElementById('NoofCards').value) > 200)
+             {
+                 document.getElementById("NoofCards_error").innerHTML = "No. of OTC Cards should be 1 to 200";
+                 return false;
+             }
+             else if(!(document.getElementById('NoofCards').value).match(number))
+             {
+                 document.getElementById("NoofCards_error").innerHTML = "No. of OTC Cards should be 1 to 200";
+                 ret = false;
+             }
+             else
+             {
+                 document.getElementById("NoofCards_error").innerHTML = "";
+             }
+        }
+
+     });
 </script>

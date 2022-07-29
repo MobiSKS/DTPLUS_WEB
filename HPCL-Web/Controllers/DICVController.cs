@@ -231,5 +231,54 @@ namespace HPCL_Web.Controllers
             var result = await _dicvService.EnableDisableDICVDealer(DealerCode, OfficerType, EnableDisableFlag);
             return Json(new { result = result });
         }
+        public IActionResult DICVManageCards()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> DICVManageCards(DICVCustomerCards entity, string editFlag)
+        {
+            var searchList = await _dicvService.DICVManageCards(entity, editFlag);
+            ModelState.Clear();
+            return Json(new { searchList = searchList });
+        }
+        [HttpPost]
+        public async Task<JsonResult> DICVViewCardDetails(string CardId)
+        {
+            var searchList = await _dicvService.DICVViewCardDetails(CardId);
+
+            ModelState.Clear();
+            return Json(new
+            {
+                searchList = searchList
+            });
+        }
+        public async Task<IActionResult> DICVCardlessMapping(string cardNumber, string mobileNumber, string LimitTypeName, string CCMSReloadSaleLimitValue)
+        {
+            var editMobBody = await _dicvService.DICVCardlessMapping(cardNumber, mobileNumber, LimitTypeName, CCMSReloadSaleLimitValue);
+            return View(editMobBody);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> DICVCardlessMappingUpdate(string mobNoNew, string crdNo)
+        {
+            var updateResponse = await _dicvService.DICVCardlessMappingUpdate(mobNoNew, crdNo);
+            ModelState.Clear();
+
+            return Json(new { updateResponse = updateResponse });
+        }
+        public async Task<IActionResult> ViewDICVDealerOTCCardStatus()
+        {
+            var model = await _dicvService.ViewDICVDealerOTCCardStatus();
+
+            return View(model);
+        }
+        public async Task<IActionResult> GetDICVDealerOTCCardStatus(string DealerCode, string CardNo)
+        {
+            var modals = await _dicvService.GetDICVDealerOTCCardStatus(DealerCode, CardNo);
+            return PartialView("~/Views/DICV/_DICVDealerOTCCardStatusTable.cshtml", modals);
+        }
+
     }
 }

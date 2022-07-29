@@ -1,6 +1,6 @@
-﻿@model HPCL.Common.Models.ResponseModel.JCB.JCBOTCCardDealerAllocationResponse
+﻿@model HPCL.Common.Models.ResponseModel.DICV.GetDICVDealerOTCCardStatusResponse
 @using HPCL.Common.Resources
-@if (Model.Data.ObjJCBTotalCardDetail.Count() > 0 && Model.Data.ObjJCBViewCardDetail.Count() > 0)
+@if (Model.Data.Count() > 0)
 {
     <div class="d-flex align-items-center flex-wrap mb-3">
         <div class="col-md-7 col-12">
@@ -8,94 +8,39 @@
             </div>
         </div>
     </div>
-    <div class="bg-white p-3">
-    <table id="tblStatusWiseDetails" class="table1 d-md-table table-bordered table-responsive" style="width:100%;">
-        <thead>
-            <tr>
-                <th colspan="3">Status wise details</th>
-            </tr>
-            <tr>
-                <th>Total Allocated Cards</th>
-                <th>Total Mapped Cards</th>
-                <th>Total Unmapped Cards</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.Data.ObjJCBTotalCardDetail)
-            {
-                <tr>
-                    <td>@item.TotalAllocatedCards</td>
-                    <td>@item.TotalMappedCards</td>
-                    <td>@item.TotalUnmappedCards</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-    </div>
-    <div style="height:15px;"></div>
 
     <table id="tblMerchantViewCardDetail" class="table d-md-table table-bordered table-responsive mt-3" style="width:100%;">
         <thead>
             <tr>
-                <th colspan="11">Card wise details</th>
-            </tr>
-            <tr>
                 <th>S.No.</th>
                 <th>Dealer Code</th>
                 <th>Dealer Name</th>
-                <th>Card Number</th>
-                <th>Status</th>
-                <th>Customer ID</th>
-                <th>Vehicle Reg. No.</th>
-                <th>Allotted VIN</th>
-                <th>Allocation Date</th>
-                <th>Mapping Date</th>
-                <th>Dispatch Details</th>
+                <th>Request ID</th>
+                <th>No. of Cards</th>
+                <th>Requested Date</th>
+                <th>Total Allotted Cards</th>
+                <th>Total Mapped Cards</th>
+                <th>Total Unmapped Cards</th>
             </tr>
         </thead>
         <tbody>
             @{
                 int Sno = 0;
             }
-            @foreach (var item in Model.Data.ObjJCBViewCardDetail)
+            @foreach (var item in Model.Data)
             {
-                if (Model.ShowUnmappedCard)
-                {
-                    if (@item.CustomerId == "")
-                    {
-                        Sno++;
-                        <tr>
-                            <td>@Sno</td>
-                            <td>@item.MerchantId</td>
-                            <td>@item.RetailOutletName</td>
-                            <td>@item.CardNo</td>
-                            <td>@item.Status</td>
-                            <td>@item.CustomerId</td>
-                            <td>@item.VechileNo</td>
-                            <td>@item.VINNumber</td>
-                            <td>@item.AllocationDate</td>
-                            <td>@item.MappingDate</td>
-                            <td><a class='CardNumber' href='#Details' onclick='ViewDispatchDetails(this,"@item.CustomerId")'><span class='rowCardNo'>View</span></a></td>
-                        </tr>
-                    }
-                }
-                else
-                {
-                    Sno++;
-                    <tr>
-                        <td>@Sno</td>
-                        <td>@item.MerchantId</td>
-                        <td>@item.RetailOutletName</td>
-                        <td>@item.CardNo</td>
-                        <td>@item.Status</td>
-                        <td>@item.CustomerId</td>
-                        <td>@item.VechileNo</td>
-                        <td>@item.VINNumber</td>
-                        <td>@item.AllocationDate</td>
-                        <td>@item.MappingDate</td>
-                        <td><a class='CardNumber' href='#Details' onclick='ViewDispatchDetails(this,"@item.CustomerId")'><span class='rowCardNo'>View</span></a></td>
-                    </tr>
-                }
+                Sno++;
+                <tr>
+                    <td>@Sno</td>
+                    <td>@item.DealerCode</td>
+                    <td>@item.DealerName</td>
+                    <td>@item.RequestID</td>
+                    <td>@item.NoofCards</td>
+                    <td>@item.RequestedDate</td>
+                    <td>@item.TotalAllocatedCards</td>
+                    <td>@item.TotalMappedCards</td>
+                    <td>@item.TotalUnmappedCards</td>
+                </tr>
             }
         </tbody>
     </table>
@@ -157,7 +102,7 @@ else
             var row = $(this);
             rowsExists=true;
             //debugger;
-            if(i==1)
+            if(i==0)
             {
                 // Get each column data
                 var cols = row[0].querySelectorAll('td,th');
@@ -169,9 +114,7 @@ else
 
                     // Get the text data of each cell
                     // of a row and push it to csvrow
-                    
-                        if(j!=10)
-                            csvrow.push(cols[j].innerHTML.toString());
+                    csvrow.push(cols[j].innerHTML.toString());
                 }
 
                 // Combine each column value with comma
@@ -205,13 +148,12 @@ else
                 csvrow.push(this.data()[0]);
                 csvrow.push(this.data()[1]);
                 csvrow.push(this.data()[2]);
-                csvrow.push("'"+this.data()[3]);
+                csvrow.push("'"+ this.data()[3]);
                 csvrow.push(this.data()[4]);
                 csvrow.push(this.data()[5]);
                 csvrow.push(this.data()[6]);
                 csvrow.push(this.data()[7]);
                 csvrow.push(this.data()[8]);
-                csvrow.push(this.data()[9]);
 
                 csv_data.push(csvrow.join(","));
             });
@@ -239,7 +181,7 @@ else
         var temp_link = document.createElement('a');
 
         // Download csv file
-        temp_link.download = "Mapped_UnmappedOTCCards.csv";
+        temp_link.download = "ViewDICVDealerOTCCardStatus.csv";
         var url = window.URL.createObjectURL(CSVFile);
         temp_link.href = url;
 
@@ -253,60 +195,4 @@ else
         document.body.removeChild(temp_link);
     }
 
-function ViewDispatchDetails(o,CustomerID)
-{
-    debugger;
-    var flag="Y";
-
-    if(CustomerID!="")
-    {
-        if(flag=="Y")
-        {
-            $.ajax({
-                type: 'GET',  // http method
-                url: '@Url.Action("GetJCBDealerCardDispatchDetails", "JCB")',
-                contentType: "application/json; charset=utf-8",
-                dataType: 'text',
-                data: { CustomerID: CustomerID},
-                success: function (data, status, xhr)
-                {
-                    console.log(data);
-                    var v = data;
-                    if (status == 'success') {
-                        $("#show_Table").html(data);
-                        $('html, body').animate({
-                            scrollTop: $("#show_Table").offset().top
-                        }, 2000);
-                    }
-                    else
-                    {
-                        console.log(v);
-                    }
-
-                },
-                error: function (jqXhr, textStatus, errorMessage)
-                {
-                    alert("Error"+ errorMessage);
-                }
-            });
-
-        }
-    }
-    else
-    {
-            $("#show_Table").html("");
-    }
-
-}
-$("#tblMerchantViewCardDetail").on('page.dt', function ()
-{
-    //debugger;
-    document.getElementById("show_Table").innerHTML="";
-});
-
-$("#tblMerchantViewCardDetail").on('length.dt', function ()
-{
-    //debugger;
-    document.getElementById("show_Table").innerHTML="";
-});
 </script>
