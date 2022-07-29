@@ -50,5 +50,7 @@ namespace HPCL.Service.Interfaces
         Task<List<JCBHotlistReason>> GetReasonListForEntities(string EntityTypeId);
         Task<List<string>> ApplyHotlistorReactivate([FromBody] JCBHotlistorReactivateViewModel hotlistorReactivateViewModel);
         Task<InsertResponse> EnableDisableJCBDealer(string DealerCode, string OfficerType, string EnableDisableFlag);
+        Task<JCBViewDealerOTCCardStatusModel> ViewJCBDealerOTCCardStatus();
+        Task<GetJCBDealerOTCCardStatusResponse> GetViewJCBDealerOTCCardStatus(string DealerCode, string CardNo);
     }
 }
