@@ -712,6 +712,150 @@ namespace HPCL.Service.Services
             InsertResponse result = obj.ToObject<InsertResponse>();
             return result;
         }
+        public async Task<InsertResponse> EnableDisableDICVDealer(string DealerCode, string OfficerType, string EnableDisableFlag)
+        {
+            bool flag = false;
+
+            if(EnableDisableFlag.ToUpper()== "ENABLED")
+            {
+                flag = true;
+            }
+
+            var requestBody = new EnableDisableDICVDealerRequest
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                DealerCode = DealerCode,
+                OfficerType = OfficerType,
+                IsDisable = flag
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.enableDisableDicvDealer);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            InsertResponse result = obj.ToObject<InsertResponse>();
+            return result;
+        }
+        public async Task<DICVSearchManageCards> DICVManageCards(DICVCustomerCards entity, string editFlag)
+        {
+            var searchBody = new DICVCustomerCards();
+
+            var UserName = _httpContextAccessor.HttpContext.Session.GetString("UserId");
+            if (entity.CustomerId != null || entity.CardNo != null)
+            {
+                searchBody = new DICVCustomerCards
+                {
+                    UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                    UserAgent = CommonBase.useragent,
+                    UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                    CustomerId = entity.CustomerId,
+                    CardNo = entity.CardNo,
+                    MobileNo = entity.MobileNo,
+                    VehicleNumber = entity.VehicleNumber,
+                    StatusFlag = entity.StatusFlag
+                };
+                _httpContextAccessor.HttpContext.Session.SetString("viewUpdatedGrid", JsonConvert.SerializeObject(searchBody));
+            }
+            else if (_httpContextAccessor.HttpContext.Session.GetString("LoginType") == "Customer")
+            {
+                searchBody = new DICVCustomerCards
+                {
+                    UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                    UserAgent = CommonBase.useragent,
+                    UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                    CustomerId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                    StatusFlag = -1,
+                    CardNo = entity.CardNo,
+                    MobileNo = entity.MobileNo,
+                    VehicleNumber = entity.VehicleNumber,
+                };
+            }
+            else if (editFlag == "edit" && _httpContextAccessor.HttpContext.Session.GetString("LoginType") != "Customer")
+            {
+                var str = _httpContextAccessor.HttpContext.Session.GetString("viewUpdatedGrid");
+
+                DICVCustomerCards vGrid = JsonConvert.DeserializeObject<DICVCustomerCards>(str);
+
+                searchBody = new DICVCustomerCards
+                {
+                    UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                    UserAgent = CommonBase.useragent,
+                    UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                    CustomerId = vGrid.CustomerId,
+                    CardNo = vGrid.CardNo,
+                    MobileNo = vGrid.MobileNo,
+                    VehicleNumber = vGrid.VehicleNumber,
+                    StatusFlag = vGrid.StatusFlag
+                };
+            }
+            StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.searchDicvManageCard);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            DICVSearchManageCards searchList = obj.ToObject<DICVSearchManageCards>();
+            return searchList;
+        }
+        public async Task<DICVSearchDetailsByCardId> DICVViewCardDetails(string CardId)
+        {
+            _httpContextAccessor.HttpContext.Session.SetString("CardIdSession", CardId);
+
+            var cardDetailsBody = new DICVCardsSearch
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                CardNo = CardId,
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(cardDetailsBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.dicvGetCardLimitFeatures);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+
+            DICVSearchDetailsByCardId searchRes = obj.ToObject<DICVSearchDetailsByCardId>();
+
+            string cusId = string.Empty;
+            foreach (var item in searchRes.Data.GetCardsDetailsModelOutput)
+            {
+                cusId = item.CustomerID;
+            }
+            _httpContextAccessor.HttpContext.Session.SetString("CustomerIdSession", cusId);
+
+            return searchRes;
+        }
+        public async Task<DICVUpdateMobileModal> DICVCardlessMapping(string cardNumber, string mobileNumber, string LimitTypeName, string CCMSReloadSaleLimitValue)
+        {
+            DICVUpdateMobileModal editMobBody = new DICVUpdateMobileModal();
+            editMobBody.CardNumber = cardNumber;
+            editMobBody.MobileNumber = mobileNumber;
+            editMobBody.LimitTypeName = LimitTypeName;
+            editMobBody.CCMSReloadSaleLimitValue = CCMSReloadSaleLimitValue;
+
+            _httpContextAccessor.HttpContext.Session.SetString("lmtType", editMobBody.LimitTypeName);
+            return editMobBody;
+        }
+
+        public async Task<List<SuccessResponse>> DICVCardlessMappingUpdate(string mobNoNew, string crdNo)
+        {
+            var cardDetailsBody = new DICVUpdateMobile
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                CardNo = crdNo,
+                MobileNo = mobNoNew,
+                ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
+            };
+            StringContent content = new StringContent(JsonConvert.SerializeObject(cardDetailsBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.dicvUpdateMobileInCard);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+
+            var updateRes = obj["Data"].Value<JArray>();
+            List<SuccessResponse> updateResponse = updateRes.ToObject<List<SuccessResponse>>();
+            return updateResponse;
+        }
 
     }
 }

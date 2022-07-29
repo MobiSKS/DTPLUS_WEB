@@ -54,5 +54,6 @@ namespace HPCL.Common.Models.ViewModel.JCB
         public string UserName { get; set; }
         public int OfficerTypeId { get; set; }
         public int OfficerSearchTypeId { get; set; }
+        public string DealerStatus { get; set; }
     }
 }

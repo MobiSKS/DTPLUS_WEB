@@ -1,4 +1,5 @@
 ﻿using HPCL.Common.Models;
+using HPCL.Common.Models.CommonEntity;
 using HPCL.Common.Models.CommonEntity.ResponseEnities;
 using HPCL.Common.Models.RequestModel.DICV;
 using HPCL.Common.Models.ResponseModel.AshokLayland;
@@ -39,5 +40,10 @@ namespace HPCL.Service.Interfaces
         Task<List<string>> UpdateCards(DICVUpdateMobileandFastagNoInCard[] limitArray);
         Task<DICVViewCardSearch> AddCardMappingDetails(DICVViewCardDetails viewCardDetails);
         Task<InsertResponse> ResetDICVDealerPassword(string UserName);
+        Task<InsertResponse> EnableDisableDICVDealer(string DealerCode, string OfficerType, string EnableDisableFlag);
+        Task<DICVSearchManageCards> DICVManageCards(DICVCustomerCards entity, string editFlag);
+        Task<DICVSearchDetailsByCardId> DICVViewCardDetails(string CardId);
+        Task<DICVUpdateMobileModal> DICVCardlessMapping(string cardNumber, string mobileNumber, string LimitTypeName, string CCMSReloadSaleLimitValue);
+        Task<List<SuccessResponse>> DICVCardlessMappingUpdate(string mobNoNew, string crdNo);
     }
 }

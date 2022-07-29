@@ -35,5 +35,6 @@ namespace HPCL.Common.Models.ResponseModel.AshokLayland
         public string UserName { get; set; }
         public string OTypeId { get; set; }
         public int officerType { get; set; }
+        public string DealerStatus { get; set; }
     }
 }

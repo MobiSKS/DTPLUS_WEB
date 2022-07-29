@@ -306,6 +306,12 @@ namespace HPCL_Web.Controllers
             var result = await _jcbService.ApplyHotlistorReactivate(HotlistorReactivateResponseModel);
             return Json(result);
         }
+        [HttpPost]
+        public async Task<JsonResult> EnableDisableJCBDealer(string DealerCode, string OfficerType, string EnableDisableFlag)
+        {
+            var result = await _jcbService.EnableDisableJCBDealer(DealerCode, OfficerType, EnableDisableFlag);
+            return Json(new { result = result });
+        }
 
     }
 }

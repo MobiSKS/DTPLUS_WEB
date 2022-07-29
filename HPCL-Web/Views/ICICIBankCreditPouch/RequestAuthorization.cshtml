@@ -324,6 +324,7 @@
         document.getElementById("noRecord").style.display = "none";
 
         var updateArray = new Array();
+        var postAuthCust = [];
 
         var flag = "Y";
         var CustomerId;
@@ -353,6 +354,8 @@
                 CreditLimitAssigned: CreditLimitAssigned,
                 AuthorizBy: '@Context.Session.GetString("UserId")'
             });
+
+            postAuthCust.push({CustomerID: CustomerId});
 
             if(AuthorizationRemark.trim() == ''){
                 document.getElementById('remarks_error_'+indexS).title="Please enter Authorization Remarks.";
@@ -423,7 +426,7 @@
                                 url: "@Url.Action("PostAuthForCreditPouch", "Common")",
                                 type: "POST",
                                 traditional: true,
-                                data: { CreditPouchType : "ICICI" },
+                                data: { postAuthCust:JSON.stringify(postAuthCust), CreditPouchType:"ICICI" },
                                 success: function (resp) {
 
                                     if(resp[0].status == 1){

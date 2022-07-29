@@ -549,8 +549,9 @@
         public static string getparenttransactionlocationdetails = "api/dtplus/ParentCustomer/transaction_details";
         public static string Convertparentcustomertoaggregator = "api/dtplus/ParentCustomer/Convert_parent_customer_to_aggregator";
         public static string PostAuthCreditPouchUrl = "api/dtplus/customer/post_authorization_for_credit_pouch";
-
-
+        public static string convertparenttoaggregator = "api/dtplus/ParentCustomer/convert_parent_to_aggregator";
+        public static string parentchildbalancetransfer = "api/dtplus/ParentCustomer/parent_to_child_and_child_parent_fund_allocation";
+        
         #endregion
 
         #region Volvo Eicher
@@ -637,6 +638,7 @@
         public static string updateJcbDealerCommunicationEmailResetPassword = "api/dtplus/JCB/update_jcb_dealer_communication_email_reset_password";
         public static string jcbHotlistReactive = "api/dtplus/JCB/jcb_hotlist_reactive";
         public static string jcbUpdateHotlistReactivate = "api/dtplus/JCB/jcb_update_hotlist_reactivate";
+        public static string enableDisableJcbDealer = "api/dtplus/JCB/enable_disable_jcb_dealer";
         #endregion
 
         #region Customer Dashboard
@@ -669,6 +671,10 @@
         public static string getDicvMobileAndFastagno = "api/dtplus/DICV/get_dicv_mobile_and_fastagno";
         public static string dicvUpdateMobileAndFastagNoInCard = "api/dtplus/DICV/dicv_update_mobile_and_fastag_no_in_card";
         public static string updateDicvDealerEmailResetPassword = "api/dtplus/DICV/update_dicv_dealer_email_reset_password";
+        public static string enableDisableDicvDealer = "api/dtplus/DICV/enable_disable_dicv_dealer";
+        public static string searchDicvManageCard = "api/dtplus/DICV/search_dicv_manage_card";
+        public static string dicvGetCardLimitFeatures = "api/dtplus/DICV/dicv_get_card_limit_features";
+        public static string dicvUpdateMobileInCard = "api/dtplus/DICV/dicv_update_mobile_in_card";
         #endregion
 
         #region "Parent Customer HDFC Bank Credit Pouch"
@@ -718,6 +724,12 @@
         public static string PCICICIRequestAuthorizationActionUrl = "api/dtplus/PCICICICreditPouch/auth_action_cp_for_pc";
         public static string PCICICIRequestToAvailCheckUrl = "api/dtplus/PCICICICreditPouch/chk_eligibility_for_pc";
         public static string PCICICIRequestToAvailEnrollUrl = "api/dtplus/PCICICICreditPouch/insrt_cp_rqst_by_customer_for_pc";
+        #endregion
+
+
+        #region "MobileDispenser Surya Yadav"
+        public static string MobileDispenserRetailOutletMapping="api/dtplus/merchant/get_mobile_dispenser_retail_outlet_mapping";
+        public static string StatusMobileDispenserRetailOutletMapping = "api/dtplus/merchant/get_status_mobiledispenser_retailoutletmapping";
         #endregion
     }
 }

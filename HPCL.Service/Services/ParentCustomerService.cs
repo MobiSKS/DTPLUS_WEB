@@ -5,6 +5,7 @@ using HPCL.Common.Models.RequestModel.Customer;
 using HPCL.Common.Models.RequestModel.ParentCustomer;
 using HPCL.Common.Models.ResponseModel.Customer;
 using HPCL.Common.Models.ResponseModel.ParentCustomer;
+using HPCL.Common.Models.ViewModel.Aggregator;
 using HPCL.Common.Models.ViewModel.CustomerRequest;
 using HPCL.Common.Models.ViewModel.ParentCustomer;
 using HPCL.Service.Interfaces;
@@ -530,7 +531,8 @@ namespace HPCL.Service.Services
                     custMdl.CommunicationCity = Customer.CommunicationCityName;
                     custMdl.CommunicationPinCode = Customer.CommunicationPincode;
                     custMdl.CommunicationStateID = Convert.ToInt32(string.IsNullOrEmpty(Customer.CommunicationStateId) ? "0" : Customer.CommunicationStateId);
-
+                    if (custMdl.CommunicationDistrictMdl.Count() > 0)
+                        custMdl.CommunicationDistrictMdl.RemoveAt(0);
                     custMdl.CommunicationDistrictMdl.AddRange(await _commonActionService.GetDistrictDetails(custMdl.CommunicationStateID.ToString()));
 
                     custMdl.CommunicationDistrictId = (string.IsNullOrEmpty(Customer.CommunicationDistrictId) ? "0" : Customer.CommunicationDistrictId);
@@ -574,7 +576,8 @@ namespace HPCL.Service.Services
                     custMdl.PerOrRegAddressCity = Customer.PermanentCityName;
                     custMdl.PerOrRegAddressPinCode = Customer.PermanentPincode;
                     custMdl.PerOrRegAddressStateID = Convert.ToInt32(string.IsNullOrEmpty(Customer.PermanentStateId) ? "0" : Customer.PermanentStateId);
-
+                    if (custMdl.PerOrRegAddressDistrictMdl.Count() > 0)
+                        custMdl.PerOrRegAddressDistrictMdl.RemoveAt(0);
                     custMdl.PerOrRegAddressDistrictMdl.AddRange(await _commonActionService.GetDistrictDetails(custMdl.PerOrRegAddressStateID.ToString()));
 
                     custMdl.PermanentDistrictId = Convert.ToInt32(string.IsNullOrEmpty(Customer.PermanentDistrictId) ? "0" : Customer.PermanentDistrictId);
@@ -906,7 +909,7 @@ namespace HPCL.Service.Services
 
             return cust;
         }
-        public async Task<ParentCustomerReportModel> SearchParentCustomerRequestStatus(string ZonalOfficeId, string RegionalOfficeId, string FromDate, string ToDate, string FormNumber,string SBUtypeId)
+        public async Task<ParentCustomerReportModel> SearchParentCustomerRequestStatus(string ZonalOfficeId, string RegionalOfficeId, string FromDate, string ToDate, string FormNumber, string SBUtypeId)
         {
             ParentCustomerReportModel parentCustomerReportModel = new ParentCustomerReportModel();
             if (!string.IsNullOrEmpty(FromDate) && !string.IsNullOrEmpty(FromDate))
@@ -924,12 +927,12 @@ namespace HPCL.Service.Services
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
                 UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
-                FormId = FormNumber==null?"0":FormNumber,
-                ZO = ZonalOfficeId==null?"0":ZonalOfficeId,
+                FormId = FormNumber == null ? "0" : FormNumber,
+                ZO = ZonalOfficeId == null ? "0" : ZonalOfficeId,
                 RO = RegionalOfficeId == null ? "0" : RegionalOfficeId,
                 FromDate = FromDate,
                 ToDate = ToDate,
-                SBUTypeId= SBUtypeId,
+                SBUTypeId = SBUtypeId,
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
@@ -938,18 +941,18 @@ namespace HPCL.Service.Services
             parentCustomerReportModel = obj.ToObject<ParentCustomerReportModel>();
             return parentCustomerReportModel;
         }
-        public async Task<ParentCustomerReportModel> SearchParentCustomerRequestStatusReport(string FormNumber,string RequestId)
+        public async Task<ParentCustomerReportModel> SearchParentCustomerRequestStatusReport(string FormNumber, string RequestId)
         {
             ParentCustomerReportModel parentCustomerReportModel = new ParentCustomerReportModel();
-    
+
             var searchBody = new ParentCustomerRequestModel
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
                 UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 FormNumber = FormNumber == null ? "0" : FormNumber,
-                RequestId=RequestId
-                
+                RequestId = RequestId
+
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
@@ -969,7 +972,7 @@ namespace HPCL.Service.Services
                 UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 ParentCustomerID = requestInfo.ParentCustomerID,
-                ChildCustomerId=requestInfo.ChildCustomerId
+                ChildCustomerId = requestInfo.ChildCustomerId
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(Request), Encoding.UTF8, "application/json");
@@ -1065,7 +1068,7 @@ namespace HPCL.Service.Services
         }
         public async Task<ParentChildCustomerMappingViewModel> ParentChildCustomerMapping(ParentChildCustomerMappingRequest requestInfo)
         {
-            ParentChildCustomerMappingViewModel parentChildCustomerMapping= new ParentChildCustomerMappingViewModel();
+            ParentChildCustomerMappingViewModel parentChildCustomerMapping = new ParentChildCustomerMappingViewModel();
 
             var Request = new ParentChildCustomerMappingRequest()
             {
@@ -1074,7 +1077,7 @@ namespace HPCL.Service.Services
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 ParentCustomerId = requestInfo.ParentCustomerId,
                 ObjChildDtl = requestInfo.ObjChildDtl,
-               CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(Request), Encoding.UTF8, "application/json");
@@ -1105,7 +1108,7 @@ namespace HPCL.Service.Services
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
 
 
-            var searchRes = obj["Data"].Value<JArray>(); 
+            var searchRes = obj["Data"].Value<JArray>();
             List<ChildCustomerDetails> searchList = searchRes.ToObject<List<ChildCustomerDetails>>();
             customerTransactionResponse.ParentCustomerID = ParentCustomerID;
             customerTransactionResponse.ChildCustomerIds.AddRange(searchList);
@@ -1219,8 +1222,8 @@ namespace HPCL.Service.Services
                 UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
-                CustomerID = reqModel.CustomerID==""?null: reqModel.CustomerID,
-                ControlCardNo = reqModel.ControlCardNo==""?null:reqModel.ControlCardNo, 
+                CustomerID = reqModel.CustomerID == "" ? null : reqModel.CustomerID,
+                ControlCardNo = reqModel.ControlCardNo == "" ? null : reqModel.ControlCardNo,
                 CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
             };
 
@@ -1321,7 +1324,7 @@ namespace HPCL.Service.Services
                 UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 CustomerId = reqEntity.CustomerId,
                 CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
-                StatementType=reqEntity.StatementType,
+                StatementType = reqEntity.StatementType,
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
@@ -1371,8 +1374,8 @@ namespace HPCL.Service.Services
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 ParentCustomerID = requestInfo.ParentCustomerID,
                 FromDate = requestInfo.FromDate,
-                ToDate=requestInfo.ToDate,
-                ObjChildCustomerIdDtl=requestInfo.ObjChildCustomerIdDtl
+                ToDate = requestInfo.ToDate,
+                ObjChildCustomerIdDtl = requestInfo.ObjChildCustomerIdDtl
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(Request), Encoding.UTF8, "application/json");
@@ -1392,17 +1395,17 @@ namespace HPCL.Service.Services
                 UserAgent = CommonBase.useragent,
                 UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
-                CustomerId = reqEntity.CustomerId==""?null:reqEntity.CustomerId,
+                CustomerId = reqEntity.CustomerId == "" ? null : reqEntity.CustomerId,
                 FormNumber = reqEntity.FormNumber == "" ? null : reqEntity.FormNumber,
                 MobileNo = reqEntity.MobileNumber == "" ? null : reqEntity.MobileNumber,
                 NameonCard = reqEntity.NameOnCard == "" ? null : reqEntity.NameOnCard,
                 CustomerName = reqEntity.CustomerName == "" ? null : reqEntity.CustomerName,
                 CommunicationCityName = reqEntity.City == "" ? null : reqEntity.City,
-                CommunicationStateId = reqEntity.StateId==null?"0": reqEntity.StateId
+                CommunicationStateId = reqEntity.StateId == null ? "0" : reqEntity.StateId
 
             };
 
-             StringContent content = new StringContent(JsonConvert.SerializeObject(Request), Encoding.UTF8, "application/json");
+            StringContent content = new StringContent(JsonConvert.SerializeObject(Request), Encoding.UTF8, "application/json");
 
             var response = await _requestService.CommonRequestService(content, WebApiUrl.getparentcustomerbasicsearch);
 
@@ -1413,21 +1416,21 @@ namespace HPCL.Service.Services
         public async Task<ViewParentChildTransactionDetailsModel> GetTransactionLocationDetails(PCTransactionLocationrequest requestInfo)
         {
             ViewParentChildTransactionDetailsModel transactionResponse = new ViewParentChildTransactionDetailsModel();
-           
+
             var Request = new PCTransactionLocationrequest()
             {
                 UserAgent = CommonBase.useragent,
                 UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
-                CustomerId= requestInfo.CustomerId,
-                TransactionId=requestInfo.TransactionId,
+                CustomerId = requestInfo.CustomerId,
+                TransactionId = requestInfo.TransactionId,
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(Request), Encoding.UTF8, "application/json");
 
             var response = await _requestService.CommonRequestService(content, WebApiUrl.getparenttransactionlocationdetails);
 
-           
+
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
             var jarr = obj["Data"].Value<JArray>();
             List<TransactionLocationDetails> locationDetails = jarr.ToObject<List<TransactionLocationDetails>>();
@@ -1458,6 +1461,189 @@ namespace HPCL.Service.Services
 
             return custMdl;
         }
-        
+        public async Task<ManageAggregatorViewModel> UpdateParentasAggregatorCustomer(ManageAggregatorViewModel cust)
+        {
+            if (cust.InterState)
+            {
+                cust.AreaOfOperation = "Inter State";
+            }
+            if (cust.InterCity)
+            {
+                if (string.IsNullOrEmpty(cust.AreaOfOperation))
+                    cust.AreaOfOperation = "Inter City";
+                else
+                    cust.AreaOfOperation = cust.AreaOfOperation + ",Inter City";
+            }
+            if (cust.IntraCity)
+            {
+                if (string.IsNullOrEmpty(cust.AreaOfOperation))
+                    cust.AreaOfOperation = "Intra City";
+                else
+                    cust.AreaOfOperation = cust.AreaOfOperation + ",Intra City";
+            }
+
+            if (!string.IsNullOrEmpty(cust.CommunicationEmail))
+            {
+                cust.CommunicationEmail = cust.CommunicationEmail.ToLower();
+            }
+            if (!string.IsNullOrEmpty(cust.KeyOffEmail))
+            {
+                cust.KeyOffEmail = cust.KeyOffEmail.ToLower();
+            }
+
+            string customerDateOfApplication = "";
+            string KeyOffDateOfAnniversary = "";
+            string KeyOfficialDOB = "";
+
+
+            customerDateOfApplication = await _commonActionService.changeDateFormat(cust.CustomerDateOfApplication);
+
+            if (!string.IsNullOrEmpty(cust.KeyOffDateOfAnniversary))
+            {
+                KeyOffDateOfAnniversary = await _commonActionService.changeDateFormat(cust.KeyOffDateOfAnniversary);
+            }
+
+            if (!string.IsNullOrEmpty(cust.KeyOfficialDOB))
+            {
+                KeyOfficialDOB = await _commonActionService.changeDateFormat(cust.KeyOfficialDOB);
+            }
+
+            string CustomerTypeID = "945", CustomerSubTypeID = "946";//For Aggregator Customer
+            var CustomerTypeForms = new CustomerCreationRequestModel
+            {
+                RequestId = cust.RequestId,
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                CustomerReferenceNo = cust.CustomerReferenceNo,
+                CustomerId = cust.CustomerId,
+                ZonalOffice = cust.CustomerZonalOfficeID.ToString(),
+                RegionalOffice = cust.CustomerRegionID.ToString(),
+                DateOfApplication = customerDateOfApplication,
+                SalesArea = cust.CustomerSalesAreaID.ToString(),
+                ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                IndividualOrgNameTitle = cust.IndividualOrgNameTitle,
+                IndividualOrgName = cust.IndividualOrgName,
+                NameOnCard = (String.IsNullOrEmpty(cust.CustomerNameOnCard) ? "" : cust.CustomerNameOnCard),
+                TypeOfBusinessEntity = cust.CustomerTbentityID.ToString(),
+                ResidenceStatus = cust.CustomerResidenceStatus,
+                IncomeTaxPan = cust.CustomerIncomeTaxPan,
+                CommunicationAddress1 = cust.CommunicationAddress1,
+                CommunicationAddress2 = cust.CommunicationAddress2,
+                CommunicationAddress3 = (String.IsNullOrEmpty(cust.CommunicationAddress3) ? "" : cust.CommunicationAddress3),
+                CommunicationLocation = (String.IsNullOrEmpty(cust.CommunicationLocation) ? "" : cust.CommunicationLocation),
+                CommunicationCityName = (String.IsNullOrEmpty(cust.CommunicationCity) ? "" : cust.CommunicationCity),
+                CommunicationPincode = cust.CommunicationPinCode,
+                CommunicationStateId = cust.CommunicationStateID.ToString(),
+                CommunicationDistrictId = cust.CommunicationDistrictId.ToString(),
+                CommunicationPhoneNo = (String.IsNullOrEmpty(cust.CommunicationDialCode) ? "" : cust.CommunicationDialCode) + "-" + (String.IsNullOrEmpty(cust.CommunicationPhoneNo) ? "" : cust.CommunicationPhoneNo),
+                CommunicationFax = (String.IsNullOrEmpty(cust.CommunicationFaxCode) ? "" : cust.CommunicationFaxCode) + "-" + (String.IsNullOrEmpty(cust.CommunicationFax) ? "" : cust.CommunicationFax),
+                CommunicationMobileNo = cust.CommunicationMobileNumber,
+                CommunicationEmailid = cust.CommunicationEmail,
+                PermanentAddress1 = cust.PerOrRegAddress1,
+                PermanentAddress2 = cust.PerOrRegAddress2,
+                PermanentAddress3 = (String.IsNullOrEmpty(cust.PerOrRegAddress3) ? "" : cust.PerOrRegAddress3),
+                PermanentLocation = (String.IsNullOrEmpty(cust.PerOrRegAddressLocation) ? "" : cust.PerOrRegAddressLocation),
+                PermanentCityName = cust.PerOrRegAddressCity,
+                PermanentPincode = cust.PerOrRegAddressPinCode,
+                PermanentStateId = cust.PerOrRegAddressStateID.ToString(),
+                PermanentDistrictId = (cust.PermanentDistrictId == 0 ? cust.CommunicationDistrictId.ToString() : cust.PermanentDistrictId.ToString()),
+                PermanentPhoneNo = (String.IsNullOrEmpty(cust.PerOrRegAddressDialCode) ? "" : cust.PerOrRegAddressDialCode) + "-" + (String.IsNullOrEmpty(cust.PerOrRegAddressPhoneNumber) ? "" : cust.PerOrRegAddressPhoneNumber),
+                PermanentFax = (String.IsNullOrEmpty(cust.PermanentFaxCode) ? "" : cust.PermanentFaxCode) + "-" + (String.IsNullOrEmpty(cust.PermanentFax) ? "" : cust.PermanentFax),
+                KeyOfficialTitle = cust.KeyOffTitle,
+                KeyOfficialIndividualInitials = cust.KeyOffIndividualInitials,
+                KeyOfficialFirstName = (String.IsNullOrEmpty(cust.KeyOffFirstName) ? "" : cust.KeyOffFirstName),
+                KeyOfficialMiddleName = (String.IsNullOrEmpty(cust.KeyOffMiddleName) ? "" : cust.KeyOffMiddleName),
+                KeyOfficialLastName = (String.IsNullOrEmpty(cust.KeyOffLastName) ? "" : cust.KeyOffLastName),
+                KeyOfficialFax = (String.IsNullOrEmpty(cust.KeyOffFaxCode) ? "" : cust.KeyOffFaxCode) + "-" + (String.IsNullOrEmpty(cust.KeyOffFax) ? "" : cust.KeyOffFax),
+                KeyOfficialDesignation = cust.KeyOffDesignation,
+                KeyOfficialEmail = cust.KeyOffEmail,
+                KeyOfficialPhoneNo = (String.IsNullOrEmpty(cust.KeyOffPhoneCode) ? "" : cust.KeyOffPhoneCode) + "-" + (String.IsNullOrEmpty(cust.KeyOffPhoneNumber) ? "" : cust.KeyOffPhoneNumber),
+                KeyOfficialDOA = (string.IsNullOrEmpty(KeyOffDateOfAnniversary) ? "1900-01-01" : KeyOffDateOfAnniversary),
+                KeyOfficialMobile = cust.KeyOffMobileNumber,
+                KeyOfficialDOB = (string.IsNullOrEmpty(KeyOfficialDOB) ? "1900-01-01" : KeyOfficialDOB),
+                KeyOfficialSecretQuestion = "0",
+                KeyOfficialSecretAnswer = null,
+                KeyOfficialTypeOfFleet = cust.CustomerTypeOfFleetID,
+                KeyOfficialCardAppliedFor = (String.IsNullOrEmpty(cust.KeyOfficialCardAppliedFor) ? "" : cust.KeyOfficialCardAppliedFor),
+                KeyOfficialApproxMonthlySpendsonVechile1 = (String.IsNullOrEmpty(cust.KeyOfficialApproxMonthlySpendsonVechile1) ? "0" : cust.KeyOfficialApproxMonthlySpendsonVechile1),
+                KeyOfficialApproxMonthlySpendsonVechile2 = (String.IsNullOrEmpty(cust.KeyOfficialApproxMonthlySpendsonVechile2) ? "0" : cust.KeyOfficialApproxMonthlySpendsonVechile2),
+                AreaOfOperation = cust.AreaOfOperation,
+                FleetSizeNoOfVechileOwnedHCV = (String.IsNullOrEmpty(cust.FleetSizeNoOfVechileOwnedHCV) ? "0" : cust.FleetSizeNoOfVechileOwnedHCV),
+                FleetSizeNoOfVechileOwnedLCV = (String.IsNullOrEmpty(cust.FleetSizeNoOfVechileOwnedLCV) ? "0" : cust.FleetSizeNoOfVechileOwnedLCV),
+                FleetSizeNoOfVechileOwnedMUVSUV = (String.IsNullOrEmpty(cust.FleetSizeNoOfVechileOwnedMUVSUV) ? "0" : cust.FleetSizeNoOfVechileOwnedMUVSUV),
+                FleetSizeNoOfVechileOwnedCarJeep = (String.IsNullOrEmpty(cust.FleetSizeNoOfVechileOwnedCarJeep) ? "0" : cust.FleetSizeNoOfVechileOwnedCarJeep),
+                CustomerType = CustomerTypeID.ToString(),
+                CustomerSubtype = CustomerSubTypeID.ToString(),
+                TierOfCustomer = "0",
+                TypeOfCustomer = "0",
+                PanCardRemarks = (String.IsNullOrEmpty(cust.PanCardRemarks) ? "" : cust.PanCardRemarks)
+
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(CustomerTypeForms), Encoding.UTF8, "application/json");
+
+            var contentString = await _requestService.CommonRequestService(content, WebApiUrl.convertparenttoaggregator);
+            CustomerResponse customerResponse = JsonConvert.DeserializeObject<CustomerResponse>(contentString);
+            cust.Internel_Status_Code = customerResponse.Internel_Status_Code;
+
+            if (customerResponse.Data != null)
+            {
+                cust.Remarks = customerResponse.Data[0].Reason;
+                cust.CustomerReferenceNo = customerResponse.Data[0].CustomerReferenceNo;
+            }
+            else
+                cust.Remarks = customerResponse.Message;
+
+            if (cust.Internel_Status_Code != 1000)
+            {
+                cust.CustomerTypeMdl.AddRange(await _commonActionService.GetCustomerTypeListDropdown());
+
+                cust.CustomerSubTypeMdl.AddRange(await _commonActionService.GetCustomerSubTypeDropdown(cust.CustomerTypeID));
+                cust.SBUTypes.AddRange(await _commonActionService.GetSbuTypeList());
+                cust.CustomerZonalOfficeMdl.AddRange(await _commonActionService.GetZonalOfficebySBUType("1"));
+
+                cust.CustomerRegionMdl.AddRange(await _commonActionService.GetRegionalDetailsDropdown(cust.CustomerZonalOfficeID));
+
+                cust.SalesAreaMdl.AddRange(await _commonActionService.GetSalesAreaDropdown(cust.CustomerRegionID.ToString()));
+
+                cust.CustomerTbentityMdl.AddRange(await _commonActionService.GetCustomerTbentityListDropdown());
+
+                cust.CustomerStateMdl.AddRange(await _commonActionService.GetStateList());
+
+                cust.CommunicationDistrictMdl.AddRange(await _commonActionService.GetDistrictDetails(cust.CommunicationStateID.ToString()));
+
+                cust.CustomerSecretQueMdl.AddRange(await _commonActionService.GetCustomerSecretQuestionListForDropdown());
+
+                cust.CustomerTypeOfFleetMdl.AddRange(await _commonActionService.GetCustomerTypeOfFleetDropdown());
+
+                cust.VehicleTypeMdl.AddRange(await _commonActionService.GetVehicleTypeDropdown());
+
+                cust.PerOrRegAddressDistrictMdl.AddRange(await _commonActionService.GetDistrictDetails(cust.PerOrRegAddressStateID.ToString()));
+            }
+
+            return cust;
+        }
+        public async Task<ParentChildBalanceTransferViewModel> ParentChildBalanceFundTransfer(ParentChildBalanceTransferViewModel reqEntity)
+        {
+            ParentChildBalanceTransferViewModel searchResponse = new ParentChildBalanceTransferViewModel();
+
+            var Request = new GetCustomerBalanceRequest()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                ParentCustomerID = reqEntity.ParentCustomerID,
+                ChildCustomerId = reqEntity.ChildCustomerId==""?null:reqEntity.ChildCustomerId,
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(Request), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.parentchildbalancetransfer);
+
+            searchResponse = JsonConvert.DeserializeObject<ParentChildBalanceTransferViewModel>(response);
+
+            return searchResponse;
+        }
     }
 }

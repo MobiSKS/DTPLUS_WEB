@@ -1,6 +1,7 @@
 ﻿using HPCL.Common.Helper;
 using HPCL.Common.Models.RequestModel.Customer;
 using HPCL.Common.Models.RequestModel.ParentCustomer;
+using HPCL.Common.Models.ViewModel.Aggregator;
 using HPCL.Common.Models.ViewModel.ParentCustomer;
 using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -103,7 +104,7 @@ namespace HPCL_Web.Controllers
             return PartialView("~/Views/ParentCustomer/_GetCardandDispatchDetailsTbl.cshtml", modals);
         }
 
-        public async Task<IActionResult> UpdateParentCustomer(string CustomerId, string RequestId,string IsSearch)
+        public async Task<IActionResult> UpdateParentCustomer(string CustomerId, string RequestId, string IsSearch)
         {
             var modals = await _customerService.UpdateParentCustomer(CustomerId, RequestId);
             ViewBag.IsSearch = String.IsNullOrEmpty(IsSearch) ? "false" : "true";
@@ -375,10 +376,53 @@ namespace HPCL_Web.Controllers
             return Json(modals);
 
         }
-        public async Task<IActionResult> UpdateParentasAggregator(string CustomerId, string RequestId)
+        public async Task<IActionResult> UpdateParentasAggregatorCustomer(string CustomerId, string RequestId)
         {
-            return RedirectToAction("UpdateAggregatorCustomer","Aggregator", new { customerId = CustomerId, requestId= RequestId });
+            var modals = new ManageAggregatorViewModel();
+            if (CustomerId != null && CustomerId != "")
+            {
+                var parentModal = await _customerService.UpdateParentCustomer(CustomerId, RequestId);
+                if (parentModal != null)
+                {
+                    var reqEntity = JsonConvert.SerializeObject(parentModal);
+                    modals = JsonConvert.DeserializeObject<ManageAggregatorViewModel>(reqEntity);
+                    modals.CustomerStateMdl.RemoveAt(0);
+                    modals.CommunicationDistrictMdl.RemoveAt(0);
+                    modals.PerOrRegAddressDistrictMdl.RemoveAt(0);
+                }
+
+            }
+            return View(modals);
+        }
+        [HttpPost]
+        public async Task<IActionResult> UpdateParentasAggregatorCustomer(ManageAggregatorViewModel cust)
+        {
+
+            var modals = await _customerService.UpdateParentasAggregatorCustomer(cust);
+
+            if (cust.Internel_Status_Code == 1000)
+            {
+                ViewBag.Success = cust.Remarks;
+            }
+            else
+            {
+                ViewBag.Success = "false";
+            }
+
+            return View(modals);
         }
 
+        public async Task<IActionResult> ParentChildBalanceFundTransfer(ParentChildBalanceTransferViewModel reqEntity)
+        {
+            var modals = new ParentChildBalanceTransferViewModel();
+            if (reqEntity.ParentCustomerID != null && reqEntity.ParentCustomerID != "")
+            {
+                modals = await _customerService.ParentChildBalanceFundTransfer(reqEntity);
+                modals.ParentCustomerID = reqEntity.ParentCustomerID;
+                modals.ChildCustomerId = reqEntity.ChildCustomerId;
+            }
+
+            return View(modals);
+        }
     }
 }
