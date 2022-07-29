@@ -49,7 +49,7 @@
                                                 <label class="font-weight-normal col-md-4 col-12">Available CCMS Balance: </label>
                                                 <div class="col-md-7 col-12 offset-md-1">
                                                     <div class="custom_select">
-                                                        @Model.Data.GetParentCustomer.First().AvailableCCMSBalance
+                                                        <span id="AvailableCCMSBalance">@Model.Data.GetParentCustomer.First().AvailableCCMSBalance</span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -59,7 +59,7 @@
                                                 <label class="font-weight-normal col-md-4 col-12">Available DriveStars: </label>
                                                 <div class="col-md-7 col-12 offset-md-1">
                                                     <div class="custom_select">
-                                                        @Model.Data.GetParentCustomer.First().AvailableDriveStars
+                                                        <span id="AvailableDriveStars"> @Model.Data.GetParentCustomer.First().AvailableDriveStars</span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -74,7 +74,7 @@
                                     <button class="btn btn_primary" type="submit" id="btnSearch">@Label.Search</button>
                                 </div>
                                 <div class="px-2">
-                                    <button class="btn btn_primary" type="button" id="btnReset">@Label.Reset</button>
+                                    <button class="btn btn_primary" type="button" id="btnReset"  onclick="location.href='@Url.Action("ParentChildBalanceFundTransfer", "ParentCustomer", new { reset="Y" })'">@Label.Reset</button>
                                 </div>
                             </div>
                         </div>
@@ -87,118 +87,189 @@
             </div>
         </form>
         <div class="clearfix"></div>
-        @if (Model.Data.GetChildCustomer != null && Model.Data.GetChildCustomer.Count() > 0)
-        {
-            <div id="CustomerSearch">
-                <table class="datatable table table-striped table-bordered d-md-table table-responsive" style="width:100%;word-wrap:break-word;">
-                    <thead>
-                        <tr>
-                            <th style="width:3%;"><input type="checkbox" id="checkAll" /></th>
-                            <th>
-                                @Html.DisplayName("Child Customer ID")
-                            </th>
-                            <th>
-                                @Html.DisplayName("Control Card Number")
-                            </th>
-                            <th>
-                                @Html.DisplayName("Name on Card")
-                            </th>
-                            <th>
-                                @Html.DisplayName("CCMS Balance")
-                            </th>
-
-                            <th>
-                                @Html.DisplayName("Drivestars")
-                            </th>
-                            <th>
-                                @Html.DisplayName("Regional Office")
-                            </th>
-                            <th>
-                                @Html.DisplayName("Status")
-                            </th>
-                            <th>
-                                @Html.DisplayName("Balance Transer Type")
-                            </th>
-                            <th>
-                                @Html.DisplayName("Amount/Drivestars To Transfer")
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody id="searchTableBody">
-                        @{
-                            int i = 0;
-                        }
-                        @foreach (var item in Model.Data.GetChildCustomer)
-                        {
-                            i = i + 1;
-
-                            <tr>
-                                <td><input type="checkbox" class="checkEnable" id="check_@i" /></td>
-                                <td>@item.ChildId</td>
-                                <td>@item.CardNo</td>
-                                <td>@item.NameOnCard</td>
-                                <td>@item.CCMSBalance</td>
-                                <td>@item.Drivestars</td>
-                                <td>@item.RegionalOffice</td>
-                                <td>@item.StatusName</td>
-                                <td>
-
-                                    <select id='transferType_@i' class="form-control" name="@item.BalanceTransferTypeId"> </select>
-
-
-                                </td>
-
-
-                                <td>
-
-                                    <input maxlength='10' class='form-control txnAmt cgl' name='AmountToTransfer' type='text' disabled="disabled">
-
-                                </td>
-
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-            <div class="d-flex align-items-center justify-content-center mt-0">
-                <div class="px-2">
-                    <button class="btn btn_primary" type="button" id="btnTransfer">Transfer Amount</button>
-                </div>
-
-            </div>
-        }
-        else
-        {
-            @if (Model.Message != null && Model.Message != "")
+        <div class="toBeHiddenOnSuccess">
+            @if (Model.Data.GetChildCustomer != null && Model.Data.GetChildCustomer.Count() > 0)
             {
                 <div>
-                    <div class="alert alert-danger mt-3 text-center" id="noRecord">
-                        @Model.Message
+                    <table id="CustomerSearch" class="datatable table table-striped table-bordered d-md-table table-responsive" style="width:100%;word-wrap:break-word;">
+                        <thead>
+                            <tr>
+                                <th style="display:none">
+                                    S.No.
+                                </th>
+                                <th style="width:3%;"><input type="checkbox" id="checkAll" /></th>
+                                <th>
+                                    @Html.DisplayName("Child Customer ID")
+                                </th>
+                                <th>
+                                    @Html.DisplayName("Control Card Number")
+                                </th>
+                                <th>
+                                    @Html.DisplayName("Name on Card")
+                                </th>
+                                <th>
+                                    @Html.DisplayName("CCMS Balance")
+                                </th>
+
+                                <th>
+                                    @Html.DisplayName("Drivestars")
+                                </th>
+                                <th>
+                                    @Html.DisplayName("Regional Office")
+                                </th>
+                                <th>
+                                    @Html.DisplayName("Status")
+                                </th>
+                                <th>
+                                    @Html.DisplayName("Balance Transer Type")
+                                </th>
+                                <th>
+                                    @Html.DisplayName("Amount/Drivestars To Transfer")
+                                </th>
+                                <th style="display:none">
+                                    Previous CCMS
+                                </th>
+                                <th style="display:none">
+                                    Previous Drivestars
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="searchTableBody">
+                            @{
+                                int i = 0;
+                                string disabled = "disabled";
+                            }
+                            @foreach (var item in Model.Data.GetChildCustomer)
+                            {
+                                i = i + 1;
+
+                                <tr>
+                                    <td style="display:none">@i</td>
+                                    <td><input type="checkbox" class="checkEnable" id="check_@i" /></td>
+                                    <td>@item.ChildId</td>
+                                    <td>@item.CardNo</td>
+                                    <td>@item.NameOnCard</td>
+                                    <td>@item.CCMSBalance</td>
+                                    <td>@item.Drivestars</td>
+                                    <td>@item.RegionalOffice</td>
+                                    <td>@item.StatusName</td>
+                                    <td>
+
+                                        @Html.DropDownListFor(m => m.BalanceTransferTypeId, new SelectList(Model.BalanceTransferTypes, "TransactionID", "TransactionType"), new {  @class = "form-control transferType" })
+
+                                    </td>
+
+
+                                    <td>
+                                        <div>
+                                            <input maxlength='10' class='form-control txnAmt cgl' name='AmountToTransfer' id="transferAmt_@i" type='text' disabled="disabled">
+                                            <span class="field-validation-error text-danger amount_error" id=amount_error_@i></span>
+                                        </div>
+                                    </td>
+                                    <td style="display:none">0</td>@*style="display:none"*@
+                                    <td style="display:none">0</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="d-flex align-items-center justify-content-center mt-0">
+                    <div class="px-2">
+                        <button class="btn btn_primary" type="button" id="btnTransfer">Transfer Amount</button>
                     </div>
+
                 </div>
             }
-        }
+            else
+            {
+                @if (Model.Message != null && Model.Message != "")
+                {
+                    <div>
+                        <div class="alert alert-danger mt-3 text-center" id="noRecord">
+                            @Model.Message
+                        </div>
+                    </div>
+                }
+            }
+        </div>
         <div class="clearfix"></div>
 
 
+
+        <div id="reason" class="mb-3 text-center alert" style="display:none"></div>
+        <div id="show_Table" style="display:none">
+            <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Child Customer Detail</p>
+            <table class="table d-md-table table-striped table-bordered table-responsive" style="width:100%;" id="transferSuccessTbl">
+                <thead style="background-color:lightgray;">
+                    <tr>
+                        <th>Customer ID</th>
+                        <th>Transaction Type</th>
+                        <th>Old Balance</th>
+                        <th>Transferred Amount/Drivestars</th>
+                        <th>New Balance</th>
+                    </tr>
+                </thead>
+
+            </table>
+        </div>
     </div>
     <div class="clearfix"></div>
+
 </div>
 <script type="text/javascript">
+   
+    $("#btnSearch").on("click",(function(e){
+        var flag="Y";
 
+        if (document.getElementById("ParentCustomerID").value.trim() == "")
+        {
+            $("#parentCustomerId_error").attr("style", "display:block");
+            $("#parentCustomerId_error").html("Please enter Parent Customer ID");
+            flag="N";
+        }
+        else if (!$("#ParentCustomerID").val().match(mappedCustomerId))
+        {
+            $("#parentCustomerId_error").attr("style", "display:block");
+            $("#parentCustomerId_error").html("Invalid Parent Customer ID");
+             flag="N";
+        }
+        if(document.getElementById("ChildCustomerId").value.trim() != ""){
+            if (!$("#ChildCustomerId").val().match(mappedCustomerId))
+            {
+                $("#childCustomerId_error").attr("style", "display:block");
+                $("#childCustomerId_error").html("Invalid Customer ID");
+                flag="N";
+            }
+        }
+        if(flag=="N"){
+            e.preventDefault();
+        }
+
+    }));
     $("#checkAll").click(function () {
         $('input:checkbox').not(this).prop('checked', this.checked);
         if ($(this).is(':checked')) {
             $("#CustomerSearch tr").each(function () {
                 $(this).find("input:text").attr("disabled", false);
+                $(this).find(".transferType").prop("disabled",false);
+
             });
         }
         else{
             $("#CustomerSearch tr").each(function () {
                 $(this).find("input:text").attr("disabled", true);
                 $(this).find("input:text").val("");
-                //$(this).find('.amount_error').html("");
-                //$(this).find('.amount_error').attr("style","dispaly:none");
+                var previousAmt=$(this)[0].cells[11].textContent;
+                var previousDrivestars=$(this)[0].cells[12].textContent;
+                var availableCCMS=$("#AvailableCCMSBalance")[0].innerText;
+                var availableDrivestars=$("#AvailableDriveStars")[0].innerText;
+                $("#AvailableCCMSBalance")[0].innerText=parseFloat(availableCCMS)+parseFloat(previousAmt);
+                $("#AvailableDriveStars")[0].innerText=parseFloat(availableCCMS)+parseFloat(previousDrivestars);
+                $(this)[0].cells[11].textContent=0;
+                $(this)[0].cells[12].textContent=0;
+                $(this).find(".transferType").prop("disabled",true);
+                $(this).find('.amount_error').html("");
+                $(this).find('.amount_error').attr("style","dispaly:none");
             });
         }
 
@@ -208,12 +279,22 @@
         currentRow = $(this).closest("tr");
         if ($(this).is(':checked')) {
             currentRow.find('input:text').attr("disabled", false);
+            currentRow.find(".transferType").prop("disabled",false);
         }
         if (!$(this).is(':checked')) {
             currentRow.find('input:text').attr("disabled", true);
+            currentRow.find(".transferType").prop("disabled",true);
             currentRow.find('input:text').val("");
-            //currentRow.find('.amount_error').html("");
-            //currentRow.find('.amount_error').attr("style","dispaly:none");
+            var previousAmt=currentRow[0].cells[11].textContent;
+            var previousDrivestars=currentRow[0].cells[12].textContent;
+            var availableCCMS=$("#AvailableCCMSBalance")[0].innerText;
+            var availableDrivestars=$("#AvailableDriveStars")[0].innerText;
+            $("#AvailableCCMSBalance")[0].innerText=parseFloat(availableCCMS)+parseFloat(previousAmt);
+            $("#AvailableDriveStars")[0].innerText=parseFloat(availableCCMS)+parseFloat(previousDrivestars);
+            currentRow[0].cells[11].textContent=0;
+            currentRow[0].cells[12].textContent=0;
+            currentRow.find('.amount_error').html("");
+            currentRow.find('.amount_error').attr("style","dispaly:none");
         }
     });
 
@@ -229,4 +310,251 @@
         if($(this).val().indexOf('.') !== -1 && (event.keyCode == 190|| event.keyCode == 110))
             event.preventDefault();
     });
+    $("#ParentCustomerID").on("blur", function ()
+    {
+        //debugger;
+        if (document.getElementById("ParentCustomerID").value.trim() == "")
+        {
+            $("#parentCustomerId_error").attr("style", "display:block");
+            $("#parentCustomerId_error").html("Please enter Parent Customer ID");
+            return false;
+        }
+        else if (!$("#ParentCustomerID").val().match(mappedCustomerId))
+        {
+            $("#parentCustomerId_error").attr("style", "display:block");
+            $("#parentCustomerId_error").html("Invalid Parent Customer ID");
+            return false;
+        }
+        else
+        {
+            $("#parentCustomerId_error").html("");
+        }
+
+    });
+    $("#ChildCustomerId").on("blur", function ()
+    {
+
+        if(document.getElementById("ChildCustomerId").value.trim() != ""){
+            if (!$("#ChildCustomerId").val().match(mappedCustomerId))
+            {
+                $("#childCustomerId_error").attr("style", "display:block");
+                $("#childCustomerId_error").html("Invalid Customer ID");
+                return false;
+            }
+            else
+            {
+                $("#childCustomerId_error").html("");
+            }
+        }
+         else
+            {
+                $("#childCustomerId_error").html("");
+            }
+
+    });
+     $("#CustomerSearch").on('blur', '.txnAmt', function (e) {
+        currentRow = $(this).closest("tr");
+        var i=currentRow[0].cells[0].textContent;
+        var amount=  currentRow.find('input#transferAmt_'+i)[0].value;
+        if(amount=="")
+        {
+            currentRow.find('#amount_error_'+i)[0].innerHTML="Please enter a valid amount."
+            currentRow.find('#amount_error_'+i)[0].style.display = "block";
+        }
+        else
+            validateAmount(currentRow);
+    });
+    function validateAmount(currentRow){
+        var availableCCMS=$("#AvailableCCMSBalance")[0].innerText;
+        var availableDrivestars=$("#AvailableDriveStars")[0].innerText;
+        var i=currentRow[0].cells[0].textContent;
+        var ccmsBalRow=currentRow[0].cells[5].textContent;
+        var drivestarsRow=currentRow[0].cells[6].textContent;
+        var transferType=currentRow.find('select :selected')[0].text;
+        var amount=  currentRow.find('input#transferAmt_'+i)[0].value;
+        var previousAmt=currentRow[0].cells[11].textContent;
+        var previousDrivestars=currentRow[0].cells[12].textContent;
+        var flag="Y";
+         if(previousAmt.trim()=="" ){
+            previousAmt=0;
+        }
+        if(previousDrivestars.trim()=="" ){
+            previousDrivestars=0;
+        }
+        console.log("change Transfer Type");
+        console.log(amount);
+
+        if(amount!="")
+        {
+            currentRow.find('#amount_error_'+i)[0].innerHTML=""
+            currentRow.find('#amount_error_'+i)[0].style.display = "none";
+            var amntFloat=parseFloat(amount);
+
+
+            if(amntFloat==0){
+                alert("Amount must be greater than Zero");
+                flag="N";
+            }
+            else{
+                if(transferType=="CCMS Debit"){
+                    if(amntFloat>ccmsBalRow){
+                        alert("Not enough CCMS balance to carry out this transaction.");
+                        flag="N";
+                    }
+                }
+                if(transferType=="Drivestars Debit"){
+                    if(amntFloat>drivestarsRow){
+                        alert("Not enough loyalty balance to carry out this transaction.");
+                        flag="N";
+                    }
+                }
+                if(transferType=="CCMS Credit"){
+
+                    if(amntFloat>(parseFloat(availableCCMS)+parseFloat(previousAmt))){
+                        alert("Amount entered should be valid and greater than 0 and less than available CCMS Balance");
+                        flag="N";
+                    }
+                    else{
+                        $("#AvailableCCMSBalance")[0].innerText=parseFloat(availableCCMS)+parseFloat(previousAmt)-amntFloat;
+                        currentRow[0].cells[11].textContent=amntFloat;
+                         $("#AvailableDriveStars")[0].innerText=parseFloat(availableDrivestars)+parseFloat(previousDrivestars);
+                        currentRow[0].cells[12].textContent=0;
+                    }
+
+                }
+                if(transferType=="Drivestars Credit"){
+
+                    if(amntFloat>(parseFloat(availableDrivestars)+parseFloat(previousDrivestars))){
+                        alert("Amount entered should be valid and greater than 0 and less than available Drivestar Balance");
+                        flag="N";
+                    }
+                    else{
+                        $("#AvailableDriveStars")[0].innerText=(parseFloat(availableDrivestars)+parseFloat(previousDrivestars))-amntFloat;
+                        currentRow[0].cells[12].textContent=amntFloat;
+                        $("#AvailableCCMSBalance")[0].innerText=parseFloat(availableCCMS)+parseFloat(previousAmt);
+                        currentRow[0].cells[11].textContent=0;
+
+                    }
+                }
+
+            }
+            if(flag=="N"){
+                currentRow.find(".checkEnable")[0].checked=false;
+                currentRow.find('input#transferAmt_'+i).attr("disabled", true);
+                currentRow.find('input#transferAmt_'+i).val("");
+                $("#AvailableCCMSBalance")[0].innerText=parseFloat(availableCCMS)+parseFloat(previousAmt);
+                currentRow[0].cells[11].textContent=0;
+                $("#AvailableDriveStars")[0].innerText=parseFloat(availableDrivestars)+parseFloat(previousDrivestars);
+                currentRow[0].cells[12].textContent=0;
+            }
+        }
+    }
+    $("#CustomerSearch").on('change', '.transferType', function (e) {
+        currentRow = $(this).closest("tr");
+        validateAmount(currentRow);
+
+    });
+    $("#btnTransfer").on("click",(function(e){
+        var flag="Y";
+        var parentId=$("#ParentCustomerID").val();
+        if (document.getElementById("ParentCustomerID").value.trim() == "")
+        {
+            $("#parentCustomerId_error").attr("style", "display:block");
+            $("#parentCustomerId_error").html("Please enter Parent Customer ID");
+            flag="N";
+        }
+        else if (!$("#ParentCustomerID").val().match(mappedCustomerId))
+        {
+            $("#parentCustomerId_error").attr("style", "display:block");
+            $("#parentCustomerId_error").html("Invalid Parent Customer ID");
+             flag="N";
+        }
+        if(document.getElementById("ChildCustomerId").value.trim() != ""){
+            if (!$("#ChildCustomerId").val().match(mappedCustomerId))
+            {
+                $("#childCustomerId_error").attr("style", "display:block");
+                $("#childCustomerId_error").html("Invalid Customer ID");
+                flag="N";
+            }
+        }
+
+        objTransferDetails = [];
+         $("#CustomerSearch tbody tr").each(function () {
+
+                 var row = $(this);
+                 if (row.find('input[type="checkbox"]').is(":checked")) {
+                    var i = row[0].cells[0].textContent;
+                    var childId = row[0].cells[2].textContent;
+                    var cardNumber = row[0].cells[3].textContent;
+                    var ccmsBalance = row[0].cells[5].textContent;
+                    var drivestars = row[0].cells[6].textContent;
+                    var amount =row.find('input#transferAmt_'+i)[0].value;
+                    if(amount=="")
+                    {
+                        row.find('#amount_error_'+i)[0].innerHTML="Please enter a valid amount."
+                        row.find('#amount_error_'+i)[0].style.display = "block";
+                        flag="N";
+                        return;
+                    }
+                    else{
+                        var amountFloat=parseFloat(amount);
+                        var transferType =row.find('select').val();
+                        objTransferDetails.push({ ChildCustomerId: childId, ControlCardNumber: cardNumber,CCMSBalance :ccmsBalance,Drivestars:drivestars,Amount:amountFloat,BalanceTransferType:transferType});
+                 }
+
+            }
+         });
+        if(flag=="N"){
+            e.preventDefault();
+        }
+        else{
+            if(objTransferDetails.length>0){
+                var reqModel={ParentCustomerId:parentId,TypeUpdateParenttoChildandChildParentFund:objTransferDetails};
+                $.ajax({
+                    type: 'POST',  // http method
+                    url: '@Url.Action("UpdatePCBalanceTransfer", "ParentCustomer")',
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(reqModel),
+                    dataType: "json",
+                    success: function (res, status, xhr) {
+                        var v = res;
+                        if (status == 'success') {
+                            $("#transferSuccessTbl td").parent().remove();
+                            console.log(res);
+                            var data=res[0];
+                            $("#reason").attr("style","display:block");
+                            $("#reason").html(data.reason);
+                            if(data.status=="1"){
+                                var rows = "<tbody><tr>"
+                                + "<td>" + (data.customerId || '') + "</td>"
+                                + "<td>" + (data.transactionType || '') + "</td>"
+                                + "<td>" + (data.oldBalance || '') + "</td>"
+                                + "<td>" + (data.transeferredAmount || '') + "</td>"
+                                + "<td>" + (data.newBalance || '') + "</td>"
+                                + "</tr ></tbody>";
+                                $('#transferSuccessTbl').append(rows);
+                                
+                                $("#reason").addClass("alert-success");
+                                $("#show_Table").attr("style","display:block");
+                            }
+                            else{
+                                $("#reason").addClass("alert-danger");
+                                $("#show_Table").attr("style","display:none");
+                            }
+                            $(".toBeHiddenOnSuccess").hide();
+                        }
+                        else {
+                            console.log(v);
+                        }
+                    },
+                    error: function (jqXhr, textStatus, errorMessage) {
+                        alert("Error");
+                    }
+                });
+            }
+            else{
+                alert("Please select atleast one record.");
+            }
+         }
+    }));
 </script>

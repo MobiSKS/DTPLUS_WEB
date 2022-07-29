@@ -13,10 +13,15 @@ namespace HPCL.Common.Models.ViewModel.ParentCustomer
         public ParentChildBalanceTransferViewModel()
         {
             Data = new ParentChildTransferDetails();
+            BalanceTransferTypes = new List<GetTransactionType>();
         }
+      
+            
+        
         public string ParentCustomerID { get; set; }
         public string ChildCustomerId { get; set; }
-
+        public List<GetTransactionType> BalanceTransferTypes { get; set; }
+        public string BalanceTransferTypeId { get; set; }
         public ParentChildTransferDetails Data { get; set; }
 
     }
@@ -38,10 +43,7 @@ namespace HPCL.Common.Models.ViewModel.ParentCustomer
     }
     public class ChildTransferDetails
     {
-        public ChildTransferDetails()
-        {
-            BalanceTransferTypes = new List<GetTransactionType>();
-        }
+       
         public string ChildId { get; set; }
         public string CardNo { get; set; }
         public string NameOnCard { get; set; }
@@ -49,8 +51,18 @@ namespace HPCL.Common.Models.ViewModel.ParentCustomer
         public string Drivestars { get; set; }
         public string RegionalOffice { get; set; }
         public string StatusName { get; set; }
-        public List<GetTransactionType> BalanceTransferTypes { get; set; }
-        public string BalanceTransferTypeId { get; set; }
+        
         public string AmounttoTransfer { get; set; }
+    }
+    public class BalanceTransferSuccessResponse
+    {
+        public string customerId { get; set; }
+        public string oldBalance { get; set; }
+        public string transeferredAmount { get; set; }
+        public string newBalance { get; set; }
+        public string transactionType { get; set; }
+        public string Status { get; set; }
+        public string Reason { get; set; }
+        
     }
 }
