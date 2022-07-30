@@ -241,6 +241,13 @@
         public static string updateuserrolelocation = "api/dtplus/UserManage/update_user_role_location";
         public static string manageusersrolelocationdelete = "api/dtplus/UserManage/manage_users_role_location_delete";
         public static string usercreationrequest = "api/dtplus/UserManage/user_creation_request";
+        public static string disableenableaggregatorusers = "api/dtplus/UserManage/disable_enable_manage_aggregator_users";
+        public static string manageaggregatorusers = "api/dtplus/UserManage/manage_aggregator_users";
+        public static string addmanageaggregatorusers = "api/dtplus/UserManage/add_manage_aggregator_users";
+        public static string addaggregatoruser = "api/dtplus/UserManage/add_users_manage_aggregator_users";
+        public static string getmanageaggregatorusers = "api/dtplus/UserManage/get_manage_aggregator_users";
+        
+
 
 
         #endregion

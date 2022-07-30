@@ -291,6 +291,52 @@ namespace HPCL_Web.Controllers
 
             return Json(modals);
         }
-      
+        public async Task<IActionResult> AddNewAggregatorUser()
+        {
+            var modals = new ManageAggregatorNewUserModel();
+            modals.GetAggregatorRoles.AddRange(await _securityService.GetAggregatorRoles());
+
+            return View(modals);
+        }
+        public IActionResult ManageAggregatorUsers()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> ManageAggregatorUsers(string searchItemList)
+        {
+            List<GetManageUser> arrs = JsonConvert.DeserializeObject<List<GetManageUser>>(searchItemList);
+
+            var searchList = await _securityService.GetManageAggregatorUsers(arrs[0]);
+
+            ModelState.Clear();
+            return Json(new { searchList = searchList });
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> DisableUpdateAggregatorUser(string userName, string action)
+        {
+            var reasonList = await _securityService.DisableUpdateAggregatorUser(userName, action);
+
+            ModelState.Clear();
+            return Json(new { reasonList = reasonList });
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> AggregatorResetPassword(string userName, string EmailId)
+        {
+            var reasonList = await _securityService.AggregatorResetPassword(userName, EmailId);
+
+            ModelState.Clear();
+            return Json(new { reasonList = reasonList });
+        }
+        [HttpPost]
+        public async Task<JsonResult> AddNewAggregatorUser([FromBody] AddNewAggregatorUser entity)
+        {
+            var result = await _securityService.AddNewAggregatorUser(entity);
+
+            return Json(result);
+        }
     }
 }
