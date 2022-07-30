@@ -47,5 +47,8 @@ namespace HPCL.Service.Interfaces
         Task<List<SuccessResponse>> DICVCardlessMappingUpdate(string mobNoNew, string crdNo);
         Task<DICVDealerOTCCardStatusModel> ViewDICVDealerOTCCardStatus();
         Task<GetDICVDealerOTCCardStatusResponse> GetDICVDealerOTCCardStatus(string DealerCode, string CardNo);
+        Task<DICVManageProfile> DICVManageProfile();
+        Task<List<DICVCustomerProfileResponse>> BindCustomerDetailsForSearch(string CardNo, string Email, string CustomerId, string MobileNo);
+        Task<InsertResponse> UpdateDICVCustomerProfile(string str);
     }
 }

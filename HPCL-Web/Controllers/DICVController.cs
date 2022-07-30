@@ -279,6 +279,25 @@ namespace HPCL_Web.Controllers
             var modals = await _dicvService.GetDICVDealerOTCCardStatus(DealerCode, CardNo);
             return PartialView("~/Views/DICV/_DICVDealerOTCCardStatusTable.cshtml", modals);
         }
+        public async Task<IActionResult> DICVManageProfile()
+        {
+            var custMdl = await _dicvService.DICVManageProfile();
+
+            return View(custMdl);
+        }
+        [HttpPost]
+        public async Task<JsonResult> BindCustomerDetailsForSearch(string CardNo, string Email, string CustomerId, string MobileNo)
+        {
+            var customerCardInfo = await _dicvService.BindCustomerDetailsForSearch(CardNo, Email, CustomerId, MobileNo);
+            ModelState.Clear();
+            return Json(customerCardInfo);
+        }
+        [HttpPost]
+        public async Task<JsonResult> UpdateDICVCustomerProfile(string str)
+        {
+            var result = await _dicvService.UpdateDICVCustomerProfile(str);
+            return Json(new { result = result });
+        }
 
     }
 }
