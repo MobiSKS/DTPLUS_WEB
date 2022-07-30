@@ -697,7 +697,7 @@ namespace HPCL.Service.Services
 
             return addAddOnCard;
         }
-        public async Task<InsertResponse> UpdateVECostomerProfile(string str)
+        public async Task<InsertResponse> UpdateVECustomerProfile(string str)
         {
             JArray objs = JArray.Parse(JsonConvert.DeserializeObject(str).ToString());
             List<UpdateAlCustomerProfileRequest> arrs = objs.ToObject<List<UpdateAlCustomerProfileRequest>>();
