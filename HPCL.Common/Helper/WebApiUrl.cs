@@ -643,6 +643,7 @@
         public static string jcbUpdateHotlistReactivate = "api/dtplus/JCB/jcb_update_hotlist_reactivate";
         public static string enableDisableJcbDealer = "api/dtplus/JCB/enable_disable_jcb_dealer";
         public static string viewJcbDealerOtcCardStatus = "api/dtplus/JCB/view_jcb_dealer_otc_card_status";
+        public static string requestUpdateJCBCustomer = "api/dtplus/JCB/request_update_JCB_customer";
         #endregion
 
         #region Customer Dashboard

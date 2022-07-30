@@ -323,6 +323,12 @@ namespace HPCL_Web.Controllers
             var modals = await _jcbService.GetViewJCBDealerOTCCardStatus(DealerCode, CardNo);
             return PartialView("~/Views/JCB/_JCBDealerOTCCardStatusTable.cshtml", modals);
         }
+        [HttpPost]
+        public async Task<JsonResult> UpdateJCBCustomerProfile(string str)
+        {
+            var result = await _jcbService.UpdateJCBCustomerProfile(str);
+            return Json(new { result = result });
+        }
 
     }
 }

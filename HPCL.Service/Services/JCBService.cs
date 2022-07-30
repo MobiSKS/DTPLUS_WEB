@@ -1180,6 +1180,39 @@ namespace HPCL.Service.Services
 
             return response;
         }
+        public async Task<InsertResponse> UpdateJCBCustomerProfile(string str)
+        {
+            JArray objs = JArray.Parse(JsonConvert.DeserializeObject(str).ToString());
+            List<UpdateJCBCustomerProfileRequest> arrs = objs.ToObject<List<UpdateJCBCustomerProfileRequest>>();
+
+            var insertServiceBody = new UpdateJCBCustomerProfileRequest
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                CustomerID = arrs[0].CustomerID,
+                IndividualOrgNameTitle = arrs[0].IndividualOrgNameTitle,
+                IndividualOrgName = arrs[0].IndividualOrgName,
+                NameOnCard = arrs[0].NameOnCard,
+                CommunicationAddress1 = arrs[0].CommunicationAddress1,
+                CommunicationAddress2 = arrs[0].CommunicationAddress2,
+                CommunicationCityName = arrs[0].CommunicationCityName,
+                CommunicationPincode = arrs[0].CommunicationPincode,
+                CommunicationStateId = arrs[0].CommunicationStateId,
+                CommunicationDistrictId = arrs[0].CommunicationDistrictId,
+                CommunicationPhoneNo = arrs[0].CommunicationPhoneNo,
+                CommunicationFax = arrs[0].CommunicationFax,
+                CommunicationMobileNo = arrs[0].CommunicationMobileNo,
+                CommunicationEmailid = arrs[0].CommunicationEmailid
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(insertServiceBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.requestUpdateJCBCustomer);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            InsertResponse result = obj.ToObject<InsertResponse>();
+            return result;
+        }
 
     }
 }
