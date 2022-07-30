@@ -176,9 +176,9 @@ namespace HPCL_Web.Controllers
             return View(custMdl);
         }
         [HttpPost]
-        public async Task<JsonResult> BindCustomerDetailsForSearch(string CustomerId, string NameOnCard)
+        public async Task<JsonResult> BindCustomerDetailsForSearch(string CardNo, string Email, string CustomerId, string MobileNo)
         {
-            var customerCardInfo = await _jcbService.BindCustomerDetailsForSearch(CustomerId, NameOnCard);
+            var customerCardInfo = await _jcbService.BindCustomerDetailsForSearch(CardNo, Email, CustomerId, MobileNo);
             ModelState.Clear();
             return Json(customerCardInfo);
         }

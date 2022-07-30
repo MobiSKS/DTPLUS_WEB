@@ -259,6 +259,10 @@ namespace HPCL.Common.Models.ViewModel.JCB
         public string CustomerTypeId { get; set; }
         public string CustomerSubtypeId { get; set; }
         public string CustomerIdSelected { get; set; }
+        public string CardNo { get; set; }
+        public string Email { get; set; }
+        public string MobileNo { get; set; }
+        public string SalesExecutiveEmployeeID { get; set; }
     }
 
     public class JCBCustomerProfileResponse

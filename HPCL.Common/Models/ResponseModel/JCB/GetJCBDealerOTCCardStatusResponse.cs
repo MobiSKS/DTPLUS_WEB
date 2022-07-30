@@ -26,5 +26,7 @@ namespace HPCL.Common.Models.ResponseModel.JCB
         public string RequestID { get; set; }
         public int Status { get; set; }
         public string Reason { get; set; }
+        public string NoofCards { get; set; }
+        public string RequestedDate { get; set; }
     }
 }

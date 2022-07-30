@@ -1,5 +1,4 @@
 ﻿@model HPCL.Common.Models.ViewModel.JCB.JCBManageProfile
-
 @using HPCL.Common.Resources
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ajax-unobtrusive/3.2.6/jquery.unobtrusive-ajax.js"></script>
@@ -9,7 +8,7 @@
     <form id="formSub">
         <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
             <li class="breadcrumb-item"><a href="@Url.Action("Index","JCB")" class="text_primary">JCB Dashboard</a> </li>
-            <li class="breadcrumb-item font-weight-light">Manage Profile</li>
+            <li class="breadcrumb-item font-weight-light">Manage Customer Profile</li>
         </ul>
         <div class="col-12 col-md-12 px-0">
             <div class="alert alert-success text-center mt-3 mb-0" role="alert" style="display:none;" id="responseMsg">
@@ -18,16 +17,16 @@
         <div class="w-100" id="dvMain">
             <div>
                 <ul class="nav nav-tabs mt-2 form_tabs">
-                    <li id="ViewCustomerProfile" class="nav-item">
-                        <a class="nav-link active" id="CustomerProfile-tab" data-toggle="tab" href="#CustomerProfile" role="tab">View Customer Profile</a>
+                    <li id="ViewCustomerProfile" class="nav-item" style="display:none">
+                        <a class="nav-link active" id="CustomerProfile-tab" data-toggle="tab" href="#CustomerProfile" role="tab">Manage Customer Profile</a>
                     </li>
-                    <li id="BasicInformation" class="nav-item">
+                    <li id="BasicInformation" class="nav-item" style="display:none">
                         <a class="nav-link disabled" id="BasicInfo-tab" data-toggle="tab" href="#BasicInfo" role="tab">Basic Information</a>
                     </li>
-                    <li id="Address" class="nav-item">
-                        <a class="nav-link disabled" id="Address-tab" data-toggle="tab" href="#AddressSection" role="tab">Address</a>
+                    <li id="Address" class="nav-item" style="display:none">
+                        <a class="nav-link disabled" id="Address-tab" data-toggle="tab" href="#AddressSection" role="tab">Update Customer Profile</a>
                     </li>
-                    <li id="KeyOfficialDetails" class="nav-item">
+                    <li id="KeyOfficialDetails" class="nav-item" style="display:none">
                         <a class="nav-link disabled" id="OfficialDetails-tab" data-toggle="tab" href="#OfficialDetails" role="tab">Key Official Details</a>
                     </li>
                 </ul>
@@ -36,24 +35,45 @@
             <div class="tab-content mt-3">
                 <div id="CustomerProfile" class="tab-pane active" role="tabpanel">
                     <div class="border-1 rounded border-grey mb-3">
-                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Search Profile</p>
+                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Manage Customer Profile</p>
                         <div class="w-100 mt-3">
+                            <p class="text-dark px-0 pb-2 mb-3 font-weight-bold">Search Profile</p>
+                            <div class="d-flex align-items-center justify-content-between flex-wrap">
+                                <div class="col-md-6 col-12">
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-4 col-12 mb-0">Card Number:</label>
+                                        <div class="col-md-7 col-12">
+                                            @Html.TextBoxFor(m => m.CardNo, new { @class = "form-control",maxlength = "16", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                            <span class="error" id="cardNo_error"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-12">
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-4 col-12 offset-md-1 mb-0">Email:</label>
+                                        <div class="col-md-7 col-12">
+                                            @Html.TextBoxFor(m => m.Email, new { @class = "form-control", maxlength = "50" })
+                                            @Html.ValidationMessageFor(m => m.Email, "", new {@id="EmailErrMsg", @class = "error" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="d-flex align-items-center justify-content-between flex-wrap">
                                 <div class="col-md-6 col-12">
                                     <div class="form-group d-flex align-items-center flex-wrap">
                                         <label class="font-weight-normal col-md-4 col-12 mb-0">Customer ID:</label>
                                         <div class="col-md-7 col-12">
                                             @Html.TextBoxFor(m => m.CustomerId, new { @class = "form-control", maxlength = "10" })
-                                            @Html.ValidationMessageFor(m => m.CustomerId, "", new {@id="custErrMsg", @class = "text-danger" })
+                                            @Html.ValidationMessageFor(m => m.CustomerId, "", new {@id="custErrMsg", @class = "error" })
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6 col-12">
                                     <div class="form-group d-flex align-items-center flex-wrap">
-                                        <label class="font-weight-normal col-md-4 col-12 offset-md-1 mb-0">Name on Card:</label>
+                                        <label class="font-weight-normal col-md-4 col-12 offset-md-1 mb-0">Mobile Number:</label>
                                         <div class="col-md-7 col-12">
-                                            @Html.TextBoxFor(m => m.NameOnCard, new { id="nameOnCard",@class = "form-control", maxlength = "22" })
-                                            @Html.ValidationMessageFor(m => m.NameOnCard, "", new {@id="NameOnCardErrMsg", @class = "text-danger" })
+                                            @Html.TextBoxFor(m => m.MobileNo, new { @class = "form-control",maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                            <span class="error" id="mobileNo_error"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -61,6 +81,9 @@
                             <div class="d-flex align-items-center justify-content-center mt-0 mb-3">
                                 <div class="px-2">
                                     <button class="btn btn_primary" type="button" onclick="searchCards()" id="btnSearch">SEARCH</button>
+                                </div>
+                                <div class="px-2">
+                                    <button class="btn btn_primary" type="button" id="btnReset">@Label.Reset</button>
                                 </div>
                             </div>
                         </div>
@@ -81,7 +104,7 @@
                                         @Html.DisplayName("Customer ID")
                                     </th>
                                     <th>
-                                        @Html.DisplayName("Name on Card")
+                                        @Html.DisplayName("Name On Card")
                                     </th>
                                     <th>
                                         @Html.DisplayName("Customer Name")
@@ -89,7 +112,7 @@
                                     <th>
                                         @Html.DisplayName("Form Number")
                                     </th>
-                                    <th>
+                                    @*<th>
                                         @Html.DisplayName("Form Receipt Date")
                                     </th>
                                     <th>
@@ -100,6 +123,12 @@
                                     </th>
                                     <th>
                                         @Html.DisplayName("Dispatch Details")
+                                    </th>*@
+                                    <th>
+                                        @Html.DisplayName("Mobile Number")
+                                    </th>
+                                    <th>
+                                        @Html.DisplayName("E-Mail")
                                     </th>
                                     <th>
                                         @Html.DisplayName("Actions")
@@ -138,14 +167,10 @@
 
 
                 <div class="tab-pane" id="BasicInfo" role="tabpanel" aria-labelledby="BasicInfo-tab">
-                   @* <div class="col-12 col-md-12 px-0">
-                        <div class="alert alert-success text-center mt-3 mb-0" role="alert" style="display:none;" id="responseMsg">
-                        </div>
-                    </div>*@
-                    <div class="col-12 col-md-12 px-0">
+                    @*<div class="col-12 col-md-12 px-0">
                         <div style="display:none;" class="alert alert-danger mt-3 mb-0 text-center" id="failureMsg">
                         </div>
-                    </div>
+                    </div>*@
                     <div class="col-lg-6 col-md-12 col-12 pl-0 pl-0 pb-2">
                         <div class="border-1 rounded border-grey h-100">
                             <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Application Details</p>
@@ -342,58 +367,75 @@
                             </div>
                         </div>
                     </div>
-                    <div class="clearfix">
+                    @*<div class="clearfix">
                     </div>
                      <div class="d-flex align-items-center justify-content-center flex-wrap mt-3">
                         <div class="px-2">
                             <button class="btn btn_primary" type="button" onclick="submitProfile()">UPDATE</button>
                         </div>
-                   </div>
+                   </div>*@
                 </div>
                 
                 <div class="tab-pane" id="AddressSection" role="tabpanel" aria-labelledby="Address-tab">
-                    <div class="mb-3">
+                    <div class="col-12 col-md-12 px-0">
+                        <div style="display:none;" class="alert alert-danger mt-3 mb-0 text-center" id="failureMsg">
+                        </div>
+                    </div>
+                    <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
+                    <div class="border-1 rounded border-grey pb-0">
+                        <p class="text-white px-3 py-2 m-0 font-weight-bold" style="background: #084693;">Update Customer Profile</p>
+                        <div class="alert alert-danger mt-3 text-center" id="dvRemarks" style="@(Model.Remarks=="" ? "display:none":"display:block")">
+                            @Html.DisplayFor(m => m.Remarks)
+                        </div>
+                        <div class="col-lg-12 col-md-12 col-12 py-3">
+                            <p class="text-dark px-0 pb-2 mb-3 font-weight-bold">Application Details</p>
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">Customer/Org. Name <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-2 col-12 pr-0">
+                                            <div class="custom_select">
+                                                @Html.DropDownListFor(x => x.IndividualOrgNameTitle, new[]{
+                                                new SelectListItem(){ Text = "Title", Value = "0" },
+                                                new SelectListItem(){ Text = "Mr", Value = "Mr"},
+                                                new SelectListItem(){ Text = "Ms", Value = "Ms"},
+                                                new SelectListItem(){ Text = "M/s", Value = "M/s"},
+                                                }, null, new { @class = "form-control px-0" })
+                                            </div>
+                                            <span class="error" id="salutaion_error"></span>
+                                        </div>
+                                        <div class="col-md-5 col-12 ">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.IndividualOrgName, new { @class = "form-control", autocomplete = "off", maxlength = "50" })
+                                            </div>
+                                            <span class="error" id="IndividualOrgName_error"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal offset-md-1 col-md-4 col-12">Name on Card <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.NameOnCard, new { @class = "form-control", autocomplete = "off", maxlength = "22" })
+                                                <span class="error" id="nameOnCard_error"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+
+                <div class="mb-3">
                         <div class="border-1 rounded border-grey w-100">
-                            <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Communication Address</p>
+                            <p class="text-white px-3 py-2 m-0 font-weight-bold" style="background: #084693;">Communication Address</p>
                             <div class="py-3 px-2 px-md-4">
                                 <div class="row w-100" id="permanent_add">
                                     <div class="d-flex align-items-center justify-content-between flex-wrap">
-                                        <div class="col-md-6 col-12">
-                                            <div class="form-group d-flex align-items-center flex-wrap">
-                                                <label class="font-weight-normal offset-md-1 col-md-4 col-12" id="lblCAddress1">Address 1:<sup class="text-danger">*</sup></label>
-                                                <div class="col-md-7 col-12">
-                                                    @Html.TextBoxFor(m => m.CommunicationAddress1, new { @class = "form-control", maxlength = "50" })
-                                                    <span class="error" id="comm_address1_error"></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 col-12" id="divAddress2">
-                                            <div class="form-group d-flex align-items-center flex-wrap">
-                                                <label class="font-weight-normal col-md-5 col-12">Address 2:<sup class="text-danger">*</sup></label>
-                                                <div class="col-md-7 col-12">
-                                                    @Html.TextBoxFor(m => m.CommunicationAddress2, new { @class = "form-control", maxlength = "50" })
-                                                    <span class="error" id="comm_address2_error"></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 col-12" id="divAddress3">
-                                            <div class="form-group d-flex align-items-center flex-wrap">
-                                                <label class="font-weight-normal offset-md-1 col-md-4 col-12">Address 3:</label>
-                                                <div class="col-md-7 col-12">
-                                                    @Html.TextBoxFor(m => m.CommunicationAddress3, new { @class = "form-control", maxlength = "50" })
-                                                    <span class="error" id="comm_address3_error"></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 col-12" id="divLocation">
-                                            <div class="form-group d-flex align-items-center flex-wrap">
-                                                <label class="font-weight-normal col-md-5 col-12">Location:</label>
-                                                <div class="col-md-7 col-12">
-                                                    @Html.TextBoxFor(m => m.CommunicationLocation, new { @class = "form-control", maxlength = "20" })
-                                                    <span class="error" id="comm_location_error"></span>
-                                                </div>
-                                            </div>
-                                        </div>
                                         <div class="col-md-6 col-12" id="divCCity">
                                             <div class="form-group d-flex align-items-center flex-wrap">
                                                 <label class="font-weight-normal offset-md-1 col-md-4 col-12">City:<sup class="text-danger">*</sup></label>
@@ -495,11 +537,92 @@
                                                 </div>
                                             </div>
                                         </div>*@
+                                        <div class="col-md-6 col-12">
+                                            <div class="form-group d-flex align-items-center flex-wrap">
+                                                <label class="font-weight-normal offset-md-1 col-md-4 col-12" id="lblCAddress1">Address 1:<sup class="text-danger">*</sup></label>
+                                                <div class="col-md-7 col-12">
+                                                    @Html.TextAreaFor(m => m.CommunicationAddress1, new {@rows = 2, @class = "form-control", maxlength = "50", @style = "resize: none;" })
+                                                    <span class="error" id="comm_address1_error"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-12" id="divAddress2">
+                                            <div class="form-group d-flex align-items-center flex-wrap">
+                                                <label class="font-weight-normal col-md-5 col-12">Address 2:<sup class="text-danger">*</sup></label>
+                                                <div class="col-md-7 col-12">
+                                                    @Html.TextAreaFor(m => m.CommunicationAddress2, new {@rows = 2, @class = "form-control", maxlength = "50", @style = "resize: none;" })
+                                                    <span class="error" id="comm_address2_error"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-12" id="divAddress3">
+                                            <div class="form-group d-flex align-items-center flex-wrap">
+                                                <label class="font-weight-normal offset-md-1 col-md-4 col-12">Address 3:</label>
+                                                <div class="col-md-7 col-12">
+                                                    @Html.TextBoxFor(m => m.CommunicationAddress3, new { @class = "form-control", maxlength = "50" })
+                                                    <span class="error" id="comm_address3_error"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-12" id="divLocation">
+                                            <div class="form-group d-flex align-items-center flex-wrap">
+                                                <label class="font-weight-normal col-md-5 col-12">Location:</label>
+                                                <div class="col-md-7 col-12">
+                                                    @Html.TextBoxFor(m => m.CommunicationLocation, new { @class = "form-control", maxlength = "20" })
+                                                    <span class="error" id="comm_location_error"></span>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+
+                    <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3">
+                    <div class="border-1 rounded border-grey pb-0">
+                        <p class="text-white px-3 py-2 m-0 font-weight-bold" style="background: #084693;">Dealer Details</p>
+                        <div class="col-lg-12 col-md-12 col-12 py-3">
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">Dealer Code <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12 ">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.DealerCode, new { @class = "form-control", maxlength = "25", autocomplete = "off", onkeypress = "return AllowAlphaNumeric(event)", @readonly = "readonly" })
+                                                <span class="error" id="DealerCode_error"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-5 col-12">Sales Executive Employee ID </label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.SalesExecutiveEmployeeID, new { @class = "form-control", maxlength = "25", autocomplete = "off", @readonly = "readonly" })
+                                                <span class="error" id="SalesExecutiveEmployeeID_error"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+
+                    <div class="clearfix">
+                    </div>
+                     <div class="d-flex align-items-center justify-content-center flex-wrap mt-3">
+                        <div class="px-2">
+                            <button class="btn btn_primary" type="button" id="btnBack">BACK</button>
+                        </div>
+                        <div class="px-2">
+                            <button class="btn btn_primary" type="button" onclick="submitProfile()">UPDATE</button>
+                        </div>
+                   </div>
+                </div>
+
                     <div class="py-2" id="divPermanentOfcAddress">
                         <div class="border-1 rounded border-grey w-100" id="PermanentOfcAddress">
                             <p class="text_primary px-3 py-2  m-0 font-weight-bold">Permanent/Registered Office Address</p>
@@ -821,7 +944,24 @@
 @using Microsoft.AspNetCore.Http;
 
 <script type="text/javascript">
+    $("#btnReset").click(function () 
+    {
+        window.location.href = '@Url.Action("JCBManageProfile", "JCB")';
+    });
 
+    $("#btnBack").click(function () 
+    {
+        $("#CustomerProfile-tab").removeClass("disabled");
+        //$("#Address-tab").removeClass("disabled");
+        $("#BasicInfo-tab").removeClass("disabled");
+        $("#OfficialDetails-tab").removeClass("disabled");
+        //$('#BasicInfo-tab').tab('show');
+        $('#CustomerProfile-tab').tab('show');
+        $("#Address-tab").addClass("disabled");
+        //document.getElementById("OfficialDetails").style.display = "block";
+        //document.getElementById("PermanentOfcAddress").style.display = "block";
+    });
+    
     //$(document).ready(function () {
 
     //     var loginType = '@Context.Session.GetString("LoginType")';
@@ -906,20 +1046,30 @@
             searchText: 'Enter Text here.'
         });
 
-    function searchCards(){
+    function searchCards()
+    {
         debugger;
-        var custtId = $("#CustomerId").val();
-        var nameOnCard = $("#nameOnCard").val();
+        var custtId = $("#CustomerId").val().trim();
+        var cardNo= $("#CardNo").val().trim();
+        var mobileNo= $("#MobileNo").val().trim();
+        var EmailId = document.getElementById("Email").value.trim();
         document.getElementById("CardSearch").style.display = "none";
         document.getElementById("lblCardDetails").style.display = "none";
         var flag = "Y";
-        if(custtId == "" && nameOnCard == "")
+        if(custtId == "" && cardNo == "" && mobileNo == "" && mobileNo == "" && EmailId == "")
         {
-            $("#NameOnCardErrMsg").attr("style", "display:block");
-            $("#NameOnCardErrMsg").html("Please enter either Customer ID or Name on card");
+            document.getElementById("CustomerSearch").style.display = "none";
+            $("#noRecord").html("");
+            $("#noRecord").append("<span>Please enter either Card Number or Email Or Customer ID or Mobile Number</span>");
+            document.getElementById("noRecord").style.display = "block";
             flag = "N";
         }
-        else if(custtId != "")
+        else
+        {
+            document.getElementById("noRecord").style.display = "none";
+        }
+
+        if(custtId != "")
         {
             if (!custtId.match(mappedCustomerId)) 
             {
@@ -927,20 +1077,70 @@
                 $("#custErrMsg").html("Invalid Customer ID");
                 flag = "N";
             }
+            else
+            {
+                $("#custErrMsg").html("");
+            }
         }
         else
         {
             $("#custErrMsg").html("");
-            $("#NameOnCardErrMsg").html("");
         }
 
-        if(nameOnCard!="")
+        if (cardNo != "") 
         {
-            if (!nameOnCard.match(nameWithSpaceCheck))
+            if (!(cardNo.match(number)) || cardNo.length<16) 
             {
-                $("#NameOnCardErrMsg").html("Invalid Name on Card");
+                $("#cardNo_error").attr("style", "display:block");
+                $("#cardNo_error").html("Invalid Card Number");
                 flag = "N";
             }
+            else
+            {
+                $("#cardNo_error").attr("style", "display:none");
+                $("#cardNo_error").html("");
+            }
+        }
+        else
+        {
+            $("#cardNo_error").html("");
+        }
+
+        if (mobileNo != "") 
+        {
+            if (!mobileNo.match(phoneno) ) 
+            {
+                $("#mobileNo_error").attr("style", "display:block");
+                $("#mobileNo_error").html("Invalid Mobile Number");
+                flag = "N";
+            }
+            else
+            {
+                $("#mobileNo_error").attr("style", "display:none");
+                $("#mobileNo_error").html("");
+            }
+        }
+        else
+        {
+            $("#mobileNo_error").html("");
+        }
+
+        if (EmailId != "") 
+        {
+            if (EmailId.match(email)) 
+            {
+                document.getElementById("EmailErrMsg").innerHTML = "";
+            }
+            else 
+            {
+                $("#EmailErrMsg").attr("style", "display:block");
+                $("#EmailErrMsg").html("Invalid email id (e.g.: abc@gmail.com)");
+                flag = "N";
+            }
+        }
+        else
+        {
+            document.getElementById("EmailErrMsg").innerHTML = "";
         }
 
         if (flag == "N")
@@ -949,13 +1149,14 @@
         }
 
 
-             if (flag == "Y") {
+           if (flag == "Y") 
+           {
 
              $.ajax({
                   url: "@Url.Action("BindCustomerDetailsForSearch", "JCB")",
                   type: "POST",
                   dataType: "JSON",
-                  data: { CustomerId: custtId,NameOnCard:nameOnCard },
+                  data: {CardNo:cardNo, Email:EmailId, CustomerId: custtId, MobileNo: mobileNo },
                   success: function (res){
 debugger;
                       console.log("res", res);
@@ -979,14 +1180,17 @@ debugger;
                               }
                               rows += "<tr>"
                                   + "<td>"+(i+1)+"</td>"
-                                  + "<td width='400px' class='nav-item'><a class='customerId' data-toggle='tab' href='#BasicInfo' onclick='ViewBasicInfo(this)' role='tab'><span class='rowCardNo'>" + res[i].customerID + "</span></a></td>"
+                                  //+ "<td width='400px' class='nav-item'><a class='customerId' data-toggle='tab' href='#BasicInfo' onclick='ViewBasicInfo(this)' role='tab'><span class='rowCardNo'>" + res[i].customerID + "</span></a></td>"
+                                  + "<td width='400px'>" + res[i].customerID + "</td>"
                                   + "<td width='400px'>" + res[i].nameOnCard + "</td>"
                                   + "<td width='400px' class='getCustType'>" + res[i].individualOrgName + "</td>"
                                   + "<td width='400px'>" + res[i].formNumber + "</td>"
-                                  + "<td width='400px'>" + ApplicationDate + "</td>"
-                                  + "<td width='400px'>" + res[i].customerStatusName + "</td>"
-                                  + "<td width='400px''><a href='#CardSearch' class='viewCardDetails' onclick='GetCardSearch(this," + res[i].customerTypeId + ")'><i class='fa fa-eye'></i></a></td>"
-                                  + "<td width='400px'><a href='#aaa' class='editNumber'><i class='fa fa-eye'></i></a></td>"
+                                  //+ "<td width='400px'>" + ApplicationDate + "</td>"
+                                  //+ "<td width='400px'>" + res[i].customerStatusName + "</td>"
+                                  //+ "<td width='400px''><a href='#CardSearch' class='viewCardDetails' onclick='GetCardSearch(this," + res[i].customerTypeId + ")'><i class='fa fa-eye'></i></a></td>"
+                                  //+ "<td width='400px'><a href='#aaa' class='editNumber'><i class='fa fa-eye'></i></a></td>"
+                                  + "<td width='400px'>" + res[i].communicationMobileNo + "</td>"
+                                  + "<td width='400px'>" + res[i].communicationEmailid + "</td>"
                                   + "<td width='400px'><a href='#BasicInfo' class='action' onclick='ViewBasicInfo(this)'><i class='fa fa-search'></i></a></td>"
                               "</tr >";
 
@@ -995,7 +1199,9 @@ debugger;
                           $('#CustomerSearch table').append(rows);
 
                           document.getElementById("CustomerSearch").style.display = "block";
-                      }else{
+                      }
+                      else
+                      {
                             document.getElementById("CustomerSearch").style.display = "none";
                             $("#noRecord").html("");
                             $("#noRecord").append("<span>No Record Found</span>");
@@ -1019,26 +1225,26 @@ debugger;
         }
     });
 
-    $("#nameOnCard").on("blur", function () 
-    {
-        //debugger;
-        if (document.getElementById("nameOnCard").value.trim() != "")
-        {
-            if (!document.getElementById("nameOnCard").value.match(nameWithSpaceCheck))
-            {
-                document.getElementById("NameOnCardErrMsg").innerHTML = "Invalid Name on Card";
-                return false;
-            }
-            else
-            {
-                document.getElementById("NameOnCardErrMsg").innerHTML = "";
-            }
-        }
-        else
-        {
-            document.getElementById("NameOnCardErrMsg").innerHTML = "";
-        }
-    });
+    //$("#nameOnCard").on("blur", function () 
+    //{
+    //    //debugger;
+    //    if (document.getElementById("nameOnCard").value.trim() != "")
+    //    {
+    //        if (!document.getElementById("nameOnCard").value.match(nameWithSpaceCheck))
+    //        {
+    //            document.getElementById("NameOnCardErrMsg").innerHTML = "Invalid Name on Card";
+    //            return false;
+    //        }
+    //        else
+    //        {
+    //            document.getElementById("NameOnCardErrMsg").innerHTML = "";
+    //        }
+    //    }
+    //    else
+    //    {
+    //        document.getElementById("NameOnCardErrMsg").innerHTML = "";
+    //    }
+    //});
 
     $("#CustomerId").on("blur", function () 
     {
@@ -1056,47 +1262,47 @@ debugger;
             {
                 $("#custErrMsg").html("");
             }
-            document.getElementById("NameOnCardErrMsg").innerHTML = "";
+            //document.getElementById("NameOnCardErrMsg").innerHTML = "";
         }
 
-        var custtId = $("#CustomerId").val();
-        var nameOnCard = $("#nameOnCard").val();
+        //var custtId = $("#CustomerId").val();
+        //var nameOnCard = $("#nameOnCard").val();
 
-        if(custtId == "" && nameOnCard == "")
-        {
-            $("#NameOnCardErrMsg").attr("style", "display:block");
-            $("#NameOnCardErrMsg").html("Please enter either Customer ID or Name on card");
-        }
-        else if(custtId != "")
-        {
-            if (!custtId.match(mappedCustomerId)) 
-            {
-                $("#custErrMsg").attr("style", "display:block");
-                $("#custErrMsg").html("Invalid Customer ID");
-            }
-            else
-            {
-                $("#custErrMsg").html("");
-                $("#NameOnCardErrMsg").html("");
-            }
-        }
-        else
-        {
-            $("#custErrMsg").html("");
-            $("#NameOnCardErrMsg").html("");
-        }
+        //if(custtId == "" && nameOnCard == "")
+        //{
+        //    $("#NameOnCardErrMsg").attr("style", "display:block");
+        //    $("#NameOnCardErrMsg").html("Please enter either Customer ID or Name on card");
+        //}
+        //else if(custtId != "")
+        //{
+        //    if (!custtId.match(mappedCustomerId)) 
+        //    {
+        //        $("#custErrMsg").attr("style", "display:block");
+        //        $("#custErrMsg").html("Invalid Customer ID");
+        //    }
+        //    else
+        //    {
+        //        $("#custErrMsg").html("");
+        //        $("#NameOnCardErrMsg").html("");
+        //    }
+        //}
+        //else
+        //{
+        //    $("#custErrMsg").html("");
+        //    $("#NameOnCardErrMsg").html("");
+        //}
 
-        if(nameOnCard!="")
-        {
-            if (!nameOnCard.match(nameWithSpaceCheck))
-            {
-                $("#NameOnCardErrMsg").html("Invalid Name on Card");
-            }
-            else
-            {
-                $("#NameOnCardErrMsg").html("");
-            }
-        }
+        //if(nameOnCard!="")
+        //{
+        //    if (!nameOnCard.match(nameWithSpaceCheck))
+        //    {
+        //        $("#NameOnCardErrMsg").html("Invalid Name on Card");
+        //    }
+        //    else
+        //    {
+        //        $("#NameOnCardErrMsg").html("");
+        //    }
+        //}
 
     });
 
@@ -1291,7 +1497,8 @@ debugger;
               });
       };
 
-      function ViewBasicInfo(o) {
+      function ViewBasicInfo(o) 
+      {
     
           var CustomerId = o.closest('tr').childNodes[1].innerText;
 
@@ -1439,7 +1646,7 @@ debugger;
                              document.getElementById("divSignedOn").style.display = "none";
                           }
 
-                          if(res[i].customerTypeName == "Ashok Leyland" || res[i].customerTypeName == "Volvo Eicher")
+                          if(res[i].customerTypeName == "Ashok Leyland" || res[i].customerTypeName == "Volvo Eicher" || res[i].customerTypeName == "JCB")
                           {
                               document.getElementById("KeyOfficialDetails").style.display = "none";
                               document.getElementById("OfficialDetails-tab").style.display = "none";
@@ -1449,8 +1656,8 @@ debugger;
                               document.getElementById("divResidenceStatus").style.display = "block";
                               document.getElementById("divTypeOfCustomer").style.display = "none";
                               document.getElementById("divFormNumber").style.display = "none";
-                              document.getElementById("divAddress3").style.display = "block";
-                              document.getElementById("divLocation").style.display = "block";
+                              document.getElementById("divAddress3").style.display = "none";
+                              document.getElementById("divLocation").style.display = "none";
                               document.getElementById("divIncomeTaxPAN").style.display = "block";
                               document.getElementById("divSignedOn").style.display = "block";
                           }
@@ -1659,24 +1866,25 @@ debugger;
                               //$('#TierOfCustomerID')[0].sumo.selectItem(res[i].tierOfCustomerID);
                               GetComDistrict(res[i].communicationStateId, res[i].communicationDistrictId);
 
-                              document.getElementById("CardSearch").style.display = "none";
-                              document.getElementById("lblCardDetails").style.display = "none";
-                              document.getElementById("CustomerSearch").style.display = "none";
-                              $("#CustomerId").val("");
-                              $("#nameOnCard").val("");
-                              $("#custErrMsg").html("");
-                              $("#NameOnCardErrMsg").html("");
+                              //document.getElementById("CardSearch").style.display = "none";
+                              //document.getElementById("lblCardDetails").style.display = "none";
+                              //document.getElementById("CustomerSearch").style.display = "none";
+                              //$("#CustomerId").val("");
+                              //$("#nameOnCard").val("");
+                              //$("#custErrMsg").html("");
+                              //$("#NameOnCardErrMsg").html("");
                           }
                       }
 console.log(customerType);                     
 debugger;
-                      if(customerType == "OTC" || customerType == "Tatkal" || customerType == "Driver" || customerType == "Ashok Leyland" || customerType == "Volvo Eicher")
+                      if(customerType == "OTC" || customerType == "Tatkal" || customerType == "Driver" || customerType == "Ashok Leyland" || customerType == "Volvo Eicher" || customerType == "JCB")
                       {
                         $("#CustomerProfile-tab").removeClass("disabled");
                         $("#Address-tab").removeClass("disabled");
                         $("#BasicInfo-tab").removeClass("disabled");
                         $("#OfficialDetails-tab").removeClass("disabled");
-                        $('#BasicInfo-tab').tab('show');
+                        //$('#BasicInfo-tab').tab('show');
+                        $('#Address-tab').tab('show');
                         document.getElementById("OfficialDetails-tab").style.display = "none";
                         document.getElementById("PermanentOfcAddress").style.display = "none";
                         //document.getElementById("OfficialDetails").style.display = "none";
@@ -3323,7 +3531,74 @@ function GetSalesArea(regionId,customerSalesAreaID) {
                 document.getElementById("CustomerSignedOn_error").innerHTML = "";
             }
 
-
         });
+        $("#CardNo").on("blur", function () 
+        {
+          var cardNo = $("#CardNo").val();
+            if (cardNo != "") 
+            {
+               if (!(cardNo.match(number)) || cardNo.length<16) 
+               {
+                   $("#cardNo_error").attr("style", "display:block");
+                   $("#cardNo_error").html("Invalid Card Number");
+               }
+               else
+               {
+                  $("#cardNo_error").attr("style", "display:none");
+                  $("#cardNo_error").html("");
+               }
+           }
+           else
+           {
+                $("#cardNo_error").attr("style", "display:none");
+                $("#cardNo_error").html("");
+           }
+
+      });
+      $("#MobileNo").on("blur", function () {
+          var mobileNo= $("#MobileNo").val();
+           if (mobileNo != "") 
+           {
+               if (!(mobileNo.match(phoneno))) 
+               {
+                   $("#mobileNo_error").attr("style", "display:block");
+                   $("#mobileNo_error").html("Invalid Mobile Number");
+               }
+               else
+               {
+                  $("#mobileNo_error").attr("style", "display:none");
+                  $("#mobileNo_error").html("");
+               }
+           }
+           else
+           {
+                $("#mobileNo_error").attr("style", "display:none");
+                $("#mobileNo_error").html("");
+           }
+
+      });
+
+$("#Email").on("blur", function () 
+{
+    //debugger;
+    var Email = document.getElementById("Email").value.trim();
+    if (Email != "") 
+    {
+        if (Email.match(email)) 
+        {
+            document.getElementById("EmailErrMsg").innerHTML = "";
+        }
+        else 
+        {
+            document.getElementById("EmailErrMsg").innerHTML = "Invalid email id (e.g.: abc@gmail.com)";
+            return (false);
+        }
+    }
+    else
+    {
+        document.getElementById("EmailErrMsg").innerHTML = "";
+    }
+
+});
 
 </script>
