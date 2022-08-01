@@ -21,7 +21,7 @@ namespace HPCL.Common.Models.ResponseModel.DICV
         public string ExpiringDrivestars { get; set; }
         public string CashPurseLimit { get; set; }
         public string DailyCashLimitBalance { get; set; }
-        public string IndividualOrgName { get; set; }
+        public string CustomerName { get; set; }
         public string RegionalOfficeName { get; set; }
     }
 }
