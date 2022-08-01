@@ -1850,5 +1850,26 @@ namespace HPCL.Service.Services
             List<GetTransactionType> lst = jarr.ToObject<List<GetTransactionType>>();
             return lst;
         }
+
+        public async Task<List<CommonResponseData>> PostAuthForCreditPouchForParentCustomer(string postAuthCust, string CreditPouchType)
+        {
+            ObjCustomerDetails[] arrs = JsonConvert.DeserializeObject<ObjCustomerDetails[]>(postAuthCust);
+
+            var requestInfo = new PostAuth
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                CreditPouchType = CreditPouchType,
+                ObjCustomerDetail = arrs
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(requestInfo), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.PostAuthCreditPouchUrl);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<CommonResponseData> authStatus = jarr.ToObject<List<CommonResponseData>>();
+            return authStatus;
+        }
     }
 }
