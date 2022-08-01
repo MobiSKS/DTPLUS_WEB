@@ -757,6 +757,7 @@
 
         #region EFT
         public static string eftrechargedetailentry = "api/dtplus/EFT/eft_recharge_detail_entry";
+        public static string eftrechargedetailvalidation = "api/dtplus/EFT/eft_recharge_detail_validation";
         #endregion
     }
 }
