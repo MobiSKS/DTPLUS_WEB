@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using HPCL.Common.Models.ResponseModel.CommonResponse;
 
 namespace HPCL.Service.Interfaces
 {
@@ -18,8 +19,12 @@ namespace HPCL.Service.Interfaces
         Task<List<LastTrasactionResponseModel>> lastTrasaction(string MerchantId);
         Task<List<LastBatchDetailResponseModel>> lastBatches(string MerchantId);
 
-        Task<List<LastSaleReloadEarningDetailsResponseModel>> lastSaleReloadEarningDetails(string MerchantId);  
+        Task<List<LastSaleReloadEarningDetailsResponseModel>> lastSaleReloadEarningDetails(string MerchantId);
         Task<List<KeyEventAndFigureResponseModel>> lastKeyEventAndFigure(string MerchantId);
+
+        Task<List<NotificationResponse>> NotificationResponsesDetails(string UserType);
+
+
         //Task<SearchMerchantModel> SearchMerchant();
         //Task KeyInformation(string merchantId);
         //Task SearchMerchantDetails(string merchantId, string erpCode, string retailOutletName, string city, string highwayNo, string status);

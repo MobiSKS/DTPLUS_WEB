@@ -14,6 +14,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 
+
+
 namespace HPCL.Service.Services
 {
     public class MerchantDashboardServices : IMerchantDashboardServices
@@ -59,8 +61,14 @@ namespace HPCL.Service.Services
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
                 UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
-                MerchantId = "3010000009"
 
+                MerchantId = "3010000009"
+                //CardSale="",
+                //CCMSSale="",
+                //CashReload="",
+                //CCMSRecharge="",
+                //Status="",
+                //Reason=""
             };
 
 
@@ -86,7 +94,14 @@ namespace HPCL.Service.Services
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
                 UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+
                 MerchantId = "3010000008"
+                //CardSale="",
+                //CCMSSale="",
+                //CashReload="",
+                //CCMSRecharge="",
+                //Status="",
+                //Reason=""
             };
 
 
@@ -112,7 +127,14 @@ namespace HPCL.Service.Services
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
                 UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+
                 MerchantId = "3010000008"
+                //CardSale="",
+                //CCMSSale="",
+                //CashReload="",
+                //CCMSRecharge="",
+                //Status="",
+                //Reason=""
             };
 
 
@@ -137,7 +159,14 @@ namespace HPCL.Service.Services
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
                 UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+
                 MerchantId = "3010000011"
+                //CardSale="",
+                //CCMSSale="",
+                //CashReload="",
+                //CCMSRecharge="",
+                //Status="",
+                //Reason=""
             };
 
 
@@ -189,12 +218,13 @@ namespace HPCL.Service.Services
 
         public async Task<List<KeyEventAndFigureResponseModel>> lastKeyEventAndFigure(string MerchantID)
         {
+
             var merchantDashboardlastKeyEventAndFigure = new MerchantDashboardRequestModel
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
                 UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
-                MerchantId = "3010000009"
+                MerchantId = "3010000021"
 
             };
 
@@ -216,6 +246,41 @@ namespace HPCL.Service.Services
 
                 return KeyEventsResponseModel;
             }
+
+
+
         }
+
+
+        public async Task<List<NotificationResponse>> NotificationResponsesDetails(string UserTypes)
+        {
+            var NotificationResponseDetails = new NotificationContent
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                UserType = "Merchant"
+            };
+
+
+            StringContent merchantDashboardNotificationTableContent = new StringContent(JsonConvert.SerializeObject(NotificationResponseDetails), Encoding.UTF8, "application/json");
+
+            var merchantDashboardNotification = await _requestService.CommonRequestService(merchantDashboardNotificationTableContent, WebApiUrl.notificationContent);
+
+            JObject merchantDashboardNotificationTableObj = JObject.Parse(JsonConvert.DeserializeObject(merchantDashboardNotification).ToString());
+            var merchantDashboardNotificationTableJarr = merchantDashboardNotificationTableObj["Data"].Value<JArray>();
+            List<NotificationResponse> NotificationResponseModel = merchantDashboardNotificationTableJarr.ToObject<List<NotificationResponse>>();
+
+            return NotificationResponseModel;
+
+
+        }
+
+
+
+
+
+
+
     }
 }
