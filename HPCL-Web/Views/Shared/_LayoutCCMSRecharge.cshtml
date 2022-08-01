@@ -415,6 +415,123 @@
             easing: 'ease-in-out-sine'
         });
     </script>
+
+    
+<script type="text/javascript">
+    var message = "@ViewBag.Message";
+    var status = "@ViewBag.CaptchaCodeStatus";
+
+    $(document).ready(function () {
+        if (message != "") {
+            $("#message").show();
+        }
+        else if (status != "") {
+            $("#message").hide();
+            document.getElementById("captcha_error").innerHTML = "Captcha is Invalid";
+        }
+        else {
+            $("#message").hide();
+            document.getElementById("captcha_error").innerHTML = "";
+        }
+        //$("#Userip").val("100:100:100:100");
+
+        $.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("GetIpAddress", "Home")',
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data, status, xhr) {
+                    $("#Userip").val(data);
+                },
+            error: function (jqXhr, textStatus, errorMessage) {
+                //document.getElementById("CustomerRegionID_error").innerHTML = "Error populating card details";
+            }
+        });
+
+    });
+
+    function loginCheck() {
+        var ret = "Y";
+
+        if (document.register_form.UserId.value == "") {
+            document.getElementById("username_error").innerHTML = "User Name is required";
+            document.register_form.UserId.focus();
+            $("#register_form").submit(function (e) {
+                e.preventDefault();
+            });
+            ret = "N";
+        }
+        else {
+            document.getElementById("username_error").innerHTML = "";
+        }
+
+        if (document.register_form.Password.value == "") {
+            document.getElementById("pass_error").innerHTML = "Password is required";
+            if (ret != "N") {
+                document.register_form.Password.focus();
+            }
+            $("#register_form").submit(function (e) {
+                e.preventDefault();
+            });
+            ret = "N";
+        }
+        else {
+            document.getElementById("pass_error").innerHTML = "";
+        }
+
+        if (document.register_form.CaptchaCode.value == "") {
+            document.getElementById("captcha_error").innerHTML = "Captcha is required";
+            if (ret != "N") {
+                document.register_form.CaptchaCode.focus();
+            }
+            $("#register_form").submit(function (e) {
+                e.preventDefault();
+            });
+            ret = "N";
+        }
+        else {
+            document.getElementById("captcha_error").innerHTML = "";
+        }
+
+        if (ret == "Y") {
+            sessionStorage.removeItem("LoginCheck");
+            sessionStorage.setItem("LoginCheck", "Login");
+            //$("#Userip").val("100:100:100:100");
+
+            $("#register_form").unbind().submit();
+        }
+    }
+
+    function SetSessionValue(){
+        sessionstorage.removeitem("logincheck");
+        sessionstorage.setItem("LoginCheck", "Login");
+        //sessionStorage.clear();
+    }
+
+    function OnSuccessLogin(res) {
+        if (res.loginRes[0].status == 0) {
+            alert(res.loginRes[0].reason);
+        }
+        if (res.loginRes[0].status == 1) {
+            window.location.href = '@Html.Raw(@Url.Action("Profile", "Home"))';
+        }
+    }
+
+    function OnFailure(data) {
+        alert(data);
+    }
+
+    $("#refreshCaptcha").click(function () {
+        resetCaptchaImage();
+    });
+
+    function resetCaptchaImage() {
+        d = new Date();
+        $("#img-captcha").attr("src", "/get-captcha-image?" + d.getTime());
+    }
+</script>
+
+
 </body>
 </html>
 <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
