@@ -690,6 +690,8 @@
         public static string lastBatch = "api/dtplus/merchantdashboard/merchant_dashboard_last_batch_deatils";
         public static string lastSaleEarning = "api/dtplus/merchantdashboard/merchant_dashboard_last_sale_reload_earning_details";
         public static string lastKeyEvent = "api/dtplus/merchantdashboard/merchant_dashboard_key_events_and_figures";
+        public static string notificationContent = "/api/dtplus/customerdashboard/get_notification_content";
+
         #endregion
 
         #region "Parent Customer ICICI Bank Credit Pouch"
