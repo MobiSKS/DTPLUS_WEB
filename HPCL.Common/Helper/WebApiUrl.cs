@@ -696,6 +696,7 @@
         public static string getDicvCustomerDetails = "api/dtplus/DICV/get_dicv_customer_details";
         public static string requestUpdateDicvCustomer = "api/dtplus/DICV/request_update_dicv_customer";
         public static string getDicvCustomerBalanceInfo = "api/dtplus/DICV/get_dicv_customer_balance_info";
+        public static string dicvUpdateCustomer = "api/dtplus/DICV/dicv_update_customer";
         #endregion
 
         #region "Parent Customer HDFC Bank Credit Pouch"
@@ -755,6 +756,7 @@
 
         #region EFT
         public static string eftrechargedetailentry = "api/dtplus/EFT/eft_recharge_detail_entry";
+        public static string eftrechargedetailvalidation = "api/dtplus/EFT/eft_recharge_detail_validation";
         #endregion
     }
 }
