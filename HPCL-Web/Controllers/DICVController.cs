@@ -311,6 +311,17 @@ namespace HPCL_Web.Controllers
 
             return Json(customerBalanceResponse);
         }
+        public IActionResult DICVCustomerTransactionDetails()
+        {
+            var model = new DICVCustomerTransactionViewModel();
+            return View(model);
+        }
+        [HttpPost]
+        public async Task<IActionResult> GetCustomerTransactionDetails(string CustomerID, string CardNo, string MobileNo, string FromDate, string ToDate)
+        {
+            var models = await _dicvService.GetCustomerTransactionDetails(CustomerID, CardNo, MobileNo, FromDate, ToDate);
+            return PartialView("~/Views/DICV/_DICVCustomerTransactionTblView.cshtml", models);
+        }
 
     }
 }
