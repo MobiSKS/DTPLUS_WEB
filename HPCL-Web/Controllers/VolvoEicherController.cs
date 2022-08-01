@@ -201,9 +201,9 @@ namespace HPCL_Web.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> UpdateVECostomerProfile(string str)
+        public async Task<JsonResult> UpdateVECustomerProfile(string str)
         {
-            var result = await _volvoEicherService.UpdateVECostomerProfile(str);
+            var result = await _volvoEicherService.UpdateVECustomerProfile(str);
             return Json(new { result = result });
         }
         [HttpPost]

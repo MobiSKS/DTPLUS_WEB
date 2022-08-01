@@ -77,6 +77,7 @@ namespace HPCL.Common.Models.RequestModel.Customer
         public string PanCardRemarks { get; set; }
         public string RBEId { get; set; }
         public string CustomerReferenceNo { get; set; }
+        public string ParentCustomerId { get; set; }
 
     }
 }

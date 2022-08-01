@@ -1,4 +1,5 @@
 ﻿using HPCL.Common.Helper;
+using HPCL.Common.Models.RequestModel.DICV;
 using HPCL.Common.Models.ResponseModel.DICV;
 using HPCL.Common.Models.ViewModel.DICV;
 using HPCL.Common.Resources;
@@ -149,6 +150,153 @@ namespace HPCL_Web.Controllers
             var addonOTCCardMapping = await _dicvService.GetDICVSalesExeEmpId(dealerCode);
 
             return Json(addonOTCCardMapping);
+        }
+        public async Task<IActionResult> DICVHotlistAndReactivate()
+        {
+            var model = await _dicvService.DICVHotlistAndReactivate();
+
+            return View(model);
+        }
+        [HttpPost]
+        public async Task<JsonResult> GetReasonListForEntities(string EntityTypeId)
+        {
+            var sortedtList = await _dicvService.GetReasonListForEntities(EntityTypeId);
+
+            ModelState.Clear();
+            return Json(sortedtList);
+        }
+        [HttpPost]
+        public async Task<IActionResult> ApplyHotlistorReactivate([FromBody] DICVHotlistorReactivateViewModel HotlistorReactivateResponseModel)
+        {
+            var result = await _dicvService.ApplyHotlistorReactivate(HotlistorReactivateResponseModel);
+            return Json(result);
+        }
+        public async Task<IActionResult> DICVResetPasswordByMo()
+        {
+            var custMdl = new DICVCustomerResetPassword();
+
+            return View(custMdl);
+        }
+        [HttpPost]
+        public async Task<JsonResult> GetDICVCommunicationEmailResetPassword(string CustomerId)
+        {
+            var responseData = await _dicvService.GetDICVCommunicationEmailResetPassword(CustomerId);
+            ModelState.Clear();
+            return Json(responseData);
+        }
+        [HttpPost]
+        public async Task<JsonResult> UpdateDICVCommunicationEmailResetPassword(string CustomerId, string AlternateEmailId)
+        {
+            var result = await _dicvService.UpdateDICVCommunicationEmailResetPassword(CustomerId, AlternateEmailId);
+            return Json(new { result = result });
+        }
+        public async Task<IActionResult> DICVAddOrEditMobile(string CustomerId)
+        {
+            ViewBag.CustomerId = CustomerId;
+            return View();
+        }
+        [HttpPost]
+        public async Task<JsonResult> SearchCardMapping(DICVViewCardDetails viewCardDetails)
+        {
+            var searchList = await _dicvService.SearchCardMapping(viewCardDetails);
+
+            ModelState.Clear();
+            return Json(searchList);
+        }
+        [HttpPost]
+        public async Task<IActionResult> UpdateCards(DICVUpdateMobileandFastagNoInCard[] limitArray)
+        {
+            var reason = await _dicvService.UpdateCards(limitArray);
+
+            ModelState.Clear();
+            return Json(reason);
+        }
+        [HttpPost]
+        public async Task<JsonResult> AddCardMappingDetails(DICVViewCardDetails viewCardDetails)
+        {
+            var searchList = await _dicvService.AddCardMappingDetails(viewCardDetails);
+
+            ModelState.Clear();
+            return Json(searchList);
+        }
+        [HttpPost]
+        public async Task<JsonResult> ResetDICVDealerPassword(string UserName)
+        {
+            var result = await _dicvService.ResetDICVDealerPassword(UserName);
+            return Json(new { result = result });
+        }
+        [HttpPost]
+        public async Task<JsonResult> EnableDisableDICVDealer(string DealerCode, string OfficerType, string EnableDisableFlag)
+        {
+            var result = await _dicvService.EnableDisableDICVDealer(DealerCode, OfficerType, EnableDisableFlag);
+            return Json(new { result = result });
+        }
+        public IActionResult DICVManageCards()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> DICVManageCards(DICVCustomerCards entity, string editFlag)
+        {
+            var searchList = await _dicvService.DICVManageCards(entity, editFlag);
+            ModelState.Clear();
+            return Json(new { searchList = searchList });
+        }
+        [HttpPost]
+        public async Task<JsonResult> DICVViewCardDetails(string CardId)
+        {
+            var searchList = await _dicvService.DICVViewCardDetails(CardId);
+
+            ModelState.Clear();
+            return Json(new
+            {
+                searchList = searchList
+            });
+        }
+        public async Task<IActionResult> DICVCardlessMapping(string cardNumber, string mobileNumber, string LimitTypeName, string CCMSReloadSaleLimitValue)
+        {
+            var editMobBody = await _dicvService.DICVCardlessMapping(cardNumber, mobileNumber, LimitTypeName, CCMSReloadSaleLimitValue);
+            return View(editMobBody);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> DICVCardlessMappingUpdate(string mobNoNew, string crdNo)
+        {
+            var updateResponse = await _dicvService.DICVCardlessMappingUpdate(mobNoNew, crdNo);
+            ModelState.Clear();
+
+            return Json(new { updateResponse = updateResponse });
+        }
+        public async Task<IActionResult> ViewDICVDealerOTCCardStatus()
+        {
+            var model = await _dicvService.ViewDICVDealerOTCCardStatus();
+
+            return View(model);
+        }
+        public async Task<IActionResult> GetDICVDealerOTCCardStatus(string DealerCode, string CardNo)
+        {
+            var modals = await _dicvService.GetDICVDealerOTCCardStatus(DealerCode, CardNo);
+            return PartialView("~/Views/DICV/_DICVDealerOTCCardStatusTable.cshtml", modals);
+        }
+        public async Task<IActionResult> DICVManageProfile()
+        {
+            var custMdl = await _dicvService.DICVManageProfile();
+
+            return View(custMdl);
+        }
+        [HttpPost]
+        public async Task<JsonResult> BindCustomerDetailsForSearch(string CardNo, string Email, string CustomerId, string MobileNo)
+        {
+            var customerCardInfo = await _dicvService.BindCustomerDetailsForSearch(CardNo, Email, CustomerId, MobileNo);
+            ModelState.Clear();
+            return Json(customerCardInfo);
+        }
+        [HttpPost]
+        public async Task<JsonResult> UpdateDICVCustomerProfile(string str)
+        {
+            var result = await _dicvService.UpdateDICVCustomerProfile(str);
+            return Json(new { result = result });
         }
 
     }

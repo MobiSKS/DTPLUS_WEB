@@ -77,7 +77,8 @@ namespace HPCL.Service.Services
                 UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 CardNo = CardNo,
-                CardStatus= string.IsNullOrEmpty(CardStatus)?1: Convert.ToInt32(CardStatus)
+                CardStatus= string.IsNullOrEmpty(CardStatus)?1: Convert.ToInt32(CardStatus),
+                CreatedBy= _httpContextAccessor.HttpContext.Session.GetString("UserId")
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
@@ -289,34 +290,15 @@ namespace HPCL.Service.Services
 
         public async Task<GetDetailForUserUnblockResponse> GetDetailForUserUnblock(string CustomerId, string UserName)
         {
-            var searchBody = new GetDetailForUserUnblockRequest();
-            string id = CustomerId;
-            if (string.IsNullOrEmpty(id))
+            var searchBody = new GetDetailForUserUnblockRequest
             {
-                id = UserName;
-            }
-            if (!string.IsNullOrEmpty(CustomerId) && !string.IsNullOrEmpty(UserName))
-            {
-                searchBody = new GetDetailForUserUnblockRequest
-                {
-                    UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
-                    UserAgent = CommonBase.useragent,
-                    UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
-                    CustomerId = CustomerId,
-                    UserName = UserName
-                };
-            }
-            else
-            {
-                searchBody = new GetDetailForUserUnblockRequest
-                {
-                    UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
-                    UserAgent = CommonBase.useragent,
-                    UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
-                    CustomerId = string.IsNullOrEmpty(id) ? "" : id,
-                    UserName = ""
-                };
-            }
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                CustomerId = String.IsNullOrEmpty(CustomerId) ? "" : CustomerId,
+                UserName = String.IsNullOrEmpty(UserName) ? "" : UserName
+            };
+
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
             var response = await _requestService.CommonRequestService(content, WebApiUrl.getDetailForUserUnblockByCustomeridOrUsername);

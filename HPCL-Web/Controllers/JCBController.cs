@@ -113,9 +113,9 @@ namespace HPCL_Web.Controllers
 
             return View(Model);
         }
-        public async Task<IActionResult> GetViewJCBOTCCardDealerAllocation(string DealerCode, string CardNo)
+        public async Task<IActionResult> GetViewJCBOTCCardDealerAllocation(string DealerCode, string CardNo, bool ShowUnmappedCard)
         {
-            var modals = await _jcbService.GetViewJCBOTCCardDealerAllocation(DealerCode, CardNo);
+            var modals = await _jcbService.GetViewJCBOTCCardDealerAllocation(DealerCode, CardNo, ShowUnmappedCard);
             return PartialView("~/Views/JCB/_JCBOTCCardsDealerAllocationTable.cshtml", modals);
         }
         public async Task<IActionResult> JCBCustomerEnrollment()
@@ -176,9 +176,9 @@ namespace HPCL_Web.Controllers
             return View(custMdl);
         }
         [HttpPost]
-        public async Task<JsonResult> BindCustomerDetailsForSearch(string CustomerId, string NameOnCard)
+        public async Task<JsonResult> BindCustomerDetailsForSearch(string CardNo, string Email, string CustomerId, string MobileNo)
         {
-            var customerCardInfo = await _jcbService.BindCustomerDetailsForSearch(CustomerId, NameOnCard);
+            var customerCardInfo = await _jcbService.BindCustomerDetailsForSearch(CardNo, Email, CustomerId, MobileNo);
             ModelState.Clear();
             return Json(customerCardInfo);
         }
@@ -274,6 +274,73 @@ namespace HPCL_Web.Controllers
 
             ModelState.Clear();
             return Json(searchList);
+        }
+        public async Task<ActionResult> GetJCBDealerCardDispatchDetails(string CustomerID)
+        {
+            var model = await _jcbService.GetJCBDealerCardDispatchDetails(CustomerID);
+            return PartialView("~/Views/JCB/_ViewJCBDealerCardDispatchDetails.cshtml", model);
+        }
+        [HttpPost]
+        public async Task<JsonResult> ResetJCBDealerPassword(string UserName)
+        {
+            var result = await _jcbService.ResetJCBDealerPassword(UserName);
+            return Json(new { result = result });
+        }
+        public async Task<IActionResult> JCBHotlistAndReactivate()
+        {
+            var model = await _jcbService.JCBHotlistAndReactivate();
+
+            return View(model);
+        }
+        [HttpPost]
+        public async Task<JsonResult> GetReasonListForEntities(string EntityTypeId)
+        {
+            var sortedtList = await _jcbService.GetReasonListForEntities(EntityTypeId);
+
+            ModelState.Clear();
+            return Json(sortedtList);
+        }
+        [HttpPost]
+        public async Task<IActionResult> ApplyHotlistorReactivate([FromBody] JCBHotlistorReactivateViewModel HotlistorReactivateResponseModel)
+        {
+            var result = await _jcbService.ApplyHotlistorReactivate(HotlistorReactivateResponseModel);
+            return Json(result);
+        }
+        [HttpPost]
+        public async Task<JsonResult> EnableDisableJCBDealer(string DealerCode, string OfficerType, string EnableDisableFlag)
+        {
+            var result = await _jcbService.EnableDisableJCBDealer(DealerCode, OfficerType, EnableDisableFlag);
+            return Json(new { result = result });
+        }
+        public async Task<IActionResult> ViewJCBDealerOTCCardStatus()
+        {
+            var model = await _jcbService.ViewJCBDealerOTCCardStatus();
+
+            return View(model);
+        }
+        public async Task<IActionResult> GetViewJCBDealerOTCCardStatus(string DealerCode, string CardNo)
+        {
+            var modals = await _jcbService.GetViewJCBDealerOTCCardStatus(DealerCode, CardNo);
+            return PartialView("~/Views/JCB/_JCBDealerOTCCardStatusTable.cshtml", modals);
+        }
+        [HttpPost]
+        public async Task<JsonResult> UpdateJCBCustomerProfile(string str)
+        {
+            var result = await _jcbService.UpdateJCBCustomerProfile(str);
+            return Json(new { result = result });
+        }
+        public async Task<IActionResult> JCBBalanceInfo()
+        {
+            var model = await _jcbService.JCBBalanceInfo();
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> GetCustomerBalanceInfo(string CustomerID)
+        {
+            var customerBalanceResponse = await _jcbService.GetCustomerBalanceInfo(CustomerID);
+
+            return Json(customerBalanceResponse);
         }
 
     }

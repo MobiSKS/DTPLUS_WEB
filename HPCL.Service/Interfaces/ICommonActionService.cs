@@ -85,5 +85,8 @@ namespace HPCL.Service.Interfaces
         Task<List<ZonalOfficeResponseModal>> GetZonalOfficeListbySBUtype(string SBUTypeId);
         Task<List<GetLimitTypeResponse>> GetAllLimitType();
         Task<List<GetAccountStatementType>> GetAccountStatementRequestType();
+        Task<List<CommonResponseData>> PostAuthForCreditPouch(string postAuthCust, string CreditPouchType);
+        Task<List<MerchantReactivationStatus>> GetMerchantReactivationStatus();
+        Task<List<GetTransactionType>> GetParentCustomerTransactionType();
     }
 }

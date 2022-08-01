@@ -2,209 +2,206 @@
 @using Microsoft.AspNetCore.Http;
 
 <div class="col-lg-12">
-    <div class="bg-white p-2 p-md-4">
+    <div class="bg-white p-2 p-md-4" style="background: #edecec !important;">
         <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
             <li class="breadcrumb-item"><a href="@Url.Action("Index","MerchantFinancials")" class="text_primary">Financial</a> </li>
             <li class="breadcrumb-item font-weight-light">View/Update Merchant Caution Limit</li>
         </ul>
-        <ul class="nav nav-tabs mt-2 form_tabs" id="formTab" role="tablist">
-            <li class="nav-item"> <a class="nav-link active" id="vmcl-tab" data-toggle="tab" href="#vmcl" role="tab" aria-controls="vmcl" aria-selected="true">View Merchant Caution Limit</a> </li>
-            <li class="nav-item"> <a class="nav-link" id="umcl-tab" data-toggle="tab" href="#umcl" role="tab" aria-controls="umcl" aria-selected="true">Upload Merchant Caution Limit</a> </li>
-        </ul>
-        <div class="tab-content mt-3" id="formTab">
-
-            <div class="tab-pane fade show active" id="vmcl" role="tabpanel" aria-labelledby="vmcl-tab">
-                <form id="formVal">
-                    <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
-                        <div class="border-1 rounded border-grey pb-0">
-                            <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">View/Update Merchant Caution Limit</p>
-                            <div class="col-lg-12 col-md-12 col-12 py-3">
-
-                                <div class="d-flex align-items-center flex-wrap">
-                                    <div class="col-lg-6 col-12">
-                                        <div class="d-flex align-items-center flex-wrap mb-3">
-                                            <label class="font-weight-normal col-md-4 col-12">Merchant ID</label>
-                                            <div class="col-md-7 col-12">
-                                                <div class="custom_select">
-                                                    @Html.TextBoxFor(m => m.MerchantId, new { @id = "custIdVal", @class = "form-control" })
-                                                    @Html.ValidationMessageFor(m => m.MerchantId, "", new { @class = "text-danger" })
+        <div class="bg-white p-3">
+            <ul class="nav nav-tabs mt-2 form_tabs" id="formTab" role="tablist">
+                <li class="nav-item"> <a class="nav-link active" id="vmcl-tab" data-toggle="tab" href="#vmcl" role="tab" aria-controls="vmcl" aria-selected="true">View Merchant Caution Limit</a> </li>
+                <li class="nav-item"> <a class="nav-link" id="umcl-tab" data-toggle="tab" href="#umcl" role="tab" aria-controls="umcl" aria-selected="true">Upload Merchant Caution Limit</a> </li>
+            </ul>
+            <div class="tab-content mt-3" id="formTab">
+                <div class="tab-pane fade show active" id="vmcl" role="tabpanel" aria-labelledby="vmcl-tab">
+                    <form id="formVal">
+                        <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
+                            <div class="border-1 rounded border-grey pb-0">
+                                <p class="text-white px-3 py-2 m-0 font-weight-bold" style="background: #084693;">View/Update Merchant Caution Limit</p>
+                                <div class="col-lg-12 col-md-12 col-12 py-3 bg-white">
+                                    <div class="d-flex align-items-center flex-wrap">
+                                        <div class="col-lg-6 col-12">
+                                            <div class="d-flex align-items-center flex-wrap mb-3">
+                                                <label class="font-weight-normal col-md-4 col-12">Merchant ID</label>
+                                                <div class="col-md-7 col-12">
+                                                    <div class="custom_select">
+                                                        @Html.TextBoxFor(m => m.MerchantId, new { @id = "custIdVal", @class = "form-control" })
+                                                        @Html.ValidationMessageFor(m => m.MerchantId, "", new { @class = "text-danger" })
+                                                    </div>
                                                 </div>
                                             </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="d-flex align-items-center flex-wrap">
+                                        <div class="col-lg-6 col-12">
+                                            <div class="d-flex align-items-center flex-wrap mb-3">
+                                                <label class="font-weight-normal col-md-4 col-12">Zonal Office</label>
+                                                <div class="col-md-7 col-12">
+                                                    <div class="custom_select">
+                                                        @Html.DropDownListFor(m => m.ZonalOffice, Enumerable.Empty<SelectListItem>(), "--Select Zonal Office--", new { @class = "form-control zonalOfcVal" })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 col-12">
+                                            <div class="d-flex align-items-center flex-wrap mb-3">
+                                                <label class="font-weight-normal col-md-4 col-12">Last Updated Date From</label>
+                                                <div class="col-md-7 col-12">
+                                                    <div class="custom_select">
+                                                        @Html.TextBoxFor(m => m.FromDate, new { @class = "form-control fromDate",@placeholder="dd-mm-yyyy", @autocomplete = "off", @onchange = "checkDates('fromDate_error');" })
+                                                    </div>
+                                                    @Html.ValidationMessageFor(m => m.FromDate, "", new { @class = "text-danger", @id = "fromDate_error" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="d-flex align-items-center flex-wrap">
+                                        <div class="col-lg-6 col-12">
+                                            <div class="d-flex align-items-center flex-wrap mb-3">
+                                                <label class="font-weight-normal col-md-4 col-12">Regional Office</label>
+                                                <div class="col-md-7 col-12">
+                                                    <div class="custom_select">
+                                                        @Html.DropDownListFor(m => m.RegionalOffice, Enumerable.Empty<SelectListItem>(), new { @class = "form-control regionalOfcVal" })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 col-12">
+                                            <div class="d-flex align-items-center flex-wrap mb-3">
+                                                <label class="font-weight-normal col-md-4 col-12"> Last Updated Date To </label>
+                                                <div class="col-md-7 col-12">
+                                                    <div class="custom_select">
+                                                        @Html.TextBoxFor(m => m.ToDate, new { @class = "form-control toDate",@placeholder="dd-mm-yyyy", @autocomplete = "off", @onchange = "checkDates('fromDate_error');" })
+                                                    </div>
+                                                    @Html.ValidationMessageFor(m => m.ToDate, "", new { @class = "text-danger", @id = "toDate_error" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="d-flex align-items-center flex-wrap">
+                                        <div class="col-lg-6 col-12">
+                                            <div class="d-flex align-items-center flex-wrap mb-3">
+                                                <label class="font-weight-normal col-md-4 col-12">Sales Area</label>
+                                                <div class="col-md-7 col-12">
+                                                    <div class="custom_select">
+                                                        @Html.DropDownListFor(m => m.SalesArea, Enumerable.Empty<SelectListItem>(), new { @class = "form-control salesAreaVal" })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 col-12">
+                                            <div class="d-flex align-items-center flex-wrap mb-3">
+                                                <label class="font-weight-normal col-md-4 col-12">Merchant Status</label>
+                                                <div class="col-md-7 col-12">
+                                                    <div class="custom_select">
+                                                        @Html.DropDownListFor(m => m.MerchantStatus, Enumerable.Empty<SelectListItem>(), "--Select Merchant Status--", new { @class = "form-control merchantStatusVal" })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="clearfix"></div>
+                                    <div class="d-flex align-items-center justify-content-center mt-0">
+                                        <div class="px-2">
+                                            <button class="btn btn_primary" type="button" onclick="subVal()">Search</button>
+                                        </div>
+                                        <div class="px-2">
+                                            <button class="btn btn_primary" type="button" onclick="resetClick()">Reset</button>
+                                        </div>
+                                        <div class="px-2">
+                                            <button class="btn btn_primary" type="button"><i class="fa fa-file-excel-o" aria-hidden="true">&nbsp;</i> Export To Excel</button>
                                         </div>
                                     </div>
                                 </div>
+                                <div class="clearfix"></div>
 
-                                <div class="d-flex align-items-center flex-wrap">
-                                    <div class="col-lg-6 col-12">
-                                        <div class="d-flex align-items-center flex-wrap mb-3">
-                                            <label class="font-weight-normal col-md-4 col-12">Zonal Office</label>
-                                            <div class="col-md-7 col-12">
-                                                <div class="custom_select">
-                                                    @Html.DropDownListFor(m => m.ZonalOffice, Enumerable.Empty<SelectListItem>(), "--Select Zonal Office--", new { @class = "form-control zonalOfcVal" })
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6 col-12">
-                                        <div class="d-flex align-items-center flex-wrap mb-3">
-                                            <label class="font-weight-normal col-md-4 col-12">Last Updated Date From</label>
-                                            <div class="col-md-7 col-12">
-                                                <div class="custom_select">
-                                                    @Html.TextBoxFor(m => m.FromDate, new { @class = "form-control fromDate",@placeholder="dd-mm-yyyy", @autocomplete = "off", @onchange = "checkDates('fromDate_error');" })
-                                                </div>
-                                                @Html.ValidationMessageFor(m => m.FromDate, "", new { @class = "text-danger", @id = "fromDate_error" })
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="d-flex align-items-center flex-wrap">
-                                    <div class="col-lg-6 col-12">
-                                        <div class="d-flex align-items-center flex-wrap mb-3">
-                                            <label class="font-weight-normal col-md-4 col-12">Regional Office</label>
-                                            <div class="col-md-7 col-12">
-                                                <div class="custom_select">
-                                                    @Html.DropDownListFor(m => m.RegionalOffice, Enumerable.Empty<SelectListItem>(), new { @class = "form-control regionalOfcVal" })
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6 col-12">
-                                        <div class="d-flex align-items-center flex-wrap mb-3">
-                                            <label class="font-weight-normal col-md-4 col-12"> Last Updated Date To </label>
-                                            <div class="col-md-7 col-12">
-                                                <div class="custom_select">
-                                                    @Html.TextBoxFor(m => m.ToDate, new { @class = "form-control toDate",@placeholder="dd-mm-yyyy", @autocomplete = "off", @onchange = "checkDates('fromDate_error');" })
-                                                </div>
-                                                @Html.ValidationMessageFor(m => m.ToDate, "", new { @class = "text-danger", @id = "toDate_error" })
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="d-flex align-items-center flex-wrap">
-                                    <div class="col-lg-6 col-12">
-                                        <div class="d-flex align-items-center flex-wrap mb-3">
-                                            <label class="font-weight-normal col-md-4 col-12">Sales Area</label>
-                                            <div class="col-md-7 col-12">
-                                                <div class="custom_select">
-                                                    @Html.DropDownListFor(m => m.SalesArea, Enumerable.Empty<SelectListItem>(), new { @class = "form-control salesAreaVal" })
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6 col-12">
-                                        <div class="d-flex align-items-center flex-wrap mb-3">
-                                            <label class="font-weight-normal col-md-4 col-12">Merchant Status</label>
-                                            <div class="col-md-7 col-12">
-                                                <div class="custom_select">
-                                                    @Html.DropDownListFor(m => m.MerchantStatus, Enumerable.Empty<SelectListItem>(), "--Select Merchant Status--", new { @class = "form-control merchantStatusVal" })
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                <div class="table-responsive" id="tblResponse" style="display:none;padding:1%;">
+                                    <table id="MerchantSearchTbl" class="datatable table table-striped d-block table-bordered table-responsive nowrap mt-3" style="width:100%;">
+                                        <thead>
+                                            <tr>
+                                                <th>S No.</th>
+                                                <th>Merchant ID</th>
+                                                <th>Retail Outlet Name</th>
+                                                <th>Regional Office</th>
+                                                <th>Sales Area</th>
+                                                <th>Avg.HSD Sale(in KL)</th>
+                                                <th>HSD RSP Value</th>
+                                                <th>DTPlus Caution Limit(in Rs)</th>
+                                                <th>Avg.MS Sale(in KL)</th>
+                                                <th>MS RSP Value</th>
+                                                <th>HPPAY Caution Limit(in Rs)</th>
+                                                <th>Last Updated On</th>
+                                                <th>Merchant Status</th>
+                                                <th>&nbsp;</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
                                 </div>
 
                                 <div class="clearfix"></div>
-                                <div class="d-flex align-items-center justify-content-center mt-0">
+                            </div>
+
+                            <div id="noRecord" class="mb-3 text-center alert alert-danger" style="display:none;"></div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </form>
+                </div>
+
+                <div class="tab-pane fade" id="umcl" role="tabpanel" aria-labelledby="umcl-tab">
+                    <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
+                        <div class="border-1 rounded border-grey pb-0">
+                            <p class="text-white px-3 py-2 m-0 font-weight-bold" style="background: #084693;">Upload Merchant Caution Limit</p>
+                            <div class="col-lg-12 col-md-12 col-12 py-3 bg-white">
+                                <div class="d-flex align-items-center flex-wrap">
+                                    <div class="col-lg-12 col-12">
+                                        <div class="d-flex align-items-center flex-wrap mb-0">
+                                            <label class="font-weight-normal col-md-2 col-12">Select File <sup class="text-danger">*</sup></label>
+                                            <div class="col-sm-3 col-md-3 col-12">
+                                                <div class="custom_select">
+                                                    <input class="form-control-file" id="" name="" type="file" value="">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3 col-12">
+                                                <div class="d-flex align-items-center flex-wrap">
+                                                    <div class="px-0">
+                                                        <button class="btn btn_primary regrate_btn" type="button">Upload</button>
+                                                    </div>
+                                                    <div class="px-2">
+                                                        <p class="mt-3 text-danger">Only csv file is allowed!</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4 col-12 px-0">
+                                                <div class="d-flex align-items-center justify-content-end flex-wrap">
+                                                    <div class="px-0">
+                                                        <button class="btn btn_primary regrate_btn" type="button">Download Merchant Caution Limit Template</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+                                <div class="d-flex align-items-center justify-content-center mt-3">
                                     <div class="px-2">
-                                        <button class="btn btn_primary" type="button" onclick="subVal()">Search</button>
+                                        <button class="btn btn_primary" type="button">Upload Merchant Caution Limit</button>
                                     </div>
                                     <div class="px-2">
                                         <button class="btn btn_primary" type="button" onclick="resetClick()">Reset</button>
                                     </div>
-                                    <div class="px-2">
-                                        <button class="btn btn_primary" type="button">Export To Excel</button>
-                                    </div>
+
                                 </div>
                             </div>
-                            <div class="clearfix"></div>
-
-                            <div id="noRecord" class="mb-3 text-center alert alert-danger" style="display:none;"></div>
-                            
-                            <div class="clearfix"></div>
-
-                            <div class="table-responsive" id="tblResponse" style="display:none;padding:1%;">
-                                <table id="MerchantSearchTbl" class="datatable table table-striped d-block table-bordered table-responsive nowrap mt-3" style="width:100%;">
-                                    <thead>
-                                        <tr>
-                                            <th>S No.</th>
-                                            <th>Merchant ID</th>
-                                            <th>Retail Outlet Name</th>
-                                            <th>Regional Office</th>
-                                            <th>Sales Area</th>
-                                            <th>Avg.HSD Sale(in KL)</th>
-                                            <th>HSD RSP Value</th>
-                                            <th>DTPlus Caution Limit(in Rs)</th>
-                                            <th>Avg.MS Sale(in KL)</th>
-                                            <th>MS RSP Value</th>
-                                            <th>HPPAY Caution Limit(in Rs)</th>
-                                            <th>Last Updated On</th>
-                                            <th>Merchant Status</th>
-                                            <th>&nbsp;</th>
-                                        </tr>
-                                    </thead>
-                                </table>
-                            </div>
-
                             <div class="clearfix"></div>
                         </div>
                     </div>
                     <div class="clearfix"></div>
-                </form>
-            </div>
-
-
-
-            <div class="tab-pane fade" id="umcl" role="tabpanel" aria-labelledby="umcl-tab">
-                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
-                    <div class="border-1 rounded border-grey pb-0">
-                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Upload Merchant Caution Limit</p>
-                        <div class="col-lg-12 col-md-12 col-12 py-3">
-                            <div class="d-flex align-items-center flex-wrap">
-                                <div class="col-lg-12 col-12">
-                                    <div class="d-flex align-items-center flex-wrap mb-0">
-                                        <label class="font-weight-normal col-md-2 col-12">Select File  <sup class="text-danger">*</sup></label>
-                                        <div class="col-sm-3 col-md-3 col-12">
-                                            <div class="custom_select">
-                                                <input class="form-control-file" id="" name="" type="file" value="">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3 col-12">
-                                            <div class="d-flex align-items-center flex-wrap">
-                                                <div class="px-2">
-                                                    <button class="btn btn_primary regrate_btn" type="button">Upload</button>
-                                                </div>
-                                                <div class="px-2">
-                                                    <p class="mt-3 text-danger">Only csv file is allowed!</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4 col-12 px-0">
-                                            <div class="d-flex align-items-center justify-content-end flex-wrap">
-                                                <div class="px-0">
-                                                    <button class="btn btn_primary regrate_btn" type="button">Download Merchant Caution Limit Template</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="clearfix"></div>
-                            <div class="d-flex align-items-center justify-content-center mt-3">
-                                <div class="px-2">
-                                    <button class="btn btn_primary" type="button">Upload Merchant Caution Limit</button>
-                                </div>
-                                <div class="px-2">
-                                    <button class="btn btn_primary" type="button" onclick="resetClick()">Reset</button>
-                                </div>
-
-                            </div>
-                        </div>
-                        <div class="clearfix"></div>
-                    </div>
                 </div>
-                <div class="clearfix"></div>
             </div>
         </div>
     </div>
@@ -220,8 +217,8 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body" >
-                 <div class="col-lg-12 col-md-12 col-12 toBeHiddenOnSuccess" id="MerchantSummaryData">
+            <div class="modal-body">
+                <div class="col-lg-12 col-md-12 col-12 toBeHiddenOnSuccess" id="MerchantSummaryData">
                 </div>
             </div>
         </div>
@@ -229,288 +226,288 @@
 </div>
 <script type="text/javascript">
 
-        function resetClick(){
-            window.location.reload(true);
-        }
+         function resetClick(){
+             window.location.reload(true);
+         }
 
-        $(document).ready(function () {
+         $(document).ready(function () {
 
-            $('select').SumoSelect({
-                placeholder: '-Select-',
-                search: true,
-                searchText: 'Enter Text here.'
-            });
-
-            $.ajax({
-                type: 'POST',  // http method
-                url: '@Url.Action("GetzonalOfficeList", "Common")',
-                dataType: "json",
-                success: function (data, status, xhr) {
-
-                    console.log(data);
-
-                    $.each(data.zonalOfficeLst, function (i, option) {
-                        $("<option/>").val(option.zonalOfficeID).text(option.zonalOfficeName).appendTo(".zonalOfcVal");
-                    });
-                    $(".zonalOfcVal")[0].sumo.reload();
-                },
-                error: function (jqXhr, textStatus, errorMessage) {
-                    alert("Error Populating Zonal Office");
-                }
-            });
-
-             $.ajax({
-                type: 'POST',  // http method
-                url: '@Url.Action("GetMerchantStatus", "Common")',
-                dataType: "json",
-                success: function (data, status, xhr) {
-
-                    console.log(data);
-
-                    $.each(data.merchantStatusList, function (i, option) {
-                        $("<option/>").val(option.statusId).text(option.statusName).appendTo(".merchantStatusVal");
-                    });
-                    $(".merchantStatusVal")[0].sumo.reload();
-                },
-                error: function (jqXhr, textStatus, errorMessage) {
-                    alert("Error Populating Zonal Office");
-                }
+             $('select').SumoSelect({
+                 placeholder: '-Select-',
+                 search: true,
+                 searchText: 'Enter Text here.'
              });
 
-           // setDates();
-        });
+             $.ajax({
+                 type: 'POST',  // http method
+                 url: '@Url.Action("GetzonalOfficeList", "Common")',
+                 dataType: "json",
+                 success: function (data, status, xhr) {
+
+                     console.log(data);
+
+                     $.each(data.zonalOfficeLst, function (i, option) {
+                         $("<option/>").val(option.zonalOfficeID).text(option.zonalOfficeName).appendTo(".zonalOfcVal");
+                     });
+                     $(".zonalOfcVal")[0].sumo.reload();
+                 },
+                 error: function (jqXhr, textStatus, errorMessage) {
+                     alert("Error Populating Zonal Office");
+                 }
+             });
+
+              $.ajax({
+                 type: 'POST',  // http method
+                 url: '@Url.Action("GetMerchantStatus", "Common")',
+                 dataType: "json",
+                 success: function (data, status, xhr) {
+
+                     console.log(data);
+
+                     $.each(data.merchantStatusList, function (i, option) {
+                         $("<option/>").val(option.statusId).text(option.statusName).appendTo(".merchantStatusVal");
+                     });
+                     $(".merchantStatusVal")[0].sumo.reload();
+                 },
+                 error: function (jqXhr, textStatus, errorMessage) {
+                     alert("Error Populating Zonal Office");
+                 }
+              });
+
+            // setDates();
+         });
 
 
 
-        $(".zonalOfcVal").change(function () {
-            var id = this.value;
+         $(".zonalOfcVal").change(function () {
+             var id = this.value;
 
-            if(id == ""){
-                $(".regionalOfcVal").html("");
-                $(".regionalOfcVal")[0].sumo.reload();
-                return false;
-            }
+             if(id == ""){
+                 $(".regionalOfcVal").html("");
+                 $(".regionalOfcVal")[0].sumo.reload();
+                 return false;
+             }
 
-            if (id != 0) {
-                $("#state_error").html("");
-            }
+             if (id != 0) {
+                 $("#state_error").html("");
+             }
 
-            $.ajax({
-                type: 'POST',  // http method
-                url: '@Url.Action("GetRegionalOfcDetails", "Common")',
-                data: { zonalOfcId: id },  // data to submit
-                dataType: "json",
-                success: function (data, status, xhr) {
+             $.ajax({
+                 type: 'POST',  // http method
+                 url: '@Url.Action("GetRegionalOfcDetails", "Common")',
+                 data: { zonalOfcId: id },  // data to submit
+                 dataType: "json",
+                 success: function (data, status, xhr) {
 
-                    console.log(data);
+                     console.log(data);
 
-                    var v = data;
-                    if (status == 'success') {
-                        $(".regionalOfcVal").html("");
-                        $('<option value="-1">--Select Regional Office--</option>').appendTo(".regionalOfcVal");
-                        $.each(data, function (i, data) { // bind the dropdown list using json result
-                            $('<option>',
-                                {
-                                    value: data.regionalOfficeID,
-                                    text: data.regionalOfficeName
-                                }).html(data.districtName).appendTo(".regionalOfcVal");
-                        });
-                        $(".regionalOfcVal")[0].sumo.reload();
-                    }
-                    else {
-                        console.log(v);
-                    }
-                },
-                error: function (jqXhr, textStatus, errorMessage) {
-                    alert("Error Populating Regional Office");
-                }
-            });
-        });
+                     var v = data;
+                     if (status == 'success') {
+                         $(".regionalOfcVal").html("");
+                         $('<option value="-1">--Select Regional Office--</option>').appendTo(".regionalOfcVal");
+                         $.each(data, function (i, data) { // bind the dropdown list using json result
+                             $('<option>',
+                                 {
+                                     value: data.regionalOfficeID,
+                                     text: data.regionalOfficeName
+                                 }).html(data.districtName).appendTo(".regionalOfcVal");
+                         });
+                         $(".regionalOfcVal")[0].sumo.reload();
+                     }
+                     else {
+                         console.log(v);
+                     }
+                 },
+                 error: function (jqXhr, textStatus, errorMessage) {
+                     alert("Error Populating Regional Office");
+                 }
+             });
+         });
 
 
-        $(".regionalOfcVal").change(function () {
+         $(".regionalOfcVal").change(function () {
 
-            var id = this.value;
+             var id = this.value;
 
-            console.log(id);
+             console.log(id);
 
-            if(id == -1){
-                $(".salesAreaVal").html("");
-                $(".salesAreaVal")[0].sumo.reload();
-                return false;
-            }
+             if(id == -1){
+                 $(".salesAreaVal").html("");
+                 $(".salesAreaVal")[0].sumo.reload();
+                 return false;
+             }
 
-            if (id != 0) {
-                $("#state_error").html("");
-            }
+             if (id != 0) {
+                 $("#state_error").html("");
+             }
 
-            $.ajax({
-                type: 'POST',  // http method
-                url: '@Url.Action("GetSalesAreaList", "Common")',
-                data: { regionalOfcId: id },  // data to submit
-                dataType: "json",
-                success: function (data, status, xhr) {
-                    console.log(data);
-                    var v = data;
-                    if (status == 'success') {
-                        $(".salesAreaVal").html("");
-                        $('<option>--Select Sales Area--</option>').appendTo(".salesAreaVal");
-                        $.each(data, function (i, data) { // bind the dropdown list using json result
-                            $('<option>',
-                                {
-                                    value: data.salesAreaID,
-                                    text: data.salesAreaName
-                                }).html(data.salesAreaLst).appendTo(".salesAreaVal");
-                        });
-                        $(".salesAreaVal")[0].sumo.reload();
-                    }
-                    else {
-                        console.log(v);
-                    }
-                },
-                error: function (jqXhr, textStatus, errorMessage) {
-                    alert("Error Populating Sales Area");
-                }
-            });
-        });
-  
+             $.ajax({
+                 type: 'POST',  // http method
+                 url: '@Url.Action("GetSalesAreaList", "Common")',
+                 data: { regionalOfcId: id },  // data to submit
+                 dataType: "json",
+                 success: function (data, status, xhr) {
+                     console.log(data);
+                     var v = data;
+                     if (status == 'success') {
+                         $(".salesAreaVal").html("");
+                         $('<option>--Select Sales Area--</option>').appendTo(".salesAreaVal");
+                         $.each(data, function (i, data) { // bind the dropdown list using json result
+                             $('<option>',
+                                 {
+                                     value: data.salesAreaID,
+                                     text: data.salesAreaName
+                                 }).html(data.salesAreaLst).appendTo(".salesAreaVal");
+                         });
+                         $(".salesAreaVal")[0].sumo.reload();
+                     }
+                     else {
+                         console.log(v);
+                     }
+                 },
+                 error: function (jqXhr, textStatus, errorMessage) {
+                     alert("Error Populating Sales Area");
+                 }
+             });
+         });
 
-    function subVal() {
 
-        var fromdate = $("#FromDate").val();
-        var todate = $("#ToDate").val();
+     function subVal() {
 
-        var flag = "Y";
-        if (fromdate == "") {
-            $("#fromDate_error").attr("style", "display:block");
-            $("#fromDate_error").html("Select From Date");
-            flag = "N";
-        }
-        if (todate == "") {
-            $("#toDate_error").attr("style", "display:block");
-            $("#toDate_error").html("Select To Date");
-            flag = "N";
-        }
-        if (fromdate != "" && todate != "") {
-            flag = checkDates("fromDate_error");
-        }
+         var fromdate = $("#FromDate").val();
+         var todate = $("#ToDate").val();
 
-        if (flag == "N")
-            e.preventDefault();
+         var flag = "Y";
+         if (fromdate == "") {
+             $("#fromDate_error").attr("style", "display:block");
+             $("#fromDate_error").html("Select From Date");
+             flag = "N";
+         }
+         if (todate == "") {
+             $("#toDate_error").attr("style", "display:block");
+             $("#toDate_error").html("Select To Date");
+             flag = "N";
+         }
+         if (fromdate != "" && todate != "") {
+             flag = checkDates("fromDate_error");
+         }
 
-        if (flag == "Y") {
-            if ($("#formVal").valid()) {
+         if (flag == "N")
+             e.preventDefault();
 
-                $.ajax({
-                    type: 'POST',  // http method
-                    url: '@Url.Action("ViewUploadMerchantCautionLimit", "MerchantFinancials")',
-                    data: $('#formVal').serialize(),  // data to submit
-                    success: function (res, status, xhr) {
+         if (flag == "Y") {
+             if ($("#formVal").valid()) {
 
-                        if (res.searchList.success == true) {
+                 $.ajax({
+                     type: 'POST',  // http method
+                     url: '@Url.Action("ViewUploadMerchantCautionLimit", "MerchantFinancials")',
+                     data: $('#formVal').serialize(),  // data to submit
+                     success: function (res, status, xhr) {
 
-                            var girdList = res.searchList.data;
+                         if (res.searchList.success == true) {
 
-                            document.getElementById("noRecord").style.display = "none";
+                             var girdList = res.searchList.data;
 
-                            var girdList = res.searchList.data;
+                             document.getElementById("noRecord").style.display = "none";
 
-                            document.getElementById("noRecord").style.display = "none";
+                             var girdList = res.searchList.data;
 
-                            $("#MerchantSearchTbl td").parent().remove();
+                             document.getElementById("noRecord").style.display = "none";
 
-                            $('#MerchantSearchTbl').DataTable().clear().destroy();
+                             $("#MerchantSearchTbl td").parent().remove();
 
-                            var tbl = $('#MerchantSearchTbl').DataTable({
-                                paging: true,
-                                searching: false,
-                                stateSave: true,
-                                "bDestroy": true,
-                                "lengthMenu": [10, 20, 50, 100, 200, 500, 1000, 2000],
-                                "autoWidth": false,
-                                "oLanguage": {
-                                    "sLengthMenu": "Display _MENU_ Records",
-                                    "info": "Showing _START_ to _END_ of _TOTAL_ Records",
-                                }
-                            });
+                             $('#MerchantSearchTbl').DataTable().clear().destroy();
 
-                            for (var i = 0; i < girdList.length; i++) {
+                             var tbl = $('#MerchantSearchTbl').DataTable({
+                                 paging: true,
+                                 searching: false,
+                                 stateSave: true,
+                                 "bDestroy": true,
+                                 "lengthMenu": [10, 20, 50, 100, 200, 500, 1000, 2000],
+                                 "autoWidth": false,
+                                 "oLanguage": {
+                                     "sLengthMenu": "Display _MENU_ Records",
+                                     "info": "Showing _START_ to _END_ of _TOTAL_ Records",
+                                 }
+                             });
 
-                                var srNumber = (girdList[i].srNumber);
-                                var merchantId = "<a data-toggle='modal' href='#MerchantSummaryView' onclick='ViewMerchantSummary(this)'>" + (girdList[i].merchantId || '') + "</a>";
-                                var retailOutletName = (girdList[i].retailOutletName || '');
-                                var regionalOfficeName = (girdList[i].regionalOfficeName || '');
-                                var salesArea = (girdList[i].salesArea);
-                                var avgHsdSale = (girdList[i].avgHsdSale);
-                                var hsdRspValue = (girdList[i].hsdRspValue);
-                                var dtplusCautionLimit = (girdList[i].dtplusCautionLimit);
-                                var avgMsSale = (girdList[i].avgMsSale);
-                                var msRspValue = (girdList[i].msRspValue);
-                                var hpPayCautionLimit = (girdList[i].hpPayCautionLimit);
-                                var lastUpdatedOn = (girdList[i].lastUpdatedOn || '');
-                                var statusName = (girdList[i].statusName || '');
-                                var edit = "<a href='#aa'><i class='fa fa-pencil-square-o' title='Edit' aria-hidden='true'></i></a>";
+                             for (var i = 0; i < girdList.length; i++) {
 
-                                tbl.row.add([
-                                    srNumber,
-                                    merchantId,
-                                    retailOutletName,
-                                    regionalOfficeName,
-                                    salesArea,
-                                    avgHsdSale,
-                                    hsdRspValue,
-                                    dtplusCautionLimit,
-                                    avgMsSale,
-                                    msRspValue,
-                                    hpPayCautionLimit,
-                                    lastUpdatedOn,
-                                    statusName,
-                                    edit
-                                ]).draw();
-                            }
-                            document.getElementById('tblResponse').style.display = 'block';
-                        } else {
-                            document.getElementById("tblResponse").style.display = "none";
-                            $("#noRecord").html("");
-                            $("#noRecord").append("<span>" + res.searchList.message + "</span>");
-                            document.getElementById("noRecord").style.display = "block";
-                        }
+                                 var srNumber = (girdList[i].srNumber);
+                                 var merchantId = "<a data-toggle='modal' href='#MerchantSummaryView' onclick='ViewMerchantSummary(this)'>" + (girdList[i].merchantId || '') + "</a>";
+                                 var retailOutletName = (girdList[i].retailOutletName || '');
+                                 var regionalOfficeName = (girdList[i].regionalOfficeName || '');
+                                 var salesArea = (girdList[i].salesArea);
+                                 var avgHsdSale = (girdList[i].avgHsdSale);
+                                 var hsdRspValue = (girdList[i].hsdRspValue);
+                                 var dtplusCautionLimit = (girdList[i].dtplusCautionLimit);
+                                 var avgMsSale = (girdList[i].avgMsSale);
+                                 var msRspValue = (girdList[i].msRspValue);
+                                 var hpPayCautionLimit = (girdList[i].hpPayCautionLimit);
+                                 var lastUpdatedOn = (girdList[i].lastUpdatedOn || '');
+                                 var statusName = (girdList[i].statusName || '');
+                                 var edit = "<a href='#aa'><i class='fa fa-pencil-square-o' title='Edit' aria-hidden='true'></i></a>";
 
-                    },
-                    error: function (jqXhr, textStatus, errorMessage) {
-                        console.log("Error");
-                    }
-                });
-            } else {
-                return false;
-            }
-        }
-    }
-     function resetClick() {
-        window.location.reload(true);
-    }
-   function ViewMerchantSummary(o){
-        var erpCode=o.innerText.substr(2);
-         $.ajax({
-            type: 'GET',  // http method
-            url: '@Url.Action("GetMerchantSummaryData", "TerminalManagement")',
-            contentType: "application/json; charset=utf-8",
-            data: { ERPCode: erpCode },
-            dataType: "text",
-            success: function (data, status, xhr) {
-                var v = data;
-                if (status == 'success') {
-                    $("#MerchantSummaryData").html("");
-                    $("#MerchantSummaryData").html(data);
-                  $('#MerchantSummaryView').modal('show');
-                }
-                else {
-                    console.log(v);
-                }
-            },
-            error: function (jqXhr, textStatus, errorMessage) {
-                alert("Error");
-            }
-        });
-    }
+                                 tbl.row.add([
+                                     srNumber,
+                                     merchantId,
+                                     retailOutletName,
+                                     regionalOfficeName,
+                                     salesArea,
+                                     avgHsdSale,
+                                     hsdRspValue,
+                                     dtplusCautionLimit,
+                                     avgMsSale,
+                                     msRspValue,
+                                     hpPayCautionLimit,
+                                     lastUpdatedOn,
+                                     statusName,
+                                     edit
+                                 ]).draw();
+                             }
+                             document.getElementById('tblResponse').style.display = 'block';
+                         } else {
+                             document.getElementById("tblResponse").style.display = "none";
+                             $("#noRecord").html("");
+                             $("#noRecord").append("<span>" + res.searchList.message + "</span>");
+                             document.getElementById("noRecord").style.display = "block";
+                         }
+
+                     },
+                     error: function (jqXhr, textStatus, errorMessage) {
+                         console.log("Error");
+                     }
+                 });
+             } else {
+                 return false;
+             }
+         }
+     }
+      function resetClick() {
+         window.location.reload(true);
+     }
+    function ViewMerchantSummary(o){
+         var erpCode=o.innerText.substr(2);
+          $.ajax({
+             type: 'GET',  // http method
+             url: '@Url.Action("GetMerchantSummaryData", "TerminalManagement")',
+             contentType: "application/json; charset=utf-8",
+             data: { ERPCode: erpCode },
+             dataType: "text",
+             success: function (data, status, xhr) {
+                 var v = data;
+                 if (status == 'success') {
+                     $("#MerchantSummaryData").html("");
+                     $("#MerchantSummaryData").html(data);
+                   $('#MerchantSummaryView').modal('show');
+                 }
+                 else {
+                     console.log(v);
+                 }
+             },
+             error: function (jqXhr, textStatus, errorMessage) {
+                 alert("Error");
+             }
+         });
+     }
 </script>

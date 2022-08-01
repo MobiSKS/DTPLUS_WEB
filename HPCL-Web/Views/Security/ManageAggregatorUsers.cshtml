@@ -1,0 +1,435 @@
+﻿@model HPCL.Common.Models.ViewModel.Security.GetManageUser
+@using Microsoft.AspNetCore.Http;
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ajax-unobtrusive/3.2.6/jquery.unobtrusive-ajax.js"></script>
+
+<div class="col-lg-12">
+    <div class="bg-white p-2 p-md-4" style="background: #edecec !important;">
+        <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
+            <li class="breadcrumb-item"><a href="@Url.Action("Index")" class="text_primary">Security</a> </li>
+            <li class="breadcrumb-item font-weight-light">Manage Aggregator Users</li>
+        </ul>
+        <form id="formVal">
+            <div class="w-100">
+                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
+                    <div class="border-1 rounded border-grey pb-0">
+                        <p class="text_primary px-3 py-2 m-0 font-weight-bold" style="background: #084693;">Manage Aggregator Users</p>
+                        <div class="col-lg-12 col-md-12 col-12 pb-0 pt-3 pb-3 bg-white">
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-0">
+                                        <label class="font-weight-normal col-md-2 col-12 px-0">Search Users</label>
+                                        <div class="col-md-5 col-12">
+                                            <div class="dropdown">
+                                                <input type="text" id="searchField" placeholder="Start Searching" class="dropbtn form-control" disabled="disabled"/>
+                                                <div class="dropdown-content">
+                                                    <input type="checkbox" class="chk" id="allFieldsCheck" name="seachType" value="0" checked>
+                                                    <label for="seachType"> All Fields</label><br>
+
+                                                    <input type="checkbox" class="chk" id="userNameCheck" name="seachType" value="1">
+                                                    <label for="seachType"> User Name</label><br>
+
+                                                    <input type="checkbox" class="chk" id="emailCheck" name="seachType" value="2">
+                                                    <label for="seachType"> Email</label><br>
+
+                                                    <input type="checkbox" class="chk" id="lastLoginTimeCheck" name="seachType" value="3">
+                                                    <label for="seachType"> Last Login Date</label><br>
+
+                                                    <input type="checkbox" class="chk" id="userRoleCheck" name="seachType" value="4">
+                                                    <label for="seachType"> User Role</label><br>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-5 col-12 pl-0">
+                                            <div class="d-flex align-items-center justify-content-end flex-wrap mb-0">
+                                                <div class="px-1">
+                                                    <button class="btn btn_primary" type="button" onclick="searchUsers()">Search</button>
+                                                </div>
+                                                <div class="px-1">
+                                                    <button class="btn btn_primary" id="btnReset" onclick="resetClick()" type="button">Reset</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center justify-content-end flex-wrap mb-0">
+                                        <div class="col-md-4 col-12">
+                                            <div class="custom_select">
+                                                <div class="form-check">
+                                                    <input type="checkbox" class="form-check-input" name="disChk" id="exampleCheck1">
+                                                    <label class="form-check-label" for="disChk" style="padding-top: 4px;">Show Disabled</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 col-12 px-0">
+                                            <div class="d-flex align-items-center justify-content-end flex-wrap mb-0">
+                                                <div class="px-1">
+                                                    <a class="btn btn_primary" href="@Url.Action("AddNewAggregatorUser","Security")"><i class="fa fa-plus">&nbsp;</i> Add</a>
+                                                </div>
+                                             
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="mb-3 text-center alert alert-danger" style="display:none;" id="noRecord"></div>
+                    <div class="mb-3 text-center alert alert-danger" style="display:none;" id="errMsg"></div>
+                    <div class="mb-3 text-center alert alert-success" style="display:none;" id="sucssMsg"></div>
+
+                    <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3" style="display:none;" id="searchDetails">
+                        <table id="UserMappingTable" class="table table-striped d-md-table d-block table-bordered table-responsive nowrap mt-3" style="width:100%;">
+                            <thead>
+                                <tr>
+                                    <th>S.No.</th>
+                                   
+                                    <th>User Name</th>
+                                    <th>Email</th>
+                                    <th>Last Login Time</th>
+                                    <th>User Roles</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="clearfix"></div>
+    </div>
+</div>
+<div class="clearfix"></div>
+
+
+
+<script>
+ 
+    $(document).ready(function (){
+       $('.chk').on('change', function() {
+           $('.chk').not(this).prop('checked', false);
+       });
+
+       if ($('input[name=seachType]:checked').val() != "0") {
+           $("#searchField").attr("disabled", false);
+       }else{
+           $("#searchField").attr("disabled", true);
+           $("#searchField").val('');
+       }
+    });
+   
+    $('input[type=checkbox][name=seachType]').change(function () {
+        if ($(this).val() != "0") {
+           $("#searchField").attr("disabled", false);
+       }else{
+           $("#searchField").attr("disabled", true);
+           $("#searchField").val('');
+       }
+    });
+
+    function searchUsers(){
+
+        document.getElementById("errMsg").style.display = "none";
+        document.getElementById("sucssMsg").style.display = "none";
+        document.getElementById("noRecord").style.display = "none";
+
+        var submitArray = [];
+        var UserName;
+        var Email;
+        var LastLoginTime;
+        var UserRole;
+        var ShowDisabled;
+
+        var disVal;
+
+        var disVal = ($('#exampleCheck1').is(':checked')) ? disVal = 1 : disVal = 0;
+
+        if ($('input[name=seachType]:checked').val() == "0"){
+            submitArray.push({
+                UserName:"",
+                Email:"",
+                LastLoginTime:"",
+                UserRole:"",
+                ShowDisabled:disVal
+            });
+        }else if($('input[name=seachType]:checked').val() == "1"){
+             submitArray.push({
+                UserName:$("#searchField").val(),
+                Email:"",
+                LastLoginTime:"",
+                UserRole:"",
+                ShowDisabled:disVal
+            });
+        }else if($('input[name=seachType]:checked').val() == "2"){
+             submitArray.push({
+                UserName:"",
+                Email:$("#searchField").val(),
+                LastLoginTime:"",
+                UserRole:"",
+                ShowDisabled:disVal
+            });
+        }else if($('input[name=seachType]:checked').val() == "3"){
+             submitArray.push({
+                UserName:"",
+                Email:"",
+                LastLoginTime:$("#searchField").val(),
+                UserRole:"",
+                ShowDisabled:disVal
+            });
+        }else if($('input[name=seachType]:checked').val() == "4"){
+             submitArray.push({
+                UserName:"",
+                Email:"",
+                LastLoginTime:"",
+                UserRole:$("#searchField").val(),
+                ShowDisabled:disVal
+            });
+        }
+
+
+        $.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("ManageAggregatorUsers", "Security")',
+            data: { searchItemList: JSON.stringify(submitArray) },  // data to submit
+            success: function (res, status, xhr) {
+
+                console.log("res",res);
+
+                if (res.searchList.success == true) {
+
+                    var girdList = res.searchList.data;
+
+                    document.getElementById("noRecord").style.display = "none";
+
+                    $('#UserMappingTable').DataTable().clear().destroy();
+
+
+                    var tbl = $('#UserMappingTable').DataTable({
+                        paging: true,
+                        searching: false,
+                        stateSave: true,
+                        "bDestroy": true,
+                        "lengthMenu": [10, 20, 50, 100, 200, 500, 1000, 2000],
+                        "autoWidth": false,
+                        "oLanguage": {
+                            "sLengthMenu": "Display _MENU_ Records",
+                            "info": "Showing _START_ to _END_ of _TOTAL_ Records",
+                        }
+                    });
+
+                    for (var i = 0; i < girdList.length; i++) {
+
+                        var actions;
+
+                        if(disVal == 1){
+                            actions = "<span class='actionName' style='display:none;'>enable</span><a href='#' tooltip='Edit' class='edit'><i title='Edit' class='fa fa-edit'></i></a>"
+                                     +"<a href='#' tooltip='Enable' class='dbs'><i title='Enable' class='fa fa-check'></i></a>"
+                                     +"<a href='#' tooltip='Reset Password' class='reset'><i title='Reset Password' class='fa fa-gear'></i></a>";
+                        }else{
+                            actions = "<span class='actionName' style='display:none;'>disable</span><a href='#' tooltip='Edit'  class='edit'><i title='Edit' class='fa fa-edit'></i></a>"
+                                     +"<a href='#' tooltip='Disable' class='dbs'><i title='Disable' class='fa fa-ban'></i></a>"
+                                     +"<a href='#' tooltip='Reset Password' class='reset'><i title='Reset Password' class='fa fa-gear '></i></a>";                            
+                        }
+
+                        var srNumber = (i + 1);
+                        var pressCheck = "<input type='checkbox' class='checkEnable' name='enableRow'>";
+                        var userName = "<span class='userNameVal'>" + (girdList[i].userName || '') + "</span>";
+                        var email = "<span class='emailVal'>"+(girdList[i].email || '')+"</span>";
+                        var lastLoginTime = (girdList[i].lastLoginTime || '');
+                        var userRole = (girdList[i].userRole || '');
+                        var action = actions;
+
+                        tbl.row.add([
+                            srNumber,
+                            userName,
+                            email,
+                            lastLoginTime,
+                            userRole,
+                            action
+                        ]).draw();
+                    }
+                    document.getElementById('searchDetails').style.display = 'block';
+                } else {
+                    document.getElementById("searchDetails").style.display = "none";
+                    $("#noRecord").html("");
+                    $("#noRecord").append("<span>" + res.searchList.message + "</span>");
+                    document.getElementById("noRecord").style.display = "block";
+                }
+
+            },
+            error: function (jqXhr, textStatus, errorMessage) {
+                console.log("Error");
+            }
+        });
+
+    }
+
+    function resetClick(){
+        window.location.reload();
+    }
+    $("#UserMappingTable").on('click', '.dbs', function (e) {
+
+        document.getElementById("errMsg").style.display = "none";
+        document.getElementById("sucssMsg").style.display = "none";
+
+
+        var currentRow = $(this).closest("tr");
+        var userName = currentRow.find('.userNameVal').text();
+        var action = currentRow.find('.actionName').text();
+
+
+        console.log(userName+"         "+action);
+        //Are you sure you want to disable user paytmtest ?
+        if (confirm('Are you sure you want to disable user '+userName+ ' ?')) {
+            $.ajax({
+                url: "@Url.Action("DisableUpdateAggregatorUser", "Security")",
+                type: "POST",
+                dataType: "JSON",
+                data: { userName: userName, action: action },
+                success: function (res) {
+
+                    console.log("res",res);
+
+                    if(res.reasonList[0].status == 1){
+                        searchUsers();
+                    }
+
+                },
+                error: function (ex) {
+                    alert('Failed' + ex);
+                }
+            });
+        }
+    });
+
+    $("#UserMappingTable").on('click', '.reset', function (e) {
+
+        document.getElementById("errMsg").style.display = "none";
+        document.getElementById("sucssMsg").style.display = "none";
+
+        var currentRow = $(this).closest("tr");
+        var userName = currentRow.find('.userNameVal').text();
+        var email = currentRow.find('.emailVal').text();
+
+        var flag = "Y";
+
+        if(email == ''){
+            $("#errMsg").html('');
+            $("#errMsg").append("<span>Invalid email address</span>");
+            document.getElementById("errMsg").style.display = "block";
+            flag="N";
+        }
+
+        if (flag == "N")
+            e.preventDefault();
+
+        if (flag == "Y") {
+            $.ajax({
+                url: "@Url.Action("AggregatorResetPassword", "Security")",
+                type: "POST",
+                dataType: "JSON",
+                data: { userName: userName ,EmailId:email},
+                success: function (res) {
+
+                    console.log("res",res);
+
+                    document.getElementById("errMsg").style.display = "none";
+                    document.getElementById("sucssMsg").style.display = "none";
+
+                    if(res.reasonList[0].status == 1){
+                        $("#sucssMsg").html('');
+                        $("#sucssMsg").append("<span>"+(res.reasonList[0].reason)+"</span>");
+                        document.getElementById("sucssMsg").style.display = "block";
+                    }else{
+                        document.getElementById("sucssMsg").style.display = "none";
+                        $("#errMsg").html('');
+                        $("#errMsg").append("<span>"+(res.reasonList[0].reason)+"</span>");
+                        document.getElementById("errMsg").style.display = "block";
+                    }
+
+                },
+                error: function (ex) {
+                    alert('Failed' + ex);
+                }
+            });
+        }
+    });
+
+
+ 
+    //$("#UserMappingTable").on('click', '.edit', function (e) {
+
+    //    document.getElementById("errMsg").style.display = "none";
+    //    document.getElementById("sucssMsg").style.display = "none";
+
+
+    //    var currentRow = $(this).closest("tr");
+    //    var userName = currentRow.find('.userNameVal').text();
+    //    var email = currentRow.find('.emailVal').text();
+
+
+    //    var url = '@Html.Raw(@Url.Action("UpdateUserandLocations", "Security",new {  UserName = "zzzzzzYzXz"}))';
+    //    url = url.replace("zzzzzzYzXz", encodeURIComponent(userName));
+    //    window.location.href=url;
+    //});
+
+</script>
+
+
+
+
+<style>
+
+.checkbox-in-ddl input[type=checkbox] {
+    margin-left: 10px;
+    margin-right: 6px;
+}
+label {
+    font-size: 12px;
+    margin-bottom: 0;
+    vertical-align: middle;
+}
+.chk {
+    vertical-align: middle;
+}
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #fff;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    margin: 0px;
+    padding: 10px;
+}
+
+.dropdown-content li {
+    color: #000;
+    padding: 6px 2px;
+    text-decoration: none;
+    display: block;
+    vertical-align: middle;
+}
+
+.dropdown-content a:hover {
+    background-color: #ddd;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown:hover .dropbtn {
+    background-color: #fff;
+}
+
+.dropdown:hover .dropdown-content {display: block;}
+</style>

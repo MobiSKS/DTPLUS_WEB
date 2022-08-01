@@ -91,6 +91,7 @@ namespace HPCL.Service.Services
                 {
                     foreach (VECustomerProfileResponse response in customerProfileResponse)
                     {
+                        #region Commented
                         //if (string.IsNullOrEmpty(response.AreaOfOperation))
                         //{
                         //    response.AreaOfOperation = "";
@@ -218,6 +219,8 @@ namespace HPCL.Service.Services
                         //        response.KeyOfficialDOB = "";
                         //    }
                         //}
+                        #endregion
+
                         if (string.IsNullOrEmpty(response.NameOnCard))
                         {
                             response.NameOnCard = "";
@@ -697,7 +700,7 @@ namespace HPCL.Service.Services
 
             return addAddOnCard;
         }
-        public async Task<InsertResponse> UpdateVECostomerProfile(string str)
+        public async Task<InsertResponse> UpdateVECustomerProfile(string str)
         {
             JArray objs = JArray.Parse(JsonConvert.DeserializeObject(str).ToString());
             List<UpdateAlCustomerProfileRequest> arrs = objs.ToObject<List<UpdateAlCustomerProfileRequest>>();

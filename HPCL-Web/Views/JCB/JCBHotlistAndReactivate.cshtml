@@ -1,0 +1,796 @@
+﻿@model HPCL.Common.Models.ViewModel.JCB.JCBHotlistorReactivateViewModel
+@using Microsoft.AspNetCore.Http;
+
+<div class="col-lg-12">
+    <div class="bg-white p-2 p-md-4" style="background: #edecec !important;">
+        <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
+            <li class="breadcrumb-item"><a href="@Url.Action("Index","JCB")" class="text_primary">JCB Dashboard</a> </li>
+            <li class="breadcrumb-item font-weight-light">Hotlist/Reactivate</li>
+        </ul>
+        <div class="bg-white">
+            <div id="reason" class="mb-0 text-center alert" style="display:none;"></div>
+        </div>
+        <form class="toBeHiddenOnSuccess">
+            <div class="w-100">
+                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
+                    <div class="border-1 rounded border-grey pb-0">
+                        <p class="text-white px-3 py-2 m-0 font-weight-bold" style="background: #084693;">Hotlist/Reactivate</p>
+                        <div class="col-lg-12 col-md-12 col-12 py-3 bg-white">
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label id="lblEntityTypeId" class="font-weight-normal col-md-3 col-12">Entity Type<sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.DropDownListFor(m => m.EntityTypeId, new SelectList(Model.HotlistEntity, "EntityId", "EntityName"), new { @class = "form-control", onchange = "showEntity()" })
+                                                <span class="error" id="entity_typeerror"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-12 divshowDetails">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label id="lblMerchantId" class="font-weight-normal offset-md-2 col-md-3 col-12 merchant" style="display:none">Merchant ID<sup class="text-danger">*</sup></label>
+                                        <label id="lblTerminalId" class="font-weight-normal offset-md-2 col-md-3 col-12 terminal" style="display:none">Terminal ID<sup class="text-danger">*</sup></label>
+                                        <label id="lblCustomerId" class="font-weight-normal offset-md-2 col-md-3 col-12 customer" style="display:none">Customer ID<sup class="text-danger">*</sup></label>
+                                        <label id="lblCardNo" class="font-weight-normal offset-md-2 col-md-3 col-12 cardNo" style="display:none">Card Number<sup class="text-danger">*</sup></label>
+
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select merchant" id="merchantIdDiv" style="display:none">
+                                                @Html.TextBoxFor(m => m.MerchantId, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                            </div>
+                                            <div class="custom_select terminal" id="terminalIdDiv" style="display:none">
+                                                @Html.TextBoxFor(m => m.TerminalId, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                            </div>
+                                            <div class="custom_select customer" id="customerIdDiv" style="display:none">
+                                                @Html.TextBoxFor(m => m.CustomerId, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                            </div>
+                                            <div class="custom_select cardNo" id="cardNoDiv" style="display:none">
+                                                @Html.TextBoxFor(m => m.CardNo, new { @class = "form-control", maxlength = "16", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                            </div>
+                                            <span style="display:none" class="error" id="entityid_error"></span>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="divshowDetails" style="display:none">
+                                <div class="d-flex align-items-center flex-wrap">
+                                    <div class="col-lg-6 col-12">
+                                        <div class="d-flex align-items-center flex-wrap mb-3">
+                                            <label class="font-weight-normal col-md-3 col-12">Action<sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="custom_select">
+                                                    @Html.DropDownListFor(m => m.ActionId, new SelectList(Model.HotlistStatus, "StatusId", "StatusName"), new { @class = "form-control", onchange = "getReasonList()" })
+                                                    <span class="error" id="action_error"></span>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-12">
+                                        <div class="d-flex align-items-center flex-wrap mb-3">
+                                            <label id="lblMerchantId" class="font-weight-normal offset-md-2 col-md-3 col-12">Reason<sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="custom_select" id="merchantIdDiv">
+                                                    @Html.DropDownListFor(m => m.ReasonId, new SelectList(Model.HotlistReason, "ReasonId", "ReasonName"), new { @class = "form-control", onchange = "showReasonDetails()" })
+                                                    <span class="error" id="reason_error"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex align-items-center flex-wrap">
+                                    <div class="col-lg-6 col-12">
+                                        <div class="d-flex align-items-center flex-wrap mb-0">
+                                            <label class="font-weight-normal col-md-3 col-12 mb-3">Remarks<sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="custom_select">
+                                                    @Html.TextAreaFor(m => m.Remarks, new { @class = "form-control", @rows = "2", @cols = "5" , @style = "resize: none;", maxlength="250" })
+                                                    <span class="error" id="remarks_error"></span>
+                                                    <p id="charRemining" class="mb-0"></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-12">
+                                        <div class="d-flex align-items-center flex-wrap mb-3">
+                                            <label class="font-weight-normal offset-md-2 col-md-3 col-12">&nbsp;</label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="custom_select" id="divReasonDetails" style="display:none">
+                                                    @Html.TextBoxFor(m => m.ReasonDetails, new { @class = "form-control", maxlength = "100" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+                                <div class="d-flex align-items-center justify-content-center mt-0">
+                                    <div class="px-2">
+                                        <button class="btn btn_primary" type="button" id="btnApply">APPLY</button>
+                                    </div>
+                                    <div class="px-2">
+                                        <button class="btn btn_primary" type="button" id="btnReset">RESET</button>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>
+            <input type="hidden" id="entityStatus" />
+        </form>
+        <div class="clearfix"></div>
+
+    </div>
+</div>
+<script type="text/javascript">
+     $(document).ready(function () {
+        var text_max = 250;
+        $('#charRemining').html('(<i>' + text_max +' characters remaining</i>)');
+
+        $('#Remarks').keyup(function ()
+        {
+            var text_length = $('#Remarks').val().length;
+            var text_remaining = text_max - text_length;
+
+            $('#charRemining').html('(<i>' + text_remaining + ' characters remaining</i>)');
+        });
+
+     });
+
+
+    function showEntity() {
+        var id = $('#EntityTypeId :selected').val();
+        if (id > 0) {
+            $(".divshowDetails").attr("style", "display:block");
+
+            getActionList();
+
+            if ($('#EntityTypeId :selected').text() == "Customer") {
+                $(".customer").attr("style", "display:block");
+                $(".merchant").attr("style", "display:none");
+                $(".terminal").attr("style", "display:none");
+                $(".cardNo").attr("style", "display:none");
+
+            }
+            else if ($('#EntityTypeId :selected').text() == "Merchant") {
+                $(".customer").attr("style", "display:none");
+                $(".merchant").attr("style", "display:block");
+                $(".terminal").attr("style", "display:none");
+                $(".cardNo").attr("style", "display:none");
+            }
+            else if ($('#EntityTypeId :selected').text() == "Card") {
+                $(".customer").attr("style", "display:none");
+                $(".merchant").attr("style", "display:none");
+                $(".terminal").attr("style", "display:none");
+                $(".cardNo").attr("style", "display:block");
+            }
+            else {
+                $(".customer").attr("style", "display:none");
+                $(".merchant").attr("style", "display:none");
+                $(".terminal").attr("style", "display:block");
+                $(".cardNo").attr("style", "display:none");
+            }
+            $("#entity_typeerror").attr("style", "display:none");
+            $("#entity_typeerror").html("");
+        }
+        else {
+            $(".divshowDetails").attr("style", "display:none");
+            $(".customer").attr("style", "display:none");
+            $(".merchant").attr("style", "display:none");
+            $(".terminal").attr("style", "display:none");
+            $(".cardNo").attr("style", "display:none");
+            $("#entity_typeerror").attr("style", "display:block");
+            $("#entity_typeerror").html("Select Entity Type");
+
+        }
+        $("#reason_error").attr("style", "display:none");
+        $("#reason_error").html("");
+        $("#entityid_error").attr("style", "display:none");
+        $("#entityid_error").html("");
+        $("#action_error").attr("style", "display:none");
+        $("#action_error").html("");
+        $("#remarks_error").attr("style", "display:none");
+        $("#remarks_error").html("");
+        $("#divReasonDetails").attr("style", "display:none");
+        $('#ReasonId').empty();
+        $("#CustomerId").val("");
+        $("#MerchantId").val("");
+        $("#TerminalId").val("");
+        $("#CardNo").val("");
+        $("#Remarks").val("");
+        var text_max = 250;
+        var text_length = $('#Remarks').val().length;
+        var text_remaining = text_max - text_length;
+
+        $('#charRemining').html('(<i>' + text_remaining + ' characters remaining</i>)');
+
+        //$('<option>',
+        //    {
+        //        value: 0,
+        //        text: "--Select--"
+        //    }).html("--Select--").appendTo("#ReasonId");
+    }
+    function getActionList() {
+        var id = $('#EntityTypeId :selected').val();
+        var entityType = $('#EntityTypeId :selected').text();
+        $.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("GetActionList", "Common")',
+            data: { EntityTypeId: id },  // data to submit
+            dataType: "json",
+            success: function (data, status, xhr) {
+                var v = data;
+                if (status == 'success') {
+                    $("#ActionId").html("");
+                    $.each(data, function (i, data) {
+                        //debugger;
+                        if (i == 0)
+                        {
+                            $('<option>',
+                                {
+                                    value: 0,
+                                    text: "--Select--"
+                                }).html("--Select--").appendTo("#ActionId");
+                            $('<option>',
+                                {
+                                    value: data.statusId,
+                                    text: data.statusName
+                                }).html(data.statusName).appendTo("#ActionId");
+                        }
+                        else
+                        {
+                            $('<option>',
+                                {
+                                    value: data.statusId,
+                                    text: data.statusName
+                                }).html(data.statusName).appendTo("#ActionId");
+                        }
+                        if (entityType.toUpperCase() == "CARD" || entityType.toUpperCase() == "CUSTOMER")
+                        {
+                            if (data.statusName == "Permanent Hotlisted" || data.statusId == "7")
+                            {
+                                $("#ActionId").val(data.statusId);
+                                getReasonList();
+                                $("#ActionId").attr("disabled", "true");
+                            }
+                        }
+                        else
+                            $("#ActionId").removeAttr("disabled");
+                    });
+                     $("#ActionId")[0].sumo.reload();
+                }
+                else {
+                    console.log(v);
+                }
+            },
+            error: function (jqXhr, textStatus, errorMessage) {
+                alert("Error Populating Data");
+            }
+        });
+    };
+    function getReasonList()
+    {
+         var entityTypeId = $('#EntityTypeId :selected').val();
+         //var actionId = $('#ActionId :selected').val();
+        $.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("GetReasonListForEntities", "JCB")',
+            data: { EntityTypeId: entityTypeId},  // data to submit
+            dataType: "json",
+            success: function (data, status, xhr) {
+                var v = data;
+                console.log(data);
+                if (status == 'success') {
+                    $("#ReasonId").html("");
+                    if (data.length > 0) {
+                        $.each(data, function (i, data) {
+                            if (i == 0) {
+                                $('<option>',
+                                    {
+                                        value: 0,
+                                        text: "--Select--"
+                                    }).html("--Select--").appendTo("#ReasonId");
+                                $('<option>',
+                                    {
+                                        value: data.reasonId,
+                                        text: data.reasonName
+                                    }).html(data.reasonName).appendTo("#ReasonId");
+                            }
+                            else {
+                                $('<option>',
+                                    {
+                                        value: data.reasonId,
+                                        text: data.reasonName
+                                    }).html(data.reasonName).appendTo("#ReasonId");
+                            }
+                        });
+
+                    }
+                    //else {
+                    //    $('<option>',
+                    //        {
+                    //            value: 0,
+                    //            text: "--Select--"
+                    //        }).html("--Select--").appendTo("#ReasonId");
+                    //}
+                    $("#ReasonId")[0].sumo.reload();
+                }
+                else {
+                    console.log(v);
+                }
+            },
+            error: function (jqXhr, textStatus, errorMessage) {
+                alert("Error Populating Data");
+            }
+        });
+    };
+
+    function showReasonDetails() {
+
+        var reason = $('#ReasonId :selected').text();
+        if (reason == "Others")
+            $("#divReasonDetails").attr("style", "display:block");
+        else
+
+            $("#divReasonDetails").attr("style", "display:none");
+        $("#reason_error").attr("style", "display:none");
+        $("#reason_error").html("");
+    }
+
+
+    $("#btnApply").on("click",(function (e) {
+
+        var flag = "Y";
+        var merchantId = "", terminalId = "", cardNo = "", customerId = "", entityIdVal = "";;
+        if ($('#EntityTypeId :selected').text() == "Customer") {
+            customerId = $("#CustomerId").val();
+            if (customerId != "") {
+                if (!customerId.match(mappedCustomerId)) {
+                    $("#entityid_error").attr("style", "display:block");
+                    $("#entityid_error").html("Invalid Customer ID");
+                    flag = "N";
+                }
+                else {
+                    $("#entityid_error").attr("style", "display:none");
+                    $("#entityid_error").html("");
+                }
+                entityIdVal = customerId;
+            }
+            else{
+                $("#entityid_error").attr("style", "display:block");
+                $("#entityid_error").html("Enter Customer ID");
+                flag = "N";
+            }
+        }
+        else if ($('#EntityTypeId :selected').text() == "Merchant") {
+            merchantId = $("#MerchantId").val();
+            if (merchantId != "") {
+                if (!merchantId.match(mappedMerchantID)) {
+                    $("#entityid_error").attr("style", "display:block");
+                    $("#entityid_error").html("Invalid Merchant ID");
+                    flag = "N";
+                }
+                else {
+                    $("#entityid_error").attr("style", "display:none");
+                    $("#entityid_error").html("");
+                }
+                entityIdVal = merchantId;
+            }
+            else{
+                $("#entityid_error").attr("style", "display:block");
+                $("#entityid_error").html("Enter Merchant ID");
+                flag = "N";
+            }
+        }
+        else if ($('#EntityTypeId :selected').text() == "Card") {
+            cardNo = $("#CardNo").val();
+            if (cardNo != "") {
+                if (cardNo.length!=16 || !(cardNo.match(number))) {
+                    $("#entityid_error").attr("style", "display:block");
+                    $("#entityid_error").html("Invalid Card Number");
+                    flag = "N";
+                }
+                else {
+                    $("#entityid_error").attr("style", "display:none");
+                    $("#entityid_error").html("");
+                }
+                entityIdVal = cardNo;
+            }
+            else{
+                $("#entityid_error").attr("style", "display:block");
+                $("#entityid_error").html("Enter Card Number");
+                flag = "N";
+            }
+        }
+
+        else {
+            terminalId = $("#TerminalId").val();
+            if (terminalId != "") {
+                if (!terminalId.match(mappedterminalID)) {
+                    $("#entityid_error").attr("style", "display:block");
+                    $("#entityid_error").html("Invalid Terminal ID");
+                    flag = "N";
+                }
+                else {
+                    $("#entityid_error").attr("style", "display:none");
+                    $("#entityid_error").html("");
+                }
+                entityIdVal = terminalId;
+            }
+            else{
+                $("#entityid_error").attr("style", "display:block");
+                $("#entityid_error").html("Enter Terminal ID");
+                flag = "N";
+            }
+        }
+
+
+        var actionId = $('#ActionId :selected').val();
+        if (actionId == "0" ) {
+            $("#action_error").attr("style", "display:block");
+            $("#action_error").html("Please Select Action");
+            flag = "N";
+        }
+        else {
+            $("#action_error").attr("style", "display:none");
+            $("#action_error").html("");
+        }
+        var reasonId = $('#ReasonId :selected').val();
+        if (reasonId == "0") {
+            $("#reason_error").attr("style", "display:block");
+            $("#reason_error").html("Please Select Reason");
+            flag = "N";
+        }
+        else {
+            $("#reason_error").attr("style", "display:none");
+            $("#reason_error").html("");
+        }
+        var remarks = $("#Remarks").val();
+        if (remarks.trim() == "") {
+            $("#remarks_error").attr("style", "display:block");
+            $("#remarks_error").html("Please enter Remarks");
+            flag = "N";
+        }
+        else
+        {
+            //if(remarks.length>100){
+            //    $("#remarks_error").attr("style", "display:block");
+            //    $("#remarks_error").html("Maximum length of Remarks is 100");
+            //    flag = "N";
+            //}
+            //else{
+            //    $("#remarks_error").attr("style", "display:none");
+            //    $("#remarks_error").html("");
+            //}
+             $("#remarks_error").attr("style", "display:none");
+             $("#remarks_error").html("");
+        }
+        var reasonDetails = "";
+        var reason = $('#ReasonId :selected').text();
+        if (reason == "Others") {
+            reasonDetails = $('#ReasonDetails').val();
+            if (reasonDetails.trim() == "") {
+                $("#reason_error").attr("style", "display:block");
+                $("#reason_error").html("Please enter Reason");
+                flag = "N";
+            }
+            else {
+                if(reasonDetails.length>100){
+                    $("#reason_error").attr("style", "display:block");
+                    $("#reason_error").html("Maximum length of reason is 100");
+                    flag = "N";
+                }
+                else{
+                    $("#reason_error").attr("style", "display:none");
+                    $("#reason_error").html("");
+                }
+            }
+        }
+        var entityTypeId = $('#EntityTypeId :selected').val();
+        if(entityIdVal.trim()!=""){
+            if ($("#entityStatus").val() != "0") {
+                $("#entityid_error").attr("style", "display:block");
+                $("#entityid_error").html($("#entityStatus").val());
+                flag = "N"
+            }
+
+        }
+
+        if (flag == "N")
+            e.preventDefault();
+        else {
+            var actionText = $('#ActionId :selected').text();
+            //var entityTypeId = $('#EntityTypeId :selected').val();
+            var remarks = $('#Remarks').val();
+            var model = { EntityTypeId: entityTypeId, EntityIdVal: entityIdVal, ActionId: actionId, ReasonId: reasonId, ReasonDetails: reasonDetails, Remarks: remarks };
+            if (actionText == "Permanent Hotlisted" || actionId == "7") {
+                if (confirm("Entity once Permanent Hotlisted cannot be Reactived. Are you sure you want to continue?")) {
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("ApplyHotlistorReactivate", "JCB")',
+                        contentType: "application/json; charset=utf-8",
+                        dataType: 'json',
+                        data: JSON.stringify(model),
+                        success: function (data) {
+                            if(data.length>0){
+
+                                $("#reason").html("");
+                                $("#reason").append("<span>" + data[1] + "</span></br>");
+                                if(data[0]=="0")
+                                {
+                                    $("#reason").addClass("alert-danger");
+                                    $("#reason").removeClass("alert-success");
+                                }
+                                else
+                                {
+                                    $("#reason").addClass("alert-success");
+                                    $("#reason").removeClass("alert-danger");
+                                    $(".toBeHiddenOnSuccess").hide();
+                                }
+                                $("#reason").attr("style","display:block");
+
+                            }
+                        },
+                        error: function (ex) {
+                            alert('Error.' + ex);
+                        }
+                    });
+                }
+            }
+            else {
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("ApplyHotlistorReactivate", "Hotlisting")',
+                        contentType: "application/json; charset=utf-8",
+                        dataType: 'json',
+                        data: JSON.stringify(model),
+                        success: function (data) {
+                            if(data.length>0){
+
+                                $("#reason").html("");
+                                $("#reason").append("<span>" + data[1] + "</span></br>");
+                                if(data[0]=="0"){
+                                    $("#reason").addClass("alert-danger");
+                                    $("#reason").removeClass("alert-success");
+                                }
+                                else{
+                                    $("#reason").addClass("alert-success");
+                                    $("#reason").removeClass("alert-danger");
+                                }
+                                $("#reason").attr("style","display:block");
+                                $(".toBeHiddenOnSuccess").hide();
+                            }
+
+                        },
+                        error: function (ex) {
+                            alert('Error.' + ex);
+                        }
+                    });
+            }
+        }
+    }));
+
+        $("#btnReset").click(function ()
+        {
+            window.location.href = '@Url.Action("JCBHotlistAndReactivate", "JCB")';
+        });
+
+         $('select').SumoSelect({
+            placeholder: '-Select-',
+            search: true,
+            searchText: 'Enter Text here.'
+        });
+        $("#MerchantId").on("blur", function () {
+         var merchantId = $("#MerchantId").val();
+          if (merchantId != "") {
+                if (!merchantId.match(mappedMerchantID)) {
+                    $("#entityid_error").attr("style", "display:block");
+                    $("#entityid_error").html("Invalid Merchant ID");
+                }
+                else {
+
+                    var entityTypeId = $('#EntityTypeId :selected').val();
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("CheckEntityAlreadyHotlisted", "Hotlisting")',
+                        dataType: 'json',
+                        data: { EntityTypeId: entityTypeId, EntityId: merchantId },
+                        success: function (data) {
+                            if(data.length>0){
+                                if(data[0].status=="0"){
+                                    $("#entityid_error").attr("style", "display:block");
+                                    $("#entityid_error").html(data[0].reason);
+                                    $("#entityStatus").val(data[0].reason);
+                                }
+                                else{
+                                    $("#entityid_error").attr("style", "display:none");
+                                    $("#entityid_error").html("");
+                                    $("#entityStatus").val("0");
+                                }
+                            }
+
+                        },
+                        error: function (ex) {
+                            alert('Error.' + ex);
+                        }
+                    });
+
+                }
+         }
+         else{
+             $("#entityid_error").attr("style", "display:block");
+              $("#entityid_error").html("Enter Merchant ID");
+         }
+     });
+     $("#TerminalId").on("blur", function () {
+         var terminalId = $("#TerminalId").val();
+        if (terminalId != "") {
+                if (!terminalId.match(mappedterminalID)) {
+                    $("#entityid_error").attr("style", "display:block");
+                    $("#entityid_error").html("Invalid Terminal ID");
+                }
+                else {
+                    var entityTypeId = $('#EntityTypeId :selected').val();
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("CheckEntityAlreadyHotlisted", "Hotlisting")',
+                        dataType: 'json',
+                        data: { EntityTypeId: entityTypeId,EntityId:terminalId},
+                        success: function (data) {
+                            if(data.length>0){
+                                if(data[0].status=="0"){
+                                    $("#entityid_error").attr("style", "display:block");
+                                    $("#entityid_error").html(data[0].reason);
+                                    $("#entityStatus").val(data[0].reason);
+                                }
+                                else{
+                                    $("#entityid_error").attr("style", "display:none");
+                                    $("#entityid_error").html("");
+                                    $("#entityStatus").val("0");
+                                }
+                            }
+
+                        },
+                        error: function (ex) {
+                            alert('Error.' + ex);
+                        }
+                    });
+                }
+         }
+         else{
+              $("#entityid_error").attr("style", "display:block");
+              $("#entityid_error").html("Enter Terminal ID");
+         }
+     });
+     $("#CardNo").on("blur", function () {
+            var cardNo = $("#CardNo").val();
+            if (cardNo != "") {
+                if (cardNo.length!=16 || !(cardNo.match(number))) {
+                    $("#entityid_error").attr("style", "display:block");
+                    $("#entityid_error").html("Invalid Card Number");
+                }
+                else {
+                    var entityTypeId = $('#EntityTypeId :selected').val();
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("CheckEntityAlreadyHotlisted", "Hotlisting")',
+                        dataType: 'json',
+                        data: { EntityTypeId: entityTypeId,EntityId:cardNo},
+                        success: function (data) {
+                            if(data.length>0){
+                                if(data[0].status=="0"){
+                                    $("#entityid_error").attr("style", "display:block");
+                                    $("#entityid_error").html(data[0].reason);
+                                    $("#entityStatus").val(data[0].reason);
+                                }
+                                else{
+                                    $("#entityid_error").attr("style", "display:none");
+                                    $("#entityid_error").html("");
+                                    $("#entityStatus").val("0");
+                                }
+                            }
+
+                        },
+                        error: function (ex) {
+                            alert('Error.' + ex);
+                        }
+                    });
+                }
+            }
+         else{
+              $("#entityid_error").attr("style", "display:block");
+              $("#entityid_error").html("Enter Card Number");
+         }
+     });
+     $("#CustomerId").on("blur", function () {
+         debugger;
+            var customerId = $("#CustomerId").val();
+            if (customerId != "") {
+                if (!customerId.match(mappedCustomerId)) {
+                    $("#entityid_error").attr("style", "display:block");
+                    $("#entityid_error").html("Invalid Customer ID");
+                }
+                else {
+                    var entityTypeId = $('#EntityTypeId :selected').val();
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("CheckEntityAlreadyHotlisted", "Hotlisting")',
+                        dataType: 'json',
+                        data: { EntityTypeId: entityTypeId,EntityId:customerId},
+                        success: function (data) {
+                            if(data.length>0){
+                                if(data[0].status=="0"){
+                                    $("#entityid_error").attr("style", "display:block");
+                                    $("#entityid_error").html(data[0].reason);
+                                    $("#entityStatus").val(data[0].reason);
+                                }
+                                else{
+                                    $("#entityid_error").attr("style", "display:none");
+                                    $("#entityid_error").html("");
+                                    $("#entityStatus").val("0");
+                                }
+                            }
+
+                        },
+                        error: function (ex) {
+                            alert('Error.' + ex);
+                        }
+                    });
+                }
+            }
+         else{
+             $("#entityid_error").attr("style", "display:block");
+              $("#entityid_error").html("Enter Customer ID");
+         }
+     });
+     $("#Remarks").on("blur", function () {
+            var remarks = $("#Remarks").val();
+             if (remarks.trim() == "") {
+            $("#remarks_error").attr("style", "display:block");
+            $("#remarks_error").html("Please enter Remarks");
+        }
+        else {
+            $("#remarks_error").attr("style", "display:none");
+            $("#remarks_error").html("");
+        }
+     });
+      $("#ReasonDetails").on("blur", function () {
+            var reasonDetails = $("#ReasonDetails").val();
+            if (reasonDetails.trim() == "") {
+                $("#reason_error").attr("style", "display:block");
+                $("#reason_error").html("Please enter Reason");
+            }
+            else {
+                $("#reason_error").attr("style", "display:none");
+                $("#reason_error").html("");
+            }
+     });
+      $("#ActionId").on("change", function () {
+        var actionId = $('#ActionId :selected').val();
+        if (actionId == "0" ) {
+            $("#action_error").attr("style", "display:block");
+            $("#action_error").html("Please Select Action");
+        }
+        else {
+            $("#action_error").attr("style", "display:none");
+            $("#action_error").html("");
+        }
+    });
+    $("#ReasonId").on("change", function () {
+       var reasonId = $('#ReasonId :selected').val();
+        if (reasonId == "0") {
+            $("#reason_error").attr("style", "display:block");
+            $("#reason_error").html("Please Select Reason");
+            flag = "N";
+        }
+        else {
+            $("#reason_error").attr("style", "display:none");
+            $("#reason_error").html("");
+        }
+    });
+</script>

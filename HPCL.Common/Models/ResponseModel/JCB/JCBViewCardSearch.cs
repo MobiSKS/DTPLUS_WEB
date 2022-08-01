@@ -32,6 +32,9 @@ namespace HPCL.Common.Models.ResponseModel.JCB
         public string IndividualOrgName { get; set; }
         public string RegionalOfficeName { get; set; }
         public string SaleTransLimt { get; set; }
+        public string Cardno { get; set; }
+        public string Mobileno { get; set; }
+        public int Status { get; set; }
     }
 
 }

@@ -116,6 +116,9 @@
         public static string validateErpCode = "api/dtplus/merchant/validate_merchant_erp_code";
         public static string validateMappedMerchantID = "api/dtplus/merchant/check_mapped_merchant_id";
         public static string approveRejectMerchantUpdate = "api/dtplus/merchant/approve_reject_merchant_update";
+        public static string getapprovedmerchantreactivationstatus = "api/dtplus/merchant/get_approved_merchant_reactivation_status";
+        public static string GetRequestForApprovalReactivateMerchant = "api/dtplus/merchant/Get_Request_For_Approval_Reactivate_Merchant";
+
         #endregion
 
         #region customer
@@ -204,6 +207,9 @@
         public static string updatecommunicationemailresetpassword = "api/dtplus/customer/update_communication_email_reset_password";
         public static string getCustomerStatus = "api/dtplus/customer/get_customer_status";
 
+        public static string GetApproveCardRenewReqUrl = "api/dtplus/card/approve_card_renewal_requests";
+        public static string UpdateApproveCardRenewReqUrl = "api/dtplus/card/update_approve_card_renewal_requests";
+
         #endregion
 
         #region Login
@@ -238,6 +244,13 @@
         public static string updateuserrolelocation = "api/dtplus/UserManage/update_user_role_location";
         public static string manageusersrolelocationdelete = "api/dtplus/UserManage/manage_users_role_location_delete";
         public static string usercreationrequest = "api/dtplus/UserManage/user_creation_request";
+        public static string disableenableaggregatorusers = "api/dtplus/UserManage/disable_enable_manage_aggregator_users";
+        public static string manageaggregatorusers = "api/dtplus/UserManage/manage_aggregator_users";
+        public static string addmanageaggregatorusers = "api/dtplus/UserManage/add_manage_aggregator_users";
+        public static string addaggregatoruser = "api/dtplus/UserManage/add_users_manage_aggregator_users";
+        public static string getmanageaggregatorusers = "api/dtplus/UserManage/get_manage_aggregator_users";
+        
+
 
 
         #endregion
@@ -361,6 +374,7 @@
         #region Interfaces
         public static string getrecordtype = "api/dtplus/settings/get_record_type";
         public static string searchcustomerandcardform = "api/dtplus/customer/search_customer_and_card_form";
+        public static string RegenerateIAC = "api/dtplus/dtp/regenerate_iac";
         #endregion
 
 
@@ -494,7 +508,7 @@
         public static string HdfcInitiateCcmsRechargeUrl = "api/dtplus/HDFCCreditPouch/initiate_cp_recharge";
         public static string RequestToAvailCheckUrl = "api/dtplus/HDFCCreditPouch/chk_eligibility";
         public static string RequestToAvailEnrollUrl = "api/dtplus/HDFCCreditPouch/insrt_cp_rqst_by_customer";
-        public static string CustomerTransactionStatusUrl = "api/dtplus/ParentCustomer/hdfc_transaction_status";
+        public static string CustomerTransactionStatusUrl = "api/dtplus/HDFCCreditPouch/hdfc_transaction_status";
         #endregion
 
         #region "CCMS Recharge"
@@ -536,13 +550,19 @@
         
 
         public static string getaccountstatmentrequestdetails = " api/dtplus/AccountStatement/get_account_statment_request_details";
-        public static string actiongetaccountstatmentrequesttype = " api/dtplus/AccountStatement/action_get_account_statment_request_type";
+        public static string actiongetaccountstatmentrequesttype = "api/dtplus/AccountStatement/action_get_account_statment_request_type";
         public static string insertaccountstatmentrequest = " api/dtplus/AccountStatement/insert_account_statment_request";
         public static string updateaccountstatmentrequeststatus = " api/dtplus/AccountStatement/update_account_statment_request_status";
         public static string getparenttransactionssummarydetails = "api/dtplus/ParentCustomer/get_parent_transactions_summary_details";
 
         public static string getparentcustomerbasicsearch = "api/dtplus/ParentCustomer/get_parent_customer_basic_search";
         public static string getparenttransactionlocationdetails = "api/dtplus/ParentCustomer/transaction_details";
+        public static string Convertparentcustomertoaggregator = "api/dtplus/ParentCustomer/Convert_parent_customer_to_aggregator";
+        public static string PostAuthCreditPouchUrl = "api/dtplus/customer/post_authorization_for_credit_pouch";
+        public static string convertparenttoaggregator = "api/dtplus/ParentCustomer/convert_parent_to_aggregator";
+        public static string parentchildbalancetransfer = "api/dtplus/ParentCustomer/parent_to_child_and_child_parent_fund_allocation";
+        public static string gettransactiontypeforpc = "api/dtplus/ParentCustomer/get_transaction_type_for_pc";
+        public static string updatechildparentfundallocation = "api/dtplus/ParentCustomer/update_parent_to_child_and_child_parent_fund_allocation";
 
 
         #endregion
@@ -627,9 +647,17 @@
         public static string JCBUpdateMobileAndFastagNoInCard = "api/dtplus/JCB/JCB_update_mobile_and_fastag_no_in_card";
         public static string getJcbMobileAndFastagno = "api/dtplus/JCB/get_jcb_mobile_and_fastagno";
         public static string getJcbSalesExeEmpidAddonOtcCardMapping = "api/dtplus/JCB/get_jcb_sales_exe_empid_addon_otc_card_mapping";
+        public static string getJcbDispatchDetail = "api/dtplus/JCB/get_jcb_dispatch_detail";
+        public static string updateJcbDealerCommunicationEmailResetPassword = "api/dtplus/JCB/update_jcb_dealer_communication_email_reset_password";
+        public static string jcbHotlistReactive = "api/dtplus/JCB/jcb_hotlist_reactive";
+        public static string jcbUpdateHotlistReactivate = "api/dtplus/JCB/jcb_update_hotlist_reactivate";
+        public static string enableDisableJcbDealer = "api/dtplus/JCB/enable_disable_jcb_dealer";
+        public static string viewJcbDealerOtcCardStatus = "api/dtplus/JCB/view_jcb_dealer_otc_card_status";
+        public static string requestUpdateJCBCustomer = "api/dtplus/JCB/request_update_JCB_customer";
+        public static string getJcbCustomerBalanceInfo = "api/dtplus/JCB/get_jcb_customer_balance_info";
         #endregion
 
-        #region "Customer Dashboard"
+        #region Customer Dashboard
         public static string customerDashboardVerifyYourDetails = "api/dtplus/customerdashboard/customer_dashboard_verify_your_details";
         public static string customerDashboardAccountSummary = "api/dtplus/customerdashboard/customer_dashboard_account_summary";
         public static string customerDashboardLastTransactions = "api/dtplus/customerdashboard/customer_dashboard_last_transactions";
@@ -638,6 +666,7 @@
         public static string customerDashboardReminder = "api/dtplus/customerdashboard/customer_dashboard_reminder";
         public static string customerDashboardUpdateVerifyYourDetails = "api/dtplus/customerdashboard/customer_dashboard_update_verify_your_details";
         public static string customerDashboardLastestDrivestarsTransactions = "/api/dtplus/customerdashboard/customer_dashboard_latest_drivestars_transactions";
+        public static string customerDashboardGetNotificationContent = "/api/dtplus/customerdashboard/get_notification_content";
         #endregion
 
         #region DICV
@@ -650,6 +679,21 @@
         public static string insertDicvCustomer = "api/dtplus/DICV/insert_dicv_customer";
         public static string getAvailityDicvOtcCard = "api/dtplus/DICV/get_availity_dicv_otc_card";
         public static string getDicvSalesExeEmpidAddonOtcCardMapping = "api/dtplus/DICV/get_dicv_sales_exe_empid_addon_otc_card_mapping";
+        public static string getDicvBalanceOtcCard = "api/dtplus/DICV/get_dicv_balance_otc_card";
+        public static string dicvHotlistReason = "api/dtplus/DICV/dicv_hotlist_reason";
+        public static string dicvUpdateHotlistReactivate = "api/dtplus/DICV/dicv_update_hotlist_reactivate";
+        public static string getDicvCommunicationEmailResetPassword = "api/dtplus/DICV/get_dicv_communication_email_reset_password";
+        public static string updateDicvCommunicationEmailResetPassword = "api/dtplus/DICV/update_dicv_communication_email_reset_password";
+        public static string getDicvMobileAndFastagno = "api/dtplus/DICV/get_dicv_mobile_and_fastagno";
+        public static string dicvUpdateMobileAndFastagNoInCard = "api/dtplus/DICV/dicv_update_mobile_and_fastag_no_in_card";
+        public static string updateDicvDealerEmailResetPassword = "api/dtplus/DICV/update_dicv_dealer_email_reset_password";
+        public static string enableDisableDicvDealer = "api/dtplus/DICV/enable_disable_dicv_dealer";
+        public static string searchDicvManageCard = "api/dtplus/DICV/search_dicv_manage_card";
+        public static string dicvGetCardLimitFeatures = "api/dtplus/DICV/dicv_get_card_limit_features";
+        public static string dicvUpdateMobileInCard = "api/dtplus/DICV/dicv_update_mobile_in_card";
+        public static string viewDicvDealerOtcCardStatus = "api/dtplus/DICV/view_dicv_dealer_otc_card_status";
+        public static string getDicvCustomerDetails = "api/dtplus/DICV/get_dicv_customer_details";
+        public static string requestUpdateDicvCustomer = "api/dtplus/DICV/request_update_dicv_customer";
         #endregion
 
         #region "Parent Customer HDFC Bank Credit Pouch"
@@ -670,16 +714,11 @@
         #endregion
 
 
-        #region "MO Dashboard"
-        public static string userinformation = "/api/dtplus/modashboard/mo_dashboard_user_information";
-        #endregion
-
-        #region "MO Dashboard"
-        public static string RegionInformation = "/api/dtplus/modashboard/mo_dashboard_region_information";
-        #endregion
-
-        #region "MO Dashboard"
-        public static string PendingTerminal = "/api/dtplus/modashboard/mo_dashboard_pending_terminal";
+        #region MO Dashboard
+        public static string userinformation = "api/dtplus/modashboard/mo_dashboard_user_information";
+        public static string RegionInformation = "api/dtplus/modashboard/mo_dashboard_region_information";
+        public static string PendingTerminal = "api/dtplus/modashboard/mo_dashboard_pending_terminal";
+        public static string GetNotificationContent = "api/dtplus/customerdashboard/get_notification_content";
         #endregion
 
         #region Dashboard
@@ -706,6 +745,12 @@
         public static string PCICICIRequestAuthorizationActionUrl = "api/dtplus/PCICICICreditPouch/auth_action_cp_for_pc";
         public static string PCICICIRequestToAvailCheckUrl = "api/dtplus/PCICICICreditPouch/chk_eligibility_for_pc";
         public static string PCICICIRequestToAvailEnrollUrl = "api/dtplus/PCICICICreditPouch/insrt_cp_rqst_by_customer_for_pc";
+        #endregion
+
+
+        #region "MobileDispenser Surya Yadav"
+        public static string MobileDispenserRetailOutletMapping="api/dtplus/merchant/get_mobile_dispenser_retail_outlet_mapping";
+        public static string StatusMobileDispenserRetailOutletMapping = "api/dtplus/merchant/get_status_mobiledispenser_retailoutletmapping";
         #endregion
     }
 }

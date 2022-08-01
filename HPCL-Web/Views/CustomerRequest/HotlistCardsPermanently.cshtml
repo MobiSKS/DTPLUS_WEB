@@ -4,7 +4,7 @@
 
 
 <div class="col-lg-12">
-    <div class="bg-white p-2 p-md-4">
+    <div class="bg-white p-2 p-md-4" style="background: #edecec !important;">
         <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
             <li class="breadcrumb-item"><a href="@Url.Action("Index")" class="text_primary">Request</a> </li>
             <li class="breadcrumb-item font-weight-light">Hotlist Cards</li>
@@ -13,8 +13,8 @@
             <div class="tab-content" id="myTabContent">
                 <div class="tab-pane fade show active" id="basicInfo" role="tabpanel" aria-labelledby="basicInfo-tab">
                     <div class="border-1 rounded border-grey h-100">
-                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Hotlist Card(s) Permanently</p>
-                        <div class="p-2 p-md-4">
+                        <p class="text-white px-3 py-2 m-0 font-weight-bold" style="background: #084693;">Hotlist Card(s) Permanently</p>
+                        <div class="p-2 p-md-4 bg-white">
                             <div class="w-100">
                                 <div id="successUpdate" class="mb-3 text-center alert alert-success" style="display:none;"></div>
                                 @*                                    <legend class="font-12 font-weight-bold d-inline-block w-auto ml-3 mb-0 px-2">Search</legend>
@@ -76,7 +76,7 @@
                                         </thead>
                                     </table>
                                 </div>
-                                <div class="d-flex align-items-center justify-content-center mt-md-3 flex-wrap px-4 mb-3">
+                                <div class="d-flex align-items-center justify-content-center mt-md-3 flex-wrap px-4">
                                     <div class="px-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2">
                                         <button class="btn btn_primary" type="button" id="btnSave" name="submit" onclick="updateCards()">Hotlist Permanently</button>
                                     </div>
@@ -114,6 +114,15 @@
     });
 
     $(document).ready(function () {
+
+        var loginType = '@Context.Session.GetString("LoginType")';
+
+        if (loginType == "Customer") {
+
+            $("#CustomerDefaultVal").val('@Context.Session.GetString("UserId")');
+            $("#CustomerDefaultVal").attr("readonly", true);
+            searchCards();
+        }
 
         function isNumberKey(evt) {
             var charCode = (evt.which) ? evt.which : event.keyCode;
@@ -206,8 +215,16 @@
                         yrOfReg = searchGrid[i].yearOfRegistration;
                     }
 
+                    var hotlReasonCheck;
+
+                    if(searchGrid[i].hotlistStatus == "1"){
+                        hotlReasonCheck = "<input type='checkbox' class='checkDisable' name='enableRow' disabled='disabled'>";
+                    }else if(searchGrid[i].hotlistStatus == null){
+                        hotlReasonCheck = "<input type='checkbox' class='checkEnable' name='enableRow'>";
+                    }
+
                     var srNumber = (i+1);
-                    var pressCheck = "<input type='checkbox' class='checkEnable' name='enableRow'>";
+                    var pressCheck = hotlReasonCheck;
                     var cardNo = "<span class='getCardNo'>" + (searchGrid[i].cardNo || '') + "</span>";
                     var userName = "<input class='form-control' type='text' value='" + (searchGrid[i].vechileNo || '') + "' readonly='readonly'>";
                     var vehicleType = "<select readonly='readonly' disabled='disabled' class='form-control'><option value='" + (searchGrid[i].vechileType || '') + "'>" + (searchGrid[i].vechileType || '') + "</option></select>";
@@ -357,6 +374,8 @@
                     $(this).closest("tr").find('.htlstReason').attr("readonly", true);
                     $(this).closest("tr").find('.htlstReason').attr("disabled", true);
                 });
+
+                $(".checkAll").prop('checked',false);
 
                 $.ajax({
                     url: "@Url.Action("UpdatePermanentlyHotlistCards", "CustomerRequest")",

@@ -8,8 +8,8 @@
             </div>
         </div>
     </div>
-
-    <table id="tblStatusWiseDetails" class="table1 d-md-table table-bordered table-responsive mt-3" style="width:100%;">
+    <div class="bg-white p-3">
+    <table id="tblStatusWiseDetails" class="table1 d-md-table table-bordered table-responsive" style="width:100%;">
         <thead>
             <tr>
                 <th colspan="3">Status wise details</th>
@@ -31,19 +31,23 @@
             }
         </tbody>
     </table>
+    </div>
     <div style="height:15px;"></div>
 
     <table id="tblMerchantViewCardDetail" class="table d-md-table table-bordered table-responsive mt-3" style="width:100%;">
         <thead>
             <tr>
-                <th colspan="10">Card wise details</th>
+                <th colspan="11">Card wise details</th>
             </tr>
             <tr>
                 <th>S.No.</th>
                 <th>Dealer Code</th>
+                <th>Dealer Name</th>
                 <th>Card Number</th>
                 <th>Status</th>
                 <th>Customer ID</th>
+                <th>Vehicle Reg. No.</th>
+                <th>Allotted VIN</th>
                 <th>Allocation Date</th>
                 <th>Mapping Date</th>
                 <th>Dispatch Details</th>
@@ -55,21 +59,50 @@
             }
             @foreach (var item in Model.Data.ObjJCBViewCardDetail)
             {
-                Sno++;
-            <tr>
-                <td>@Sno</td>
-                <td>@item.MerchantId</td>
-                <td>@item.CardNo</td>
-                <td>@item.Status</td>
-                <td>@item.CustomerId</td>
-                <td>@item.AllocationDate</td>
-                <td>@item.MappingDate</td>
-                <td><a class='CardNumber' href='#Details' onclick='ViewRoleDetails(this,"@item.CardNo")'><span class='rowCardNo'>View</span></a></td>
-            </tr>
+                if (Model.ShowUnmappedCard)
+                {
+                    if (@item.CustomerId == "")
+                    {
+                        Sno++;
+                        <tr>
+                            <td>@Sno</td>
+                            <td>@item.MerchantId</td>
+                            <td>@item.RetailOutletName</td>
+                            <td>@item.CardNo</td>
+                            <td>@item.Status</td>
+                            <td>@item.CustomerId</td>
+                            <td>@item.VechileNo</td>
+                            <td>@item.VINNumber</td>
+                            <td>@item.AllocationDate</td>
+                            <td>@item.MappingDate</td>
+                            <td><a class='CardNumber' href='#Details' onclick='ViewDispatchDetails(this,"@item.CustomerId")'><span class='rowCardNo'>View</span></a></td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    Sno++;
+                    <tr>
+                        <td>@Sno</td>
+                        <td>@item.MerchantId</td>
+                        <td>@item.RetailOutletName</td>
+                        <td>@item.CardNo</td>
+                        <td>@item.Status</td>
+                        <td>@item.CustomerId</td>
+                        <td>@item.VechileNo</td>
+                        <td>@item.VINNumber</td>
+                        <td>@item.AllocationDate</td>
+                        <td>@item.MappingDate</td>
+                        <td><a class='CardNumber' href='#Details' onclick='ViewDispatchDetails(this,"@item.CustomerId")'><span class='rowCardNo'>View</span></a></td>
+                    </tr>
+                }
             }
         </tbody>
     </table>
     <div class="clearfix"></div>
+    <div class="clearfix"></div>
+    <div id="show_Table" class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3 toBeHiddenOnSuccess">
+    </div>
 }
 else
 {
@@ -137,7 +170,7 @@ else
                     // Get the text data of each cell
                     // of a row and push it to csvrow
                     
-                        if(j!=7)
+                        if(j!=10)
                             csvrow.push(cols[j].innerHTML.toString());
                 }
 
@@ -171,14 +204,14 @@ else
 
                 csvrow.push(this.data()[0]);
                 csvrow.push(this.data()[1]);
-                csvrow.push("'"+this.data()[2]);
-                csvrow.push(this.data()[3]);
+                csvrow.push(this.data()[2]);
+                csvrow.push("'"+this.data()[3]);
                 csvrow.push(this.data()[4]);
                 csvrow.push(this.data()[5]);
                 csvrow.push(this.data()[6]);
-                //csvrow.push(this.data()[7]);
-                //csvrow.push(this.data()[8]);
-                //csvrow.push(this.data()[9]);
+                csvrow.push(this.data()[7]);
+                csvrow.push(this.data()[8]);
+                csvrow.push(this.data()[9]);
 
                 csv_data.push(csvrow.join(","));
             });
@@ -220,45 +253,60 @@ else
         document.body.removeChild(temp_link);
     }
 
-function ViewRoleDetails(o,userName)
+function ViewDispatchDetails(o,CustomerID)
 {
     debugger;
     var flag="Y";
- 
-    //if(flag=="Y")
-    //{
-    //    $.ajax({
-    //        type: 'GET',  // http method
-    //        url: '@Url.Action("GetUserRoleLocation", "Security")',
-    //        contentType: "application/json; charset=utf-8",
-    //        dataType: 'text',
-    //        data: { UserName: userName},
-    //        success: function (data, status, xhr)
-    //        {
-    //            console.log(data);
-    //            var v = data;
-    //            if (status == 'success') {
-    //                $("#show_Table").html(data);
-    //                $('html, body').animate({
-    //                    scrollTop: $("#show_Table").offset().top
-    //                }, 2000);
-    //            }
-    //            else
-    //            {
-    //                console.log(v);
-    //            }
 
-    //            //var count = $('#tblCustomer tr').length;
-    //            //console.log(count);
-                
-    //        },
-    //        error: function (jqXhr, textStatus, errorMessage)
-    //        {
-    //            alert("Error"+ errorMessage);
-    //        }
-    //    });
+    if(CustomerID!="")
+    {
+        if(flag=="Y")
+        {
+            $.ajax({
+                type: 'GET',  // http method
+                url: '@Url.Action("GetJCBDealerCardDispatchDetails", "JCB")',
+                contentType: "application/json; charset=utf-8",
+                dataType: 'text',
+                data: { CustomerID: CustomerID},
+                success: function (data, status, xhr)
+                {
+                    console.log(data);
+                    var v = data;
+                    if (status == 'success') {
+                        $("#show_Table").html(data);
+                        $('html, body').animate({
+                            scrollTop: $("#show_Table").offset().top
+                        }, 2000);
+                    }
+                    else
+                    {
+                        console.log(v);
+                    }
 
-    //}
+                },
+                error: function (jqXhr, textStatus, errorMessage)
+                {
+                    alert("Error"+ errorMessage);
+                }
+            });
+
+        }
+    }
+    else
+    {
+            $("#show_Table").html("");
+    }
 
 }
+$("#tblMerchantViewCardDetail").on('page.dt', function ()
+{
+    //debugger;
+    document.getElementById("show_Table").innerHTML="";
+});
+
+$("#tblMerchantViewCardDetail").on('length.dt', function ()
+{
+    //debugger;
+    document.getElementById("show_Table").innerHTML="";
+});
 </script>

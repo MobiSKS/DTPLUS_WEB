@@ -82,11 +82,11 @@
                                 <div class="px-md-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2">
                                     <button class="btn btn_primary" type="button" onclick="searchCard()">Search</button>
                                 </div>
-                                <div class="px-md-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2">
-                                      <button class="btn btn_primary" type="button" onclick="tableToCSV()">Export to Excel</button>
-                                </div>
                                  <div class="px-md-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2">
                                     <a class="btn btn_primary" href="#" id="btnCancel" name="cancel" onclick="resetClick()">Reset</a>
+                                </div>
+                                 <div class="px-md-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2">
+                                      <button class="btn btn_primary" type="button" onclick="tableToCSV()">Export to Excel</button>
                                 </div>
                             </div>
                         </div>
@@ -121,11 +121,6 @@
                                     </thead>
                                 </table>
                             </div>
-                            <div class="d-flex align-items-center justify-content-center mt-3">
-                                <div class="px-md-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2">
-                                    <button class="btn btn_primary" type="button" onclick="requestApprovalSubmit()">Submit</button>
-                                </div>
-                            </div>
                         </div>
                 </div>
             </div>
@@ -138,6 +133,11 @@
 <script src="https://rawgit.com/moment/moment/2.2.1/min/moment.min.js"></script>
 
 <script>
+
+    function resetClick(){
+        window.location.reload(true);
+    }
+
     $(document).ready(function () {
 
         function isNumberKey(evt) {
@@ -154,6 +154,16 @@
             search: true,
             searchText: 'Enter Text here.'
         });
+
+        var loginType = '@Context.Session.GetString("LoginType")';
+
+        if (loginType == "Customer") {
+
+            $("#CustomerDefaultVal").val('@Context.Session.GetString("UserId")');
+            $("#CustomerDefaultVal").attr("readonly", true);
+
+            searchCard();
+        }
     });
 
     function searchCard(){
@@ -217,7 +227,7 @@
                                 if(((girdList[i].modifiedDate) == "01-01-0001") || ((girdList[i].modifiedDate) == "01-01-1900") || ((girdList[i].modifiedDate) == null)){
                                     modDate = "";
                                 }else{
-                                    modDate = moment(girdList[i].requestedDate, 'DD-MM-YYYY').format('DD-MM-YYYY');
+                                    modDate = moment(girdList[i].modifiedDate, 'DD-MM-YYYY').format('DD-MM-YYYY');
                                 }
 
                                 var srNumber = (i + 1);
@@ -276,6 +286,53 @@
             } else {
                 return false;
             }
+        }
+    }
+
+
+    function downloadCSVFile(csv_data,fileName) {
+
+        CSVFile = new Blob([csv_data], {
+            type: "text/csv"
+        });
+
+        var temp_link = document.createElement('a');
+
+        temp_link.download = fileName;
+        var url = window.URL.createObjectURL(CSVFile);
+        temp_link.href = url;
+
+        temp_link.style.display = "none";
+        document.body.appendChild(temp_link);
+
+        temp_link.click();
+        document.body.removeChild(temp_link);
+    }
+
+    function tableToCSV(){
+        var csv_data = [];
+        var rows = document.getElementById("cardwiseLimitList").getElementsByTagName('tr');
+        if (rows.length > 0) {
+            for (var i = 0; i < rows.length; i++) {
+                var cols = rows[i].querySelectorAll('td,th');
+                var csvrow = [];
+                for (var j = 0; j < cols.length; j++) {
+
+                    if(j != 1 && j != 12){
+                        console.log("cols[j]", cols[j]);
+
+                        csvrow.push(cols[j].innerText);
+                  
+                    }
+                }
+
+                csv_data.push(csvrow.join(",")); 
+            }
+            csv_data = csv_data.join('\n');
+
+            var fileName = "HDFCCreditPouchRequest.csv";
+
+            downloadCSVFile(csv_data,fileName);
         }
     }
 </script>
