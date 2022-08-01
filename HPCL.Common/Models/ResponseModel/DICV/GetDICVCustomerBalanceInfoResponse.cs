@@ -5,13 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HPCL.Common.Models.ResponseModel.JCB
+namespace HPCL.Common.Models.ResponseModel.DICV
 {
-    public class GetJCBCustomerBalanceInfoResponse : CommonResponseBase
+    public class GetDICVCustomerBalanceInfoResponse : CommonResponseBase
     {
-        public List<GetJCBCustomerBalanceInfoData> Data { get; set; }
+        public List<GetDICVCustomerBalanceInfoData> Data { get; set; }
     }
-    public class GetJCBCustomerBalanceInfoData
+    public class GetDICVCustomerBalanceInfoData
     {
         public string CustomerID { get; set; }
         public string CardBalance { get; set; }
