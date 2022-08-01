@@ -356,6 +356,8 @@
                 AuthorizBy: '@Context.Session.GetString("UserId")'
             });
 
+            postAuthCust.push({CustomerID: CustomerId});
+
             if(AuthorizationRemark.trim() == ''){
                 document.getElementById('remarks_error_'+indexS).title="Please enter Authorization Remarks.";
                 document.getElementById('remarks_error_'+indexS).style.display = "block";
@@ -421,10 +423,30 @@
                     success: function (res) {
 
                         if(res.reasonList[0].status == 1){
-                            document.getElementById("approvalRejectSection").style.display = "none";
-                            $("#successUpdate").html('');
-                            $("#successUpdate").append("<span>"+(res.reasonList[0].reason)+"</span>");
-                            document.getElementById("successUpdate").style.display = "block";
+                         
+                            $.ajax({
+                                url: "@Url.Action("PostAuthForCreditPouchForParentCustomer", "Common")",
+                                type: "POST",
+                                traditional: true,
+                                data: { postAuthCust:JSON.stringify(postAuthCust), CreditPouchType:"HDFC" },
+                                success: function (resp) {
+
+                                    console.log("resp",resp);
+
+                                    if(resp[0].status == 1){
+
+                                        document.getElementById("approvalRejectSection").style.display = "none";
+                                        $("#successUpdate").html('');
+                                        $("#successUpdate").append("<span>"+(res.reasonList[0].reason)+"</span>");
+                                        document.getElementById("successUpdate").style.display = "block";
+                                    }
+
+                                },
+                                error: function (ex) {
+                                    alert('Failed' + ex);
+                                }
+                            });
+
                         }else{
                             $("#noRecord").html('');
                             $("#noRecord").append("<span>"+(res.reasonList[0].reason)+"</span>");
