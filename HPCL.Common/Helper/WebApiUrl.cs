@@ -655,6 +655,8 @@
         public static string viewJcbDealerOtcCardStatus = "api/dtplus/JCB/view_jcb_dealer_otc_card_status";
         public static string requestUpdateJCBCustomer = "api/dtplus/JCB/request_update_JCB_customer";
         public static string getJcbCustomerBalanceInfo = "api/dtplus/JCB/get_jcb_customer_balance_info";
+        public static string updateJcbCustomerDetail = "api/dtplus/JCB/update_jcb_customer_Detail";
+        public static string getJcbTransactionsSummary = "api/dtplus/JCB/get_jcb_transactions_summary";
         #endregion
 
         #region Customer Dashboard
@@ -695,6 +697,7 @@
         public static string getDicvCustomerDetails = "api/dtplus/DICV/get_dicv_customer_details";
         public static string requestUpdateDicvCustomer = "api/dtplus/DICV/request_update_dicv_customer";
         public static string getDicvCustomerBalanceInfo = "api/dtplus/DICV/get_dicv_customer_balance_info";
+        public static string dicvUpdateCustomer = "api/dtplus/DICV/dicv_update_customer";
         #endregion
 
         #region "Parent Customer HDFC Bank Credit Pouch"
@@ -754,6 +757,7 @@
 
         #region EFT
         public static string eftrechargedetailentry = "api/dtplus/EFT/eft_recharge_detail_entry";
+        public static string eftrechargedetailvalidation = "api/dtplus/EFT/eft_recharge_detail_validation";
         #endregion
     }
 }

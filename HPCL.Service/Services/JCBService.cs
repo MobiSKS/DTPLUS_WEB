@@ -529,6 +529,7 @@ namespace HPCL.Service.Services
                 {
                     foreach (JCBCustomerProfileResponse response in customerProfileResponse)
                     {
+                        #region Commented
                         //if (string.IsNullOrEmpty(response.AreaOfOperation))
                         //{
                         //    response.AreaOfOperation = "";
@@ -664,6 +665,8 @@ namespace HPCL.Service.Services
                         //        response.KeyOfficialDOB = "";
                         //    }
                         //}
+                        #endregion
+
                         if (string.IsNullOrEmpty(response.NameOnCard))
                         {
                             response.NameOnCard = "";
@@ -1207,7 +1210,7 @@ namespace HPCL.Service.Services
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(insertServiceBody), Encoding.UTF8, "application/json");
-            var response = await _requestService.CommonRequestService(content, WebApiUrl.requestUpdateJCBCustomer);
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.updateJcbCustomerDetail);
 
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
             InsertResponse result = obj.ToObject<InsertResponse>();
@@ -1239,6 +1242,50 @@ namespace HPCL.Service.Services
             customerBalanceInfo = JsonConvert.DeserializeObject<GetJCBCustomerBalanceInfoResponse>(response);
 
             return customerBalanceInfo;
+        }
+        public async Task<JCBCustomerTransactionResponseModel> GetCustomerTransactionDetails(string CustomerID, string CardNo, string MobileNo, string FromDate, string ToDate)
+        {
+            JCBCustomerTransactionResponseModel transactionResponse = new JCBCustomerTransactionResponseModel();
+            if (!string.IsNullOrEmpty(FromDate) && !string.IsNullOrEmpty(FromDate))
+            {
+                FromDate = await _commonActionService.changeDateFormat(FromDate);
+                ToDate = await _commonActionService.changeDateFormat(ToDate);
+            }
+            else
+            {
+                FromDate = DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd");
+                ToDate = DateTime.Now.ToString("yyyy-MM-dd");
+            }
+            var Request = new JCBCustomerTransactionViewModel()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                CustomerID = CustomerID,
+                CardNo = CardNo,
+                MobileNo = MobileNo,
+                FromDate = FromDate,
+                ToDate = ToDate
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(Request), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getJcbTransactionsSummary);
+            JObject jObj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            transactionResponse = JsonConvert.DeserializeObject<JCBCustomerTransactionResponseModel>(response);
+            var transactionjObj = jObj["Data"].Value<JObject>();
+            var summaryListjArr = transactionjObj["GetTransactionsSaleSummary"].Value<JArray>();
+            var detailListjArr = transactionjObj["GetTransactionsDetailSummary"].Value<JArray>();
+
+            List<JCBCustomerTransactionSummary> CustomerTransactionSummary =
+                summaryListjArr.ToObject<List<JCBCustomerTransactionSummary>>();
+
+            List<JCBCustomerTransactionDetails> CustomerTransactionDetails =
+                detailListjArr.ToObject<List<JCBCustomerTransactionDetails>>();
+
+            transactionResponse.GetTransactionsSaleSummary.AddRange(CustomerTransactionSummary);
+            transactionResponse.GetTransactionsDetailSummary.AddRange(CustomerTransactionDetails);
+            return transactionResponse;
         }
 
     }
