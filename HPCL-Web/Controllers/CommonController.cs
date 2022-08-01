@@ -282,7 +282,7 @@ namespace HPCL_Web.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> PostAuthForCreditPouch(ObjCustomerDetails[] postAuthCust, string CreditPouchType)
+        public async Task<JsonResult> PostAuthForCreditPouch(string postAuthCust, string CreditPouchType)
         {
             var authStatus = await _commonActionService.PostAuthForCreditPouch(postAuthCust, CreditPouchType);
 

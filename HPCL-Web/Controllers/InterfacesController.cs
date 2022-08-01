@@ -46,15 +46,25 @@ namespace HPCL_Web.Controllers
                 return PartialView("~/Views/Interfaces/_CardFormDetails.cshtml", modals);
         }
 
-        public async Task<IActionResult> Interface(string TerminalID)
-        {   
-            var RegenerateIAC = await _interfaceService.RegenerateIAC(TerminalID);
+        //public async Task<IActionResult> Interface(string TerminalID)
+        public async Task<IActionResult> Interface()
+        {
+            //var RegenerateIAC = await _interfaceService.RegenerateIAC(TerminalID);
 
             RegenerateIACModel Interface = new RegenerateIACModel();
 
-            Interface.RegenerateIACResponseModel = RegenerateIAC;
-        
+            //Interface.RegenerateIACResponseModels = RegenerateIAC;
+
             return View(Interface);
+        }
+        [HttpPost]
+        public async Task<JsonResult> GetRegenerateIAC(string TerminalID)
+        {
+            RegenerateIACModel Interface = new RegenerateIACModel();
+
+            var RegenerateIAC = await _interfaceService.RegenerateIAC(TerminalID);
+
+            return Json(RegenerateIAC);
         }
     }
 }

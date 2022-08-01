@@ -628,5 +628,137 @@ namespace HPCL.Service.Services
             List<SuccessResponse> res = jarr.ToObject<List<SuccessResponse>>();
             return res;
         }
+
+        public async Task<GetManageUserResponse> GetManageAggregatorUsers(GetManageUser entity)
+        {
+
+            var forms = new GetManageUser
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserName = entity.UserName,
+                Email = entity.Email,
+                LastLoginTime = entity.LastLoginTime,
+                UserRole = entity.UserRole,
+                ShowDisabled = entity.ShowDisabled
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.manageaggregatorusers);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            GetManageUserResponse searchList = obj.ToObject<GetManageUserResponse>();
+            return searchList;
+        }
+
+        public async Task<List<SuccessResponse>> AggregatorResetPassword(string userName, string EmailId)
+        {
+            var forms = new GetUserResetPassword
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserName = userName,
+                ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                EmailId = EmailId
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.UserResetPasswordUrl);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<SuccessResponse> responseMsg = jarr.ToObject<List<SuccessResponse>>();
+            return responseMsg;
+        }
+
+        public async Task<List<SuccessResponse>> DisableUpdateAggregatorUser(string userName, string action)
+        {
+            var forms = new UpdateManageUserRequest
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                LoginKey = userName,
+                ActionType = action
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.disableenableaggregatorusers);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            
+            var jarr = obj["Data"].Value<JArray>();
+            List<SuccessResponse> responseMsg = jarr.ToObject<List<SuccessResponse>>();
+            return responseMsg;
+        }
+        public async Task<List<AggregatorRoles>> GetAggregatorRoles()
+        {
+            var forms = new ManageRolesRequestModel
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.addmanageaggregatorusers);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var searchRes = obj["Data"].Value<JObject>();
+            var jarr = searchRes["API"].Value<JArray>();
+            List<AggregatorRoles> searchList = jarr.ToObject<List<AggregatorRoles>>();
+            return searchList;
+        }
+        public async Task<List<SuccessResponse>> AddNewAggregatorUser([FromBody] AddNewAggregatorUser entity)
+        {
+            var forms = new AddNewAggregatorUser
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserName = entity.UserName,
+                Email = entity.Email,
+                Password = entity.Password,
+                ConfirmPassword = entity.ConfirmPassword,
+                CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                TypeAddManageAggregatorUsers = entity.TypeAddManageAggregatorUsers,
+                ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.addaggregatoruser);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<SuccessResponse> responseMsg = jarr.ToObject<List<SuccessResponse>>();
+            return responseMsg;
+        }
+        public async Task<ManageAggregatorNewUserModel> GetManageAggregatorUserForEdit(string UserName)
+        {
+            var forms = new AddNewUserReq
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserName = UserName
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getmanageaggregatorusers);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            ManageAggregatorNewUserModel searchList = obj.ToObject<ManageAggregatorNewUserModel>();
+            return searchList;
+        }
+
     }
 }

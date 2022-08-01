@@ -111,11 +111,13 @@ namespace HPCL_Web.Controllers
             var reasonList = await _customerRequestService.UpdatePermanentlyHotlistCards(CustomerId, cardsList);
             return Json(new { reasonList = reasonList });
         }
+
         public async Task<IActionResult> ConfigureEmailAlerts()
         {
             ConfigureEmailAlertViewModel modals = new ConfigureEmailAlertViewModel();
             return View(modals);
         }
+
         [HttpPost]
         public async Task<IActionResult> ConfigureEmailAlerts(ConfigureEmailAlertViewModel reqModel)
         {
@@ -127,11 +129,32 @@ namespace HPCL_Web.Controllers
             }
             return View(modals);
         }
+
         [HttpPost]
         public async Task<JsonResult> UpdateConfigureEmailAlert([FromBody] ConfigureEmailAlertRequest reqModel)
         {
             var modals = await _customerRequestService.UpdateConfigureEmailAlert(reqModel);
             return Json(modals);
+        }
+
+        public IActionResult ApproveCardRenewRequest()
+        {
+            ApproveCardRenwalRequestReq entity = new ApproveCardRenwalRequestReq();
+            return View(entity);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> ApproveCardRenewRequest(ApproveCardRenwalRequestReq entity)
+        {
+            var searchList = await _customerRequestService.GetApproveCardRenwalRequest(entity);
+            return Json(new { searchList = searchList });
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> UpdateApproveCardRenwalRequest(string actionType, string appRejValues)
+        {
+            var reasonList = await _customerRequestService.UpdateApproveCardRenwalRequest(actionType, appRejValues);
+            return Json(new { reasonList = reasonList });
         }
     }
 }

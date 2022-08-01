@@ -35,5 +35,11 @@ namespace HPCL.Service.Interfaces
         Task<ManageNewUserViewModel> GetManageUserForEdit(string UserName);
         Task<List<SuccessResponse>> DeleteLocationMapping([FromBody] AddNewUserReq entity);
         Task<List<SuccessResponse>> UserCreationRequest([FromBody] UserCreationReqModel reqEntity);
+        Task<GetManageUserResponse> GetManageAggregatorUsers(GetManageUser entity);
+        Task<List<SuccessResponse>> DisableUpdateAggregatorUser(string userName, string action);
+        Task<List<AggregatorRoles>> GetAggregatorRoles();
+        Task<List<SuccessResponse>> AddNewAggregatorUser([FromBody] AddNewAggregatorUser entity);
+        Task<ManageAggregatorNewUserModel> GetManageAggregatorUserForEdit(string UserName);
+        Task<List<SuccessResponse>> AggregatorResetPassword(string userName, string EmailId);
     }
 }

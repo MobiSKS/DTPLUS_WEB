@@ -33,7 +33,7 @@ namespace HPCL.Service.Interfaces
         Task<List<JCBOTCCardDetails>> GetAvailableJCBOTCCardForDealer(string DealerCode);
         Task<JCBCustomerEnrollmentModel> JCBCustomerEnrollment(JCBCustomerEnrollmentModel customerModel);
         Task<JCBManageProfile> JCBManageProfile();
-        Task<List<JCBCustomerProfileResponse>> BindCustomerDetailsForSearch(string CustomerId, string NameOnCard);
+        Task<List<JCBCustomerProfileResponse>> BindCustomerDetailsForSearch(string CardNo, string Email, string CustomerId, string MobileNo);
         Task<List<SearchGridResponse>> CardDetailsForSearch(string CustomerId, string CustomerTypeId);
         Task<GetJCBCommunicationEmailResetPasswordResponse> GetJCBCommunicationEmailResetPassword(string CustomerId);
         Task<InsertResponse> UpdateJCBCommunicationEmailResetPassword(string CustomerId, string AlternateEmailId);
@@ -49,5 +49,9 @@ namespace HPCL.Service.Interfaces
         Task<JCBHotlistorReactivateViewModel> JCBHotlistAndReactivate();
         Task<List<JCBHotlistReason>> GetReasonListForEntities(string EntityTypeId);
         Task<List<string>> ApplyHotlistorReactivate([FromBody] JCBHotlistorReactivateViewModel hotlistorReactivateViewModel);
+        Task<InsertResponse> EnableDisableJCBDealer(string DealerCode, string OfficerType, string EnableDisableFlag);
+        Task<JCBViewDealerOTCCardStatusModel> ViewJCBDealerOTCCardStatus();
+        Task<GetJCBDealerOTCCardStatusResponse> GetViewJCBDealerOTCCardStatus(string DealerCode, string CardNo);
+        Task<InsertResponse> UpdateJCBCustomerProfile(string str);
     }
 }

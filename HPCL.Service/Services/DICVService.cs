@@ -712,6 +712,422 @@ namespace HPCL.Service.Services
             InsertResponse result = obj.ToObject<InsertResponse>();
             return result;
         }
+        public async Task<InsertResponse> EnableDisableDICVDealer(string DealerCode, string OfficerType, string EnableDisableFlag)
+        {
+            bool flag = false;
+
+            if(EnableDisableFlag.ToUpper()== "ENABLED")
+            {
+                flag = true;
+            }
+
+            var requestBody = new EnableDisableDICVDealerRequest
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                DealerCode = DealerCode,
+                OfficerType = OfficerType,
+                IsDisable = flag
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.enableDisableDicvDealer);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            InsertResponse result = obj.ToObject<InsertResponse>();
+            return result;
+        }
+        public async Task<DICVSearchManageCards> DICVManageCards(DICVCustomerCards entity, string editFlag)
+        {
+            var searchBody = new DICVCustomerCards();
+
+            var UserName = _httpContextAccessor.HttpContext.Session.GetString("UserId");
+            if (entity.CustomerId != null || entity.CardNo != null)
+            {
+                searchBody = new DICVCustomerCards
+                {
+                    UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                    UserAgent = CommonBase.useragent,
+                    UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                    CustomerId = entity.CustomerId,
+                    CardNo = entity.CardNo,
+                    MobileNo = entity.MobileNo,
+                    VehicleNumber = entity.VehicleNumber,
+                    StatusFlag = entity.StatusFlag
+                };
+                _httpContextAccessor.HttpContext.Session.SetString("viewUpdatedGrid", JsonConvert.SerializeObject(searchBody));
+            }
+            else if (_httpContextAccessor.HttpContext.Session.GetString("LoginType") == "Customer")
+            {
+                searchBody = new DICVCustomerCards
+                {
+                    UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                    UserAgent = CommonBase.useragent,
+                    UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                    CustomerId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                    StatusFlag = -1,
+                    CardNo = entity.CardNo,
+                    MobileNo = entity.MobileNo,
+                    VehicleNumber = entity.VehicleNumber,
+                };
+            }
+            else if (editFlag == "edit" && _httpContextAccessor.HttpContext.Session.GetString("LoginType") != "Customer")
+            {
+                var str = _httpContextAccessor.HttpContext.Session.GetString("viewUpdatedGrid");
+
+                DICVCustomerCards vGrid = JsonConvert.DeserializeObject<DICVCustomerCards>(str);
+
+                searchBody = new DICVCustomerCards
+                {
+                    UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                    UserAgent = CommonBase.useragent,
+                    UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                    CustomerId = vGrid.CustomerId,
+                    CardNo = vGrid.CardNo,
+                    MobileNo = vGrid.MobileNo,
+                    VehicleNumber = vGrid.VehicleNumber,
+                    StatusFlag = vGrid.StatusFlag
+                };
+            }
+            StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.searchDicvManageCard);
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            DICVSearchManageCards searchList = obj.ToObject<DICVSearchManageCards>();
+            return searchList;
+        }
+        public async Task<DICVSearchDetailsByCardId> DICVViewCardDetails(string CardId)
+        {
+            _httpContextAccessor.HttpContext.Session.SetString("CardIdSession", CardId);
+
+            var cardDetailsBody = new DICVCardsSearch
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                CardNo = CardId,
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(cardDetailsBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.dicvGetCardLimitFeatures);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+
+            DICVSearchDetailsByCardId searchRes = obj.ToObject<DICVSearchDetailsByCardId>();
+
+            string cusId = string.Empty;
+            foreach (var item in searchRes.Data.GetCardsDetailsModelOutput)
+            {
+                cusId = item.CustomerID;
+            }
+            _httpContextAccessor.HttpContext.Session.SetString("CustomerIdSession", cusId);
+
+            return searchRes;
+        }
+        public async Task<DICVUpdateMobileModal> DICVCardlessMapping(string cardNumber, string mobileNumber, string LimitTypeName, string CCMSReloadSaleLimitValue)
+        {
+            DICVUpdateMobileModal editMobBody = new DICVUpdateMobileModal();
+            editMobBody.CardNumber = cardNumber;
+            editMobBody.MobileNumber = mobileNumber;
+            editMobBody.LimitTypeName = LimitTypeName;
+            editMobBody.CCMSReloadSaleLimitValue = CCMSReloadSaleLimitValue;
+
+            _httpContextAccessor.HttpContext.Session.SetString("lmtType", editMobBody.LimitTypeName);
+            return editMobBody;
+        }
+
+        public async Task<List<SuccessResponse>> DICVCardlessMappingUpdate(string mobNoNew, string crdNo)
+        {
+            var cardDetailsBody = new DICVUpdateMobile
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                CardNo = crdNo,
+                MobileNo = mobNoNew,
+                ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
+            };
+            StringContent content = new StringContent(JsonConvert.SerializeObject(cardDetailsBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.dicvUpdateMobileInCard);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+
+            var updateRes = obj["Data"].Value<JArray>();
+            List<SuccessResponse> updateResponse = updateRes.ToObject<List<SuccessResponse>>();
+            return updateResponse;
+        }
+        public async Task<DICVDealerOTCCardStatusModel> ViewDICVDealerOTCCardStatus()
+        {
+            DICVDealerOTCCardStatusModel model = new DICVDealerOTCCardStatusModel();
+            model.Remarks = "";
+            return model;
+        }
+        public async Task<GetDICVDealerOTCCardStatusResponse> GetDICVDealerOTCCardStatus(string DealerCode, string CardNo)
+        {
+            var searchBody = new GetDICVDealerOTCCardStatusRequest()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                DealerCode = DealerCode,
+                CardNo = string.IsNullOrEmpty(CardNo) ? "" : CardNo
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+
+            var ResponseContent = await _requestService.CommonRequestService(content, WebApiUrl.viewDicvDealerOtcCardStatus);
+
+            GetDICVDealerOTCCardStatusResponse response = new GetDICVDealerOTCCardStatusResponse();
+
+            response = JsonConvert.DeserializeObject<GetDICVDealerOTCCardStatusResponse>(ResponseContent);
+
+            return response;
+        }
+        public async Task<DICVManageProfile> DICVManageProfile()
+        {
+            DICVManageProfile custMdl = new DICVManageProfile();
+
+            custMdl.SBUTypes.AddRange(await _commonActionService.GetSbuTypeList());
+            custMdl.SBUTypeID = 1;
+
+            custMdl.CustomerZonalOfficeMdl.AddRange(await _commonActionService.GetZonalOfficebySBUType(custMdl.SBUTypeID.ToString()));
+            custMdl.CustomerTbentityMdl.AddRange(await _commonActionService.GetCustomerTbentityListDropdown());
+            custMdl.CustomerStateMdl.AddRange(await _commonActionService.GetStateList());
+
+            custMdl.ExternalPANAPIStatus = _configuration.GetSection("ExternalAPI:PANAPI").Value.ToString();
+            if (string.IsNullOrEmpty(custMdl.ExternalPANAPIStatus))
+            {
+                custMdl.ExternalPANAPIStatus = "Y";
+            }
+            custMdl.Remarks = "";
+
+            return custMdl;
+        }
+        public async Task<List<DICVCustomerProfileResponse>> BindCustomerDetailsForSearch(string CardNo, string Email, string CustomerId, string MobileNo)
+        {
+            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
+            {
+                var searchBody = new DICVCustomerProfileSearchRequest
+                {
+                    UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                    UserAgent = CommonBase.useragent,
+                    UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                    CardNo = string.IsNullOrEmpty(CardNo) ? "" : CardNo,
+                    Email = string.IsNullOrEmpty(Email) ? "" : Email,
+                    CustomerID = string.IsNullOrEmpty(CustomerId) ? "" : CustomerId,
+                    MobileNo = string.IsNullOrEmpty(MobileNo) ? "" : MobileNo
+                };
+
+                StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+
+                var contentString = await _requestService.CommonRequestService(content, WebApiUrl.getDicvCustomerDetails);
+
+                JObject customerResponse = JObject.Parse(JsonConvert.DeserializeObject(contentString).ToString());
+
+                var jarr = customerResponse["Data"].Value<JObject>();
+
+                var customerResult = jarr["GetCustomerDetails"].Value<JArray>();
+                List<DICVCustomerProfileResponse> customerProfileResponse = customerResult.ToObject<List<DICVCustomerProfileResponse>>();
+
+                if (customerProfileResponse != null && customerProfileResponse.Count > 0)
+                {
+                    foreach (DICVCustomerProfileResponse response in customerProfileResponse)
+                    {
+
+                        #region Commented
+                        //if (string.IsNullOrEmpty(response.AreaOfOperation))
+                        //{
+                        //    response.AreaOfOperation = "";
+                        //}
+                        //if (!string.IsNullOrEmpty(response.CommunicationPhoneNo))
+                        //{
+                        //    string[] subs = response.CommunicationPhoneNo.Split("-");
+
+                        //    if (subs.Count() > 1)
+                        //    {
+                        //        response.CommunicationDialCode = subs[0].ToString();
+                        //        response.CommunicationPhoneNo = subs[1].ToString();
+                        //    }
+                        //    else
+                        //    {
+                        //        response.CommunicationDialCode = "";
+                        //        response.CommunicationPhoneNo = "";
+                        //    }
+                        //}
+
+                        //if (!string.IsNullOrEmpty(response.CommunicationFax))
+                        //{
+                        //    string[] subs = response.CommunicationFax.Split("-");
+
+                        //    if (subs.Count() > 1)
+                        //    {
+                        //        response.CommunicationFaxCode = subs[0].ToString();
+                        //        response.CommunicationFax = subs[1].ToString();
+                        //    }
+                        //    else
+                        //    {
+                        //        response.CommunicationFaxCode = "";
+                        //        response.CommunicationFax = "";
+                        //    }
+                        //}
+
+                        //if (!string.IsNullOrEmpty(response.PermanentPhoneNo))
+                        //{
+                        //    string[] subs = response.PermanentPhoneNo.Split("-");
+
+                        //    if (subs.Count() > 1)
+                        //    {
+                        //        response.PerOrRegAddressDialCode = subs[0].ToString();
+                        //        response.PermanentPhoneNo = subs[1].ToString();
+                        //    }
+                        //    else
+                        //    {
+                        //        response.PerOrRegAddressDialCode = "";
+                        //        response.PermanentPhoneNo = "";
+                        //    }
+                        //}
+
+                        //if (!string.IsNullOrEmpty(response.PermanentFax))
+                        //{
+                        //    string[] subs = response.PermanentFax.Split("-");
+
+                        //    if (subs.Count() > 1)
+                        //    {
+                        //        response.PermanentFaxCode = subs[0].ToString();
+                        //        response.PermanentFax = subs[1].ToString();
+                        //    }
+                        //    else
+                        //    {
+                        //        response.PermanentFaxCode = "";
+                        //        response.PermanentFax = "";
+                        //    }
+                        //}
+
+                        //if (!string.IsNullOrEmpty(response.KeyOfficialFax))
+                        //{
+                        //    string[] subs = response.KeyOfficialFax.Split("-");
+
+                        //    if (subs.Count() > 1)
+                        //    {
+                        //        response.KeyOffFaxCode = subs[0].ToString();
+                        //        response.KeyOffFax = subs[1].ToString();
+                        //    }
+                        //    else
+                        //    {
+                        //        response.KeyOffFaxCode = "";
+                        //        response.KeyOffFax = "";
+                        //    }
+                        //}
+
+                        //if (!string.IsNullOrEmpty(response.KeyOfficialPhoneNo))
+                        //{
+                        //    string[] subs = response.KeyOfficialPhoneNo.Split("-");
+
+                        //    if (subs.Count() > 1)
+                        //    {
+                        //        response.KeyOffDialCode = subs[0].ToString();
+                        //        response.KeyOfficialPhoneNo = subs[1].ToString();
+                        //    }
+                        //    else
+                        //    {
+                        //        response.KeyOffDialCode = "";
+                        //        response.KeyOfficialPhoneNo = "";
+                        //    }
+                        //}
+
+                        //if (response.FleetSizeNoOfVechileOwnedHCV == "0")
+                        //    response.FleetSizeNoOfVechileOwnedHCV = "";
+                        //response.FleetSizeNoOfVechileOwnedLCV = (string.IsNullOrEmpty(response.FleetSizeNoOfVechileOwnedLCV) ? "" : response.FleetSizeNoOfVechileOwnedLCV);
+                        //if (response.FleetSizeNoOfVechileOwnedLCV == "0")
+                        //    response.FleetSizeNoOfVechileOwnedLCV = "";
+                        //response.FleetSizeNoOfVechileOwnedMUVSUV = (string.IsNullOrEmpty(response.FleetSizeNoOfVechileOwnedMUVSUV) ? "" : response.FleetSizeNoOfVechileOwnedMUVSUV);
+                        //if (response.FleetSizeNoOfVechileOwnedMUVSUV == "0")
+                        //    response.FleetSizeNoOfVechileOwnedMUVSUV = "";
+                        //response.FleetSizeNoOfVechileOwnedCarJeep = (string.IsNullOrEmpty(response.FleetSizeNoOfVechileOwnedCarJeep) ? "" : response.FleetSizeNoOfVechileOwnedCarJeep);
+                        //if (response.FleetSizeNoOfVechileOwnedCarJeep == "0")
+                        //    response.FleetSizeNoOfVechileOwnedCarJeep = "";
+
+                        //if (!string.IsNullOrEmpty(response.KeyOfficialDOA))
+                        //{
+                        //    if (response.KeyOfficialDOA.Contains("1900"))
+                        //    {
+                        //        response.KeyOfficialDOA = "";
+                        //    }
+                        //    if (response.KeyOfficialDOA.Contains("0001"))
+                        //    {
+                        //        response.KeyOfficialDOA = "";
+                        //    }
+                        //}
+
+                        //if (!string.IsNullOrEmpty(response.KeyOfficialDOB))
+                        //{
+                        //    if (response.KeyOfficialDOB.Contains("1900"))
+                        //    {
+                        //        response.KeyOfficialDOB = "";
+                        //    }
+                        //    if (response.KeyOfficialDOB.Contains("0001"))
+                        //    {
+                        //        response.KeyOfficialDOB = "";
+                        //    }
+                        //}
+                        #endregion
+
+                        if (string.IsNullOrEmpty(response.NameOnCard))
+                        {
+                            response.NameOnCard = "";
+                        }
+                        if (!string.IsNullOrEmpty(response.DateOfApplication))
+                        {
+                            response.CustomerApplicationDate = response.DateOfApplication;
+                        }
+                        if (string.IsNullOrEmpty(response.RegionalOfficeName))
+                        {
+                            response.RegionalOfficeName = "";
+                        }
+                        if (response.FormNumber == "0")
+                        {
+                            response.FormNumber = "";
+                        }
+                        response.strSBU = response.SBUId.ToString();
+                    }
+                }
+
+                return customerProfileResponse;
+            }
+        }
+        public async Task<InsertResponse> UpdateDICVCustomerProfile(string str)
+        {
+            JArray objs = JArray.Parse(JsonConvert.DeserializeObject(str).ToString());
+            List<UpdateDICVCustomerProfileRequest> arrs = objs.ToObject<List<UpdateDICVCustomerProfileRequest>>();
+
+            var insertServiceBody = new UpdateDICVCustomerProfileRequest
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                CustomerID = arrs[0].CustomerID,
+                IndividualOrgNameTitle = arrs[0].IndividualOrgNameTitle,
+                IndividualOrgName = arrs[0].IndividualOrgName,
+                NameOnCard = arrs[0].NameOnCard,
+                CommunicationAddress1 = arrs[0].CommunicationAddress1,
+                CommunicationAddress2 = arrs[0].CommunicationAddress2,
+                CommunicationCityName = arrs[0].CommunicationCityName,
+                CommunicationPincode = arrs[0].CommunicationPincode,
+                CommunicationStateId = arrs[0].CommunicationStateId,
+                CommunicationDistrictId = arrs[0].CommunicationDistrictId,
+                CommunicationPhoneNo = arrs[0].CommunicationPhoneNo,
+                CommunicationFax = arrs[0].CommunicationFax,
+                CommunicationMobileNo = arrs[0].CommunicationMobileNo,
+                CommunicationEmailid = arrs[0].CommunicationEmailid
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(insertServiceBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.requestUpdateDicvCustomer);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            InsertResponse result = obj.ToObject<InsertResponse>();
+            return result;
+        }
 
     }
 }

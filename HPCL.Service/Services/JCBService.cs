@@ -495,24 +495,24 @@ namespace HPCL.Service.Services
             {
                 custMdl.ExternalPANAPIStatus = "Y";
             }
+            custMdl.Remarks = "";
 
             return custMdl;
         }
-        public async Task<List<JCBCustomerProfileResponse>> BindCustomerDetailsForSearch(string CustomerId, string NameOnCard)
+        public async Task<List<JCBCustomerProfileResponse>> BindCustomerDetailsForSearch(string CardNo, string Email, string CustomerId, string MobileNo)
         {
             using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
             {
-
-                var searchBody = new CustomerProfileModel
+                var searchBody = new JCBCustomerProfileSearchRequest
                 {
                     UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                     UserAgent = CommonBase.useragent,
                     UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
-                    CustomerId = string.IsNullOrEmpty(CustomerId) ? "" : CustomerId,
-                    NameOnCard = string.IsNullOrEmpty(NameOnCard) ? "" : NameOnCard
+                    CardNo = string.IsNullOrEmpty(CardNo) ? "" : CardNo,
+                    Email = string.IsNullOrEmpty(Email) ? "" : Email,
+                    CustomerID = string.IsNullOrEmpty(CustomerId) ? "" : CustomerId,
+                    MobileNo = string.IsNullOrEmpty(MobileNo) ? "" : MobileNo
                 };
-
-
 
                 StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
 
@@ -629,41 +629,41 @@ namespace HPCL.Service.Services
                         //    }
                         //}
 
-                        if (response.FleetSizeNoOfVechileOwnedHCV == "0")
-                            response.FleetSizeNoOfVechileOwnedHCV = "";
-                        response.FleetSizeNoOfVechileOwnedLCV = (string.IsNullOrEmpty(response.FleetSizeNoOfVechileOwnedLCV) ? "" : response.FleetSizeNoOfVechileOwnedLCV);
-                        if (response.FleetSizeNoOfVechileOwnedLCV == "0")
-                            response.FleetSizeNoOfVechileOwnedLCV = "";
-                        response.FleetSizeNoOfVechileOwnedMUVSUV = (string.IsNullOrEmpty(response.FleetSizeNoOfVechileOwnedMUVSUV) ? "" : response.FleetSizeNoOfVechileOwnedMUVSUV);
-                        if (response.FleetSizeNoOfVechileOwnedMUVSUV == "0")
-                            response.FleetSizeNoOfVechileOwnedMUVSUV = "";
-                        response.FleetSizeNoOfVechileOwnedCarJeep = (string.IsNullOrEmpty(response.FleetSizeNoOfVechileOwnedCarJeep) ? "" : response.FleetSizeNoOfVechileOwnedCarJeep);
-                        if (response.FleetSizeNoOfVechileOwnedCarJeep == "0")
-                            response.FleetSizeNoOfVechileOwnedCarJeep = "";
+                        //if (response.FleetSizeNoOfVechileOwnedHCV == "0")
+                        //    response.FleetSizeNoOfVechileOwnedHCV = "";
+                        //response.FleetSizeNoOfVechileOwnedLCV = (string.IsNullOrEmpty(response.FleetSizeNoOfVechileOwnedLCV) ? "" : response.FleetSizeNoOfVechileOwnedLCV);
+                        //if (response.FleetSizeNoOfVechileOwnedLCV == "0")
+                        //    response.FleetSizeNoOfVechileOwnedLCV = "";
+                        //response.FleetSizeNoOfVechileOwnedMUVSUV = (string.IsNullOrEmpty(response.FleetSizeNoOfVechileOwnedMUVSUV) ? "" : response.FleetSizeNoOfVechileOwnedMUVSUV);
+                        //if (response.FleetSizeNoOfVechileOwnedMUVSUV == "0")
+                        //    response.FleetSizeNoOfVechileOwnedMUVSUV = "";
+                        //response.FleetSizeNoOfVechileOwnedCarJeep = (string.IsNullOrEmpty(response.FleetSizeNoOfVechileOwnedCarJeep) ? "" : response.FleetSizeNoOfVechileOwnedCarJeep);
+                        //if (response.FleetSizeNoOfVechileOwnedCarJeep == "0")
+                        //    response.FleetSizeNoOfVechileOwnedCarJeep = "";
 
-                        if (!string.IsNullOrEmpty(response.KeyOfficialDOA))
-                        {
-                            if (response.KeyOfficialDOA.Contains("1900"))
-                            {
-                                response.KeyOfficialDOA = "";
-                            }
-                            if (response.KeyOfficialDOA.Contains("0001"))
-                            {
-                                response.KeyOfficialDOA = "";
-                            }
-                        }
+                        //if (!string.IsNullOrEmpty(response.KeyOfficialDOA))
+                        //{
+                        //    if (response.KeyOfficialDOA.Contains("1900"))
+                        //    {
+                        //        response.KeyOfficialDOA = "";
+                        //    }
+                        //    if (response.KeyOfficialDOA.Contains("0001"))
+                        //    {
+                        //        response.KeyOfficialDOA = "";
+                        //    }
+                        //}
 
-                        if (!string.IsNullOrEmpty(response.KeyOfficialDOB))
-                        {
-                            if (response.KeyOfficialDOB.Contains("1900"))
-                            {
-                                response.KeyOfficialDOB = "";
-                            }
-                            if (response.KeyOfficialDOB.Contains("0001"))
-                            {
-                                response.KeyOfficialDOB = "";
-                            }
-                        }
+                        //if (!string.IsNullOrEmpty(response.KeyOfficialDOB))
+                        //{
+                        //    if (response.KeyOfficialDOB.Contains("1900"))
+                        //    {
+                        //        response.KeyOfficialDOB = "";
+                        //    }
+                        //    if (response.KeyOfficialDOB.Contains("0001"))
+                        //    {
+                        //        response.KeyOfficialDOB = "";
+                        //    }
+                        //}
                         if (string.IsNullOrEmpty(response.NameOnCard))
                         {
                             response.NameOnCard = "";
@@ -1125,6 +1125,93 @@ namespace HPCL.Service.Services
                 messageList.Add(ResponseObj["Message"].ToString());
             }
             return messageList;
+        }
+        public async Task<InsertResponse> EnableDisableJCBDealer(string DealerCode, string OfficerType, string EnableDisableFlag)
+        {
+            bool flag = false;
+
+            if (EnableDisableFlag.ToUpper() == "ENABLED")
+            {
+                flag = true;
+            }
+
+            var requestBody = new EnableDisableJCBDealerRequest
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                DealerCode = DealerCode,
+                OfficerType = OfficerType,
+                IsDisable = flag
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.enableDisableJcbDealer);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            InsertResponse result = obj.ToObject<InsertResponse>();
+            return result;
+        }
+
+        public async Task<JCBViewDealerOTCCardStatusModel> ViewJCBDealerOTCCardStatus()
+        {
+            JCBViewDealerOTCCardStatusModel model = new JCBViewDealerOTCCardStatusModel();
+            model.Remarks = "";
+            return model;
+        }
+        public async Task<GetJCBDealerOTCCardStatusResponse> GetViewJCBDealerOTCCardStatus(string DealerCode, string CardNo)
+        {
+            var searchBody = new GetJCBOTCCardDealerAllocationRequestModel()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                DealerCode = DealerCode,
+                CardNo = string.IsNullOrEmpty(CardNo) ? "" : CardNo
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+
+            var ResponseContent = await _requestService.CommonRequestService(content, WebApiUrl.viewJcbDealerOtcCardStatus);
+
+            GetJCBDealerOTCCardStatusResponse response = new GetJCBDealerOTCCardStatusResponse();
+
+            response = JsonConvert.DeserializeObject<GetJCBDealerOTCCardStatusResponse>(ResponseContent);
+
+            return response;
+        }
+        public async Task<InsertResponse> UpdateJCBCustomerProfile(string str)
+        {
+            JArray objs = JArray.Parse(JsonConvert.DeserializeObject(str).ToString());
+            List<UpdateJCBCustomerProfileRequest> arrs = objs.ToObject<List<UpdateJCBCustomerProfileRequest>>();
+
+            var insertServiceBody = new UpdateJCBCustomerProfileRequest
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                CustomerID = arrs[0].CustomerID,
+                IndividualOrgNameTitle = arrs[0].IndividualOrgNameTitle,
+                IndividualOrgName = arrs[0].IndividualOrgName,
+                NameOnCard = arrs[0].NameOnCard,
+                CommunicationAddress1 = arrs[0].CommunicationAddress1,
+                CommunicationAddress2 = arrs[0].CommunicationAddress2,
+                CommunicationCityName = arrs[0].CommunicationCityName,
+                CommunicationPincode = arrs[0].CommunicationPincode,
+                CommunicationStateId = arrs[0].CommunicationStateId,
+                CommunicationDistrictId = arrs[0].CommunicationDistrictId,
+                CommunicationPhoneNo = arrs[0].CommunicationPhoneNo,
+                CommunicationFax = arrs[0].CommunicationFax,
+                CommunicationMobileNo = arrs[0].CommunicationMobileNo,
+                CommunicationEmailid = arrs[0].CommunicationEmailid
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(insertServiceBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.requestUpdateJCBCustomer);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            InsertResponse result = obj.ToObject<InsertResponse>();
+            return result;
         }
 
     }

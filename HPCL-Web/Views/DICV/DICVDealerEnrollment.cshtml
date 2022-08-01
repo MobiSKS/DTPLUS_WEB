@@ -322,6 +322,9 @@
                                     <div style="display:none;" id="updateExist">
                                         <div class="d-flex align-items-center justify-content-center mt-0">
                                             <div class="px-2">
+                                                <button class="btn btn_primary" type="button" id="btnEnableDisable" onclick="EnableDisableDealer()">DISABLE</button>
+                                            </div>
+                                            <div class="px-2">
                                                 <button class="btn btn_primary" type="button" onclick="thisPageLoad()">Back to Search</button>
                                             </div>
                                             <div class="px-2">
@@ -337,6 +340,7 @@
                             </div>
                         </div>
                         @Html.HiddenFor(model => Model.UserName)
+                        @Html.HiddenFor(model => Model.DealerStatus)
                     </form>
                 </div>
             </div>
@@ -795,6 +799,19 @@
                         $("#add3Val").val(alList[0].address3 || '');
                         $("#cityFetchVal").val(alList[0].cityName || '');
                         $("#UserName").val(alList[0].userName || '');
+                        $("#DealerStatus").val(alList[0].dealerStatus || '');
+
+                        console.log($("#DealerStatus").val());
+                        console.log(alList[0].dealerStatus);
+
+                        if(alList[0].dealerStatus=="Enabled")
+                        {
+                            $("#btnEnableDisable").text("DISABLE");
+                        }
+                        else
+                        {
+                            $("#btnEnableDisable").text("ENABLE");
+                        }
 
                         //$('select[name^="StateId"] option[value="' + alList[0].stateId + '"]').attr("selected", "selected");
                         //$('#StateId')[0].sumo.selectItem(alList[0].sId);
@@ -1285,6 +1302,71 @@
                 type: "POST",
                 dataType: "JSON",
                 data: { UserName: userName },
+                success: function (res) 
+                {
+
+                    if (res.result.success == true) 
+                    {
+                        $("#responseMsg").append("<span>" + res.result.data[0].reason + "</span>");
+
+                        document.getElementById("responseMsg").style.display = "block";
+                        document.getElementById("failureMsg").style.display = "none";
+                        document.getElementById("divDealerEnrollment").style.display = "none";
+                        document.getElementById("divCommunicationAddress").style.display = "none";
+                    }
+                    else
+                    {
+                        document.getElementById("failureMsg").style.display = "block";
+                        document.getElementById("responseMsg").style.display = "none";
+                        document.getElementById("failureMsg").innerHTML=res.result.data[0].reason;
+                        document.getElementById("divDealerEnrollment").style.display = "block";
+                        document.getElementById("divCommunicationAddress").style.display = "block";
+                    }
+
+                },
+                error: function (ex) {
+                    alert('Failed' + ex);
+                }
+            });
+        }
+        else {
+            return false;
+        }
+    }
+
+    function EnableDisableDealer()
+    {
+        var ret=true;
+
+        var dealerCode = document.getElementById("dealerCodedFetchVal").value.trim();
+        if (dealerCode == "") 
+        {
+            document.getElementById("dealerCodeError").innerHTML = "Dealer Code field cannot be left blank";
+            ret=false;
+        }
+        else 
+        {
+            document.getElementById("dealerCodeError").innerHTML = "";
+        }
+
+        if($("#OfficerTypeId").val()=="0")
+        {
+            $('#OfficerTypeId_error').text("Please select a dealer");
+            ret=false;
+        }
+        else
+        {
+            $('#OfficerTypeId_error').text("");
+        }
+
+        if (ret==true)
+        {
+
+            $.ajax({
+                url: "@Url.Action("EnableDisableDICVDealer", "DICV")",
+                type: "POST",
+                dataType: "JSON",
+                data: { DealerCode: dealerCode, OfficerType: $("#OfficerTypeId").val(), EnableDisableFlag:$("#DealerStatus").val()},
                 success: function (res) 
                 {
 

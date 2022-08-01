@@ -1,6 +1,7 @@
 ﻿using HPCL.Common.Helper;
 using HPCL.Common.Models.RequestModel.Customer;
 using HPCL.Common.Models.RequestModel.ParentCustomer;
+using HPCL.Common.Models.ResponseModel.ParentCustomer;
 using HPCL.Common.Models.ViewModel.Aggregator;
 using HPCL.Common.Models.ViewModel.ParentCustomer;
 using HPCL.Service.Interfaces;
@@ -104,7 +105,7 @@ namespace HPCL_Web.Controllers
             return PartialView("~/Views/ParentCustomer/_GetCardandDispatchDetailsTbl.cshtml", modals);
         }
 
-        public async Task<IActionResult> UpdateParentCustomer(string CustomerId, string RequestId,string IsSearch)
+        public async Task<IActionResult> UpdateParentCustomer(string CustomerId, string RequestId, string IsSearch)
         {
             var modals = await _customerService.UpdateParentCustomer(CustomerId, RequestId);
             ViewBag.IsSearch = String.IsNullOrEmpty(IsSearch) ? "false" : "true";
@@ -410,6 +411,32 @@ namespace HPCL_Web.Controllers
             }
 
             return View(modals);
+        }
+
+        public async Task<IActionResult> ParentChildBalanceFundTransfer(ParentChildBalanceTransferViewModel reqEntity, string reset)
+        {
+            var modals = new ParentChildBalanceTransferViewModel();
+            if (reset==null || reset=="")
+            {
+                if (reqEntity.ParentCustomerID != null && reqEntity.ParentCustomerID != "")
+                {
+                    modals = await _customerService.ParentChildBalanceFundTransfer(reqEntity);
+                    modals.ParentCustomerID = reqEntity.ParentCustomerID;
+                    modals.ChildCustomerId = reqEntity.ChildCustomerId;
+                    modals.BalanceTransferTypes.AddRange(await _commonActionService.GetParentCustomerTransactionType());
+
+
+                }
+            }
+            return View(modals);
+        }
+        [HttpPost]
+        public async Task<JsonResult> UpdatePCBalanceTransfer([FromBody] UpdatePCBalanceTransferRequest reqEntity)
+        {
+            var modals = await _customerService.UpdatePCBalanceTransfer(reqEntity);
+
+            return Json(modals);
+
         }
     }
 }

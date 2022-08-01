@@ -7,7 +7,9 @@
             <li class="breadcrumb-item"><a href="@Url.Action("Index","JCB")" class="text_primary">JCB Dashboard</a> </li>
             <li class="breadcrumb-item font-weight-light">Hotlist/Reactivate</li>
         </ul>
-        <div id="reason" class="mb-3 text-center alert" style="display:none;"></div>
+        <div class="bg-white">
+            <div id="reason" class="mb-0 text-center alert" style="display:none;"></div>
+        </div>
         <form class="toBeHiddenOnSuccess">
             <div class="w-100">
                 <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
@@ -94,12 +96,12 @@
                                     </div>
                                     <div class="col-lg-6 col-12">
                                         <div class="d-flex align-items-center flex-wrap mb-3">
-                                           <label class="font-weight-normal offset-md-2 col-md-3 col-12">&nbsp;</label>
-                                           <div class="col-md-7 col-12">
-                                               <div class="custom_select" id="divReasonDetails" style="display:none">
-                                                   @Html.TextBoxFor(m => m.ReasonDetails, new { @class = "form-control", maxlength = "100" })
-                                               </div>
-                                           </div>
+                                            <label class="font-weight-normal offset-md-2 col-md-3 col-12">&nbsp;</label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="custom_select" id="divReasonDetails" style="display:none">
+                                                    @Html.TextBoxFor(m => m.ReasonDetails, new { @class = "form-control", maxlength = "100" })
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -119,7 +121,7 @@
                     </div>
                 </div>
             </div>
-            <input type="hidden"  id="entityStatus"/>
+            <input type="hidden" id="entityStatus" />
         </form>
         <div class="clearfix"></div>
 
@@ -130,7 +132,7 @@
         var text_max = 250;
         $('#charRemining').html('(<i>' + text_max +' characters remaining</i>)');
 
-        $('#Remarks').keyup(function () 
+        $('#Remarks').keyup(function ()
         {
             var text_length = $('#Remarks').val().length;
             var text_remaining = text_max - text_length;
@@ -139,7 +141,7 @@
         });
 
      });
-        
+
 
     function showEntity() {
         var id = $('#EntityTypeId :selected').val();
@@ -206,7 +208,7 @@
         var text_remaining = text_max - text_length;
 
         $('#charRemining').html('(<i>' + text_remaining + ' characters remaining</i>)');
-        
+
         //$('<option>',
         //    {
         //        value: 0,
@@ -227,7 +229,7 @@
                     $("#ActionId").html("");
                     $.each(data, function (i, data) {
                         //debugger;
-                        if (i == 0) 
+                        if (i == 0)
                         {
                             $('<option>',
                                 {
@@ -240,7 +242,7 @@
                                     text: data.statusName
                                 }).html(data.statusName).appendTo("#ActionId");
                         }
-                        else 
+                        else
                         {
                             $('<option>',
                                 {
@@ -248,9 +250,9 @@
                                     text: data.statusName
                                 }).html(data.statusName).appendTo("#ActionId");
                         }
-                        if (entityType.toUpperCase() == "CARD" || entityType.toUpperCase() == "CUSTOMER") 
+                        if (entityType.toUpperCase() == "CARD" || entityType.toUpperCase() == "CUSTOMER")
                         {
-                            if (data.statusName == "Permanent Hotlisted" || data.statusId == "7") 
+                            if (data.statusName == "Permanent Hotlisted" || data.statusId == "7")
                             {
                                 $("#ActionId").val(data.statusId);
                                 getReasonList();
@@ -271,7 +273,7 @@
             }
         });
     };
-    function getReasonList() 
+    function getReasonList()
     {
          var entityTypeId = $('#EntityTypeId :selected').val();
          //var actionId = $('#ActionId :selected').val();
@@ -454,7 +456,7 @@
             $("#remarks_error").html("Please enter Remarks");
             flag = "N";
         }
-        else 
+        else
         {
             //if(remarks.length>100){
             //    $("#remarks_error").attr("style", "display:block");
@@ -496,7 +498,7 @@
                 $("#entityid_error").html($("#entityStatus").val());
                 flag = "N"
             }
-                
+
         }
 
         if (flag == "N")
@@ -516,19 +518,22 @@
                         data: JSON.stringify(model),
                         success: function (data) {
                             if(data.length>0){
-                                
+
                                 $("#reason").html("");
                                 $("#reason").append("<span>" + data[1] + "</span></br>");
-                                if(data[0]=="0"){
+                                if(data[0]=="0")
+                                {
                                     $("#reason").addClass("alert-danger");
                                     $("#reason").removeClass("alert-success");
                                 }
-                                else{
+                                else
+                                {
                                     $("#reason").addClass("alert-success");
                                     $("#reason").removeClass("alert-danger");
+                                    $(".toBeHiddenOnSuccess").hide();
                                 }
                                 $("#reason").attr("style","display:block");
-                                $(".toBeHiddenOnSuccess").hide();
+
                             }
                         },
                         error: function (ex) {
@@ -546,7 +551,7 @@
                         data: JSON.stringify(model),
                         success: function (data) {
                             if(data.length>0){
-                               
+
                                 $("#reason").html("");
                                 $("#reason").append("<span>" + data[1] + "</span></br>");
                                 if(data[0]=="0"){
@@ -570,7 +575,7 @@
         }
     }));
 
-        $("#btnReset").click(function () 
+        $("#btnReset").click(function ()
         {
             window.location.href = '@Url.Action("JCBHotlistAndReactivate", "JCB")';
         });
@@ -588,7 +593,7 @@
                     $("#entityid_error").html("Invalid Merchant ID");
                 }
                 else {
-                    
+
                     var entityTypeId = $('#EntityTypeId :selected').val();
                     $.ajax({
                         type: 'POST',
@@ -614,7 +619,7 @@
                             alert('Error.' + ex);
                         }
                     });
-                    
+
                 }
          }
          else{
