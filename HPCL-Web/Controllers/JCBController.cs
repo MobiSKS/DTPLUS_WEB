@@ -329,6 +329,19 @@ namespace HPCL_Web.Controllers
             var result = await _jcbService.UpdateJCBCustomerProfile(str);
             return Json(new { result = result });
         }
+        public async Task<IActionResult> JCBBalanceInfo()
+        {
+            var model = await _jcbService.JCBBalanceInfo();
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> GetCustomerBalanceInfo(string CustomerID)
+        {
+            var customerBalanceResponse = await _jcbService.GetCustomerBalanceInfo(CustomerID);
+
+            return Json(customerBalanceResponse);
+        }
 
     }
 }

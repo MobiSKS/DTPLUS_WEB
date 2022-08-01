@@ -1,0 +1,414 @@
+﻿@model HPCL.Common.Models.ViewModel.JCB.JCBCustomerBalanceInfoModel
+@using HPCL.Common.Resources
+@{
+    ViewData["Title"] = "Customer Balance Info";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="col-lg-12 px-0">
+    <div class="bg-white p-2 p-md-4" style="overflow: hidden;background: #edecec !important;">
+        <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
+            <li class="breadcrumb-item"><a href="@Url.Action("Index","JCB")" class="text_primary">JCB Dashboard</a> </li>
+            <li class="breadcrumb-item font-weight-light">Balance Info</li>
+        </ul>
+        <form>
+            <div class="w-100">
+                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
+                    <div class="border-1 rounded border-grey pb-0">
+                        <p class="text-white px-3 py-2 m-0 font-weight-bold" style="background: #084693;">Balance Info</p>
+                        <div class="alert alert-danger mt-3 text-center" id="dvRemarks" style="@(Model.Remarks=="" ? "display:none":"display:block")">
+                            @Html.DisplayFor(m => m.Remarks)
+                        </div>
+                        <div class="col-lg-12 col-md-12 col-12 py-3 bg-white">
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-12 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-2 col-12">Customer ID <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-3 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.CustomerId, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+                                                <span class="error" id="CustomerId_error"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-7 col-12">
+                                            <div class="d-flex align-items-center justify-content-start mt-0">
+                                                <div class="px-2">
+                                                    <button class="btn btn_primary" type="button" id="btnSearch">@Label.Search</button>
+                                                </div>
+                                                <div class="px-2">
+                                                    <button class="btn btn_primary" type="button" id="btnReset">@Label.Reset</button>
+                                                </div>
+                                                <div class="px-2">
+                                                    <button class="btn btn_primary" type="button">Recharge Your Account</button>
+                                                </div>
+                                                <div class="px-2">
+                                                    <button class="btn btn_primary" type="button">Add/Edit Mobile</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                @*<div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                    <label class="font-weight-normal offset-md-1 col-md-4 col-12">Customer Status <sup class="text-danger">*</sup></label>
+                                    <div class="col-md-7 col-12">
+                                    <div class="form-check form-check-inline">
+                                    @Html.RadioButtonFor(m => m.CustomerStatus, "Live", new { @id = "rbtnCustomerStatusLive" })
+                                    <label class="form-check-label" for="inlineRadio1"><span style="margin:0px 10px;">Live</span></label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                    @Html.RadioButtonFor(m => m.CustomerStatus, "Test", new { @id = "rbtnCustomerStatusTest" })
+                                    <label class="form-check-label" for="inlineRadio2"><span style="margin:0px 10px;">Test</span></label>
+                                    </div>
+                                    </div>
+                                    </div>
+                                    </div>*@
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+
+                    <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3" id="dvCustomerBalance" style="width:100%;display:none;">
+                        <table id="CustomerBalanceTbl" class="table1 table-striped d-md-table d-block table-bordered table-responsive mt-3" style="width:100%;">
+                            <thead>
+                                <tr>
+                                    <th>Customer ID</th>
+                                    <th>Customer Name</th>
+                                    <th>Regional Office</th>
+                                    <th>Card Balance</th>
+                                    <th>CCMS Balance</th>
+                                    <th>Drivestars</th>
+                                    <th>Expired Drivestars</th>
+                                    <th>Expiring Drivestars</th>
+                                    @*<th>Daily Cash Limit</th>
+                                    <th>Daily Cash Limit Balance</th>
+                                    <th>Card-wise Balances</th>*@
+                                </tr>
+                            </thead>
+
+                        </table>
+                    </div>
+                    
+                </div>
+                   <div class="clearfix"></div>
+                <div class="alert alert-danger mt-3 text-center mb-0" style="display:none" id="divMsg">
+                    </div>
+            </div>
+        </form>
+        <!-- Modal : Card1 -->
+        <div class="modal fade" id="CustomerSummaryView" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document" style="max-width:960px;">
+
+                <!-- Modal content-->
+                <div class="modal-content" style=''>
+                    <div class="modal-header py-2">
+                        <h5 class="modal-title" id="exampleModalLabel" style="font-size:18px;">Customer Details</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" style="overflow:scroll;height:500px;">
+                        <div class="col-lg-12 col-md-12 col-12 toBeHiddenOnSuccess" id="CustomerSummaryData">
+                        </div>
+
+                    </div>
+                </div>
+                @*<div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>*@
+            </div>
+
+        </div>
+
+        <!-- Modal : Card1 -->
+
+        <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3 toBeHiddenOnSuccess" id="customerCardWiseBalancesTbl">
+        </div>
+        <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3 toBeHiddenOnSuccess" id="customerCCMSBalanceTbl">
+        </div>
+    </div>
+    <div class="clearfix"></div>
+</div>
+<script type="text/javascript">
+        $(document).ready(function () {
+            //console.log(document.getElementById("rbtnCustomerStatusLive").checked);
+            //console.log(document.getElementById("rbtnCustomerStatusTest").checked);
+            //if (!document.getElementById("rbtnCustomerStatusLive").checked && !document.getElementById("rbtnCustomerStatusTest").checked) {
+            //    document.getElementById("rbtnCustomerStatusLive").checked = true;
+            //}
+
+
+        });
+
+        var cardclick = "N";
+        var ccmsclcik = "N";
+
+        $("#btnReset").click(function () 
+        {
+            window.location.href = '@Url.Action("JCBBalanceInfo", "JCB")';
+        });
+
+        $("#btnSearch").click(function () {
+debugger;
+
+            console.log(cardclick+"             "+ccmsclcik);
+
+            $("#customerCCMSBalanceTbl").hide();
+            $("#customerCardWiseBalancesTbl").hide();
+
+            //debugger;
+            var customerId = document.getElementById("CustomerId").value;
+            if (customerId == "") {
+                document.getElementById("CustomerId_error").innerHTML = "Please enter Customer ID";
+                $("#CustomerId").focus;
+                return (false);
+            }
+            else {
+                if (!customerId.match(mappedCustomerId)) {
+                    $("#CustomerId_error").attr("style", "display:block");
+                    $("#CustomerId_error").html("Invalid Customer ID");
+                    return (false);
+                }
+                else {
+                    document.getElementById("CustomerId_error").innerHTML = "";
+                }
+
+            }
+
+            customerCardWiseBalancesTbl.style.display = "none";
+debugger;
+            $.ajax({
+                type: 'POST',  // http method
+                url: '@Url.Action("GetCustomerBalanceInfo", "JCB")',
+                data: { CustomerID: customerId },  // data to submit
+                dataType: "json",
+                success: function (res, status, xhr) {
+                
+debugger;
+                    if (status == 'success') 
+                    {
+                        debugger;
+                        $("#CustomerBalanceTbl td").parent().remove();
+                        var data=res.data;
+                        if(data.length>0)
+                        {
+                            for (var i = 0; i < data.length; i++) 
+                            {
+                                var customerID = data[i].customerID;
+                                var rows = "<tbody><tr>"
+                                    //+ "<td class='nav-item'><a class='CardNumber' data-toggle='tab' href='#BasicInformation' onclick='ViewCardDetails(this)' role='tab'><span class='rowCardNo'>" + (data.customerBalanceResponse[i].customerID || '') + "</span></a></td>"
+                                    //+ "<td class='nav-item'><a class='CardNumber' onclick='ViewBasicInfo(this)' role='tab'><span class='rowCardNo'>" + (data.customerBalanceResponse[i].customerID || '') + "</span></a></td>"
+                                    + "<td class='nav-item'><a class='CustNo' data-toggle='modal' href='#myModalCard1' onclick='ViewBasicInfo(this)' role='tab'><span class='rowCardNo'>" + (data[i].customerID || '') + "</span></a></td>"
+                                    //+ "<td><span class='rowData CustReferenceNo'>" + (data[i].cardBalance || '') + "</span></td>"
+                                    + "<td><span class='rowData'>" + (data[i].individualOrgName || '') + "</span></td>"
+                                    + "<td><span class='rowData'>" + (data[i].regionalOfficeName || '') + "</span></td>"
+                                    + "<td class='nav-item'><a class='CardNumber' href='#' onclick='viewCardDetailsGrid()' role='tab'>" + (data[i].cardBalance || '')  +"</a></td>"
+                                    + "<td class='nav-item'><a class='CCMSBalance' href='#' onclick='ViewCCMSInfo()' role='tab'><span class='rowCCMSBalance'>" + (data[i].ccmsLimitValue || '') + "</span></a></td>"
+                                    //+ "<td><span class='rowData'>" + (data[i].drivestars || '') + "</span></td>"
+                                    + "<td class='nav-item'><a class='Drivestars' href='#' onclick='ViewDrivestars(" + customerID + ")' role='tab'>" + (data[i].drivestars || '')  +"</a></td>"
+                                    + "<td><span class='rowData'>" + (data[i].expiredDrivestars || '') + "</span></td>"
+                                    + "<td><span class='rowData'>" + (data[i].expiringDrivestars || '') + "</span></td></tr></tbody>"
+                                    //+ "<td><span class='rowData'>" + (data[i].cashPurseLimit || '') + "</span></td>"
+                                    //+ "<td><span class='rowData'>" + (data[i].dailyCashLimitBalance || '') + "</span></td>"
+                                    //+ "<td><div class='d-flex align-items-center justify-content-left' style='min-height: 100%'><div class='px-2'><a href='#' class='d-block action_btn'><img src='assets/images/search_icon2.png' alt='View' class='img-fluid'></a></div></div></td></tr></tbody>"
+                                    //+ "<td class='nav-item'><a class='CardNumber' data-toggle='tab' onclick='ViewCardDetails(" + customerID + ")' role='tab'><img src='/assets/images/search_icon2.png' alt='View' class='action_btn img-fluid'></a></td></tr></tbody>"
+
+
+                                $('#CustomerBalanceTbl').append(rows);
+
+
+                            }
+
+
+                            ViewCardDetails(customerId);
+                            ViewCCMSBalanceDetails(customerId);
+
+                            console.log(cardclick+"             "+ccmsclcik);
+
+                            if((cardclick == "N") && (ccmsclcik == "N")){
+                                $("#customerCCMSBalanceTbl").hide();
+                                $("#customerCardWiseBalancesTbl").hide();
+                            }
+
+                            if((cardclick == "Y") && (ccmsclcik == "N")){
+                                $("#customerCCMSBalanceTbl").hide();
+                                $("#customerCardWiseBalancesTbl").show();
+                            }
+                            if((ccmsclcik == "Y") && (cardclick == "N")){
+                                $("#customerCardWiseBalancesTbl").hide();
+                                $("#customerCCMSBalanceTbl").show();
+                            }
+
+                            document.getElementById('dvCustomerBalance').style.display = 'block';
+                            document.getElementById('divMsg').style.display = 'none';
+                            $("#CustomerId").prop('readonly', true);
+                        }
+                        else
+                        {
+                            document.getElementById('dvCustomerBalance').style.display = 'none';
+                            $("#customerCCMSBalanceTbl").html("");
+                            $("#customerCardWiseBalancesTbl").html("");
+                            document.getElementById('divMsg').style.display = 'block';
+                            $("#divMsg").html(res.message);
+                            $("#CustomerId").prop('readonly', false);
+                        }
+
+                        //if (data == "Failed to load Customer Details")
+                        //document.getElementById("RBEName").value = "";
+                    }
+                    else {
+                        //$("#RBEId_error").html("");
+                        //document.getElementById("RBEName").value = "";
+                        //found = false;
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    //document.getElementById("RBEName").value = "";
+                },
+                statusCode: {
+                    1024: function () {
+                        //document.getElementById("RBEName").value = "";
+                    }
+                }
+            });
+
+        });
+
+
+
+        function viewCardDetailsGrid(){
+            cardclick = "Y";
+            ccmsclcik = "N";
+            $("#customerCCMSBalanceTbl").hide();
+            $("#customerCardWiseBalancesTbl").show();
+        }
+
+        function ViewCCMSInfo(){
+            cardclick = "N";
+            ccmsclcik = "Y";
+            $("#customerCardWiseBalancesTbl").hide();
+            $("#customerCCMSBalanceTbl").show();
+        }
+
+
+        function ViewCardDetails(customerId) {
+
+            if (customerId == "") {
+                return (false);
+            }
+            else {
+
+            }
+
+            //var found = false;
+            customerCardWiseBalancesTbl.style.display = "block";
+
+
+            $.ajax({
+                type: 'GET',  // http method
+                url: '@Url.Action("GetCustomerCardWiseBalance", "Customer")',
+                contentType: "application/json; charset=utf-8",
+                data: { CustomerID: customerId },
+                dataType: "text",
+                success: function (data, status, xhr) {
+                    var v = data;
+                    if (status == 'success') {
+                        $("#customerCardWiseBalancesTbl").html(data);
+                        $('html, body').animate({
+                            scrollTop: $("#customerCardWiseBalancesTbl").offset().top
+                        }, 2000);
+                    }
+                    else {
+                        console.log(v);
+                    }
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+                    alert("Error");
+                }
+            });
+
+
+        }
+
+        function ViewBasicInfo(o) {
+
+            var customerId = o.innerText;
+            $.ajax({
+                url: "@Url.Action("GetCustomerDetailsByCustomerID", "Customer")",
+                type: "GET",
+                contentType: "application/json; charset=utf-8",
+                data: { CustomerID: customerId },
+                dataType: "text",
+                success: function (data, status, xhr) {
+                var v = data;
+                    if (status == 'success') {
+                        $("#CustomerSummaryData").html("");
+                        $("#CustomerSummaryData").html(data);
+                      $('#CustomerSummaryView').modal('show');
+                    }
+                    else {
+                        console.log(v);
+                    }
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+                    alert("Error");
+                }
+            });
+
+        };
+        function ViewCCMSBalanceDetails(o) {
+
+            var customerId = $("#CustomerId").val();
+            if (customerId == "") {
+                return (false);
+            }
+            $.ajax({
+                type: 'GET',  // http method
+                url: '@Url.Action("GetCCMSBalanceDetails", "Customer")',
+                data: { CustomerID: customerId },
+                contentType: "application/json; charset=utf-8",
+                dataType: "text",
+                success: function (data,status,xhr) {
+                    var v = data;
+                    if (status == 'success') {
+                        $("#customerCCMSBalanceTbl").html(data);
+                        $('html, body').animate({
+                            scrollTop: $("#customerCCMSBalanceTbl").offset().top
+                        }, 2000);
+                    }
+                    else {
+                        console.log(v);
+                    }
+
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+                    alert("Error" + errorMessage);
+                }
+            });
+
+
+        }
+
+    $("#CustomerId").on("blur", function ()
+    {
+        //debugger;
+        if (document.getElementById("CustomerId").value.trim() == "")
+        {
+            $("#CustomerId_error").attr("style", "display:block");
+            $("#CustomerId_error").html("Please enter Customer ID");
+            return false;
+        }
+        else if (!$("#CustomerId").val().match(mappedCustomerId))
+        {
+            $("#CustomerId_error").attr("style", "display:block");
+            $("#CustomerId_error").html("Invalid Customer ID");
+            return false;
+        }
+        else
+        {
+            $("#CustomerId_error").html("");
+        }
+
+    });
+</script>
