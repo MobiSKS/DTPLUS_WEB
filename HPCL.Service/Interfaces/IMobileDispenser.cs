@@ -17,8 +17,8 @@ namespace HPCL.Service.Interfaces
 
         public Task<List<GetStatusMobileDispenserRetailOutletMappingResponse>> GetStatusMobileDispenserRetailOutletMapping(string Status);
 
-
-       // public Task<List<MobileDispenserViewModel>> SearchMobileDispenserRetailOutletMapping(string MobileDispenserId, int Status);
+        public Task<List<GetStatusMobileDispenserResponse>> GetStatusMobileDispenser();
+        // public Task<List<MobileDispenserViewModel>> SearchMobileDispenserRetailOutletMapping(string MobileDispenserId, int Status);
 
 
 

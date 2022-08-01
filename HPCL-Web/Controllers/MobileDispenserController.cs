@@ -1,4 +1,5 @@
 ﻿using HPCL.Common.Helper;
+using HPCL.Common.Models.ViewModel.MobileDispenser;
 using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -19,16 +20,48 @@ namespace HPCL_Web.Controllers
         //    return View();
         //}
 
+       
+
         public async Task<IActionResult> MobileDispenserRetailsOutletMapping(string MobileDispenserId, int Status)
+        
+        
+        
         {
+            
             var modals = await _mobiledispenser.MobileDispenserRetailOutletMapping(MobileDispenserId, Status);
 
-           //ViewBag.Status = Status;
+            var modals1 = await _mobiledispenser.GetStatusMobileDispenser();
+
+
+
+
+
+            //ViewBag.StatusName = modals1;
+
+
+            MobileDispenserViewModel multi_Dropdownlist = new MobileDispenserViewModel
+
+            {
+
+                GetStatus = await _mobiledispenser.GetStatusMobileDispenser(),
+
+                GetAllDataMobileDispenser = await _mobiledispenser.MobileDispenserRetailOutletMapping(MobileDispenserId, Status)
+
+            };
+
+            // ViewBag.StatusName = modals1;
+
+
+            //MobileDispenserViewModel obj = new MobileDispenserViewModel();
+            //obj.GetAllDataMobileDispenser = modals;
+
+            // obj.GetStatus = modals1;
+            // ViewBag.StatusName = modals1;
             //ViewBag.Status = Status;
             //MobileDispenserId = "";
             //Status = 0;
 
-            return View(modals);
+            return View(multi_Dropdownlist);
         }
 
         public async Task<IActionResult> SearchMobileDispenserRetailsOutletMapping(string MobileDispenserId, int Status)

@@ -34,6 +34,8 @@ namespace HPCL.Service.Services
             //_configuration = configuration;
         }
 
+     
+
         public async Task<List<GetStatusMobileDispenserRetailOutletMappingResponse>> GetStatusMobileDispenserRetailOutletMapping(string Status)
         {
             var StatusMobileDispenserRetailOutlet = new GetStatusMobileDispenserRetailOutletMappingRequest()
@@ -41,7 +43,7 @@ namespace HPCL.Service.Services
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
                 UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
-                Status = "0"
+                Status = "1"
             };
             StringContent StatusMobileDispenserContent = new StringContent(JsonConvert.SerializeObject(StatusMobileDispenserRetailOutlet), Encoding.UTF8, "application/json");
 
@@ -55,6 +57,7 @@ namespace HPCL.Service.Services
         }
 
         public async Task<List<MobileDispenserRetailOutletMappingResponse>> MobileDispenserRetailOutletMapping(string MobileDispenserID, int Status)
+        
         
         {
             var MobileDispenserRetailOutlet = new MobileDispenserRetailOutletMappingRequest()
@@ -78,27 +81,6 @@ namespace HPCL.Service.Services
 
         }
 
-        //public async Task<List<MobileDispenserViewModel>> SearchMobileDispenserRetailOutletMapping(string MobileDispenserId, int Status)
-        //{
-        //    var MobileDispenserRetailOutlet = new MobileDispenserRetailOutletMappingRequest()
-        //    {
-        //        UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
-        //        UserAgent = CommonBase.useragent,
-        //        UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
-        //        MobileDispenserId = "3411120001",
-        //        Status = 0
-        //    };
-        //    StringContent MobileDispenserContent = new StringContent(JsonConvert.SerializeObject(MobileDispenserRetailOutlet), Encoding.UTF8, "application/json");
-
-        //    var MobileDispenserContentResponse = await _requestService.CommonRequestService(MobileDispenserContent, WebApiUrl.MobileDispenserRetailOutletMapping);
-
-        //    JObject mobiledispenserObj = JObject.Parse(JsonConvert.DeserializeObject(MobileDispenserContentResponse).ToString());
-        //    //mobiledispenser = JsonConvert.DeserializeObject<MobileDispenserRetailOutletMappingRequest>(MobileDispenserContentResponse);
-        //    var mobiledispenserJarr = mobiledispenserObj["Data"].Value<JArray>();
-        //    List<MobileDispenserViewModel> mobiledispenserApprovalLst = mobiledispenserJarr.ToObject<List<MobileDispenserViewModel>>();
-        //    // mobiledispenser.MobileDispenserContentResponse.AddRange(mobiledispenserApprovalLst);
-        //    return mobiledispenserApprovalLst;
-        //}
 
 
 
@@ -128,6 +110,23 @@ namespace HPCL.Service.Services
 
         }
 
+     public async   Task<List<GetStatusMobileDispenserResponse>> GetStatusMobileDispenser()
+        {
+            var StatusMobileDispenser = new GetStatusMobileDispenserRequest()
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
 
+            };
+            StringContent StatusMobileDispenserContent = new StringContent(JsonConvert.SerializeObject(StatusMobileDispenser), Encoding.UTF8, "application/json");
+
+            var StatusMobileDispenserContentRespons = await _requestService.CommonRequestService(StatusMobileDispenserContent, WebApiUrl.StatusMobileDispenser);
+
+            JObject StatusmobiledispenserObj = JObject.Parse(JsonConvert.DeserializeObject(StatusMobileDispenserContentRespons).ToString());
+            var StatusmobiledispenserJarr = StatusmobiledispenserObj["Data"].Value<JArray>();
+            List<GetStatusMobileDispenserResponse> mobiledispenserApprovalLst = StatusmobiledispenserJarr.ToObject<List<GetStatusMobileDispenserResponse>>();
+            return mobiledispenserApprovalLst;
+        }
     }
 }

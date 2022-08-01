@@ -729,6 +729,8 @@
         #region "MobileDispenser Surya Yadav"
         public static string MobileDispenserRetailOutletMapping="api/dtplus/merchant/get_mobile_dispenser_retail_outlet_mapping";
         public static string StatusMobileDispenserRetailOutletMapping = "api/dtplus/merchant/get_status_mobiledispenser_retailoutletmapping";
+
+        public static string StatusMobileDispenser = "api/dtplus/merchant/get_status_mobile_dispenser";
         #endregion
     }
 }
