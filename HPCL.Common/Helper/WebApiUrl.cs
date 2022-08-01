@@ -656,6 +656,7 @@
         public static string requestUpdateJCBCustomer = "api/dtplus/JCB/request_update_JCB_customer";
         public static string getJcbCustomerBalanceInfo = "api/dtplus/JCB/get_jcb_customer_balance_info";
         public static string updateJcbCustomerDetail = "api/dtplus/JCB/update_jcb_customer_Detail";
+        public static string getJcbTransactionsSummary = "api/dtplus/JCB/get_jcb_transactions_summary";
         #endregion
 
         #region Customer Dashboard
