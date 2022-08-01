@@ -152,7 +152,7 @@ namespace HPCL.Service.Services
             editMobBody.LimitTypeName = LimitTypeName;
             editMobBody.CCMSReloadSaleLimitValue = CCMSReloadSaleLimitValue;
 
-            _httpContextAccessor.HttpContext.Session.SetString("lmtType", editMobBody.LimitTypeName);
+            _httpContextAccessor.HttpContext.Session.SetString("lmtType", string.IsNullOrEmpty(editMobBody.LimitTypeName)?"": editMobBody.LimitTypeName);
             return editMobBody;
         }
 
