@@ -1128,6 +1128,33 @@ namespace HPCL.Service.Services
             InsertResponse result = obj.ToObject<InsertResponse>();
             return result;
         }
+        public async Task<DICVCustomerBalanceInfoModel> DICVBalanceInfo()
+        {
+            DICVCustomerBalanceInfoModel custMdl = new DICVCustomerBalanceInfoModel();
+            custMdl.Remarks = "";
+            return custMdl;
+        }
+
+        public async Task<GetDICVCustomerBalanceInfoResponse> GetCustomerBalanceInfo(string CustomerID)
+        {
+            GetDICVCustomerBalanceInfoResponse customerBalanceInfo = new GetDICVCustomerBalanceInfoResponse();
+
+            var Request = new DICVCustomerProfileSearchRequest()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                CustomerID = CustomerID
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(Request), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getDicvCustomerBalanceInfo);
+
+            customerBalanceInfo = JsonConvert.DeserializeObject<GetDICVCustomerBalanceInfoResponse>(response);
+
+            return customerBalanceInfo;
+        }
 
     }
 }

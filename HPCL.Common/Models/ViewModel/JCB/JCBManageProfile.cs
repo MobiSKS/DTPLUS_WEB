@@ -428,6 +428,8 @@ namespace HPCL.Common.Models.ViewModel.JCB
         public string SignedOn { get; set; }
         public int SBUId { get; set; }
         public string strSBU { get; set; }
+        public string DealerCode { get; set; }
+        public string SalesExecutiveEmployeeID { get; set; }
     }
     public class JCBSearchGridResponse
     {

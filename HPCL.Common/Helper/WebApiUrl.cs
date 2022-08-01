@@ -655,6 +655,7 @@
         public static string viewJcbDealerOtcCardStatus = "api/dtplus/JCB/view_jcb_dealer_otc_card_status";
         public static string requestUpdateJCBCustomer = "api/dtplus/JCB/request_update_JCB_customer";
         public static string getJcbCustomerBalanceInfo = "api/dtplus/JCB/get_jcb_customer_balance_info";
+        public static string updateJcbCustomerDetail = "api/dtplus/JCB/update_jcb_customer_Detail";
         #endregion
 
         #region Customer Dashboard
@@ -694,6 +695,7 @@
         public static string viewDicvDealerOtcCardStatus = "api/dtplus/DICV/view_dicv_dealer_otc_card_status";
         public static string getDicvCustomerDetails = "api/dtplus/DICV/get_dicv_customer_details";
         public static string requestUpdateDicvCustomer = "api/dtplus/DICV/request_update_dicv_customer";
+        public static string getDicvCustomerBalanceInfo = "api/dtplus/DICV/get_dicv_customer_balance_info";
         #endregion
 
         #region "Parent Customer HDFC Bank Credit Pouch"
@@ -749,6 +751,10 @@
         #region "MobileDispenser Surya Yadav"
         public static string MobileDispenserRetailOutletMapping="api/dtplus/merchant/get_mobile_dispenser_retail_outlet_mapping";
         public static string StatusMobileDispenserRetailOutletMapping = "api/dtplus/merchant/get_status_mobiledispenser_retailoutletmapping";
+        #endregion
+
+        #region EFT
+        public static string eftrechargedetailentry = "api/dtplus/EFT/eft_recharge_detail_entry";
         #endregion
     }
 }

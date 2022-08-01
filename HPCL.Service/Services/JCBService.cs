@@ -529,6 +529,7 @@ namespace HPCL.Service.Services
                 {
                     foreach (JCBCustomerProfileResponse response in customerProfileResponse)
                     {
+                        #region Commented
                         //if (string.IsNullOrEmpty(response.AreaOfOperation))
                         //{
                         //    response.AreaOfOperation = "";
@@ -664,6 +665,8 @@ namespace HPCL.Service.Services
                         //        response.KeyOfficialDOB = "";
                         //    }
                         //}
+                        #endregion
+
                         if (string.IsNullOrEmpty(response.NameOnCard))
                         {
                             response.NameOnCard = "";
@@ -1207,7 +1210,7 @@ namespace HPCL.Service.Services
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(insertServiceBody), Encoding.UTF8, "application/json");
-            var response = await _requestService.CommonRequestService(content, WebApiUrl.requestUpdateJCBCustomer);
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.updateJcbCustomerDetail);
 
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
             InsertResponse result = obj.ToObject<InsertResponse>();
