@@ -176,9 +176,9 @@ namespace HPCL_Web.Controllers
             return View(custMdl);
         }
         [HttpPost]
-        public async Task<JsonResult> BindCustomerDetailsForSearch(string CustomerId, string NameOnCard)
+        public async Task<JsonResult> BindCustomerDetailsForSearch(string CardNo, string Email, string CustomerId, string MobileNo)
         {
-            var customerCardInfo = await _jcbService.BindCustomerDetailsForSearch(CustomerId, NameOnCard);
+            var customerCardInfo = await _jcbService.BindCustomerDetailsForSearch(CardNo, Email, CustomerId, MobileNo);
             ModelState.Clear();
             return Json(customerCardInfo);
         }
@@ -322,6 +322,12 @@ namespace HPCL_Web.Controllers
         {
             var modals = await _jcbService.GetViewJCBDealerOTCCardStatus(DealerCode, CardNo);
             return PartialView("~/Views/JCB/_JCBDealerOTCCardStatusTable.cshtml", modals);
+        }
+        [HttpPost]
+        public async Task<JsonResult> UpdateJCBCustomerProfile(string str)
+        {
+            var result = await _jcbService.UpdateJCBCustomerProfile(str);
+            return Json(new { result = result });
         }
 
     }

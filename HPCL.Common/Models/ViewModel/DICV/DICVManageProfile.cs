@@ -8,11 +8,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HPCL.Common.Models.ViewModel.JCB
+namespace HPCL.Common.Models.ViewModel.DICV
 {
-    public class JCBManageProfile : BaseEntity
+    public class DICVManageProfile : BaseEntity
     {
-        public JCBManageProfile()
+        public DICVManageProfile()
         {
             CustomerTypeMdl = new List<CustomerTypeModel>();
             CustomerTypeMdl.Add(new CustomerTypeModel
@@ -232,7 +232,7 @@ namespace HPCL.Common.Models.ViewModel.JCB
         public virtual List<VehicleTypeModel> VehicleTypeMdl { get; set; }
         public virtual List<SalesAreaModel> SalesAreaMdl { get; set; }
 
-        public virtual List<JCBCustomerProfileResponse> CustomerProfileResponses { get; set; }
+        public virtual List<DICVCustomerProfileResponse> CustomerProfileResponses { get; set; }
 
         public string CustomerSignedOn { get; set; }
 
@@ -265,7 +265,7 @@ namespace HPCL.Common.Models.ViewModel.JCB
         public string SalesExecutiveEmployeeID { get; set; }
     }
 
-    public class JCBCustomerProfileResponse
+    public class DICVCustomerProfileResponse
     {
         public string CustomerZonalOfficeID { get; set; }
         public string CustomerRegionID { get; set; }
@@ -429,12 +429,5 @@ namespace HPCL.Common.Models.ViewModel.JCB
         public int SBUId { get; set; }
         public string strSBU { get; set; }
     }
-    public class JCBSearchGridResponse
-    {
-        public string CardNumber { get; set; }
-        public string VechileNo { get; set; }
-        public string IssueDate { get; set; }
-        public string ExpiryDate { get; set; }
-        public string Status { get; set; }
-    }
+   
 }

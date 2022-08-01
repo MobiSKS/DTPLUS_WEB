@@ -883,6 +883,251 @@ namespace HPCL.Service.Services
 
             return response;
         }
+        public async Task<DICVManageProfile> DICVManageProfile()
+        {
+            DICVManageProfile custMdl = new DICVManageProfile();
+
+            custMdl.SBUTypes.AddRange(await _commonActionService.GetSbuTypeList());
+            custMdl.SBUTypeID = 1;
+
+            custMdl.CustomerZonalOfficeMdl.AddRange(await _commonActionService.GetZonalOfficebySBUType(custMdl.SBUTypeID.ToString()));
+            custMdl.CustomerTbentityMdl.AddRange(await _commonActionService.GetCustomerTbentityListDropdown());
+            custMdl.CustomerStateMdl.AddRange(await _commonActionService.GetStateList());
+
+            custMdl.ExternalPANAPIStatus = _configuration.GetSection("ExternalAPI:PANAPI").Value.ToString();
+            if (string.IsNullOrEmpty(custMdl.ExternalPANAPIStatus))
+            {
+                custMdl.ExternalPANAPIStatus = "Y";
+            }
+            custMdl.Remarks = "";
+
+            return custMdl;
+        }
+        public async Task<List<DICVCustomerProfileResponse>> BindCustomerDetailsForSearch(string CardNo, string Email, string CustomerId, string MobileNo)
+        {
+            using (HttpClient client = new HelperAPI().GetApiBaseUrlString())
+            {
+                var searchBody = new DICVCustomerProfileSearchRequest
+                {
+                    UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                    UserAgent = CommonBase.useragent,
+                    UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                    CardNo = string.IsNullOrEmpty(CardNo) ? "" : CardNo,
+                    Email = string.IsNullOrEmpty(Email) ? "" : Email,
+                    CustomerID = string.IsNullOrEmpty(CustomerId) ? "" : CustomerId,
+                    MobileNo = string.IsNullOrEmpty(MobileNo) ? "" : MobileNo
+                };
+
+                StringContent content = new StringContent(JsonConvert.SerializeObject(searchBody), Encoding.UTF8, "application/json");
+
+                var contentString = await _requestService.CommonRequestService(content, WebApiUrl.getDicvCustomerDetails);
+
+                JObject customerResponse = JObject.Parse(JsonConvert.DeserializeObject(contentString).ToString());
+
+                var jarr = customerResponse["Data"].Value<JObject>();
+
+                var customerResult = jarr["GetCustomerDetails"].Value<JArray>();
+                List<DICVCustomerProfileResponse> customerProfileResponse = customerResult.ToObject<List<DICVCustomerProfileResponse>>();
+
+                if (customerProfileResponse != null && customerProfileResponse.Count > 0)
+                {
+                    foreach (DICVCustomerProfileResponse response in customerProfileResponse)
+                    {
+
+                        #region Commented
+                        //if (string.IsNullOrEmpty(response.AreaOfOperation))
+                        //{
+                        //    response.AreaOfOperation = "";
+                        //}
+                        //if (!string.IsNullOrEmpty(response.CommunicationPhoneNo))
+                        //{
+                        //    string[] subs = response.CommunicationPhoneNo.Split("-");
+
+                        //    if (subs.Count() > 1)
+                        //    {
+                        //        response.CommunicationDialCode = subs[0].ToString();
+                        //        response.CommunicationPhoneNo = subs[1].ToString();
+                        //    }
+                        //    else
+                        //    {
+                        //        response.CommunicationDialCode = "";
+                        //        response.CommunicationPhoneNo = "";
+                        //    }
+                        //}
+
+                        //if (!string.IsNullOrEmpty(response.CommunicationFax))
+                        //{
+                        //    string[] subs = response.CommunicationFax.Split("-");
+
+                        //    if (subs.Count() > 1)
+                        //    {
+                        //        response.CommunicationFaxCode = subs[0].ToString();
+                        //        response.CommunicationFax = subs[1].ToString();
+                        //    }
+                        //    else
+                        //    {
+                        //        response.CommunicationFaxCode = "";
+                        //        response.CommunicationFax = "";
+                        //    }
+                        //}
+
+                        //if (!string.IsNullOrEmpty(response.PermanentPhoneNo))
+                        //{
+                        //    string[] subs = response.PermanentPhoneNo.Split("-");
+
+                        //    if (subs.Count() > 1)
+                        //    {
+                        //        response.PerOrRegAddressDialCode = subs[0].ToString();
+                        //        response.PermanentPhoneNo = subs[1].ToString();
+                        //    }
+                        //    else
+                        //    {
+                        //        response.PerOrRegAddressDialCode = "";
+                        //        response.PermanentPhoneNo = "";
+                        //    }
+                        //}
+
+                        //if (!string.IsNullOrEmpty(response.PermanentFax))
+                        //{
+                        //    string[] subs = response.PermanentFax.Split("-");
+
+                        //    if (subs.Count() > 1)
+                        //    {
+                        //        response.PermanentFaxCode = subs[0].ToString();
+                        //        response.PermanentFax = subs[1].ToString();
+                        //    }
+                        //    else
+                        //    {
+                        //        response.PermanentFaxCode = "";
+                        //        response.PermanentFax = "";
+                        //    }
+                        //}
+
+                        //if (!string.IsNullOrEmpty(response.KeyOfficialFax))
+                        //{
+                        //    string[] subs = response.KeyOfficialFax.Split("-");
+
+                        //    if (subs.Count() > 1)
+                        //    {
+                        //        response.KeyOffFaxCode = subs[0].ToString();
+                        //        response.KeyOffFax = subs[1].ToString();
+                        //    }
+                        //    else
+                        //    {
+                        //        response.KeyOffFaxCode = "";
+                        //        response.KeyOffFax = "";
+                        //    }
+                        //}
+
+                        //if (!string.IsNullOrEmpty(response.KeyOfficialPhoneNo))
+                        //{
+                        //    string[] subs = response.KeyOfficialPhoneNo.Split("-");
+
+                        //    if (subs.Count() > 1)
+                        //    {
+                        //        response.KeyOffDialCode = subs[0].ToString();
+                        //        response.KeyOfficialPhoneNo = subs[1].ToString();
+                        //    }
+                        //    else
+                        //    {
+                        //        response.KeyOffDialCode = "";
+                        //        response.KeyOfficialPhoneNo = "";
+                        //    }
+                        //}
+
+                        //if (response.FleetSizeNoOfVechileOwnedHCV == "0")
+                        //    response.FleetSizeNoOfVechileOwnedHCV = "";
+                        //response.FleetSizeNoOfVechileOwnedLCV = (string.IsNullOrEmpty(response.FleetSizeNoOfVechileOwnedLCV) ? "" : response.FleetSizeNoOfVechileOwnedLCV);
+                        //if (response.FleetSizeNoOfVechileOwnedLCV == "0")
+                        //    response.FleetSizeNoOfVechileOwnedLCV = "";
+                        //response.FleetSizeNoOfVechileOwnedMUVSUV = (string.IsNullOrEmpty(response.FleetSizeNoOfVechileOwnedMUVSUV) ? "" : response.FleetSizeNoOfVechileOwnedMUVSUV);
+                        //if (response.FleetSizeNoOfVechileOwnedMUVSUV == "0")
+                        //    response.FleetSizeNoOfVechileOwnedMUVSUV = "";
+                        //response.FleetSizeNoOfVechileOwnedCarJeep = (string.IsNullOrEmpty(response.FleetSizeNoOfVechileOwnedCarJeep) ? "" : response.FleetSizeNoOfVechileOwnedCarJeep);
+                        //if (response.FleetSizeNoOfVechileOwnedCarJeep == "0")
+                        //    response.FleetSizeNoOfVechileOwnedCarJeep = "";
+
+                        //if (!string.IsNullOrEmpty(response.KeyOfficialDOA))
+                        //{
+                        //    if (response.KeyOfficialDOA.Contains("1900"))
+                        //    {
+                        //        response.KeyOfficialDOA = "";
+                        //    }
+                        //    if (response.KeyOfficialDOA.Contains("0001"))
+                        //    {
+                        //        response.KeyOfficialDOA = "";
+                        //    }
+                        //}
+
+                        //if (!string.IsNullOrEmpty(response.KeyOfficialDOB))
+                        //{
+                        //    if (response.KeyOfficialDOB.Contains("1900"))
+                        //    {
+                        //        response.KeyOfficialDOB = "";
+                        //    }
+                        //    if (response.KeyOfficialDOB.Contains("0001"))
+                        //    {
+                        //        response.KeyOfficialDOB = "";
+                        //    }
+                        //}
+                        #endregion
+
+                        if (string.IsNullOrEmpty(response.NameOnCard))
+                        {
+                            response.NameOnCard = "";
+                        }
+                        if (!string.IsNullOrEmpty(response.DateOfApplication))
+                        {
+                            response.CustomerApplicationDate = response.DateOfApplication;
+                        }
+                        if (string.IsNullOrEmpty(response.RegionalOfficeName))
+                        {
+                            response.RegionalOfficeName = "";
+                        }
+                        if (response.FormNumber == "0")
+                        {
+                            response.FormNumber = "";
+                        }
+                        response.strSBU = response.SBUId.ToString();
+                    }
+                }
+
+                return customerProfileResponse;
+            }
+        }
+        public async Task<InsertResponse> UpdateDICVCustomerProfile(string str)
+        {
+            JArray objs = JArray.Parse(JsonConvert.DeserializeObject(str).ToString());
+            List<UpdateDICVCustomerProfileRequest> arrs = objs.ToObject<List<UpdateDICVCustomerProfileRequest>>();
+
+            var insertServiceBody = new UpdateDICVCustomerProfileRequest
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                CustomerID = arrs[0].CustomerID,
+                IndividualOrgNameTitle = arrs[0].IndividualOrgNameTitle,
+                IndividualOrgName = arrs[0].IndividualOrgName,
+                NameOnCard = arrs[0].NameOnCard,
+                CommunicationAddress1 = arrs[0].CommunicationAddress1,
+                CommunicationAddress2 = arrs[0].CommunicationAddress2,
+                CommunicationCityName = arrs[0].CommunicationCityName,
+                CommunicationPincode = arrs[0].CommunicationPincode,
+                CommunicationStateId = arrs[0].CommunicationStateId,
+                CommunicationDistrictId = arrs[0].CommunicationDistrictId,
+                CommunicationPhoneNo = arrs[0].CommunicationPhoneNo,
+                CommunicationFax = arrs[0].CommunicationFax,
+                CommunicationMobileNo = arrs[0].CommunicationMobileNo,
+                CommunicationEmailid = arrs[0].CommunicationEmailid
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(insertServiceBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.requestUpdateDicvCustomer);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            InsertResponse result = obj.ToObject<InsertResponse>();
+            return result;
+        }
 
     }
 }

@@ -1,0 +1,393 @@
+﻿@model HPCL.Common.Models.ViewModel.Security.ManageAggregatorNewUserModel
+@using Microsoft.AspNetCore.Http;
+<div class="col-lg-12 p-4 p-md-4">
+    <div class="bg-white p-2 p-md-4">
+        <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
+            <li class="breadcrumb-item"><a href="@Url.Action("ManageAggregatorUsers","Security")" class="text_primary">Manage Aggregator Users</a> </li>
+            <li class="breadcrumb-item font-weight-light">Add User</li>
+        </ul>
+        <div id="reason" tabindex="0" class="mb-3 text-center alert" style="display:none"></div>
+        @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "form1", name = "form1" ,@class="tobehiddenonSuccess"}))
+        {
+            <div class="border-1 rounded border-grey w-100 mt-3">
+                <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">User Information</p>
+                <div class="py-2 p-md-4">
+                    <div class="d-flex align-items-center justify-content-between flex-wrap row">
+                        <div class="col-lg-6 col-md-12 col-12">
+                            <div class="form-group d-flex align-items-center flex-wrap">
+                                <label class="font-weight-normal col-md-5 col-12">User Name <sup class="text-danger">*</sup></label>
+                                <div class="col-md-7 col-12">
+                                    <div class="custom_select">
+                                        @Html.TextBoxFor(m => m.UserName, new { @class = "form-control", maxlength = "50"})
+                                        <span class="error" style="display:none" id="userName_error"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-12 col-12">
+                            <div class="form-group d-flex align-items-center flex-wrap">
+                                <label class="font-weight-normal offset-md-1 col-md-4 col-12">Email <sup class="text-danger">*</sup></label>
+                                <div class="col-md-7 col-12">
+                                    <div class="custom_select">
+                                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control", maxlength = "50", @style = "text-transform:lowercase"})
+                                        <span class="error" style="display:none" id="email_error"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-between flex-wrap row">
+                        <div class="col-lg-6 col-md-12 col-12">
+                            <div class="form-group d-flex align-items-center flex-wrap">
+                                <label class="font-weight-normal col-md-5 col-12">Password <sup class="text-danger">*</sup></label>
+                                <div class="col-md-7 col-12">
+                                    <div class="custom_select">
+
+                                        @Html.PasswordFor(m => m.Password, new { @class = "form-control", maxlength = "50",autocomplete = "new-password"})
+                                        <span class="error" style="display:none" id="password_error"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-12 col-12">
+                            <div class="form-group d-flex align-items-center flex-wrap">
+                                <label class="font-weight-normal offset-md-1 col-md-4 col-12">Confirm Password <sup class="text-danger">*</sup></label>
+                                <div class="col-md-7 col-12">
+                                    <div class="custom_select">
+                                        @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control", maxlength = "50"})
+                                        <span class="error" style="display:none" id="confirmPassword_error"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+                <p class="userNote px-3 py-2  m-0" style="display:none">Note:-Minimum length of Username should be 6 and special characters(Except .,_,@@)are not allowed.Username should not start with special character and 2 consecutive special characters are not allowed.</p>
+                <p class="passNote px-3 py-2  m-0" style="display:none">Note:-Password must contain minimum 8 characters, and atleast one upper case letter, one lower case letter, one numeric digit and one special character !@@~#%^&(*)</p>
+            </div>
+            <div class="clearfix"></div>
+
+            <div class="border-1 rounded border-grey w-100 mt-3">
+                <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Roles</p>
+                @if (Model.GetAggregatorRoles != null)
+                {
+                    @if (Model.GetAggregatorRoles.Count() > 0)
+                    {
+                        <div class="d-flex align-items-start flex-wrap mt-3">
+                            <div class="col-12 col-lg-12">
+
+                                <table id="AggregatorUserRoles" class="table table-striped d-block d-md-table table-bordered table-responsive mt-3" style="width:100%;">
+                                    <thead>
+                                        <tr>
+                                            <th style="width:3%;"><input type="checkbox" id="checkAll" /></th>
+                                            <th>Role Name</th>
+                                            <th>Role Description</th>
+                                            <th>Control Type</th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @{
+                                            int i = 0;
+
+                                        }
+                                        @foreach (var item in Model.GetAggregatorRoles)
+                                        {
+                                            i = i + 1;
+
+                                            <tr>
+                                                <td><input type="checkbox" class="checkEnable" id="check_@i" onchange="checkChanged(this)" /></td>
+                                                <td>@item.RoleName</td>
+                                                <td>@item.RoleDescription</td>
+                                                <td>@item.ControlType</td>
+
+                                            </tr>
+                                        }
+
+
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    }
+
+                }
+                <div class="clearfix"></div>
+                
+            </div>
+            <div class="clearfix"></div>
+
+            <div class="d-flex align-items-center justify-content-center mt-3">
+
+                <div class="px-2" >
+                    <button class="btn btn_primary" id="btnCreate" type="button">CREATE USER</button>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+        }
+    </div>
+
+</div>
+<div class="clearfix"></div>
+
+<script type="text/javascript">
+     var selectedRole="";
+     var userNameVal="";
+     var emailVal="";
+      $(document).ready(function (){
+
+       });
+    $("#checkAll").click(function () {
+        $('input:checkbox').not(this).prop('checked', this.checked);
+    });
+    function checkChanged(o){
+
+        var chkStatus=o.checked;
+        var chkAllStatus= $("#checkAll")[0].checked;
+        if(!chkStatus && chkAllStatus)
+            $("#checkAll")[0].checked=false;
+    }
+
+     
+    $("#btnCreate").on("click", (function (e) {
+        var userName=$("#UserName").val();
+        var newEmail=$("#Email").val();
+        var password=$("#Password").val();
+        var confirm=$("#ConfirmPassword").val();
+        
+        var flag = "Y";
+
+            if(userName.trim()==""){
+                $("#userName_error").html("Please enter User Name");
+                $("#userName_error").attr("style","display:block");
+                flag="N";
+            }
+            else{
+                if(!(userName.match(userNameCheck))){
+                    $("#userName_error").html("Please enter valid User Name");
+                    $("#userName_error").attr("style","display:block");
+                    $("p.userNote").attr("style","display:block");
+                    flag="N";
+                }
+                else{
+                    $.ajax({
+                        type: 'POST',  // http method
+                        url: '@Url.Action("ValidateUserName", "Security")',
+                        data: { UserName: userName.trim() },  // data to submit
+                        dataType: "json",
+                        success: function (data, status, xhr) {
+                            var v = data;
+                            if (v == '0') {
+                                $("#userName_error").html("User Name already Exists");
+                                $("#userName_error").attr("style","display:block");
+                                flag="N";
+                                $("#UserName").focus();
+                                e.preventDefault();
+                            }
+
+                        }
+                    });
+                }
+
+            }
+            if(newEmail.trim()==""){
+                $("#email_error").html("Please enter Email");
+                $("#email_error").attr("style","display:block");
+                flag="N";
+            }
+            else{
+                if(!(newEmail.match(email))){
+                    $("#email_error").html("Please enter valid Email");
+                    $("#email_error").attr("style","display:block");
+                    flag="N";
+
+                }
+            }
+            if(password.trim()==""){
+                $("#password_error").html("Please enter Password");
+                $("#password_error").attr("style","display:block");
+                flag="N";
+            }
+            else{
+            if(!(password.match(passwordCheck))){
+                    $("#password_error").html("Please enter valid Password");
+                    $("#password_error").attr("style","display:block");
+                    $("p.userNote").attr("style","display:block");
+                    flag="N";
+                }
+            }
+            if(confirm.trim()==""){
+                $("#confirmPassword_error").html("Please enter Confirm Password");
+                $("#confirmPassword_error").attr("style","display:block");
+                flag="N";
+
+            }
+            else{
+                if(password!=""){
+                    if(confirm!=password){
+                        $("#confirmPassword_error").html("Please enter same Password");
+                        $("#confirmPassword_error").attr("style","display:block");
+                        flag="N";
+                    }
+                }
+            }
+          
+            setTimeout(function(){
+                if (flag == "N")
+                    e.preventDefault();
+                else{
+                    objUserRole=[];
+                        $("#AggregatorUserRoles tbody tr").each(function () {
+                        var row = $(this);
+                        if (row.find('input[type="checkbox"]').is(":checked")) {
+
+                                var roleName = row[0].cells[1].textContent;
+                                var roleDescription = row[0].cells[2].textContent;
+                                var controlType = row[0].cells[3].textContent;
+                                objUserRole.push({ RoleName: roleName, RoleDescription: roleDescription ,ControlType:controlType});
+
+                        }
+                        });
+                        if(objUserRole.length>0){
+                            var ReqModel={UserName:userName,Email:newEmail,Password:password,ConfirmPassword:confirm,TypeAddManageAggregatorUsers:objUserRole};
+                            $.ajax({
+                                type: 'POST',  // http method
+                                url: '@Url.Action("AddNewAggregatorUser", "Security")',
+                                contentType: "application/json; charset=utf-8",
+                                dataType: 'JSON',
+                                data: JSON.stringify(ReqModel),
+                                success: function (data, status, xhr) {
+                                    var v = data;
+                                    $("#reason").html(data[0].reason);
+                                    $("#reason").attr("style","display:block");
+
+                                    if(data[0].status=="1"){
+                                        $("#reason").addClass("alert-success");
+                                    }
+                                    else{
+                                        $("#reason").addClass("alert-danger");
+                                    }
+                                    $(".tobehiddenonSuccess").hide();
+                                },
+                                error: function (jqXhr, textStatus, errorMessage) {
+                                    alert("Error"+ errorMessage);
+                                }
+                            });
+                        }
+                        else{
+                             alert("Please select atleast one role for the User.");
+                        }
+                    }
+            },1000);
+    }));
+      
+    $("#UserName").on("blur", function() {
+        var userName=$("#UserName").val();
+        if(userName.trim()==""){
+            $("#userName_error").html("Please enter User Name");
+            $("#userName_error").attr("style","display:block");
+
+
+        }
+        else{
+            if(!(userName.match(userNameCheck))){
+                $("#userName_error").html("Please enter valid User Name");
+                $("#userName_error").attr("style","display:block");
+                $("p.userNote").attr("style","display:block");
+
+            }
+            else{
+                    $.ajax({
+                        type: 'POST',  // http method
+                        url: '@Url.Action("ValidateUserName", "Security")',
+                        data: { UserName: userName.trim() },  // data to submit
+                        dataType: "json",
+                        success: function (data, status, xhr) {
+                            var v = data;
+                            if (status == 'success' && v == '0') {
+                                $("#userName_error").html("User Name already Exists");
+                                $("#userName_error").attr("style","display:block");
+
+                            }
+                            else {
+                                $("#userName_error").html("");
+                                $("#userName_error").attr("style","display:none");
+                                $("p.userNote").attr("style","display:none");
+                            }
+                        }
+                    });
+                }
+        }
+    });
+    $("#Email").on("blur", function() {
+        var newEmail=$("#Email").val();
+        if(newEmail.trim()==""){
+            $("#email_error").html("Please enter Email");
+            $("#email_error").attr("style","display:block");
+
+        }
+        else{
+            if(!(newEmail.match(email))){
+                $("#email_error").html("Please enter valid Email");
+                $("#email_error").attr("style","display:block");
+            }
+            else{
+                $("#email_error").html("");
+                $("#email_error").attr("style","display:none");
+            }
+
+        }
+    });
+    $("#Password").on("blur", function() {
+        var password=$("#Password").val();
+        if(password.trim()==""){
+            $("#password_error").html("Please enter Password");
+            $("#password_error").attr("style","display:block");
+
+        }
+        else{
+        if(!(password.match(passwordCheck))){
+                $("#password_error").html("Please enter valid Password");
+                $("#password_error").attr("style","display:block");
+                $("p.passNote").attr("style","display:block");
+            }
+            else{
+                $("#password_error").html("");
+                $("#password_error").attr("style","display:none");
+                $("p.passNote").attr("style","display:none");
+            }
+
+        }
+    });
+    $("#ConfirmPassword").on("blur", function() {
+        var confirm=$("#ConfirmPassword").val();
+        if(confirm.trim()==""){
+            $("#confirmPassword_error").html("Please enter Confirm Password");
+            $("#confirmPassword_error").attr("style","display:block");
+
+        }
+        else{
+            var password=$("#Password").val();
+            if(password!=""){
+                if(confirm!=password){
+                    $("#confirmPassword_error").html("Please enter same Password");
+                    $("#confirmPassword_error").attr("style","display:block");
+                }
+                else{
+                    $("#confirmPassword_error").html("");
+                    $("#confirmPassword_error").attr("style","display:none");
+                }
+            }
+            else{
+                $("#confirmPassword_error").html("");
+                $("#confirmPassword_error").attr("style","display:none");
+            }
+
+        }
+    });
+   
+      
+</script>

@@ -244,6 +244,13 @@
         public static string updateuserrolelocation = "api/dtplus/UserManage/update_user_role_location";
         public static string manageusersrolelocationdelete = "api/dtplus/UserManage/manage_users_role_location_delete";
         public static string usercreationrequest = "api/dtplus/UserManage/user_creation_request";
+        public static string disableenableaggregatorusers = "api/dtplus/UserManage/disable_enable_manage_aggregator_users";
+        public static string manageaggregatorusers = "api/dtplus/UserManage/manage_aggregator_users";
+        public static string addmanageaggregatorusers = "api/dtplus/UserManage/add_manage_aggregator_users";
+        public static string addaggregatoruser = "api/dtplus/UserManage/add_users_manage_aggregator_users";
+        public static string getmanageaggregatorusers = "api/dtplus/UserManage/get_manage_aggregator_users";
+        
+
 
 
         #endregion
@@ -646,6 +653,7 @@
         public static string jcbUpdateHotlistReactivate = "api/dtplus/JCB/jcb_update_hotlist_reactivate";
         public static string enableDisableJcbDealer = "api/dtplus/JCB/enable_disable_jcb_dealer";
         public static string viewJcbDealerOtcCardStatus = "api/dtplus/JCB/view_jcb_dealer_otc_card_status";
+        public static string requestUpdateJCBCustomer = "api/dtplus/JCB/request_update_JCB_customer";
         #endregion
 
         #region Customer Dashboard
@@ -683,6 +691,8 @@
         public static string dicvGetCardLimitFeatures = "api/dtplus/DICV/dicv_get_card_limit_features";
         public static string dicvUpdateMobileInCard = "api/dtplus/DICV/dicv_update_mobile_in_card";
         public static string viewDicvDealerOtcCardStatus = "api/dtplus/DICV/view_dicv_dealer_otc_card_status";
+        public static string getDicvCustomerDetails = "api/dtplus/DICV/get_dicv_customer_details";
+        public static string requestUpdateDicvCustomer = "api/dtplus/DICV/request_update_dicv_customer";
         #endregion
 
         #region "Parent Customer HDFC Bank Credit Pouch"
