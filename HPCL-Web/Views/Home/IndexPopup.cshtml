@@ -1,0 +1,202 @@
+﻿@model HPCL.Common.Models.UserInfoModel
+@{
+    Layout = "_LayoutLogin";
+}
+@using HPCL.Common.Resources
+@using Microsoft.AspNetCore.Http;
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ajax-unobtrusive/3.2.6/jquery.unobtrusive-ajax.js"></script>
+
+<div class="login_wrapper py-sm-5 py-3">
+    <div class="d-flex align-items-center justify-content-end flex-wrap">
+        <div class="col-md-6 col-lg-6 col-12 bg-white p-3 p-sm-5 border_grey_1">
+            <div class="text-center">
+                <div id="message" class="mb-3 text-center" style="background-color: #a0f1d6;">@Html.Raw(ViewBag.Message)</div>
+                <h3 class="login_heading text-center">Login to DriveTrack Plus</h3>
+            </div>
+            <div class="bg-white w-100">
+                @*<form action="" name="register_form">*@
+                @using (Html.BeginForm("IndexPopup", "Home", FormMethod.Post, new { id = "register_form", name = "register_form" }))
+                {
+                    @*<form name="register_form" method="post" data-ajax="true" data-ajax-controller="Home" data-ajax-action="Index" data-ajax-method="POST" data-ajax-success="OnSuccessLogin" data-ajax-failure="OnFailure">*@
+                    <div class="form-group mb-3 position-relative">
+                        <label class="mb-1 font-weight-bold">Username<sup class="text-danger">*</sup></label>
+                        <input type="text" class="form-control login_input br-0" asp-for="@Model.UserId">
+                        <span class="error" id="username_error" asp-validation-for="@Model.UserId"></span>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="form-group mb-3 position-relative">
+                        <label class="mb-1 font-weight-bold">Password<sup class="text-danger">*</sup></label>
+                        <input type="password" class="form-control login_input br-0" asp-for="@Model.Password">
+                        <span class="error" id="pass_error" asp-validation-for="@Model.Password"></span>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="form-group mb-3 position-relative">
+                        <label class="mb-1 font-weight-bold">Enter Captcha</label>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend" style="max-width: 120px; max-height: 36px;">
+                                <img id="img-captcha" src="~/get-captcha-image" />
+                            </div>
+                            <input type="text" class="form-control" style="height: 36px !important;" placeholder="Captcha Code" asp-for="CaptchaCode" maxlength="6"  />
+                            <span class="error" id="captcha_error" asp-validation-for="@Model.CaptchaCode"></span>
+                            <div class="pl-3 d-flex align-items-center">
+                                @*<img src="~/assets/images/refresh_icon.jpg" alt="">*@
+                                <i title="Refresh" class="fa fa-refresh" aria-hidden="true" id="refreshCaptcha" style="font-size: 16px; color: #1874dc;"></i>
+                            </div>
+                        </div>
+                        <span class="error" id="captcha_error"></span>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div style="display:none;">
+                        @Html.TextBoxFor(m => m.Userip)
+                    </div>
+                    @*<div class="form-group mb-3 position-relative">
+                            <label class="mb-1 font-weight-bold">Enter Captcha</label>
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control login_input br-0" aria-label="Recipient's username" aria-describedby="basic-addon2" name="captcha">
+                                <div class="input-group-append">
+                                    <span class="font-12 input-group-text bg-white" id="basic-addon2">11muPg</span>
+                                </div>
+                                <a href="#" class="refresh_btn"><img src="~/assets/images/refresh_icon.jpg" alt=""></a>
+                            </div>
+                            <span class="error" id="captcha_error"></span>
+                            <div class="clearfix"></div>
+                        </div>*@
+                    <div class="mt-4 mb-3">
+                        @*<button class="btn btn_primary login_btn br-0" type="button" onClick="Validate()">Login</button>*@
+                        <button class="btn btn_primary login_btn br-0" type="submit" onclick="loginCheck()">@Label.Login</button>
+                    </div>
+                    <div class="text-center">
+                        <p>Forgot Password? <a href="#" class="primary_link">Click Here</a></p>
+                    </div>
+                    <div class="error" id="loginError"></div>
+                }
+                @*</form>*@
+            </div>
+        </div>
+    </div>
+</div>
+<div class="clearfix"></div>
+<div class="text-center mt-4 mb-2">
+    <div class="MainWebsiteLink">
+        <a href="http://180.179.198.149/projects/dtplus/web/index.html" class="note_1">CLICK HERE FOR FULL WEBSITE</a>
+    </div>
+    <h4 class="d-inline-block note_1">Now Enjoy "0" charge for your CCMS Recharge using Payment Gateway for Debit Card, Net Banking, UPI and Wallet transactions.</h4>
+</div>
+
+
+
+<script type="text/javascript">
+    var message = "@ViewBag.Message";
+    var status = "@ViewBag.CaptchaCodeStatus";
+
+    $(document).ready(function () {
+        if (message != "") {
+            $("#message").show();
+        }
+        else if (status != "") {
+            $("#message").hide();
+            document.getElementById("captcha_error").innerHTML = "Captcha is Invalid";
+        }
+        else {
+            $("#message").hide();
+            document.getElementById("captcha_error").innerHTML = "";
+        }
+        //$("#Userip").val("100:100:100:100");
+
+        $.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("GetIpAddress", "Home")',
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data, status, xhr) {
+                    $("#Userip").val(data);
+                },
+            error: function (jqXhr, textStatus, errorMessage) {
+                //document.getElementById("CustomerRegionID_error").innerHTML = "Error populating card details";
+            }
+        });
+
+    });
+
+    function loginCheck() {
+        var ret = "Y";
+
+        if (document.register_form.UserId.value == "") {
+            document.getElementById("username_error").innerHTML = "User Name is required";
+            document.register_form.UserId.focus();
+            $("#register_form").submit(function (e) {
+                e.preventDefault();
+            });
+            ret = "N";
+        }
+        else {
+            document.getElementById("username_error").innerHTML = "";
+        }
+
+        if (document.register_form.Password.value == "") {
+            document.getElementById("pass_error").innerHTML = "Password is required";
+            if (ret != "N") {
+                document.register_form.Password.focus();
+            }
+            $("#register_form").submit(function (e) {
+                e.preventDefault();
+            });
+            ret = "N";
+        }
+        else {
+            document.getElementById("pass_error").innerHTML = "";
+        }
+
+        if (document.register_form.CaptchaCode.value == "") {
+            document.getElementById("captcha_error").innerHTML = "Captcha is required";
+            if (ret != "N") {
+                document.register_form.CaptchaCode.focus();
+            }
+            $("#register_form").submit(function (e) {
+                e.preventDefault();
+            });
+            ret = "N";
+        }
+        else {
+            document.getElementById("captcha_error").innerHTML = "";
+        }
+
+        if (ret == "Y") {
+            sessionStorage.removeItem("LoginCheck");
+            sessionStorage.setItem("LoginCheck", "Login");
+            //$("#Userip").val("100:100:100:100");
+
+            $("#register_form").unbind().submit();
+        }
+    }
+
+    function SetSessionValue(){
+        sessionstorage.removeitem("logincheck");
+        sessionstorage.setItem("LoginCheck", "Login");
+        //sessionStorage.clear();
+    }
+
+    function OnSuccessLogin(res) {
+        if (res.loginRes[0].status == 0) {
+            alert(res.loginRes[0].reason);
+        }
+        if (res.loginRes[0].status == 1) {
+            window.location.href = '@Html.Raw(@Url.Action("Profile", "Home"))';
+        }
+    }
+
+    function OnFailure(data) {
+        alert(data);
+    }
+
+    $("#refreshCaptcha").click(function () {
+        resetCaptchaImage();
+    });
+
+    function resetCaptchaImage() {
+        d = new Date();
+        $("#img-captcha").attr("src", "/get-captcha-image?" + d.getTime());
+    }
+</script>

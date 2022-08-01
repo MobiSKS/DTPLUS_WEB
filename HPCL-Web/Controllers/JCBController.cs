@@ -342,6 +342,17 @@ namespace HPCL_Web.Controllers
 
             return Json(customerBalanceResponse);
         }
+        public IActionResult JCBCustomerTransactionDetails()
+        {
+            var model = new JCBCustomerTransactionViewModel();
+            return View(model);
+        }
+        [HttpPost]
+        public async Task<IActionResult> GetCustomerTransactionDetails(string CustomerID, string CardNo, string MobileNo, string FromDate, string ToDate)
+        {
+            var models = await _jcbService.GetCustomerTransactionDetails(CustomerID, CardNo, MobileNo, FromDate, ToDate);
+            return PartialView("~/Views/JCB/_JCBCustomerTransactionTblView.cshtml", models);
+        }
 
     }
 }

@@ -1243,6 +1243,50 @@ namespace HPCL.Service.Services
 
             return customerBalanceInfo;
         }
+        public async Task<JCBCustomerTransactionResponseModel> GetCustomerTransactionDetails(string CustomerID, string CardNo, string MobileNo, string FromDate, string ToDate)
+        {
+            JCBCustomerTransactionResponseModel transactionResponse = new JCBCustomerTransactionResponseModel();
+            if (!string.IsNullOrEmpty(FromDate) && !string.IsNullOrEmpty(FromDate))
+            {
+                FromDate = await _commonActionService.changeDateFormat(FromDate);
+                ToDate = await _commonActionService.changeDateFormat(ToDate);
+            }
+            else
+            {
+                FromDate = DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd");
+                ToDate = DateTime.Now.ToString("yyyy-MM-dd");
+            }
+            var Request = new JCBCustomerTransactionViewModel()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                CustomerID = CustomerID,
+                CardNo = CardNo,
+                MobileNo = MobileNo,
+                FromDate = FromDate,
+                ToDate = ToDate
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(Request), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getJcbTransactionsSummary);
+            JObject jObj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            transactionResponse = JsonConvert.DeserializeObject<JCBCustomerTransactionResponseModel>(response);
+            var transactionjObj = jObj["Data"].Value<JObject>();
+            var summaryListjArr = transactionjObj["GetTransactionsSaleSummary"].Value<JArray>();
+            var detailListjArr = transactionjObj["GetTransactionsDetailSummary"].Value<JArray>();
+
+            List<JCBCustomerTransactionSummary> CustomerTransactionSummary =
+                summaryListjArr.ToObject<List<JCBCustomerTransactionSummary>>();
+
+            List<JCBCustomerTransactionDetails> CustomerTransactionDetails =
+                detailListjArr.ToObject<List<JCBCustomerTransactionDetails>>();
+
+            transactionResponse.GetTransactionsSaleSummary.AddRange(CustomerTransactionSummary);
+            transactionResponse.GetTransactionsDetailSummary.AddRange(CustomerTransactionDetails);
+            return transactionResponse;
+        }
 
     }
 }
