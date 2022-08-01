@@ -22,5 +22,7 @@ namespace HPCL.Service.Interfaces
         Task<List<UpdateHotlistCardRes>> UpdatePermanentlyHotlistCards(string CustomerId, string cardsList);
         Task<ConfigureEmailAlertViewModel> ConfigureEmailAlerts(string CustomerId);
         Task<List<SuccessResponse>> UpdateConfigureEmailAlert([FromBody] ConfigureEmailAlertRequest reqModel);
+        Task<ApproveCardRenwalRequestRes> GetApproveCardRenwalRequest(ApproveCardRenwalRequestReq entity);
+        Task<List<SuccessResponse>> UpdateApproveCardRenwalRequest(string actionType, string appRejValues);
     }
 }

@@ -323,6 +323,25 @@ namespace HPCL_Web.Controllers
             var modals = await _jcbService.GetViewJCBDealerOTCCardStatus(DealerCode, CardNo);
             return PartialView("~/Views/JCB/_JCBDealerOTCCardStatusTable.cshtml", modals);
         }
+        [HttpPost]
+        public async Task<JsonResult> UpdateJCBCustomerProfile(string str)
+        {
+            var result = await _jcbService.UpdateJCBCustomerProfile(str);
+            return Json(new { result = result });
+        }
+        public async Task<IActionResult> JCBBalanceInfo()
+        {
+            var model = await _jcbService.JCBBalanceInfo();
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> GetCustomerBalanceInfo(string CustomerID)
+        {
+            var customerBalanceResponse = await _jcbService.GetCustomerBalanceInfo(CustomerID);
+
+            return Json(customerBalanceResponse);
+        }
 
     }
 }

@@ -52,5 +52,8 @@ namespace HPCL.Service.Interfaces
         Task<InsertResponse> EnableDisableJCBDealer(string DealerCode, string OfficerType, string EnableDisableFlag);
         Task<JCBViewDealerOTCCardStatusModel> ViewJCBDealerOTCCardStatus();
         Task<GetJCBDealerOTCCardStatusResponse> GetViewJCBDealerOTCCardStatus(string DealerCode, string CardNo);
+        Task<InsertResponse> UpdateJCBCustomerProfile(string str);
+        Task<JCBCustomerBalanceInfoModel> JCBBalanceInfo();
+        Task<GetJCBCustomerBalanceInfoResponse> GetCustomerBalanceInfo(string CustomerID);
     }
 }

@@ -207,6 +207,9 @@
         public static string updatecommunicationemailresetpassword = "api/dtplus/customer/update_communication_email_reset_password";
         public static string getCustomerStatus = "api/dtplus/customer/get_customer_status";
 
+        public static string GetApproveCardRenewReqUrl = "api/dtplus/card/approve_card_renewal_requests";
+        public static string UpdateApproveCardRenewReqUrl = "api/dtplus/card/update_approve_card_renewal_requests";
+
         #endregion
 
         #region Login
@@ -650,6 +653,8 @@
         public static string jcbUpdateHotlistReactivate = "api/dtplus/JCB/jcb_update_hotlist_reactivate";
         public static string enableDisableJcbDealer = "api/dtplus/JCB/enable_disable_jcb_dealer";
         public static string viewJcbDealerOtcCardStatus = "api/dtplus/JCB/view_jcb_dealer_otc_card_status";
+        public static string requestUpdateJCBCustomer = "api/dtplus/JCB/request_update_JCB_customer";
+        public static string getJcbCustomerBalanceInfo = "api/dtplus/JCB/get_jcb_customer_balance_info";
         #endregion
 
         #region Customer Dashboard
@@ -687,6 +692,8 @@
         public static string dicvGetCardLimitFeatures = "api/dtplus/DICV/dicv_get_card_limit_features";
         public static string dicvUpdateMobileInCard = "api/dtplus/DICV/dicv_update_mobile_in_card";
         public static string viewDicvDealerOtcCardStatus = "api/dtplus/DICV/view_dicv_dealer_otc_card_status";
+        public static string getDicvCustomerDetails = "api/dtplus/DICV/get_dicv_customer_details";
+        public static string requestUpdateDicvCustomer = "api/dtplus/DICV/request_update_dicv_customer";
         #endregion
 
         #region "Parent Customer HDFC Bank Credit Pouch"

@@ -66,12 +66,6 @@
                         </div>
                     </div>
 
-                    <div>
-                        <div style="display:none;" class="alert alert-danger mt-3 text-center ml-3 mr-3" id="noRecord">
-                        </div>
-                    </div>
-
-
                     <div id="CustomerSearch" style="display:none;">
                         <table class="table table-striped table-bordered d-md-table d-block text-nowrap display table-responsive" style="width:100%;">
                             <thead>
@@ -134,6 +128,38 @@
                         </tr>
                     </table>
 
+                    <div>
+                        <div style="display:none;" class="alert alert-danger mt-3 text-center ml-3 mr-3" id="noCardDetails">
+                            No Record Found
+                        </div>
+                    </div>
+
+                    <div class="py-3">
+                        <label class="font-weight-normal col-md-5 col-12" id="lblDispatchDetails" style="display:none;"><b>Dispatch Details</b> </label>
+                    </div>
+
+                    <table id="tblDispatchDetails" class="table table-striped table-bordered table-responsive" style="display:none;">
+                        <tr>
+                            <th>S.No.</th>
+                            <th>@Html.DisplayName("Customer ID")</th>
+                            <th>@Html.DisplayName("Card Number")</th>
+                            <th>@Html.DisplayName("Dispatch Date")</th>
+                            <th>@Html.DisplayName("Courier Name")</th>
+                            <th>@Html.DisplayName("AirwaysBill No")</th>
+                            <th>@Html.DisplayName("Status")</th>
+                            <th>@Html.DisplayName("Delivered To")</th>
+                            <th>@Html.DisplayName("Delivery Date")</th>
+                            <th>@Html.DisplayName("Return Reason")</th>
+                            <th>@Html.DisplayName("MO Comments")</th>
+                        </tr>
+                    </table>
+
+                    <div>
+                        <div style="display:none;" class="alert alert-danger mt-3 text-center ml-3 mr-3" id="noDispatchDetails">
+                            No Record Found
+                        </div>
+                    </div>
+
                 </div>
 
 
@@ -143,13 +169,13 @@
                         </div>
                         </div>*@
                     <div class="col-12 col-md-12 px-0">
-                        <div style="display:none;" class="alert alert-danger mt-3 mb-0 text-center" id="failureMsg">
+                        <div style="display:none;" class="alert alert-danger mt-3 mb-3 text-center" id="failureMsg">
                         </div>
                     </div>
-                    <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 pb-3">
+                    <div class="col-lg-12 col-md-12 col-12 pl-0 pl-0 pb-2">
                         <div class="border-1 rounded border-grey h-100">
                             <p class="text-white px-3 py-2 m-0 font-weight-bold" style="background: #084693;">Application Details</p>
-                            <div class="py-3 px-2 px-md-4 bg-white">
+                            <div class="col-lg-12 col-md-12 col-12 py-3 px-2 px-md-4 bg-white">
                                 <div class="d-flex align-items-center flex-wrap">
                                     <div class="col-lg-6 col-12">
                                         <div class="form-group d-flex align-items-center flex-wrap">
@@ -222,14 +248,12 @@
                                     </div>
                                 </div>
                                 <div class="d-flex align-items-center flex-wrap">
-                                    <div class="col-lg-6 col-12">
-                                        <div id="divFormNumber">
-                                            <div class="form-group d-flex align-items-center flex-wrap">
-                                                <label class="font-weight-normal col-md-5 col-12">Form Number: <sup class="text-danger">*</sup></label>
-                                                <div class="col-md-7 col-12">
-                                                    @Html.TextBoxFor(m => m.CustomerFormNumber, new { id = "form-number", @class = "form-control", @readonly = true })
-                                                    <span class="error" id="CustomerFormNumber_error"></span>
-                                                </div>
+                                    <div class="col-lg-6 col-12" id="divFormNumber">
+                                        <div class="form-group d-flex align-items-center flex-wrap">
+                                            <label class="font-weight-normal col-md-5 col-12">Form Number: <sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                @Html.TextBoxFor(m => m.CustomerFormNumber, new { id = "form-number", @class = "form-control", @readonly = true })
+                                                <span class="error" id="CustomerFormNumber_error"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -257,142 +281,141 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="clearfix"></div>
                         </div>
                     </div>
-                        <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 pb-3">
-                            <div class="border-1 rounded border-grey h-100">
-                                <p class="text-white px-3 py-2 m-0 font-weight-bold" style="background: #084693;">Personal Details</p>
-                                <div class="py-3 px-2 px-md-4 bg-white">
-                                    <div class="d-flex align-items-center flex-wrap">
-                                        <div class="col-lg-6 col-12">
+                    <div class="col-lg-12 col-md-12 col-12 pl-0 pl-0 pb-2">
+                        <div class="border-1 rounded border-grey h-100">
+                            <p class="text-white px-3 py-2 m-0 font-weight-bold" style="background: #084693;">Personal Details</p>
+                            <div class="col-lg-12 col-md-12 col-12 py-3 px-2 px-md-4 bg-white">
+                                <div class="d-flex align-items-center flex-wrap">
+                                    <div class="col-lg-6 col-12">
+                                        <div class="form-group d-flex align-items-center flex-wrap">
+                                            <label class="font-weight-normal col-md-5 col-12">Individual/Org. Name: <sup class="text-danger">*</sup></label>
+                                            <div class="col-md-7 col-12">
+                                                <div class="row">
+                                                    <div class="col-5">
+                                                        <div class="custom_select">
+                                                            @Html.DropDownListFor(m => m.IndividualOrgNameTitle, new List<SelectListItem>
+                                                            {
+                                                            new SelectListItem(){ Text = "Title", Value = "-1" },
+                                                            new SelectListItem(){ Text = "Mr", Value = "Mr"},
+                                                            new SelectListItem(){ Text = "Ms", Value = "Ms"},
+                                                            new SelectListItem(){ Text = "M/s", Value = "M/s"},
+                                                            }, null, new { @class = "form-control px-0" })
+                                                        </div>
+                                                        <span class="error" id="salutaion_error"></span>
+                                                    </div>
+                                                    <div class="col-7 pl-0">
+                                                        @Html.TextBoxFor(m => m.IndividualOrgName, new { @class = "form-control", maxlength = "80" })
+                                                        <span class="error" id="individualName_error"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-12">
+                                        <div id="divNameOnCard">
                                             <div class="form-group d-flex align-items-center flex-wrap">
-                                                <label class="font-weight-normal col-md-5 col-12">Individual/Org. Name: <sup class="text-danger">*</sup></label>
+                                                <label class="font-weight-normal col-md-5 col-12">Name on Card: <sup class="text-danger">*</sup></label>
                                                 <div class="col-md-7 col-12">
-                                                    <div class="row">
-                                                        <div class="col-5">
-                                                            <div class="custom_select">
-                                                                @Html.DropDownListFor(m => m.IndividualOrgNameTitle, new List<SelectListItem>
-                                                                {
-                                                                new SelectListItem(){ Text = "Title", Value = "-1" },
-                                                                new SelectListItem(){ Text = "Mr", Value = "Mr"},
-                                                                new SelectListItem(){ Text = "Ms", Value = "Ms"},
-                                                                new SelectListItem(){ Text = "M/s", Value = "M/s"},
-                                                                }, null, new { @class = "form-control px-0" })
-                                                            </div>
-                                                            <span class="error" id="salutaion_error"></span>
-                                                        </div>
-                                                        <div class="col-7 pl-0">
-                                                            @Html.TextBoxFor(m => m.IndividualOrgName, new { @class = "form-control", maxlength = "80" })
-                                                            <span class="error" id="individualName_error"></span>
-                                                        </div>
-                                                    </div>
+                                                    @Html.TextBoxFor(m => m.CustomerNameOnCard, new { @class = "form-control", maxlength = "22" })
+                                                    <span class="error" id="nameOnCard_error"></span>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-lg-6 col-12">
-                                            <div id="divNameOnCard">
-                                                <div class="form-group d-flex align-items-center flex-wrap">
-                                                    <label class="font-weight-normal col-md-5 col-12">Name on Card: <sup class="text-danger">*</sup></label>
-                                                    <div class="col-md-7 col-12">
-                                                        @Html.TextBoxFor(m => m.CustomerNameOnCard, new { @class = "form-control", maxlength = "22" })
-                                                        <span class="error" id="nameOnCard_error"></span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex align-items-center flex-wrap">
-                                        <div class="col-lg-6 col-12">
-                                            <div id="divTypeOfBusinessEntity">
-                                                <div class="form-group d-flex align-items-center flex-wrap">
-                                                    <label class="font-weight-normal col-md-5 col-12">Type of Business Entity: <sup class="text-danger">*</sup></label>
-                                                    <div class="col-md-7 col-12">
-                                                        <div class="custom_select">
-                                                            @Html.DropDownListFor(m => m.CustomerTbentityID, new SelectList(Model.CustomerTbentityMdl, "TBEntityID", "TBEntityName"), new { @class = "form-control" })
-                                                        </div>
-                                                        <span class="error" id="typeOfbusiness_error"></span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6 col-12">
-                                            <div id="divResidenceStatus">
-                                                <div class="form-group d-flex align-items-center flex-wrap">
-                                                    <label class="font-weight-normal col-md-5 col-12">Residence Status:</label>
-                                                    <div class="col-md-7 col-12">
-                                                        <div class="custom_select">
-                                                            @Html.DropDownListFor(x => x.CustomerResidenceStatus, new[]{
-                                                            new SelectListItem(){ Text = "Select Residence Status", Value = "-1"},
-                                                            new SelectListItem(){ Text = "Indian", Value = "Indian", Selected = true},
-                                                            new SelectListItem(){ Text = "NRI", Value = "NRI"},
-                                                            }, null, new { @class = "form-control" })
-                                                        </div>
-                                                        <span class="error" id="residenceStatus_error"></span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex align-items-center flex-wrap">
-                                        <div class="col-lg-6 col-12">
-                                            <div id="divIncomeTaxPAN">
-                                                <div class="form-group d-flex align-items-center flex-wrap">
-                                                    <label class="font-weight-normal col-md-5 col-12" id="lblPanText">Income Tax PAN:<sup class="text-danger">*</sup></label>
-                                                    <div class="col-md-5 col-12" id="dvPan">
-                                                        @Html.TextBoxFor(m => m.CustomerIncomeTaxPan, new { @class = "form-control", @style = "text-transform:uppercase", autocomplete = "off" })
-                                                        <span class="error" id="incomeTaxPan_error"></span>
-                                                    </div>
-                                                    <div class="col-md-2 col-12 pl-md-0">
-                                                        <button class="btn btn_primary" type="button" id="btnVerify" onclick="ValidatePAN()" style="min-width:auto;">Verify</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6 col-12">
-                                            <div id="divTypeOfCustomer">
-                                                <div class="form-group d-flex align-items-center flex-wrap">
-                                                    <label class="font-weight-normal col-md-5 col-12">Type Of Customer: <sup class="text-danger">*</sup></label>
-                                                    <div class="col-md-7 col-12">
-                                                        <div class="custom_select">
-                                                            @*@Html.DropDownListFor(x => x.TypeOfCustomerID, new[]{
-                                                                new SelectListItem(){ Text = "Select Customer Type", Value = "0"},
-                                                                new SelectListItem(){ Text = "Competitor Customer", Value = "1"},
-                                                                new SelectListItem(){ Text = "Existing HPCL Customer", Value = "2"},
-                                                                new SelectListItem(){ Text = "New Customer", Value = "3"},
-                                                                }, null, new { @class = "form-control", disabled = "true" })*@
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group d-flex align-items-center flex-wrap">
-                                                    <label class="font-weight-normal col-md-5 col-12">Tier Of Customer: <sup class="text-danger">*</sup></label>
-                                                    <div class="col-md-7 col-12">
-                                                        <div class="custom_select">
-                                                            @*@Html.DropDownListFor(x => x.TierOfCustomerID, new[]{
-                                                                new SelectListItem(){ Text = "Select Tier Of Customer", Value = "0"},
-                                                                new SelectListItem(){ Text = "1", Value = "1"},
-                                                                new SelectListItem(){ Text = "2", Value = "2"},
-                                                                new SelectListItem(){ Text = "3", Value = "3"},
-                                                                }, null, new { @class = "form-control", disabled = "true" })*@
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group align-items-center flex-wrap" id="lblCustPOI">
-                                        <p class="alert alert-info" style="padding: 5px 10px;">** Please provide the document details that you are going to upload as POI.</p>
                                     </div>
                                 </div>
+                                <div class="d-flex align-items-center flex-wrap">
+                                    <div class="col-lg-6 col-12">
+                                        <div id="divTypeOfBusinessEntity">
+                                            <div class="form-group d-flex align-items-center flex-wrap">
+                                                <label class="font-weight-normal col-md-5 col-12">Type of Business Entity: <sup class="text-danger">*</sup></label>
+                                                <div class="col-md-7 col-12">
+                                                    <div class="custom_select">
+                                                        @Html.DropDownListFor(m => m.CustomerTbentityID, new SelectList(Model.CustomerTbentityMdl, "TBEntityID", "TBEntityName"), new { @class = "form-control" })
+                                                    </div>
+                                                    <span class="error" id="typeOfbusiness_error"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-12">
+                                        <div id="divResidenceStatus">
+                                            <div class="form-group d-flex align-items-center flex-wrap">
+                                                <label class="font-weight-normal col-md-5 col-12">Residence Status:</label>
+                                                <div class="col-md-7 col-12">
+                                                    <div class="custom_select">
+                                                        @Html.DropDownListFor(x => x.CustomerResidenceStatus, new[]{
+                                                        new SelectListItem(){ Text = "Select Residence Status", Value = "-1"},
+                                                        new SelectListItem(){ Text = "Indian", Value = "Indian", Selected = true},
+                                                        new SelectListItem(){ Text = "NRI", Value = "NRI"},
+                                                        }, null, new { @class = "form-control" })
+                                                    </div>
+                                                    <span class="error" id="residenceStatus_error"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12" id="divIncomeTaxPAN">
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-5 col-12" id="lblPanText">Income Tax PAN:<sup class="text-danger">*</sup></label>
+                                        <div class="col-md-5 col-12" id="dvPan">
+                                            @Html.TextBoxFor(m => m.CustomerIncomeTaxPan, new { @class = "form-control", @style = "text-transform:uppercase", autocomplete = "off" })
+                                            <span class="error" id="incomeTaxPan_error"></span>
+                                        </div>
+                                        <div class="col-md-2 col-12 pl-md-0">
+                                            <button class="btn btn_primary" type="button" id="btnVerify" onclick="ValidatePAN()" style="min-width:auto;">Verify</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-6 col-12" id="divTypeOfCustomer">
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-5 col-12">Type Of Customer: <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @*@Html.DropDownListFor(x => x.TypeOfCustomerID, new[]{
+                                                    new SelectListItem(){ Text = "Select Customer Type", Value = "0"},
+                                                    new SelectListItem(){ Text = "Competitor Customer", Value = "1"},
+                                                    new SelectListItem(){ Text = "Existing HPCL Customer", Value = "2"},
+                                                    new SelectListItem(){ Text = "New Customer", Value = "3"},
+                                                    }, null, new { @class = "form-control", disabled = "true" })*@
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group d-flex align-items-center flex-wrap">
+                                        <label class="font-weight-normal col-md-5 col-12">Tier Of Customer: <sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @*@Html.DropDownListFor(x => x.TierOfCustomerID, new[]{
+                                                    new SelectListItem(){ Text = "Select Tier Of Customer", Value = "0"},
+                                                    new SelectListItem(){ Text = "1", Value = "1"},
+                                                    new SelectListItem(){ Text = "2", Value = "2"},
+                                                    new SelectListItem(){ Text = "3", Value = "3"},
+                                                    }, null, new { @class = "form-control", disabled = "true" })*@
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                </div>
+                                <div class="form-group align-items-center flex-wrap" id="lblCustPOI">
+                                    <p class="alert alert-info" style="padding: 5px 10px;">** Please provide the document details that you are going to upload as POI.</p>
+                                </div>
                             </div>
+                            <div class="clearfix"></div>
                         </div>
-                        <div class="clearfix">
+                    </div>
+                    <div class="clearfix">
+                    </div>
+                    <div class="d-flex align-items-center justify-content-center flex-wrap mt-3">
+                        <div class="px-2">
+                            <button class="btn btn_primary" type="button" onclick="submitProfile()">UPDATE</button>
                         </div>
-                        <div class="d-flex align-items-center justify-content-center flex-wrap mt-3 mb-3">
-                            <div class="px-2">
-                                <button class="btn btn_primary" type="button" onclick="submitProfile()">UPDATE</button>
-                            </div>
-                        </div>
-                    
+                    </div>
+                </div>
 
                     <div class="tab-pane" id="AddressSection" role="tabpanel" aria-labelledby="Address-tab">
                         <div class="mb-3">
@@ -543,7 +566,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="py-2" id="divPermanentOfcAddress">
+                        <div class="py-2" id="divPermanentOfcAddress" style="display:none">
                             <div class="border-1 rounded border-grey w-100" id="PermanentOfcAddress">
                                 <p class="text-white px-3 py-2 m-0 font-weight-bold" style="background: #084693;">Permanent/Registered Office Address</p>
                                 <div class="py-3 px-2 px-md-4">
@@ -636,7 +659,7 @@
                         <div class="clearfix"></div>
                     </div>
 
-                    <div class="tab-pane" id="OfficialDetails" role="tabpanel" aria-labelledby="OfficialDetails-tab">
+                    <div class="tab-pane" id="OfficialDetails" role="tabpanel" aria-labelledby="OfficialDetails-tab" style="display:none">
                         <div class="border-1 rounded border-grey w-100">
                             <p class="text-white px-3 py-2 m-0 font-weight-bold" style="background: #084693;">Key Official</p>
                             <div class="py-2 p-md-4 bg-white">
@@ -824,6 +847,10 @@
                     </div>
                 </div>
             </div>
+
+        <div class="clearfix"></div>
+        <div style="display:none;" class="alert alert-danger mt-3 text-center" id="noRecord"></div>
+        <div class="clearfix"></div>
             @Html.HiddenFor(model => Model.ExternalPANAPIStatus)
             @Html.HiddenFor(model => Model.CustomerIdSelected)
             <!-- Modal : Dialog -->
@@ -899,7 +926,7 @@
         //                              + "<td width='400px'>" + ApplicationDate + "</td>"
         //                              + "<td width='400px'>" + res[i].customerStatusName + "</td>"
         //                              + "<td width='400px''><a href='#CardSearch' class='viewCardDetails' onclick='GetCardSearch(this," + res[i].customerTypeId + ")'><i class='fa fa-eye'></i></a></td>"
-        //                              + "<td width='400px'><a href='#aaa' class='editNumber'><i class='fa fa-eye'></i></a></td>"
+        //                              + "<td width='400px'><a href='#aaa' class='editNumber' onclick='GetDispatchDetails(this," + res[i].customerTypeId + ")'><i class='fa fa-eye'></i></a></td>"
         //                              + "<td width='400px'><a href='#BasicInfo' class='action' onclick='ViewBasicInfo(this)'><i class='fa fa-search'></a></td>"
         //                          "</tr >";
 
@@ -952,6 +979,11 @@
             var nameOnCard = $("#nameOnCard").val();
             document.getElementById("CardSearch").style.display = "none";
             document.getElementById("lblCardDetails").style.display = "none";
+            $("#noCardDetails").attr("style", "display:none");
+
+            $("#lblDispatchDetails").attr("style", "display:none");
+            $("#noDispatchDetails").attr("style", "display:none");
+
             var flag = "Y";
             if(custtId == "" && nameOnCard == "")
             {
@@ -1026,7 +1058,7 @@
                                       + "<td width='400px'>" + ApplicationDate + "</td>"
                                       + "<td width='400px'>" + res[i].customerStatusName + "</td>"
                                       + "<td width='400px''><a href='#CardSearch' class='viewCardDetails' onclick='GetCardSearch(this," + res[i].customerTypeId + ")'><i class='fa fa-eye'></i></a></td>"
-                                      + "<td width='400px'><a href='#aaa' class='editNumber'><i class='fa fa-eye'></i></a></td>"
+                                      + "<td width='400px'><a href='#aaa' class='editNumber' onclick='GetDispatchDetails(this," + res[i].customerTypeId + ")'><i class='fa fa-eye'></i></a></td>"
                                       + "<td width='400px'><a href='#BasicInfo' class='action' onclick='ViewBasicInfo(this)'><i class='fa fa-search'></i></a></td>"
                                   "</tr >";
 
@@ -1144,6 +1176,9 @@
           function GetCardSearch(o,customerTypeId){
               var Id = o.closest('tr').childNodes[1].innerText;
               //alert(customerTypeId);
+              $("#lblDispatchDetails").attr("style", "display:none");
+              $("#noDispatchDetails").attr("style", "display:none");
+
               $.ajax({
                   url: "@Url.Action("CardDetailsForSearch", "VolvoEicher")",
                   type: "POST",
@@ -1173,16 +1208,70 @@
                           }
                           $("#lblCardDetails").show();
                           $("#CardSearch").show();
+                          $("#noCardDetails").attr("style", "display:none");
                       }
                       else
                       {
                           $("#lblCardDetails").attr("style","display:none");
                           $("#CardSearch").attr("style", "display:none");
+                          $("#noCardDetails").attr("style", "display:block");
                       }
                   },
               });
           };
 
+          function GetDispatchDetails(o,customerTypeId)
+          {
+          //var Id = o.closest('tr').childNodes[1].innerText;
+          ////alert(customerTypeId);
+          //$.ajax({
+          //    url: "@Url.Action("CardDetails", "CustomerManage")",
+          //    type: "POST",
+          //    dataType: "JSON",
+          //    data: { CustomerId: Id, CustomerTypeId: customerTypeId },
+          //    success: function (data)
+          //    {
+          //        console.log("data", data);
+          //        if (data.length > 0) 
+          //        {
+
+          //            $("#CardSearch td").parent().remove();
+          //            for (var i = 0; i < data.length; i++) {
+          //                //var issueDate = new Date(data[i].issueDate).toLocaleDateString("pt-PT");
+          //                //var expiryDate = new Date(data[i].expiryDate).toLocaleDateString("pt-PT");
+          //                var rows = "<tbody><tr>"
+          //                    +"<td>"+(i+1)+"</td>"
+          //                    + "<td width='400px'><span class='rowData'>" + data[i].cardNumber + "</span></td>"
+          //                    + "<td width='400px'><span class='rowData'>" + data[i].vechileNo + "</span></td>"
+          //                    + "<td width='400px'><span class='rowData'>" + data[i].issueDate + "</span></td>"
+          //                    //+ "<td width='400px'><span class='rowData'>" + data[i].expiryDate + "</span></td>"
+          //                    + "<td width='400px'><span class='rowData'>" + data[i].status + "</span></td>"
+          //                "</tr></tbody>";
+
+
+          //                $('#CardSearch').append(rows);
+
+          //            }
+          //            $("#lblCardDetails").show();
+          //            $("#CardSearch").show();
+          //            $("#noCardDetails").attr("style", "display:none");
+          //        }
+          //        else 
+          //        {
+          //            $("#lblCardDetails").attr("style","display:block");
+          //            $("#CardSearch").attr("style", "display:none");
+          //            $("#noCardDetails").attr("style", "display:block");
+          //        }
+          //    },
+          //});
+
+          $("#lblCardDetails").attr("style","display:none");
+          $("#CardSearch").attr("style", "display:none");
+          $("#noCardDetails").attr("style", "display:none");
+
+          $("#lblDispatchDetails").attr("style", "display:block");
+          $("#noDispatchDetails").attr("style", "display:block");
+      };
 
           function GetComDistrict(stateId, districtId) {
               var id = stateId;
@@ -1702,6 +1791,9 @@
                                   document.getElementById("CardSearch").style.display = "none";
                                   document.getElementById("lblCardDetails").style.display = "none";
                                   document.getElementById("CustomerSearch").style.display = "none";
+                                  $("#noCardDetails").attr("style", "display:none");
+                                  $("#lblDispatchDetails").attr("style", "display:none");
+                                  $("#noDispatchDetails").attr("style", "display:none");
                                   $("#CustomerId").val("");
                                   $("#nameOnCard").val("");
                                   $("#custErrMsg").html("");
@@ -2705,7 +2797,7 @@
 
 
                 $.ajax({
-                    url: "@Url.Action("UpdateVECostomerProfile", "VolvoEicher")",
+                    url: "@Url.Action("UpdateVECustomerProfile", "VolvoEicher")",
                     type: "POST",
                     data: { str: JSON.stringify(getAllData) },
                     dataType: "JSON",
