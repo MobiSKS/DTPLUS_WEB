@@ -751,5 +751,9 @@
         public static string MobileDispenserRetailOutletMapping="api/dtplus/merchant/get_mobile_dispenser_retail_outlet_mapping";
         public static string StatusMobileDispenserRetailOutletMapping = "api/dtplus/merchant/get_status_mobiledispenser_retailoutletmapping";
         #endregion
+
+        #region EFT
+        public static string eftrechargedetailentry = "api/dtplus/EFT/eft_recharge_detail_entry";
+        #endregion
     }
 }

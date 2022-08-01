@@ -1,0 +1,255 @@
+﻿@model HPCL.Common.Models.ViewModel.EFT.CCMSRechargethroughEFTModel
+@using HPCL.Common.Resources
+
+
+<div class="col-lg-12 px-0">
+    <div class="bg-white p-2 p-md-4" style="overflow: hidden;">
+        <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
+            <li class="breadcrumb-item"><a href="@Url.Action("Index","Interfaces")" class="text_primary">Interfaces</a> </li>
+            <li class="breadcrumb-item font-weight-light">CCMS Recharge Through EFT</li>
+        </ul>
+        @if (Model.UploadEFTSummaryData != null)
+        {
+            <div class="w-100">
+                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
+                    <div class="border-1 rounded border-grey pb-3 mb-3">
+                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Summary</p>
+                        <p class="text-dark px-3 py-1  font-weight-bold">Uploaded CCMS Record Summary</p>
+                        <div class="col-lg-12 col-md-12 col-12 py-3">
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-8 col-12">Total Records in Uploaded File: </label>
+                                        <div class="col-md-4 col-12 offset-md-1">
+                                            <div class="custom_select">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-8 col-12">Total Valid Records:</label>
+                                        <div class="col-md-4 col-12 offset-md-1">
+                                            <div class="custom_select">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-8 col-12">Total Amount(in Rs.)for Valid Records: </label>
+                                        <div class="col-md-4 col-12 offset-md-1">
+                                            <div class="custom_select">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-8 col-12">Total Number of Invalid Records:</label>
+                                        <div class="col-md-4 col-12 offset-md-1">
+                                            <div class="custom_select">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-8 col-12">Total Amount(in Rs.)for Invalid Records: </label>
+                                        <div class="col-md-4 col-12 offset-md-1">
+                                            <div class="custom_select">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-8 col-12">Invalid Records Row Numbers in File:</label>
+                                        <div class="col-md-4 col-12 offset-md-1">
+                                            <div class="custom_select">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="clearfix"></div>
+                        
+                    </div>
+                    @if (Model.UploadEFTSummaryData.Data.Count() > 0)
+                        {
+                            <table class="datatable table table-striped table-bordered table-responsive d-md-table d-block " style="width:100%;" id="transactionDetails">
+                                <thead style="background-color:lightgray;">
+                                    <tr>
+
+
+                                        <th>Control Card Number</th>
+                                        <th>UTR Number</th>
+                                        <th>Transaction Date(DD-MM-YYYY)</th>
+                                        <th>Transaction Amount</th>
+                                        <th>ICICI Ref Number</th>
+                                        <th>IFSC Code</th>
+                                        <th>Sender Name</th>
+                                        <th>Reason</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="searchMerchantTableBody">
+
+                                    @foreach (var item in Model.UploadEFTSummaryData.Data)
+                                    {
+                                        <tr>
+                                            <td>@item.ControlCardNumber</td>
+                                            <td>@item.UTRNumber</td>
+                                            <td>@item.TransactionDate</td>
+                                            <td>@item.TransactionAmount</td>
+                                            <td>@item.ICICIRefNumber</td>
+                                            <td>@item.IFSCCode</td>
+                                            <td>@item.SenderName</td>
+                                            <td>@item.Reason</td>
+
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        }
+                </div>
+                <div class="clearfix"></div>
+
+            </div>
+        }
+        else
+        {
+            <form id="saveDocs" method="post" data-ajax="true" enctype="multipart/form-data" asp-controller="EFT" asp-action="CCMSRechargethroughEFT" data-ajax-method="POST">
+                <div class="w-100">
+                    <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0">
+                        <div class="border-1 rounded border-grey pb-3">
+                            <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">CCMS Recharge Through EFT</p>
+
+                            <div class="col-lg-12 col-md-12 col-12 py-3">
+                                <div class="d-flex align-items-center flex-wrap">
+                                    <div class="col-lg-6 col-12">
+                                        <div class="d-flex align-items-center flex-wrap mb-3">
+                                            <label class="font-weight-normal col-md-4 col-12">File Name <sup class="text-danger">*</sup></label>
+                                            <div class="col-md-8 col-12">
+                                                <div class="custom_select">
+                                                    @Html.TextBoxFor(m => m.FileName, new { @class = "form-control", autocomplete = "off" ,@readonly="readonly"})
+                                                    <span class="error" id="fileName_error"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-12">
+                                        <div class="d-flex align-items-center flex-wrap mb-3">
+                                            <label class="font-weight-normal col-md-4 col-12">Select File</label>
+                                            <div class="col-md-8 col-12">
+                                                <div class="custom_select">
+                                                    @Html.TextBoxFor(m => m.TransactionDetailFile, new { @id = "TransactionDetailFile", @class = "form-control form-control-file myfilen", Type = "file" })
+                                                    <span class="error" id="transactionFile_error"></span>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+                                <div class="d-flex align-items-center justify-content-center mt-0">
+                                    <div class="px-2">
+                                        <button class="btn btn_primary" type="submit" id="btnUpload">UPLOAD</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+
+                    </div>
+                    <div class="clearfix"></div>
+
+                </div>
+            </form>
+        }
+    </div>
+    <div class="clearfix"></div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#FileName").val("DTEFT010822_01.txt");
+    });
+    $("#TransactionDetailFile").change(function () {
+        var fileName=$("#FileName").val();
+
+        if($(this).val()==""){
+            $("#transactionFile_error").html("Please select a File");
+        }
+        else{
+            debugger;
+            var transFileName=this.files[0].name;//.slice(0,this.files[0].name.indexOf('.'));
+            if(fileName!=transFileName){
+                $("#transactionFile_error").html("");
+                $('#TransactionDetailFile').val('');
+                $("#transactionFile_error").html("File name suggested and uploaded are not matching.");
+            }
+            else{
+                var regex = /(.*?)\.(txt)$/;
+                if (regex.test($(this).val())) {
+                        if(this.files[0].size >26214400){
+                            $("#transactionFile_error").html("");
+                            $('#TransactionDetailFile').val('');
+                            $("#transactionFile_error").html("Document File should not exceeded from 25MB");
+                        }
+                        else {
+                            $("#transactionFile_error").html("");
+                        }
+                }
+                else {
+                    $("#transactionFile_error").html("");
+                    $('#TransactionDetailFile').val('');
+                    $("#transactionFile_error").html("Invalid File Type");
+                }
+            }
+        }
+
+    });
+    $("#btnUpload").on("click",(function(e){
+        debugger;
+        var transactionFile=$("#TransactionDetailFile").val();
+        var fileName=$("#FileName").val();
+        var flag="Y";
+        if (fileName=="")
+        {
+             $("#fileName_error").html("File Name is required");
+             flag="N";
+        }
+        if(transactionFile==""){
+            $("#transactionFile_error").html("Please select a File");
+        }//File name suggested and uploaded are not matching.
+        else{
+             var transFileName=$("#TransactionDetailFile")[0].files[0].name;
+            if(fileName!=transFileName){
+                $("#transactionFile_error").html("");
+                $('#TransactionDetailFile').val('');
+                $("#transactionFile_error").html("File name suggested and uploaded are not matching.");
+            }
+            else{
+                var regex = /(.*?)\.(txt)$/;
+                if (regex.test(transactionFile)) {
+                        if($("#TransactionDetailFile").files[0].size >26214400){
+                            $("#transactionFile_error").html("");
+                            $('#TransactionDetailFile').val('');
+                            $("#transactionFile_error").html("Document File should not exceeded from 25MB");
+                            flag="N";
+                        }
+                }
+                else {
+                    $("#transactionFile_error").html("");
+                    $('#TransactionDetailFile').val('');
+                    $("#transactionFile_error").html("Invalid File Type");
+                    flag="N";
+                }
+            }
+        }
+        if(flag="N")
+            e.preventDefault();
+    }));
+
+</script>
