@@ -1213,6 +1213,33 @@ namespace HPCL.Service.Services
             InsertResponse result = obj.ToObject<InsertResponse>();
             return result;
         }
+        public async Task<JCBCustomerBalanceInfoModel> JCBBalanceInfo()
+        {
+            JCBCustomerBalanceInfoModel custMdl = new JCBCustomerBalanceInfoModel();
+            custMdl.Remarks = "";
+            return custMdl;
+        }
+
+        public async Task<GetJCBCustomerBalanceInfoResponse> GetCustomerBalanceInfo(string CustomerID)
+        {
+            GetJCBCustomerBalanceInfoResponse customerBalanceInfo = new GetJCBCustomerBalanceInfoResponse();
+
+            var Request = new JCBCustomerProfileSearchRequest()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                CustomerID = CustomerID
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(Request), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getJcbCustomerBalanceInfo);
+
+            customerBalanceInfo = JsonConvert.DeserializeObject<GetJCBCustomerBalanceInfoResponse>(response);
+
+            return customerBalanceInfo;
+        }
 
     }
 }
