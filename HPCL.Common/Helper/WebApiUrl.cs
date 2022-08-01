@@ -207,6 +207,9 @@
         public static string updatecommunicationemailresetpassword = "api/dtplus/customer/update_communication_email_reset_password";
         public static string getCustomerStatus = "api/dtplus/customer/get_customer_status";
 
+        public static string GetApproveCardRenewReqUrl = "api/dtplus/card/approve_card_renewal_requests";
+        public static string UpdateApproveCardRenewReqUrl = "api/dtplus/card/update_approve_card_renewal_requests";
+
         #endregion
 
         #region Login

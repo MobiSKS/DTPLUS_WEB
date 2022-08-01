@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
@@ -19,11 +20,13 @@ namespace HPCL.Service.Services
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IRequestService _requestService;
+        private readonly ICommonActionService _commonActionService;
 
-        public CustomerRequestService(IHttpContextAccessor httpContextAccessor, IRequestService requestServices)
+        public CustomerRequestService(IHttpContextAccessor httpContextAccessor, IRequestService requestServices, ICommonActionService commonActionService)
         {
             _httpContextAccessor = httpContextAccessor;
             _requestService = requestServices;
+            _commonActionService = commonActionService;
         }
 
         public async Task<GetSmsAlertForMultipleMobileDetailRes> GetSmsAlertForMultipleMobileDetail(GetSmsAlertForMultipleMobileDetailReq entity)
@@ -315,6 +318,62 @@ namespace HPCL.Service.Services
             StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
             var response = await _requestService.CommonRequestService(content, WebApiUrl.updateconfigureemailalert);
 
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<SuccessResponse> res = jarr.ToObject<List<SuccessResponse>>();
+            return res;
+        }
+
+        public async Task<ApproveCardRenwalRequestRes> GetApproveCardRenwalRequest(ApproveCardRenwalRequestReq entity)
+        {
+            string fromDate = "", toDate = "";
+            if (!string.IsNullOrEmpty(entity.FromDate) && !string.IsNullOrEmpty(entity.FromDate))
+            {
+                fromDate = await _commonActionService.changeDateFormat(entity.FromDate);
+                toDate = await _commonActionService.changeDateFormat(entity.ToDate);
+            }
+            else
+            {
+                fromDate = DateTime.Now.ToString("yyyy-MM-dd");
+                toDate = DateTime.Now.ToString("yyyy-MM-dd");
+            }
+
+            var reqBody = new ApproveCardRenwalRequestReq
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                CardNo = entity.CardNo ?? "",
+                FromDate = fromDate,
+                ToDate = toDate
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.GetApproveCardRenewReqUrl);
+
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            ApproveCardRenwalRequestRes searchList = obj.ToObject<ApproveCardRenwalRequestRes>();
+            return searchList;
+        }
+
+        public async Task<List<SuccessResponse>> UpdateApproveCardRenwalRequest(string actionType, string appRejValues)
+        {
+            TypeApproveCardRenewalRequestsList[] arrs = JsonConvert.DeserializeObject<TypeApproveCardRenewalRequestsList[]>(appRejValues);
+
+            var reqBody = new UpdateApproveCardRenwalRequestReq
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                ActionType = actionType,
+                TypeApproveCardRenewalRequests = arrs,
+                ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.UpdateApproveCardRenewReqUrl);
 
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
             var jarr = obj["Data"].Value<JArray>();
