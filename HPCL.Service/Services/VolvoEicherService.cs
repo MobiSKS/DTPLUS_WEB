@@ -91,6 +91,7 @@ namespace HPCL.Service.Services
                 {
                     foreach (VECustomerProfileResponse response in customerProfileResponse)
                     {
+                        #region Commented
                         //if (string.IsNullOrEmpty(response.AreaOfOperation))
                         //{
                         //    response.AreaOfOperation = "";
@@ -218,6 +219,8 @@ namespace HPCL.Service.Services
                         //        response.KeyOfficialDOB = "";
                         //    }
                         //}
+                        #endregion
+
                         if (string.IsNullOrEmpty(response.NameOnCard))
                         {
                             response.NameOnCard = "";
