@@ -58,6 +58,7 @@ namespace HPCL.Service
          
 
             services.AddTransient<IPC_ICICIBankCreditPouchService, PC_ICICIBankCreditPouchService>();
+            services.AddTransient<IEFTService, EFTService>();
             return services;
         }
     }
