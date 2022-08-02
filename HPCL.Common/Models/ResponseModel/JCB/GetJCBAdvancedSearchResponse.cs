@@ -40,6 +40,7 @@ namespace HPCL.Common.Models.ResponseModel.JCB
         public string CommunicationMobileNo { get; set; }
         public string CommunicationEmailid { get; set; }
         public string District { get; set; }
+        public string SalesArea { get; set; }
         public int Status { get; set; }
         public string Reason { get; set; }
     }
