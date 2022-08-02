@@ -277,7 +277,7 @@
                                         <div class="col-md-12 col-12">
                                             <div class="d-flex align-items-center justify-content-center mt-0">
                                                 <div class="px-2">
-                                                    <button class="btn btn_primary" type="button">Search</button>
+                                                    <button class="btn btn_primary" type="button" id="btnSearch">Search</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -289,7 +289,7 @@
                         <div class="clearfix"></div>
                     </div>
                 </div>
-                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3">
+                @*<div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3">
                     <table id="UserMappingTable" class="table table-striped d-block table-bordered table-responsive mt-3 nowrap" style="width:100%;">
                         <thead>
                             <tr>
@@ -431,14 +431,26 @@
                             </tr>
                         </tbody>
                     </table>
-                </div>
+                </div>*@
             </div>
         </form>
+        <div class="clearfix"></div>
+        <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3 toBeHiddenOnSuccess" id="viewALOTCCardDealerAllocationTbl" style="overflow: scroll; width: 1100px;">
+        </div>
         <div class="clearfix"></div>
     </div>
 </div>
 <div class="clearfix"></div>
 <script>
+     $(document).ready(function () {
+
+              $('select').SumoSelect({
+                placeholder: '-Select-',
+                search: true,
+                searchText: 'Enter Text here.'
+              });
+     });
+
      $("#ZonalOfficeId").change(function () {
             var id = this.value;
             if (id != 0) 
@@ -479,4 +491,83 @@
                 }
             });
         });
+
+         $("#btnSearch").click(function () {
+             //debugger;
+             
+                var customerName = $("#CustomerName").val();
+                var optionCustomerName = $("input[name='OptionCustomerName']:checked").val();
+                var formNumber = $("#FormNumber").val();
+                var optionFormNumber = $("input[name='OptionFormNumber']:checked").val();
+                var customerId = $("#CustomerId").val();
+                var optionCustomerId = $("input[name='OptionCustomerId']:checked").val();
+                var customerType = $("#CustomerType").val();
+                var optionCustomerType = $("input[name='OptionCustomerId']:checked").val();
+                var zonalOfficeId = $("#ZonalOfficeId").val();
+                var optionZonalOffice = $("input[name='OptionZonalOffice']:checked").val();
+                var RegionalOfficeId = $("#RegionalOfficeID").val();
+                var optionRegionalOffice = $("input[name='OptionRegionalOffice']:checked").val();
+                var Pin = $("#Pincode").val();
+                var optionPincode = $("input[name='OptionPincode']:checked").val();
+                var MobileNo = $("#MobileNo").val();
+
+                var getAllData = [];
+
+                getAllData.push({
+                    CustomerName: customerName,
+                    OptionCustomerName: optionCustomerName,
+                    FormNumber: formNumber,
+                    OptionFormNumber:optionFormNumber,
+                    Customerid: customerId,
+                    OptionCustomerId: optionCustomerId,
+                    CustomerType: customerType,
+                    OptionCustomerType: optionCustomerType,
+                    ZonalOfficeId: zonalOfficeId,
+                    OptionZonalOffice: optionZonalOffice,
+                    RegionalOfficeID: RegionalOfficeId,
+                    OptionRegionalOffice: optionRegionalOffice,
+                    Pincode: Pin,
+                    OptionPincode: optionPincode,
+                    MobileNo: MobileNo
+                })
+
+             //var found = false;
+             viewALOTCCardDealerAllocationTbl.style.display = "block";
+
+             $.ajax({
+                 //type: 'GET',  // http method
+                 //url: '@Url.Action("GetJCBAdvancedSearch", "JCB")',
+                 //contentType: "application/json; charset=utf-8",
+                 //data: { DealerCode: dealerCode, CardNo: cardNumber },
+                 //dataType: "text",
+                url: "@Url.Action("GetJCBAdvancedSearch", "JCB")",
+                type: "POST",
+                data: { str: JSON.stringify(getAllData) },
+                dataType: "text",
+                success: function (data, status, xhr) {
+                     var v = data;
+                     if (status == 'success')
+                     {
+                         $("#viewALOTCCardDealerAllocationTbl").html(data);
+                         $('html, body').animate({
+                             scrollTop: $("#viewALOTCCardDealerAllocationTbl").offset().top
+                         }, 2000);
+                         //$("#DealerCode").prop('readonly', true);
+                     }
+                     else
+                     {
+                         console.log(v);
+                         //$("#DealerCode").prop('readonly', false);
+                     }
+                 },
+                 error: function (jqXhr, textStatus, errorMessage) 
+                 {
+                     alert("Error");
+                    //$("#DealerCode").prop('readonly', false);
+                 }
+             });
+
+
+         });
+
 </script>

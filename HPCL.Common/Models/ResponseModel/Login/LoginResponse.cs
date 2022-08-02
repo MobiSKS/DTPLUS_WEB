@@ -21,5 +21,6 @@
         public string Token { get; set; }
         public int SBUTypeId { get; set; }
         public string SBUName { get; set; }
+        public string UserSubType { get; set; }
     }
 }
