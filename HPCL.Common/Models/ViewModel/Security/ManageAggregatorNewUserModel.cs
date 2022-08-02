@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace HPCL.Common.Models.ViewModel.Security
 {
-    public class ManageAggregatorNewUserModel:CommonResponseBase
+    public class ManageAggregatorNewUserModel : CommonResponseBase
     {
         public ManageAggregatorNewUserModel()
         {
@@ -18,8 +18,9 @@ namespace HPCL.Common.Models.ViewModel.Security
         public string Email { get; set; }
         public string Password { get; set; }
         public string ConfirmPassword { get; set; }
-     
-        public virtual List<AggregatorRoles> GetAggregatorRoles{ get; set; }
+        public string CreatedDate { get; set; }
+        public string LastLogin { get; set; }
+        public virtual List<AggregatorRoles> GetAggregatorRoles { get; set; }
 
     }
     public class AggregatorRoles

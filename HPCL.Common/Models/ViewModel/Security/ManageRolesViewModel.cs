@@ -9,7 +9,10 @@ namespace HPCL.Common.Models.ViewModel.Security
 {
     public class ManageRolesViewModel:CommonResponseBase
     {
-        
+        public ManageRolesViewModel()
+        {
+            Data = new List<ManageRoleDetails>();
+        }
         public string MenuNameId { get; set; }
         public string Status { get; set; }
         public string Reason { get; set; }
