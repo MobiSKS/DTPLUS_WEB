@@ -1308,6 +1308,49 @@ namespace HPCL.Service.Services
 
             return model;
         }
+        public async Task<GetJCBAdvancedSearchResponse> GetJCBAdvancedSearch(string str)
+        {
+            JArray objs = JArray.Parse(JsonConvert.DeserializeObject(str).ToString());
+            List<JCBCustomerAdvancedSearchRequest> arrs = objs.ToObject<List<JCBCustomerAdvancedSearchRequest>>();
+            bool isCustomerNameExist = false;
+            bool isFormNumberExist = false;
+            bool isCustomeridExist = false;
+            bool isRegionalOfficeExist = false;
+            bool isZonalOfficeExist = false;
+            bool isPincodeExist = false;
+            bool isMobileExist = false;
+
+            var insertServiceBody = new JCBCustomerAdvancedSearchRequest
+            {
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserAgent = CommonBase.useragent,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                CustomerName = arrs[0].CustomerName,
+                IsCustomerNameExist = isCustomerNameExist,
+                FormNumber = arrs[0].FormNumber,
+                IsFormNumberExist = isFormNumberExist,
+                Customerid = arrs[0].Customerid,
+                IsCustomeridExist = isCustomeridExist,
+                CustomerType = arrs[0].CustomerType,
+                IsCustomerTypeExist = true,
+                RegionalOfficeID = arrs[0].RegionalOfficeID,
+                IsRegionalOfficeExist = isRegionalOfficeExist,
+                ZonalOfficeId = arrs[0].ZonalOfficeId,
+                IsZonalOfficeExist = isZonalOfficeExist,
+                Pincode = arrs[0].Pincode,
+                IsPincodeExist = isPincodeExist,
+                MobileNo = arrs[0].MobileNo,
+                IsMobileExist = isMobileExist
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(insertServiceBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getJcbAdvancedSearch);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            GetJCBAdvancedSearchResponse result = obj.ToObject<GetJCBAdvancedSearchResponse>();
+
+            return result;
+        }
 
     }
 }

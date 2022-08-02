@@ -1,0 +1,224 @@
+﻿@model HPCL.Common.Models.ResponseModel.JCB.GetJCBAdvancedSearchResponse
+@using HPCL.Common.Resources
+@if (Model.Data.Count() > 0)
+{
+    <div class="d-flex align-items-center flex-wrap mb-3">
+        <div class="col-md-7 col-12">
+            <div class="custom_select">
+            </div>
+        </div>
+    </div>
+
+    <table id="tblMerchantViewCardDetail" class="table d-md-table table-bordered table-responsive mt-3" style="width:100%;">
+        <thead>
+            <tr>
+                <th>S.No.</th>
+                <th>Customer Name</th>
+                <th>Form Number</th>
+                <th>Customer ID</th>
+                <th>Customer Type</th>
+                <th>Regional Office</th>
+                <th>Zonal Office</th>
+                <th>User Name</th>
+                <th>Status</th>
+                <th>Name on Card</th>
+                <th>Residence Type</th>
+                <th>Constitution</th>
+                <th>IT Permanent A/C</th>
+                <th>Bank Name</th>
+                <th>Bank Branch Name</th>
+                <th>Bank Account Number</th>
+                <th>Control Card No.</th>
+                <th>City</th>
+                <th>State</th>
+                <th>PinCode</th>
+                <th>Mobile</th>
+                <th>Email</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int Sno = 0;
+            }
+            @foreach (var item in Model.Data)
+            {
+                Sno++;
+                <tr>
+                    <td>@Sno</td>
+                    <td>@item.IndividualOrgName</td>
+                    <td>@item.FormNumber</td>
+                    <td>@item.CustomerID</td>
+                    <td>@item.CustomerTypeName</td>
+                    <td>@item.RegionalOfficeName</td>
+                    <td>@item.ZonalOfficeName</td>
+                    <td>@item.CreatedBy</td>
+                    <td>@item.Status</td>
+                    <td>@item.NameOnCard</td>
+                    <td>@item.ResidenceType</td>
+                    <td>@item.Constitution</td>
+                    <td>@item.ITPermanentAccount</td>
+                    <td>@item.BankName</td>
+                    <td>@item.BankBranchName</td>
+                    <td>@item.BankAccountNumber</td>
+                    <td>@item.ControlCardNo</td>
+                    <td>@item.CommunicationCityName</td>
+                    <td>@item.StateName</td>
+                    <td>@item.CommunicationPincode</td>
+                    <td>@item.CommunicationMobileNo</td>
+                    <td>@item.CommunicationEmailid</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div class="clearfix"></div>
+    <div class="clearfix"></div>
+    <div id="show_Table" class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-3 toBeHiddenOnSuccess">
+    </div>
+}
+else
+{
+    <div class="alert alert-danger mt-3 text-center ml-3 mr-3">
+        @Model.Message
+    </div>
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.table').DataTable({
+            "lengthMenu": [10, 20, 50, 100, 200, 500],
+            "oLanguage": {
+                "sLengthMenu": "Display _MENU_ Records",
+                "info": "Showing _START_ to _END_ of _TOTAL_ Records",
+            }
+        });
+    });
+
+        function tableToCSV() {
+
+        // Variable to store the final csv data
+        var csv_data = [];
+        var rowsExists=false;
+
+        // Get each row data
+        ////var rows = document.getElementsByTagName('tr');
+        //$("#tblStatusWiseDetails tr").each(function () {
+        //    var row = $(this);
+        //    //debugger;
+        //        rowsExists=true;
+        //        // Get each column data
+        //        var cols = row[0].querySelectorAll('td,th');
+
+        //        // Stores each csv row data
+        //        var csvrow = [];
+        //        for (var j = 0; j < cols.length; j++) {
+
+        //            // Get the text data of each cell
+        //            // of a row and push it to csvrow
+
+        //           csvrow.push(cols[j].innerHTML.toString());
+                    
+        //        }
+
+        //        // Combine each column value with comma
+        //        csv_data.push(csvrow.join(","));
+
+        //});
+
+        var i=0;
+        $("#tblMerchantViewCardDetail tr").each(function () {
+            var row = $(this);
+            rowsExists=true;
+            //debugger;
+            if(i==0)
+            {
+                // Get each column data
+                var cols = row[0].querySelectorAll('td,th');
+
+                // Stores each csv row data
+                var csvrow = [];
+                for (var j = 0; j < cols.length; j++) 
+                {
+
+                    // Get the text data of each cell
+                    // of a row and push it to csvrow
+                    csvrow.push(cols[j].innerHTML.toString());
+                }
+
+                // Combine each column value with comma
+                csv_data.push(csvrow.join(","));
+            }
+            i=i+1
+        });
+        // Combine each row data with new line character
+        //csv_data = csv_data.join('\n');
+
+        //// Call this function to download csv file
+        //downloadCSVFile(csv_data);
+
+        //var data = $('#tblMerchantViewCardDetail').DataTable().rows.data();
+        //data.each(function (value, index) {
+        //    console.log(value);
+        //  //if (value.isActive)
+        //  //{
+        //  //   console.log(value.UserID);
+        //  //   console.log(value.UserName);
+        //  //}
+        //});
+
+        if(rowsExists)
+        {
+            var tableName = $('#tblMerchantViewCardDetail').DataTable();
+            tableName.rows().every(function(){
+                //console.log(this.data()[0]);
+                var csvrow = [];
+
+                csvrow.push(this.data()[0]);
+                csvrow.push(this.data()[1]);
+                csvrow.push(this.data()[2]);
+                csvrow.push("'"+ this.data()[3]);
+                csvrow.push(this.data()[4]);
+                csvrow.push(this.data()[5]);
+                csvrow.push(this.data()[6]);
+                csvrow.push(this.data()[7]);
+                csvrow.push(this.data()[8]);
+
+                csv_data.push(csvrow.join(","));
+            });
+
+            csv_data = csv_data.join('\n');
+        }
+
+        // Call this function to download csv file
+        if(rowsExists)
+        {
+           downloadCSVFile(csv_data);
+        }
+    }
+
+    function downloadCSVFile(csv_data) {
+
+        // Create CSV file object and feed
+        // our csv_data into it
+        CSVFile = new Blob([csv_data], {
+            type: "text/csv"
+        });
+
+        // Create to temporary link to initiate
+        // download process
+        var temp_link = document.createElement('a');
+
+        // Download csv file
+        temp_link.download = "ViewJCBDealerOTCCardStatus.csv";
+        var url = window.URL.createObjectURL(CSVFile);
+        temp_link.href = url;
+
+        // This link should not be displayed
+        temp_link.style.display = "none";
+        document.body.appendChild(temp_link);
+
+        // Automatically click the link to
+        // trigger download
+        temp_link.click();
+        document.body.removeChild(temp_link);
+    }
+
+</script>

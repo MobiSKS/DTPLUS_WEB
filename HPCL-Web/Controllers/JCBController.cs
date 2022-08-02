@@ -358,6 +358,12 @@ namespace HPCL_Web.Controllers
             var model = await _jcbService.JCBCustomerAdvancedSearch();
             return View(model);
         }
+        [HttpPost]
+        public async Task<IActionResult> GetJCBAdvancedSearch(string str)
+        {
+            var models = await _jcbService.GetJCBAdvancedSearch(str);
+            return PartialView("~/Views/JCB/_JCBCustomerAdvancedSearchTblView.cshtml", models);
+        }
 
     }
 }
