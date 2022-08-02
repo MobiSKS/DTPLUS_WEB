@@ -56,5 +56,6 @@ namespace HPCL.Service.Interfaces
         Task<JCBCustomerBalanceInfoModel> JCBBalanceInfo();
         Task<GetJCBCustomerBalanceInfoResponse> GetCustomerBalanceInfo(string CustomerID);
         Task<JCBCustomerTransactionResponseModel> GetCustomerTransactionDetails(string CustomerID, string CardNo, string MobileNo, string FromDate, string ToDate);
+        Task<JCBCustomerAdvancedSearchModel> JCBCustomerAdvancedSearch();
     }
 }

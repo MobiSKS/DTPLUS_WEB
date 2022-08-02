@@ -89,5 +89,6 @@ namespace HPCL.Service.Interfaces
         Task<List<MerchantReactivationStatus>> GetMerchantReactivationStatus();
         Task<List<GetTransactionType>> GetParentCustomerTransactionType();
         Task<List<CommonResponseData>> PostAuthForCreditPouchForParentCustomer(string postAuthCust, string CreditPouchType);
+        Task<List<CustomerTypeModel>> GetOtherCustomerTypeDropdown();
     }
 }
