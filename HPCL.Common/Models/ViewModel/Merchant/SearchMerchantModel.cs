@@ -1,7 +1,9 @@
 ﻿using HPCL.Common.Models.CommonEntity;
 using HPCL.Common.Models.CommonEntity.ResponseEnities;
+using HPCL.Common.Resources;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace HPCL.Common.Models.ViewModel.Merchant
@@ -17,6 +19,9 @@ namespace HPCL.Common.Models.ViewModel.Merchant
                 StatusName = "-ALL-"
             });
         }
+        [Required(ErrorMessage = FieldValidation.MerchantNotEmpty)]
+        [StringLength(10)]
+        [RegularExpression(FieldValidation.ValidMerchantId, ErrorMessage = FieldValidation.ValidMerchantIdErrMsg)]
         public string MerchantId { get; set; }
         public string ErpCode { get; set; }
         public string RetailOutletName { get; set; }

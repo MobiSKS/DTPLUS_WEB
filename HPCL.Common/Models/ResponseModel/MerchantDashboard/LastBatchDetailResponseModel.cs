@@ -8,7 +8,7 @@ using HPCL.Common.Models.ResponseModel.CommonResponse;
 
 namespace HPCL.Common.Models.ResponseModel.MerchantDashboard
 {
-    public class LastBatchDetailResponseModel : ResponseMsg
+    public class LastBatchDetailResponseModel :ResponseMsg
     {
         public string TerminalId { get; set; }
 

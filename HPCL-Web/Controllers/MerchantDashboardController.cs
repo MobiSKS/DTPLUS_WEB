@@ -17,6 +17,7 @@ using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using HPCL.Common.Helper;
 using HPCL.Common.Models.ViewModel.MerchantDashboard;
+using HPCL.Common.Models.ResponseModel.CommonResponse;
 
 namespace HPCL_Web.Controllers
 {
@@ -36,23 +37,53 @@ namespace HPCL_Web.Controllers
         {
             var dashboardkeyInformation = await _merchantDashboardService.keyInformation(MerchantId);
             var todaysTransaction = await _merchantDashboardService.TodaysTransactionSummaries(MerchantId);
+            //var notificationContent = await _merchantDashboardService.NotificationResponsesDetails(UserType);
+
             //var lastTransaction= await _merchantDashboardService.lastTrasaction(MerchantId);
             //var lastBatchDetails = await _merchantDashboardService.lastBatches(MerchantId);
-           // var salesEarningDetails = await _merchantDashboardService.lastSaleReloadEarningDetails(MerchantId);
+            // var salesEarningDetails = await _merchantDashboardService.lastSaleReloadEarningDetails(MerchantId);
             //var keyEventsFigures= await _merchantDashboardService.lastKeyEventAndFigure(MerchantId);
 
             MerchantDashboardModel merchantDashboard = new MerchantDashboardModel();
 
             merchantDashboard.KeyInformationResponseModels = dashboardkeyInformation;
             merchantDashboard.todaysTransactionResponseModels = todaysTransaction;
-           // merchantDashboard.LastTrasactionResponseModels= lastTransaction;
-           // merchantDashboard.LastBatchDetailResponseModels = lastBatchDetails;
-           // merchantDashboard.LastSaleReloadEarningDetailsResponseModels = salesEarningDetails;
-           // merchantDashboard.keyEVentsAndFigureResponseModels = keyEventsFigures;
+            //merchantDashboard.NotificationResponseModels = notificationContent;
+            // merchantDashboard.LastTrasactionResponseModels= lastTransaction;
+            // merchantDashboard.LastBatchDetailResponseModels = lastBatchDetails;
+            // merchantDashboard.LastSaleReloadEarningDetailsResponseModels = salesEarningDetails;
+            //merchantDashboard.keyEVentsAndFigureResponseModels = keyEventsFigures;
 
 
 
             return View(merchantDashboard);
+        }
+
+        //public async Task<IActionResult> NotificationContent(string UserType)
+        //{
+
+        //    var notificationContent = await _merchantDashboardService.NotificationResponsesDetails(UserType);
+
+
+
+        //    MerchantDashboardModel merchantDashboard = new MerchantDashboardModel();
+
+
+        //    merchantDashboard.NotificationResponseModels = notificationContent;
+
+
+
+
+        //    return View(merchantDashboard);
+        //}
+
+        [HttpPost]
+        public async Task<JsonResult> NotificationContent(string UserType)
+        {
+            MerchantDashboardModel merchantDashboard = new MerchantDashboardModel();
+            var notificationContent = await _merchantDashboardService.NotificationResponsesDetails(UserType);
+
+            return Json(notificationContent);
         }
 
         [HttpPost]
@@ -95,12 +126,12 @@ namespace HPCL_Web.Controllers
 
             return Json(lastSales);
         }
-        
+
 
         /// <summary>
         /// Get last key Event and figures
         /// </summary>
-     
+
 
 
         [HttpPost]

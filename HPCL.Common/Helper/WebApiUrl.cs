@@ -656,6 +656,7 @@
         public static string requestUpdateJCBCustomer = "api/dtplus/JCB/request_update_JCB_customer";
         public static string getJcbCustomerBalanceInfo = "api/dtplus/JCB/get_jcb_customer_balance_info";
         public static string updateJcbCustomerDetail = "api/dtplus/JCB/update_jcb_customer_Detail";
+        public static string getJcbTransactionsSummary = "api/dtplus/JCB/get_jcb_transactions_summary";
         #endregion
 
         #region Customer Dashboard
@@ -697,6 +698,7 @@
         public static string requestUpdateDicvCustomer = "api/dtplus/DICV/request_update_dicv_customer";
         public static string getDicvCustomerBalanceInfo = "api/dtplus/DICV/get_dicv_customer_balance_info";
         public static string dicvUpdateCustomer = "api/dtplus/DICV/dicv_update_customer";
+        public static string getDicvTransactionsSummary = "api/dtplus/DICV/get_dicv_transactions_summary";
         #endregion
 
         #region "Parent Customer HDFC Bank Credit Pouch"
@@ -732,6 +734,8 @@
         public static string lastBatch = "api/dtplus/merchantdashboard/merchant_dashboard_last_batch_deatils";
         public static string lastSaleEarning = "api/dtplus/merchantdashboard/merchant_dashboard_last_sale_reload_earning_details";
         public static string lastKeyEvent = "api/dtplus/merchantdashboard/merchant_dashboard_key_events_and_figures";
+        public static string notificationContent = "/api/dtplus/customerdashboard/get_notification_content";
+
         #endregion
 
         #region "Parent Customer ICICI Bank Credit Pouch"

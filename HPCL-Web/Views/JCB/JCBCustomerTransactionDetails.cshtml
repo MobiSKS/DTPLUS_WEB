@@ -1,0 +1,348 @@
+﻿@model HPCL.Common.Models.ViewModel.JCB.JCBCustomerTransactionViewModel
+@using Microsoft.AspNetCore.Http;
+
+<div class="col-lg-12">
+    <div class="bg-white p-2 p-md-4" style="background: #edecec !important;">
+        <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
+            <li class="breadcrumb-item"><a href="@Url.Action("Index","JCB")" class="text_primary">JCB Dashboard</a> </li>
+            <li class="breadcrumb-item font-weight-light">Transaction Details</li>
+        </ul>
+        <div id="reason" class="mb-3 text-center" style="background-color: #a0f1d6;display:none;"></div>
+        <form>
+            <div class="w-100">
+                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mb-3">
+                    <div class="border-1 rounded border-grey pb-0">
+                        <p class="text-white px-3 py-2 m-0 font-weight-bold" style="background: #084693;">Transaction Details</p>
+                        <div class="col-lg-12 col-md-12 col-12 py-3 bg-white">
+                             <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap">
+                                        <label class="col-md-3 col-12">&nbsp;</label>
+                                        <div class="col-md-9 col-12">
+                                            <div class="custom_select">
+                                                <input type="radio" id="rbCustomerID" name="Status" value="Customer ID" class="rbTransactionType" checked>
+                                                <span style="margin:0 10px">Customer ID</span>
+                                                <input type="radio" id="rbCardNo" name="Status" value="Card Number" class="rbTransactionType">
+                                                <span style="margin:0 10px">Card Number</span>
+                                                <input type="radio" id="rbMobileNo" name="Status" value="Mobile Number" class="rbTransactionType">
+                                                <span style="margin:0 10px">Mobile Number</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mt-3">
+                                        <label id="lblCustomerId" class="font-weight-normal col-md-3 col-12">Customer ID<sup class="text-danger">*</sup></label>
+                                        <label id="lblCardNo" class="font-weight-normal col-md-3 col-12" style="display:none">Card Number<sup class="text-danger">*</sup></label>
+                                        <label id="lblMobileNo" class="font-weight-normal col-md-3 col-12" style="display:none">Mobile Number<sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select" id="customerIdDiv">
+                                                @Html.TextBoxFor(m => m.CustomerID, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+
+                                            </div>
+                                            <div class="custom_select" id="cardNoDiv" style="display:none">
+                                                @Html.TextBoxFor(m => m.CardNo, new { @class = "form-control", maxlength = "16", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+
+                                            </div>
+                                            <div class="custom_select" id="mobileNoDiv" style="display:none">
+                                                @Html.TextBoxFor(m => m.MobileNo, new { @class = "form-control", maxlength = "10", onkeypress = "return isNumberKey(event)", autocomplete = "off" })
+
+                                            </div>
+                                        </div>
+                                        <div class="col-12 offset-3 offset-md-3 col-md-12">
+                                            <span style="display:none" class="error" id="customerId_error"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mt-3">
+                                        <label class="font-weight-normal col-md-3 col-12 offset-md-2">From Date<sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.FromDate, new { @class = "form-control fromDate",@placeholder="dd-mm-yyyy", @autocomplete = "off", @onchange = "checkDates('fromDate_error','31');"  })
+                                            </div>
+
+                                        </div>
+                                        <div class="col-12 offset-3 offset-md-3 col-md-12">
+                                            <span style="display:none" class="error" id="fromDate_error"></span>
+                                        </div>
+                                    </div>
+                                </div> 
+                            </div>
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mt-3">
+                                        <label class="font-weight-normal col-md-3 col-12">To Date<sup class="text-danger">*</sup></label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.ToDate, new { @class = "form-control toDate" ,@placeholder="dd-mm-yyyy", @autocomplete = "off", @onchange = "checkDates('fromDate_error','31');" })
+                                            </div>
+
+                                        </div>
+                                        <div class="col-12 offset-3 offset-md-3 col-md-12">
+                                            <span style="display:none" class="error" id="toDate_error"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-12 d-flex align-items-center justify-content-center mt-3">
+                                <div class="px-2">
+                                    <button class="btn btn_primary" id="btnSearch" type="button">SEARCH</button>
+                                </div>
+                                <div class="px-2">
+                                    <button class="btn btn_primary" type="button"  onclick="tableToCSV()"><i class="fa fa-file-excel-o" aria-hidden="true">&nbsp;</i> EXPORT TO EXCEL</button>
+                                </div>
+                                <div class="px-2">
+                                    <button class="btn btn_primary" type="button" onclick="generatePDF()"><i class="fa fa-file-pdf-o" aria-hidden="true">&nbsp;</i> EXPORT TO PDF</button>
+                                </div>
+                                <div class="px-2">
+                                    <button class="btn btn_primary" id="btnReset" type="button">RESET</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>             
+            </div>
+        </form>
+        <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mt-0 toBeHiddenOnSuccess" id="divtable">
+        </div>
+        <div class="clearfix"></div>
+       
+
+    </div>
+</div>
+<script type="text/javascript">
+
+    // var today = new Date();
+     //var dd = String(today.getDate()).padStart(2, '0');
+     //var mm = String(today.getMonth() + 1).padStart(2, '0');
+     //var yyyy = today.getFullYear();
+     //today = yyyy + '-' + mm + '-' + dd;
+     $(document).ready(function () {
+         if ($("#rbCardNo").is(":checked")) {
+             $("#lblCustomerId").attr("style", "display:none");
+             $("#lblCardNo").attr("style", "display:block");
+             $("#lblMobileNo").attr("style", "display:none");
+         }
+         else if ($("#rbMobileNo").is(":checked")) {
+             $("#lblCustomerId").attr("style", "display:none");
+             $("#lblCardNo").attr("style", "display:none");
+             $("#lblMobileNo").attr("style", "display:block");
+         }
+         else {
+             $("#lblCustomerId").attr("style", "display:block");
+             $("#lblCardNo").attr("style", "display:none");
+             $("#lblMobileNo").attr("style", "display:none");
+         }
+
+     });
+
+     $(".rbTransactionType").change(function () {
+
+         if ($("#rbCustomerID").is(":checked")) {
+             $("#cardNoDiv").attr("style", "display:none");
+             $("#mobileNoDiv").attr("style", "display:none");
+             $("#customerIdDiv").attr("style", "display:block");
+             $("#lblCustomerId").attr("style", "display:block");
+             $("#lblCardNo").attr("style", "display:none");
+             $("#lblMobileNo").attr("style", "display:none");
+
+         }
+         if ($("#rbCardNo").is(":checked")) {
+             $("#cardNoDiv").attr("style", "display:block");
+             $("#mobileNoDiv").attr("style", "display:none");
+             $("#customerIdDiv").attr("style", "display:none");
+             $("#lblCustomerId").attr("style", "display:none");
+             $("#lblCardNo").attr("style", "display:block");
+             $("#lblMobileNo").attr("style", "display:none");
+         }
+         if ($("#rbMobileNo").is(":checked")) {
+             $("#cardNoDiv").attr("style", "display:none");
+             $("#mobileNoDiv").attr("style", "display:block");
+             $("#customerIdDiv").attr("style", "display:none");
+             $("#lblCustomerId").attr("style", "display:none");
+             $("#lblCardNo").attr("style", "display:none");
+             $("#lblMobileNo").attr("style", "display:block");
+         }
+         $("#CardNo").val("");
+         $("#CustomerID").val("");
+         $("#MobileNo").val("");
+         $("#customerId_error").attr("style", "display:none");
+         $("#customerId_error").html("");
+
+     });
+
+
+
+     $("#btnSearch").on("click", (function (e) {
+          var fromdate = $("#FromDate").val();
+          var todate = $("#ToDate").val();
+          var customerId = "", cardNo = "", mobileNo = "";
+          var flag="Y";
+          if (fromdate == "") {
+              $("#fromDate_error").attr("style", "display:block");
+              $("#fromDate_error").html("Select From Date");
+              flag = "N";
+          }
+          if (todate == "") {
+              $("#toDate_error").attr("style", "display:block");
+              $("#toDate_error").html("Select To Date");
+              flag = "N";
+          }
+          if (fromdate != "" && todate != "") {
+              flag = checkDates("fromDate_error","31");
+          }
+        
+          if ($("#rbCardNo").is(":checked")) {
+              cardNo = $("#CardNo").val();
+              if(cardNo.trim()==""){
+                  $("#customerId_error").attr("style", "display:block");
+                  $("#customerId_error").html("Please enter Card Number");
+                  flag = "N";
+              }
+              else{
+                  if (cardNo.length < 16 || (!(cardNo.match(number))) || cardNo.charAt(0)=="0") {
+                        $("#customerId_error").attr("style", "display:block");
+                        $("#customerId_error").html("Invalid Card Number");
+                        flag = "N";
+                    }
+                    else {
+                        $("#customerId_error").attr("style", "display:none");
+                        $("#customerId_error").html("");
+                    }
+              }
+          }
+          else if ($("#rbMobileNo").is(":checked")) {
+              mobileNo = $("#MobileNo").val();
+              if(mobileNo.trim()==""){
+                  $("#customerId_error").attr("style", "display:block");
+                  $("#customerId_error").html("Please enter Mobile Number");
+                  flag = "N";
+              }
+              else{
+                  if (!mobileNo.match(phoneno)) {
+                        $("#customerId_error").attr("style", "display:block");
+                        $("#customerId_error").html("Invalid Mobile Number");
+                        flag = "N";
+                    }
+                    else {
+                        $("#customerId_error").attr("style", "display:none");
+                        $("#customerId_error").html("");
+                    }
+              }
+
+          }
+          else {
+              customerId = $("#CustomerID").val();
+               if(customerId.trim()==""){
+                  $("#customerId_error").attr("style", "display:block");
+                  $("#customerId_error").html("Please enter Customer ID");
+                  flag = "N";
+              }
+              else{
+                  if (!customerId.match(mappedCustomerId)){
+                        $("#customerId_error").attr("style", "display:block");
+                        $("#customerId_error").html("Invalid Customer ID");
+                        flag = "N";
+                    }
+                    else {
+                        $("#customerId_error").attr("style", "display:none");
+                        $("#customerId_error").html("");
+                    }
+              }
+          }
+          
+
+
+          if (flag == "N")
+              e.preventDefault();
+
+
+          if (flag == "Y") {
+              //customerId = "2000000004";
+              $.ajax({
+                  type: 'POST',  // http method
+                  url: '@Url.Action("GetCustomerTransactionDetails", "JCB")',
+                  data: { CustomerID: customerId, CardNo: cardNo, MobileNo: mobileNo, FromDate: fromdate, ToDate: todate},  // data to submit
+                  success: function (data, status, xhr) {
+                      console.log(data);
+                      if (status == 'success') {
+                           $("#divtable").html(data);
+                            $('html, body').animate({
+                                scrollTop: $("#divtable").offset().top
+                            }, 2000);
+                            $("#CardNo").attr("readonly",true);
+                            $("#CustomerID").attr("readonly",true);
+                            $("#MobileNo").attr("readonly",true);
+                            $("#FromDate").attr("disabled",true);
+                            $("#ToDate").attr("disabled",true);
+                            $(".rbTransactionType").attr("disabled",true);
+                      }
+
+                  },
+              });
+          }
+
+     })
+     );
+     $("#btnReset").click(function () 
+     {
+         window.location.href = '@Url.Action("JCBCustomerTransactionDetails", "JCB")';
+     });
+      $("#CustomerID").on("blur", function () {
+          var customerId = $("#CustomerID").val();
+          if (customerId != "") {
+             if (!customerId.match(mappedCustomerId)) {
+                 $("#customerId_error").attr("style", "display:block");
+                 $("#customerId_error").html("Invalid Customer ID");
+
+             }
+             else{
+                 $("#customerId_error").attr("style", "display:none");
+                 $("#customerId_error").html("");
+             }
+          }
+          else{
+              $("#customerId_error").attr("style", "display:block");
+              $("#customerId_error").html("Please enter Customer ID");
+          }
+      });
+      $("#MobileNo").on("blur", function () {
+          var mobileNo = $("#MobileNo").val();
+          if (mobileNo != "") {
+              if (!mobileNo.match(phoneno)) {
+                  $("#customerId_error").attr("style", "display:block");
+                  $("#customerId_error").html("Invalid Mobile Number");
+              }
+              else{
+                  $("#customerId_error").attr("style", "display:none");
+                  $("#customerId_error").html("");
+              }
+          }
+          else{
+              $("#customerId_error").attr("style", "display:block");
+              $("#customerId_error").html("Please enter Mobile Number");
+          }
+      });
+      $("#CardNo").on("blur", function () {
+          var cardNo = $("#CardNo").val();
+          if (cardNo != "") {
+              if (cardNo.length < 16 || (!(cardNo.match(number))) || cardNo.charAt(0)=="0") {
+                  $("#customerId_error").attr("style", "display:block");
+                  $("#customerId_error").html("Invalid Card Number");
+              }
+              else{
+                  $("#customerId_error").attr("style", "display:none");
+                  $("#customerId_error").html("");
+              }
+          }
+          else{
+              $("#customerId_error").attr("style", "display:block");
+              $("#customerId_error").html("Please enter Card Number");
+          }
+      });
+</script>

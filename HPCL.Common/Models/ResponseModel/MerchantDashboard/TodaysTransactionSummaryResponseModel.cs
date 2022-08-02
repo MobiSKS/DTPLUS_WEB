@@ -1,10 +1,10 @@
 ﻿using HPCL.Common.Models.CommonEntity;
-using HPCL.Common.Models.ResponseModel.CommonResponse;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using HPCL.Common.Models.ResponseModel.CommonResponse;
 
 namespace HPCL.Common.Models.ResponseModel.MerchantDashboard
 {
