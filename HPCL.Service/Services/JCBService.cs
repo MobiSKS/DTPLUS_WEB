@@ -1287,6 +1287,27 @@ namespace HPCL.Service.Services
             transactionResponse.GetTransactionsDetailSummary.AddRange(CustomerTransactionDetails);
             return transactionResponse;
         }
+        public async Task<JCBCustomerAdvancedSearchModel> JCBCustomerAdvancedSearch()
+        {
+            JCBCustomerAdvancedSearchModel model = new JCBCustomerAdvancedSearchModel();
+
+            model.lstCustomerType.AddRange(await _commonActionService.GetOtherCustomerTypeDropdown());
+            model.CustomerType = 956;
+
+            model.CustomerZonalOfficeMdl.AddRange(await _commonActionService.GetZonalOfficebySBUType("0"));
+            model.OptionCustomerName = "YES";
+            model.OptionFormNumber = "YES";
+            model.OptionCustomerId = "YES";
+            model.OptionCustomerType = "YES";
+            model.OptionZonalOffice = "YES";
+            model.OptionRegionalOffice = "YES";
+            model.OptionPincode = "YES";
+            model.OptionResult = "YES";
+
+            model.Remarks = "";
+
+            return model;
+        }
 
     }
 }

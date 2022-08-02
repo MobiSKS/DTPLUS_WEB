@@ -329,7 +329,7 @@ namespace HPCL.Service.Services
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
                 UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
-                CustomerId = entity.CustomerId ?? "",
+                CustomerId = entity.CustomerId,
                 FromDate = fromDate,
                 ToDate = toDate
             };
