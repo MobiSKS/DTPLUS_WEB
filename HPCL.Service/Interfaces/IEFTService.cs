@@ -1,4 +1,5 @@
-﻿using HPCL.Common.Models.ViewModel.EFT;
+﻿using HPCL.Common.Models.CommonEntity;
+using HPCL.Common.Models.ViewModel.EFT;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,7 @@ namespace HPCL.Service.Interfaces
 {
     public interface IEFTService
     {
-        Task<CCMSRechargeSummaryViewModel> CCMSRechargethroughEFT(CCMSRechargethroughEFTModel entity);
+        Task<List<SuccessResponse>> CCMSRechargethroughEFT(CCMSRechargethroughEFTModel entity);
+        Task<CCMSRechargeSummaryViewModel> EFTRechargeDetailValidation(CCMSRechargethroughEFTModel entity);
     }
 }

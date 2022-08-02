@@ -759,6 +759,28 @@ namespace HPCL.Service.Services
             ManageAggregatorNewUserModel searchList = obj.ToObject<ManageAggregatorNewUserModel>();
             return searchList;
         }
+        public async Task<List<SuccessResponse>> UpdateAggregatorUser([FromBody] AddNewAggregatorUser entity)
+        {
+            var forms = new AddNewAggregatorUser
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserName = entity.UserName,
+                Email = entity.Email,
+                CreatedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
 
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(forms), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.addaggregatoruser);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<SuccessResponse> responseMsg = jarr.ToObject<List<SuccessResponse>>();
+            return responseMsg;
+        }
     }
 }
