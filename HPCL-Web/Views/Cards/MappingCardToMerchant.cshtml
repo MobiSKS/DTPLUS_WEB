@@ -146,23 +146,28 @@
             return true;
         }
 
-         $.ajax({
-                type: 'POST',  // http method
-                url: '@Url.Action("GetCardList", "Cards")',
-                dataType: "json",
-             success: function (data, status, xhr) {
+        var loginType = '@Context.Session.GetString("LoginType")';
 
-                 console.log(data);
+        if (loginType == "Customer") {
 
-                 $.each(data.cardList, function (i, option) {
-                     $("<option/>").val(option.cardNo).text(option.cardNo).appendTo(".cardListCls");
-                 });
-                 $(".cardListCls")[0].sumo.reload();
-             },
-             error: function (jqXhr, textStatus, errorMessage) {
-                 alert("Error Populating Cards");
-             }
-         });
+            $.ajax({
+                    type: 'POST',  // http method
+                    url: '@Url.Action("GetCardList", "Cards")',
+                    dataType: "json",
+                 success: function (data, status, xhr) {
+
+                     console.log(data);
+
+                     $.each(data.cardList, function (i, option) {
+                         $("<option/>").val(option.cardNo).text(option.cardNo).appendTo(".cardListCls");
+                     });
+                     $(".cardListCls")[0].sumo.reload();
+                 },
+                 error: function (jqXhr, textStatus, errorMessage) {
+                     alert("Error Populating Cards");
+                 }
+             });
+         }
     });
 
     $("#searchFire").on("click", (function (e) {

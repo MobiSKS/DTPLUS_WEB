@@ -50,5 +50,8 @@ namespace HPCL.Service.Interfaces
         Task<DICVManageProfile> DICVManageProfile();
         Task<List<DICVCustomerProfileResponse>> BindCustomerDetailsForSearch(string CardNo, string Email, string CustomerId, string MobileNo);
         Task<InsertResponse> UpdateDICVCustomerProfile(string str);
+        Task<DICVCustomerBalanceInfoModel> DICVBalanceInfo();
+        Task<GetDICVCustomerBalanceInfoResponse> GetCustomerBalanceInfo(string CustomerID);
+        Task<DICVCustomerTransactionResponseModel> GetCustomerTransactionDetails(string CustomerID, string CardNo, string MobileNo, string FromDate, string ToDate);
     }
 }

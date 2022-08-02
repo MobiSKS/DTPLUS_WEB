@@ -27,6 +27,10 @@ namespace HPCL_Web.Controllers
         {
             return View(SessionMenuModel.menuList);
         }
+        public IActionResult EFTIndex()
+        {
+            return View();
+        }
         public async Task<IActionResult> SearchCustomerandCardForm()
         {
             SearchCustomerandCardFormModel SearchCustomerandCardFormModel = new SearchCustomerandCardFormModel();

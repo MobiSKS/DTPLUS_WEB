@@ -289,5 +289,14 @@ namespace HPCL_Web.Controllers
             ModelState.Clear();
             return Json(authStatus);
         }
+
+        [HttpPost]
+        public async Task<JsonResult> PostAuthForCreditPouchForParentCustomer(string postAuthCust, string CreditPouchType)
+        {
+            var authStatus = await _commonActionService.PostAuthForCreditPouchForParentCustomer(postAuthCust, CreditPouchType);
+
+            ModelState.Clear();
+            return Json(authStatus);
+        }
     }
 }

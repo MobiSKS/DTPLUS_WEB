@@ -163,7 +163,7 @@
              var doc = new jsPDF({
                 orientation: 'l', // landscape
                 unit: 'pt', // points, pixels won't work properly
-                format: [740, 680] // set needed dimensions for any element
+                format: [720, 680] // set needed dimensions for any element
             })
 
              var htmlstring = '';
@@ -180,8 +180,10 @@
              };
              doc.setFontSize(14);
              var y = 20;
-             doc.setLineWidth(5);
-             
+             //doc.setLineWidth(5);
+             doc.setLineWidth(1);
+            
+
              var base64HPlogoImg=addImagetoPDF("img1");
              var base64DTlogoImg=addImagetoPDF("img2");
              doc.addImage(base64HPlogoImg,"jpg", 100, 20,45, 50);//doc.addImage(imgData, 'image format', x, y, w, h, 'alias');
@@ -233,7 +235,7 @@
                 }
              })
               finalY = doc.lastAutoTable.finalY
-
+            
                doc.autoTable({
                 html: '#TransactionDetails',
                 startY: finalY + 20,
@@ -246,6 +248,16 @@
                     minCellHeight: 10
                 }
              })
+             const pageCount = doc.internal.getNumberOfPages();
+             doc.setPage(pageCount);
+             finalY = doc.lastAutoTable.finalY
+             if(finalY>=pageHeight)
+                doc.addPage();
+             doc.rect(540, 600, 150, 50);
+             doc.setFontSize(8);
+              doc.text("Authorized signatory",575,640)
+                    
+                    
              doc.save('CreditSaleStatement.pdf');
 
         }

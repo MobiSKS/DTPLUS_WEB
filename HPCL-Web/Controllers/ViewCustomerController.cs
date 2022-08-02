@@ -1,5 +1,7 @@
 ﻿using HPCL.Common.Helper;
 using HPCL.Common.Models.ViewModel.Customer;
+using HPCL.Service;
+using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -15,12 +17,15 @@ namespace HPCL_Web.Controllers
     public class ViewCustomerController : Controller
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IRequestService _requestService;
+        private readonly ICommonActionService _commonActionService;
 
-        public ViewCustomerController(IHttpContextAccessor httpContextAccessor)
+        public ViewCustomerController(IHttpContextAccessor httpContextAccessor, IRequestService requestServices, ICommonActionService commonActionService)
         {
             _httpContextAccessor = httpContextAccessor;
+            _requestService = requestServices;
+            _commonActionService = commonActionService;
         }
-
         public async Task<IActionResult> ViewCustomerSearch()
         {
             ViewCustomerSearch ObjViewCustomer = new ViewCustomerSearch();
@@ -28,6 +33,7 @@ namespace HPCL_Web.Controllers
             var searchBody = new ViewCustomerSearch
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                //UserId = CommonBase.userid,
                 UserAgent = CommonBase.useragent,
                 UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 CustomerID = "",
@@ -72,7 +78,7 @@ namespace HPCL_Web.Controllers
 
             var searchBody = new ViewCustomerSearch
             {
-                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                UserId = CommonBase.userid,
                 UserAgent = CommonBase.useragent,
                 UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
                 CustomerID = "",

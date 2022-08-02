@@ -298,6 +298,30 @@ namespace HPCL_Web.Controllers
             var result = await _dicvService.UpdateDICVCustomerProfile(str);
             return Json(new { result = result });
         }
+        public async Task<IActionResult> DICVBalanceInfo()
+        {
+            var model = await _dicvService.DICVBalanceInfo();
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> GetCustomerBalanceInfo(string CustomerID)
+        {
+            var customerBalanceResponse = await _dicvService.GetCustomerBalanceInfo(CustomerID);
+
+            return Json(customerBalanceResponse);
+        }
+        public IActionResult DICVCustomerTransactionDetails()
+        {
+            var model = new DICVCustomerTransactionViewModel();
+            return View(model);
+        }
+        [HttpPost]
+        public async Task<IActionResult> GetCustomerTransactionDetails(string CustomerID, string CardNo, string MobileNo, string FromDate, string ToDate)
+        {
+            var models = await _dicvService.GetCustomerTransactionDetails(CustomerID, CardNo, MobileNo, FromDate, ToDate);
+            return PartialView("~/Views/DICV/_DICVCustomerTransactionTblView.cshtml", models);
+        }
 
     }
 }

@@ -35,7 +35,7 @@ namespace HPCL.Common.Models.ViewModel.MerchantDashboard
 
         public List<KeyEventAndFigureResponseModel> keyEVentsAndFigureResponseModels { get; set; }
 
-     
+        public List<NotificationResponse> NotificationResponseModels { get; set; }
 
 
     }

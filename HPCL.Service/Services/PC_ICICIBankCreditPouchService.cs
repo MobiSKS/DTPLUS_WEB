@@ -260,7 +260,7 @@ namespace HPCL.Service.Services
                 PlanTypeId = Convert.ToInt32(planTypeId),
                 ReferenceNo = null,
                 CustomerRemarks = "Request By Customer",
-                ActionType = 1,
+                ActionType = 2,
                 RequestedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
             };
 

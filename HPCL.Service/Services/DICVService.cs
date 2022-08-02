@@ -1122,11 +1122,82 @@ namespace HPCL.Service.Services
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(insertServiceBody), Encoding.UTF8, "application/json");
-            var response = await _requestService.CommonRequestService(content, WebApiUrl.requestUpdateDicvCustomer);
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.dicvUpdateCustomer);
 
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
             InsertResponse result = obj.ToObject<InsertResponse>();
             return result;
+        }
+        public async Task<DICVCustomerBalanceInfoModel> DICVBalanceInfo()
+        {
+            DICVCustomerBalanceInfoModel custMdl = new DICVCustomerBalanceInfoModel();
+            custMdl.Remarks = "";
+            return custMdl;
+        }
+
+        public async Task<GetDICVCustomerBalanceInfoResponse> GetCustomerBalanceInfo(string CustomerID)
+        {
+            GetDICVCustomerBalanceInfoResponse customerBalanceInfo = new GetDICVCustomerBalanceInfoResponse();
+
+            var Request = new DICVCustomerProfileSearchRequest()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                CustomerID = CustomerID
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(Request), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getDicvCustomerBalanceInfo);
+
+            customerBalanceInfo = JsonConvert.DeserializeObject<GetDICVCustomerBalanceInfoResponse>(response);
+
+            return customerBalanceInfo;
+        }
+        public async Task<DICVCustomerTransactionResponseModel> GetCustomerTransactionDetails(string CustomerID, string CardNo, string MobileNo, string FromDate, string ToDate)
+        {
+            DICVCustomerTransactionResponseModel transactionResponse = new DICVCustomerTransactionResponseModel();
+            if (!string.IsNullOrEmpty(FromDate) && !string.IsNullOrEmpty(FromDate))
+            {
+                FromDate = await _commonActionService.changeDateFormat(FromDate);
+                ToDate = await _commonActionService.changeDateFormat(ToDate);
+            }
+            else
+            {
+                FromDate = DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd");
+                ToDate = DateTime.Now.ToString("yyyy-MM-dd");
+            }
+            var Request = new DICVCustomerTransactionViewModel()
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                CustomerID = CustomerID,
+                CardNo = CardNo,
+                MobileNo = MobileNo,
+                FromDate = FromDate,
+                ToDate = ToDate
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(Request), Encoding.UTF8, "application/json");
+
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.getDicvTransactionsSummary);
+            JObject jObj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            transactionResponse = JsonConvert.DeserializeObject<DICVCustomerTransactionResponseModel>(response);
+            var transactionjObj = jObj["Data"].Value<JObject>();
+            var summaryListjArr = transactionjObj["GetTransactionsSaleSummary"].Value<JArray>();
+            var detailListjArr = transactionjObj["GetTransactionsDetailSummary"].Value<JArray>();
+
+            List<DICVCustomerTransactionSummary> CustomerTransactionSummary =
+                summaryListjArr.ToObject<List<DICVCustomerTransactionSummary>>();
+
+            List<DICVCustomerTransactionDetails> CustomerTransactionDetails =
+                detailListjArr.ToObject<List<DICVCustomerTransactionDetails>>();
+
+            transactionResponse.GetTransactionsSaleSummary.AddRange(CustomerTransactionSummary);
+            transactionResponse.GetTransactionsDetailSummary.AddRange(CustomerTransactionDetails);
+            return transactionResponse;
         }
 
     }
