@@ -1320,6 +1320,12 @@ namespace HPCL.Service.Services
             bool isPincodeExist = false;
             bool isMobileExist = false;
 
+            if(!string.IsNullOrEmpty(arrs[0].CustomerName))
+            {
+                isCustomerNameExist = true;
+            }
+            //if(arrs[0].opti)
+
             var insertServiceBody = new JCBCustomerAdvancedSearchRequest
             {
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
