@@ -14,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -314,9 +315,9 @@ namespace HPCL.Service.Services
 
             return obj;
         }
-        public async Task<UpdateKycResponse> AproveCustomer(string CustomerReferenceNo, string Comments, string Approvalstatus)
+        public async Task<UpdateKycResponse> AproveCustomer(string CustomerReferenceNo, string Comments, string Approvalstatus, string formNumber)
         {
-            var approvalBody = new AproveCustomerRequest()
+            var approvalBody = new AproveAggregatorCustomerRequest()
             {
                 UserAgent = CommonBase.useragent,
                 UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
@@ -324,7 +325,8 @@ namespace HPCL.Service.Services
                 CustomerReferenceNo = CustomerReferenceNo,
                 Comments = Comments,
                 Approvalstatus = Approvalstatus,
-                ApprovedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId")
+                ApprovedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                FormNumber = BigInteger.Parse(formNumber)
             };
 
             StringContent content = new StringContent(JsonConvert.SerializeObject(approvalBody), Encoding.UTF8, "application/json");

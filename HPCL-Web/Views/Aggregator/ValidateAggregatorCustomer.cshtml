@@ -1040,7 +1040,7 @@
                                 y = y + 1;
                                 <tr>
                                     <td>@y</td>
-                                    <td>@item.FormNumber</td>
+                                    <td class="formNumberVal">@item.FormNumber</td>
                                     
                                     <td>@item.CustomerName</td>
                                     <td>@item.CustomerAddress</td>
@@ -1511,6 +1511,16 @@
           //today = yyyy + '-' + mm + '-' + dd;
           today = dd + '-' + mm + '-' + yyyy;
 
+
+          var formNumber;
+
+          $("#CustomerSearch").on('click', '.CardNumber', function (e) {
+
+            currentRow = $(this).closest("tr");
+            formNumber = currentRow.find('.formNumberVal').text();
+
+          });
+
           function ApproveCustomer(approveReject)
           {
               console.log(approveReject);
@@ -1537,7 +1547,7 @@
                   url: "@Url.Action("AproveCustomer", "Aggregator")",
                   type: "POST",
                   dataType: "JSON",
-                  data: { CustomerReferenceNo: custRefNo, Comments: remarks, Approvalstatus: approveReject },
+                  data: { CustomerReferenceNo: custRefNo, Comments: remarks, Approvalstatus: approveReject, formNumber:formNumber },
                   success: function (res) {
                       //if (serviceId.checked == true) {
                       //    $('input[name *= "' + serviceId.id + '"]').prop('checked', true);

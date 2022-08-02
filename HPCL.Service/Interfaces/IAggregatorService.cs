@@ -17,7 +17,7 @@ namespace HPCL.Service.Interfaces
         Task<ManageAggregatorViewModel> ManageAggregator(ManageAggregatorViewModel cust);
         Task<ValidateAggregatorCustomerModel> ValidateAggregatorCustomer(ValidateAggregatorCustomerModel entity);
         Task<JObject> ViewCustomerDetails(string FormNumber);
-        Task<UpdateKycResponse> AproveCustomer(string CustomerReferenceNo, string Comments, string Approvalstatus);
+        Task<UpdateKycResponse> AproveCustomer(string CustomerReferenceNo, string Comments, string Approvalstatus, string formNumber);
         Task<ManageAggregatorViewModel> UpdateAggregatorCustomer(string FormNumber);
         Task<ManageAggregatorViewModel> UpdateAggregatorCustomer(ManageAggregatorViewModel cust);
         Task<UploadDocResponseBody> UploadDoc(string FormNumber);
