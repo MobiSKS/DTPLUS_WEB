@@ -215,7 +215,7 @@
                             <div class="d-flex align-items-center flex-wrap">
                                 <div class="col-lg-8 col-12">
                                     <div class="d-flex align-items-center flex-wrap mb-3">
-                                        <label class="font-weight-normal col-md-4 col-12">PinCode : </label>
+                                        <label class="font-weight-normal col-md-4 col-12">PIN Code : </label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
                                                 @Html.TextBoxFor(m => m.Pincode, new { @class = "form-control", maxlength = "6", onkeypress = "return isNumberKey(event)" })
@@ -492,24 +492,155 @@
             });
         });
 
-         $("#btnSearch").click(function () {
+  $("#btnSearch").click(function () {
              //debugger;
              
-                var customerName = $("#CustomerName").val();
-                var optionCustomerName = $("input[name='OptionCustomerName']:checked").val();
-                var formNumber = $("#FormNumber").val();
-                var optionFormNumber = $("input[name='OptionFormNumber']:checked").val();
-                var customerId = $("#CustomerId").val();
-                var optionCustomerId = $("input[name='OptionCustomerId']:checked").val();
-                var customerType = $("#CustomerType").val();
-                var optionCustomerType = $("input[name='OptionCustomerId']:checked").val();
-                var zonalOfficeId = $("#ZonalOfficeId").val();
-                var optionZonalOffice = $("input[name='OptionZonalOffice']:checked").val();
-                var RegionalOfficeId = $("#RegionalOfficeID").val();
-                var optionRegionalOffice = $("input[name='OptionRegionalOffice']:checked").val();
-                var Pin = $("#Pincode").val();
-                var optionPincode = $("input[name='OptionPincode']:checked").val();
-                var MobileNo = $("#MobileNo").val();
+        var customerName = $("#CustomerName").val().trim();
+        var optionCustomerName = $("input[name='OptionCustomerName']:checked").val();
+        var formNumber = $("#FormNumber").val();
+        var optionFormNumber = $("input[name='OptionFormNumber']:checked").val();
+        var customerId = $("#CustomerId").val();
+        var optionCustomerId = $("input[name='OptionCustomerId']:checked").val();
+        var customerType = $("#CustomerType").val();
+        var optionCustomerType = $("input[name='OptionCustomerId']:checked").val();
+        var zonalOfficeId = $("#ZonalOfficeId").val();
+        var optionZonalOffice = $("input[name='OptionZonalOffice']:checked").val();
+        var RegionalOfficeId = $("#RegionalOfficeID").val();
+        var optionRegionalOffice = $("input[name='OptionRegionalOffice']:checked").val();
+        var Pin = $("#Pincode").val();
+        var optionPincode = $("input[name='OptionPincode']:checked").val();
+        var MobileNo = $("#MobileNo").val();
+
+        var flag = "Y";
+
+        if(customerId != "")
+        {
+            if (!customerId.match(mappedCustomerId)) 
+            {
+                $("#CustomerIdErrMsg").attr("style", "display:block");
+                $("#CustomerIdErrMsg").html("Invalid Customer ID");
+                flag = "N";
+            }
+            else
+            {
+                $("#CustomerIdErrMsg").html("");
+            }
+        }
+        else
+        {
+            $("#CustomerIdErrMsg").html("");
+        }
+
+        if (MobileNo != "") 
+        {
+            if (!MobileNo.match(phoneno)) 
+            {
+                $("#MobileNoErrMsg").attr("style", "display:block");
+                $("#MobileNoErrMsg").html("Invalid Mobile Number");
+                flag = "N";
+            }
+            else
+            {
+                $("#MobileNoErrMsg").attr("style", "display:none");
+                $("#MobileNoErrMsg").html("");
+            }
+        }
+        else
+        {
+            $("#MobileNoErrMsg").html("");
+        }
+
+
+        if(formNumber != "")
+        {
+             if (formNumber.substring(0, 1) == "0") 
+             {
+                $("#FormNumberErrMsg").attr("style", "display:block");
+                $("#FormNumberErrMsg").html("Invalid Form Number. Min-Max 10 digits");
+                flag = "N";
+            }
+            else if (formNumber.length < 10 || formNumber.length > 10) 
+            {
+                $("#FormNumberErrMsg").attr("style", "display:block");
+                $("#FormNumberErrMsg").html("Invalid Form Number. Min-Max 10 digits");
+                flag = "N";
+            }
+            else if (!(formNumber.match(number))) 
+            {
+                $("#FormNumberErrMsg").attr("style", "display:block");
+                $("#FormNumberErrMsg").html("Invalid Form Number. Min-Max 10 digits");
+                flag = "N";
+            }
+            else
+            {
+                $("#FormNumberErrMsg").html("");
+            }
+        }
+        else
+        {
+            $("#FormNumberErrMsg").html("");
+        }
+
+        if (Pin != "") 
+        {
+            if (Pin.substring(0, 1) == "0") 
+            {
+                $("#PincodeErrMsg").attr("style", "display:block");
+                $("#PincodeErrMsg").html("Invalid PIN Code. Min-Max 6 digits");
+                flag = "N";
+            }
+            else if (Pin.length < 6 || Pin.length > 6) 
+            {
+                $("#PincodeErrMsg").attr("style", "display:block");
+                $("#PincodeErrMsg").html("Invalid PIN Code. Min-Max 6 digits");
+                flag = "N";
+            }
+            else if (!Pin.match(pincode)) 
+            {
+                $("#PincodeErrMsg").attr("style", "display:block");
+                $("#PincodeErrMsg").html("Invalid PIN Code. Min-Max 6 digits");
+                flag = "N";
+            }
+            else 
+            {
+                $("#PincodeErrMsg").html("");    
+            }
+        }
+        else
+        {
+            $("#PincodeErrMsg").html("");
+        }
+
+        if (customerName != "") 
+        {
+            if (!customerName.match(nameWithSpaceCheck)) 
+            {
+                $("#CustomerNameMsg").attr("style", "display:block");
+                $("#CustomerNameMsg").html("Invalid Customer Name");
+                flag = "N";
+            }
+            else if (!isNaN(customerName)) 
+            {
+                $("#CustomerNameMsg").attr("style", "display:block");
+                $("#CustomerNameMsg").html("Invalid Customer Name");
+                flag = "N";
+            }
+            else 
+            {
+                $("#CustomerNameMsg").html("");
+            }
+        }
+        else
+        {
+            $("#CustomerNameMsg").html("");
+        }
+
+
+        if (flag == "N")
+        {
+            return false;
+        }
+
 
                 var getAllData = [];
 
@@ -546,22 +677,159 @@
                          $('html, body').animate({
                              scrollTop: $("#viewALOTCCardDealerAllocationTbl").offset().top
                          }, 2000);
-                         //$("#DealerCode").prop('readonly', true);
                      }
                      else
                      {
                          console.log(v);
-                         //$("#DealerCode").prop('readonly', false);
                      }
                  },
                  error: function (jqXhr, textStatus, errorMessage) 
                  {
                      alert("Error");
-                    //$("#DealerCode").prop('readonly', false);
                  }
              });
 
 
-         });
+   });
+
+ $("#MobileNo").on("blur", function () 
+ {
+    var MobileNo = $("#MobileNo").val();
+
+    if (MobileNo != "") 
+    {
+        if (!MobileNo.match(phoneno)) 
+        {
+            $("#MobileNoErrMsg").attr("style", "display:block");
+            $("#MobileNoErrMsg").html("Invalid Mobile Number");
+        }
+        else
+        {
+            $("#MobileNoErrMsg").attr("style", "display:none");
+            $("#MobileNoErrMsg").html("");
+        }
+    }
+    else
+    {
+        $("#MobileNoErrMsg").html("");
+    }
+
+});
+
+$("#CustomerId").on("blur", function () 
+{
+    var customerId = $("#CustomerId").val();
+
+    if(customerId != "")
+    {
+        if (!customerId.match(mappedCustomerId)) 
+        {
+            $("#CustomerIdErrMsg").attr("style", "display:block");
+            $("#CustomerIdErrMsg").html("Invalid Customer ID");
+        }
+        else
+        {
+            $("#CustomerIdErrMsg").html("");
+        }
+    }
+    else
+    {
+        $("#CustomerIdErrMsg").html("");
+    }
+
+});
+
+$("#FormNumber").on("blur", function () 
+{
+    var formNumber = $("#FormNumber").val().trim();
+
+    if(formNumber != "")
+    {
+         if (formNumber.substring(0, 1) == "0") 
+         {
+            $("#FormNumberErrMsg").attr("style", "display:block");
+            $("#FormNumberErrMsg").html("Invalid Form Number. Min-Max 10 digits");
+        }
+        else if (formNumber.length < 10 || formNumber.length > 10) 
+        {
+            $("#FormNumberErrMsg").attr("style", "display:block");
+            $("#FormNumberErrMsg").html("Invalid Form Number. Min-Max 10 digits");
+        }
+        else if (!(formNumber.match(number))) 
+        {
+            $("#FormNumberErrMsg").attr("style", "display:block");
+            $("#FormNumberErrMsg").html("Invalid Form Number. Min-Max 10 digits");
+        }
+        else
+        {
+            $("#FormNumberErrMsg").html("");
+        }
+    }
+    else
+    {
+        $("#FormNumberErrMsg").html("");
+    }
+
+});
+
+$("#Pincode").on("blur", function () {
+    //debugger;
+    var pincode = $("#Pincode").val().trim();
+
+    if (pincode != "") 
+    {
+        if (pincode.substring(0, 1) == "0") 
+        {
+            $("#PincodeErrMsg").attr("style", "display:block");
+            $("#PincodeErrMsg").html("Invalid PIN Code. Min-Max 6 digits");
+        }
+        else if (pincode.length < 6 || pincode.length > 6) 
+        {
+            $("#PincodeErrMsg").attr("style", "display:block");
+            $("#PincodeErrMsg").html("Invalid PIN Code. Min-Max 6 digits");
+        }
+        else if (!pincode.match(pincode)) 
+        {
+            $("#PincodeErrMsg").attr("style", "display:block");
+            $("#PincodeErrMsg").html("Invalid PIN Code. Min-Max 6 digits");
+        }
+        else 
+        {
+            $("#PincodeErrMsg").html("");    
+        }
+    }
+    else
+    {
+        $("#PincodeErrMsg").html("");
+    }
+
+});
+
+$("#CustomerName").on("blur", function () 
+{
+    //debugger;
+    var individualOrgName = document.getElementById("CustomerName").value.trim();
+    if (individualOrgName != "") 
+    {
+        if (!individualOrgName.match(nameWithSpaceCheck)) 
+        {
+            $("#CustomerNameMsg").attr("style", "display:block");
+            $("#CustomerNameMsg").html("Invalid Customer Name");
+        }
+        else if (!isNaN(individualOrgName)) 
+        {
+            $("#CustomerNameMsg").attr("style", "display:block");
+            $("#CustomerNameMsg").html("Invalid Customer Name");
+        }
+        else 
+        {
+            $("#CustomerNameMsg").html("");
+        }
+    }
+    else
+    {
+        $("#CustomerNameMsg").html("");
+    }
+});
 
 </script>
