@@ -195,8 +195,9 @@ namespace HPCL_Web.Controllers
                                 HttpContext.Session.SetInt32("CustomerSbuTypeId", loginRes[0].SBUTypeId);
                                 HttpContext.Session.SetString("CustomerSbuTypeName", loginRes[0].SBUName ?? "");
 
-                                return RedirectToAction("CustomerDashboard", "CustomerDashboard", new { CustomerId = HttpContext.Session.GetString("UserId").ToString() });
+                                HttpContext.Session.SetString("UserSubType", loginRes[0].UserSubType ?? "");
 
+                                return RedirectToAction("CustomerDashboard", "CustomerDashboard", new { CustomerId = HttpContext.Session.GetString("UserId").ToString() });
                             }
                             else if (loginRes[0].LoginType == "Merchant")
                             {
