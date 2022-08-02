@@ -104,7 +104,7 @@
                                         @Html.DisplayName("Customer ID")
                                     </th>
                                     <th>
-                                        @Html.DisplayName("Name On Card")
+                                        @Html.DisplayName("Name on Card")
                                     </th>
                                     <th>
                                         @Html.DisplayName("Customer Name")
@@ -1060,7 +1060,7 @@
         {
             document.getElementById("CustomerSearch").style.display = "none";
             $("#noRecord").html("");
-            $("#noRecord").append("<span>Please enter either Card Number or Email Or Customer ID or Mobile Number</span>");
+            $("#noRecord").append("<span>Please enter the Card Number or Email or Customer ID or Mobile Number.</span>");
             document.getElementById("noRecord").style.display = "block";
             flag = "N";
         }
@@ -1095,6 +1095,12 @@
                 $("#cardNo_error").html("Invalid Card Number");
                 flag = "N";
             }
+            else if (cardNo.substring(0, 1) == "0")
+            {
+                $("#cardNo_error").attr("style", "display:block");
+                $("#cardNo_error").html("Invalid Card Number");
+                flag = "N";
+            }
             else
             {
                 $("#cardNo_error").attr("style", "display:none");
@@ -1108,7 +1114,7 @@
 
         if (mobileNo != "") 
         {
-            if (!mobileNo.match(phoneno) ) 
+            if (!mobileNo.match(phoneno)) 
             {
                 $("#mobileNo_error").attr("style", "display:block");
                 $("#mobileNo_error").html("Invalid Mobile Number");
@@ -1199,6 +1205,10 @@ debugger;
                           $('#CustomerSearch table').append(rows);
 
                           document.getElementById("CustomerSearch").style.display = "block";
+                          $("#CardNo").prop('readonly', true);
+                          $("#Email").prop('readonly', true);
+                          $("#CustomerId").prop('readonly', true);
+                          $("#MobileNo").prop('readonly', true);
                       }
                       else
                       {
@@ -1206,6 +1216,10 @@ debugger;
                             $("#noRecord").html("");
                             $("#noRecord").append("<span>No Record Found</span>");
                             document.getElementById("noRecord").style.display = "block";
+                            $("#CardNo").prop('readonly', true);
+                            $("#Email").prop('readonly', true);
+                            $("#CustomerId").prop('readonly', true);
+                            $("#MobileNo").prop('readonly', true);
                       }
 
                   },
@@ -1675,6 +1689,7 @@ debugger;
                               document.getElementById('CustomerSignedOn').value=res[i].signedOn;
                               $('#IndividualOrgName').val(res[i].individualOrgName);
                               $('#CustomerNameOnCard').val(res[i].nameOnCard);
+                              document.getElementById("salutaion_error").innerHTML = "";
                               document.getElementById("individualName_error").innerHTML = "";
                               document.getElementById("nameOnCard_error").innerHTML = "";
                               document.getElementById("salutaion_error").innerHTML = "";
@@ -2334,17 +2349,17 @@ $("#IndividualOrgName").on("blur", function () {
     var individualOrgName = document.getElementById("IndividualOrgName").value.trim();
     if (individualOrgName == "") 
     {
-        document.getElementById("individualName_error").innerHTML = "Individual/Org. Name is required";
+        document.getElementById("individualName_error").innerHTML = "Customer/Org. Name is required";
         return (false);
     }
     else if (!isNaN(document.getElementById("IndividualOrgName").value.trim())) 
     {
-        document.getElementById("individualName_error").innerHTML = "Invalid Individual/Org. Name";
+        document.getElementById("individualName_error").innerHTML = "Invalid Customer/Org. Name";
         return false;
     }
     else if (!document.getElementById("IndividualOrgName").value.match(nameWithSpaceCheck)) 
     {
-        document.getElementById("individualName_error").innerHTML = "Invalid Individual/Org. Name";
+        document.getElementById("individualName_error").innerHTML = "Invalid Customer/Org. Name";
         return false;
     }
     else 
@@ -2397,17 +2412,17 @@ $("#CustomerNameOnCard").on("blur", function () {
 
         if (document.getElementById("IndividualOrgName").value == "") 
         {
-            document.getElementById("individualName_error").innerHTML = "Individual/Org. Name is required";
+            document.getElementById("individualName_error").innerHTML = "Customer/Org. Name is required";
             ret = false;
         }
         else if (!isNaN(document.getElementById("IndividualOrgName").value.trim())) 
         {
-            document.getElementById("individualName_error").innerHTML = "Invalid Individual/Org. Name";
+            document.getElementById("individualName_error").innerHTML = "Invalid Customer/Org. Name";
             ret = false;
         }
         else if (!document.getElementById("IndividualOrgName").value.match(nameWithSpaceCheck)) 
         {
-            document.getElementById("individualName_error").innerHTML = "Invalid Individual/Org. Name";
+            document.getElementById("individualName_error").innerHTML = "Invalid Customer/Org. Name";
             ret = false;
         }
         else 
@@ -3338,6 +3353,11 @@ function GetSalesArea(regionId,customerSalesAreaID) {
                    $("#cardNo_error").attr("style", "display:block");
                    $("#cardNo_error").html("Invalid Card Number");
                }
+               else if (cardNo.substring(0, 1) == "0")
+               {
+                   $("#cardNo_error").attr("style", "display:block");
+                   $("#cardNo_error").html("Invalid Card Number");
+               }
                else
                {
                   $("#cardNo_error").attr("style", "display:none");
@@ -3395,6 +3415,15 @@ $("#Email").on("blur", function ()
         document.getElementById("EmailErrMsg").innerHTML = "";
     }
 
+});
+
+$("#IndividualOrgNameTitle").change(function () 
+{
+    var id = this.value;
+
+    if (id != -1) {
+        $("#salutaion_error").html("");
+    }
 });
 
 </script>
