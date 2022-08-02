@@ -353,6 +353,11 @@ namespace HPCL_Web.Controllers
             var models = await _jcbService.GetCustomerTransactionDetails(CustomerID, CardNo, MobileNo, FromDate, ToDate);
             return PartialView("~/Views/JCB/_JCBCustomerTransactionTblView.cshtml", models);
         }
+        public async Task<IActionResult> JCBCustomerAdvancedSearch()
+        {
+            var model = await _jcbService.JCBCustomerAdvancedSearch();
+            return View(model);
+        }
 
     }
 }
