@@ -250,7 +250,9 @@
         public static string addmanageaggregatorusers = "api/dtplus/UserManage/add_manage_aggregator_users";
         public static string addaggregatoruser = "api/dtplus/UserManage/add_users_manage_aggregator_users";
         public static string getmanageaggregatorusers = "api/dtplus/UserManage/get_manage_aggregator_users";
+        public static string updateaggregatoruserdetailswithroles = "api/dtplus/UserManage/update_aggregator_user_details_with_roles";
         
+
 
 
 
