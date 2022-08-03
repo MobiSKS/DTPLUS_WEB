@@ -156,5 +156,24 @@ namespace HPCL_Web.Controllers
             var reasonList = await _customerRequestService.UpdateApproveCardRenwalRequest(actionType, appRejValues);
             return Json(new { reasonList = reasonList });
         }
+
+        public IActionResult ReissueCard()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> ReissueCard(SearchHotlistAndReissue entity)
+        {
+            var searchList = await _customerRequestService.SearchReissueCard(entity);
+            return Json(new { searchList = searchList });
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> InitialReissueCardService(string customerId, string reissueReq)
+        {
+            var resp = await _customerRequestService.InitialReissueCardService(customerId, reissueReq);
+            return Json(new { resp = resp });
+        }
     }
 }

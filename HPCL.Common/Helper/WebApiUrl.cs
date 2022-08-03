@@ -210,6 +210,8 @@
         public static string GetApproveCardRenewReqUrl = "api/dtplus/card/approve_card_renewal_requests";
         public static string UpdateApproveCardRenewReqUrl = "api/dtplus/card/update_approve_card_renewal_requests";
         public static string searchcustomer = "api/dtplus/basicsearch/get_basic_searchby_customer";
+        public static string SearchReissueCardUrl = "api/dtplus/hotlist/get_hotlist_reissue_cards";
+        public static string ApplyReissueCardUrl = "api/dtplus/card/update_hotlist_reissue_card_request";
 
         #endregion
 

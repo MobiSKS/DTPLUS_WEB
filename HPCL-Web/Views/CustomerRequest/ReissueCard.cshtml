@@ -1,0 +1,433 @@
+﻿@model HPCL.Common.Models.ViewModel.CustomerRequest.SearchHotlistAndReissue
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ajax-unobtrusive/3.2.6/jquery.unobtrusive-ajax.js"></script>
+
+<div class="col-lg-12">
+    <div class="bg-white p-2 p-md-4" style="background: #edecec !important;">
+        <ul class="breadcrumb bread_custom bg-transparent m-0 pb-1 py-0 px-0">
+            <li class="breadcrumb-item"><a href="@Url.Action("Index")" class="text_primary">Request</a> </li>
+            <li class="breadcrumb-item font-weight-light">Reissue Cards</li>
+        </ul>
+
+        <div id="updateFailed" class="mb-0 mt-3 text-center alert alert-danger" style="display:none;"></div>
+
+        <div id="successUpdate" class="mb-3 text-center alert alert-success" style="display:none;"></div>
+
+        <form id="formValid"  method="post" data-ajax="true" data-ajax-controller="CustomerRequest" data-ajax-action="ApproveCardRenewRequest" data-ajax-method="POST" data-ajax-success="OnSuccess" data-ajax-failure="OnFailure">
+            <div class="w-100">
+                <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mb-3">
+                    <div class="border-1 rounded border-grey pb-0">
+                        <p class="text-white px-3 py-2 m-0 font-weight-bold" style="background: #084693;">Approve Card Renewal Requests</p>
+                        <div class="col-lg-12 col-md-12 col-12 py-3 bg-white">
+
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">Customer ID</label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.CustomerID, new { @class = "form-control restrictPaste", onkeypress = "return isNumberKey(event)" })
+                                                @Html.ValidationMessageFor(m => m.CustomerID, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="d-flex align-items-center flex-wrap">
+                                <div class="col-lg-6 col-12">
+                                    <div class="d-flex align-items-center flex-wrap mb-3">
+                                        <label class="font-weight-normal col-md-4 col-12">Card Number</label>
+                                        <div class="col-md-7 col-12">
+                                            <div class="custom_select">
+                                                @Html.TextBoxFor(m => m.CardNo, new { @class = "form-control restrictPaste", onkeypress = "return isNumberKey(event)" })
+                                                @Html.ValidationMessageFor(m => m.CardNo, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="d-flex align-items-center justify-content-center">
+                                <div class="px-md-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2">
+                                    <button class="btn btn_primary" type="button" onclick="searchCards()">Search</button>
+                                </div>
+                                <div class="px-md-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2">
+                                    <a class="btn btn_primary" href="#" id="btnCancel" name="cancel" onclick="resetClick()"><i class="fa fa-refresh">&nbsp;</i> Reset</a>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+
+                    <div id="noRecord" class="mb-0 mt-3 text-center alert alert-danger" style="display:none;"></div>
+
+                    <div id="cardissueSection" style="display:none;">
+                        <div class="table-responsive mt-3">
+                            <table id="cardissueTbl" class="datatable table table-striped d-block d-md-table table-bordered table-responsive" style="width:100%;">
+                                <thead>
+                                    <tr>
+                                        <th style="width:1%">S.No.</th>
+                                        <th><input type="checkbox" name="allListCheck" class="checkAll" /></th>
+                                        <th>Card Number</th>
+                                        <th>Vehicle No/User Name</th>
+                                        @*<th>User No</th>*@
+                                        <th>Vehicle Type</th>
+                                        <th>Year Of Reg.</th>
+                                        <th>Manufacturer</th>
+                                        <th>Owned/Attached</th>
+                                        <th>Live/Test</th>
+                                        <th>Hotlist Reason</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+
+                        <div class="d-flex align-items-center justify-content-center mt-3">
+                            <div class="px-md-2 mb-3 col-sm-auto col-12 mb-sm-0 mb-2">
+                                <button class="btn btn_primary" type="button" onclick="updateCards()">Reissue</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="clearfix"></div>
+    </div>
+</div>
+
+
+@using Microsoft.AspNetCore.Http;
+<script src="https://rawgit.com/moment/moment/2.2.1/min/moment.min.js"></script>
+
+
+
+<script type="text/javascript">
+
+    function resetClick() {
+        window.location.reload(true);
+    }
+
+    $('input').on('paste', function (event) {
+        if (event.originalEvent.clipboardData.getData('Text').match(/[^\d]/)) {
+            event.preventDefault();
+        }
+    });
+
+    $(document).ready(function () {
+
+        function isNumberKey(evt) {
+            var charCode = (evt.which) ? evt.which : event.keyCode;
+            if (charCode != 46 && charCode > 31
+                && (charCode < 48 || charCode > 57))
+                return false;
+
+            return true;
+        }
+
+    });
+
+
+    function searchCards(){
+        var flag = "Y";
+
+        var customerId = $("#CustomerID").val();
+        var cardNo = $("#CardNo").val();
+
+        if(customerId == '' && cardNo == ''){
+            $("#CustomerIdErr").text("Please enter either Card Number and/or Customer ID");
+            flag = "N";
+        }
+
+        if (flag == "N")
+            e.preventDefault();
+
+        if (flag == "Y") {
+            if ($("#formValid").valid()) {
+
+                $("#CustomerIdErr").text("");
+
+                $.ajax({
+                    type: 'POST',  // http method
+                    url: '@Url.Action("ReissueCard", "CustomerRequest")',
+                    data: $('#formValid').serialize(),  // data to submit
+                    success: function (res, status, xhr) {
+
+                        $("#CustomerID").attr("readonly",true);
+                        $("#CardNo").attr("readonly",true);
+
+                        OnSuccess(res);
+
+                    },
+                    error: function (jqXhr, textStatus, errorMessage) {
+                        console.log("Error");
+                    }
+                });
+            } else {
+                return false;
+            }
+        }
+    }
+
+    function OnSuccess(res) {
+        console.log(res, "data");
+
+        if (res.searchList.success == true) {
+
+            document.getElementById("noRecord").style.display = "none";
+            document.getElementById("successUpdate").style.display = "none";
+            //document.getElementById("responseTbl").style.display = "none";
+
+            if(res.searchList.data[0].status == 1){
+
+                var searchGrid = res.searchList.data;
+
+                $('#cardissueTbl').DataTable().clear().destroy();
+
+                var tbl = $('#cardissueTbl').DataTable({
+                    paging: true,
+                    searching: false,
+                    stateSave: true,
+                    "lengthMenu": [10, 20, 50, 100, 200, 500, 1000, 2000],
+                    "autoWidth": false,
+                    "oLanguage": {
+                        "sLengthMenu": "Display _MENU_ Records",
+                        "info": "Showing _START_ to _END_ of _TOTAL_ Records",
+                    }
+                });
+
+                for (var i = 0; i < searchGrid.length; i++) {
+
+                    var yrOfReg;
+
+                    if((searchGrid[i].yearOfRegistration) == '0'){
+                        yrOfReg = '';
+                    }else{
+                        yrOfReg = searchGrid[i].yearOfRegistration;
+                    }
+
+                    //var hotlReasonCheck;
+
+                    //if(searchGrid[i].hotlistStatus == "1"){
+                    //    hotlReasonCheck = "<input type='checkbox' class='checkDisable' name='enableRow' disabled='disabled'>";
+                    //}else if(searchGrid[i].hotlistStatus == null){
+                    //    hotlReasonCheck = "<input type='checkbox' class='checkEnable' name='enableRow'>";
+                    //}
+
+                    var srNumber = (i+1);
+                    var pressCheck = "<input type='checkbox' class='checkEnable' name='enableRow'>";
+                    var cardNo = "<span class='getCardNo'>" + (searchGrid[i].cardNo || '') + "</span>";
+                    var vehicleNo = "<input class='form-control vehicleNoVal' type='text' value='" + (searchGrid[i].vechileNo || '') + "' readonly='readonly'>";
+                    //var userName = "<input class='form-control' type='text' value='" + (searchGrid[i].vechileNo || '') + "' readonly='readonly'>";
+                    var vehicleType = "<select readonly='readonly' disabled='disabled' class='form-control'><option value='" + (searchGrid[i].vechileType || '') + "'>" + (searchGrid[i].vechileType || '') + "</option></select>";
+                    var yrOfReg = "<input class='form-control' type='text' value='" + (yrOfReg) + "' readonly='readonly'>";
+                    var manufacturer = "<input class='form-control' type='text' value='" + (searchGrid[i].manufacturer || '') + "' readonly='readonly'>";
+                    var ownedAttched = "<select readonly='readonly' disabled='disabled' class='form-control'><option value='" + (searchGrid[i].ownedORAttachedId || '') + "'>" + (searchGrid[i].ownedORAttachedName || '') + "</option></select>";
+                    var cardCategory = "<select readonly='readonly' disabled='disabled' class='form-control'><option value='" + (searchGrid[i].cardCategory || '') + "'>" + (searchGrid[i].cardCategory || '') + "</option></select>";
+                    var hotlistReason = "<div style='width:160px;display:flex;'><select onblur='reasonOnChange(this," + (i) + ")' readonly='readonly' disabled='disabled' class='form-control htlstReason'><option value='0'>Select</option></select><i style='display:none;margin-top:10px;' class='fa fa-exclamation-triangle errss' id='hotlistreason_error_"+i+"' aria-hidden='true'></i></div>";
+
+                    tbl.row.add([
+                        srNumber,
+                        pressCheck,
+                        cardNo,
+                        vehicleNo,
+                        vehicleType,
+                        yrOfReg,
+                        manufacturer,
+                        ownedAttched,
+                        cardCategory,
+                        hotlistReason
+                    ]).draw();
+                }
+
+                $.ajax({
+                    type: 'POST',  // http method
+                    url: '@Url.Action("GetHotlistReason", "Common")',
+                    dataType: "json",
+                    success: function (data, status, xhr) {
+
+                        console.log(data);
+
+                        $.each(data.hotlistReasonList, function (i, option) {
+                            $("<option/>").val(option.statusId).text(option.statusName).appendTo(".htlstReason");
+                        });
+                    },
+                    error: function (jqXhr, textStatus, errorMessage) {
+                        alert("Error Populating Hotlist Reason Type");
+                    }
+                });
+
+                document.getElementById("cardissueSection").style.display = "block";
+            }else{
+                document.getElementById("cardissueSection").style.display = "none";
+                document.getElementById("successUpdate").style.display = "none";
+                $("#noRecord").html("");
+                $("#noRecord").append("<span>" + res.searchList.data[0].reason + "</span>");
+                document.getElementById("noRecord").style.display = "block";
+            }
+        } else {
+            document.getElementById("cardissueSection").style.display = "none";
+            document.getElementById("successUpdate").style.display = "none";
+            $("#noRecord").html("");
+            $("#noRecord").append("<span>" + res.searchList.message + "</span>");
+            document.getElementById("noRecord").style.display = "block";
+        }
+    }
+
+    $(".checkAll").click(function () {
+        if (this.checked) {
+            $(".checkEnable").prop("checked", true);
+            $('#cardissueTbl .checkEnable').closest("tr").find('.htlstReason').attr("disabled", false);
+            $('#cardissueTbl .checkEnable').closest("tr").find('.htlstReason').attr("readonly", false);
+        } else {
+            $(".checkEnable").prop("checked", false);
+            $('#cardissueTbl .checkEnable').closest("tr").find('.htlstReason').attr("disabled", true);
+            $('#cardissueTbl .checkEnable').closest("tr").find('.htlstReason').attr("readonly", true);
+            $('#cardissueTbl .checkEnable').closest("tr").find('.errss').css("display", "none");
+        }
+    });
+
+    $("#cardissueTbl").on('click', '.checkEnable', function (e) {
+
+        currentRow = $(this).closest("tr");
+
+        if ($(this).is(':checked')) {
+            currentRow.find('.htlstReason').attr("readonly", false);
+            currentRow.find('.htlstReason').attr("disabled", false);
+        }
+        if (!$(this).is(':checked')) {
+            currentRow.find('.htlstReason').attr("readonly", true);
+            currentRow.find('.htlstReason').attr("disabled", true);
+            currentRow.find('.errss').css("display", "none");
+        }
+    });
+
+    function updateCards(){
+
+        var customerId = $("#CustomerID").val();
+
+        var updateArray = new Array();
+
+
+        var flag = "Y";
+        var CardNo;
+
+        $("#cardissueTbl tr:gt(0) input[type=checkbox]:checked").each(function () {
+
+            //document.getElementById("responseTbl").style.display = "none";
+
+            var selectedRow = $(this).closest("tr")[0];
+            console.log("index",selectedRow.rowIndex);
+
+            var indexS = (selectedRow.rowIndex) - 1;
+
+            console.log("indexS",indexS);
+
+            var row = $(this).closest("tr");
+
+            CardNo = row.find('.getCardNo').text();
+            var ReasonId = row.find('.htlstReason option:selected').val();
+            var VechileNo = row.find('.vehicleNoVal').val();
+
+            updateArray.push({
+                CardNo: CardNo,
+                ReasonId: ReasonId,
+                VechileNo:VechileNo
+            });
+
+            if(ReasonId == 0){
+                document.getElementById('hotlistreason_error_'+indexS).title="Please Select Hotlist Reason";
+                document.getElementById('hotlistreason_error_'+indexS).style.display = "block";
+                flag = "N";
+            }
+
+        });
+
+         if (CardNo == undefined) {
+                alert("Please select atleast one record.");
+                flag = "N";
+         }
+
+         if (flag == "N")
+            e.preventDefault();
+
+        if (flag == "Y") {
+            
+            if (confirm('Do you want to reissue your card(s), corresponding older card(s) will get hotlisted')) {
+                console.log('ok');
+
+                $("#CardSearch tr:gt(0) input[type=checkbox]:checked").each(function () {
+                    var selectedRow = $(this).closest("tr")[0];
+                    console.log("index",selectedRow.rowIndex);
+                    var indexS = (selectedRow.rowIndex) - 1;
+                    document.getElementById('hotlistreason_error_'+indexS).style.display = "none";
+                    $(this).closest("tr").find(".checkEnable").prop('checked',false);
+                    $(this).closest("tr").find('.htlstReason').attr("readonly", true);
+                    $(this).closest("tr").find('.htlstReason').attr("disabled", true);
+                });
+
+                $(".checkAll").prop('checked',false);
+
+                $.ajax({
+                    url: "@Url.Action("InitialReissueCardService", "CustomerRequest")",
+                    type: "POST",
+                    dataType: "JSON",
+                    data: { customerId: customerId, reissueReq: JSON.stringify(updateArray)},
+                    success: function (res) {
+
+                        console.log("res",res);
+
+                        if(res.resp[0].status == 1){
+                            $("#formValid").hide();
+                            document.getElementById("updateFailed").style.display = "none";
+                            $("#successUpdate").html("");
+                            $("#successUpdate").append("<span>" + res.resp[0].reason + "</span>");
+                            document.getElementById("successUpdate").style.display = "block";
+                        }else{
+                            //$("#responseTbl td").parent().remove();
+
+                            //for (var i = 0; i < res.reasonList.length; i++) {
+
+                            //    var rows = "<tbody><tr>"
+                            //        + "<td>"+(i+1)+"</td>"
+                            //        + "<td><span class='cardNoVal'>" + (res.reasonList[i].cardNo || '') + "</span></td>"
+                            //        + "<td>" + (res.reasonList[i].reason || '') + "</td>"
+                            //        + "</tr ></tbody>";
+
+                            //    $('#responseTbl').append(rows);
+                            //}
+
+                            $("#formValid").hide();
+                            //document.getElementById("responseTbl").style.display = "block";
+
+                            document.getElementById("successUpdate").style.display = "none";
+                            $("#updateFailed").html("");
+                            $("#updateFailed").append("<span>" + res.resp[0].reason + "</span>");
+                            document.getElementById("updateFailed").style.display = "block";
+                        }
+                    },
+                    error: function (ex) {
+                        alert('Failed' + ex);
+                    }
+                });
+
+            } else {
+                console.log('cancel')
+            }
+        }
+    }
+
+    function reasonOnChange(o, rowSelected){
+        var StatusId = o.value;
+
+        if(StatusId == 0){
+            document.getElementById('hotlistreason_error_'+rowSelected).title="Please Select Hotlist Reason";
+            document.getElementById('hotlistreason_error_'+rowSelected).style.display = "block";
+            return false;
+        }else{
+            document.getElementById('hotlistreason_error_'+rowSelected).title="";
+            document.getElementById('hotlistreason_error_'+rowSelected).style.display = "none";
+        }
+    }
+</script>
