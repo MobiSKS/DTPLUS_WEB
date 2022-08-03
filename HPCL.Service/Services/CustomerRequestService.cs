@@ -352,7 +352,6 @@ namespace HPCL.Service.Services
             StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
             var response = await _requestService.CommonRequestService(content, WebApiUrl.GetApproveCardRenewReqUrl);
 
-
             JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
             ApproveCardRenwalRequestRes searchList = obj.ToObject<ApproveCardRenwalRequestRes>();
             return searchList;

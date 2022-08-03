@@ -41,5 +41,6 @@ namespace HPCL.Service.Interfaces
         Task<List<SuccessResponse>> AddNewAggregatorUser([FromBody] AddNewAggregatorUser entity);
         Task<ManageAggregatorNewUserModel> GetManageAggregatorUserForEdit(string UserName);
         Task<List<SuccessResponse>> AggregatorResetPassword(string userName, string EmailId);
+        Task<List<SuccessResponse>> UpdateAggregatorUser([FromBody] AddNewAggregatorUser entity);
     }
 }

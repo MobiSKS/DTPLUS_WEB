@@ -1,4 +1,5 @@
 ﻿using HPCL.Common.Helper;
+using HPCL.Common.Models.CommonEntity;
 using HPCL.Common.Models.RequestModel.JCB;
 using HPCL.Common.Models.ResponseModel.JCB;
 using HPCL.Common.Models.ViewModel.JCB;
@@ -352,6 +353,36 @@ namespace HPCL_Web.Controllers
         {
             var models = await _jcbService.GetCustomerTransactionDetails(CustomerID, CardNo, MobileNo, FromDate, ToDate);
             return PartialView("~/Views/JCB/_JCBCustomerTransactionTblView.cshtml", models);
+        }
+        public async Task<IActionResult> JCBCustomerAdvancedSearch()
+        {
+            var model = await _jcbService.JCBCustomerAdvancedSearch();
+            return View(model);
+        }
+        [HttpPost]
+        public async Task<IActionResult> GetJCBAdvancedSearch(string str)
+        {
+            var models = await _jcbService.GetJCBAdvancedSearch(str);
+            return PartialView("~/Views/JCB/_JCBCustomerAdvancedSearchTblView.cshtml", models);
+        }
+        [HttpPost]
+        public async Task<JsonResult> GetRegionalDetails(int ZonalOfficeID)
+        {
+            List<CustomerRegionModel> lstCustomerRegion = new List<CustomerRegionModel>();
+            if (ZonalOfficeID > 0)
+            {
+                lstCustomerRegion = await _commonActionService.GetRegionalDetailsDropdown(ZonalOfficeID);
+            }
+            else
+            {
+                lstCustomerRegion.Add(new CustomerRegionModel
+                {
+                    RegionalOfficeID = 0,
+                    RegionalOfficeName = "--Select--",
+
+                });
+            }
+            return Json(lstCustomerRegion);
         }
 
     }

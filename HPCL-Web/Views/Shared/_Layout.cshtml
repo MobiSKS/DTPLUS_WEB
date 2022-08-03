@@ -45,9 +45,9 @@
 
 
     <script>
-        $(document).ready(function(){
+        $(document).ready(function() {
             $("form").attr('autocomplete', 'off');
-            $(function () {
+            $(function() {
                 $('[data-toggle="tooltip"]').tooltip()
             });
         });
@@ -169,23 +169,24 @@
                 <div class="col-lg-6 col-12 d-none d-lg-block">
                     <div class="input-group mb-0 header_input_group  bg-white align-items-center">
                         <div class="input-group-prepend"> <span class="input-group-text "><img src="~/assets/images/search_icon.png" alt=""></span> </div>
-                        <input type="search" class="form-control" aria-label="Start Searching" placeholder="Start Searching...">
+                        <input type="search" id="textsearch" class="form-control" aria-label="Start Searching" placeholder="Start Searching...">
+                        <span class="error" id="MerchantId_error"></span>
                         <div class="input-group-append">
                             @*<div class="customSumoFilter">
-                                <select name="" id="">
-                                <option value="">Filter By</option>
-                                <option value="">Customer Search</option>
-                                <option value="">Card Search</option>
-                                <option value="">Merchant Search</option>
-                                <option value="">Terminal Search</option>
-                                </select>
-                                </div>*@
+                            <select name="" id="">
+                            <option value="">Filter By</option>
+                            <option value="">Customer Search</option>
+                            <option value="">Card Search</option>
+                            <option value="">Merchant Search</option>
+                            <option value="">Terminal Search</option>
+                            </select>
+                            </div>*@
 
-                            <div class="dropdown">
-                                <button type="button" class="btn btn_filter dropdown-toggle" @*data-toggle="dropdown"*@ onclick="searchfilter()">
+                            <div class="">
+                                <button type="button" class="btn btn_filter" @*dropdown-toggle data-toggle="dropdown"*@ onclick="searchfilter()">
                                     <span>Search</span>
                                 </button>
-                                @*<div class="dropdown-menu radio">
+                               @* <div class="dropdown-menu radio">
                                     <label class="dropdown-item">
                                         <input class="jRadioDropdown" type="radio" value="005" name="alphabet">
                                         <i>Customer Search</i>
@@ -334,12 +335,11 @@
     var localStrNum = '@Context.Session.GetString("LocalStorage")';
     localStorage.setItem("clearStorage", localStrNum);
     debugger;
-    if (!sessionStorage.getItem("LoginCheck"))
-    {
+    if (!sessionStorage.getItem("LoginCheck")) {
         window.location.href = '@Html.Raw(@Url.Action("Index", "Home"))';
     }
 
-    $(document).ready(function () {
+    $(document).ready(function() {
         //setTimeout(function(){
         $('.datatable').DataTable({
             "lengthMenu": [[-1, 10, 25, 50, 100, 250, 500, 750, 1000, 1500, 2000, 2500, 3000], ["All", 10, 25, 50, 100, 250, 500, 750, 1000, 1500, 2000, 2500, 3000]],
@@ -355,16 +355,16 @@
         });
 
 
-        if ($('.fromDate').val() != undefined){
+        if ($('.fromDate').val() != undefined) {
             setFromDateFormat();
         }
 
-        if ($('.toDate').val() != undefined){
+        if ($('.toDate').val() != undefined) {
             setToDateFormat();
         }
-        if ($('.nodefaultDate').val() != undefined){
-                setDateFormat();
-            }
+        if ($('.nodefaultDate').val() != undefined) {
+            setDateFormat();
+        }
         $('select').SumoSelect({
             placeholder: '-Select-',
             search: true,
@@ -375,8 +375,7 @@
             window.localStorage.clear();
         }
 
-        if (!sessionStorage.getItem("CurrentLoggedInUser"))
-        {
+        if (!sessionStorage.getItem("CurrentLoggedInUser")) {
             sessionStorage.setItem("CurrentLoggedInUser", '@Context.Session.GetString("UserId")');
         }
 
@@ -386,62 +385,62 @@
             contentType: "application/json; charset=utf-8",
             data: JSON.stringify(sessionStorage.getItem("CurrentLoggedInUser")),
             dataType: "html",
-            success: function (data, status, xhr) {
-                        var v = data;
-                        if (status == 'success') {
-                            $("#topMenuList").html(data);
-                            //$(".breadcrumb").html("");
-                            //var breadCrumbHtml = "<li class='breadcrumb-item'><a href='@Url.Action(@Context.Session.GetString("BreadCrumbsAction"), @Context.Session.GetString("BreadCrumbsController"))' class='text_primary'>@Context.Session.GetString("BreadCrumbsPerviousMenuName")</a> </li><li class='breadcrumb-item font-weight-light'>@Context.Session.GetString("CurrentAction")</li>";
-                            //$(".breadcrumb").html(breadCrumbHtml);
-                        }
-                        else {
-                            console.log(v);
-                        }
-                    },
-                error: function (jqXhr, textStatus, errorMessage) {
-                    console.log("jqXhr",jqXhr);
-                    console.log("textStatus",textStatus);
-                    console.log("errorMessage",errorMessage);
+            success: function(data, status, xhr) {
+                var v = data;
+                if (status == 'success') {
+                    $("#topMenuList").html(data);
+                    //$(".breadcrumb").html("");
+                    //var breadCrumbHtml = "<li class='breadcrumb-item'><a href='@Url.Action(@Context.Session.GetString("BreadCrumbsAction"), @Context.Session.GetString("BreadCrumbsController"))' class='text_primary'>@Context.Session.GetString("BreadCrumbsPerviousMenuName")</a> </li><li class='breadcrumb-item font-weight-light'>@Context.Session.GetString("CurrentAction")</li>";
+                    //$(".breadcrumb").html(breadCrumbHtml);
                 }
+                else {
+                    console.log(v);
+                }
+            },
+            error: function(jqXhr, textStatus, errorMessage) {
+                console.log("jqXhr", jqXhr);
+                console.log("textStatus", textStatus);
+                console.log("errorMessage", errorMessage);
+            }
         });
 
 
 
         $('button').each(function() {
             debugger;
-            if ($(this).html().trim().toLowerCase() == "search"){
+            if ($(this).html().trim().toLowerCase() == "search") {
                 var btnHtml = $(this).html();
                 $(this).html("<i class='fa fa-search'>&nbsp;</i> " + btnHtml);
             }
-            else if ($(this).html().trim().toLowerCase() == "reset"){
+            else if ($(this).html().trim().toLowerCase() == "reset") {
                 var btnHtml = $(this).html();
                 $(this).html("<i class='fa fa-refresh''>&nbsp;</i> " + btnHtml);
             }
-            else if ($(this).html().trim().toLowerCase() == "add"){
+            else if ($(this).html().trim().toLowerCase() == "add") {
                 var btnHtml = $(this).html();
                 $(this).html("<i class='fa fa-plus''>&nbsp;</i> " + btnHtml);
             }
-            else if ($(this).html().trim().toLowerCase() == "next"){
+            else if ($(this).html().trim().toLowerCase() == "next") {
                 var btnHtml = $(this).html();
                 $(this).html(btnHtml + " <i class='fa fa-angle-double-right''>&nbsp;</i>");
             }
-            else if ($(this).html().trim().toLowerCase() == "back"){
+            else if ($(this).html().trim().toLowerCase() == "back") {
                 var btnHtml = $(this).html();
                 $(this).html("<i class='fa fa-angle-double-left''>&nbsp;</i> " + btnHtml);
             }
-            else if ($(this).html().trim().toLowerCase() == "previous"){
+            else if ($(this).html().trim().toLowerCase() == "previous") {
                 var btnHtml = $(this).html();
                 $(this).html("<i class='fa fa-angle-double-left''>&nbsp;</i> " + btnHtml);
             }
-            else if ($(this).html().trim().toLowerCase() == "save"){
+            else if ($(this).html().trim().toLowerCase() == "save") {
                 var btnHtml = $(this).html();
                 $(this).html("<i class='fa fa-floppy''>&nbsp;</i> " + btnHtml);
             }
-            else if ($(this).html().trim().toLowerCase() == "submit"){
+            else if ($(this).html().trim().toLowerCase() == "submit") {
                 var btnHtml = $(this).html();
                 $(this).html("<i class='fa fa-paper-plane''>&nbsp;</i> " + btnHtml);
             }
-            else if ($(this).html().toLowerCase().startsWith("add ")){
+            else if ($(this).html().toLowerCase().startsWith("add ")) {
                 var btnHtml = $(this).html();
                 $(this).html("<i class='fa fa-plus'>&nbsp;</i> " + btnHtml);
             }
@@ -452,7 +451,7 @@
     });
 
 
-    function setFromDateFormat(){
+    function setFromDateFormat() {
         $(".fromDate").attr("readonly", true);
         $('.fromDate').datepicker({
             dateFormat: 'dd-mm-yy',
@@ -463,18 +462,18 @@
             yearRange: "-100:+0"
         });
 
-         if (($('.fromDate').val() != undefined)  && ($('.fromDate').val() != "") ){
-            var d = stringToDate($('.fromDate').val(),"dd-mm-yyyy");
-            if(d!="Invalid Date"){
+        if (($('.fromDate').val() != undefined) && ($('.fromDate').val() != "")) {
+            var d = stringToDate($('.fromDate').val(), "dd-mm-yyyy");
+            if (d != "Invalid Date") {
                 var ye = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(d)
                 var mo = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(d)
                 var da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(d)
                 $('.fromDate').val(`${da}-${mo}-${ye}`);
             }
-         }
+        }
     }
 
-    function setToDateFormat(){
+    function setToDateFormat() {
         $(".toDate").attr("readonly", true);
         $('.toDate').datepicker({
             dateFormat: 'dd-mm-yy',
@@ -484,9 +483,9 @@
             autoclose: "true",
             yearRange: "-100:+0"
         });
-        if (($('.toDate').val() != undefined)  && ($('.toDate').val() != "") ){
-            var d1 = stringToDate($('.toDate').val(),"dd-mm-yyyy");
-            if(d1!="Invalid Date"){
+        if (($('.toDate').val() != undefined) && ($('.toDate').val() != "")) {
+            var d1 = stringToDate($('.toDate').val(), "dd-mm-yyyy");
+            if (d1 != "Invalid Date") {
                 var ye1 = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(d1)
                 var mo1 = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(d1)
                 var da1 = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(d1)
@@ -495,34 +494,34 @@
         }
     }
 
-    function checkDates(dateId,n) {
-        var dateflag="Y";
-        if (($('.fromDate').val() != undefined) && ($('.toDate').val() != undefined) && ($('.fromDate').val() != "") && ($('.toDate').val() != "")){
+    function checkDates(dateId, n) {
+        var dateflag = "Y";
+        if (($('.fromDate').val() != undefined) && ($('.toDate').val() != undefined) && ($('.fromDate').val() != "") && ($('.toDate').val() != "")) {
 
-            var d = stringToDate($('.fromDate').val(),"dd-mm-yyyy");
-            if(d!="Invalid Date"){
+            var d = stringToDate($('.fromDate').val(), "dd-mm-yyyy");
+            if (d != "Invalid Date") {
                 var ye = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(d)
                 var mo = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(d)
                 var da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(d)
                 //$('.fromDate').val(`${mo}-${da}-${ye}`);
             }
-            else{
+            else {
                 dateflag = "N";
                 return dateflag;
             }
-            var d1 = stringToDate($('.toDate').val(),"dd-mm-yyyy");
-            if(d1!="Invalid Date"){
+            var d1 = stringToDate($('.toDate').val(), "dd-mm-yyyy");
+            if (d1 != "Invalid Date") {
                 var ye1 = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(d1)
                 var mo1 = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(d1)
                 var da1 = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(d1)
                 //$('.toDate').val(`${mo1}-${da1}-${ye1}`);
             }
-            else{
+            else {
                 dateflag = "N";
                 return dateflag;
             }
-            var fromD =d;
-            var toD =  d1;
+            var fromD = d;
+            var toD = d1;
 
             if (fromD != "" && toD != "") {
                 if (fromD > toD) {
@@ -530,11 +529,9 @@
                     $("#" + dateId + "").html("'From Date' should be less or equal to 'To date'");
                     dateflag = "N";
                 }
-                else if(n>0)
-                {
+                else if (n > 0) {
                     var aday = 24 * 60 * 60 * 1000;
-                    if ((Math.abs(toD-fromD) / aday) > n)
-                    {
+                    if ((Math.abs(toD - fromD) / aday) > n) {
                         $("#" + dateId + "").attr("style", "display:block");
                         $("#" + dateId + "").html("Difference between From Date and To Date should not be more than " + n + " days");
                         dateflag = "N";
@@ -554,10 +551,10 @@
         return dateflag;
     }
 
-    document.addEventListener("submit", function(){
+    document.addEventListener("submit", function() {
         $("#loader").fadeIn();
-        if (event.defaultPrevented){
-            if (~event.composedPath().indexOf("form#saveDocs") < 0){
+        if (event.defaultPrevented) {
+            if (~event.composedPath().indexOf("form#saveDocs") < 0) {
                 $("#loader").fadeOut();
             }
         }
@@ -571,24 +568,24 @@
             contentType: "application/json; charset=utf-8",
             data: JSON.stringify(userid),
             dataType: "json",
-            success: function (data, status, xhr) {
-                        if (status == 'success') {
-                            console.log("User sessions has been restored");
-                        }
-                        else {
-                            console.log("output",data);
-                        }
-                    },
-                error: function (jqXhr, textStatus, errorMessage) {
-                    //document.getElementById("CustomerRegionID_error").innerHTML = "Error populating card details";
+            success: function(data, status, xhr) {
+                if (status == 'success') {
+                    console.log("User sessions has been restored");
                 }
+                else {
+                    console.log("output", data);
+                }
+            },
+            error: function(jqXhr, textStatus, errorMessage) {
+                //document.getElementById("CustomerRegionID_error").innerHTML = "Error populating card details";
+            }
         });
 
     });
 
     function preventBack() { window.history.forward(); }
     setTimeout("preventBack()", 0);
-    window.onunload = function () { null };
+    window.onunload = function() { null };
 
     function stringToDate(date, format) {
         var formatArr = format.split("-");
@@ -598,36 +595,36 @@
         var yearIndex = formatArr.indexOf("yyyy");
         var month = parseInt(dateArr[monthIndex]);
         month -= 1;
-        if(dateArr[yearIndex]<(new Date(today).getFullYear()-100)||month<0 ||month>11 ||dateArr[dayIndex]<=0||dateArr[dayIndex]>31)
+        if (dateArr[yearIndex] < (new Date(today).getFullYear() - 100) || month < 0 || month > 11 || dateArr[dayIndex] <= 0 || dateArr[dayIndex] > 31)
             return "Invalid Date";
         var outputDate = new Date(dateArr[yearIndex], month, dateArr[dayIndex]);
-        if(outputDate.getFullYear()!=dateArr[yearIndex] || outputDate.getMonth()!=month || outputDate.getDate()!= dateArr[dayIndex])
+        if (outputDate.getFullYear() != dateArr[yearIndex] || outputDate.getMonth() != month || outputDate.getDate() != dateArr[dayIndex])
             return "Invalid Date";
         return outputDate;
     }
-     $('.fromDate,.toDate').on("cut copy paste",function(e) {
-      e.preventDefault();
+    $('.fromDate,.toDate').on("cut copy paste", function(e) {
+        e.preventDefault();
     });
 
-    function checkForSpecialChars(str){
+    function checkForSpecialChars(str) {
         var flag = "N";
         var count = 0;
         for (var i = 0; i < str.length; i++) {
-            if (!str.charAt(i).match(notOnlySpecialChars)){
-                if(!str.charAt(i + 1).match(notOnlySpecialChars)){
+            if (!str.charAt(i).match(notOnlySpecialChars)) {
+                if (!str.charAt(i + 1).match(notOnlySpecialChars)) {
                     flag = "Y";
                     break;
                 }
             }
         }
-        if (flag == "N"){
+        if (flag == "N") {
             return false;
         }
-        else{
+        else {
             return true;
         }
     }
-    function setDateFormat(){
+    function setDateFormat() {
         $(".nodefaultDate").attr("readonly", true);
         $('.nodefaultDate').datepicker({
             dateFormat: 'dd-mm-yy',
@@ -637,9 +634,9 @@
             autoclose: "true",
             yearRange: "-100:+0"
         });
-        if (($('.nodefaultDate').val() != undefined)  && ($('.nodefaultDate').val() != "") ){
-            var d1 = stringToDate($('.nodefaultDate').val(),"dd-mm-yyyy");
-            if(d1!="Invalid Date"){
+        if (($('.nodefaultDate').val() != undefined) && ($('.nodefaultDate').val() != "")) {
+            var d1 = stringToDate($('.nodefaultDate').val(), "dd-mm-yyyy");
+            if (d1 != "Invalid Date") {
                 var ye1 = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(d1)
                 var mo1 = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(d1)
                 var da1 = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(d1)
@@ -647,24 +644,23 @@
             }
         }
     }
-    function validateDate(dateClass,dateId) {
-        var dateflag="Y";
-        if (($("#" + dateClass + "").val() != undefined) && ($("#" + dateClass + "").val() != "")){
-            var d = stringToDate($("#" + dateClass + "").val(),"dd-mm-yyyy");
-            if(d!="Invalid Date"){
-                if(d>new Date(today)){
+    function validateDate(dateClass, dateId) {
+        var dateflag = "Y";
+        if (($("#" + dateClass + "").val() != undefined) && ($("#" + dateClass + "").val() != "")) {
+            var d = stringToDate($("#" + dateClass + "").val(), "dd-mm-yyyy");
+            if (d != "Invalid Date") {
+                if (d > new Date(today)) {
                     $("#" + dateId + "").attr("style", "display:block");
                     $("#" + dateId + "").html("Date should be less than Today");
                     dateflag = "N";
                 }
-                else
-                {
+                else {
                     $("#" + dateId + "").attr("style", "display:none");
                     $("#" + dateId + "").html("");
                 }
 
             }
-            else{
+            else {
                 $("#" + dateId + "").attr("style", "display:block");
                 $("#" + dateId + "").html("Invalid Date");
                 dateflag = "N";
@@ -693,31 +689,25 @@
 
     //Enter Key Blocked
     $(document).keypress(
-      function(event){
-        if (event.which == '13') {
-          event.preventDefault();
-        }
-    });
+        function(event) {
+            if (event.which == '13') {
+                event.preventDefault();
+            }
+        });
 
-    function ValidateVehicleNumber(vehicleNo)
-    {
+    function ValidateVehicleNumber(vehicleNo) {
         var isValid = true;
 
-        if(vehicleNo.trim()=='')
-        {
-            isValid=false;
+        if (vehicleNo.trim() == '') {
+            isValid = false;
         }
-        else
-        {
-            if(vehicleNo.trim()!='')
-            {
-                if (!(vehicleNo.match(forVehicleNo)))
-                {
-                    isValid=false;
+        else {
+            if (vehicleNo.trim() != '') {
+                if (!(vehicleNo.match(forVehicleNo))) {
+                    isValid = false;
                 }
-                else if(vehicleNo.length<6 || vehicleNo.length>10)
-                {
-                    isValid=false;
+                else if (vehicleNo.length < 6 || vehicleNo.length > 10) {
+                    isValid = false;
                 }
             }
         }
@@ -728,65 +718,148 @@
 </script>
 
 <script>
-    $("#logOutId").on('click', function () {
+    $("#logOutId").on('click', function() {
         sessionStorage.clear();
         window.location.href = '@Html.Raw(@Url.Action("Logout", "Home"))';
     });
 
     // Change the button text & add active class
-        $('.jRadioDropdown').change(function() {
-          var dropdown = $(this).closest('.dropdown');
-          var thislabel = $(this).closest('label');
+    $('.jRadioDropdown').change(function() {
+        var dropdown = $(this).closest('.dropdown');
+        var thislabel = $(this).closest('label');
 
-          dropdown.find('label').removeClass('active');
-          if( $(this).is(':checked') ) {
+        dropdown.find('label').removeClass('active');
+        if ($(this).is(':checked')) {
             thislabel.addClass('active');
-            dropdown.find('span').html( thislabel.text() );
-          }
+            dropdown.find('span').html(thislabel.text());
+        }
 
-        });
+    });
 
-        //Add tabindex on labels
-        $('label.dropdown-item').each(function (index, value){
-          $(this).attr('tabindex', 0 );
-          $(this).find('input').attr('tabindex', -1 );
-        });
+    //Add tabindex on labels
+    $('label.dropdown-item').each(function(index, value) {
+        $(this).attr('tabindex', 0);
+        $(this).find('input').attr('tabindex', -1);
+    });
 
-        //Add keyboard navigation
-        $('label.dropdown-item').keypress(function(e){
-          if((e.keyCode ? e.keyCode : e.which) == 13){
+    //Add keyboard navigation
+    $('label.dropdown-item').keypress(function(e) {
+        if ((e.keyCode ? e.keyCode : e.which) == 13) {
             $(this).trigger('click');
-          }
-        });
+        }
+    });
+
 
     function searchfilter() {
+
+     
         var filter = document.getElementById("textsearch").value;
+      
          sessionStorage.setItem("textvalue", filter);
 
+   
+
         if (document.getElementById("textsearch").value.substring(0, 1) == "3") {
+
+         
+
+         
+
             window.location.href = '@Html.Raw(@Url.Action("SearchMerchant", "Merchant"))';
+        
             return (true);
+
+            //    if (document.getElementById("textsearch").value.length < 10) {
+            //        document.getElementById("MerchantId_error").innerHTML = "invalid Merchant Id ";
+            //        return (false);
+
+
+
+            //}
+            //else {
+            //    window.location.href = '@Html.Raw(@Url.Action("SearchMerchant", "Merchant"))';
+            //    return (true);
+
+            //}
         }
+
 
         if (document.getElementById("textsearch").value.substring(0, 1) == "2") {
-            window.location.href = '@Html.Raw(@Url.Action("ViewCustomerSearch", "ViewCustomer"))';
+
+            window.location.href = '@Html.Raw(@Url.Action("SearchCustomer", "CustomerSearch"))';
             return (true);
+
+            //if (document.getElementById("textsearch").value.length < 10) {
+            //    document.getElementById("MerchantId_error").innerHTML = "invalid Cutomer Id ";
+            //    return (false);
+
+
+
         }
+        //else {
+        //    window.location.href = '@Html.Raw(@Url.Action("ViewCustomerSearch", "ViewCustomer"))';
+        //    return (true);
+
+        //}
+        // }
 
         if (document.getElementById("textsearch").value.substring(0, 1) == "4") {
+
             window.location.href = '@Html.Raw(@Url.Action("ViewCustomerSearch", "ViewCustomer"))';
             return (true);
+
+            //if (document.getElementById("textsearch").value.length < 10) {
+            //    document.getElementById("MerchantId_error").innerHTML = "invalid Cutomer Id ";
+            //    return (false);
+
+
+
         }
+        //else {
+        //    window.location.href = '@Html.Raw(@Url.Action("ViewCustomerSearch", "ViewCustomer"))';
+        //    return (true);
+
+        //}
+        // }
+
 
         if (document.getElementById("textsearch").value.substring(0, 1) == "5") {
+
             window.location.href = '@Html.Raw(@Url.Action("SearchTerminal", "TerminalManagement"))';
             return (true);
+
+
+            //if (document.getElementById("textsearch").value.length < 16) {
+            //    document.getElementById("MerchantId_error").innerHTML = " invalid Card number ";
+            //    return (false);
+
+
+
+            //}
+            //else {
+            //    window.location.href = '@Html.Raw(@Url.Action("ViewCardSearch", "ViewCard"))';
+            //    return (true);
+
+            //}
+
         }
 
-        var merchantId = $("#textsearch").val();
-        localStorage.setItem("merchantId");
+        //var merchantId = $("#textsearch").val();
+        //localStorage.setItem("merchantId");
 
-        window.location = '@Url.Action("SearchTerminal", "TerminalManagement")';
+        //window.location = '@Url.Action("SearchTerminal", "TerminalManagement")';
+
+
+
+
+
+
+
+
+
+
+
+
     }
 
 </script>

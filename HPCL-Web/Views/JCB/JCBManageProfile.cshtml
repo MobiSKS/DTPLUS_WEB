@@ -35,7 +35,7 @@
             <div class="tab-content mt-3">
                 <div id="CustomerProfile" class="tab-pane active" role="tabpanel">
                     <div class="border-1 rounded border-grey mb-3">
-                        <p class="text_primary px-3 py-2 bg-grey m-0 font-weight-bold">Manage Customer Profile</p>
+                        <p class="text-white px-3 py-2 m-0 font-weight-bold" style="background: #084693;">Manage Customer Profile</p>
                         <div class="w-100 mt-3">
                             <p class="text-dark px-0 pb-2 mb-3 font-weight-bold">Search Profile</p>
                             <div class="d-flex align-items-center justify-content-between flex-wrap">
@@ -95,8 +95,8 @@
                       </div>
 
 
-                    <div id="CustomerSearch" style="display:none;">
-                        <table class="table table-striped table-bordered d-md-table d-block text-nowrap display table-responsive" style="width:100%;">
+                    <div id="CustomerSearch" style="display:none;width:100%">
+                        <table class="table table-striped table-bordered datatable" style="width:100%;">
                             <thead>
                                 <tr>
                                     <th>S.No.</th>
@@ -104,7 +104,7 @@
                                         @Html.DisplayName("Customer ID")
                                     </th>
                                     <th>
-                                        @Html.DisplayName("Name On Card")
+                                        @Html.DisplayName("Name on Card")
                                     </th>
                                     <th>
                                         @Html.DisplayName("Customer Name")
@@ -1060,7 +1060,7 @@
         {
             document.getElementById("CustomerSearch").style.display = "none";
             $("#noRecord").html("");
-            $("#noRecord").append("<span>Please enter either Card Number or Email Or Customer ID or Mobile Number</span>");
+            $("#noRecord").append("<span>Please enter the Card Number or Email or Customer ID or Mobile Number.</span>");
             document.getElementById("noRecord").style.display = "block";
             flag = "N";
         }
@@ -1095,6 +1095,12 @@
                 $("#cardNo_error").html("Invalid Card Number");
                 flag = "N";
             }
+            else if (cardNo.substring(0, 1) == "0")
+            {
+                $("#cardNo_error").attr("style", "display:block");
+                $("#cardNo_error").html("Invalid Card Number");
+                flag = "N";
+            }
             else
             {
                 $("#cardNo_error").attr("style", "display:none");
@@ -1108,7 +1114,7 @@
 
         if (mobileNo != "") 
         {
-            if (!mobileNo.match(phoneno) ) 
+            if (!mobileNo.match(phoneno)) 
             {
                 $("#mobileNo_error").attr("style", "display:block");
                 $("#mobileNo_error").html("Invalid Mobile Number");
@@ -1181,17 +1187,17 @@ debugger;
                               rows += "<tr>"
                                   + "<td>"+(i+1)+"</td>"
                                   //+ "<td width='400px' class='nav-item'><a class='customerId' data-toggle='tab' href='#BasicInfo' onclick='ViewBasicInfo(this)' role='tab'><span class='rowCardNo'>" + res[i].customerID + "</span></a></td>"
-                                  + "<td width='400px'>" + res[i].customerID + "</td>"
-                                  + "<td width='400px'>" + res[i].nameOnCard + "</td>"
-                                  + "<td width='400px' class='getCustType'>" + res[i].individualOrgName + "</td>"
-                                  + "<td width='400px'>" + res[i].formNumber + "</td>"
+                                  + "<td>" + res[i].customerID + "</td>"
+                                  + "<td>" + res[i].nameOnCard + "</td>"
+                                  + "<td class='getCustType'>" + res[i].individualOrgName + "</td>"
+                                  + "<td>" + res[i].formNumber + "</td>"
                                   //+ "<td width='400px'>" + ApplicationDate + "</td>"
                                   //+ "<td width='400px'>" + res[i].customerStatusName + "</td>"
                                   //+ "<td width='400px''><a href='#CardSearch' class='viewCardDetails' onclick='GetCardSearch(this," + res[i].customerTypeId + ")'><i class='fa fa-eye'></i></a></td>"
                                   //+ "<td width='400px'><a href='#aaa' class='editNumber'><i class='fa fa-eye'></i></a></td>"
-                                  + "<td width='400px'>" + res[i].communicationMobileNo + "</td>"
-                                  + "<td width='400px'>" + res[i].communicationEmailid + "</td>"
-                                  + "<td width='400px'><a href='#BasicInfo' class='action' onclick='ViewBasicInfo(this)'><i class='fa fa-search'></i></a></td>"
+                                  + "<td>" + res[i].communicationMobileNo + "</td>"
+                                  + "<td>" + res[i].communicationEmailid + "</td>"
+                                  + "<td><a href='#BasicInfo' class='action' onclick='ViewBasicInfo(this)'><i class='fa fa-search'></i></a></td>"
                               "</tr >";
 
                           }
@@ -1199,6 +1205,10 @@ debugger;
                           $('#CustomerSearch table').append(rows);
 
                           document.getElementById("CustomerSearch").style.display = "block";
+                          $("#CardNo").prop('readonly', true);
+                          $("#Email").prop('readonly', true);
+                          $("#CustomerId").prop('readonly', true);
+                          $("#MobileNo").prop('readonly', true);
                       }
                       else
                       {
@@ -1206,6 +1216,10 @@ debugger;
                             $("#noRecord").html("");
                             $("#noRecord").append("<span>No Record Found</span>");
                             document.getElementById("noRecord").style.display = "block";
+                            $("#CardNo").prop('readonly', true);
+                            $("#Email").prop('readonly', true);
+                            $("#CustomerId").prop('readonly', true);
+                            $("#MobileNo").prop('readonly', true);
                       }
 
                   },
@@ -1675,6 +1689,7 @@ debugger;
                               document.getElementById('CustomerSignedOn').value=res[i].signedOn;
                               $('#IndividualOrgName').val(res[i].individualOrgName);
                               $('#CustomerNameOnCard').val(res[i].nameOnCard);
+                              document.getElementById("salutaion_error").innerHTML = "";
                               document.getElementById("individualName_error").innerHTML = "";
                               document.getElementById("nameOnCard_error").innerHTML = "";
                               document.getElementById("salutaion_error").innerHTML = "";
@@ -2334,17 +2349,17 @@ $("#IndividualOrgName").on("blur", function () {
     var individualOrgName = document.getElementById("IndividualOrgName").value.trim();
     if (individualOrgName == "") 
     {
-        document.getElementById("individualName_error").innerHTML = "Individual/Org. Name is required";
+        document.getElementById("individualName_error").innerHTML = "Customer/Org. Name is required";
         return (false);
     }
     else if (!isNaN(document.getElementById("IndividualOrgName").value.trim())) 
     {
-        document.getElementById("individualName_error").innerHTML = "Invalid Individual/Org. Name";
+        document.getElementById("individualName_error").innerHTML = "Invalid Customer/Org. Name";
         return false;
     }
     else if (!document.getElementById("IndividualOrgName").value.match(nameWithSpaceCheck)) 
     {
-        document.getElementById("individualName_error").innerHTML = "Invalid Individual/Org. Name";
+        document.getElementById("individualName_error").innerHTML = "Invalid Customer/Org. Name";
         return false;
     }
     else 
@@ -2397,17 +2412,17 @@ $("#CustomerNameOnCard").on("blur", function () {
 
         if (document.getElementById("IndividualOrgName").value == "") 
         {
-            document.getElementById("individualName_error").innerHTML = "Individual/Org. Name is required";
+            document.getElementById("individualName_error").innerHTML = "Customer/Org. Name is required";
             ret = false;
         }
         else if (!isNaN(document.getElementById("IndividualOrgName").value.trim())) 
         {
-            document.getElementById("individualName_error").innerHTML = "Invalid Individual/Org. Name";
+            document.getElementById("individualName_error").innerHTML = "Invalid Customer/Org. Name";
             ret = false;
         }
         else if (!document.getElementById("IndividualOrgName").value.match(nameWithSpaceCheck)) 
         {
-            document.getElementById("individualName_error").innerHTML = "Invalid Individual/Org. Name";
+            document.getElementById("individualName_error").innerHTML = "Invalid Customer/Org. Name";
             ret = false;
         }
         else 
@@ -3338,6 +3353,11 @@ function GetSalesArea(regionId,customerSalesAreaID) {
                    $("#cardNo_error").attr("style", "display:block");
                    $("#cardNo_error").html("Invalid Card Number");
                }
+               else if (cardNo.substring(0, 1) == "0")
+               {
+                   $("#cardNo_error").attr("style", "display:block");
+                   $("#cardNo_error").html("Invalid Card Number");
+               }
                else
                {
                   $("#cardNo_error").attr("style", "display:none");
@@ -3395,6 +3415,15 @@ $("#Email").on("blur", function ()
         document.getElementById("EmailErrMsg").innerHTML = "";
     }
 
+});
+
+$("#IndividualOrgNameTitle").change(function () 
+{
+    var id = this.value;
+
+    if (id != -1) {
+        $("#salutaion_error").html("");
+    }
 });
 
 </script>

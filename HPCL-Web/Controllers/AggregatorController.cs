@@ -274,9 +274,9 @@ namespace HPCL_Web.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> AproveCustomer(string CustomerReferenceNo, string Comments, string Approvalstatus)
+        public async Task<JsonResult> AproveCustomer(string CustomerReferenceNo, string Comments, string Approvalstatus, string formNumber)
         {
-            UpdateKycResponse updateKycResponse = await _aggregatorService.AproveCustomer(CustomerReferenceNo, Comments, Approvalstatus);
+            UpdateKycResponse updateKycResponse = await _aggregatorService.AproveCustomer(CustomerReferenceNo, Comments, Approvalstatus, formNumber);
             return Json(updateKycResponse);
         }
         [HttpPost]

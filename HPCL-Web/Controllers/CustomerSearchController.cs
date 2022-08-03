@@ -8,10 +8,12 @@ namespace HPCL_Web.Controllers
     public class CustomerSearchController : Controller
     {
         private readonly ICustomerSearchService _customerSearchService;
+        private readonly ICommonActionService _commonActionService;
 
-        public CustomerSearchController(ICustomerSearchService customerSearchService)
+        public CustomerSearchController(ICustomerSearchService customerSearchService,ICommonActionService commonActionService)
         {
             _customerSearchService = customerSearchService;
+            _commonActionService = commonActionService;
         }
 
         public IActionResult Index()
@@ -29,6 +31,28 @@ namespace HPCL_Web.Controllers
         {
             var searchList = await _customerSearchService.CCPinReset(entity);
             return Json(new { searchList = searchList });
+        }
+
+
+        public async Task<IActionResult> SearchCustomer()
+        {
+            var modals = await _customerSearchService.SearchCustomer();
+     
+            modals.RetailOutletStates.AddRange(await _commonActionService.GetStateList());
+            return View(modals);
+        }
+        public async Task<IActionResult> SearchCustomerDetails(string customerId, string mobileNo, string formNumber, string nameonCard, string CustomerName, string communicationStateId, string communicationCityName)
+        {
+            var modals = await _customerSearchService.SearchCustomerDetails(customerId, mobileNo, formNumber, nameonCard, CustomerName, communicationStateId, communicationCityName);
+
+            //BasicSearchModel obj=new BasicSearchModel 
+            //{
+            //RetailOutletStateName = await _customerSearchService.SearchCustomerDetails();
+
+        //}
+
+
+            return PartialView("~/Views/CustomerSearch/_SearchResultForCustomerTable.cshtml", modals);
         }
     }
 }

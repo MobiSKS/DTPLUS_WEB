@@ -53,5 +53,7 @@ namespace HPCL.Service.Interfaces
         Task<DICVCustomerBalanceInfoModel> DICVBalanceInfo();
         Task<GetDICVCustomerBalanceInfoResponse> GetCustomerBalanceInfo(string CustomerID);
         Task<DICVCustomerTransactionResponseModel> GetCustomerTransactionDetails(string CustomerID, string CardNo, string MobileNo, string FromDate, string ToDate);
+        Task<DICVCustomerAdvancedSearchModel> DICVCustomerAdvancedSearch();
+        Task<GetDICVAdvancedSearchResponse> GetJCBAdvancedSearch(string str);
     }
 }

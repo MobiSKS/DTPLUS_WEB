@@ -10,6 +10,8 @@ namespace HPCL.Common.Models.ViewModel.EFT
 {
     public class CCMSRechargethroughEFTModel:CommonResponseBase
     {
+        public string Status { get; set; }
+        public string Reason{ get; set; }
         public string FileName { get; set; }
         public IFormFile TransactionDetailFile { get; set; }
         public string TransactionDetailFileId { get; set; }
