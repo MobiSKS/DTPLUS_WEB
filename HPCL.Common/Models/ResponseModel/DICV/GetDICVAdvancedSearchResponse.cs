@@ -5,17 +5,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HPCL.Common.Models.ResponseModel.JCB
+namespace HPCL.Common.Models.ResponseModel.DICV
 {
-    public class GetJCBAdvancedSearchResponse : CommonResponseBase
+    public class GetDICVAdvancedSearchResponse : CommonResponseBase
     {
-        public GetJCBAdvancedSearchResponse()
+        public GetDICVAdvancedSearchResponse()
         {
-            Data = new List<GetJCBAdvancedSearchData>();
+            Data = new List<GetDICVAdvancedSearchData>();
         }
-        public List<GetJCBAdvancedSearchData> Data { get; set; }
+        public List<GetDICVAdvancedSearchData> Data { get; set; }
     }
-    public class GetJCBAdvancedSearchData
+    public class GetDICVAdvancedSearchData
     {
         public string IndividualOrgName { get; set; }
         public string FormNumber { get; set; }

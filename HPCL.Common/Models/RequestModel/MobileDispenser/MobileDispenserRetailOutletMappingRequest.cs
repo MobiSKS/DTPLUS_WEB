@@ -21,7 +21,7 @@ namespace HPCL.Common.Models.RequestModel.MobileDispenser
         public string MobileDispenserId { get; set; }
 
       
-        public int Status { get; set; }
+        public string Status { get; set; }
 
         //public virtual List<TerminalStatusResponseModal> TerminalStatusResponseModals { get; set; }
     }

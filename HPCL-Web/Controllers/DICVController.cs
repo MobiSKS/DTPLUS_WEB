@@ -322,6 +322,17 @@ namespace HPCL_Web.Controllers
             var models = await _dicvService.GetCustomerTransactionDetails(CustomerID, CardNo, MobileNo, FromDate, ToDate);
             return PartialView("~/Views/DICV/_DICVCustomerTransactionTblView.cshtml", models);
         }
+        public async Task<IActionResult> DICVCustomerAdvancedSearch()
+        {
+            var model = await _dicvService.DICVCustomerAdvancedSearch();
+            return View(model);
+        }
+        [HttpPost]
+        public async Task<IActionResult> GetDICVAdvancedSearch(string str)
+        {
+            var models = await _dicvService.GetJCBAdvancedSearch(str);
+            return PartialView("~/Views/DICV/_DICVCustomerAdvancedSearchTblView.cshtml", models);
+        }
 
     }
 }

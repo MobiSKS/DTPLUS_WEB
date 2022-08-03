@@ -1,4 +1,6 @@
-﻿@model IEnumerable<HPCL.Common.Models.ResponseModel.MobileDispenser.MobileDispenserRetailOutletMappingResponse>
+﻿@*@model IEnumerable<HPCL.Common.Models.ResponseModel.MobileDispenser.MobileDispenserRetailOutletMappingResponse>
+*@
+@model HPCL.Common.Models.ViewModel.MobileDispenser.MobileDispenserViewModel
 @using HPCL.Common.Resources
 <div class="col-lg-12 p-4 p-md-4">
     <div class="bg-white p-2 p-md-4">
@@ -21,7 +23,7 @@
                                         <label class="font-weight-normal col-md-5 col-12">Mobile Dispenser Id<sup class="text-danger">*</sup></label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                <input class="form-control" id="" name="mdispenserid" type="text" value="">
+                                                <input class="form-control" id="mdispenserid" name="mdispenser" type="text" value="">
                                             </div>
                                         </div>
                                     </div>
@@ -32,16 +34,15 @@
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
 
-                                               @*@Html.DropDownListFor(m => m, new SelectList(Model.MobileDispenserRetailOutletMappingResponse, "Status", "StatusName"), new { @class = "form-control" })
-*@                                                @* @Html.DropDownList("Mobiledropdown2", Model.Stat as SelectList,"Status")*@
-                                                 @*@Html.DropDownList("MySkills", (IEnumerable<SelectListItem>)ViewBag.Status)*@
+                                                @Html.DropDownListFor(model => model.StatusIdValue, new SelectList(Model.GetStatus, "StatusId","StatusName"), new { @class = "form-control" })
 
-                                                <select name="zonalOffice" id="" class="form-control" onclick="StatusSearchMobile()">
+                                                @*<select name="zonalOffice" id="StatusId" class="form-control" onchange="StatusSearchMobile()">
                                                     <option selected="selected" value="-1">--All--</option>
                                                     <option value="0">Pending</option>
                                                     <option value="1">Approved</option>
                                                     <option value="2">Rejected</option>
-                                                </select>
+                                                    <option value="3">test</option>
+                                                </select>*@
                                             </div>
                                         </div>
                                     </div>
@@ -52,7 +53,7 @@
                                             <button class="btn btn_primary" type="button" onclick="SearchMobile()">Search</button>
                                         </div>
                                         <div class="px-2">
-                                            <button class="btn btn_primary" type="button">Add Retail Outlet</button>
+                                            <button class="btn btn_primary" type="button" onclick="location.href='@Url.Action("CreateMobileDispenser", "MobileDispenser")'">Add Retail Outlet</button>
                                         </div>
                                     </div>
                                 </div>
@@ -61,62 +62,62 @@
                         <div class="clearfix"></div>
                     </div>
                     <div id="Mobiletbl">
-                   <table id="UserMappingTable" class="table table-striped d-md-table d-block table-bordered table-responsive nowrap mt-3"  style="width:100%">
-        <thead>
-            <tr>
-                <th style="">Serial Number</th>
-                <th style="">Mobile Dispenser Id</th>
-                <th style="">Mapped Merchant Id</th>
-                <th style="">CreatedBy</th>
-                <th style="">CreatedTime</th>
-                <th style="">Status</th>
-                <th style="">ModifiedBy</th>
-                <th style="">ModifiedTime</th>
-                <th style="">Remarks</th>
+                        <table id="UserMappingTable" class="table table-striped d-md-table d-block table-bordered table-responsive nowrap mt-3" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th style="">Serial Number</th>
+                                    <th style="">Mobile Dispenser Id</th>
+                                    <th style="">Mapped Merchant Id</th>
+                                    <th style="">CreatedBy</th>
+                                    <th style="">CreatedTime</th>
+                                    <th style="">Status</th>
+                                    <th style="">ModifiedBy</th>
+                                    <th style="">ModifiedTime</th>
+                                    <th style="">Remarks</th>
 
 
-                
-            </tr>
-        </thead>
-        <tbody class="bg-white">
-            @if (Model.Count() > 0)
-            {
-                int i = 0;
-                @foreach (var item in Model)
-                {
-                    i++;
-                    <tr>
-                        <td>@i</td>
-                       
-                        <td>@item.MobileDispenserId</td>
-                        <td>@item.MappedMerchantId</td>
-                        <td>@item.CreatedBy</td>
-                        <td>@item.CreatedTime</td>
-                         <td>@item.Status</td>
-                        <td>@item.ModifiedBy</td>
-                        <td>@item.ModifiedTime</td>
-                        <td>@item.Remarks</td>
-                        
 
-                    </tr>
-                }
-            }
-            else
-            {
-         @*  <div class="mb-3 text-center alert alert-danger">
-            No Record Found
-        </div>*@
-            }
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white">
+                                @if (Model.GetAllDataMobileDispenser.Count() > 0)
+                                {
+                                    int i = 0;
+                                    @foreach (var item in Model.GetAllDataMobileDispenser)
+                                    {
+                                        i++;
+                                        <tr>
+                                            <td>@i</td>
 
-        </tbody>
+                                            <td>@item.MobileDispenserId</td>
+                                            <td>@item.MappedMerchantId</td>
+                                            <td>@item.CreatedBy</td>
+                                            <td>@item.CreatedTime</td>
+                                            <td>@item.StatusVal</td>
+                                            <td>@item.ModifiedBy</td>
+                                            <td>@item.ModifiedTime</td>
+                                            <td>@item.Remarks</td>
 
-    </table>
-    </div>
+
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    @*  <div class="mb-3 text-center alert alert-danger">
+                            No Record Found
+                            </div>*@
+                                }
+
+                            </tbody>
+
+                        </table>
+                    </div>
 
                 </div>
             </div>
         }
-        
+
     </div>
 
 </div>
@@ -124,71 +125,73 @@
 <script type="text/javascript">
 
 
- 
 
 
-function SearchMobile() {
-     var merchantId = '3411120001';
-       var status = 0;
-    debugger;
-    $.ajax({
-        type: 'POST',  // http method
-        url: '@Url.Action("SearchMobileDispenserRetailsOutletMapping", "MobileDispenser")',
-        contentType: "application/json; charset=utf-8",
-        data: { merchantId: merchantId, status:status },
-        dataType: "text",
-        success: function (data, status, xhr) {
-            var v = data;
-            if (status == 'success') {
-                $("#Mobiletbl").html("");
-                $("#Mobiletbl").html(data);
-                $('html, body').animate({
-                    scrollTop: $("#Mobiletbl").offset().top
-                }, 2000);
+
+    function SearchMobile() {
+        var merchantIdVal = $("#mdispenserid").val();/*'3411120001';*/
+        var statusVal = $('#StatusIdValue').val();
+
+        debugger;
+        $.ajax({
+            type: 'GET',  // http method
+            url: '/MobileDispenser/SearchMobileDispenserRetailsOutletMapping?merchantId='+merchantIdVal+'&status='+statusVal,
+            contentType: "application/json; charset=utf-8",
+            //data: { merchantId: merchantId, status: status },
+            dataType: "text",
+            success: function(data, status, xhr) {
+                var v = data;
+                if (status == 'success') {
+                    $("#Mobiletbl").html("");
+                    $("#Mobiletbl").html(data);
+                    $('html, body').animate({
+                        scrollTop: $("#Mobiletbl").offset().top
+                    }, 2000);
+                }
+                else {
+                    console.log(v);
+                }
+            },
+            error: function(jqXhr, textStatus, errorMessage) {
+                alert("Error");
             }
-            else {
-                console.log(v);
+        });
+    }
+
+
+
+
+
+    function StatusSearchMobile() {
+
+        var confirmstring = "Are you sure you want to create this officer ?";
+        var status = '3'/*$('#StatusId').val();*/
+        debugger;
+        $.ajax({
+            type: 'POST',  // http method
+            url: '@Url.Action("StatusMobileDispenserRetailsOutletMapping", "MobileDispenser")',
+            contentType: "application/json; charset=utf-8",
+            data: { status: status },
+            dataType: "text",
+            success: function(data, status, xhr) {
+                var v = data;
+                if (status == 'success') {
+                   
+            if (confirm(confirmstring)) {
+                $("#form1").unbind().submit();
+            
+                                          }
+                }
+                else {
+                    document.getElementById("MobileDispenser_Error").innerHTML = "MobileDispenser is not Saved..";
+                }
+            },
+            error: function(jqXhr, textStatus, errorMessage) {
+                alert("Error");
             }
-        },
-        error: function (jqXhr, textStatus, errorMessage) {
-            alert("Error");
-        }
-    });
-}
-
-
-
-
-
-function StatusSearchMobile() {
-    
-       var status = 1;
-    debugger;
-    $.ajax({
-        type: 'POST',  // http method
-        url: '@Url.Action("StatusMobileDispenserRetailsOutletMapping", "MobileDispenser")',
-        contentType: "application/json; charset=utf-8",
-        data: {status:status },
-        dataType: "text",
-        success: function (data, status, xhr) {
-            var v = data;
-            if (status == 'success') {
-                $("#Mobiletbl").html("");
-                $("#Mobiletbl").html(data);
-                $('html, body').animate({
-                    scrollTop: $("#Mobiletbl").offset().top
-                }, 2000);
-            }
-            else {
-                console.log(v);
-            }
-        },
-        error: function (jqXhr, textStatus, errorMessage) {
-            alert("Error");
-        }
-    });
-}
+        });
+    }
 </script>
 
 
- 
+

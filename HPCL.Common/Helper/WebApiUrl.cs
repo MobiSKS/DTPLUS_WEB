@@ -703,6 +703,7 @@
         public static string getDicvCustomerBalanceInfo = "api/dtplus/DICV/get_dicv_customer_balance_info";
         public static string dicvUpdateCustomer = "api/dtplus/DICV/dicv_update_customer";
         public static string getDicvTransactionsSummary = "api/dtplus/DICV/get_dicv_transactions_summary";
+        public static string getDicvAdvancedSearch = "api/dtplus/DICV/get_dicv_advanced_search";
         #endregion
 
         #region "Parent Customer HDFC Bank Credit Pouch"
@@ -760,6 +761,8 @@
         #region "MobileDispenser Surya Yadav"
         public static string MobileDispenserRetailOutletMapping="api/dtplus/merchant/get_mobile_dispenser_retail_outlet_mapping";
         public static string StatusMobileDispenserRetailOutletMapping = "api/dtplus/merchant/get_status_mobiledispenser_retailoutletmapping";
+        public static string InsertMobileDispenserRetailOutletMapping = "api/dtplus/merchant/insert_mobile_dispenser_retail_outlet_mapping";
+        public static string StatusMobileDispenser = "api/dtplus/merchant/get_status_mobile_dispenser";
         #endregion
 
         #region EFT
