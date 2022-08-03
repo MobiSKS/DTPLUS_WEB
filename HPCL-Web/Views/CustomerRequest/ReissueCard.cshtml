@@ -17,7 +17,7 @@
             <div class="w-100">
                 <div class="col-lg-12 col-md-12 col-12 pl-0 pr-0 mb-3">
                     <div class="border-1 rounded border-grey pb-0">
-                        <p class="text-white px-3 py-2 m-0 font-weight-bold" style="background: #084693;">Approve Card Renewal Requests</p>
+                        <p class="text-white px-3 py-2 m-0 font-weight-bold" style="background: #084693;">Reissue Card(s)</p>
                         <div class="col-lg-12 col-md-12 col-12 py-3 bg-white">
 
                             <div class="d-flex align-items-center flex-wrap">
@@ -26,8 +26,8 @@
                                         <label class="font-weight-normal col-md-4 col-12">Customer ID</label>
                                         <div class="col-md-7 col-12">
                                             <div class="custom_select">
-                                                @Html.TextBoxFor(m => m.CustomerID, new { @class = "form-control restrictPaste", onkeypress = "return isNumberKey(event)" })
-                                                @Html.ValidationMessageFor(m => m.CustomerID, "", new { @class = "text-danger" })
+                                                @Html.TextBoxFor(m => m.CustomerID, new {@id="customerIdVal", @class = "form-control restrictPaste", onkeypress = "return isNumberKey(event)" })
+                                                @Html.ValidationMessageFor(m => m.CustomerID, "", new {@id="CustomerIdErr", @class = "text-danger" })
                                             </div>
                                         </div>
                                     </div>
@@ -132,7 +132,7 @@
     function searchCards(){
         var flag = "Y";
 
-        var customerId = $("#CustomerID").val();
+        var customerId = $("#customerIdVal").val();
         var cardNo = $("#CardNo").val();
 
         if(customerId == '' && cardNo == ''){
@@ -154,7 +154,7 @@
                     data: $('#formValid').serialize(),  // data to submit
                     success: function (res, status, xhr) {
 
-                        $("#CustomerID").attr("readonly",true);
+                        $("#customerIdVal").attr("readonly",true);
                         $("#CardNo").attr("readonly",true);
 
                         OnSuccess(res);
@@ -303,120 +303,120 @@
         }
     });
 
-    function updateCards(){
+    //function updateCards(){
 
-        var customerId = $("#CustomerID").val();
+    //    var customerId = $("#customerIdVal").val();
 
-        var updateArray = new Array();
+    //    var updateArray = new Array();
 
 
-        var flag = "Y";
-        var CardNo;
+    //    var flag = "Y";
+    //    var CardNo;
 
-        $("#cardissueTbl tr:gt(0) input[type=checkbox]:checked").each(function () {
+    //    $("#cardissueTbl tr:gt(0) input[type=checkbox]:checked").each(function () {
 
-            //document.getElementById("responseTbl").style.display = "none";
+    //        //document.getElementById("responseTbl").style.display = "none";
 
-            var selectedRow = $(this).closest("tr")[0];
-            console.log("index",selectedRow.rowIndex);
+    //        var selectedRow = $(this).closest("tr")[0];
+    //        console.log("index",selectedRow.rowIndex);
 
-            var indexS = (selectedRow.rowIndex) - 1;
+    //        var indexS = (selectedRow.rowIndex) - 1;
 
-            console.log("indexS",indexS);
+    //        console.log("indexS",indexS);
 
-            var row = $(this).closest("tr");
+    //        var row = $(this).closest("tr");
 
-            CardNo = row.find('.getCardNo').text();
-            var ReasonId = row.find('.htlstReason option:selected').val();
-            var VechileNo = row.find('.vehicleNoVal').val();
+    //        CardNo = row.find('.getCardNo').text();
+    //        var ReasonId = row.find('.htlstReason option:selected').val();
+    //        var VechileNo = row.find('.vehicleNoVal').val();
 
-            updateArray.push({
-                CardNo: CardNo,
-                ReasonId: ReasonId,
-                VechileNo:VechileNo
-            });
+    //        updateArray.push({
+    //            CardNo: CardNo,
+    //            ReasonId: ReasonId,
+    //            VechileNo:VechileNo
+    //        });
 
-            if(ReasonId == 0){
-                document.getElementById('hotlistreason_error_'+indexS).title="Please Select Hotlist Reason";
-                document.getElementById('hotlistreason_error_'+indexS).style.display = "block";
-                flag = "N";
-            }
+    //        if(ReasonId == 0){
+    //            document.getElementById('hotlistreason_error_'+indexS).title="Please Select Hotlist Reason";
+    //            document.getElementById('hotlistreason_error_'+indexS).style.display = "block";
+    //            flag = "N";
+    //        }
 
-        });
+    //    });
 
-         if (CardNo == undefined) {
-                alert("Please select atleast one record.");
-                flag = "N";
-         }
+    //    if (CardNo == undefined) {
+    //            alert("Please select atleast one record.");
+    //            flag = "N";
+    //    }
 
-         if (flag == "N")
-            e.preventDefault();
+    //    if (flag == "N")
+    //       e.preventDefault();
 
-        if (flag == "Y") {
+    //    if (flag == "Y") {
             
-            if (confirm('Do you want to reissue your card(s), corresponding older card(s) will get hotlisted')) {
-                console.log('ok');
+    //        if (confirm('Do you want to reissue your card(s), corresponding older card(s) will get hotlisted')) {
+    //            console.log('ok');
 
-                $("#CardSearch tr:gt(0) input[type=checkbox]:checked").each(function () {
-                    var selectedRow = $(this).closest("tr")[0];
-                    console.log("index",selectedRow.rowIndex);
-                    var indexS = (selectedRow.rowIndex) - 1;
-                    document.getElementById('hotlistreason_error_'+indexS).style.display = "none";
-                    $(this).closest("tr").find(".checkEnable").prop('checked',false);
-                    $(this).closest("tr").find('.htlstReason').attr("readonly", true);
-                    $(this).closest("tr").find('.htlstReason').attr("disabled", true);
-                });
+    //            //$("#CardSearch tr:gt(0) input[type=checkbox]:checked").each(function () {
+    //            //    var selectedRow = $(this).closest("tr")[0];
+    //            //    console.log("index",selectedRow.rowIndex);
+    //            //    var indexS = (selectedRow.rowIndex) - 1;
+    //            //    document.getElementById('hotlistreason_error_'+indexS).style.display = "none";
+    //            //    $(this).closest("tr").find(".checkEnable").prop('checked',false);
+    //            //    $(this).closest("tr").find('.htlstReason').attr("readonly", true);
+    //            //    $(this).closest("tr").find('.htlstReason').attr("disabled", true);
+    //            //});
 
-                $(".checkAll").prop('checked',false);
+    //            $(".checkAll").prop('checked',false);
 
-                $.ajax({
-                    url: "@Url.Action("InitialReissueCardService", "CustomerRequest")",
-                    type: "POST",
-                    dataType: "JSON",
-                    data: { customerId: customerId, reissueReq: JSON.stringify(updateArray)},
-                    success: function (res) {
+    //            $.ajax({
+    //                url: "@Url.Action("InitialReissueCardService", "CustomerRequest")",
+    //                type: "POST",
+    //                dataType: "JSON",
+    //                data: { customerId: customerId, reissueReq: JSON.stringify(updateArray)},
+    //                success: function (res) {
 
-                        console.log("res",res);
+    //                    console.log("res",res);
 
-                        if(res.resp[0].status == 1){
-                            $("#formValid").hide();
-                            document.getElementById("updateFailed").style.display = "none";
-                            $("#successUpdate").html("");
-                            $("#successUpdate").append("<span>" + res.resp[0].reason + "</span>");
-                            document.getElementById("successUpdate").style.display = "block";
-                        }else{
-                            //$("#responseTbl td").parent().remove();
+    //                    if(res.resp[0].status == 1){
+    //                        $("#formValid").hide();
+    //                        document.getElementById("updateFailed").style.display = "none";
+    //                        $("#successUpdate").html("");
+    //                        $("#successUpdate").append("<span>" + res.resp[0].reason + "</span>");
+    //                        document.getElementById("successUpdate").style.display = "block";
+    //                    }else{
+    //                        //$("#responseTbl td").parent().remove();
 
-                            //for (var i = 0; i < res.reasonList.length; i++) {
+    //                        //for (var i = 0; i < res.reasonList.length; i++) {
 
-                            //    var rows = "<tbody><tr>"
-                            //        + "<td>"+(i+1)+"</td>"
-                            //        + "<td><span class='cardNoVal'>" + (res.reasonList[i].cardNo || '') + "</span></td>"
-                            //        + "<td>" + (res.reasonList[i].reason || '') + "</td>"
-                            //        + "</tr ></tbody>";
+    //                        //    var rows = "<tbody><tr>"
+    //                        //        + "<td>"+(i+1)+"</td>"
+    //                        //        + "<td><span class='cardNoVal'>" + (res.reasonList[i].cardNo || '') + "</span></td>"
+    //                        //        + "<td>" + (res.reasonList[i].reason || '') + "</td>"
+    //                        //        + "</tr ></tbody>";
 
-                            //    $('#responseTbl').append(rows);
-                            //}
+    //                        //    $('#responseTbl').append(rows);
+    //                        //}
 
-                            $("#formValid").hide();
-                            //document.getElementById("responseTbl").style.display = "block";
+    //                        $("#formValid").hide();
+    //                        //document.getElementById("responseTbl").style.display = "block";
 
-                            document.getElementById("successUpdate").style.display = "none";
-                            $("#updateFailed").html("");
-                            $("#updateFailed").append("<span>" + res.resp[0].reason + "</span>");
-                            document.getElementById("updateFailed").style.display = "block";
-                        }
-                    },
-                    error: function (ex) {
-                        alert('Failed' + ex);
-                    }
-                });
+    //                        document.getElementById("successUpdate").style.display = "none";
+    //                        $("#updateFailed").html("");
+    //                        $("#updateFailed").append("<span>" + res.resp[0].reason + "</span>");
+    //                        document.getElementById("updateFailed").style.display = "block";
+    //                    }
+    //                },
+    //                error: function (ex) {
+    //                    alert('Failed' + ex);
+    //                }
+    //            });
 
-            } else {
-                console.log('cancel')
-            }
-        }
-    }
+    //        } else {
+    //            console.log('cancel')
+    //        }
+    //    }
+    //}
 
     function reasonOnChange(o, rowSelected){
         var StatusId = o.value;
