@@ -22,10 +22,8 @@ namespace HPCL.Common.Models.ViewModel.MobileDispenser
             });
         }
 
-           public List<MobileDispenserRetailOutletMappingResponse> GetAllDataMobileDispenser { get; set; }
-
-          // public List<GetStatusMobileDispenserResponse> GetStatu { get; set; }
-
+        public int StatusIdValue { get; set; }
+        public virtual List<MobileDispenserRetailOutletMappingResponse> GetAllDataMobileDispenser { get; set; }
 
         public virtual List<GetStatusMobileDispenserResponse> GetStatus { get; set; }
 

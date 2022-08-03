@@ -6,10 +6,12 @@ using System.Threading.Tasks;
 
 namespace HPCL.Common.Models.ResponseModel.MobileDispenser
 {
-    public  class GetStatusMobileDispenserResponse
+    public  class InsertMobileDispenserRetailOutletMappingResponse
     {
-        
-        public string StatusId { get; set; }
-        public string StatusName { get; set; }
+       
+        public int Status { get; set; }
+
+       
+        public string Reason { get; set; }
     }
 }

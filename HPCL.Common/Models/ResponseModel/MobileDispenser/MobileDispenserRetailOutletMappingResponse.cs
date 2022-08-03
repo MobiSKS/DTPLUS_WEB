@@ -22,7 +22,7 @@ namespace HPCL.Common.Models.ResponseModel.MobileDispenser
         public string CreatedTime { get; set; }
 
       
-        public  string Status { get; set; }
+        public string StatusVal { get; set; }
 
        
         public string ModifiedBy { get; set; }

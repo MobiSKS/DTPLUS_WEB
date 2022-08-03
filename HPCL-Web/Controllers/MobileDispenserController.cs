@@ -1,4 +1,6 @@
 ﻿using HPCL.Common.Helper;
+using HPCL.Common.Models.RequestModel.MobileDispenser;
+using HPCL.Common.Models.ResponseModel.MobileDispenser;
 using HPCL.Common.Models.ViewModel.MobileDispenser;
 using HPCL.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -22,13 +24,13 @@ namespace HPCL_Web.Controllers
 
        
 
-        public async Task<IActionResult> MobileDispenserRetailsOutletMapping(string MobileDispenserId, int Status)
+        public async Task<IActionResult> MobileDispenserRetailsOutletMapping()
         
         
         
         {
             
-            var modals = await _mobiledispenser.MobileDispenserRetailOutletMapping(MobileDispenserId, Status);
+            var modals = await _mobiledispenser.MobileDispenserRetailOutletMapping();
 
             var modals1 = await _mobiledispenser.GetStatusMobileDispenser();
 
@@ -45,7 +47,7 @@ namespace HPCL_Web.Controllers
 
                 GetStatus = await _mobiledispenser.GetStatusMobileDispenser(),
 
-                GetAllDataMobileDispenser = await _mobiledispenser.MobileDispenserRetailOutletMapping(MobileDispenserId, Status)
+                GetAllDataMobileDispenser = await _mobiledispenser.MobileDispenserRetailOutletMapping()
 
             };
 
@@ -63,10 +65,9 @@ namespace HPCL_Web.Controllers
 
             return View(multi_Dropdownlist);
         }
-
-        public async Task<IActionResult> SearchMobileDispenserRetailsOutletMapping(string MobileDispenserId, int Status)
+        public async Task<IActionResult> SearchMobileDispenserRetailsOutletMapping(string merchantId, string status)
         {
-            var modals = await _mobiledispenser.SearchMobileDispenserRetailOutletMapping(MobileDispenserId, Status);
+            var modals = await _mobiledispenser.SearchMobileDispenserRetailOutletMapping(merchantId, status);
 
             //ViewBag.Status = Status;
             //ViewBag.Status = Status;
@@ -84,6 +85,30 @@ namespace HPCL_Web.Controllers
          
 
             return View("~/Views/MobileDispenser/_StatusMobileDispenserRetailsOutletMapping.cshtml", modals);
+        }
+
+        public async Task<IActionResult> CreateMobileDispenser()
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> CreateMobileDispenser(InsertMobileDispenserRetailOutletMappingRequest ObjMobileDis)
+        {
+            var tuple = await _mobiledispenser.CreateMobileDispenserRetailOutletMapping(ObjMobileDis);
+            if (tuple.Item1 == "0")
+            {
+                
+                ViewBag.Reason = tuple.Item2;
+                ViewBag.Status = tuple.Item1;
+                return View(ObjMobileDis);
+            }
+            else
+            {
+                ViewBag.Reason = tuple.Item2;
+                ViewBag.Status = tuple.Item1;
+                return View(ObjMobileDis);
+            }
+               
         }
     }
 }
