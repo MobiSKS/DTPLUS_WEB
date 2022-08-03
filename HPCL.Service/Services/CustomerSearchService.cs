@@ -60,16 +60,14 @@ namespace HPCL.Service.Services
                 UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
                 UserAgent = CommonBase.useragent,
                 UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
-                CustomerId = null,
+                CustomerId = string.IsNullOrEmpty(customerId) ? "" : customerId,
+                //CustomerId = null,
                 MobileNo = null,
                 FormNumber = null,
                 NameonCard = null,
                 CustomerName = null,
-                CommunicationStateId = null,
-                CommunicationCityName = null
-
-
-                // CustomerId = string.IsNullOrEmpty(customerId) ? "" : customerId,
+                //CommunicationStateId = null,
+                CommunicationCityName = null,
                 //MobileNo = string.IsNullOrEmpty(mobileNo) ? "" : mobileNo,
                 //FormNumber = string.IsNullOrEmpty(formNumber) ? "" : formNumber,
                 //NameonCard = string.IsNullOrEmpty(nameonCard) ? "" : nameonCard,
