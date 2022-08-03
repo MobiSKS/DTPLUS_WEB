@@ -252,7 +252,9 @@
         public static string addmanageaggregatorusers = "api/dtplus/UserManage/add_manage_aggregator_users";
         public static string addaggregatoruser = "api/dtplus/UserManage/add_users_manage_aggregator_users";
         public static string getmanageaggregatorusers = "api/dtplus/UserManage/get_manage_aggregator_users";
+        public static string updateaggregatoruserdetailswithroles = "api/dtplus/UserManage/update_aggregator_user_details_with_roles";
         
+
 
 
 
@@ -761,6 +763,8 @@
         #region "MobileDispenser Surya Yadav"
         public static string MobileDispenserRetailOutletMapping="api/dtplus/merchant/get_mobile_dispenser_retail_outlet_mapping";
         public static string StatusMobileDispenserRetailOutletMapping = "api/dtplus/merchant/get_status_mobiledispenser_retailoutletmapping";
+        public static string InsertMobileDispenserRetailOutletMapping = "api/dtplus/merchant/insert_mobile_dispenser_retail_outlet_mapping";
+        public static string StatusMobileDispenser = "api/dtplus/merchant/get_status_mobile_dispenser";
         #endregion
 
         #region EFT
