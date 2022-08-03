@@ -379,5 +379,47 @@ namespace HPCL.Service.Services
             List<SuccessResponse> res = jarr.ToObject<List<SuccessResponse>>();
             return res;
         }
+
+        public async Task<SearchHotlistAndReissueRes> SearchReissueCard(SearchHotlistAndReissue entity)
+        {
+            var reqBody = new SearchHotlistAndReissue
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                CardNo = entity.CardNo,
+                CustomerID = entity.CustomerID
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.SearchReissueCardUrl);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            SearchHotlistAndReissueRes searchList = obj.ToObject<SearchHotlistAndReissueRes>();
+            return searchList;
+        }
+
+        public async Task<List<InitialReissueCardRes>> InitialReissueCardService(string customerId, string reissueReq)
+        {
+            TypeHotlistReissueCardRequests[] arrs = JsonConvert.DeserializeObject<TypeHotlistReissueCardRequests[]>(reissueReq);
+
+            var reqBody = new InitialReissueCard
+            {
+                UserAgent = CommonBase.useragent,
+                UserIp = _httpContextAccessor.HttpContext.Session.GetString("IpAddress"),
+                UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                CustomerId = customerId,
+                ModifiedBy = _httpContextAccessor.HttpContext.Session.GetString("UserId"),
+                TypeHotlistReissueCardRequest = arrs
+            };
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(reqBody), Encoding.UTF8, "application/json");
+            var response = await _requestService.CommonRequestService(content, WebApiUrl.ApplyReissueCardUrl);
+
+            JObject obj = JObject.Parse(JsonConvert.DeserializeObject(response).ToString());
+            var jarr = obj["Data"].Value<JArray>();
+            List<InitialReissueCardRes> resp = jarr.ToObject<List<InitialReissueCardRes>>();
+            return resp;
+        }
     }
 }

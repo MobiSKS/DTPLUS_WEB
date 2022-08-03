@@ -24,5 +24,7 @@ namespace HPCL.Service.Interfaces
         Task<List<SuccessResponse>> UpdateConfigureEmailAlert([FromBody] ConfigureEmailAlertRequest reqModel);
         Task<ApproveCardRenwalRequestRes> GetApproveCardRenwalRequest(ApproveCardRenwalRequestReq entity);
         Task<List<SuccessResponse>> UpdateApproveCardRenwalRequest(string actionType, string appRejValues);
+        Task<SearchHotlistAndReissueRes> SearchReissueCard(SearchHotlistAndReissue entity);
+        Task<List<InitialReissueCardRes>> InitialReissueCardService(string customerId, string reissueReq);
     }
 }
