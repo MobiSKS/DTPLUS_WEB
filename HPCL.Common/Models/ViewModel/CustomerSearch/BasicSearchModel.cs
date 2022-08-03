@@ -1,6 +1,7 @@
 ﻿using System;
 using HPCL.Common.Models.CommonEntity;
 using HPCL.Common.Models.CommonEntity.ResponseEnities;
+using System.Collections.Generic;
 using HPCL.Common.Resources;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,5 +19,22 @@ namespace HPCL.Common.Models.ViewModel.CustomerSearch
         public string CustomerName { get; set; }
         public string CommunicationStateId { get; set; }
         public string CommunicationCityName { get; set; }
-    }
+
+     
+        public string RetailOutletStateName { get; set; }
+
+        public BasicSearchModel()
+        {
+            RetailOutletStates = new List<StateResponseModal>();
+
+            RetailOutletStates.Add(new StateResponseModal
+            {
+               // CountryID = 0,
+                StateID = 0,
+                StateName = "Select State"
+            });
+        }
+        public int _StateID { get; set; }
+           public virtual List<StateResponseModal> RetailOutletStates { get; set; }
+}
 }

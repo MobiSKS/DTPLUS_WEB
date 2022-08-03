@@ -1320,11 +1320,34 @@ namespace HPCL.Service.Services
             bool isPincodeExist = false;
             bool isMobileExist = false;
 
-            if(!string.IsNullOrEmpty(arrs[0].CustomerName))
+            if (!string.IsNullOrEmpty(arrs[0].CustomerName))
             {
                 isCustomerNameExist = true;
             }
-            //if(arrs[0].opti)
+            if (arrs[0].OptionCustomerName == "YES")
+            {
+                isFormNumberExist = true;
+            }
+            if (arrs[0].OptionFormNumber == "YES")
+            {
+                isCustomeridExist = true;
+            }
+            if (arrs[0].ZonalOfficeId != "0")
+            {
+                isZonalOfficeExist = true;
+            }
+            if (arrs[0].OptionZonalOffice == "YES")
+            {
+                isRegionalOfficeExist = true;
+            }
+            if (arrs[0].OptionRegionalOffice == "YES")
+            {
+                isPincodeExist = true;
+            }
+            if (arrs[0].OptionPincode == "YES")
+            {
+                isMobileExist = true;
+            }
 
             var insertServiceBody = new JCBCustomerAdvancedSearchRequest
             {

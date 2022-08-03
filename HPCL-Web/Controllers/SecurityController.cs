@@ -338,5 +338,19 @@ namespace HPCL_Web.Controllers
 
             return Json(result);
         }
+        public async Task<IActionResult> EditAggregatorUser(string UserName)
+        {
+
+            var modals = await _securityService.GetManageAggregatorUserForEdit(UserName);
+            
+            return View(modals);
+        }
+        [HttpPost]
+        public async Task<JsonResult> EditAggregatorUser([FromBody] AddNewAggregatorUser entity)
+        {
+            var result = await _securityService.UpdateAggregatorUser(entity);
+
+            return Json(result);
+        }
     }
 }
